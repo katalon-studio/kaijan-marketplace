@@ -23505,9 +23505,9 @@ async function main() {
     authorization,
     telemetry,
     build,
-    onClose: () => {
+    onClose: async () => {
       stopTelemetry?.();
-      telemetry?.close();
+      await telemetry?.close();
     }
   });
   for (const signal of ["SIGINT", "SIGTERM"])

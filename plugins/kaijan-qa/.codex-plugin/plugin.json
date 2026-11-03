@@ -1,6 +1,6 @@
 {
   "name": "kaijan-qa",
-  "version": "0.4.0-preview.1",
+  "version": "0.4.0-preview.2",
   "description": "Understand your application, plan tests and review results with Kaijan.",
   "author": {
     "name": "Kaijan"

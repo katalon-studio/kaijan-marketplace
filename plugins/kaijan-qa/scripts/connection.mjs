@@ -332,11 +332,27 @@ try {
   const build = JSON.parse(
     await readFile3(join3(root, "loki-build.json"), "utf8")
   );
-  const broker = await connectBroker(root, build);
-  const response = action === "connect" ? await broker.connect() : action === "logout" ? await broker.logout() : await (await broker.send(action === "stop" ? "/shutdown" : "/health", {
-    method: action === "stop" ? "POST" : "GET"
-  })).json();
-  process.stdout.write(JSON.stringify(response) + "\n");
+  if (action === "stop") {
+    const profile = await brokerProfile(build);
+    const health = await channelFetch(profile.socketPath, "/health", {
+      signal: AbortSignal.timeout(1e3)
+    });
+    if (!health.ok || (await health.json()).installationId !== profile.installationId)
+      throw Error("unexpected_broker_identity");
+    const response = await channelFetch(profile.socketPath, "/shutdown", {
+      method: "POST",
+      signal: AbortSignal.timeout(3e3)
+    });
+    if (!response.ok) throw Error("broker_stop_failed");
+    process.stdout.write(JSON.stringify(await response.json()) + "\n");
+    process.exitCode = 0;
+  } else {
+    const broker = await connectBroker(root, build);
+    const response = action === "connect" ? await broker.connect() : action === "logout" ? await broker.logout() : await (await broker.send("/health", {
+      method: "GET"
+    })).json();
+    process.stdout.write(JSON.stringify(response) + "\n");
+  }
 } catch {
   process.stderr.write(
     "Connection action failed. No inference request was retried.\n"

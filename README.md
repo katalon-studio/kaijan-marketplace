@@ -1,6 +1,6 @@
 # Kaijan — qa
 
-Version: 0.4.0-preview.1. Platform: macOS ARM64.
+Version: 0.4.0-preview.2. Platform: macOS ARM64.
 
 ## Install
 
