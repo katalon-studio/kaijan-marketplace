@@ -483,7 +483,7 @@
       "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
       "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
       "experiments/context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
-      "experiments/work-verifier/supplied-evidence.mjs": "73abe3c90636bc43549214fd416b8f139b39c9bd0e5dd965d3fd182a898e6c56",
+      "experiments/work-verifier/supplied-evidence.mjs": "6840d5e02aa68c0b010119bd6d18064ea39b38b505cb62aba29fd1846bf36e20",
       "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
       "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
       "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -597,7 +597,7 @@
       "packages/computer-runner/src/redaction.mjs": "8d3f621ec09dda315dbee3331dad95f0e7d376e87537e35cef3f162c8f3bdcb8",
       "packages/computer-runner/src/redaction.d.mts": "59e873f9637ad013884ce724d0e02b99081e19beae6b7fc52abae2e947a7f9f8",
       "packages/computer-runner/src/navigation-policy.mjs": "3fdc0e435a79fd62aff9030677a0b42bdce16694541552cf5cb18867169b2d6f",
-      "packages/computer-runner/src/case-evidence.mjs": "a7c4d2673b898d5a827da2e919429ac0b1136fdd1510ed9ed50b91e9d5de5808",
+      "packages/computer-runner/src/case-evidence.mjs": "7095e1f0e1292bca01f0a892aabdd611b7db8b3966dc5ceda1c8483ef3320df0",
       "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425"
     },
     "relocation": {

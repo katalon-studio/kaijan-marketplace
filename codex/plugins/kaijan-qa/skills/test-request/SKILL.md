@@ -52,6 +52,23 @@ precompute capability answers or approve routine internal choices.
 
 ## Compose only useful stages
 
+For an authorized local checkout and test server, collect host evidence before
+Runner starts. Record the selected source path, HEAD and actual working-tree
+changes with content digests when dirty; HEAD alone does not identify that source.
+Keep the startup command, actual output and capture times. Record the process
+serving the target listener and its configured source root, including root overrides.
+Compare the selected source with existing served build metadata or an observed
+served module when available. A reachable URL or process working directory alone
+does not prove which source the server serves. Keep each gap explicit.
+
+Retain these host results for `loki_assessment_prepare`: put startup and source
+checks in `preflight` or attributed `receipts`, and the actual source/runtime
+comparison in `runtimeComparison`. These are caller assertions, not authenticated
+execution. Keep the original test prerequisites and expected behavior. Give
+browser Runner the relevant host findings as context for UI behavior; do not ask
+it to verify Git or filesystem facts. Repeat relevant host checks after a source
+or server change before a retest, and keep each Run's records separate.
+
 Inspect `loki_capabilities_list` for the responding runtime, scope and actual
 requirements. Choose only stages useful for the requested outcome:
 

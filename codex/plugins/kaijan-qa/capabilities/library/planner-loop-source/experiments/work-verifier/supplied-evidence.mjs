@@ -213,8 +213,10 @@ export const SUPPLIED_INSTRUCTIONS = [
   "Identify practical demonstrated support, partial support, contradictions, behavior not exercised, skipped/blocked/not-run work, unresolved artifacts, target/revision/environment/time mismatches and unresolved contracts. Keep a reported pass/fail label distinct from observations that actually exercise the expected behavior. Appropriate supplied observations can support a scoped behavior even if an optional proposal is absent. Do not require blanket all-green evidence or invent acceptance policy.",
   "Preserve each full original requirement and its conditions across sentences. Physical source lines are addresses, not semantic requirement partitions. A narrower observed fact does not satisfy an unexercised condition. Each not_exercised behavioral finding must identify the particular supplied requirement condition or exercise missing from the observations. Absence of an optional proposal, unknown provenance or target metadata, and broader scenarios not requested by the supplied requirement do not by themselves add behavioral obligations. Retain genuine provenance and authenticity limits as scope limitations while preserving support for the described instance. Missing evidence is a gap, not proof of a product defect. Caller-supplied execution evidence is not authenticated Loki-observed execution. Static tests and report labels alone are not observed behavior.",
   "Every finding must name the actual requirement IDs, applicable proposed/reported test and outcome IDs, and exact offered source-line citations supporting its reasoning. Cite the named requirement's requirements[].source_ids and each named outcome's returned_outcomes[].source_id, plus the actual observation or explicitly host-derived submission inventory for absence. A named test needs its proposal source or a matching returned-outcome source. Choose source_id/from_line/through_line only from source_views; the host renders original bytes. Do not invent quotes, IDs, tests, revisions, environments, timestamps or missing reference contents. Explain consequential gaps without requiring proof of an exact implementation bug.",
+  "Use the offered full_source_citation object unchanged when a source_view provides it. An empty source has no legal citation. For a narrower citation, use only line numbers listed in that view's lines array, with from_line <= through_line. Do not count displayed JSON lines, text characters or a trailing newline as extra source lines. Each test_outcome_binding offers a required_citation to the submission inventory. Include it in that test's result slot citations, even for an inconclusive verdict. A citation in a finding or observed step does not satisfy this per-test requirement. These citation choices establish addresses and record links only, not semantic support.",
   "Use only supplied provenance. Content-hash revisions and input-pointer paths in source bindings identify this submitted text, not a code commit, deployed build or authenticated execution. Evidence with only an unresolved reference has no imported contents. Opaque bytes remain uninterpreted; do not invent visual or binary observations. Target scope declared in a report can differ from requested target scope; retain that mismatch without declaring the requested behavior false.",
-  "Return test_results for each supplied proposed test, each outcome-only test ID, and each outcome with test_id null. Use exact test_id and all matching outcome_ids. The supplied test_outcome_bindings declare additional test/outcome/evidence links for shared runs. Use their exact IDs with direct test_id links. These declarations do not authenticate execution or create separate runs. A null outcome explicitly linked to a test needs no separate unlinked result. Cite the submission_inventory source for any declared link used. Judge each test separately as pass, fail or inconclusive against its full original proposed test text. A reported status is not a verdict. Use observed_evidence only for supplied evidence contents that exercise the expectation; outcome prose, repeated Runner summaries, metadata, unresolved references and opaque bytes alone cannot support pass or fail. Use reported_only or missing_evidence where appropriate. Without a proposed test, an expectation, a matching outcome, or relevant observed evidence, return inconclusive. A fail requires an observed contradiction, not an evidence gap. Cite the proposal, every matching outcome, and the linked evidence contents. Keep mixed attempts, skipped work and scope limits explicit; do not infer an overall pass from one attempt. Describe actual behavior without rewriting expected text. List observed_steps only for actions demonstrated by cited linked evidence contents; proposed steps and Runner claims alone are not performed steps. Each step needs its own source-line citations. Do not infer steps from a final state.",
+  "Evaluate concrete caller-supplied observations on their contents. A host record of a source inspection, listener/root check, served-module comparison or browser action can support a scoped finding when its supplied details establish the relevant condition. State who observed it and retain its scope and time limits. Distinguish a direct recorded check from a repeated Runner claim, an intended check, a bare hash or an unresolved path. The caller-assertion label means the record is not independently authenticated; it does not mean its contents have no evidential value. Do not require independent authentication or external attestation unless the original requirement asks for it. Never claim authenticated execution, infer missing checks, ignore a mismatch, or turn a caller's pass label into a verdict.",
+  "Return test_results as an object with every required slot listed in expected_test_results. Each slot represents one supplied proposed test, outcome-only test ID, or unlinked outcome with test_id null. Copy that slot's exact test_id and all outcome_ids. Do not omit a slot when evidence is missing; return an inconclusive assessment with the reason. The supplied test_outcome_bindings declare additional test/outcome/evidence links for shared runs. Use their exact IDs with direct test_id links. These declarations do not authenticate execution or create separate runs. A null outcome explicitly linked to a test needs no separate unlinked result. Cite the submission_inventory source for any declared link used. Judge each test separately as pass, fail or inconclusive against its full original proposed test text. A reported status is not a verdict. Use observed_evidence only for supplied evidence contents that exercise the expectation; outcome prose, repeated Runner summaries, metadata, unresolved references and opaque bytes alone cannot support pass or fail. Use reported_only or missing_evidence where appropriate. Without a proposed test, an expectation, a matching outcome, or relevant observed evidence, return inconclusive. A fail requires an observed contradiction, not an evidence gap. Cite the proposal, every matching outcome, and the linked evidence contents. Keep mixed attempts, skipped work and scope limits explicit; do not infer an overall pass from one attempt. Describe actual behavior without rewriting expected text. List observed_steps only for actions demonstrated by cited linked evidence contents; proposed steps and Runner claims alone are not performed steps. Each step needs its own source-line citations. Do not infer steps from a final state.",
   "Write actual behavior, reasons, findings and summaries in clear English for developers and manual QA testers who may not be native English speakers. Use short active sentences and familiar words. Name what was checked, what happened and the exact missing check. Preserve technical IDs, numbers, conditions and uncertainty. No observed problem is not proof that all behavior works. Missing evidence is neither a product defect nor a pass.",
   "Return distinct useful findings with actual remaining gaps; empty findings are allowed and leave coverage unassessed. Keep favorable observations when other evidence is partial or contradictory. The host derives only record membership/binding, never semantic completeness, whole-item acceptance or automatic delivery permission. Do not generate new test cases, execute steps or rewrite the submitted results.",
 ].join(" ");
@@ -229,6 +231,70 @@ const obj = (properties) => ({
 });
 const idsSchema = (ids) =>
   arr(ids.length ? { type: "string", enum: ids } : scalar, ids.length || 0);
+
+// Use the same membership rules for required response slots and projection.
+function testResultGroups(input) {
+  const groups = new Map();
+  const declaredBindings = input.provenance?.testOutcomeBindings ?? [];
+  const boundOutcomeIds = new Set(
+    declaredBindings.flatMap((binding) => binding.outcomeIds),
+  );
+  const groupFor = (key, testId) => {
+    if (!groups.has(key))
+      groups.set(key, {
+        test_id: testId,
+        test: null,
+        outcomes: [],
+        evidenceIds: new Set(),
+        declared: null,
+      });
+    return groups.get(key);
+  };
+  for (const test of input.proposed_tests ?? [])
+    groupFor(test.id, test.id).test = test;
+  for (const outcome of input.outcomes) {
+    // Explicit shared-run links replace the otherwise unlinked outcome row.
+    if (outcome.test_id === null && boundOutcomeIds.has(outcome.id)) continue;
+    const group = groupFor(outcome.test_id ?? outcome, outcome.test_id);
+    group.outcomes.push(outcome);
+    outcome.evidence_ids.forEach((id) => group.evidenceIds.add(id));
+  }
+  for (const binding of declaredBindings) {
+    const group = groupFor(binding.testId, binding.testId);
+    group.declared = binding;
+    for (const outcome of input.outcomes.filter((outcome) =>
+      binding.outcomeIds.includes(outcome.id),
+    ))
+      if (!group.outcomes.some((existing) => existing.id === outcome.id))
+        group.outcomes.push(outcome);
+    binding.evidenceIds.forEach((id) => group.evidenceIds.add(id));
+  }
+  return [...groups.values()];
+}
+
+function testResultSchema(citation, testIds, outcomeIds) {
+  return obj({
+    test_id: {
+      anyOf: [
+        { type: "null" },
+        ...(testIds.length ? [{ type: "string", enum: testIds }] : []),
+      ],
+    },
+    outcome_ids: idsSchema(outcomeIds),
+    verdict: { type: "string", enum: ["pass", "fail", "inconclusive"] },
+    basis: {
+      type: "string",
+      enum: ["observed_evidence", "reported_only", "missing_evidence"],
+    },
+    actual: scalar,
+    reason: scalar,
+    citations: arr(citation, LIMITS.citations),
+    observed_steps: arr(
+      obj({ description: scalar, citations: arr(citation, LIMITS.citations) }),
+      64,
+    ),
+  });
+}
 
 export function prepareSuppliedEvidence(input, options = {}) {
   const settings = modelSettings(options.modelSettings);
@@ -355,7 +421,10 @@ export function prepareSuppliedEvidence(input, options = {}) {
     if (record.bytes_base64 !== null) {
       bytes = Buffer.from(record.bytes_base64, "base64");
       if (record.media_type === "image/png") {
-        assert(images.length < 12, "At most 12 selected assessment images");
+        assert(
+          images.length < LIMITS.images,
+          `At most ${LIMITS.images} selected assessment images`,
+        );
         const descriptor = {
           evidence_id: record.id,
           media_type: "image/png",
@@ -488,6 +557,13 @@ export function prepareSuppliedEvidence(input, options = {}) {
     source_sha256: source.sha256,
     provenance: source.provenance,
     text: source.text,
+    full_source_citation: source.lines.length
+      ? {
+          source_id: source.id,
+          from_line: 1,
+          through_line: source.lines.length,
+        }
+      : null,
     lines: source.lines.map((line, i) => ({
       line: i + 1,
       start_utf16: line.startUtf16,
@@ -541,38 +617,25 @@ export function prepareSuppliedEvidence(input, options = {}) {
       })}`
     );
   };
-  const boundOutcomeIds = new Set(
-    declaredBindings.flatMap((binding) => binding.outcomeIds),
-  );
-  const testResult = obj({
-    test_id: {
-      anyOf: [
-        { type: "null" },
-        ...(testIds.length ? [{ type: "string", enum: testIds }] : []),
-      ],
-    },
-    outcome_ids: idsSchema(outcomes.map((record) => record.id)),
-    verdict: { type: "string", enum: ["pass", "fail", "inconclusive"] },
-    basis: {
-      type: "string",
-      enum: ["observed_evidence", "reported_only", "missing_evidence"],
-    },
-    actual: scalar,
-    reason: scalar,
-    citations: arr(citation, LIMITS.citations),
-    observed_steps: arr(
-      obj({ description: scalar, citations: arr(citation, LIMITS.citations) }),
-      64,
-    ),
-  });
+  const resultGroups = testResultGroups(original);
+  const expectedResults = resultGroups.map((group, index) => ({
+    key: `result_${index + 1}`,
+    test_id: group.test_id,
+    outcome_ids: group.outcomes.map((outcome) => outcome.id),
+  }));
   const schema = obj({
-    test_results: arr(
-      testResult,
-      testIds.length +
-        outcomes.filter(
-          (record) =>
-            record.test_id === null && !boundOutcomeIds.has(record.id),
-        ).length,
+    test_results: obj(
+      Object.fromEntries(
+        expectedResults.map((result) => {
+          const row = testResultSchema(citation, testIds, result.outcome_ids);
+          row.properties.test_id =
+            result.test_id === null
+              ? { type: "null" }
+              : { type: "string", enum: [result.test_id] };
+          row.properties.outcome_ids.minItems = result.outcome_ids.length;
+          return [result.key, row];
+        }),
+      ),
     ),
     findings: arr(
       obj({
@@ -617,7 +680,14 @@ export function prepareSuppliedEvidence(input, options = {}) {
       requirements,
       proposed_tests: original.proposed_tests === null ? null : tests,
       returned_outcomes: outcomes,
-      test_outcome_bindings: clone(declaredBindings),
+      expected_test_results: expectedResults,
+      test_outcome_bindings: declaredBindings.map((binding) => ({
+        ...clone(binding),
+        required_citation: clone(
+          views.find((view) => view.provenance.role === "submission_inventory")
+            .full_source_citation,
+        ),
+      })),
       evidence_status: evidenceStatus,
       source_views: views,
     }),
@@ -702,42 +772,7 @@ const validBindings = (bindings) =>
   bindings.every((binding) => binding.status === "bound");
 
 function projectTestResults(verified, candidate, sourceById) {
-  const groups = new Map();
-  const declaredBindings = verified.test_outcome_bindings;
-  const boundOutcomeIds = new Set(
-    declaredBindings.flatMap((binding) => binding.outcomeIds),
-  );
-  const groupFor = (key, testId) => {
-    if (!groups.has(key))
-      groups.set(key, {
-        test_id: testId,
-        test: null,
-        outcomes: [],
-        evidenceIds: new Set(),
-        declared: null,
-      });
-    return groups.get(key);
-  };
-  for (const test of verified.input.proposed_tests ?? [])
-    groupFor(test.id, test.id).test = test;
-  for (const outcome of verified.input.outcomes) {
-    // Explicit shared-run links replace the otherwise unlinked outcome row.
-    if (outcome.test_id === null && boundOutcomeIds.has(outcome.id)) continue;
-    const group = groupFor(outcome.test_id ?? outcome, outcome.test_id);
-    group.outcomes.push(outcome);
-    outcome.evidence_ids.forEach((id) => group.evidenceIds.add(id));
-  }
-  for (const binding of declaredBindings) {
-    const group = groupFor(binding.testId, binding.testId);
-    group.declared = binding;
-    for (const outcome of verified.input.outcomes.filter((outcome) =>
-      binding.outcomeIds.includes(outcome.id),
-    ))
-      if (!group.outcomes.some((existing) => existing.id === outcome.id))
-        group.outcomes.push(outcome);
-    binding.evidenceIds.forEach((id) => group.evidenceIds.add(id));
-  }
-  return [...groups.values()].map((group) => {
+  return testResultGroups(verified.input).map((group) => {
     const matches = candidate.test_results.filter((result) =>
       group.test_id === null
         ? result.test_id === null &&
@@ -888,6 +923,22 @@ export function projectSuppliedAssessment(prepared, candidate) {
   );
   // Old saved candidates have no test_results. Do not invent verdicts for them.
   const schema = clone(verified.request.text.format.schema);
+  if (Array.isArray(candidate?.test_results)) {
+    const testIds = [
+      ...new Set([
+        ...verified.tests.map((test) => test.id),
+        ...verified.outcomes.map((outcome) => outcome.test_id).filter(nonempty),
+      ]),
+    ];
+    schema.properties.test_results = arr(
+      testResultSchema(
+        schema.properties.findings.items.properties.citations.items,
+        testIds,
+        verified.outcomes.map((outcome) => outcome.id),
+      ),
+      testResultGroups(verified.input).length,
+    );
+  }
   if (object(candidate) && !Object.hasOwn(candidate, "test_results")) {
     delete schema.properties.test_results;
     schema.required = schema.required.filter((key) => key !== "test_results");
@@ -968,7 +1019,16 @@ export function projectSuppliedAssessment(prepared, candidate) {
     )
     .map((record) => record.id);
   const testResults = Object.hasOwn(candidate, "test_results")
-    ? projectTestResults(verified, candidate, sourceById)
+    ? projectTestResults(
+        verified,
+        {
+          ...candidate,
+          test_results: Array.isArray(candidate.test_results)
+            ? candidate.test_results
+            : Object.values(candidate.test_results),
+        },
+        sourceById,
+      )
     : null;
   const status =
     rows.some((row) => row.validation_errors.length) ||

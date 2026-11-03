@@ -436,7 +436,7 @@
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
         "experiments/context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
-        "experiments/work-verifier/supplied-evidence.mjs": "73abe3c90636bc43549214fd416b8f139b39c9bd0e5dd965d3fd182a898e6c56",
+        "experiments/work-verifier/supplied-evidence.mjs": "6840d5e02aa68c0b010119bd6d18064ea39b38b505cb62aba29fd1846bf36e20",
         "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
         "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -1733,7 +1733,7 @@
     },
     "planner-loop-source/experiments/work-verifier/supplied-evidence.mjs": {
       "source": "packages/work-verifier/supplied-evidence.mjs",
-      "sha256": "73abe3c90636bc43549214fd416b8f139b39c9bd0e5dd965d3fd182a898e6c56",
+      "sha256": "f0099feff8488123ccd11c539218c2b700c6720bdee3064e0814bec3138b8a93",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf"
     },
     "planner-loop-source/experiments/provider-transport/index.mjs": {
@@ -1807,7 +1807,7 @@
     },
     "planner-loop-source/experiments/work-verifier/assessment-contract.mjs": {
       "source": "packages/work-verifier/assessment-contract.mjs",
-      "sha256": "1600bb68e5cb18877b6badda7bb06c92bb86186a8eaa43643e22cfea9040ec11",
+      "sha256": "63e38da70781994b8ed73eab486fc14089cbeb98bc81e21609e217f3b0638716",
       "originalSha256": null,
       "derivation": "Neutral shared Product helper after source extraction #2173."
     },
@@ -1880,7 +1880,7 @@
       "originalPath": "experiments/context-finder/planning/prompts.mjs"
     },
     "packages/work-verifier/supplied-evidence.mjs": {
-      "sha256": "73abe3c90636bc43549214fd416b8f139b39c9bd0e5dd965d3fd182a898e6c56",
+      "sha256": "f0099feff8488123ccd11c539218c2b700c6720bdee3064e0814bec3138b8a93",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf",
       "originalPath": "experiments/work-verifier/supplied-evidence.mjs"
     },
@@ -2209,7 +2209,7 @@
       "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
     },
     "packages/work-verifier/assessment-contract.mjs": {
-      "sha256": "1600bb68e5cb18877b6badda7bb06c92bb86186a8eaa43643e22cfea9040ec11",
+      "sha256": "63e38da70781994b8ed73eab486fc14089cbeb98bc81e21609e217f3b0638716",
       "originalSha256": null,
       "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
     },

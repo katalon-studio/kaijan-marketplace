@@ -43826,7 +43826,15 @@ var workItemReadinessScopeSchema = external_exports.strictObject({
   workItem: external_exports.string().min(1).max(1e5),
   applicationCoverage: external_exports.literal("incomplete"),
   evidence: external_exports.literal("source-inferred"),
-  browserObserved: external_exports.literal(false)
+  browserObserved: external_exports.literal(false),
+  selectedPageIds: external_exports.array(label2).optional(),
+  sourceLimitations: external_exports.array(
+    external_exports.strictObject({
+      stage: external_exports.literal("global/definitions"),
+      reason: external_exports.string().min(1),
+      relevance: external_exports.literal("unknown")
+    })
+  ).optional()
 });
 var mappingSchema = external_exports.strictObject({
   mapId: identity2,
@@ -43834,6 +43842,12 @@ var mappingSchema = external_exports.strictObject({
   pagePreviewLimit: external_exports.literal(40).optional(),
   coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
   readinessScope: workItemReadinessScopeSchema.optional(),
+  readinessIssues: external_exports.array(
+    external_exports.strictObject({
+      code: label2,
+      recovery: label2
+    })
+  ).optional(),
   answerId: identity2.optional(),
   resultSha256: identity2.optional(),
   snapshotTree: revision.optional()
@@ -44391,10 +44405,12 @@ async function createSetup({
         nextAction = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
         break;
       case "incomplete":
-        nextAction = "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
+        nextAction = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
         break;
       case "ready":
         nextAction = value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
+        if (value.map.data?.readinessScope?.sourceLimitations?.length)
+          nextAction += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
         break;
       default:
         nextAction = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
@@ -45133,6 +45149,71 @@ async function snapshotSource(source, destination, signal) {
   return { directory: destination, tree, revision: source.revision };
 }
 
+// apps/codex-plugin/src/setup/map-readiness.mjs
+function classifyMapReadiness(coverage2, pages) {
+  const issues = [], sourceLimitations = [];
+  const block = (code, recovery) => issues.push({ code, recovery });
+  for (const key of [
+    "failed_local_stages",
+    "discovery_failures",
+    "unavailable_local_batches"
+  ]) {
+    if (!Array.isArray(coverage2?.[key]))
+      block(
+        `unknown_${key}`,
+        "Read the original native coverage; this stage has no complete receipt."
+      );
+    else if (coverage2[key].length)
+      block(
+        key,
+        "Read the original native stage records and supply the missing source or fix the recorded failure before an authorized retry."
+      );
+  }
+  if (!Array.isArray(coverage2?.unresolved))
+    block(
+      "unknown_native_coverage",
+      "Read the original native coverage before using this map."
+    );
+  else
+    for (const entry of coverage2.unresolved) {
+      if (entry?.stage === "global/definitions" && typeof entry.reason === "string" && entry.reason.trim() && Object.keys(entry).every((key) => ["stage", "reason"].includes(key)))
+        sourceLimitations.push({ ...entry, relevance: "unknown" });
+      else
+        block(
+          "unresolved_native_stage",
+          "Read coverage.unresolved in the original answer; resolve its pending source, identity or page processing before an authorized retry."
+        );
+    }
+  const selection = coverage2?.focused_page_selection;
+  const selectedPageIds = selection?.selected_page_ids;
+  const available = selection?.available_pages;
+  if (selection?.policy !== "work-item-page-selection-before-extraction/1" || !Array.isArray(selectedPageIds) || !selectedPageIds.length || selectedPageIds.some((id3) => typeof id3 !== "string" || !id3.length) || new Set(selectedPageIds).size !== selectedPageIds.length || !Array.isArray(available) || selectedPageIds.some((id3) => !available.some((p) => p?.id === id3)) || !Array.isArray(selection?.unresolved)) {
+    block(
+      "unknown_page_selection",
+      "Read the recorded native page selection; a processed page alone does not establish the work-item scope."
+    );
+  } else {
+    if (selection.unresolved.length)
+      block(
+        "unresolved_page_selection",
+        "Resolve the recorded page-selection uncertainty before an authorized retry."
+      );
+    if (selectedPageIds.some(
+      (id3) => pages.filter((p) => p.id === id3).length !== 1 || pages.find((p) => p.id === id3)?.status !== "processed"
+    ))
+      block(
+        "selected_pages_not_processed",
+        "Read each selected page's original result; supply missing source or fix its recorded failure before an authorized retry."
+      );
+  }
+  return {
+    usable: issues.length === 0,
+    selectedPageIds: Array.isArray(selectedPageIds) ? selectedPageIds : [],
+    sourceLimitations,
+    issues
+  };
+}
+
 // apps/codex-plugin/src/setup/real-ports.mjs
 async function realSetupPorts({
   directory,
@@ -45230,31 +45311,42 @@ async function realSetupPorts({
         if (map2.mapId !== mapId || map2.repository !== source.directory)
           throw new SetupFailure("map_scope_mismatch");
         const coverage2 = answer.result.native?.native?.coverage;
-        const stagesComplete = [
-          "unresolved",
-          "failed_local_stages",
-          "discovery_failures",
-          "unavailable_local_batches"
-        ].every(
-          (key) => Array.isArray(coverage2?.[key]) && coverage2[key].length === 0
-        );
-        const usable = stagesComplete && map2.items.some(({ status: status2 }) => status2 === "processed");
+        const pages = [...map2.items];
+        const selected = coverage2?.focused_page_selection?.selected_page_ids;
+        if (map2.nextCursor && Array.isArray(selected))
+          for (const pageId of new Set(selected)) {
+            if (typeof pageId !== "string" || !pageId || pages.some((p) => p.id === pageId))
+              continue;
+            const detail = await catalog.invoke("loki_ui_modeler_get_map", {
+              mapId,
+              pageId,
+              limit: 1
+            });
+            if (detail.mapId !== mapId || detail.repository !== source.directory || detail.page?.id !== pageId)
+              throw new SetupFailure("map_scope_mismatch");
+            pages.push(detail.page);
+          }
+        const readiness = classifyMapReadiness(coverage2, pages);
+        const usable = readiness.usable;
         const cost = answer.result.native?.cost;
         value.executionSettled = cost?.pending_requests === 0 && cost?.unresolved_requests === 0;
         value.state = value.executionSettled ? usable ? "ready" : "incomplete" : "uncertain";
-        value.progress = value.executionSettled ? usable ? "Source-inferred map ready for the selected work item; application coverage is incomplete. Browser behavior and consumer acceptance are not established." : "Source-inferred map retained; page processing or native stage coverage is incomplete. Scoped readiness is not established." : "Original map retained; provider accounting remains unresolved. Do not replay.";
+        value.progress = value.executionSettled ? usable ? `Source-inferred map ready for the recorded selected pages; application coverage is incomplete.${readiness.sourceLimitations.length ? " Source/identity limitations remain; their work-item relevance is unknown. Read readinessScope.sourceLimitations." : ""} Browser behavior and consumer acceptance are not established.` : `Source-inferred map retained; ${readiness.issues[0].code}. ${readiness.issues[0].recovery}` : "Original map retained; provider accounting remains unresolved. Do not replay.";
         value.resultId = identity2.parse(answer.answerId);
         value.data = {
           mapId,
           pages: map2.items.map(({ id: id3, label: label3 }) => ({ id: id3, title: label3 })),
           pagePreviewLimit: 40,
           coverage: "source-inferred-work-item-fragment",
+          readinessIssues: readiness.issues,
           readinessScope: {
             kind: "work-item",
             workItem: input3.workItem,
             applicationCoverage: "incomplete",
             evidence: "source-inferred",
-            browserObserved: false
+            browserObserved: false,
+            selectedPageIds: readiness.selectedPageIds,
+            sourceLimitations: readiness.sourceLimitations
           },
           answerId: answer.answerId,
           resultSha256: identity2.parse(answer.resultSha256),
@@ -46589,7 +46681,9 @@ var locator = external_exports.strictObject({
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
   location: external_exports.string(),
-  detail: external_exports.string()
+  detail: external_exports.string(),
+  actualCount: external_exports.number().int().nonnegative().optional(),
+  maximumCount: external_exports.number().int().positive().optional()
 });
 var indexEntry = external_exports.looseObject({
   id: external_exports.string(),
@@ -47015,12 +47109,27 @@ var screenshot = external_exports.object({
   sha256: digest12,
   capturedAt: external_exports.string()
 });
+var browserRefresh = external_exports.object({
+  kind: external_exports.literal("browser-refresh"),
+  method: external_exports.literal("page.reload"),
+  pageId: external_exports.string().optional(),
+  urlBefore: external_exports.string(),
+  waitUntil: external_exports.literal("domcontentloaded"),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  dispatchedAt: external_exports.string().optional(),
+  urlAfter: external_exports.string().optional(),
+  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
+  completedAt: external_exports.string().optional(),
+  error: external_exports.string().optional(),
+  completion: external_exports.literal("unverified").optional()
+});
 var action = external_exports.object({
   index: external_exports.number().int().positive(),
   type: external_exports.string(),
   status: external_exports.enum(["invoked", "returned", "error"]),
   startedAt: external_exports.string(),
-  endedAt: external_exports.string()
+  endedAt: external_exports.string(),
+  operation: browserRefresh.optional()
 });
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),

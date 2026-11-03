@@ -75,7 +75,7 @@ var init_define_LOKI_CHANGE_RISK_PINS = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "e78b378bf9ac81222d0e3617b7bff1aeee1c4b22", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "7ab56dc432945035f4180a7d076670a7baede3c13607e152435ac6ed17797f57", "packages/computer-runner/src/runner.mjs": "edf4b40fc828899442fde1e0475a8cc9364c461198271b42c5d4044a782e2cea", "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73", "packages/computer-runner/README.md": "74ea352e13e47d4a17e6ce23f4a31ba5d4e8c50699c70af16488186feb66d6c0", "packages/computer-runner/flow.md": "fef7bb39f6be368cf4fe7f655b4cdac6cab0dbdff968b3828d183f6ee28c39a5", "packages/computer-runner/src/runner.d.mts": "cd7d49a3eb08638380da524735980c2f6715655a95f050484c89268011fcb4ca", "packages/computer-runner/src/browser.mjs": "e9346079b47a572f6409129d7833a003510f352aa0d5e3cebe75a2163727debf", "packages/computer-runner/src/browser.d.mts": "3f938be898865ae431e164028c41e1c9d46feb7794a18a41836a954563f27495", "packages/computer-runner/src/provider.mjs": "3ffc922ada138cf9b9ca4758e477e573d5dbd1b78fd225a0dd4edf89e64600e3", "packages/computer-runner/src/application-context.mjs": "5e4d8a71ca6d797dc8045cdbc1e7c7d827a2f0da43f8150b3479399d758e3d0a", "packages/computer-runner/src/execution-status.mjs": "0f63b340920465daaf6d67e698e20cfc46c5d504960d9d6f609a77b76f6ced7f", "packages/computer-runner/src/redaction.mjs": "8d3f621ec09dda315dbee3331dad95f0e7d376e87537e35cef3f162c8f3bdcb8", "packages/computer-runner/src/redaction.d.mts": "59e873f9637ad013884ce724d0e02b99081e19beae6b7fc52abae2e947a7f9f8", "packages/computer-runner/src/navigation-policy.mjs": "3fdc0e435a79fd62aff9030677a0b42bdce16694541552cf5cb18867169b2d6f", "packages/computer-runner/src/case-evidence.mjs": "a7c4d2673b898d5a827da2e919429ac0b1136fdd1510ed9ed50b91e9d5de5808", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "e78b378bf9ac81222d0e3617b7bff1aeee1c4b22", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "7ab56dc432945035f4180a7d076670a7baede3c13607e152435ac6ed17797f57", "packages/computer-runner/src/runner.mjs": "edf4b40fc828899442fde1e0475a8cc9364c461198271b42c5d4044a782e2cea", "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73", "packages/computer-runner/README.md": "74ea352e13e47d4a17e6ce23f4a31ba5d4e8c50699c70af16488186feb66d6c0", "packages/computer-runner/flow.md": "fef7bb39f6be368cf4fe7f655b4cdac6cab0dbdff968b3828d183f6ee28c39a5", "packages/computer-runner/src/runner.d.mts": "cd7d49a3eb08638380da524735980c2f6715655a95f050484c89268011fcb4ca", "packages/computer-runner/src/browser.mjs": "e9346079b47a572f6409129d7833a003510f352aa0d5e3cebe75a2163727debf", "packages/computer-runner/src/browser.d.mts": "3f938be898865ae431e164028c41e1c9d46feb7794a18a41836a954563f27495", "packages/computer-runner/src/provider.mjs": "3ffc922ada138cf9b9ca4758e477e573d5dbd1b78fd225a0dd4edf89e64600e3", "packages/computer-runner/src/application-context.mjs": "5e4d8a71ca6d797dc8045cdbc1e7c7d827a2f0da43f8150b3479399d758e3d0a", "packages/computer-runner/src/execution-status.mjs": "0f63b340920465daaf6d67e698e20cfc46c5d504960d9d6f609a77b76f6ced7f", "packages/computer-runner/src/redaction.mjs": "8d3f621ec09dda315dbee3331dad95f0e7d376e87537e35cef3f162c8f3bdcb8", "packages/computer-runner/src/redaction.d.mts": "59e873f9637ad013884ce724d0e02b99081e19beae6b7fc52abae2e947a7f9f8", "packages/computer-runner/src/navigation-policy.mjs": "3fdc0e435a79fd62aff9030677a0b42bdce16694541552cf5cb18867169b2d6f", "packages/computer-runner/src/case-evidence.mjs": "7095e1f0e1292bca01f0a892aabdd611b7db8b3966dc5ceda1c8483ef3320df0", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -91,7 +91,7 @@ var init_define_LOKI_MAC_RUNNER_PINS = __esm({
 var define_LOKI_PLANNER_LOOP_PINS_default;
 var init_define_LOKI_PLANNER_LOOP_PINS = __esm({
   "<define:LOKI_PLANNER_LOOP_PINS>"() {
-    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "7081c9a8e2f4f7dd845141aa275cf24e20b9a6d754c584fa0deaccc994527a71", "experiments/context-finder/planning/pcf_plan.mjs": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "5048227135ec06ce1d4b1a4c18bcd05ad6dc028aa9ae79d3707022431e152d02", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704", "experiments/work-verifier/supplied-evidence.mjs": "73abe3c90636bc43549214fd416b8f139b39c9bd0e5dd965d3fd182a898e6c56", "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "716025e562d4d79883a0bea6b12e8d37000956b0aebad07a0451ba1174ed7adb", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "1600bb68e5cb18877b6badda7bb06c92bb86186a8eaa43643e22cfea9040ec11", "experiments/work-verifier/assessment-runtime.mjs": "5164160da50ac1f24c9b8e66af29e82c5c2a9dca9c47eeb67f7c93652e902cfb", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7" };
+    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "7081c9a8e2f4f7dd845141aa275cf24e20b9a6d754c584fa0deaccc994527a71", "experiments/context-finder/planning/pcf_plan.mjs": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "5048227135ec06ce1d4b1a4c18bcd05ad6dc028aa9ae79d3707022431e152d02", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704", "experiments/work-verifier/supplied-evidence.mjs": "6840d5e02aa68c0b010119bd6d18064ea39b38b505cb62aba29fd1846bf36e20", "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "716025e562d4d79883a0bea6b12e8d37000956b0aebad07a0451ba1174ed7adb", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "1600bb68e5cb18877b6badda7bb06c92bb86186a8eaa43643e22cfea9040ec11", "experiments/work-verifier/assessment-runtime.mjs": "5164160da50ac1f24c9b8e66af29e82c5c2a9dca9c47eeb67f7c93652e902cfb", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7" };
   }
 });
 
@@ -87232,7 +87232,9 @@ var locator = external_exports.strictObject({
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
   location: external_exports.string(),
-  detail: external_exports.string()
+  detail: external_exports.string(),
+  actualCount: external_exports.number().int().nonnegative().optional(),
+  maximumCount: external_exports.number().int().positive().optional()
 });
 var indexEntry = external_exports.looseObject({
   id: external_exports.string(),
@@ -87762,12 +87764,27 @@ var screenshot = external_exports.object({
   sha256: digest10,
   capturedAt: external_exports.string()
 });
+var browserRefresh = external_exports.object({
+  kind: external_exports.literal("browser-refresh"),
+  method: external_exports.literal("page.reload"),
+  pageId: external_exports.string().optional(),
+  urlBefore: external_exports.string(),
+  waitUntil: external_exports.literal("domcontentloaded"),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  dispatchedAt: external_exports.string().optional(),
+  urlAfter: external_exports.string().optional(),
+  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
+  completedAt: external_exports.string().optional(),
+  error: external_exports.string().optional(),
+  completion: external_exports.literal("unverified").optional()
+});
 var action = external_exports.object({
   index: external_exports.number().int().positive(),
   type: external_exports.string(),
   status: external_exports.enum(["invoked", "returned", "error"]),
   startedAt: external_exports.string(),
-  endedAt: external_exports.string()
+  endedAt: external_exports.string(),
+  operation: browserRefresh.optional()
 });
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
@@ -95956,6 +95973,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var SUPPLIED_TEST_EVIDENCE = "work-verifier/supplied-test-evidence/1";
 var SUPPLIED_ASSESSMENT = "work-verifier/supplied-test-assessment/1";
 var LIMITS = Object.freeze({
+  images: 12,
   outputTokens: 12e3,
   findings: 48,
   citations: 16,
@@ -96993,8 +97011,10 @@ var SUPPLIED_INSTRUCTIONS = [
   "Identify practical demonstrated support, partial support, contradictions, behavior not exercised, skipped/blocked/not-run work, unresolved artifacts, target/revision/environment/time mismatches and unresolved contracts. Keep a reported pass/fail label distinct from observations that actually exercise the expected behavior. Appropriate supplied observations can support a scoped behavior even if an optional proposal is absent. Do not require blanket all-green evidence or invent acceptance policy.",
   "Preserve each full original requirement and its conditions across sentences. Physical source lines are addresses, not semantic requirement partitions. A narrower observed fact does not satisfy an unexercised condition. Each not_exercised behavioral finding must identify the particular supplied requirement condition or exercise missing from the observations. Absence of an optional proposal, unknown provenance or target metadata, and broader scenarios not requested by the supplied requirement do not by themselves add behavioral obligations. Retain genuine provenance and authenticity limits as scope limitations while preserving support for the described instance. Missing evidence is a gap, not proof of a product defect. Caller-supplied execution evidence is not authenticated Loki-observed execution. Static tests and report labels alone are not observed behavior.",
   "Every finding must name the actual requirement IDs, applicable proposed/reported test and outcome IDs, and exact offered source-line citations supporting its reasoning. Cite the named requirement's requirements[].source_ids and each named outcome's returned_outcomes[].source_id, plus the actual observation or explicitly host-derived submission inventory for absence. A named test needs its proposal source or a matching returned-outcome source. Choose source_id/from_line/through_line only from source_views; the host renders original bytes. Do not invent quotes, IDs, tests, revisions, environments, timestamps or missing reference contents. Explain consequential gaps without requiring proof of an exact implementation bug.",
+  "Use the offered full_source_citation object unchanged when a source_view provides it. An empty source has no legal citation. For a narrower citation, use only line numbers listed in that view's lines array, with from_line <= through_line. Do not count displayed JSON lines, text characters or a trailing newline as extra source lines. Each test_outcome_binding offers a required_citation to the submission inventory. Include it in that test's result slot citations, even for an inconclusive verdict. A citation in a finding or observed step does not satisfy this per-test requirement. These citation choices establish addresses and record links only, not semantic support.",
   "Use only supplied provenance. Content-hash revisions and input-pointer paths in source bindings identify this submitted text, not a code commit, deployed build or authenticated execution. Evidence with only an unresolved reference has no imported contents. Opaque bytes remain uninterpreted; do not invent visual or binary observations. Target scope declared in a report can differ from requested target scope; retain that mismatch without declaring the requested behavior false.",
-  "Return test_results for each supplied proposed test, each outcome-only test ID, and each outcome with test_id null. Use exact test_id and all matching outcome_ids. The supplied test_outcome_bindings declare additional test/outcome/evidence links for shared runs. Use their exact IDs with direct test_id links. These declarations do not authenticate execution or create separate runs. A null outcome explicitly linked to a test needs no separate unlinked result. Cite the submission_inventory source for any declared link used. Judge each test separately as pass, fail or inconclusive against its full original proposed test text. A reported status is not a verdict. Use observed_evidence only for supplied evidence contents that exercise the expectation; outcome prose, repeated Runner summaries, metadata, unresolved references and opaque bytes alone cannot support pass or fail. Use reported_only or missing_evidence where appropriate. Without a proposed test, an expectation, a matching outcome, or relevant observed evidence, return inconclusive. A fail requires an observed contradiction, not an evidence gap. Cite the proposal, every matching outcome, and the linked evidence contents. Keep mixed attempts, skipped work and scope limits explicit; do not infer an overall pass from one attempt. Describe actual behavior without rewriting expected text. List observed_steps only for actions demonstrated by cited linked evidence contents; proposed steps and Runner claims alone are not performed steps. Each step needs its own source-line citations. Do not infer steps from a final state.",
+  "Evaluate concrete caller-supplied observations on their contents. A host record of a source inspection, listener/root check, served-module comparison or browser action can support a scoped finding when its supplied details establish the relevant condition. State who observed it and retain its scope and time limits. Distinguish a direct recorded check from a repeated Runner claim, an intended check, a bare hash or an unresolved path. The caller-assertion label means the record is not independently authenticated; it does not mean its contents have no evidential value. Do not require independent authentication or external attestation unless the original requirement asks for it. Never claim authenticated execution, infer missing checks, ignore a mismatch, or turn a caller's pass label into a verdict.",
+  "Return test_results as an object with every required slot listed in expected_test_results. Each slot represents one supplied proposed test, outcome-only test ID, or unlinked outcome with test_id null. Copy that slot's exact test_id and all outcome_ids. Do not omit a slot when evidence is missing; return an inconclusive assessment with the reason. The supplied test_outcome_bindings declare additional test/outcome/evidence links for shared runs. Use their exact IDs with direct test_id links. These declarations do not authenticate execution or create separate runs. A null outcome explicitly linked to a test needs no separate unlinked result. Cite the submission_inventory source for any declared link used. Judge each test separately as pass, fail or inconclusive against its full original proposed test text. A reported status is not a verdict. Use observed_evidence only for supplied evidence contents that exercise the expectation; outcome prose, repeated Runner summaries, metadata, unresolved references and opaque bytes alone cannot support pass or fail. Use reported_only or missing_evidence where appropriate. Without a proposed test, an expectation, a matching outcome, or relevant observed evidence, return inconclusive. A fail requires an observed contradiction, not an evidence gap. Cite the proposal, every matching outcome, and the linked evidence contents. Keep mixed attempts, skipped work and scope limits explicit; do not infer an overall pass from one attempt. Describe actual behavior without rewriting expected text. List observed_steps only for actions demonstrated by cited linked evidence contents; proposed steps and Runner claims alone are not performed steps. Each step needs its own source-line citations. Do not infer steps from a final state.",
   "Write actual behavior, reasons, findings and summaries in clear English for developers and manual QA testers who may not be native English speakers. Use short active sentences and familiar words. Name what was checked, what happened and the exact missing check. Preserve technical IDs, numbers, conditions and uncertainty. No observed problem is not proof that all behavior works. Missing evidence is neither a product defect nor a pass.",
   "Return distinct useful findings with actual remaining gaps; empty findings are allowed and leave coverage unassessed. Keep favorable observations when other evidence is partial or contradictory. The host derives only record membership/binding, never semantic completeness, whole-item acceptance or automatic delivery permission. Do not generate new test cases, execute steps or rewrite the submitted results."
 ].join(" ");
@@ -97007,6 +97027,66 @@ var obj3 = (properties) => ({
   properties
 });
 var idsSchema = (ids2) => arr2(ids2.length ? { type: "string", enum: ids2 } : scalar, ids2.length || 0);
+function testResultGroups(input3) {
+  const groups = /* @__PURE__ */ new Map();
+  const declaredBindings = input3.provenance?.testOutcomeBindings ?? [];
+  const boundOutcomeIds = new Set(
+    declaredBindings.flatMap((binding) => binding.outcomeIds)
+  );
+  const groupFor = (key5, testId) => {
+    if (!groups.has(key5))
+      groups.set(key5, {
+        test_id: testId,
+        test: null,
+        outcomes: [],
+        evidenceIds: /* @__PURE__ */ new Set(),
+        declared: null
+      });
+    return groups.get(key5);
+  };
+  for (const test of input3.proposed_tests ?? [])
+    groupFor(test.id, test.id).test = test;
+  for (const outcome of input3.outcomes) {
+    if (outcome.test_id === null && boundOutcomeIds.has(outcome.id)) continue;
+    const group = groupFor(outcome.test_id ?? outcome, outcome.test_id);
+    group.outcomes.push(outcome);
+    outcome.evidence_ids.forEach((id7) => group.evidenceIds.add(id7));
+  }
+  for (const binding of declaredBindings) {
+    const group = groupFor(binding.testId, binding.testId);
+    group.declared = binding;
+    for (const outcome of input3.outcomes.filter(
+      (outcome2) => binding.outcomeIds.includes(outcome2.id)
+    ))
+      if (!group.outcomes.some((existing) => existing.id === outcome.id))
+        group.outcomes.push(outcome);
+    binding.evidenceIds.forEach((id7) => group.evidenceIds.add(id7));
+  }
+  return [...groups.values()];
+}
+function testResultSchema(citation, testIds, outcomeIds) {
+  return obj3({
+    test_id: {
+      anyOf: [
+        { type: "null" },
+        ...testIds.length ? [{ type: "string", enum: testIds }] : []
+      ]
+    },
+    outcome_ids: idsSchema(outcomeIds),
+    verdict: { type: "string", enum: ["pass", "fail", "inconclusive"] },
+    basis: {
+      type: "string",
+      enum: ["observed_evidence", "reported_only", "missing_evidence"]
+    },
+    actual: scalar,
+    reason: scalar,
+    citations: arr2(citation, LIMITS.citations),
+    observed_steps: arr2(
+      obj3({ description: scalar, citations: arr2(citation, LIMITS.citations) }),
+      64
+    )
+  });
+}
 function prepareSuppliedEvidence(input3, options2 = {}) {
   const settings = modelSettings(options2.modelSettings);
   assert4(
@@ -97121,7 +97201,10 @@ function prepareSuppliedEvidence(input3, options2 = {}) {
     if (record12.bytes_base64 !== null) {
       bytes2 = Buffer.from(record12.bytes_base64, "base64");
       if (record12.media_type === "image/png") {
-        assert4(images.length < 12, "At most 12 selected assessment images");
+        assert4(
+          images.length < LIMITS.images,
+          `At most ${LIMITS.images} selected assessment images`
+        );
         const descriptor = {
           evidence_id: record12.id,
           media_type: "image/png",
@@ -97243,6 +97326,11 @@ function prepareSuppliedEvidence(input3, options2 = {}) {
     source_sha256: source2.sha256,
     provenance: source2.provenance,
     text: source2.text,
+    full_source_citation: source2.lines.length ? {
+      source_id: source2.id,
+      from_line: 1,
+      through_line: source2.lines.length
+    } : null,
     lines: source2.lines.map((line, i2) => ({
       line: i2 + 1,
       start_utf16: line.startUtf16,
@@ -97286,36 +97374,22 @@ function prepareSuppliedEvidence(input3, options2 = {}) {
       }))
     })}`;
   };
-  const boundOutcomeIds = new Set(
-    declaredBindings.flatMap((binding) => binding.outcomeIds)
-  );
-  const testResult = obj3({
-    test_id: {
-      anyOf: [
-        { type: "null" },
-        ...testIds.length ? [{ type: "string", enum: testIds }] : []
-      ]
-    },
-    outcome_ids: idsSchema(outcomes.map((record12) => record12.id)),
-    verdict: { type: "string", enum: ["pass", "fail", "inconclusive"] },
-    basis: {
-      type: "string",
-      enum: ["observed_evidence", "reported_only", "missing_evidence"]
-    },
-    actual: scalar,
-    reason: scalar,
-    citations: arr2(citation, LIMITS.citations),
-    observed_steps: arr2(
-      obj3({ description: scalar, citations: arr2(citation, LIMITS.citations) }),
-      64
-    )
-  });
+  const resultGroups = testResultGroups(original);
+  const expectedResults = resultGroups.map((group, index) => ({
+    key: `result_${index + 1}`,
+    test_id: group.test_id,
+    outcome_ids: group.outcomes.map((outcome) => outcome.id)
+  }));
   const schema = obj3({
-    test_results: arr2(
-      testResult,
-      testIds.length + outcomes.filter(
-        (record12) => record12.test_id === null && !boundOutcomeIds.has(record12.id)
-      ).length
+    test_results: obj3(
+      Object.fromEntries(
+        expectedResults.map((result) => {
+          const row = testResultSchema(citation, testIds, result.outcome_ids);
+          row.properties.test_id = result.test_id === null ? { type: "null" } : { type: "string", enum: [result.test_id] };
+          row.properties.outcome_ids.minItems = result.outcome_ids.length;
+          return [result.key, row];
+        })
+      )
     ),
     findings: arr2(
       obj3({
@@ -97356,7 +97430,13 @@ function prepareSuppliedEvidence(input3, options2 = {}) {
       requirements,
       proposed_tests: original.proposed_tests === null ? null : tests,
       returned_outcomes: outcomes,
-      test_outcome_bindings: clone3(declaredBindings),
+      expected_test_results: expectedResults,
+      test_outcome_bindings: declaredBindings.map((binding) => ({
+        ...clone3(binding),
+        required_citation: clone3(
+          views2.find((view) => view.provenance.role === "submission_inventory").full_source_citation
+        )
+      })),
       evidence_status: evidenceStatus,
       source_views: views2
     }),
@@ -97430,41 +97510,7 @@ var citedSources = (bindings) => new Set(
 );
 var validBindings = (bindings) => bindings.length > 0 && bindings.every((binding) => binding.status === "bound");
 function projectTestResults(verified, candidate, sourceById) {
-  const groups = /* @__PURE__ */ new Map();
-  const declaredBindings = verified.test_outcome_bindings;
-  const boundOutcomeIds = new Set(
-    declaredBindings.flatMap((binding) => binding.outcomeIds)
-  );
-  const groupFor = (key5, testId) => {
-    if (!groups.has(key5))
-      groups.set(key5, {
-        test_id: testId,
-        test: null,
-        outcomes: [],
-        evidenceIds: /* @__PURE__ */ new Set(),
-        declared: null
-      });
-    return groups.get(key5);
-  };
-  for (const test of verified.input.proposed_tests ?? [])
-    groupFor(test.id, test.id).test = test;
-  for (const outcome of verified.input.outcomes) {
-    if (outcome.test_id === null && boundOutcomeIds.has(outcome.id)) continue;
-    const group = groupFor(outcome.test_id ?? outcome, outcome.test_id);
-    group.outcomes.push(outcome);
-    outcome.evidence_ids.forEach((id7) => group.evidenceIds.add(id7));
-  }
-  for (const binding of declaredBindings) {
-    const group = groupFor(binding.testId, binding.testId);
-    group.declared = binding;
-    for (const outcome of verified.input.outcomes.filter(
-      (outcome2) => binding.outcomeIds.includes(outcome2.id)
-    ))
-      if (!group.outcomes.some((existing) => existing.id === outcome.id))
-        group.outcomes.push(outcome);
-    binding.evidenceIds.forEach((id7) => group.evidenceIds.add(id7));
-  }
-  return [...groups.values()].map((group) => {
+  return testResultGroups(verified.input).map((group) => {
     const matches = candidate.test_results.filter(
       (result) => group.test_id === null ? result.test_id === null && result.outcome_ids.includes(group.outcomes[0].id) : result.test_id === group.test_id
     );
@@ -97576,6 +97622,22 @@ function projectSuppliedAssessment(prepared, candidate) {
     "Prepared input/request changed; no rebinding"
   );
   const schema = clone3(verified.request.text.format.schema);
+  if (Array.isArray(candidate?.test_results)) {
+    const testIds = [
+      .../* @__PURE__ */ new Set([
+        ...verified.tests.map((test) => test.id),
+        ...verified.outcomes.map((outcome) => outcome.test_id).filter(nonempty6)
+      ])
+    ];
+    schema.properties.test_results = arr2(
+      testResultSchema(
+        schema.properties.findings.items.properties.citations.items,
+        testIds,
+        verified.outcomes.map((outcome) => outcome.id)
+      ),
+      testResultGroups(verified.input).length
+    );
+  }
   if (object10(candidate) && !Object.hasOwn(candidate, "test_results")) {
     delete schema.properties.test_results;
     schema.required = schema.required.filter((key5) => key5 !== "test_results");
@@ -97634,7 +97696,14 @@ function projectSuppliedAssessment(prepared, candidate) {
       (row) => row.original_finding.requirement_ids.includes(record12.id)
     )
   ).map((record12) => record12.id);
-  const testResults = Object.hasOwn(candidate, "test_results") ? projectTestResults(verified, candidate, sourceById) : null;
+  const testResults = Object.hasOwn(candidate, "test_results") ? projectTestResults(
+    verified,
+    {
+      ...candidate,
+      test_results: Array.isArray(candidate.test_results) ? candidate.test_results : Object.values(candidate.test_results)
+    },
+    sourceById
+  ) : null;
   const status2 = rows.some((row) => row.validation_errors.length) || unassessed.length || testResults?.some((row) => row.validation_errors.length) ? "partial" : "complete_record_membership";
   return {
     schema: SUPPLIED_ASSESSMENT,
@@ -99046,6 +99115,8 @@ function inspectAssessment(packet, input3, entry, entryIndex, artifactEvidence =
       rows.slice(0, limit).map((row, i2) => ({
         code: row.code,
         location: row.location,
+        ...row.actualCount === void 0 ? {} : { actualCount: row.actualCount },
+        ...row.maximumCount === void 0 ? {} : { maximumCount: row.maximumCount },
         detail: literal2(row.detail, packetAt(`/${name}/${i2}/detail`)),
         locator: packetAt(`/${name}/${i2}`)
       })),
@@ -99608,8 +99679,24 @@ async function prepareFullAssessment(reader, input3, selected) {
             "Original manifest is unavailable; selected evidence is unresolved."
           );
       }
+      const selectedPngs = available2.filter(
+        (artifact2) => artifact2.mediaType === "image/png" && input3.selectedArtifactIds.includes(artifact2.artifactId)
+      );
+      const caseEvidence = available2.find(
+        (artifact2) => artifact2.name === "case-evidence.json"
+      );
+      const selectedIds = new Set(input3.selectedArtifactIds);
+      if (selectedPngs.length) {
+        if (caseEvidence) selectedIds.add(caseEvidence.artifactId);
+        else
+          unresolvedReferences.push({
+            code: "case_evidence_unavailable",
+            location: "case-evidence.json",
+            detail: "No original case evidence is recorded in this Run manifest; screenshot capture times and case/action links are unknown."
+          });
+      }
       if (!selectedArtifacts.length)
-        for (const id7 of input3.selectedArtifactIds) {
+        for (const id7 of selectedIds) {
           const artifact2 = available2.find((value) => value.artifactId === id7);
           if (!artifact2) return refuse("artifact_refused");
           const reference = {
@@ -99700,7 +99787,34 @@ async function prepareFullAssessment(reader, input3, selected) {
             } while (offset2 !== null);
             if (Buffer.byteLength(text12) !== artifact2.bytes || hash11(text12) !== artifact2.sha256)
               return refuse("artifact_refused");
-            JSON.parse(text12);
+            const parsed = JSON.parse(text12);
+            if (artifact2.name === "case-evidence.json" && selectedPngs.length) {
+              const chronology = caseEvidenceSchema.parse(parsed);
+              const correlation = object14(native2.correlation);
+              const planRef = object14(correlation.planRef);
+              const testIds = correlation.selectedTestIds ?? planRef.selectedTestIds;
+              if (chronology.planRef.answerId !== planRef.answerId || chronology.planRef.resultSha256 !== planRef.resultSha256 || !Array.isArray(testIds) || testIds.length !== chronology.selectedTestIds.length || !chronology.selectedTestIds.every(
+                (testId) => testIds.includes(testId)
+              ))
+                return refuse("artifact_refused");
+              const screenshots = [
+                ...chronology.unassignedScreenshots,
+                ...chronology.cases.flatMap((item) => item.screenshots)
+              ];
+              for (const image of selectedPngs) {
+                const capture2 = screenshots.find(
+                  (item) => item.name === image.name
+                );
+                if (capture2 && capture2.sha256 !== image.sha256)
+                  return refuse("artifact_refused");
+                if (!capture2)
+                  unresolvedReferences.push({
+                    code: "case_evidence_screenshot_unavailable",
+                    location: image.artifactId,
+                    detail: "Original case evidence has no capture record for this selected PNG; no capture time or case/action link inferred."
+                  });
+              }
+            }
             selectedArtifacts.push({
               ...artifact2,
               state: "read",
@@ -99776,7 +99890,7 @@ async function prepareFullAssessment(reader, input3, selected) {
       originalReferences,
       missingFacts,
       unresolvedReferences,
-      interpretation: "Caller receipts and supplied observations are assertions, not authenticated observations. Plugin/runtime identity is not application identity. Runtime equality cannot authenticate preflight timing. Original citation/reference failures are not repaired. Selected original operation/native facts are separately attributed evidence; full originals remain at exact report pointers, not independently verified by preparation."
+      interpretation: "Caller receipts and observations retain caller attribution and are not independently authenticated. Evaluate concrete supplied check results as evidence for their stated scope; this attribution does not by itself invalidate their contents. Distinguish direct checks from repeated claims, intended checks and unresolved references. Plugin/runtime identity is not application identity, and runtime equality alone does not establish preflight timing. Original citation/reference failures are not repaired. Selected original operation/native facts are separately attributed evidence; full originals remain at exact report pointers, not independently verified by preparation."
     }
   };
   let compatible = input3.work_item !== null && suppliedEvidenceInputSchema.safeParse(candidate).success;
@@ -99794,13 +99908,29 @@ async function prepareFullAssessment(reader, input3, selected) {
     missingFacts,
     unresolvedReferences,
     selectedArtifacts,
-    interpretation: "Read-only mechanical packet. Prepared means structurally assembled, never semantic completeness, authenticated execution, a new verdict or acceptance. Only explicitly selected intermediate artifacts are included. No replay.",
+    interpretation: selectedArtifacts.some(
+      (artifact2) => artifact2.mediaType === "image/png"
+    ) ? "Read-only mechanical packet. Prepared means structurally assembled, never semantic completeness, authenticated execution, a new verdict or acceptance. Selected Run PNGs also select original case evidence when available. No replay." : "Read-only mechanical packet. Prepared means structurally assembled, never semantic completeness, authenticated execution, a new verdict or acceptance. Only explicitly selected intermediate artifacts are included. No replay.",
     replayAllowed: false
   });
   let output2 = buildOutput();
   let requiredBytes = Buffer.byteLength(JSON.stringify(output2));
   if (requiredBytes > assessmentPreparationLimits.packetBytes)
     return refuse("oversize", requiredBytes);
+  const imageCount = candidate.evidence.filter(
+    (item) => object14(item).media_type === "image/png" && typeof object14(item).bytes_base64 === "string"
+  ).length;
+  const tooManyImages = imageCount > LIMITS.images;
+  if (tooManyImages) {
+    compatible = false;
+    missingFacts.push({
+      code: "assessment_image_limit_exceeded",
+      location: "assessmentInput/evidence",
+      actualCount: imageCount,
+      maximumCount: LIMITS.images,
+      detail: `${imageCount} images selected; assessment accepts at most ${LIMITS.images}. Select relevant before/after images and their action evidence, then prepare the same retained run again. Keep omitted observations and gaps explicit. No evidence was removed and no assessment or browser run was started.`
+    });
+  }
   if (compatible) {
     try {
       prepareSuppliedEvidence(candidate);
@@ -99808,7 +99938,7 @@ async function prepareFullAssessment(reader, input3, selected) {
       compatible = false;
     }
   }
-  if (!compatible && input3.work_item !== null)
+  if (!compatible && !tooManyImages && input3.work_item !== null)
     missingFacts.push({
       code: "incompatible_original_fragment",
       location: "assessmentInput",
@@ -102042,7 +102172,7 @@ function requestTestIndexes(result) {
   const intent = new Set(
     list3(native2.evidence).filter((value) => {
       const item = record8(value);
-      return item.source_id === "work-item" && item.kind === "intent";
+      return item.kind === "intent";
     }).map((value) => text8(record8(value).id)).filter(Boolean)
   );
   return list3(record8(native2.plan).tests).flatMap((value, index) => {

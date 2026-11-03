@@ -54,6 +54,15 @@ Preparation performs no inference, dispatch, new persistence or automatic
 acceptance. It preserves original requirements rather than deriving them from
 the Runner scenario. Caller receipts remain assertions. Selected JSON stays as
 original text. Selected PNG pixels reach the existing native image request.
+When a Run PNG is selected, preparation also includes its original
+`case-evidence.json` once, even if the caller also selects that file. The same
+artifact reader checks its report, Run, manifest and content hashes. Preparation
+checks the record's Plan and selected test IDs against the Run and checks each
+selected PNG's recorded hash. The complete original JSON text keeps its Runner
+attribution, capture times, case boundaries and action links. These are retained
+Runner claims. They do not authenticate execution or establish a verdict.
+An absent record or capture link remains explicit. Preparation does not derive
+chronology from filenames or add missing links.
 Missing facts and reference/citation failures remain unresolved. Oversized
 packets are explicitly refused rather than truncated; original results remain
 available through the returned existing readers. Plugin/runtime identity and

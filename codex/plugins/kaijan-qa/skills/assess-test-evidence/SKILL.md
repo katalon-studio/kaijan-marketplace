@@ -15,10 +15,24 @@ For a completed Kaijan Plan and Run, create their saved report first and use the
 preparation path below. Keep the full original selected tests, not a short summary.
 Include relevant evidence already collected in the chat. Source findings belong
 in attributed receipts, not requirements. App startup and revision checks belong
-in their own receipts. After inspecting a screenshot, supply the actual visible
+in their own receipts. For local-app tests, forward the host's actual source,
+startup, listener and configured-root records collected before that Run through
+`preflight` or `receipts`. Put the actual comparison with served metadata or
+source in `runtimeComparison`; state when that evidence is unavailable. Do not
+replace available host records with a browser claim, or treat browser Runner's
+inability to inspect Git or the filesystem as proof that no host check exists.
+Keep source identity gaps separate from observed UI behavior; neither changes
+the original test requirements or authenticates caller receipts.
+After inspecting a screenshot, supply the actual visible
 observation with its artifact reference and your attribution in
 `suppliedObservations`. Select the relevant original screenshots with
-`selectedArtifactIds`. Preparation returns compact `artifact_ref` selectors, not
+`selectedArtifactIds`. Select at most 12 PNG images in one assessment, including
+any images already in the original evidence. Use a relevant before/after set
+with its action evidence. If preparation reports `assessment_image_limit_exceeded`,
+read its actual and maximum counts, adjust the selection, and prepare the same
+retained Run again. Keep omitted observations and remaining gaps explicit. Do not
+rerun the browser or discard original evidence to fix this selection limit.
+Preparation returns compact `artifact_ref` selectors, not
 image bytes. Submit them unchanged; assessment reads the exact PNGs inside the
 same conversation scope. Do not copy base64 images into chat. The assessor does
 not fetch arbitrary references. Do not omit available observations and then describe

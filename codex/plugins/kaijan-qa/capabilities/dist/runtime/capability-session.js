@@ -21326,7 +21326,9 @@ var locator = external_exports.strictObject({
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
   location: external_exports.string(),
-  detail: external_exports.string()
+  detail: external_exports.string(),
+  actualCount: external_exports.number().int().nonnegative().optional(),
+  maximumCount: external_exports.number().int().positive().optional()
 });
 var indexEntry = external_exports.looseObject({
   id: external_exports.string(),
@@ -21752,12 +21754,27 @@ var screenshot = external_exports.object({
   sha256: digest10,
   capturedAt: external_exports.string()
 });
+var browserRefresh = external_exports.object({
+  kind: external_exports.literal("browser-refresh"),
+  method: external_exports.literal("page.reload"),
+  pageId: external_exports.string().optional(),
+  urlBefore: external_exports.string(),
+  waitUntil: external_exports.literal("domcontentloaded"),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  dispatchedAt: external_exports.string().optional(),
+  urlAfter: external_exports.string().optional(),
+  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
+  completedAt: external_exports.string().optional(),
+  error: external_exports.string().optional(),
+  completion: external_exports.literal("unverified").optional()
+});
 var action = external_exports.object({
   index: external_exports.number().int().positive(),
   type: external_exports.string(),
   status: external_exports.enum(["invoked", "returned", "error"]),
   startedAt: external_exports.string(),
-  endedAt: external_exports.string()
+  endedAt: external_exports.string(),
+  operation: browserRefresh.optional()
 });
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
