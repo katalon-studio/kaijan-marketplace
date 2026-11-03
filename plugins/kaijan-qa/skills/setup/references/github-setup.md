@@ -1,0 +1,15 @@
+# GitHub connection and recovery
+
+Read this only when the current operation needs GitHub. Preserve the selected repository, issue/PR, exact source revision and existing operation/request key through recovery. Local source maps and supplied-input work do not require a GitHub connection.
+
+Use the installed Kaijan managed connection. `kaijan_connect` opens Core sign-in and native consent. Continue with GitHub uses the same Kaijan GitHub App to establish identity and repository access, followed by the separate Allow access step for the local runtime. Google sign-in remains available; use Connect GitHub during consent when remote data is needed. Confirm the returned Kaijan account/workspace and selected GitHub account. Never merge identities by email or silently change accounts.
+
+The native runtime needs the explicit `github:credential` permission. An existing read-only Core MCP grant is insufficient. The trusted broker obtains only the user access token internally, calls GitHub directly and keeps analysis local. Do not request, paste, print or inspect provider tokens, client secrets, refresh tokens, credential files or environment dumps. Normal tools return data and source/coverage receipts, never credentials.
+
+Use `loki_github_read` for an exact Issue/PR URL. It returns original descriptions, paginated discussion/timeline, PR review/changed-file input, comparison identity and explicit omissions. Use `loki_github_source_read` for one safe repository file at a resolved commit. It returns verified bytes/hashes, not a checkout or arbitrary Git history. Related Work uses its existing dynamic connected source interface automatically. Use the existing analysis input contracts; a raw read is not a fabricated complete change packet.
+
+Managed reads do not need Git, gh, a CLI login, PAT, SSH key or clone. Do not install them as recovery or use another identity as a hidden fallback. If the installed package lacks these managed entry points, report its exact version and missing feature rather than patching its cache or changing private settings.
+
+Distinguish missing native consent/connection, provider expiry/revocation, missing App installation/repository approval, organization SSO, rate limits and network failure. A GitHub App user token has only the intersection of App and user access. Org installation alone does not authorize every caller. For provider reconnect, use the explicit Connect journey and let the human complete provider consent. For denied repositories, state the repository and actual access requirement. Do not broaden permissions, create an App, choose another account or change live configuration without its separate authority.
+
+Respect Retry-After; a network error is not a reason to replace an identity or reinstall software. Cancellation keeps the original goal pending. After recovery, repeat only a known read or resume the original operation; never replay uncertain paid analysis or Runner actions. Report partial pages, missing patches and unavailable source explicitly.

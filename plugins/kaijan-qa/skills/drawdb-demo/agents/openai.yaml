@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kaijan QA Demo"
+  short_description: "Try a real DrawDB test and native report"
+  default_prompt: "Use $drawdb-demo to test DrawDB Subject areas: create Sales in a new diagram, rename it Orders, delete it and show me the results."

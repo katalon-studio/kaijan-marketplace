@@ -1,0 +1,20 @@
+{
+  "name": "kaijan-qa",
+  "interface": {
+    "displayName": "Kaijan — QA"
+  },
+  "plugins": [
+    {
+      "name": "kaijan-qa",
+      "source": {
+        "source": "local",
+        "path": "./plugins/kaijan-qa"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
