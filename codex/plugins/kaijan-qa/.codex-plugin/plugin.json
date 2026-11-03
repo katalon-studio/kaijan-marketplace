@@ -1,0 +1,28 @@
+{
+  "name": "kaijan-qa",
+  "version": "0.4.0-preview.2",
+  "description": "Understand your application, plan tests and review results with Kaijan.",
+  "author": {
+    "name": "Kaijan"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/setup/SKILL.md"
+    }
+  },
+  "interface": {
+    "displayName": "Kaijan — QA",
+    "shortDescription": "Explore apps and test changes",
+    "defaultPrompt": [
+      "Use Kaijan to explore an existing app map.",
+      "Use Kaijan to assess the risk of a change.",
+      "Use Kaijan to plan and run a test scenario on my app, assess its evidence and show the report."
+    ],
+    "logo": "./assets/kaijan-ready.png",
+    "composerIcon": "./assets/kaijan-ready.png",
+    "longDescription": "Use Kaijan in chat to understand an application, assess changes and run test scenarios.\n\nStart with a message:\n\n• Use Kaijan to explore an existing app map.\n\n• Use Kaijan to assess the risk of a change.\n\n• Use Kaijan to plan and run a test scenario on my app, assess its evidence and show the report.\n\nSelect Try now to start a chat, then send one of these messages or describe your own goal. Kaijan will ask for the missing repository, change or test details.\n\nSome actions need a connection or configured AI provider. Setup can collect your goal while these execution prerequisites are pending."
+  },
+  "requires_local_executor": true
+}

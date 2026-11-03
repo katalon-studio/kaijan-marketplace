@@ -1,0 +1,20 @@
+{
+  "name": "kaijan-codex",
+  "interface": {
+    "displayName": "Kaijan for Codex"
+  },
+  "plugins": [
+    {
+      "name": "kaijan-qa",
+      "source": {
+        "source": "local",
+        "path": "./plugins/kaijan-qa"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

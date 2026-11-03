@@ -1,0 +1,9 @@
+URL parser compatibility in urlsplit.mjs is translated from the recorded CPython
+3.9.6 and3.12.14 urllib.parse implementations and3.12.14 ipaddress validation.
+Copyright (c) 2001-2023 Python Software Foundation. All Rights Reserved.
+IPv4/IPv6 source: Copyright2007 Google Inc.; licensed to PSF under a Contributor Agreement.
+License: PYTHON-LICENSE.txt. Upstream: https://github.com/python/cpython/tree/v3.12.14
+
+Changes: Node translation of URL component splitting, bracket-host/IP grammar,
+and a fixed explicit caller baseline binding. No interpreter is used at runtime.
+Only this compatibility boundary is translated; no whole-runtime emulation claim.

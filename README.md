@@ -1,21 +1,44 @@
-# Kaijan Marketplace
+# Kaijan marketplace
 
-Public distribution for Kaijan plugins and integrations. Product source development remains private.
+Public distribution packages for Kaijan plugins and integrations. Source history,
+credentials and private verification reports stay outside this repository.
 
-## Codex preview
+## Install
 
-The QA package targets Codex desktop on macOS ARM64. Add this repository as a GitHub marketplace and select `channel/qa`. For workspace installation, use Admin → Plugins → Add → Import marketplace, leave Path empty, and select the same branch.
+| Platform | Status | Location |
+| --- | --- | --- |
+| Codex | Available packages are listed in its marketplace | [codex](codex/) |
+| Claude | Reserved; no installable package yet | [claude](claude/) |
+| Kiro | Reserved; no installable package yet | [kiro](kiro/) |
 
-The current QA preview is `0.4.0-preview.2`. A Codex desktop UI upgrade from `.1` to `.2` was verified without uninstalling the plugin or restarting the app. Login and retained results survived. The package was also downloaded with Git credentials disabled and checked against its build inventory. Installation does not grant access to the Kaijan service. Each participant connects their own account and may need pilot approval.
+Codex desktop: add https://github.com/thongnguyen23/kaijan-marketplace.git with Git ref
+`main`, then select the required plugin. The root Codex manifest points into
+`codex/`; it does not contain another copy of the plugins.
+
+Workspace admin: Import marketplace from https://github.com/thongnguyen23/kaijan-marketplace,
+Path `codex`, ref `main`. Set workspace access policies after import.
+Each member connects their own Kaijan account. Public installation does not grant
+service access. QA is a preview environment.
 
 ## Releases and updates
 
-Version releases retain selected-profile packages. Untagged builds update `latest`. Moving channel branches provide marketplace updates; downloading a ZIP alone does not enable automatic updates.
+`main` is the only active distribution branch. A publication replaces only one
+platform/plugin/profile. Other packages keep their exact bytes. See
+[catalog.json](catalog.json) for current versions and source identities; this
+index is not an installer manifest.
 
-Workspace sync and local desktop refresh have different behavior. Admin/team automatic upgrade acceptance is still pending. The initial preview uses an ad-hoc signed Node runtime and is not a notarized Production installer.
+Version releases use tags such as `codex/kaijan/v0.5.0`. Untagged builds replace
+only their own asset in `latest`. Asset names include platform, plugin and profile.
+Immutable `snapshots/<platform>/<plugin>/<profile>/<version>` tags retain build
+receipts without creating branches. Release upload completes before main moves.
 
-## Other integrations
+Install from main to follow updates. Fixed tags and commits pin a version.
+Workspace synchronization and desktop refresh follow the host's own behavior.
+Manual Codex refresh is distinct from unattended team synchronization.
 
-This repository can host additional Kaijan integrations. Each integration will document its platform, installation steps and update channel.
+## Add a platform or plugin
 
-Distributed third-party components include their own notices and licenses.
+Each platform owns its format, manifest and installer checks. Add its adapter and
+verify installation before advertising it here. Never place a Codex package in a
+Claude or Kiro catalog and assume compatibility. QA and Production have separate
+installation identities. Production activation requires its own acceptance.
