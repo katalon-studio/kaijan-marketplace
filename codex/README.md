@@ -1,11 +1,13 @@
 # Kaijan for Codex
 
-Use Admin import with ref main and Path codex/qa or codex/production.
-Each marketplace lists only its selected environment. There is no catalog at the
-repository root or at codex/. Existing imports of those old paths need an explicit
-migration to a profile Path; they do not switch automatically. Verify the new
-import and installed runtime before retiring the old source. Each plugin retains
-its own version, service connection and runtime.
+For Production, add the repository Git URL in Codex desktop with ref main and
+leave Sparse paths empty. The root catalog lists only Production. Admin can use
+Path codex/qa or codex/production on the same ref. There is no catalog at codex/.
+The root and Production profile catalog share the kaijan-codex-production
+identity; choose one source for that environment. Old kaijan-codex aggregate
+imports need explicit migration. Verify the new source and installed runtime
+before retiring the old source. Each plugin retains its own version, service
+connection and runtime.
 
 Package releases include checksums and a standalone install guide. See the root
 README for version releases, preview limits and future platform adapters.
