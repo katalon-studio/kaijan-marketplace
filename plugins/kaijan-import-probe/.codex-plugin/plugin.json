@@ -1,0 +1,1 @@
+{"name":"kaijan-import-probe","version":"1.0.0","description":"Diagnostic fixture for the Kaijan workspace marketplace import.","author":{"name":"Kaijan"},"skills":"./skills/","interface":{"displayName":"Kaijan import probe","shortDescription":"Verify marketplace import"}}

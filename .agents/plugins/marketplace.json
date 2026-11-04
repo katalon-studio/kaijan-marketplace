@@ -1,0 +1,1 @@
+{"name":"kaijan-import-diagnostics","interface":{"displayName":"Kaijan import diagnostics"},"plugins":[{"name":"kaijan-import-probe","source":{"source":"local","path":"./plugins/kaijan-import-probe"},"category":"Productivity"}]}
