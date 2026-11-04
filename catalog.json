@@ -5,7 +5,7 @@
       "platform": "codex",
       "plugin": "kaijan",
       "profile": "production",
-      "path": "codex/plugins/kaijan",
+      "path": "codex/production/plugins/kaijan",
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "production",
@@ -21,7 +21,7 @@
       "platform": "codex",
       "plugin": "kaijan",
       "profile": "qa",
-      "path": "codex/plugins/kaijan-qa",
+      "path": "codex/qa/plugins/kaijan-qa",
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "qa",

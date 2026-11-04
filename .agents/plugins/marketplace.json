@@ -8,7 +8,7 @@
       "name": "kaijan",
       "source": {
         "source": "local",
-        "path": "./codex/plugins/kaijan"
+        "path": "./codex/production/plugins/kaijan"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -20,7 +20,7 @@
       "name": "kaijan-qa",
       "source": {
         "source": "local",
-        "path": "./codex/plugins/kaijan-qa"
+        "path": "./codex/qa/plugins/kaijan-qa"
       },
       "policy": {
         "installation": "AVAILABLE",
