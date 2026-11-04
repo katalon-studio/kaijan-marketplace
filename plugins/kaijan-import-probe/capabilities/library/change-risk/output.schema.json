@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "change-risk-finder/result/4",
+  "title": "Change Risk Finder selectable-mode result v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "status",
+    "assumptions_to_confirm",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "change-risk-finder/result/4"
+    },
+    "version": {
+      "type": "string"
+    },
+    "method": {
+      "enum": ["jev-high-only-luna-assumptions/3", "direct-luna-assumptions/3"]
+    },
+    "status": {
+      "enum": ["completed", "no_retained_cue", "partial", "refused"]
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repository", "base_sha", "head_sha"],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "pattern": "^[\\w.-]+/[\\w.-]+$"
+            },
+            "pull_request": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "base_sha": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            "head_sha": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "snapshot_id", "manifest_sha256"],
+          "properties": {
+            "kind": {
+              "const": "provided-snapshot"
+            },
+            "snapshot_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "manifest_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "coverage": {
+      "type": ["string", "object", "null"]
+    },
+    "packet_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assumptions_to_confirm": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "observed_code_behavior": {
+            "type": "string"
+          },
+          "assumption_to_confirm": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "why_it_matters": {
+            "type": "string"
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_needed": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "observed_code_behavior",
+          "assumption_to_confirm",
+          "question",
+          "why_it_matters",
+          "source_evidence",
+          "evidence_needed"
+        ]
+      }
+    },
+    "risk_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "side", "line", "text", "risk_selection"],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "side": {
+            "enum": ["left", "right"]
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "risk_selection": {
+            "type": "object",
+            "required": ["type", "choice", "probabilities"],
+            "properties": {
+              "type": {
+                "const": "choice"
+              },
+              "choice": {
+                "type": "string"
+              },
+              "probabilities": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "hunk_assessments": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "choice", "probabilities"],
+        "properties": {
+          "type": {
+            "const": "choice"
+          },
+          "choice": {
+            "type": "string"
+          },
+          "probabilities": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "string"
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "artifact_directory": {
+      "type": "string"
+    },
+    "ledger": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["stage", "route", "requested_model", "status", "cost_usd"],
+        "properties": {
+          "stage": {
+            "type": "string"
+          },
+          "route": {
+            "enum": ["/responses", "/systemone"]
+          },
+          "requested_model": {
+            "type": "string"
+          },
+          "returned_model": {
+            "type": ["string", "null"]
+          },
+          "status": {
+            "enum": ["dispatched", "not_dispatched", "response", "uncertain"]
+          },
+          "cost_usd": {
+            "type": ["number", "null"],
+            "minimum": 0
+          },
+          "usage": {
+            "type": ["object", "null"]
+          },
+          "elapsed_seconds": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calls_started",
+        "known_cost_usd",
+        "unknown_cost_calls",
+        "elapsed_seconds",
+        "execution"
+      ],
+      "properties": {
+        "calls_started": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "known_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unknown_cost_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "elapsed_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "execution": {
+          "type": "string"
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files", "hunks", "high_hunks", "selected_lines"],
+      "properties": {
+        "files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hunks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high_hunks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "selected_lines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "recovery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage", "raw_response"],
+        "additionalProperties": false,
+        "properties": {
+          "stage": {
+            "type": "string"
+          },
+          "raw_response": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mode": {
+      "enum": ["guided", "direct"]
+    },
+    "mode_selection": {
+      "enum": ["explicit", "default"]
+    },
+    "question_limit": {
+      "const": 6
+    },
+    "coverage_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_context",
+        "screening",
+        "localization",
+        "unresolved_hunks",
+        "assumptions"
+      ],
+      "properties": {
+        "source_context": {
+          "enum": [
+            "supplied_patch_only",
+            "supplied_snapshot_contents",
+            "supplied_patch_and_file_metadata",
+            "supplied_file_metadata_only"
+          ]
+        },
+        "screening": {
+          "enum": ["not_used", "not_run", "complete", "incomplete"]
+        },
+        "localization": {
+          "enum": ["not_used", "not_run", "complete", "incomplete"]
+        },
+        "assumptions": {
+          "enum": ["not_run", "complete", "incomplete"]
+        },
+        "unresolved_hunks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "non_hunk_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "text_evidence", "basis", "navigation"],
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "previous_file": {
+                "type": "string"
+              },
+              "text_evidence": {
+                "enum": ["reported_no_text_delta", "unavailable"]
+              },
+              "basis": {
+                "type": "string"
+              },
+              "navigation": {
+                "const": "no_textual_hunk_anchor"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "change-risk-finder/invocation/1"
+        },
+        "version": {
+          "type": "string"
+        },
+        "available_modes": {
+          "const": ["guided", "direct"]
+        },
+        "selected_mode": {
+          "enum": ["guided", "direct"]
+        },
+        "selection": {
+          "enum": ["explicit", "default"]
+        },
+        "method": {
+          "enum": [
+            "jev-high-only-luna-assumptions/3",
+            "direct-luna-assumptions/3"
+          ]
+        },
+        "status": {
+          "enum": ["completed", "no_retained_cue", "partial", "refused"]
+        },
+        "calls_started": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "known_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unknown_cost_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "elapsed_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "error_code": {
+          "type": ["string", "null"]
+        }
+      },
+      "required": [
+        "schema",
+        "version",
+        "available_modes",
+        "selected_mode",
+        "selection",
+        "method",
+        "status",
+        "calls_started",
+        "known_cost_usd",
+        "unknown_cost_calls",
+        "elapsed_seconds",
+        "error_code"
+      ]
+    },
+    "source_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "representation",
+        "identity",
+        "verification",
+        "external_repository_membership",
+        "manifest_sha256",
+        "files"
+      ],
+      "properties": {
+        "kind": {
+          "const": "provided-snapshot"
+        },
+        "representation": {
+          "const": "current-file-contents"
+        },
+        "identity": {
+          "const": "caller-attested snapshot_id and source_path; paths are not opened"
+        },
+        "verification": {
+          "const": "sha256 of supplied UTF-8 contents and canonical filename/hash manifest"
+        },
+        "external_repository_membership": {
+          "const": "not_verified"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["filename", "sha256"],
+            "properties": {
+              "filename": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "source_path": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "error_details": {
+      "type": "object"
+    },
+    "question_identity": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": ["completed", "no_retained_cue", "partial"]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "method",
+          "source",
+          "coverage",
+          "packet_sha256",
+          "risk_selections",
+          "ledger",
+          "accounting",
+          "artifact_directory",
+          "mode",
+          "mode_selection",
+          "question_limit",
+          "coverage_details",
+          "invocation"
+        ],
+        "properties": {
+          "method": {},
+          "source": {},
+          "coverage": {},
+          "packet_sha256": {},
+          "risk_selections": {},
+          "ledger": {},
+          "accounting": {},
+          "artifact_directory": {},
+          "mode": {},
+          "mode_selection": {},
+          "question_limit": {},
+          "coverage_details": {},
+          "invocation": {}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["mode"],
+        "properties": {
+          "mode": {
+            "const": "guided"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "method": {
+            "const": "jev-high-only-luna-assumptions/3"
+          },
+          "invocation": {
+            "properties": {
+              "selected_mode": {
+                "const": "guided"
+              },
+              "method": {
+                "const": "jev-high-only-luna-assumptions/3"
+              }
+            },
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["mode"],
+        "properties": {
+          "mode": {
+            "const": "direct"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "method": {
+            "const": "direct-luna-assumptions/3"
+          },
+          "invocation": {
+            "properties": {
+              "selected_mode": {
+                "const": "direct"
+              },
+              "method": {
+                "const": "direct-luna-assumptions/3"
+              }
+            },
+            "type": "object"
+          },
+          "mode_selection": {
+            "const": "explicit"
+          },
+          "status": {
+            "enum": ["completed", "partial", "refused"]
+          },
+          "risk_selections": {
+            "maxItems": 0,
+            "type": "array"
+          },
+          "ledger": {
+            "maxItems": 1,
+            "type": "array"
+          },
+          "accounting": {
+            "properties": {
+              "calls_started": {
+                "maximum": 1,
+                "type": "integer"
+              },
+              "unknown_cost_calls": {
+                "maximum": 1,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["source"],
+        "properties": {
+          "source": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": {
+                "const": "provided-snapshot"
+              }
+            }
+          },
+          "status": {
+            "enum": ["completed", "partial"]
+          }
+        }
+      },
+      "then": {
+        "required": ["source_provenance"],
+        "properties": {
+          "mode": {
+            "const": "direct"
+          }
+        }
+      }
+    }
+  ]
+}
