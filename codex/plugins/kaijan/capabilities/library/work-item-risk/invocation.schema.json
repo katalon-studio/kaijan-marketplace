@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "change-risk-finder/invocation/1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "change-risk-finder/invocation/1"
+    },
+    "version": {
+      "type": "string"
+    },
+    "available_modes": {
+      "const": ["guided", "direct"]
+    },
+    "selected_mode": {
+      "enum": ["guided", "direct"]
+    },
+    "selection": {
+      "enum": ["explicit", "default"]
+    },
+    "method": {
+      "enum": ["jev-high-only-luna-assumptions/2", "direct-luna-assumptions/2"]
+    },
+    "status": {
+      "enum": ["completed", "no_retained_cue", "partial", "refused"]
+    },
+    "calls_started": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "known_cost_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unknown_cost_calls": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "elapsed_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "error_code": {
+      "type": ["string", "null"]
+    }
+  },
+  "required": [
+    "schema",
+    "version",
+    "available_modes",
+    "selected_mode",
+    "selection",
+    "method",
+    "status",
+    "calls_started",
+    "known_cost_usd",
+    "unknown_cost_calls",
+    "elapsed_seconds",
+    "error_code"
+  ]
+}
