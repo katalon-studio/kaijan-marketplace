@@ -1,10 +1,11 @@
 # Kaijan for Codex
 
-Use ref main. Desktop imports the repository root and lists both profiles.
-Install only the profile you need. Admin uses Path codex/qa or codex/production
-to import only one environment. The old Path codex remains an aggregate catalog.
-Select the plugin and profile shown in the marketplace. Each plugin retains its
-own version, service connection and runtime. Refresh through the Codex UI.
+Use Admin import with ref main and Path codex/qa or codex/production.
+Each marketplace lists only its selected environment. There is no catalog at the
+repository root or at codex/. Existing imports of those old paths need an explicit
+migration to a profile Path; they do not switch automatically. Verify the new
+import and installed runtime before retiring the old source. Each plugin retains
+its own version, service connection and runtime.
 
 Package releases include checksums and a standalone install guide. See the root
 README for version releases, preview limits and future platform adapters.

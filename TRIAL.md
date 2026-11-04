@@ -9,6 +9,10 @@ In Admin → Plugins → Add → Import marketplace:
 - Ref: codex/profile-isolation-trial
 - Path: codex/qa for QA, or codex/production for Production
 
+Start with Production: Path `codex/production` must show only `kaijan`.
+The repository root and `codex/` have no marketplace.json. There is no combined
+QA/Production catalog. QA has its separate catalog at `codex/qa`.
+
 Each selected path must import only its own profile. Review availability and
 installation policy for the test workspace. Do not treat this branch as an
 ongoing update channel or replace an existing team source during this test.
