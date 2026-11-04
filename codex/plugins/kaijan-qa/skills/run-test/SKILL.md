@@ -1,11 +1,13 @@
 ---
 name: run-test
-description: Execute a complete caller-authorized browser or macOS desktop scenario through standalone Runner, read original outcomes and evidence, or Stop that execution. Use only with explicit target/action authority; not for proposing tests or non-UI verification.
+description: Run and assess a complete caller-authorized browser or macOS desktop scenario, read its result, or Stop the same test. Standalone execution remains available when explicitly needed. Use only with explicit target/action authority; not for proposing tests or non-UI verification.
 ---
 
 # Execute an explicit UI scenario
 
 Read the chat guidance in the [shared Product MCP instructions](../../references/local-capabilities.md).
+
+For final user wording, follow [Present assessed results](../../references/assessed-result-language.md). Preserve native verdicts in records; do not repeat an internal `unverified` label as a customer warning after a valid linked assessment.
 
 When execution follows a request to review a change and reproduce its findings,
 use [test-request](../test-request/SKILL.md) to retain the Plan and selected tests
@@ -32,8 +34,11 @@ Check actual Runner provisioning separately from target-application credentials.
    grants no execution permission. The original full test request can already
    authorize execution; do not ask for a separate phase approval when its target,
    actions and inputs are clear. A plan-only request never starts this skill.
-   Browser session attachment, memory and credential
-   references are unsupported. Desktop execution preserves the target app’s current state. Do not inspect unrelated profiles or histories.
+   Browser session attachment and memory are unsupported. For approved browser
+   login values, use [Private login parameters](../../references/private-parameters.md).
+   Pass its `privateParams` references. Do not read or print values in chat,
+   command output or MCP arguments. Desktop execution preserves the target app’s
+   current state. Do not inspect unrelated profiles or histories.
    For browser sign-in, include the application host and its known sign-in hosts
    in `target.allowedHosts`. Use the supplied application context or an observed
    sign-in redirect; do not guess broad host lists or use wildcards. A normal
@@ -42,27 +47,41 @@ Check actual Runner provisioning separately from target-application credentials.
    confirms that login did not start, add the verified sign-in host and continue
    the same authorized task in a new run. Do not repeat a submitted login or
    unknown action to discover whether it succeeded.
-2. Call `loki_runner_execute` with one stable `requestKey`, exact `scenarioId`,
-   full `scenario`, explicit `params` ({} when empty), and the method-specific target.
-   Include relevant app knowledge already available to Codex: known routes,
-   setup, fixture names, labels, and navigation guidance. Keep this guidance
-   separate from the original expected behavior; it must not redefine success.
-   Do not send only a test ID or make Runner rediscover facts Codex already has.
-   Prefer the complete structured test so its prerequisites, steps, expected
-   authority/hypotheses and execution gaps stay intact. IDs and optional planRef
-   are correlation only. Declare unresolvedInputs rather than dispatch missing
-   values. Use browser-ui with target.initialURL or desktop-ui with target.app; other methods return
+2. Normally call `loki_test_execute` with one stable `requestKey`, exact `scenarioId`,
+   explicit `params` ({} when empty), and the method-specific target.
+   For Kaijan's saved Plan, use `savedTests: {answerId, resultSha256, selectedTestIds}`.
+   Kaijan loads each complete structured test and gives Runner the full scenario.
+   Add new `guidance` and `hostContext` when useful. Do not combine `savedTests`
+   with `scenario` or `planRef`; the tool rejects missing, changed or out-of-scope
+   saved tests before dispatch.
+   For a caller-supplied scenario, pass the full `scenario` and optional `planRef`.
+   Standalone Runner also requires the full scenario; its IDs correlate only.
+   Include known routes, setup, fixture names, labels and navigation guidance.
+   Keep that context separate from the original expected behavior; it must not
+   redefine success. Declare unresolvedInputs rather than dispatch missing values.
+   Use browser-ui with target.initialURL or desktop-ui with target.app; other methods return
    not-executed. See the [Runner contract](../../references/RUNNER.md).
    For headless browser execution, set `options.headless: true` on this MCP
    request. Omission keeps the headed default. This option is browser-only.
+   Omit `options.limits` to use the native budget: 80 provider calls, 150
+   browser or desktop inputs, and 600000 ms (10 minutes). Set limits only
+   to lower that budget; larger values are rejected before execution.
    Use MCP so the run keeps its full report and retained request identity.
    Keep requested behavior, caller-authored hypotheses and observation-only questions
    distinct. “Observe what remains after reload” asks for an observation; it does
    not require persistence. Compare persistence only when the caller explicitly
    requires it. Do not strengthen an observation question or prescribe an additional
    action mechanism as an acceptance requirement.
-3. Read `loki_runner_get` until the operation settles. For browser clarification,
-   `pendingClarification` is null or has `state: live | unknown` and questions
+3. Read `loki_test_get` until the complete flow settles, including assessment.
+   Check `nextAction` before polling again. `kind: input-required` and
+   `status.execution: waiting-for-input` mean Runner is waiting for your answer,
+   not doing browser work. Read its questions now. Use known authorized context
+   or ask the human for the missing information. Do not keep polling in place of
+   handling the question. If no answer can arrive within the stated deadline,
+   stop the same test and retain its partial results. Do not guess or restart.
+   Standalone `loki_runner_get` exposes the same `nextAction`.
+   The `execution` field holds the original Runner result. For browser clarification,
+   `execution.pendingClarification` is null or has `state: live | unknown` and questions
    with `id`, `kind` and `question`. Only `live` has current callback authority;
    `unknown` is an unresolved retained request that cannot resume. For a live
    request, call `loki_runner_answer({runId, clarificationId, answerKey, answers, sensitiveQuestionIds})`
@@ -72,6 +91,9 @@ Check actual Runner provisioning separately from target-application credentials.
    docs/source when possible. Ask the human only for missing information or a
    decision Codex cannot resolve. Do not guess. Keep the same live Run; a question
    is not a reason to restart it.
+   Use the default result summary for verdicts, actual observations, performed
+   steps, costs and the report. Read `originalResult` with ordered offsets only
+   when the task needs full evidence records. It never runs the test again.
    Mark new sensitive full answer values with `sensitiveQuestionIds`, a unique
    list of exact answered IDs. Omission adds no sensitivities; ordinary answers
    remain ordinary. Declaration metadata/order participates in exact-key conflicts.
@@ -84,7 +106,7 @@ Check actual Runner provisioning separately from target-application credentials.
    Check the correlated native function output and subsequent result for continuation.
    The original request is immutable; any live continuation uses the same worker,
    browser and provider history, and waiting consumes the original deadline.
-   Follow ordered resultRead chunks to recover exact JSON. Preserve nativeResult,
+   For standalone Runner, follow ordered resultRead chunks when needed. Preserve nativeResult,
    including executionState, unverified testVerdict, terminal reason, fees, unknown
    usage and cleanup. Browser executionState is `completed` only for a coherent
    explicit complete report with known effects and no remaining steps/questions;
@@ -93,8 +115,8 @@ Check actual Runner provisioning separately from target-application credentials.
    observations stay separate and do not reverse accepted completion. Cause is in
    `terminal.actor`/`terminal.reason`. Wrapper `finished` only retains a result.
    Final prose or capture alone is insufficient. Model-authored completion and step
-   reports are unverified; returned actions do not prove steps. Independently observe
-   the application outcome. Raw traces, provider requests and browser state remain
+   reports are execution evidence; the internal assessment checks the observations
+   against the test. Do not run a second browser check merely to duplicate it. Raw traces, provider requests and browser state remain
    private references.
    Report the requested behavior, attempted action, actual observation and unresolved
    selection separately. Observation-only completion records what was observed;
@@ -115,7 +137,7 @@ Check actual Runner provisioning separately from target-application credentials.
    responding runtime, then use a new key for the still-authorized test. Do not
    retry through the stale connection. This recovery does not apply to unknown
    effects or a worker that started and then lost its result.
-   Never replace or replay unknown effects. Honor Stop with `loki_runner_stop`,
+   Never replace or replay unknown effects. Honor Stop with `loki_test_stop`,
    then read actual cancellation, partial evidence and cleanup. Stop requested
    does not prove remote computation or billing ended.
    Browser provider transient HTTP responses retry quietly within the same request
@@ -125,16 +147,22 @@ Check actual Runner provisioning separately from target-application credentials.
    Uncertain transport, incomplete bodies and invalid/auth errors do not retry.
    For browser execution, the first known-effects `stuck` raises Terra effort from low to
    medium for one recovery phase within original limits;
-   a second returns reason and completed/remaining steps. Missing input does not
+   a second returns reason and completed/remaining steps. A `blocked` report ends
+   incomplete without escalation and keeps the reason and remaining checks. Missing input does not
    consume escalation. Errors, uncertain effects, safety, Stop, deadline and exhausted
    limits never auto-recover or replay. Desktop does not support the clarification
    or recovery behavior.
-5. For requested assessment, explicitly combine assessmentFragment with original
-   work_item, requirements and proposed_tests (or null) under
-   work-verifier/supplied-test-evidence/1, then use the test-evidence skill.
-   Reference-only traces remain unresolved. Retain the native unverified label;
-   do not invent pass/fail, expected results, authenticated provenance or missing
-   artifact content. Execution and assessment are separate explicit operations.
+5. Kaijan assesses the retained run internally. It reuses the original scenario,
+   parameters, linked Plan and captured evidence. Do not copy the test objects,
+   select screenshots or submit a second routine assessment. Keep `execution`
+   and `assessment` distinct and use the returned report. A failed assessment
+   does not show a defect in the tested app and never calls for a browser replay.
+   Codex may supply useful new context when a specific gap needs it.
+
+For an explicit execution-only task, use `loki_runner_execute`, `loki_runner_get`
+and `loki_runner_stop`. For tests run by Codex or another tool outside Kaijan,
+use [assess-test-evidence](../assess-test-evidence/SKILL.md). These independent
+paths do not replace the normal combined test flow.
 
 For detailed browser review, Playwright tracing is on by default. If trace.saved is
 true, open nativeResult.trace.path from the package root with its pinned tools:
@@ -154,7 +182,8 @@ when the IPC handoff is uncertain.
 ## Show the retained result
 
 After reading the complete result, use the installed `review-report` skill
-to present it with its exact runner operation ID and result digest. Include other
+to open its saved `report.reportId`. For standalone execution, use its exact
+runner operation ID and result digest. Include other
 plan/run/assessment references only when selected or explicitly linked. Keep the
 producer output unchanged; the report is a read-only projection, not another
 execution or an acceptance decision. Missing host UI does not justify a rerun.
@@ -178,7 +207,7 @@ estimated USD per 10,000 inputs. A model completion is not a verified test pass.
 ## Authored terminal checks
 
 For caller-authorized Expected/Actual checks, add `checks` using
-`loki.terminal-checks/1` to the ordinary `loki_runner_execute` request. Author the
+`loki.terminal-checks/1` to the ordinary `loki_test_execute` request (or explicit execution-only request). Author the
 test titles, IDs and text/snapshot/URL predicates before dispatch. Use the exact
 stored Plan answer/digest and selectedTestIds; selected tests and authored checks
 must match. For a selected PR, first retain its original authorized GitHub PR/files

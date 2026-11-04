@@ -7,6 +7,8 @@ description: Assess caller-supplied test outcomes and observations against origi
 
 Read the chat guidance in the [shared Product MCP instructions](../../references/local-capabilities.md).
 
+For final user wording, follow [Present assessed results](../../references/assessed-result-language.md). Preserve native verdicts in records; do not repeat an internal `unverified` label as a customer warning after a valid linked assessment.
+
 An original full test-and-report request can include this assessment; no separate
 user command is required after Runner completes. Keep its original scope and
 producer identities. A standalone evidence-review request never starts Runner.
@@ -23,15 +25,26 @@ replace available host records with a browser claim, or treat browser Runner's
 inability to inspect Git or the filesystem as proof that no host check exists.
 Keep source identity gaps separate from observed UI behavior; neither changes
 the original test requirements or authenticates caller receipts.
-After inspecting a screenshot, supply the actual visible
-observation with its artifact reference and your attribution in
-`suppliedObservations`. Select the relevant original screenshots with
-`selectedArtifactIds`. Select at most 12 PNG images in one assessment, including
-any images already in the original evidence. Use a relevant before/after set
-with its action evidence. If preparation reports `assessment_image_limit_exceeded`,
-read its actual and maximum counts, adjust the selection, and prepare the same
-retained Run again. Keep omitted observations and remaining gaps explicit. Do not
-rerun the browser or discard original evidence to fix this selection limit.
+For a retained Kaijan Run, omit `selectedArtifactIds`. Preparation reads all
+supported public report-readable JSON and PNG evidence for that exact Run through
+the existing integrity and privacy reader. Codex does not need to list files or
+pick screenshots for normal assessment. Original action records, case evidence,
+UI observations and complete retained screenshot sequences stay together.
+Protected pixels and private records remain unavailable. Preparation does not
+infer a pass from a file or a Runner claim.
+After inspecting a screenshot, you may supply the actual visible observation
+with its artifact reference and your attribution in `suppliedObservations`.
+An explicit `selectedArtifactIds` array is an optional scoped override; an empty
+array selects no artifacts. `unselectedArtifacts` lists omitted public PNGs and
+available case capture links for that override. Its descriptors do not supply
+pixels. Keep these omissions explicit in any scoped assessment.
+Assessment accepts at most 32 PNG images, including images already in the
+original evidence. It also has packet and provider limits. This supports bounded
+complete retained sequences, not arbitrary long Runs. If preparation reports
+`assessment_image_limit_exceeded`, keep its actual and maximum counts visible.
+Do not sample or drop frames to make a full-run assessment fit. Do not rerun the
+browser to resolve an assessment limit. A smaller explicit selection is a
+separate scoped assessment and must state the omitted evidence and gaps.
 Preparation returns compact `artifact_ref` selectors, not
 image bytes. Submit them unchanged; assessment reads the exact PNGs inside the
 same conversation scope. Do not copy base64 images into chat. The assessor does
@@ -40,7 +53,11 @@ the resulting assessment gap as absent execution evidence. Do not add a new run
 or invent an observation to complete the packet.
 
 For a comparison or preservation check, include relevant before and after
-observations and the action record that connects them. Do not select only the
+observations and the action record that connects them. Include retained screens
+that identify the action under test, such as its menu, dialog and immediate
+result. Coordinate-only click records plus before/after states may not establish
+which action caused the change. Use original artifacts; do not infer missing
+steps from a final state. Do not select only the
 final state or the screenshots that match a reported problem. Inspect available
 starting-state artifacts before calling the baseline missing. If a useful
 observation was omitted, add it to a new assessment of the same retained Run.
@@ -48,15 +65,22 @@ observation was omitted, add it to a new assessment of the same retained Run.
 1. Retain the original work item, human-conversation testing context, supplied
    requirements and any proposed tests. Preserve each source's attribution and
    unknown metadata. No PR, diff or code revision is required. If no proposal was
-   supplied, keep `proposed_tests: null`; do not invent test IDs or a fake plan.
+   supplied for an external test, keep `proposed_tests: null`; do not invent test IDs or a fake plan.
    For an exact retained Runner run in a saved report, use
-   `loki_assessment_prepare` with its `reportId`, `runId`, optional
-   `expectedResultSha256`, original `work_item`, `requirements`,
-   `proposed_tests`, `receipts`, `preflight`, `runtimeComparison`, `cleanup`,
-   and `selectedArtifactIds`. Use explicit null for absent facts and
-   an empty array for receipts or artifact selections not supplied. Each supplied
+   `loki_assessment_prepare` with its `reportId` and `runId`. Optional
+   `expectedResultSha256` guards the selected result. Omit repeated `work_item`,
+   `requirements` and `proposed_tests`: Kaijan reads the protected original Run
+   and exact selected Plan tests. When available, it reads the original planning
+   input too. A standalone scenario keeps its caller-supplied attribution; it is
+   not presented as a human requirement. Do not JSON-copy an existing Plan.
+   Omit `selectedArtifactIds` for full-run evidence. Supply `receipts`,
+   `preflight`, `runtimeComparison`, `cleanup` or `suppliedObservations` only for
+   useful new context not already held by Kaijan. Explicit task fields override
+   retained defaults, and explicit null means absent rather than automatic reuse.
+   Each supplied
    receipt has `{id, attribution, content}`; optional `suppliedObservations`
-   uses the same shape. Select artifact IDs through `loki_report_artifact_read`.
+   uses the same shape. Explicit artifact overrides use IDs from
+   `loki_report_artifact_read`.
    Preparation reads existing evidence without dispatch, inference or storage.
    First set `view: "inspection"` on this same tool. Its
    `loki.assessment-inspection/1` view presents execution facts, the native
@@ -74,7 +98,7 @@ observation was omitted, add it to a new assessment of the same retained Run.
    packet, then submit `{ input: packet.assessmentInput }` unchanged to
    `loki_test_evidence_assess`. Inspection is not assessment input; avoid printing
    the complete payload merely to submit it. A refused or null input needs its
-   stated missing source or smaller selection; do not reconstruct it from the
+   stated missing source or limit resolution; do not reconstruct it from the
    translated scenario. Preparation
    never grants execution or assessment authority. Caller receipts remain
    attributed context; selected original PNGs supply image evidence. Plugin identity does not

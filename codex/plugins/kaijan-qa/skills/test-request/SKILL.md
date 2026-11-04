@@ -61,10 +61,10 @@ Compare the selected source with existing served build metadata or an observed
 served module when available. A reachable URL or process working directory alone
 does not prove which source the server serves. Keep each gap explicit.
 
-Retain these host results for `loki_assessment_prepare`: put startup and source
-checks in `preflight` or attributed `receipts`, and the actual source/runtime
-comparison in `runtimeComparison`. These are caller assertions, not authenticated
-execution. Keep the original test prerequisites and expected behavior. Give
+Include these host observations in the structured scenario context, with their
+attribution and capture time. Keep startup, source checks and the source/runtime
+comparison distinct from the requested behavior. Kaijan retains them with the
+run, so do not resend them after execution. Keep the original test prerequisites and expected behavior. Give
 browser Runner the relevant host findings as context for UI behavior; do not ask
 it to verify Git or filesystem facts. Repeat relevant host checks after a source
 or server change before a retest, and keep each Run's records separate.
@@ -80,9 +80,7 @@ requirements. Choose only stages useful for the requested outcome:
 - Use [assess-change-risk](../assess-change-risk/SKILL.md) for relevant uncertainty.
   Work-item risk can use the issue/request; Change Risk needs actual frozen change
   input. Do not fabricate a diff or require code evidence for a requirements-only
-  question. A source app map is optional: use
-  [build-app-map](../build-app-map/SKILL.md) only for the explicitly selected source
-  and [read-app-map](../read-app-map/SKILL.md) for bounded existing-map reads.
+  question. Use the original request and attributed source/context evidence. This release does not build or require an application map.
 - Use [plan-tests](../plan-tests/SKILL.md) with the complete original work item or
   its supported attributed context packet. Keep the actual completed `answerId`,
   `resultSha256`, original test IDs and full structured tests. Findings and
@@ -92,50 +90,35 @@ requirements. Choose only stages useful for the requested outcome:
   even when no risk is found. Change-impact and risk scenarios add coverage;
   they do not replace or limit that baseline.
 - If execution belongs to the original request and inputs suffice, continue via
-  [run-test](../run-test/SKILL.md) without another user command. Choose the full
-  executable scenarios within that scope; retain their prerequisites, steps,
-  expectations/hypotheses, parameters and exact Plan reference/test IDs. Pass
-  full scenarios, not just IDs. For a single planned test, keep its actual test ID
-  as scenarioId and use `planRef: {answerId, resultSha256, selectedTestIds}`. A
+  [run-test](../run-test/SKILL.md) without another user command. Select the saved
+  tests within that scope. Use `savedTests: {answerId, resultSha256, selectedTestIds}`
+  with explicit parameters and target. Kaijan loads the complete selected tests
+  internally, including prerequisites, steps, expectations and gaps. Supply new
+  guidance or host observations separately; do not copy the saved tests into chat.
+  For a single planned test, keep its actual test ID as `scenarioId`. A
   combined Run remains one execution; preserve its original outcome identity and
   do not invent per-test verdicts or rewrite the native assessmentFragment.
   Missing parameters/oracles block the dependent
   test, not unrelated selected tests. Disclose selected and unexecuted coverage.
-- Read original Runner outcomes and evidence completely. A request to test or
-  validate includes assessing the selected test cases after execution; do not
-  wait for a second request. Follow
-  [assess-test-evidence](../assess-test-evidence/SKILL.md).
-  First save the original Plan and Run together with `loki_report_show`. Use that
-  report and Run with `loki_assessment_prepare`; do not hand-copy a shortened
-  Runner fragment into a new assessment. Supply the complete original selected
-  tests, including their steps and expectations, with their Plan ID and digest.
-  Each proposed-test record must keep its original test ID and put the full
-  original test object in `text` as JSON. This lets preparation bind tests to
-  the exact saved Plan and selected Run, including a shared scenario.
-  Carry relevant source findings and already collected app/revision, startup and
-  cleanup records in attributed `receipts`. Include inspected screenshot
-  observations in `suppliedObservations`, with exact artifact references and the
-  inspecting agent's attribution. Use the report artifact reader to select the
-  relevant original records. Select the original PNGs so the assessor can inspect
-  their pixels; an unresolved reference alone supplies no image. Missing evidence
-  stays missing; no new execution
-  is needed to prepare the retained evidence. Submit the prepared assessment input
-  unchanged. Keep inferred test expectations separate from human requirements.
-  Preserve original outcome/evidence IDs, labels and Plan/Run/result digests.
-  Keep the native verdict unchanged. The separate assessor may return pass,
-  fail or inconclusive for each selected test. Report that assessment with its
-  evidence and identity; it is not the Runner's own verdict. An unfinished test
-  can still have a failed expectation when observed evidence contradicts it;
-  missing evidence alone is inconclusive.
-- Show the final selected Plan, Runner and Assessment references through
-  `loki_report_show` with `view: "test-plan"` for the existing native inline card
-  and details design. Keep every selected original operation in the immutable
-  snapshot. Product terminal checks, native engine output, Assessment and UI
-  projection remain distinct. Missing source, Quality, coverage, step verdicts or
-  replay stays unavailable; do not generate finished report data or test code.
+- The normal `loki_test_execute` flow runs the selected scenario, assesses its
+  saved evidence and saves the combined report. Use `loki_test_get` until that
+  flow settles. Kaijan reads its own original request, exact selected Plan tests
+  and retained artifacts. Do not create an intermediate report, JSON-copy tests,
+  select screenshot files or manually invoke the routine assessment.
+- Read the separate execution and assessment results. Completion is not a pass.
+  A partial run can still provide evidence of a failed expectation. Missing
+  evidence alone is not an app defect. If new caller context can resolve a
+  specific gap, use the independent evidence-assessment capability with that
+  addition; do not rerun browser actions to reconstruct saved evidence.
+- Show the returned combined `report.reportId` through
+  [review-report](../review-report/SKILL.md), within the existing Tests and Runs
+  design. Keep the original Plan, Run and Assessment identities. Do not invent
+  performed steps or a verdict.
 
-No stage needs a new workflow service, Core entity or background watcher. Narrow
-requests continue using their independent owning skills and existing public APIs.
+For tests run outside Kaijan, use
+[assess-test-evidence](../assess-test-evidence/SKILL.md) with the external results.
+Narrow requests continue to use their independent owning skills. No Core entity
+or background watcher is needed for this composition.
 
 ## Continue after an observed failed expectation
 
@@ -146,8 +129,9 @@ provider failure does not establish an application defect.
 
 When the caller's request and effective host permissions authorize repairs,
 Codex fixes the application within that scope, then Kaijan retests through
-[run-test](../run-test/SKILL.md) and reassesses the new evidence through
-[assess-test-evidence](../assess-test-evidence/SKILL.md). Continue without a new
+[run-test](../run-test/SKILL.md), which assesses the new evidence and saves its
+report. Use separate evidence assessment only for execution outside Kaijan or
+additional supplied evidence. Continue without a new
 phase approval while that authority still applies. In read-only scope, show the
 findings and ask before repairs. Do not edit under explicit no-edit or plan-only
 instructions. Continue the fix/retest loop only when the caller changes that

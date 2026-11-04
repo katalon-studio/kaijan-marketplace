@@ -1,158 +1,42 @@
 ---
 name: setup
-description: Set up Kaijan and prepare the selected application. Use for onboarding, setup and connection readiness. Introduce this as Kaijan setup with a friendly English welcome, not internal skill narration.
+description: Set up Kaijan and save the selected application context. Use for onboarding, setup and connection readiness. Introduce this as Kaijan setup with a friendly English welcome.
 ---
 
 # Set up Kaijan
 
-Read the chat guidance in the [shared Product MCP instructions](../../references/local-capabilities.md).
+Read the [shared Product MCP guidance](../../references/local-capabilities.md). Use simple English. Start with a short welcome such as “Welcome to Kaijan! Let's get your application ready so you can start testing.” Adapt it to the known application and goal. Do not repeat it on resume or narrate internal skills and tools.
 
-## Start with a friendly welcome
+## Select the application and goal
 
-Write the product welcome, onboarding prompts and map completion/blocker messages
-in English. Use the supplied project/goal. Open with a short software welcome,
-not a narration about skills, tools, package inspection or delegation. For example:
-“Welcome to Kaijan! Let's get your application ready so you can start
-testing.” Adapt the second sentence when the actual application or next action is
-already known. Do not repeat the welcome when resuming an existing setup.
+Reuse the current project, explicit selection and saved context. When needed, use the host's supported `list_projects` inventory. Match the actual project label and local directory. Ask which application only when the selection is missing or ambiguous. Do not scan the machine or choose by recency. If the host inventory is unavailable, use an explicit directory or ask for it; do not claim a search occurred.
 
-Reuse the current project, explicit selections and matching saved context. When
-application context is missing, use the host's supported `list_projects` inventory
-if available. These are Codex saved projects, not folders discovered by scanning
-the machine. Match the selected host/project ID and its actual local directory;
-a ChatGPT-only project without a local source directory is not a Git repository.
-Ask “Which application would you like to start with?” with the actual usable
-candidates, preserving their returned labels. Resolve a named saved project
-before asking for its folder. Do not choose among ambiguous candidates by recency.
-If the inventory is unavailable, use an explicitly supplied directory or ask for
-it; do not claim that saved projects were searched.
+Use a native Question for consequential missing input. A highlighted or unanswered choice authorizes nothing. Never change approval mode to show a Question. If the original request already selects a complete test/report goal, continue through `test-request` when its inputs suffice; do not add a phase choice.
 
-During input collection, use Codex's native Question for genuinely missing or
-ambiguous setup input. At completion, use it to resolve an open next-action
-choice when the caller has not selected an outcome. If the original request
-already authorizes a clear full test/report flow and inputs suffice, continue
-with the installed `test-request` skill instead of asking for another phase choice. Derive choices from actual candidates; no default three-goal menu. An unanswered
-or highlighted option supplies no selection. Never change approval mode to show
-a workflow question. A supported explicit typed answer can cover a missing native
-Question control, with that limit stated.
+## Save application context without a map
 
-## Prepare automatically and continue
+Resolve the installed plugin root two directories above this skill. Read its `loki-build.json` and use that profile's installed tools and skills. For application configuration, follow `application-setup` in this same conversation. Save the source selection, original goal and optional target, then read the original result.
 
-Resolve this installed plugin's root two directories above the skill. Read
-`loki-build.json` for the fixed profile, version and available integration. Use
-only that profile's installed skills/tools, not a source checkout or another
-profile. Report an inconsistent package as a concrete blocker.
+This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup sends no source to a model. It returns a saved configuration with `map: null`; this is not browser observation or proof that a feature works.
 
-For application Setup, call the installed `application-setup` skill in this same
-conversation. Start or reuse its map automatically as soon as the selected inputs
-and actual authority suffice. No second create-map assignment or Continue question
-is needed. Keep prepare, get/wait, Stop and recovery in the owning conversation;
-follow that skill's lifecycle and original context/run/result readback. Helpers
-remain useful for genuinely independent work, but must not own the Setup lifecycle
-or source consent. Keep this conversation active while the map runs and continue
-only genuinely independent onboarding work. Map communication
-is limited to one completion or an actionable blocker; no running/stage messages,
-percentages or repeated progress summaries. Structured tool diagnostics may still
-contain the original progress.
+For a new source selection, default to latest main and honor an explicit branch, PR ref or exact commit. Keep the frozen SHA and original requestKey for readback/recovery. Setup does not include dirty files in that committed-source selection. Keep the caller's actual dirty-source evidence separate when the selected test task needs it. Ask for a target/browser only when execution needs one.
 
-For a new source operation, default to latest main. Honor a selected branch, PR
-head or exact commit; resolve once to a full SHA. Preserve the original SHA and
-request key during retry/recovery. Keep dirty/untracked source excluded, and
-report an unavailable upstream rather than calling a stale local ref latest.
-Ask for target/browser inputs only when the selected operation actually needs them.
+Use the advertised input/output schema, `isError` and `structuredContent`. Preserve actual safe failures, missing input and unknown historical effects. Old mapping contexts remain old records and are never automatically restarted. A saved application context does not grant provider, browser or write authority.
 
-Map-dependent steps wait for actual map readiness. Independent work keeps its
-own prerequisites. Normal packages call the admitted real Setup map adapter and
-never fall back to fixtures or analysis CLIs. A settled source-inferred fragment
-with a processed page and no native stage failures can be ready for the selected work
-item. Read its structured
-readiness scope and report its coverage limits. Application coverage remains
-incomplete; scoped readiness does not prove browser behavior or consumer acceptance.
-Empty or unprocessed maps stay incomplete, and unknown accounting stays uncertain.
+## Connections and prerequisites
 
-Consume Setup tools through their advertised input/output schemas. Check
-`isError` and read `structuredContent`; keep safe execution errors and protocol
-argument failures distinct. Handles and completed waits do not prove readiness.
-Follow the installed `application-setup` guidance for exact context state,
-bounded wait, Stop receipts and pending or unknown-effect recovery.
+Core HTTP/OAuth handles cloud account/workspace and Work Item operations. Local stdio handles Setup, context, analysis, planning, Runner and reports. Core sign-in is not a prerequisite for independent local capabilities. A connection offer does not prove that the current chat has callable tools.
 
-## Connections and missing prerequisites
+Inspect the actual chat tool inventory and `loki_capabilities_list` when exposed. Distinguish installed/enabled, discovery, current-chat availability and selected-operation readiness. Report the exact missing boundary. Use a supported reconnect control only when needed and verify afterward. Do not infer that Core login will fix missing local tools.
 
-Kaijan has two independent MCP connections: Core HTTP for cloud account/workspace
-and Work Item operations, and Local stdio for application Setup, analysis,
-planning, Runner and reports. Core sign-in is not a prerequisite for local
-capabilities, including browser or macOS desktop Runner when that mode is
-available. Runner still needs its model-provider configuration, runtime and
-explicit scenario, parameters, target and action authority. Credentials for the
-application under test are separate from Core OAuth and provider credentials.
+Provider/runtime configuration is checked for the selected analysis or Runner action. Do not collect keys or make it a universal onboarding gate. Application login is separate from Core OAuth and model credentials. Use installed `work-item` and connection-status tools only when the requested cloud operation needs them. Do not create a Work Item as an onboarding requirement. For GitHub work, read [GitHub setup and recovery](references/github-setup.md) only when relevant.
 
-Distinguish installed/enabled, server discovery, current-chat tool availability
-and operation readiness. If local tools are missing, report that specific
-boundary; do not infer that Core login will fix it. Discovery in another process
-does not prove tools are callable in this chat. Inspect the current tool inventory
-and use `loki_capabilities_list` when available. Recommend reconnect/reload only
-through a supported host control, and verify tool availability afterward before
-claiming recovery. Ask for Core sign-in only when the requested operation needs
-Core; do not make it a universal setup gate.
+When local analysis or Runner reports missing provider access on a fresh machine, read [provider setup](references/provider-setup.md). The installed package has a host-only setup command. Use an explicitly approved local credential source; never ask the user to paste a key into chat or an MCP argument. Do not treat the Codex subscription or a working terminal environment as proof that the plugin has API access.
 
-The native post-install offer and later Set up action use this same entrypoint.
-Supported installation preparation and OAuth remain host-owned; this skill runs
-after Set up submission. Reuse valid connections. The offer alone does not prove
-that every server authenticated, nor does OAuth grant source transfer or browser
-actions. Preserve the pending application/goal across cancelled login or reconnect.
+## Finish and continue
 
-- Core reads: use installed `work-item` and the profile's connection-status
-  tool when relevant. Confirm only observed account/workspace. Use an explicit
-  Work Item UUID for a read; never create one as an onboarding prerequisite.
-- Local source: use the selected canonical repository and frozen commit. The real
-  adapter must establish source-transfer authority for sending committed excerpts
-  to its configured provider. Keep actual consent distinct from a workflow choice.
-- AI: never collect keys or configure a provider in onboarding. Report a missing
-  provider only when the requested real operation needs it. Browser/Core tokens
-  are not provider credentials.
-- GitHub: only if the goal requires it, read
-  [GitHub setup and recovery](references/github-setup.md). Local mapping does not
-  inherently require GitHub login.
+Verify the saved configuration or blocker through `application-setup` in this conversation. State it once and continue the user's explicit task when its inputs and authority suffice. Risk analysis, functional/change-impact planning and Runner do not require a map or a Setup handoff.
 
-Do not add optional connection questions to fill time while a map runs.
-A connection-only request ends with its supported next action and does not start
-unrelated source analysis.
+If the next action is open, read [next-action discovery](references/next-actions.md) and show a small set of relevant capability actions with their reason, expected result and actual requirements through a native Question. Do not substitute a fixed menu, generic chat navigation or “I'll wait” for that choice. A plan-only or no-execution request still allows useful suggestions. An explicit request to stop or skip suggestions takes precedence. Preserve the accepted selection instead of asking again.
 
-## Finish in the same conversation
-
-Verify the original context/run/result through the installed `application-setup`
-lifecycle and API in this same conversation, or
-read back the genuine retained-map configuration when that reuse route applies.
-Keep a saved configuration distinct from generated readiness and preserve partial
-map status. Prepare
-the applicable next action or selection below, then combine it with one concise
-completion in the final reply. Do not publish map completion in commentary before
-the Question: its rationale can explain task relevance without repeating map
-status. A blocker is reported once with its recovery action. Missing real
-provider/authority or consumer support never licenses a simulated completion.
-
-Continue the user's explicit goal when its prerequisites and authority permit it.
-When the next action has not been selected, read
-[next-action discovery and selection](references/next-actions.md) and present its
-contextual choices before ending Setup. “I will choose what to do next afterward”
-means the choice is still open, not that suggestions should be skipped. Only skip
-suggestions when the user explicitly declines them or asks to stop. Use supported task metadata for the selected project when available;
-otherwise use the supplied conversation/project context. Present a small set of
-concrete Kaijan capability actions with their contextual reasons, expected
-results and actual readiness conditions, using a native Codex Question for the
-user's selection. A chat/source read is an input step, not a substitute for the
-relevant Kaijan action. Neither a generic “Which work item or scenario next?” nor “I’ll wait for your
-choice” alone completes onboarding. Do not repeat the map completion when
-presenting a Question or its typed fallback. In the same conversation, preserve an accepted selection
-instead of repeating the suggestions.
-Keep source inference, controlled output and observed browser behavior distinct.
-A finished turn/helper is not a map pass, confirmed Stop or OS notification receipt.
-Read the original result in the owning conversation; do not promise idle-chat wakeups,
-restart-surviving execution, another daemon or cloud orchestration.
-
-Before ending the initial Setup turn, verify the actual configuration or blocker,
-explain the applicable action choices and their prerequisites, and emit the native
-Question when the next action is still open. A text list alone does not complete
-that choice step. "Do not execute anything yet" limits execution; it does not
-decline suggestions or the choice card. Leave the Question unanswered until the
-user decides. An explicit request to stop or skip suggestions still takes precedence.
+Keep configuration, proposed tests, actual execution and separate evidence assessment distinct. Do not claim a pass from a handle, finished call, source inference or missing evidence. No watcher, extra daemon, idle-chat wake or cloud orchestration is introduced.

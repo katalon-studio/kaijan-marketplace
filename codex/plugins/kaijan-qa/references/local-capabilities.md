@@ -37,7 +37,7 @@ Do not use raw Unverified or inconclusive badges, or a stock authentication
 statement, as the main user status. Keep technical native statuses in records. A
 user-facing pass or fail still needs sufficient evidence; do not invent a verdict.
 
-Map and report tools expose their MCP Apps UI by default. The library option
+Report tools expose their MCP Apps UI by default. The library option
 `createCapabilityCatalog(services, { uiEnabled: false })` explicitly selects
 chat-only output: no UI metadata, resources or local previews are exposed in
 that mode. Present returned chat results with concise prose, Markdown tables or
@@ -48,17 +48,13 @@ useful evidence. Open external Playwright replay only when requested.
 
 Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The fixed Product profile binds private state and the Core HTTP/OAuth connection; source, provider, GitHub and browser authority remain distinct.
 
-The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, immutable supplements, supplied-evidence assessment, native browser execution and work-item-focused source map building plus map reading/presentation. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
+The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, immutable supplements, supplied-evidence assessment, native browser execution. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
 
 Use the installed owning skill and exact advertised input schema. The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
 
-The supplied native algorithms, prompts, models and validator contracts retain their origin hashes. Current public sources live under packages/. Alternative experiments remain in experiments/ and are outside the Product build selection. The canonical UI Modeler additionally supports explicitly new focused source discovery under #2108; its original full-generation path remains available through the same Node library. Broader cleanup remains deferred. Research MCP registration/distribution is removed; there is one maintained Product capability MCP plus the existing Product Setup and Core transports.
+The supplied native algorithms, prompts, models and validator contracts retain their origin hashes. Current public sources live under packages/. Alternative experiments remain in experiments/ and are outside the Product build selection. Mapping source is preserved in the repository for future backend work; it is not an installed plugin action. Broader cleanup remains deferred. Research MCP registration/distribution is removed; there is one maintained Product capability MCP plus the existing Product Setup and Core transports.
 
 This package includes no application map, test-case dataset, prepared answer, credential or browser binary. Native Runner downloads compatible Chromium on first use through its pinned Playwright installer and reuses the versioned user cache. Import, discovery and analysis do not download browsers. If preparation fails or provider configuration is unavailable, report readiness honestly. Do not switch to an old experiment or a CLI bridge.
-
-For fresh mapping, call loki_ui_modeler_build_map with the explicit authorized local folder and current workItem. Plain folders and dirty Git working trees are supported; no Setup or GitHub prerequisite is added. JEV first screens paths and the question without source text. Source discovery then reads promising captured source and follows material connections; uncertain and lower-scored paths remain eligible. The selected scope seeds page discovery. Later assembly can request material dependencies from the same immutable capture, with actual reads and expanded included scope reported. Defaults are $10 known/reserved and one 5400-second native guard across capture, discovery and assembly. The packaged Codex local server sets tool_timeout_sec=5520 to allow final receipt/cleanup return; host approval policy is unchanged.
-
-Use the returned mapId with get/show. Building registers immutable private answer data without changing the selected map. Inventory changes invalidate discovery; source changes invalidate dependent analysis. Exact native Responses and independent JEV source results can be reused across related questions, with original receipts separate from new fees. Preserve unknown connections and partial coverage. Independent fragment IDs are not a complete app or an implicit union of source snapshots.
 
 The normal Local stdio declaration forwards only the approved existing provider
 environment names: LOKI_OPENROUTER_API_KEY, LOKI_OPENROUTER_BASE_URL and
@@ -73,8 +69,12 @@ forward the entire environment.
 ## Compose a caller-scoped test request
 
 Use the installed `test-request` skill for a full testing request. The coding agent
-selects and composes existing capabilities under the original goal/target/actions;
-it does not need another full-flow API or approval at every phase. Plan-only
+selects analysis and planning under the original goal, target and actions.
+Use `loki_test_execute` for normal execution and assessment. Kaijan reuses its
+saved task, selected tests and evidence internally, then saves the combined report.
+Use `loki_test_get` for that same flow and `loki_test_stop` for Stop. The caller
+does not copy saved evidence back or invoke a second routine assessment. Independent
+execution and external-evidence review remain available. Plan-only
 requests do not execute. Full requests with sufficient inputs continue through
 their selected scenarios, evidence assessment and native report.
 

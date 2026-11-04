@@ -17,12 +17,35 @@ const result = await catalog.invoke("loki_capabilities_list", {});
 await catalog.close();
 ```
 
-For a retained Runner run selected in an existing report,
+For a normal authorized UI test, `loki_test_execute` runs the complete scenario,
+assesses its retained evidence, and saves a combined report. Read the same flow
+with `loki_test_get` until it ends; browser completion is an intermediate stage.
+The default reply contains test results, performed steps, costs and the report.
+Use `originalResult` and explicit offsets only for the complete evidence records.
+Use `savedTests` with an exact Plan reference and selected test IDs to load the
+full saved scenarios internally. Parameters and target remain explicit; optional
+guidance and host observations supplement the Plan. Standalone Runner still
+requires the full scenario.
+Use `loki_test_stop` to stop the flow. Execution and assessment keep separate
+statuses and accounting. No caller copy of the saved Plan or screenshots is
+needed. The public `TestRun` service composes the existing Runner, Reports and
+SuppliedEvidenceAssessment APIs. Standalone Runner tools remain available for
+execution-only tasks. Tests run outside Kaijan use `loki_test_evidence_assess`.
+
+For an independent review of a retained Runner run selected in an existing report,
 `loki_assessment_prepare` assembles a read-only assessment handoff. Supply the
-exact `reportId` and `runId`, original `work_item`, nullable `requirements` and
-`proposed_tests`, attributed `receipts`, nullable `preflight`,
-`runtimeComparison` and `cleanup`, and `selectedArtifactIds` from
-`loki_report_artifact_read`. Receipts use `{id, attribution, content}`;
+exact `reportId` and `runId`. Omitted `work_item`, `requirements` and
+`proposed_tests` reuse the protected original Runner request, exact selected
+Plan tests, and original planning input when available. Standalone scenarios
+keep their caller-supplied attribution. Explicit values (including null)
+override these defaults. Attributed `receipts`, `preflight`, `runtimeComparison`,
+`cleanup` and `suppliedObservations` add optional caller context.
+Omit `selectedArtifactIds` to include all
+supported public report-readable JSON and PNG evidence for that Run. The existing
+reader applies integrity and privacy checks. No caller file-selection loop is
+needed. An explicit `selectedArtifactIds` array from `loki_report_artifact_read`
+is an optional override; an empty array selects no artifacts.
+Receipts use `{id, attribution, content}`;
 `suppliedObservations` may supply separately attributed interpretations.
 `expectedResultSha256` optionally pins the selected result. First call the same
 tool with `view: "inspection"` to inspect `loki.assessment-inspection/1`:
@@ -49,13 +72,22 @@ returns `assessment_image_unavailable` with `requestDispatched: false`, includin
 when an earlier answer is cached. No path or URL can select an image. Direct
 caller-supplied image bytes remain supported. The full native input stays in
 private assessment artifacts. Inspection itself is not submission input.
+The 2 MiB preparation limit applies to the compact packet, including all text
+and metadata. It does not count the base64 copies of retained PNGs. Each PNG
+still has a 2 MiB limit, and assessment accepts at most 256 images. Preparation
+validates the complete native input before returning a compatible packet.
+The complete serialized provider request also has a 32 MiB limit. These are
+local assessment bounds, not provider capacity claims. They allow normal
+Runner sequences beyond 32 screenshots without sending unbounded payloads.
+Preparation does not resize, sample or discard images to meet these limits.
 
 Preparation performs no inference, dispatch, new persistence or automatic
 acceptance. It preserves original requirements rather than deriving them from
 the Runner scenario. Caller receipts remain assertions. Selected JSON stays as
 original text. Selected PNG pixels reach the existing native image request.
 When a Run PNG is selected, preparation also includes its original
-`case-evidence.json` once, even if the caller also selects that file. The same
+`actions.json`, `case-evidence.json` and matching `.ui.json` files once when
+available, even if the caller also selects those files. The same
 artifact reader checks its report, Run, manifest and content hashes. Preparation
 checks the record's Plan and selected test IDs against the Run and checks each
 selected PNG's recorded hash. The complete original JSON text keeps its Runner
@@ -63,6 +95,17 @@ attribution, capture times, case boundaries and action links. These are retained
 Runner claims. They do not authenticate execution or establish a verdict.
 An absent record or capture link remains explicit. Preparation does not derive
 chronology from filenames or add missing links.
+For an explicit override, the full packet lists other report-readable PNGs in
+`unselectedArtifacts`. Inspection shows a bounded prefix, omission counts and
+exact artifact selectors. Case capture links keep their original Runner
+attribution. These descriptors do not supply omitted pixels. Normal automatic
+preparation includes the complete supported public artifact sequence. Protected
+pixels and private manifest members stay unavailable. Assessment accepts at
+most 256 PNGs, including original embedded images, and retains packet and provider
+limits. Larger inputs return an explicit incompatibility without sampling or
+dropping evidence. Do not replay the browser to resolve this limit. A smaller
+explicit selection is a separate scoped assessment with explicit omissions;
+complete assessment of arbitrary long Runs is not supported.
 Missing facts and reference/citation failures remain unresolved. Oversized
 packets are explicitly refused rather than truncated; original results remain
 available through the returned existing readers. Plugin/runtime identity and

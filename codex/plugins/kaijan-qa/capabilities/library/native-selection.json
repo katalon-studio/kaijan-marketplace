@@ -245,10 +245,10 @@
         "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55",
         "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "pr-context-finder/planning/pcf_plan.mjs": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97",
+        "pr-context-finder/planning/pcf_plan.mjs": "44e6f315dbeb5c7844cefa1d0b693d035f4099fff0b678f71bd8219739c9d7f4",
         "pr-context-finder/planning/pcf_provider.mjs": "e960d072d964eda02f682c6b8ee01233b9433788cef394f5ceda69fe66443dd7",
         "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
-        "pr-context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
+        "pr-context-finder/planning/prompts.mjs": "955a36950d07b178f0efd026dcc0cbd578d8d17a0940e2ec3d3414d5012117ae",
         "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
@@ -432,11 +432,11 @@
         "experiments/context-finder/planning/pcf_plan.mjs": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97",
         "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
-        "experiments/context-finder/planning/pcf_provider.mjs": "5048227135ec06ce1d4b1a4c18bcd05ad6dc028aa9ae79d3707022431e152d02",
+        "experiments/context-finder/planning/pcf_provider.mjs": "9ddb0d57b1fb42589746f8ac6d4e01cabf165deaaf8cd7a806103027a925f74d",
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "experiments/context-finder/planning/prompts.mjs": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
-        "experiments/work-verifier/supplied-evidence.mjs": "6840d5e02aa68c0b010119bd6d18064ea39b38b505cb62aba29fd1846bf36e20",
+        "experiments/context-finder/planning/prompts.mjs": "2d18893ff49dd79c81a34293a4b5f3c41061ea82a07d10d740f740269629f5f5",
+        "experiments/work-verifier/supplied-evidence.mjs": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
         "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
         "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -447,8 +447,8 @@
         "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8",
         "experiments/work-verifier/source-binding.mjs": "716025e562d4d79883a0bea6b12e8d37000956b0aebad07a0451ba1174ed7adb",
         "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
-        "experiments/work-verifier/assessment-contract.mjs": "1600bb68e5cb18877b6badda7bb06c92bb86186a8eaa43643e22cfea9040ec11",
-        "experiments/work-verifier/assessment-runtime.mjs": "5164160da50ac1f24c9b8e66af29e82c5c2a9dca9c47eeb67f7c93652e902cfb",
+        "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
+        "experiments/work-verifier/assessment-runtime.mjs": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
         "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
       },
       "assets": {
@@ -505,7 +505,11 @@
         "pullRequest": 2435,
         "scope": "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change."
       },
-      "structuredTestAssessmentSource": "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7"
+      "structuredTestAssessmentSource": "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7",
+      "scenarioOutcomeResultSlots": {
+        "issue": 2530,
+        "scope": "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks."
+      }
     },
     "uiModeler": {
       "sourceCommit": "986f8ac81fb993c5c351ddbba8ee88bc00e2142f",
@@ -1638,7 +1642,7 @@
     },
     "planning/pr-context-finder/planning/pcf_plan.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/pcf_plan.mjs",
-      "sha256": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97",
+      "sha256": "44e6f315dbeb5c7844cefa1d0b693d035f4099fff0b678f71bd8219739c9d7f4",
       "originalSha256": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5"
     },
     "planning/pr-context-finder/planning/pcf_provider.mjs": {
@@ -1653,7 +1657,7 @@
     },
     "planning/pr-context-finder/planning/prompts.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/prompts.mjs",
-      "sha256": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
+      "sha256": "955a36950d07b178f0efd026dcc0cbd578d8d17a0940e2ec3d3414d5012117ae",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5"
     },
     "planning/pr-context-finder/planning/semantics.mjs": {
@@ -1713,7 +1717,7 @@
     },
     "planner-loop-source/experiments/context-finder/planning/pcf_provider.mjs": {
       "source": "packages/context-finder/planning/pcf_provider.mjs",
-      "sha256": "5048227135ec06ce1d4b1a4c18bcd05ad6dc028aa9ae79d3707022431e152d02",
+      "sha256": "9ddb0d57b1fb42589746f8ac6d4e01cabf165deaaf8cd7a806103027a925f74d",
       "originalSha256": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee"
     },
     "planner-loop-source/experiments/context-finder/planning/semantics.mjs": {
@@ -1728,12 +1732,12 @@
     },
     "planner-loop-source/experiments/context-finder/planning/prompts.mjs": {
       "source": "packages/context-finder/planning/prompts.mjs",
-      "sha256": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
+      "sha256": "2d18893ff49dd79c81a34293a4b5f3c41061ea82a07d10d740f740269629f5f5",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5"
     },
     "planner-loop-source/experiments/work-verifier/supplied-evidence.mjs": {
       "source": "packages/work-verifier/supplied-evidence.mjs",
-      "sha256": "f0099feff8488123ccd11c539218c2b700c6720bdee3064e0814bec3138b8a93",
+      "sha256": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf"
     },
     "planner-loop-source/experiments/provider-transport/index.mjs": {
@@ -1807,13 +1811,13 @@
     },
     "planner-loop-source/experiments/work-verifier/assessment-contract.mjs": {
       "source": "packages/work-verifier/assessment-contract.mjs",
-      "sha256": "63e38da70781994b8ed73eab486fc14089cbeb98bc81e21609e217f3b0638716",
+      "sha256": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
       "originalSha256": null,
       "derivation": "Neutral shared Product helper after source extraction #2173."
     },
     "planner-loop-source/experiments/work-verifier/assessment-runtime.mjs": {
       "source": "packages/work-verifier/assessment-runtime.mjs",
-      "sha256": "5164160da50ac1f24c9b8e66af29e82c5c2a9dca9c47eeb67f7c93652e902cfb",
+      "sha256": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
       "originalSha256": null,
       "derivation": "Neutral shared Product helper after source extraction #2173."
     },
@@ -1860,7 +1864,7 @@
       "originalPath": "experiments/context-finder/planning/pcf_records.mjs"
     },
     "packages/context-finder/planning/pcf_provider.mjs": {
-      "sha256": "5048227135ec06ce1d4b1a4c18bcd05ad6dc028aa9ae79d3707022431e152d02",
+      "sha256": "9ddb0d57b1fb42589746f8ac6d4e01cabf165deaaf8cd7a806103027a925f74d",
       "originalSha256": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee",
       "originalPath": "experiments/context-finder/planning/pcf_provider.mjs"
     },
@@ -1875,12 +1879,12 @@
       "originalPath": "experiments/context-finder/planning/pcf_native.mjs"
     },
     "packages/context-finder/planning/prompts.mjs": {
-      "sha256": "ca4a55cf6a536348a4ccb355b102b003e3926484f52e74673d500fc77d791704",
+      "sha256": "2d18893ff49dd79c81a34293a4b5f3c41061ea82a07d10d740f740269629f5f5",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5",
       "originalPath": "experiments/context-finder/planning/prompts.mjs"
     },
     "packages/work-verifier/supplied-evidence.mjs": {
-      "sha256": "f0099feff8488123ccd11c539218c2b700c6720bdee3064e0814bec3138b8a93",
+      "sha256": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf",
       "originalPath": "experiments/work-verifier/supplied-evidence.mjs"
     },
@@ -2209,12 +2213,12 @@
       "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
     },
     "packages/work-verifier/assessment-contract.mjs": {
-      "sha256": "63e38da70781994b8ed73eab486fc14089cbeb98bc81e21609e217f3b0638716",
+      "sha256": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
       "originalSha256": null,
       "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
     },
     "packages/work-verifier/assessment-runtime.mjs": {
-      "sha256": "5164160da50ac1f24c9b8e66af29e82c5c2a9dca9c47eeb67f7c93652e902cfb",
+      "sha256": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
       "originalSha256": null,
       "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
     },

@@ -7,9 +7,7 @@ not automatic execution or a mandatory recipe.
 ## Use the available context
 
 Start with the user's supplied goal, selected application/project, current
-conversation and the verified Setup result or retained-map configuration receipt.
-Keep incomplete map coverage explicit; a saved configuration is not execution
-readiness. An explicit next goal takes priority
+conversation and the verified saved Setup configuration. A saved configuration is not execution readiness. No map is required or built in this release. An explicit next goal takes priority
 over discovery; do not interrupt it with a recommendation menu.
 
 If the host exposes `list_threads`, read one bounded recent metadata page (about
@@ -49,7 +47,6 @@ contracts, not from a fixed menu or a chat title alone. Conditional examples:
 | Actual code change or PR                          | `assess-change-risk`                                                       | Source-backed change assumptions and evidence to investigate |
 | Supplied test outcomes and original requirement   | `assess-test-evidence`                                                     | Scoped evidence assessment and remaining coverage gaps       |
 | Work item/issue/PR needing related context        | `find-related-work`                                                        | Related items with reasons and source links                  |
-| A real map relevant to the current task           | `read-app-map`                                                             | Relevant controls, routes and explicit coverage limits       |
 | A complete browser scenario and authorized target | `run-test`                                                                 | Execution records and observations, separately from verdicts |
 
 These are examples of semantic fit, not mandatory predecessors, literal option
@@ -77,11 +74,9 @@ readiness condition. Use friendly English; keep internal MCP names and routing
 details in the reasoning/tool record unless the user requests them.
 
 Use only installed capabilities and the context actually available, keeping
-missing prerequisites explicit as above. A controlled map is simulated: do not
-offer exploring it as the application's real map or
-claim it authorizes downstream testing. Independent project orientation and
-requirement collection can proceed without a real map. Report provider/browser
-or source-authority prerequisites when the selected action actually needs them.
+missing prerequisites explicit as above. Project orientation and requirement
+collection can proceed from supplied task and code context. Report provider,
+browser or source-authority requirements only when the selected action needs them.
 
 Give a brief rationale before invoking the native Codex Question, using concrete
 action labels for those same suggestions and preserving material readiness

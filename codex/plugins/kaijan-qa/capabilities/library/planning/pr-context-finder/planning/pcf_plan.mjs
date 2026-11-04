@@ -59,14 +59,6 @@ const arr = (items) => ({ type: "array", items }),
 export const SCHEMA = obj({
   status: { type: "string", enum: ["proposed_plan", "needs_clarification"] },
   objectives: arr(obj({ id: S, text: S, refs: arr(REF) })),
-  requirement_coverage: arr(
-    obj({
-      requirement_id: S,
-      status: { type: "string", enum: ["proposed", "gap"] },
-      test_ids: arr(S),
-      reason: S,
-    }),
-  ),
   ambiguities: arr(S),
   relevant_surfaces: arr(
     obj({
@@ -101,6 +93,16 @@ export const SCHEMA = obj({
         refs: arr(REF),
       }),
       execution_gaps: arr(S),
+    }),
+  ),
+  // Define tests before emitting coverage and handoff references. Keep the
+  // public shape and the independent reference validator unchanged.
+  requirement_coverage: arr(
+    obj({
+      requirement_id: S,
+      status: { type: "string", enum: ["proposed", "gap"] },
+      test_ids: arr(S),
+      reason: S,
     }),
   ),
   disagreements: arr(S),

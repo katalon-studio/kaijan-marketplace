@@ -67,11 +67,13 @@ Playwright's versioned user cache. It is not included in the plugin archive and
 does not require an installed Google Chrome. Browser preparation respects Stop
 and the execution time limit; download failure returns before browser launch or
 provider calls. Imports, tool discovery and analysis do not download browsers.
-Credentials for the authorized target are explicit params, resolved by the host
-before invocation; use `options.secretParameterNames` for names requiring native
-redaction. The adapter never reads unrelated browser profiles or live history.
-Existing-session attachment, persisted memory and credential-reference resolution
-are not implemented by this delivered Runner. Its native limits remain 80 calls,
+For browser logins, use [private parameters](private-parameters.md). The installed
+host command returns `privateParams` references scoped to this conversation and
+the approved hosts. Kaijan resolves these before dispatch and adds the names to
+`options.secretParameterNames`. Keep ordinary inputs in `params`. Raw credentials
+must not appear in MCP arguments. The adapter never reads unrelated browser
+profiles or live history. Existing-session attachment and persisted memory are
+not implemented by this delivered Runner. Its native limits remain 80 calls,
 150 returned browser inputs and ten minutes; options can lower those bounds.
 Native admission additionally limits serialized scenario text to 8000 characters,
 50 scalar params, 120-character names and 4000-character string values. Those are
@@ -115,7 +117,7 @@ mapping. Host-derived hashes identify bytes, not semantic support.
 
 ## Browser clarification and recovery contract (#2334)
 
-The native strict `execution_status` function reports `needs_input`, `stuck` or
+The native strict `execution_status` function reports `needs_input`, `stuck`, `blocked` or
 `complete`. Browser nativeResult
 `executionState` is exactly `completed | incomplete`: completion requires a
 coherent explicit `complete` with known effects and no remaining steps or
@@ -147,7 +149,16 @@ remains `accepted | running | finished | unknown | not-started | stopped-before-
 `deadlineAt` and `state: live | unknown`. Question fields are strings. `live`
 requires this host's running pending callback, no Stop and an unexpired deadline.
 `unknown` retains an unresolved request without live authority; restart, disconnect,
-Stop or deadline cannot restore it. Existing get result fields remain unchanged.
+Stop or deadline cannot restore it. Existing lifecycle `state` fields remain unchanged.
+
+A live clarification also returns top-level `nextAction` with `kind: input-required`,
+`tool: loki_runner_answer`, the original `runId`, `clarificationId`, `deadlineAt`,
+safe projected `questions` and an `instruction`. This requires caller action, not
+repeated polling. Combined `loki_test_get` exposes the same next action at the top
+level and sets `status.execution: waiting-for-input`. Answer from known authorized
+context or ask the user now. If no answer can arrive within the deadline, stop the
+same run and keep partial results. Unknown, stopped or expired requests do not
+return a next action that authorizes an answer.
 
 For a live request, submit `loki_runner_answer({runId, clarificationId, answerKey,
 answers, sensitiveQuestionIds})`: runId and clarificationId are hex64 strings, answerKey is a nonempty
@@ -182,6 +193,12 @@ strings; clarificationId is SHA-256 of the response ID, a NUL separator and the
 call ID.
 The callback is a host function, not execute input; unavailable callback means
 incomplete. It carries no source grants or authorization.
+
+A `blocked` report ends the run incomplete without escalation. Use it for a task
+restriction, a prohibited transition, denied access or an unavailable service
+that reasoning cannot resolve. Preserve the reason and remaining checks. Missing
+caller information uses `needs_input`; navigation or reasoning difficulty uses
+`stuck`. The host uses the explicit status, not keyword guesses about the reason.
 
 The first `stuck` with known effects raises Luna effort low to medium for one
 recovery phase within original limits. A second `stuck` terminates with reason and
@@ -363,7 +380,7 @@ complete process environment requires `LOKI_MODEL_PROVIDER=openrouter`,
 provider. An already authorized LiteLLM profile retains its own declared settings.
 
 The host supplies the approved provider environment or provisions its existing
-private Product profile through the owner API. For an explicitly authorized
+private Product profile through the packaged host command. Read `skills/setup/references/provider-setup.md` and run the bundled Node with `scripts/provider-settings.mjs show` or `configure --from-file /absolute/path/to/approved.env`. The command prints no keys and needs no source checkout. For an explicitly authorized
 operator with the complete configured environment, the public library exposes
 `adoptProviderEnvironment(privateProductDataRoot)`. This stores only the private
 provider profile and starts no analysis. Do not use a Research data-root flag or

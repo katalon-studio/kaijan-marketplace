@@ -21,6 +21,7 @@ export declare const runnerExecutionReportSchema: z.ZodObject<{
     schema: z.ZodLiteral<"loki.runner.execution-report/1">;
     status: z.ZodEnum<{
         complete: "complete";
+        blocked: "blocked";
         needs_input: "needs_input";
         stuck: "stuck";
     }>;
@@ -129,6 +130,7 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
         schema: z.ZodLiteral<"loki.runner.execution-report/1">;
         status: z.ZodEnum<{
             complete: "complete";
+            blocked: "blocked";
             needs_input: "needs_input";
             stuck: "stuck";
         }>;
@@ -256,6 +258,7 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
             schema: z.ZodLiteral<"loki.runner.execution-report/1">;
             status: z.ZodEnum<{
                 complete: "complete";
+                blocked: "blocked";
                 needs_input: "needs_input";
                 stuck: "stuck";
             }>;
@@ -361,6 +364,20 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
     sourceContextId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strict>], "status">;
 export type RunnerResult = z.infer<typeof runnerResultSchema>;
+/** A live input request needs caller action, not another status poll. */
+export declare const runnerNextActionSchema: z.ZodObject<{
+    kind: z.ZodLiteral<"input-required">;
+    tool: z.ZodLiteral<"loki_runner_answer">;
+    runId: z.ZodString;
+    clarificationId: z.ZodString;
+    deadlineAt: z.ZodString;
+    questions: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        question: z.ZodString;
+        kind: z.ZodString;
+    }, z.core.$strict>>;
+    instruction: z.ZodString;
+}, z.core.$strict>;
 export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
     schema: z.ZodLiteral<"loki.runner-operation/1">;
     runId: z.ZodString;
@@ -387,6 +404,19 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -442,6 +472,19 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -548,6 +591,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
                     complete: "complete";
+                    blocked: "blocked";
                     needs_input: "needs_input";
                     stuck: "stuck";
                 }>;
@@ -678,6 +722,19 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -732,6 +789,19 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -778,6 +848,12 @@ export declare const runnerErrorSchema: z.ZodObject<{
             request_key_conflict: "request_key_conflict";
             operation_not_found_in_scope: "operation_not_found_in_scope";
             operation_unavailable: "operation_unavailable";
+            private_parameter_invalid: "private_parameter_invalid";
+            private_parameter_unavailable: "private_parameter_unavailable";
+            private_parameter_scope_mismatch: "private_parameter_scope_mismatch";
+            private_parameter_target_mismatch: "private_parameter_target_mismatch";
+            private_parameter_collision: "private_parameter_collision";
+            private_parameter_revoked: "private_parameter_revoked";
         }>;
         message: z.ZodString;
         requestDispatched: z.ZodNullable<z.ZodBoolean>;
@@ -817,6 +893,19 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -872,6 +961,19 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -978,6 +1080,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
                     complete: "complete";
+                    blocked: "blocked";
                     needs_input: "needs_input";
                     stuck: "stuck";
                 }>;
@@ -1108,6 +1211,19 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -1162,6 +1278,19 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
     }, z.core.$strict>>>;
+    nextAction: z.ZodOptional<z.ZodObject<{
+        kind: z.ZodLiteral<"input-required">;
+        tool: z.ZodLiteral<"loki_runner_answer">;
+        runId: z.ZodString;
+        clarificationId: z.ZodString;
+        deadlineAt: z.ZodString;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+        }, z.core.$strict>>;
+        instruction: z.ZodString;
+    }, z.core.$strict>>;
     identity: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodJSONSchema>>;
     execution: z.ZodOptional<z.ZodLiteral<"programmatic/1">>;
     createdAt: z.ZodOptional<z.ZodString>;
@@ -1206,6 +1335,12 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             request_key_conflict: "request_key_conflict";
             operation_not_found_in_scope: "operation_not_found_in_scope";
             operation_unavailable: "operation_unavailable";
+            private_parameter_invalid: "private_parameter_invalid";
+            private_parameter_unavailable: "private_parameter_unavailable";
+            private_parameter_scope_mismatch: "private_parameter_scope_mismatch";
+            private_parameter_target_mismatch: "private_parameter_target_mismatch";
+            private_parameter_collision: "private_parameter_collision";
+            private_parameter_revoked: "private_parameter_revoked";
         }>;
         message: z.ZodString;
         requestDispatched: z.ZodNullable<z.ZodBoolean>;

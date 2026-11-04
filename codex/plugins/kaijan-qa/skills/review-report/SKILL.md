@@ -1,6 +1,6 @@
 ---
 name: review-report
-description: Open a read-only Kaijan Map, Test plan and per-run report from exact retained answer or operation IDs, or preview and save a selected local HTML snapshot. Does not execute tests, publish or send reports.
+description: Open a read-only Kaijan Test plan and per-run report from exact retained answer or operation IDs, or preview and save a selected local HTML snapshot. Does not execute tests, publish or send reports.
 ---
 
 # Read the selected report
@@ -77,9 +77,8 @@ resolved to work-item intent evidence. No ID/order/prose inference. Unknown
 score/bar are dashes; Quality still expands all five design parts. Runs use
 original operation metadata; completion is not a verified test pass, and a Plan's
 not-executed receipt does not override later selected runs. Test evidence links
-require the exact Plan ID, digest and requested test scope. Files changed, Runs,
-App map and Pull requests have explicit unavailable states for missing data.
-Map reads use the snapshot's exact map, not a new extraction. Missing compatible
+require the exact Plan ID, digest and requested test scope. Files changed and Runs
+keep their actual available data. The Map tab is hidden for this release. Do not build or require a map to open a test report. Historical map data remains unchanged. Missing compatible
 inline replay stays unavailable; do not launch a system browser to imitate it.
 For original GitHub PR/files reads, retain `loki.report-sources/1` under Context
 Intake's `nativeInputs.reportSources`, then select its exact `sourceContextId`
@@ -139,7 +138,14 @@ To inspect a retained intermediate observation, call `loki_report_artifact_read`
 with the exact reportId and selected Runner runId. Omit artifactId to list
 manifest-bound selectors; follow nextOffset for further entries. Read a returned
 artifactId, then join JSON content.text using its ordered UTF-16 offsets until
-nextOffset=null, or inspect its original PNG MCP image. Retain result/manifest
+nextOffset=null, or inspect an available PNG MCP image. JSON is filtered using
+the run's marked parameters and sensitive clarification answers. Keep the
+`content.projection` hash and byte count separate from the private original
+`artifact` hash and byte count. Do not claim the filtered text is the original.
+Screenshots and traces stay private for runs with marked secrets because a text
+filter cannot remove secrets from pixels or trace archives. Missing protection
+records refuse access; do not use a raw file path to bypass that refusal.
+Retain result/manifest
 and member digests, request taskId and creation time as provenance. The list is
 metadata; only a successful content read verifies the selected member. This tool
 accepts no arbitrary path and invokes no Runner or provider. Foreign, changed,

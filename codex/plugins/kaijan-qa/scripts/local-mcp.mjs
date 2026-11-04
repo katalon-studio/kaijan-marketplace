@@ -15867,7 +15867,7 @@ function resolveInputAliases(data, toolName) {
   }
 }
 async function captureToolCall(params) {
-  const { server, data, request: request3, extra, execute: execute3, parameterOwnership, inputSchema, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
+  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
   const resolvedEventType = eventType ?? MCPAnalyticsEventType.mcpToolsCall;
   const isVirtualAnalyticsTool = resolvedEventType === MCPAnalyticsEventType.mcpMissingCapability || resolvedEventType === MCPAnalyticsEventType.mcpFeedback;
   const ownership2 = getActiveAnalyticsParameterOwnership(data, request3.params?.name, parameterOwnership, isVirtualAnalyticsTool);
@@ -15896,7 +15896,7 @@ async function captureToolCall(params) {
   if (preparedEvent && omitCapturedParameters) preparedEvent.event.parameters = void 0;
   let result;
   try {
-    result = await execute3(downstreamRequest);
+    result = await execute2(downstreamRequest);
   } catch (error62) {
     publishFailedToolEvent(server, preparedEvent, error62, startTime, conversation, data.logger);
     throw error62;
@@ -39746,13 +39746,27 @@ var setupStartedPropertiesSchema = external_exports.strictObject({
 });
 var setupFinishedPropertiesSchema = external_exports.strictObject({
   setup_id: telemetryOperationId,
-  outcome: external_exports.enum(["ready", "failed", "stopped"]),
+  outcome: external_exports.enum([
+    "ready",
+    "ready_partial",
+    "needs_input",
+    "failed",
+    "stopped"
+  ]),
   missing_prerequisites: external_exports.array(external_exports.enum([
     "admitted-map-producer",
     "work-item-or-mapping-question",
     "model-provider",
     "source-authorization",
     "admitted-application-consumer",
+    "source_identity_changed",
+    "adapter_changed",
+    "invalid_map_readiness",
+    "invalid_source_authorization",
+    "source_authorization_scope_mismatch",
+    "setup_interrupted",
+    "git_unavailable",
+    "invalid_source",
     "unknown"
   ])).max(30).nullable(),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
@@ -39843,7 +39857,7 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped"]),
+  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
@@ -39855,8 +39869,11 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
-  error_code: external_exports.null(),
-  error_message: external_exports.null()
+  error_code: external_exports.enum(["native_execution_failed", "native_execution_blocked"]).nullable(),
+  error_message: external_exports.enum([
+    "Native execution did not return a validated result.",
+    "Native execution was blocked."
+  ]).nullable()
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
@@ -40146,7 +40163,7 @@ function createTelemetryCollector(broker, build) {
         component: "local_runtime",
         plugin_version: build.pluginVersion,
         release: `loki@${build.pluginVersion}+${build.sourceRevision}`,
-        install_channel: build.profile === "local" ? "dev" : build.profile === "qa" ? "qa" : "unknown",
+        install_channel: build.profile === "local" ? "dev" : build.profile === "qa" ? "qa" : build.profile === "production" ? "early_access" : "unknown",
         cohort: null,
         // Startup is the fixed installed Codex entrypoint; MCP uses its public handshake.
         host: event !== "$mcp_tool_call" ? "codex" : /codex/i.test(observation.clientName ?? "") ? "codex" : observation.clientName === "claude-code" ? "claude_code" : "unknown",
@@ -40326,7 +40343,15 @@ var prerequisites = [
   "work-item-or-mapping-question",
   "model-provider",
   "source-authorization",
-  "admitted-application-consumer"
+  "admitted-application-consumer",
+  "source_identity_changed",
+  "adapter_changed",
+  "invalid_map_readiness",
+  "invalid_source_authorization",
+  "source_authorization_scope_mismatch",
+  "setup_interrupted",
+  "git_unavailable",
+  "invalid_source"
 ];
 var outcome = (status2, reason) => ({ status: status2, reason });
 function elementKinds(value) {
@@ -40475,7 +40500,9 @@ function createSetupMapEvents({
       });
     }),
     setupFinished: observe((input3) => {
-      if (!["ready", "failed", "stopped"].includes(input3.state))
+      if (!["ready", "incomplete", "blocked", "failed", "stopped"].includes(
+        input3.state
+      ))
         return outcome("unsupported", "setup-state-unmapped");
       if (!firstTerminal(input3))
         return outcome("ignored", "not-first-setup-terminal");
@@ -40492,7 +40519,7 @@ function createSetupMapEvents({
         return outcome("unsupported", "readiness-not-established");
       return submit("Setup Finished", input3, {
         setup_id: input3.setupId,
-        outcome: input3.state,
+        outcome: input3.state === "blocked" ? "needs_input" : input3.state === "incomplete" ? "ready_partial" : input3.state,
         missing_prerequisites: missing ? Object.freeze(missing) : null,
         duration_ms: duration3(input3),
         permissions_requested_count: null,
@@ -40598,9 +40625,9 @@ var runCompletion = external_exports.strictObject({
   checks: terminalChecks.nullable(),
   checkSummary: checkSummary.nullable().optional()
 }).refine(
-  (value) => value.operationState === "finished" && value.resultValidated && value.resultKind === "returned" && ["completed", "incomplete", "cancelled"].includes(
+  (value) => value.operationState === "finished" && value.resultValidated && (value.resultKind === "native-exception" && value.nativeExecutionState === null && value.checks === null && !value.checkSummary || value.resultKind === "returned" && ["completed", "incomplete", "cancelled", "blocked"].includes(
     value.nativeExecutionState
-  )
+  ))
 );
 function elapsed(start, end) {
   return start !== null && end !== null && end >= start ? end - start : null;
@@ -40622,6 +40649,12 @@ function outcome2(value) {
       return ["partial", null, null];
     case "cancelled":
       return ["stopped", null, null];
+    case "blocked":
+      return [
+        "failed",
+        "native_execution_blocked",
+        "Native execution was blocked."
+      ];
     default:
       return [null, "run_outcome_unknown", "The run outcome is unknown."];
   }
@@ -40901,7 +40934,7 @@ function createBoundLifecycle(telemetry) {
           nativeDispatched: true,
           operationState: "finished",
           resultValidated: true,
-          resultKind: "returned",
+          resultKind: value.resultKind ?? "returned",
           checks: null
         });
         break;
@@ -40915,7 +40948,7 @@ import process7 from "node:process";
 import { performance as performance5 } from "node:perf_hooks";
 import { readFile as readFile3 } from "node:fs/promises";
 import { homedir as homedir2 } from "node:os";
-import { join as join9, resolve as resolve3 } from "node:path";
+import { join as join7, resolve as resolve3 } from "node:path";
 
 // packages/contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
@@ -42143,17 +42176,25 @@ async function createInstalledSession(root, build, data, broker, {
     ...contextSetup.binding,
     artifactDigest: identity3.digest
   }) : void 0;
-  const hostLibrary = validation || contextBinding || lifecycleFactory ? {
+  const hostLibrary = {
     ...library,
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
+        mapGeneration: false,
         ...validation ? { runnerValidation: validation } : {},
         ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
         ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
       });
+    },
+    createCapabilityCatalog(services, options) {
+      return library.createCapabilityCatalog(services, {
+        ...options,
+        mapsEnabled: false
+      });
     }
-  } : library;
+  };
   if (broker) {
     if (typeof library.bindManagedProvider !== "function")
       throw Error("Shared-auth runtime required");
@@ -42173,7 +42214,7 @@ async function createInstalledSession(root, build, data, broker, {
     library: broker ? {
       ...hostLibrary,
       createCapabilityCatalog(...args) {
-        const catalog2 = library.createCapabilityCatalog(...args);
+        const catalog2 = hostLibrary.createCapabilityCatalog(...args);
         return withModelDiscovery(
           {
             ...catalog2,
@@ -42197,6 +42238,28 @@ async function createInstalledSession(root, build, data, broker, {
     uiMode: "panel"
   });
   session.workspaceResults = workspaceService;
+  session.privateParameters = {
+    async provision(threadId, input3) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.provisionRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        input3
+      );
+    },
+    async revoke(threadId, bindingId) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.revokeRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        bindingId
+      );
+    }
+  };
   const originalFailure = session.failure.bind(session);
   session.failure = (error62) => modelDiscoveryFailure(error62) ?? originalFailure(error62);
   const initialized = performance3.now();
@@ -43756,6 +43819,7 @@ var UrlElicitationRequiredError = class extends McpError {
 
 // apps/codex-plugin/src/setup/service.mjs
 import { randomUUID as randomUUID5 } from "node:crypto";
+import { performance as performance4 } from "node:perf_hooks";
 
 // apps/codex-plugin/src/setup/store.mjs
 import { DatabaseSync } from "node:sqlite";
@@ -43921,7 +43985,7 @@ var setupSummarySchema = external_exports.strictObject({
 var setupPreparationOutputSchema = setupReceiptSchema.extend(
   setupSummarySchema.shape
 );
-var setupContextSchema = handleSchema.extend({
+var mappedSetupContextSchema = handleSchema.extend({
   schema: external_exports.literal("loki.setup-context/3"),
   version: external_exports.number().int().positive(),
   configuration: configurationSchema.extend({
@@ -43954,6 +44018,15 @@ var setupContextSchema = handleSchema.extend({
   error: label2.nullable(),
   supersededBy: identity2.optional()
 });
+var setupContextSchema = external_exports.union([
+  mappedSetupContextSchema,
+  mappedSetupContextSchema.extend({
+    schema: external_exports.literal("loki.setup-context/4"),
+    map: external_exports.null(),
+    authorityRef: external_exports.null(),
+    authorityKind: external_exports.null()
+  })
+]);
 var setupListOutputSchema = external_exports.strictObject({
   contexts: external_exports.array(
     setupReceiptSchema.omit({ recovered: true, reused: true }).extend({
@@ -43971,7 +44044,7 @@ var setupStopOutputSchema = setupReceiptSchema.extend({
   runId: identity2.nullable(),
   cancellationRequested: external_exports.boolean()
 });
-var setupResolveOutputSchema = external_exports.strictObject({
+var mappedResolveOutputSchema = external_exports.strictObject({
   application: external_exports.strictObject({
     schema: external_exports.literal("loki.application-context/2"),
     contextId: identity2,
@@ -44003,7 +44076,36 @@ var setupResolveOutputSchema = external_exports.strictObject({
     "controlled-selection-only"
   ])
 });
-var setupHandoffOutputSchema = setupResolveOutputSchema.extend({
+var configuredResolveOutputSchema = external_exports.strictObject({
+  application: external_exports.strictObject({
+    schema: external_exports.literal("loki.application-context/3"),
+    contextId: identity2,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().min(1).max(1e5).nullable(),
+    map: external_exports.null(),
+    readiness: external_exports.strictObject({
+      state: external_exports.literal("configured"),
+      missing: external_exports.array(external_exports.never()).max(0),
+      map: external_exports.literal("not-required"),
+      browserObserved: external_exports.literal(false)
+    }),
+    provenance: provenanceSchema
+  }),
+  setup: handleSchema.extend({
+    version: external_exports.number().int().positive(),
+    mapRunId: external_exports.null(),
+    mapResultId: external_exports.null(),
+    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
+    authorityRef: external_exports.null()
+  }),
+  authority: external_exports.literal("configuration-only")
+});
+var setupResolveOutputSchema = external_exports.union([
+  mappedResolveOutputSchema,
+  configuredResolveOutputSchema
+]);
+var handoffFields = {
   consumer: external_exports.union([
     external_exports.strictObject({
       state: external_exports.literal("pending"),
@@ -44012,7 +44114,11 @@ var setupHandoffOutputSchema = setupResolveOutputSchema.extend({
     consumerReceiptSchema
   ]),
   recovered: external_exports.boolean().optional()
-});
+};
+var setupHandoffOutputSchema = external_exports.union([
+  mappedResolveOutputSchema.extend(handoffFields),
+  configuredResolveOutputSchema.extend(handoffFields)
+]);
 var setupErrorOutputSchema = external_exports.strictObject({
   error: external_exports.strictObject({
     code: external_exports.string().regex(/^[a-z][a-z0-9_]{0,99}$/),
@@ -44029,7 +44135,15 @@ var setupSuccessSchemas = {
   loki_setup_resolve: setupResolveOutputSchema,
   loki_setup_handoff: setupHandoffOutputSchema
 };
-var setupOutputVersion = (name) => ["loki_setup_prepare", "loki_setup_retry", "loki_setup_stop"].includes(name) ? 2 : 1;
+var setupOutputVersion = (name) => [
+  "loki_setup_prepare",
+  "loki_setup_retry",
+  "loki_setup_stop",
+  "loki_setup_get",
+  "loki_setup_wait",
+  "loki_setup_resolve",
+  "loki_setup_handoff"
+].includes(name) ? 2 : 1;
 var setupOutputSchemas = Object.fromEntries(
   Object.entries(setupSuccessSchemas).map(([name, schema]) => [
     name,
@@ -44319,9 +44433,15 @@ async function createSetup({
   createTelemetry
 }) {
   const store = await openSetupStore(directory);
-  const provenance2 = provenanceSchema.parse(mapper.provenance);
+  const provenance2 = provenanceSchema.parse(
+    mapper?.provenance ?? {
+      kind: "product-adapter",
+      version: "application-source-configuration/1"
+    }
+  );
   const owner2 = randomUUID5();
   const telemetryByContext = /* @__PURE__ */ new Map();
+  const telemetryStarts = /* @__PURE__ */ new Map();
   const observe = (method, input3) => {
     try {
       Promise.resolve(
@@ -44356,6 +44476,7 @@ async function createSetup({
   const started = (value, observer) => {
     if (!observer || telemetryByContext.size >= 512) return;
     telemetryByContext.set(value.contextId, observer);
+    telemetryStarts.set(value.contextId, performance4.now());
     observe("setupStarted", {
       transitionKey: value.contextId,
       setupId: value.contextId,
@@ -44379,7 +44500,9 @@ async function createSetup({
     recovered: false,
     reused: false,
     state: value.state,
-    missingPrerequisites: value.missing
+    missingPrerequisites: value.missing,
+    durationKnown: telemetryStarts.has(value.contextId),
+    durationMs: performance4.now() - telemetryStarts.get(value.contextId)
   });
   const read = (input3) => store.get(input3.applicationId, input3.contextId);
   async function summarize(receipt, stop = false) {
@@ -44408,13 +44531,15 @@ async function createSetup({
         nextAction = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
         break;
       case "ready":
-        nextAction = value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
-        if (value.map.data?.readinessScope?.sourceLimitations?.length)
+        nextAction = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
+        if (value.map?.data?.readinessScope?.sourceLimitations?.length)
           nextAction += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
         break;
       default:
         nextAction = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
     }
+    if (!mapper && value.map && active.has(value.state))
+      nextAction = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
     if (stop && !receipt.cancellationRequested) {
       nextAction = receipt.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
     }
@@ -44437,7 +44562,7 @@ async function createSetup({
   async function verify(value) {
     if (digest2(await inspectSource(value.configuration.source)) !== digest2(value.sourceIdentity))
       throw new SetupFailure("source_identity_changed");
-    if (digest2(provenance2) !== digest2(value.provenance))
+    if (mapper && digest2(provenance2) !== digest2(value.provenance))
       throw new SetupFailure("adapter_changed");
   }
   function reserve(scope, input3, configuration, sourceIdentity, retry = false) {
@@ -44451,7 +44576,7 @@ async function createSetup({
       });
       const configurationHash = digest2({ configuration, provenance: provenance2 });
       const existing = store.matching(applicationId, configurationHash);
-      if (existing && existing.schema === "loki.setup-context/3" && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
+      if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
         const receipt2 = handle(existing);
         store.receipt(scope, input3.requestKey, hash2, receipt2);
         return {
@@ -44468,7 +44593,7 @@ async function createSetup({
         throw new SetupFailure("retry_not_required");
       const version4 = store.version(applicationId);
       const value = {
-        schema: "loki.setup-context/3",
+        schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
         applicationId,
         version: version4,
         contextId: digest2({ applicationId, version: version4, configurationHash }),
@@ -44481,11 +44606,11 @@ async function createSetup({
         authorityRef: null,
         authorityKind: null,
         owner: owner2,
-        map: { requestKey: null, runId: null, resultId: null, data: null },
-        progress: "Checking required execution prerequisites and source authority",
+        map: mapper ? { requestKey: null, runId: null, resultId: null, data: null } : null,
+        progress: mapper ? "Checking required execution prerequisites and source authority" : "Saving application source configuration",
         error: null
       };
-      value.map.requestKey = value.contextId;
+      if (value.map) value.map.requestKey = value.contextId;
       if (previousContext?.state === "awaiting-authority") {
         previousContext.state = "superseded";
         previousContext.supersededBy = value.contextId;
@@ -44521,7 +44646,9 @@ async function createSetup({
       value.progress = result.progress;
       value.missing = [];
       value.error = result.state === "failed" ? "map_failed" : null;
-      firstTerminal = ["ready", "failed", "stopped"].includes(value.state);
+      firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
+        value.state
+      );
     });
     if (firstTerminal) finished2(accepted, result.executionSettled === true);
     return accepted;
@@ -44530,18 +44657,31 @@ async function createSetup({
     try {
       if (read(value).state !== "awaiting-authority") return;
       signal?.throwIfAborted();
+      if (!mapper) {
+        await verify(value);
+        signal?.throwIfAborted();
+        const configured = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "ready";
+          current.missing = [];
+          current.progress = "Application source and optional target configured; no map generated";
+        });
+        finished2(configured, true);
+        return;
+      }
       const parsed = missingSchema.safeParse(
         await mapper.readiness(value.configuration)
       );
       if (!parsed.success) throw new SetupFailure("invalid_map_readiness");
       signal?.throwIfAborted();
       if (parsed.data.length) {
-        edit(value, (current) => {
+        const blocked = edit(value, (current) => {
           if (current.state !== "awaiting-authority") return;
           current.state = "blocked";
           current.missing = parsed.data;
           current.progress = "Setup needs the listed prerequisites";
         });
+        finished2(blocked, true);
         return;
       }
       if (read(value).state !== "awaiting-authority") return;
@@ -44551,13 +44691,14 @@ async function createSetup({
         invocation
       );
       if (!authorization) {
-        edit(value, (current) => {
+        const blocked = edit(value, (current) => {
           if (current.state !== "awaiting-authority") return;
           current.state = "blocked";
           current.missing = ["source-authorization"];
           current.progress = "Source or target authority was denied";
           current.error = "authority_denied";
         });
+        finished2(blocked, true);
         return;
       }
       const parsedAuthorization = authorizationSchema.safeParse(authorization);
@@ -44616,7 +44757,7 @@ async function createSetup({
           });
       }
     } catch (error62) {
-      edit(value, (current) => {
+      const interrupted = edit(value, (current) => {
         if (current.state === "awaiting-authority") {
           current.state = signal?.aborted ? "stopped" : "blocked";
           current.missing = [
@@ -44626,6 +44767,8 @@ async function createSetup({
           current.error = error62 instanceof SetupFailure ? error62.code : "setup_interrupted";
         }
       });
+      if (["blocked", "stopped"].includes(interrupted.state))
+        finished2(interrupted, true);
     }
   }
   const api = {
@@ -44691,7 +44834,7 @@ async function createSetup({
     async get(raw) {
       const input3 = handleSchema.parse(raw), value = read(input3);
       await verify(value);
-      if (active.has(value.state)) {
+      if (mapper && active.has(value.state)) {
         let result;
         try {
           result = await mapper.get({
@@ -44725,7 +44868,7 @@ async function createSetup({
           (async () => {
             const value = await this.get(input3);
             bounded.throwIfAborted();
-            if (!active.has(value.state) || !mapper.wait) return null;
+            if (!active.has(value.state) || !mapper?.wait) return null;
             return mapper.wait(
               { requestKey: value.map.requestKey, runId: value.map.runId },
               bounded
@@ -44743,7 +44886,7 @@ async function createSetup({
           await Promise.race([
             this.stop({
               ...input3,
-              requestKey: `interrupt-${original.map.requestKey}`
+              requestKey: `interrupt-${original.map?.requestKey ?? original.contextId}`
             }),
             new Promise((resolve4) => {
               stopDeadline = () => resolve4();
@@ -44812,7 +44955,7 @@ async function createSetup({
         const cancel = active.has(value.state);
         if (value.state === "awaiting-authority") {
           value.state = "stopped";
-          value.progress = "Stopped before map admission";
+          value.progress = mapper ? "Stopped before map admission" : "Setup stopped before configuration completed";
           store.put(value);
           stoppedBeforeAdmission = true;
         }
@@ -44823,14 +44966,14 @@ async function createSetup({
         }
         const receipt = {
           ...handle(value),
-          runId: value.map.runId,
+          runId: value.map?.runId ?? null,
           cancellationRequested: cancel
         };
         store.receipt("stop", input3.requestKey, hash2, receipt);
         return { receipt, value, cancel };
       });
       if (stoppedBeforeAdmission) finished2(reserved.value, true);
-      if (reserved.cancel) {
+      if (reserved.cancel && mapper) {
         try {
           applyMap(
             input3,
@@ -44849,6 +44992,41 @@ async function createSetup({
       await verify(value);
       if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
         throw new SetupFailure("stale_application_context");
+      if (value.schema === "loki.setup-context/4" && value.state === "ready") {
+        const source2 = value.configuration.source;
+        const target2 = value.configuration.target ?? null;
+        const workItem = value.configuration.workItem ?? null;
+        return {
+          application: {
+            schema: "loki.application-context/3",
+            contextId: digest2({
+              source: source2,
+              target: target2,
+              workItem,
+              provenance: value.provenance
+            }),
+            source: source2,
+            target: target2,
+            workItem,
+            map: null,
+            readiness: {
+              state: "configured",
+              missing: [],
+              map: "not-required",
+              browserObserved: false
+            },
+            provenance: value.provenance
+          },
+          setup: {
+            ...handle(value),
+            mapRunId: null,
+            mapResultId: null,
+            configurationRefs: value.configuration.configurationRefs,
+            authorityRef: null
+          },
+          authority: "configuration-only"
+        };
+      }
       if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
         throw new SetupFailure("application_not_ready");
       const source = value.configuration.source, target = value.configuration.target ?? null;
@@ -44887,7 +45065,7 @@ async function createSetup({
     },
     async handoff(raw) {
       const input3 = handoffSchema.parse(raw);
-      if ((await consumer.readiness?.())?.length)
+      if (!consumer || (await consumer.readiness?.())?.length)
         throw new SetupFailure("consumer_integration_unavailable");
       const payload = await this.resolve({
         applicationId: input3.applicationId,
@@ -44937,6 +45115,7 @@ async function createSetup({
         }
       }
       telemetryByContext.clear();
+      telemetryStarts.clear();
       store.close();
     }
   };
@@ -45023,9 +45202,19 @@ async function createSetupTools({
       false
     ]
   ];
+  const configurationDescriptions = {
+    loki_setup_list: "Find saved application configurations for the selected project directory. No source scan, provider call or browser action.",
+    loki_setup_prepare: "Save the selected application's source revision, original work item and optional target configuration. Resolve the selected Git ref once without changing the checkout. No map building, source transfer to a model, provider configuration or browser action is required. Keep the original requestKey after a lost reply.",
+    loki_setup_get: "Read the original saved application configuration and its actual state. Historical mapping records remain unchanged; this release never restarts mapping.",
+    loki_setup_wait: "Read the original Setup configuration. Fresh Setup does not start a map or provider operation. Historical unknown effects remain retained and are not replayed.",
+    loki_setup_retry: "Retry known failed, stopped or blocked application configuration after its missing input changes or the user requests it. No map or provider operation starts; preserve the original source selection and receipts.",
+    loki_setup_stop: "Stop only this original Setup context. Configuration-only Setup has no map run or browser operation to cancel. Do not treat a receipt as confirmation that historical unknown work stopped.",
+    loki_setup_resolve: "Read the configured application source, original work item and optional target using their exact expected revisions. Map is not required. Configuration is not observed application behavior or an execution grant; risk, planning and Runner use their own supplied inputs and authority.",
+    loki_setup_handoff: "Send the saved configuration only through a supported consumer. Unavailable consumer integration does not block Setup, risk analysis, test planning or Runner and never falls back to a fixture."
+  };
   const tools = definitions.map(([name, description, schema, , readOnly]) => ({
     name,
-    description,
+    description: mapper ? description : configurationDescriptions[name],
     inputSchema: {
       ...external_exports.toJSONSchema(schema, { io: "input" }),
       $id: `urn:loki:${name}:input:1`
@@ -45037,11 +45226,9 @@ async function createSetupTools({
     },
     annotations: {
       readOnlyHint: readOnly,
-      destructiveHint: [
-        "loki_setup_prepare",
-        "loki_setup_wait",
-        "loki_setup_retry"
-      ].includes(name),
+      destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
+        name
+      ),
       idempotentHint: true,
       openWorldHint: !readOnly
     }
@@ -45083,448 +45270,6 @@ async function createSetupTools({
     }
   };
   return { tools, invoke, setup, close: () => setup.close() };
-}
-
-// apps/codex-plugin/src/setup/real-ports.mjs
-import { performance as performance4 } from "node:perf_hooks";
-import { randomUUID as randomUUID6 } from "node:crypto";
-import { join as join7 } from "node:path";
-import { mkdir as mkdir6, rm as rm2, lstat as lstat7, realpath as realpath5 } from "node:fs/promises";
-
-// apps/codex-plugin/src/setup/snapshot.mjs
-import { execFile as execFile2 } from "node:child_process";
-import { promisify as promisify3 } from "node:util";
-import { mkdir as mkdir5, writeFile as writeFile3, realpath as realpath4 } from "node:fs/promises";
-import { dirname as dirname3, join as join6, posix as posix2 } from "node:path";
-var execute2 = promisify3(execFile2);
-async function snapshotSource(source, destination, signal) {
-  await inspectSource(source);
-  if (await realpath4(destination) !== destination)
-    throw new SetupFailure("unsafe_source_snapshot");
-  const git = async (...args) => (await execute2(
-    "git",
-    [
-      "-c",
-      "core.hooksPath=/dev/null",
-      "-c",
-      "core.fsmonitor=false",
-      "-C",
-      source.directory,
-      ...args
-    ],
-    {
-      encoding: "buffer",
-      maxBuffer: 64 * 1024 * 1024,
-      timeout: 6e4,
-      signal
-    }
-  )).stdout;
-  const tree = (await git("rev-parse", `${source.revision}^{tree}`)).toString("utf8").trim();
-  const entries = new TextDecoder("utf-8", { fatal: true }).decode(await git("ls-tree", "-r", "-l", "-z", source.revision)).split("\0").filter(Boolean);
-  const files = entries.map((entry) => {
-    const tab = entry.indexOf("	"), name = entry.slice(tab + 1);
-    const [mode, type, object3, bytes] = entry.slice(0, tab).trim().split(/\s+/);
-    if (tab < 0 || !["100644", "100755"].includes(mode) || type !== "blob" || !/^[a-f0-9]{40}$/.test(object3) || !/^\d+$/.test(bytes) || posix2.isAbsolute(name) || name.includes("\\") || name.split("/").some((part) => !part || part === "." || part === ".."))
-      throw new SetupFailure("unsupported_committed_source_entry");
-    return { name, object: object3, bytes: Number(bytes) };
-  });
-  if (files.reduce((sum, file2) => sum + file2.bytes, 0) > 64 * 1024 * 1024)
-    throw new SetupFailure("source_snapshot_exceeds_query_budget");
-  let next = 0;
-  const writes = await Promise.allSettled(
-    Array.from({ length: Math.min(8, files.length) }, async () => {
-      while (next < files.length) {
-        signal?.throwIfAborted();
-        const file2 = files[next++], path = join6(destination, file2.name);
-        const bytes = await git("cat-file", "blob", file2.object);
-        if (bytes.length !== file2.bytes)
-          throw new SetupFailure("source_snapshot_changed");
-        await mkdir5(dirname3(path), { recursive: true, mode: 448 });
-        await writeFile3(path, bytes, { flag: "wx", mode: 384 });
-      }
-    })
-  );
-  const failure3 = writes.find((result) => result.status === "rejected");
-  if (failure3) throw failure3.reason;
-  return { directory: destination, tree, revision: source.revision };
-}
-
-// apps/codex-plugin/src/setup/map-readiness.mjs
-function classifyMapReadiness(coverage2, pages) {
-  const issues = [], sourceLimitations = [];
-  const block = (code, recovery) => issues.push({ code, recovery });
-  for (const key of [
-    "failed_local_stages",
-    "discovery_failures",
-    "unavailable_local_batches"
-  ]) {
-    if (!Array.isArray(coverage2?.[key]))
-      block(
-        `unknown_${key}`,
-        "Read the original native coverage; this stage has no complete receipt."
-      );
-    else if (coverage2[key].length)
-      block(
-        key,
-        "Read the original native stage records and supply the missing source or fix the recorded failure before an authorized retry."
-      );
-  }
-  if (!Array.isArray(coverage2?.unresolved))
-    block(
-      "unknown_native_coverage",
-      "Read the original native coverage before using this map."
-    );
-  else
-    for (const entry of coverage2.unresolved) {
-      if (entry?.stage === "global/definitions" && typeof entry.reason === "string" && entry.reason.trim() && Object.keys(entry).every((key) => ["stage", "reason"].includes(key)))
-        sourceLimitations.push({ ...entry, relevance: "unknown" });
-      else
-        block(
-          "unresolved_native_stage",
-          "Read coverage.unresolved in the original answer; resolve its pending source, identity or page processing before an authorized retry."
-        );
-    }
-  const selection = coverage2?.focused_page_selection;
-  const selectedPageIds = selection?.selected_page_ids;
-  const available = selection?.available_pages;
-  if (selection?.policy !== "work-item-page-selection-before-extraction/1" || !Array.isArray(selectedPageIds) || !selectedPageIds.length || selectedPageIds.some((id3) => typeof id3 !== "string" || !id3.length) || new Set(selectedPageIds).size !== selectedPageIds.length || !Array.isArray(available) || selectedPageIds.some((id3) => !available.some((p) => p?.id === id3)) || !Array.isArray(selection?.unresolved)) {
-    block(
-      "unknown_page_selection",
-      "Read the recorded native page selection; a processed page alone does not establish the work-item scope."
-    );
-  } else {
-    if (selection.unresolved.length)
-      block(
-        "unresolved_page_selection",
-        "Resolve the recorded page-selection uncertainty before an authorized retry."
-      );
-    if (selectedPageIds.some(
-      (id3) => pages.filter((p) => p.id === id3).length !== 1 || pages.find((p) => p.id === id3)?.status !== "processed"
-    ))
-      block(
-        "selected_pages_not_processed",
-        "Read each selected page's original result; supply missing source or fix its recorded failure before an authorized retry."
-      );
-  }
-  return {
-    usable: issues.length === 0,
-    selectedPageIds: Array.isArray(selectedPageIds) ? selectedPageIds : [],
-    sourceLimitations,
-    issues
-  };
-}
-
-// apps/codex-plugin/src/setup/real-ports.mjs
-async function realSetupPorts({
-  directory,
-  catalog,
-  providerReady,
-  authorize
-}) {
-  const store = await openSetupStore(directory), owner2 = randomUUID6();
-  const active2 = /* @__PURE__ */ new Map();
-  const provenance2 = {
-    kind: "product-adapter",
-    version: "kaijan.setup-ui-modeler/1"
-  };
-  const read = ({ requestKey: requestKey2, runId }) => {
-    identity2.parse(requestKey2);
-    const value = store.producer(requestKey2);
-    if (!value || runId && value.runId !== runId)
-      throw new SetupFailure("unknown_map_operation");
-    if (value.state === "running" && (value.owner !== owner2 || !active2.has(requestKey2)))
-      return {
-        ...value,
-        state: "uncertain",
-        executionSettled: false,
-        progress: "Original map execution was interrupted; effects and fees are unknown. Do not replay."
-      };
-    return value;
-  };
-  const receipt = (value) => {
-    const {
-      requestKey: requestKey2,
-      runId,
-      sourceRevision,
-      state,
-      progress: progress2,
-      resultId,
-      data,
-      executionSettled
-    } = value;
-    return {
-      requestKey: requestKey2,
-      runId,
-      sourceRevision,
-      state,
-      progress: progress2,
-      resultId,
-      data,
-      provenance: provenance2,
-      executionSettled
-    };
-  };
-  async function generate(input3, controller, value, invocation) {
-    const snapshots = join7(directory, "sources"), snapshot = join7(snapshots, input3.requestKey);
-    let snapshotCreated = false;
-    try {
-      await mkdir6(snapshots, { recursive: true, mode: 448 });
-      const info = await lstat7(snapshots);
-      if (!info.isDirectory() || info.mode & 63 || await realpath5(snapshots) !== snapshots)
-        throw new SetupFailure("unsafe_source_snapshot");
-      await mkdir6(snapshot, { mode: 448 });
-      snapshotCreated = true;
-      const source = await snapshotSource(
-        input3.source,
-        snapshot,
-        controller.signal
-      );
-      controller.signal.throwIfAborted();
-      value.dispatched = true;
-      store.retainProducer(input3.requestKey, value);
-      const answer = await catalog.invoke(
-        "loki_ui_modeler_build_map",
-        {
-          folder: source.directory,
-          workItem: input3.workItem,
-          requestKey: input3.requestKey
-        },
-        {
-          signal: controller.signal,
-          lifecycle: invocation?.lifecycle ? { sink: invocation.lifecycle, startedAtMs: performance4.now() } : null,
-          setupOperationId: input3.requestKey
-        }
-      );
-      value.answer = {
-        state: answer.state,
-        answerId: answer.answerId ?? null,
-        resultSha256: answer.resultSha256 ?? null,
-        accounting: answer.accounting ?? null,
-        cost: answer.result?.native?.cost ?? null
-      };
-      const mapId = answer.result?.mapId;
-      if (answer.state === "complete" && identity2.safeParse(mapId).success) {
-        const map2 = await catalog.invoke("loki_ui_modeler_get_map", {
-          mapId,
-          limit: 40
-        });
-        if (map2.mapId !== mapId || map2.repository !== source.directory)
-          throw new SetupFailure("map_scope_mismatch");
-        const coverage2 = answer.result.native?.native?.coverage;
-        const pages = [...map2.items];
-        const selected = coverage2?.focused_page_selection?.selected_page_ids;
-        if (map2.nextCursor && Array.isArray(selected))
-          for (const pageId of new Set(selected)) {
-            if (typeof pageId !== "string" || !pageId || pages.some((p) => p.id === pageId))
-              continue;
-            const detail = await catalog.invoke("loki_ui_modeler_get_map", {
-              mapId,
-              pageId,
-              limit: 1
-            });
-            if (detail.mapId !== mapId || detail.repository !== source.directory || detail.page?.id !== pageId)
-              throw new SetupFailure("map_scope_mismatch");
-            pages.push(detail.page);
-          }
-        const readiness = classifyMapReadiness(coverage2, pages);
-        const usable = readiness.usable;
-        const cost = answer.result.native?.cost;
-        value.executionSettled = cost?.pending_requests === 0 && cost?.unresolved_requests === 0;
-        value.state = value.executionSettled ? usable ? "ready" : "incomplete" : "uncertain";
-        value.progress = value.executionSettled ? usable ? `Source-inferred map ready for the recorded selected pages; application coverage is incomplete.${readiness.sourceLimitations.length ? " Source/identity limitations remain; their work-item relevance is unknown. Read readinessScope.sourceLimitations." : ""} Browser behavior and consumer acceptance are not established.` : `Source-inferred map retained; ${readiness.issues[0].code}. ${readiness.issues[0].recovery}` : "Original map retained; provider accounting remains unresolved. Do not replay.";
-        value.resultId = identity2.parse(answer.answerId);
-        value.data = {
-          mapId,
-          pages: map2.items.map(({ id: id3, label: label3 }) => ({ id: id3, title: label3 })),
-          pagePreviewLimit: 40,
-          coverage: "source-inferred-work-item-fragment",
-          readinessIssues: readiness.issues,
-          readinessScope: {
-            kind: "work-item",
-            workItem: input3.workItem,
-            applicationCoverage: "incomplete",
-            evidence: "source-inferred",
-            browserObserved: false,
-            selectedPageIds: readiness.selectedPageIds,
-            sourceLimitations: readiness.sourceLimitations
-          },
-          answerId: answer.answerId,
-          resultSha256: identity2.parse(answer.resultSha256),
-          snapshotTree: source.tree
-        };
-      } else if (answer.state === "complete" && identity2.safeParse(answer.answerId).success) {
-        const cost = answer.result?.native?.cost;
-        value.resultId = answer.answerId;
-        value.executionSettled = cost?.pending_requests === 0 && cost?.unresolved_requests === 0;
-        value.state = value.executionSettled ? "failed" : "uncertain";
-        value.progress = "Original producer answer retained without a usable map; inspect its outcome and accounting, not a replacement invocation.";
-      } else {
-        const noDispatch = answer.accounting?.providerCallsStarted === 0;
-        value.state = noDispatch ? controller.signal.aborted ? "stopped" : "failed" : "uncertain";
-        value.executionSettled = noDispatch;
-        value.progress = noDispatch ? "Map was not produced; original no-dispatch receipt retained." : "Original map result or provider effect is unknown. Do not replay.";
-      }
-    } catch (error62) {
-      const beforeDispatch = !value.dispatched;
-      value.state = beforeDispatch ? controller.signal.aborted ? "stopped" : "failed" : "uncertain";
-      value.executionSettled = beforeDispatch;
-      value.progress = beforeDispatch ? `Source preparation did not complete (${error62 instanceof SetupFailure ? error62.code : "source_preparation_failed"}); no provider execution was started.` : "Original map receipt is uncertain. Read retained results; do not replay.";
-      value.error = error62 instanceof SetupFailure ? error62.code : "map_operation_failed";
-    } finally {
-      try {
-        if (snapshotCreated)
-          await rm2(snapshot, { recursive: true, force: true });
-      } finally {
-        store.transaction(() => {
-          value.stopRequested ||= store.producer(input3.requestKey)?.stopRequested ?? false;
-          store.retainProducer(input3.requestKey, value);
-        });
-      }
-    }
-    return receipt(value);
-  }
-  return {
-    authorize,
-    mapper: {
-      provenance: provenance2,
-      async readiness(configuration) {
-        const missing = [];
-        if (!catalog.tools.some(
-          ({ name }) => name === "loki_ui_modeler_build_map"
-        ))
-          missing.push("admitted-map-producer");
-        if (!configuration.workItem)
-          missing.push("work-item-or-mapping-question");
-        if (!await providerReady()) missing.push("model-provider");
-        return missing;
-      },
-      async start(input3, signal, invocation) {
-        identity2.parse(input3.requestKey);
-        const previous = store.producer(input3.requestKey);
-        if (previous) {
-          if (previous.inputHash !== digest2(input3))
-            throw new SetupFailure("request_conflict");
-          return receipt(read({ requestKey: input3.requestKey }));
-        }
-        signal?.throwIfAborted();
-        const value = {
-          requestKey: input3.requestKey,
-          runId: digest2({ setupOperation: input3.requestKey }),
-          sourceRevision: input3.source.revision,
-          state: "running",
-          progress: "Original real map query is active.",
-          resultId: null,
-          data: null,
-          executionSettled: false,
-          owner: owner2,
-          inputHash: digest2(input3),
-          dispatched: false
-        };
-        store.retainProducer(input3.requestKey, value);
-        const controller = new AbortController();
-        const abort = () => controller.abort(signal.reason);
-        signal?.addEventListener("abort", abort, { once: true });
-        const stopMonitor = setInterval(() => {
-          try {
-            if (store.producer(input3.requestKey)?.stopRequested)
-              controller.abort(
-                new DOMException(
-                  "User stopped this original Setup map.",
-                  "AbortError"
-                )
-              );
-          } catch {
-            controller.abort(
-              new DOMException(
-                "Setup cancellation state could not be verified.",
-                "AbortError"
-              )
-            );
-          }
-        }, 250);
-        const promise2 = generate(input3, controller, value, invocation).finally(
-          () => {
-            clearInterval(stopMonitor);
-            signal?.removeEventListener("abort", abort);
-            active2.delete(input3.requestKey);
-          }
-        );
-        void promise2.catch(() => {
-        });
-        active2.set(input3.requestKey, { controller, promise: promise2 });
-        return receipt(value);
-      },
-      async get(input3) {
-        return receipt(read(input3));
-      },
-      async wait(input3, signal) {
-        const value = read(input3), pending = active2.get(input3.requestKey);
-        if (!pending) return receipt(value);
-        let timer, abort;
-        try {
-          return await Promise.race([
-            pending.promise,
-            new Promise((resolve4, reject) => {
-              timer = setTimeout(() => resolve4(receipt(read(input3))), 3e4);
-              abort = () => reject(signal.reason);
-              signal?.addEventListener("abort", abort, { once: true });
-              if (signal?.aborted) abort();
-            })
-          ]);
-        } finally {
-          clearTimeout(timer);
-          signal?.removeEventListener("abort", abort);
-        }
-      },
-      async stop(input3) {
-        const value = store.transaction(() => {
-          const current = read(input3);
-          const original = store.producer(input3.requestKey);
-          original.stopRequested = true;
-          store.retainProducer(input3.requestKey, original);
-          return current;
-        }), pending = active2.get(input3.requestKey);
-        pending?.controller.abort(
-          new DOMException("User stopped this Setup map.", "AbortError")
-        );
-        return receipt(value);
-      }
-    },
-    consumer: {
-      readiness: async () => ["admitted-application-consumer"],
-      accept: async () => {
-        throw new SetupFailure("consumer_integration_unavailable");
-      }
-    },
-    async close() {
-      for (const { controller } of active2.values())
-        controller.abort(new DOMException("Setup host closed.", "AbortError"));
-      await Promise.allSettled(
-        [...active2.values()].map(({ promise: promise2 }) => promise2)
-      );
-      store.close();
-    }
-  };
-}
-
-// apps/codex-plugin/src/setup/source-authorization.mjs
-async function authorizeSourceTransfer(configuration, signal, invocation) {
-  signal?.throwIfAborted();
-  if (invocation?.origin !== "codex-local-mcp" || invocation.scope?.kind !== "host-thread" || invocation.scope.identitySource !== "mcp._meta.threadId")
-    throw new SetupFailure("host_operation_authority_unavailable");
-  const parsed = authorizationSchema.safeParse({
-    kind: "host-managed-tool-dispatch",
-    host: "codex",
-    policy: "host-managed",
-    scopeId: invocation.scope.id,
-    requestId: invocation.requestId,
-    tool: invocation.tool,
-    argumentsSha256: invocation.argumentsSha256,
-    configurationSha256: digest2(configuration)
-  });
-  if (!parsed.success)
-    throw new SetupFailure("invalid_host_operation_authority");
-  return parsed.data;
 }
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
@@ -45638,16 +45383,16 @@ var StdioServerTransport = class {
 import { TextDecoder as TextDecoder2 } from "node:util";
 import { constants as constants4 } from "node:fs";
 import {
-  mkdir as mkdir7,
+  mkdir as mkdir5,
   open as open4,
   readdir,
-  realpath as realpath6,
+  realpath as realpath4,
   stat,
   link as link2,
   unlink as unlink4
 } from "node:fs/promises";
-import { createHash as createHash3, randomUUID as randomUUID7 } from "node:crypto";
-import { dirname as dirname4, join as join8, resolve as resolve2 } from "node:path";
+import { createHash as createHash3, randomUUID as randomUUID6 } from "node:crypto";
+import { dirname as dirname3, join as join6, resolve as resolve2 } from "node:path";
 async function bindProfileState(build, args, home) {
   if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
     throw new Error(
@@ -45676,12 +45421,12 @@ async function bindProfileState(build, args, home) {
     } else forwarded.push(arg);
   }
   const state = resolve2(
-    selected ?? join8(home, ".local", "share", "loki", "codex", build.profile, key)
+    selected ?? join6(home, ".local", "share", "loki", "codex", build.profile, key)
   );
-  await mkdir7(state, { recursive: true, mode: 448 });
-  if (await realpath6(state) !== state || ((await stat(state)).mode & 63) !== 0)
+  await mkdir5(state, { recursive: true, mode: 448 });
+  if (await realpath4(state) !== state || ((await stat(state)).mode & 63) !== 0)
     throw new Error("Use a canonical private state directory with mode 0700.");
-  const path = join8(state, "plugin-profile.json");
+  const path = join6(state, "plugin-profile.json");
   const expected = {
     schemaVersion: 1,
     profile: build.profile,
@@ -45708,7 +45453,7 @@ async function bindProfileState(build, args, home) {
         );
       }
     } else {
-      const temporary = join8(dirname4(state), `.loki-profile-${randomUUID7()}`);
+      const temporary = join6(dirname3(state), `.loki-profile-${randomUUID6()}`);
       const created = await open4(temporary, "wx", 384);
       try {
         try {
@@ -46423,7 +46168,7 @@ var progress = {
 };
 var runnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
-  status: external_exports.enum(["needs_input", "stuck", "complete"]),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
   effects: external_exports.enum(["known", "uncertain"]),
   basis: external_exports.literal("model-authored-unverified"),
@@ -46544,6 +46289,15 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
     sourceContextId: digest8.nullable().optional()
   })
 ]);
+var runnerNextActionSchema = external_exports.strictObject({
+  kind: external_exports.literal("input-required"),
+  tool: external_exports.literal("loki_runner_answer"),
+  runId: digest8,
+  clarificationId: external_exports.string().min(1),
+  deadlineAt: external_exports.string(),
+  questions,
+  instruction: external_exports.string()
+});
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
   runId: digest8,
@@ -46557,6 +46311,7 @@ var operationBase = external_exports.strictObject({
   ]),
   replayAllowed: external_exports.literal(false),
   pendingClarification: runnerClarificationSchema.nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
   identity: jsonObject2.optional(),
   execution: external_exports.literal("programmatic/1").optional(),
   createdAt: external_exports.string().optional(),
@@ -46619,7 +46374,13 @@ var runnerErrorSchema = external_exports.strictObject({
       "invalid_arguments",
       "request_key_conflict",
       "operation_not_found_in_scope",
-      "operation_unavailable"
+      "operation_unavailable",
+      "private_parameter_invalid",
+      "private_parameter_unavailable",
+      "private_parameter_scope_mismatch",
+      "private_parameter_target_mismatch",
+      "private_parameter_collision",
+      "private_parameter_revoked"
     ]),
     message: external_exports.string(),
     // null means dispatch may have happened; failure never permits replay.
@@ -46652,15 +46413,15 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   runId: digest9,
   view: external_exports.literal("inspection").optional(),
   expectedResultSha256: digest9.optional(),
-  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable(),
-  requirements: suppliedEvidenceInputSchema.shape.requirements,
-  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests,
-  receipts: external_exports.array(assessmentReceiptSchema),
+  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
+  requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
+  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
+  receipts: external_exports.array(assessmentReceiptSchema).optional(),
   suppliedObservations: external_exports.array(assessmentReceiptSchema).optional(),
-  preflight: assessmentReceiptSchema.nullable(),
-  runtimeComparison: assessmentReceiptSchema.nullable(),
-  cleanup: assessmentReceiptSchema.nullable(),
-  selectedArtifactIds: external_exports.array(digest9).refine((ids2) => new Set(ids2).size === ids2.length)
+  preflight: assessmentReceiptSchema.nullable().optional(),
+  runtimeComparison: assessmentReceiptSchema.nullable().optional(),
+  cleanup: assessmentReceiptSchema.nullable().optional(),
+  selectedArtifactIds: external_exports.array(digest9).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
 var locator = external_exports.strictObject({
   report: external_exports.strictObject({
@@ -46690,8 +46451,14 @@ var indexEntry = external_exports.looseObject({
   basis: external_exports.enum(["original-fragment", "caller-assertion", "original-artifact"]),
   state: external_exports.enum(["supplied", "read", "opaque-uninterpreted", "unavailable"])
 });
+var submission = external_exports.strictObject({
+  compatible: external_exports.boolean(),
+  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
+  instruction: external_exports.string()
+});
 var common = {
   schema: external_exports.literal("loki.assessment-preparation/1"),
+  submission,
   // These describe the selected original run, never a new assessment verdict.
   executionState: external_exports.json(),
   nativeVerdict: external_exports.json(),
@@ -46711,6 +46478,7 @@ var fullPreparationOutput = external_exports.union([
     missingFacts: external_exports.array(issue2),
     unresolvedReferences: external_exports.array(issue2),
     selectedArtifacts: external_exports.array(jsonObject3),
+    unselectedArtifacts: external_exports.array(jsonObject3),
     interpretation: external_exports.string(),
     replayAllowed: external_exports.literal(false)
   }),
@@ -46764,6 +46532,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   factSources: jsonObject3,
   submission: external_exports.strictObject({
     compatible: external_exports.boolean(),
+    nextAction: external_exports.enum(["get_assessment_input", "resolve_input"]),
     locator: assessmentInspectionLocatorSchema,
     instruction: external_exports.string()
   }),
@@ -46778,6 +46547,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   }),
   evidenceIndex: section,
   selectedArtifacts: section,
+  unselectedArtifacts: section,
   missingFacts: section,
   unresolvedReferences: section,
   selection: external_exports.strictObject({
@@ -46791,6 +46561,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
     stringCodePoints: count5,
     evidenceIndex: count5,
     selectedArtifacts: count5,
+    unselectedArtifacts: count5,
     missingFacts: count5,
     unresolvedReferences: count5,
     objectKeys: external_exports.literal("UTF-16-code-unit-order"),
@@ -46804,6 +46575,47 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   replayAllowed: external_exports.literal(false)
 });
 var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union([fullPreparationOutput, assessmentInspectionOutputSchema])).meta({ $id: "urn:kaijan:assessment-prepare-output:1" });
+
+// packages/contracts/dist/test-run.js
+var testRunResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  state: external_exports.string(),
+  status: external_exports.object({
+    execution: external_exports.string(),
+    assessment: external_exports.string(),
+    report: external_exports.string()
+  }),
+  // Keep recursive JSON references rooted in this output, not a nested URI.
+  execution: runnerOutputSchema.meta({ $id: void 0 }).nullable(),
+  // Default reads return literal selected fields. Full original execution and
+  // assessment records remain available through originalResult and offsets.
+  assessment: external_exports.json().nullable(),
+  preparation: external_exports.json().nullable(),
+  executionSummary: external_exports.json().nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  view: external_exports.enum(["summary", "original"]).optional(),
+  originalResult: external_exports.strictObject({
+    tool: external_exports.literal("loki_test_get"),
+    arguments: external_exports.strictObject({
+      runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+      offset: external_exports.literal(0)
+    }),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultBytes: external_exports.number().int().positive().nullable(),
+    instruction: external_exports.string()
+  }).optional(),
+  report: external_exports.looseObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).nullable(),
+  replayAllowed: external_exports.literal(false)
+});
+var testRunErrorSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  state: external_exports.literal("unavailable"),
+  replayAllowed: external_exports.literal(false),
+  error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
+});
+var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
 
 // packages/contracts/dist/report-presentation.js
 var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -46887,7 +46699,9 @@ var summarySchema = external_exports.object({
     blocked: count6,
     skipped: count6,
     "not-run": count6,
-    inconclusive: count6.default(0)
+    inconclusive: count6.default(0),
+    conflicting: count6.default(0),
+    unavailable: count6.default(0)
   }),
   assessmentResults: count6.optional(),
   pullRequest: external_exports.object({
@@ -47028,6 +46842,13 @@ var reportExportOutputSchema = external_exports.union([
 // packages/contracts/dist/report-artifact.js
 var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
+var reportArtifactProjectionSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-artifact-projection/1"),
+  sourceSha256: digest11,
+  sha256: digest11,
+  bytes: count7,
+  redactionRevision: count7
+});
 var reportArtifactInputSchema = external_exports.strictObject({
   reportId: digest11,
   runId: digest11,
@@ -47080,7 +46901,10 @@ var reportArtifactResultSchema = external_exports.union([
         text: external_exports.string(),
         offset: count7,
         nextOffset: count7.nullable(),
-        totalCodeUnits: count7
+        totalCodeUnits: count7,
+        // Artifact metadata identifies the private original. This identifies
+        // the complete filtered JSON, before transport pagination.
+        projection: reportArtifactProjectionSchema.optional()
       })
     ])
   })
@@ -49491,7 +49315,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
   const startupStarted = performance5.now();
   const root = resolve3(import.meta.dirname, "..");
   const build = JSON.parse(
-    await readFile3(join9(root, "loki-build.json"), "utf8")
+    await readFile3(join7(root, "loki-build.json"), "utf8")
   );
   if (process7.env.LOKI_CORE_ORIGIN && process7.env.LOKI_CORE_ORIGIN !== build.coreOrigin)
     throw Error("Profile mismatch");
@@ -49531,13 +49355,8 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
       let pending = setupByScope.get(scope.data);
       if (pending) return pending;
       pending = (async () => {
-        const directory = join9(scope.data, "setup");
-        const ports = createSetupPorts ? await createSetupPorts(directory) : await realSetupPorts({
-          directory,
-          catalog: scope.catalog,
-          providerReady: session.providerReady,
-          authorize: authorizeSourceTransfer
-        });
+        const directory = join7(scope.data, "setup");
+        const ports = createSetupPorts ? await createSetupPorts(directory) : {};
         let scopedSetup;
         try {
           scopedSetup = await createSetupTools({

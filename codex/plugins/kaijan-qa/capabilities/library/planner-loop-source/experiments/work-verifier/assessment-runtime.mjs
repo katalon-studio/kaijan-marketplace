@@ -109,7 +109,13 @@ export async function assessPreparedSuppliedEvidence(
       prepared.request,
       nativeRoot,
       (candidate) => projectAssessment(prepared, candidate),
-      { env, signal, transport: guardedTransport, deadline_ms },
+      {
+        env,
+        signal,
+        transport: guardedTransport,
+        deadline_ms,
+        max_output_tokens_limit: LIMITS.outputTokens,
+      },
     );
     receipt = result.receipt;
   } catch (error) {
@@ -119,6 +125,19 @@ export async function assessPreparedSuppliedEvidence(
         typeof error.reason === "string"
           ? error.reason
           : "assessment_failed_no_retry",
+      ...(error.reason === "provider_output_limit_no_retry"
+        ? {
+            code: "assessment_output_limit",
+            message:
+              "The assessment reached its response limit before it finished. No new test result was produced.",
+            max_output_tokens: prepared.request.max_output_tokens,
+            next_action: {
+              kind: "review_assessment_scope",
+              instruction:
+                "Keep the earlier assessment and original evidence. Do not repeat the same request automatically. Prepare a focused assessment for one test or related check, including its full requirements, outcomes and relevant evidence. Keep omitted checks pending. If this is already one check or cannot be separated without losing context, report the limit for a larger-response assessment; do not drop evidence to obtain a verdict.",
+            },
+          }
+        : {}),
     };
   }
   const assessment = result ? projectAssessment(prepared, result.plan) : null;

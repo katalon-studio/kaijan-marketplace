@@ -21068,7 +21068,7 @@ var progress = {
 };
 var runnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
-  status: external_exports.enum(["needs_input", "stuck", "complete"]),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
   effects: external_exports.enum(["known", "uncertain"]),
   basis: external_exports.literal("model-authored-unverified"),
@@ -21189,6 +21189,15 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
     sourceContextId: digest6.nullable().optional()
   })
 ]);
+var runnerNextActionSchema = external_exports.strictObject({
+  kind: external_exports.literal("input-required"),
+  tool: external_exports.literal("loki_runner_answer"),
+  runId: digest6,
+  clarificationId: external_exports.string().min(1),
+  deadlineAt: external_exports.string(),
+  questions,
+  instruction: external_exports.string()
+});
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
   runId: digest6,
@@ -21202,6 +21211,7 @@ var operationBase = external_exports.strictObject({
   ]),
   replayAllowed: external_exports.literal(false),
   pendingClarification: runnerClarificationSchema.nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
   identity: jsonObject2.optional(),
   execution: external_exports.literal("programmatic/1").optional(),
   createdAt: external_exports.string().optional(),
@@ -21264,7 +21274,13 @@ var runnerErrorSchema = external_exports.strictObject({
       "invalid_arguments",
       "request_key_conflict",
       "operation_not_found_in_scope",
-      "operation_unavailable"
+      "operation_unavailable",
+      "private_parameter_invalid",
+      "private_parameter_unavailable",
+      "private_parameter_scope_mismatch",
+      "private_parameter_target_mismatch",
+      "private_parameter_collision",
+      "private_parameter_revoked"
     ]),
     message: external_exports.string(),
     // null means dispatch may have happened; failure never permits replay.
@@ -21297,15 +21313,15 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   runId: digest7,
   view: external_exports.literal("inspection").optional(),
   expectedResultSha256: digest7.optional(),
-  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable(),
-  requirements: suppliedEvidenceInputSchema.shape.requirements,
-  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests,
-  receipts: external_exports.array(assessmentReceiptSchema),
+  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
+  requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
+  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
+  receipts: external_exports.array(assessmentReceiptSchema).optional(),
   suppliedObservations: external_exports.array(assessmentReceiptSchema).optional(),
-  preflight: assessmentReceiptSchema.nullable(),
-  runtimeComparison: assessmentReceiptSchema.nullable(),
-  cleanup: assessmentReceiptSchema.nullable(),
-  selectedArtifactIds: external_exports.array(digest7).refine((ids2) => new Set(ids2).size === ids2.length)
+  preflight: assessmentReceiptSchema.nullable().optional(),
+  runtimeComparison: assessmentReceiptSchema.nullable().optional(),
+  cleanup: assessmentReceiptSchema.nullable().optional(),
+  selectedArtifactIds: external_exports.array(digest7).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
 var locator = external_exports.strictObject({
   report: external_exports.strictObject({
@@ -21335,8 +21351,14 @@ var indexEntry = external_exports.looseObject({
   basis: external_exports.enum(["original-fragment", "caller-assertion", "original-artifact"]),
   state: external_exports.enum(["supplied", "read", "opaque-uninterpreted", "unavailable"])
 });
+var submission = external_exports.strictObject({
+  compatible: external_exports.boolean(),
+  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
+  instruction: external_exports.string()
+});
 var common = {
   schema: external_exports.literal("loki.assessment-preparation/1"),
+  submission,
   // These describe the selected original run, never a new assessment verdict.
   executionState: external_exports.json(),
   nativeVerdict: external_exports.json(),
@@ -21356,6 +21378,7 @@ var fullPreparationOutput = external_exports.union([
     missingFacts: external_exports.array(issue2),
     unresolvedReferences: external_exports.array(issue2),
     selectedArtifacts: external_exports.array(jsonObject3),
+    unselectedArtifacts: external_exports.array(jsonObject3),
     interpretation: external_exports.string(),
     replayAllowed: external_exports.literal(false)
   }),
@@ -21409,6 +21432,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   factSources: jsonObject3,
   submission: external_exports.strictObject({
     compatible: external_exports.boolean(),
+    nextAction: external_exports.enum(["get_assessment_input", "resolve_input"]),
     locator: assessmentInspectionLocatorSchema,
     instruction: external_exports.string()
   }),
@@ -21423,6 +21447,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   }),
   evidenceIndex: section,
   selectedArtifacts: section,
+  unselectedArtifacts: section,
   missingFacts: section,
   unresolvedReferences: section,
   selection: external_exports.strictObject({
@@ -21436,6 +21461,7 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
     stringCodePoints: count3,
     evidenceIndex: count3,
     selectedArtifacts: count3,
+    unselectedArtifacts: count3,
     missingFacts: count3,
     unresolvedReferences: count3,
     objectKeys: external_exports.literal("UTF-16-code-unit-order"),
@@ -21449,6 +21475,47 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   replayAllowed: external_exports.literal(false)
 });
 var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union([fullPreparationOutput, assessmentInspectionOutputSchema])).meta({ $id: "urn:kaijan:assessment-prepare-output:1" });
+
+// ../contracts/dist/test-run.js
+var testRunResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  state: external_exports.string(),
+  status: external_exports.object({
+    execution: external_exports.string(),
+    assessment: external_exports.string(),
+    report: external_exports.string()
+  }),
+  // Keep recursive JSON references rooted in this output, not a nested URI.
+  execution: runnerOutputSchema.meta({ $id: void 0 }).nullable(),
+  // Default reads return literal selected fields. Full original execution and
+  // assessment records remain available through originalResult and offsets.
+  assessment: external_exports.json().nullable(),
+  preparation: external_exports.json().nullable(),
+  executionSummary: external_exports.json().nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  view: external_exports.enum(["summary", "original"]).optional(),
+  originalResult: external_exports.strictObject({
+    tool: external_exports.literal("loki_test_get"),
+    arguments: external_exports.strictObject({
+      runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+      offset: external_exports.literal(0)
+    }),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultBytes: external_exports.number().int().positive().nullable(),
+    instruction: external_exports.string()
+  }).optional(),
+  report: external_exports.looseObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).nullable(),
+  replayAllowed: external_exports.literal(false)
+});
+var testRunErrorSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  state: external_exports.literal("unavailable"),
+  replayAllowed: external_exports.literal(false),
+  error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
+});
+var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
 
 // ../contracts/dist/report-presentation.js
 var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -21532,7 +21599,9 @@ var summarySchema = external_exports.object({
     blocked: count4,
     skipped: count4,
     "not-run": count4,
-    inconclusive: count4.default(0)
+    inconclusive: count4.default(0),
+    conflicting: count4.default(0),
+    unavailable: count4.default(0)
   }),
   assessmentResults: count4.optional(),
   pullRequest: external_exports.object({
@@ -21673,6 +21742,13 @@ var reportExportOutputSchema = external_exports.union([
 // ../contracts/dist/report-artifact.js
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count5 = external_exports.number().int().nonnegative();
+var reportArtifactProjectionSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-artifact-projection/1"),
+  sourceSha256: digest9,
+  sha256: digest9,
+  bytes: count5,
+  redactionRevision: count5
+});
 var reportArtifactInputSchema = external_exports.strictObject({
   reportId: digest9,
   runId: digest9,
@@ -21725,7 +21801,10 @@ var reportArtifactResultSchema = external_exports.union([
         text: external_exports.string(),
         offset: count5,
         nextOffset: count5.nullable(),
-        totalCodeUnits: count5
+        totalCodeUnits: count5,
+        // Artifact metadata identifies the private original. This identifies
+        // the complete filtered JSON, before transport pagination.
+        projection: reportArtifactProjectionSchema.optional()
       })
     ])
   })

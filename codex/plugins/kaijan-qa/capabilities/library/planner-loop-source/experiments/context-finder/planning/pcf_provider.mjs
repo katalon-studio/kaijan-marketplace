@@ -110,6 +110,7 @@ export async function generate(
   validate,
   {
     max_request_bytes,
+    max_output_tokens_limit = 12000,
     transport = native,
     env = process.env,
     signal,
@@ -132,10 +133,13 @@ export async function generate(
     throw Error("Full request byte bound exceeded");
   const ceiling = body.max_output_tokens;
   if (
+    !Number.isInteger(max_output_tokens_limit) ||
+    max_output_tokens_limit < 1 ||
+    max_output_tokens_limit > 24000 ||
     !Number.isInteger(ceiling) ||
     !isJsonInteger(body, "max_output_tokens") ||
     ceiling < 1 ||
-    ceiling > 12000
+    ceiling > max_output_tokens_limit
   )
     throw Error("Invalid output token guard");
   if (
@@ -303,6 +307,25 @@ export async function generate(
           );
         }
         save(path.join(root, "usage-receipt.json"), receipt);
+        if (
+          receipt.http_status === 200 &&
+          raw.model === body.model &&
+          !truth(raw.error) &&
+          raw.status === "incomplete" &&
+          raw.incomplete_details?.reason === "max_output_tokens"
+        ) {
+          receipt.status = "output_limit";
+          receipt.failure_diagnostic = {
+            stage: "response_completion",
+            reason: "max_output_tokens",
+            max_output_tokens: ceiling,
+          };
+          throw new PlanningFailure(
+            "provider_output_limit_no_retry",
+            root,
+            receipt,
+          );
+        }
         if (
           receipt.http_status !== 200 ||
           raw.status !== "completed" ||

@@ -22870,13 +22870,27 @@ var setupStartedPropertiesSchema = external_exports.strictObject({
 });
 var setupFinishedPropertiesSchema = external_exports.strictObject({
   setup_id: telemetryOperationId,
-  outcome: external_exports.enum(["ready", "failed", "stopped"]),
+  outcome: external_exports.enum([
+    "ready",
+    "ready_partial",
+    "needs_input",
+    "failed",
+    "stopped"
+  ]),
   missing_prerequisites: external_exports.array(external_exports.enum([
     "admitted-map-producer",
     "work-item-or-mapping-question",
     "model-provider",
     "source-authorization",
     "admitted-application-consumer",
+    "source_identity_changed",
+    "adapter_changed",
+    "invalid_map_readiness",
+    "invalid_source_authorization",
+    "source_authorization_scope_mismatch",
+    "setup_interrupted",
+    "git_unavailable",
+    "invalid_source",
     "unknown"
   ])).max(30).nullable(),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
@@ -22967,7 +22981,7 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped"]),
+  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
@@ -22979,8 +22993,11 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
-  error_code: external_exports.null(),
-  error_message: external_exports.null()
+  error_code: external_exports.enum(["native_execution_failed", "native_execution_blocked"]).nullable(),
+  error_message: external_exports.enum([
+    "Native execution did not return a validated result.",
+    "Native execution was blocked."
+  ]).nullable()
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
