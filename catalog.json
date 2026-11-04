@@ -5,15 +5,15 @@
       "platform": "codex",
       "plugin": "kaijan",
       "profile": "production",
-      "path": "codex/plugins/kaijan",
+      "path": "codex/production/plugins/kaijan",
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "production",
-        "version": "0.5.0-build.41793441689.1",
-        "buildId": "423b406e-be28-4ccd-b658-2ebd1b93ba99",
-        "sourceRevision": "db1f655d0bc6ea6d397c7ad20e05482e41ba3066",
-        "treeDigest": "2fc46a3bf740b086ddbc64084486d65fd5b849163ef114e4169defe605f76907",
-        "run": "41793441689",
+        "version": "0.5.0-build.41815941092.1",
+        "buildId": "d6678c0e-dcac-4c96-9e10-08df26181ac3",
+        "sourceRevision": "816691677a14daf976290de83cc9bed192ccc683",
+        "treeDigest": "33906523c4ab433cbdb1df314619e351587105d66ac986682909376b971ce285",
+        "run": "41815941092",
         "attempt": "1"
       }
     },
@@ -21,7 +21,7 @@
       "platform": "codex",
       "plugin": "kaijan",
       "profile": "qa",
-      "path": "codex/plugins/kaijan-qa",
+      "path": "codex/qa/plugins/kaijan-qa",
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "qa",
