@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import { encodedJson, utf8 } from "../related/json.mjs";
 import {
   digest,
+  save,
   validationFailure,
   pointer,
   referenceDiagnostic,
@@ -22,12 +24,7 @@ import {
   splitlines,
   zonedDate,
 } from "./semantics.mjs";
-import {
-  SPECIALIZED,
-  LEDGER_INSTRUCTIONS,
-  METHOD_INSTRUCTIONS,
-  CONCISE_COMPLETE_INSTRUCTIONS,
-} from "./prompts.mjs";
+import { SPECIALIZED, METHOD_INSTRUCTIONS } from "./prompts.mjs";
 export {
   SPECIALIZED,
   LEDGER_INSTRUCTIONS,
@@ -124,11 +121,14 @@ export function literalRequirements(packet) {
       quote: s.text,
     }));
 }
+export function validateCaptureTime(value) {
+  need(typeof value === "string", "Missing capture time");
+  return zonedDate(value);
+}
 export function validateInput(packet) {
   need(object(packet), "Input object required");
   need(packet.version === VERSION, "Unsupported input version");
-  need(typeof packet.captured_at === "string", "Missing capture time");
-  zonedDate(packet.captured_at);
+  validateCaptureTime(packet.captured_at);
   need(
     object(packet.work_item) &&
       typeof packet.work_item.title === "string" &&
@@ -424,7 +424,7 @@ export function validatePlan(plan, packet) {
     unassessed_requirement_ids: missingRequirements,
     runner_handoff: {
       reported_scenario_ids: [...handoff],
-      order_origin: "model_reported_order",
+      order_origin: "supplied_plan_reference_order",
       omitted_test_ids: missingHandoff,
       membership: tests.map((id) => ({
         test_id: id,
@@ -534,12 +534,121 @@ export function schemaFor(packet) {
     } else if (Array.isArray(node)) for (const value of node) bind(value);
   };
   bind(schema);
+  const intentIds = packet.evidence_catalog
+    .filter((row) => row.kind === "intent")
+    .map((row) => row.id);
   schema.properties.objectives.items.properties.refs.items.properties.evidence_id.enum =
-    packet.evidence_catalog
-      .filter((row) => row.kind === "intent")
-      .map((row) => row.id);
+    intentIds;
+  // Constrain generation without changing saved plans or the validation guard.
+  // Context can support a proposed check, but cannot establish a requirement.
+  const expected = schema.properties.tests.items.properties.expected;
+  const requirement = copy(expected),
+    hypothesis = copy(expected);
+  requirement.properties.authority.enum = ["requirement"];
+  requirement.properties.refs.minItems = 1;
+  requirement.properties.refs.items.properties.evidence_id.enum = intentIds;
+  hypothesis.properties.authority.enum = ["hypothesis"];
+  schema.properties.tests.items.properties.expected = {
+    anyOf: [requirement, hypothesis],
+  };
   return schema;
 }
+// Generation stores each membership beside the complete test. Public plans keep
+// their existing shape; old plans still use the independent validator above.
+function generationShape(schema) {
+  const value = copy(schema);
+  // Keep an independent declaration before full definitions. Projection must
+  // not conceal an intended test whose body is missing from generation.
+  const properties = {};
+  for (const [key, property] of Object.entries(value.properties)) {
+    if (key === "tests")
+      properties.test_outline = arr(obj({ id: S, purpose: S }));
+    properties[key] = property;
+  }
+  value.properties = properties;
+  value.required = Object.keys(properties);
+  const test = value.properties.tests.items;
+  test.properties.requirement_ids = arr(S);
+  test.properties.runner_selection = {
+    type: "string",
+    enum: ["selected", "not_selected"],
+  };
+  test.required.push("requirement_ids", "runner_selection");
+  const row = value.properties.requirement_coverage.items;
+  delete row.properties.status;
+  delete row.properties.test_ids;
+  row.required = ["requirement_id", "reason"];
+  delete value.properties.runner_handoff.properties.scenario_ids;
+  value.properties.runner_handoff.required = ["status", "required_inputs"];
+  return value;
+}
+export function generationSchemaFor(packet) {
+  const schema = generationShape(schemaFor(packet));
+  schema.properties.tests.items.properties.requirement_ids.items = {
+    type: "string",
+    enum: packet.requirement_inventory.map((row) => row.id),
+  };
+  return schema;
+}
+export function projectGeneratedPlan(value, packet) {
+  validateSchema(value, generationShape(SCHEMA));
+  const outlined = value.test_outline.map((test) => test.id);
+  const defined = value.tests.map((test) => test.id);
+  need(
+    new Set(outlined).size === outlined.length &&
+      outlined.length === defined.length &&
+      outlined.every((id) => defined.includes(id)) &&
+      defined.every((id) => outlined.includes(id)),
+    "Test outline and full definitions do not match",
+    () => ({
+      path: "/test_outline",
+      rule: "complete_test_definitions",
+      missing_test_ids: outlined.filter((id) => !defined.includes(id)),
+      undeclared_test_ids: defined.filter((id) => !outlined.includes(id)),
+    }),
+  );
+  const inventory = packet.requirement_inventory.map((row) => row.id);
+  const reported = value.requirement_coverage.map((row) => row.requirement_id);
+  for (const [index, test] of value.tests.entries()) {
+    need(
+      new Set(test.requirement_ids).size === test.requirement_ids.length &&
+        test.requirement_ids.every(
+          (id) => inventory.includes(id) && reported.includes(id),
+        ),
+      "Unknown, duplicate or unreported test requirement",
+      () =>
+        referenceDiagnostic(
+          `/tests/${index}/requirement_ids`,
+          test.requirement_ids,
+          inventory.filter((id) => reported.includes(id)),
+        ),
+    );
+  }
+  // copy handles the lossless JSON parser's values. Never mutate provider data.
+  const projected = copy(value);
+  delete projected.test_outline;
+  for (const test of projected.tests) {
+    delete test.requirement_ids;
+    delete test.runner_selection;
+  }
+  projected.requirement_coverage = value.requirement_coverage.map((row) => {
+    const ids = value.tests
+      .filter((test) => test.requirement_ids.includes(row.requirement_id))
+      .map((test) => test.id);
+    return {
+      ...copy(row),
+      status: ids.length ? "proposed" : "gap",
+      test_ids: ids,
+    };
+  });
+  projected.runner_handoff.scenario_ids = value.tests
+    .filter((test) => test.runner_selection === "selected")
+    .map((test) => test.id);
+  return projected;
+}
+const GENERATION_MEMBERSHIP_INSTRUCTIONS =
+  "\nThe host supplies requirement_inventory entries containing complete intent sources. They are a source checklist, not proof of semantic coverage. Consider all supplied intent. First list every distinct functional and change-impact check in test_outline with its ID and purpose. Then write one complete test definition for each outlined ID, with no missing or extra definitions. Do not remove distinct checks to make the lists fit. Each test's requirement_ids names the supplied entries it checks; runner_selection states selected or not_selected. Return one requirement_coverage row per inventory entry, with a reason explaining coverage or the gap. Do not repeat test IDs in coverage or handoff. The host derives their links from these exact definitions in test order. Keep all test content, including tests not selected for Runner. An empty membership is a gap, not permission to invent behavior. Explicit implementation requirements need source checks or a stated gap; visual similarity cannot prove source ownership. Do not invent thresholds or expected behavior. Use concise wording while preserving distinct conditions, prerequisites, actions, observable expectations, source authority and missing inputs.";
+
 export function requestFor(
   packet,
   model = MODEL,
@@ -555,11 +664,7 @@ export function requestFor(
       reasoning: { effort: reasoning },
       store: false,
       instructions:
-        SPECIALIZED +
-        LEDGER_INSTRUCTIONS +
-        METHOD_INSTRUCTIONS +
-        "\n\n" +
-        CONCISE_COMPLETE_INSTRUCTIONS,
+        SPECIALIZED + METHOD_INSTRUCTIONS + GENERATION_MEMBERSHIP_INSTRUCTIONS,
       input: encodedJson(prepared),
       max_output_tokens,
       text: {
@@ -567,7 +672,7 @@ export function requestFor(
           type: "json_schema",
           name: "pr_context_plan",
           strict: true,
-          schema: schemaFor(prepared),
+          schema: generationSchemaFor(prepared),
         },
       },
     },
@@ -581,13 +686,29 @@ export async function plan(packet, output_dir, model, options = {}) {
     options.max_output_tokens ?? 8000,
     settings.reasoning,
   );
+  let projected, projection;
   const result = await generate(
     prepared,
     request,
     output_dir,
-    (value) => validatePlan(value, prepared),
+    (value) => {
+      projected = projectGeneratedPlan(value, prepared);
+      const checks = validatePlan(projected, prepared);
+      projection = {
+        version: "test-membership/1",
+        candidate_sha256: digest(value),
+        plan_sha256: digest(projected),
+        links: "derived_from_model_test_membership_in_test_order",
+        order_origin: "derived_from_model_test_order",
+      };
+      save(join(output_dir, "projected-plan.json"), projected);
+      save(join(output_dir, "generation-projection.json"), projection);
+      return checks;
+    },
     options,
   );
+  result.plan = projected;
+  result.generation_projection = projection;
   result.evidence = prepared.evidence_catalog;
   if (Object.hasOwn(prepared, "input_projection"))
     result.input_projection = prepared.input_projection;

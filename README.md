@@ -41,4 +41,4 @@ Manual Codex refresh is distinct from unattended team synchronization.
 Each platform owns its format, manifest and installer checks. Add its adapter and
 verify installation before advertising it here. Never place a Codex package in a
 Claude or Kiro catalog and assume compatibility. QA and Production have separate
-installation identities. Production activation requires its own acceptance.
+installation identities. Publishing either profile updates only its own package.

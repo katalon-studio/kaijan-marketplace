@@ -1,0 +1,3 @@
+interface:
+  display_name: "Set up an application"
+  short_description: "Save the application source, goal and test target"

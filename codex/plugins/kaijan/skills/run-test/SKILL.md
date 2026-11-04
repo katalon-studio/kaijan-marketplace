@@ -67,6 +67,12 @@ Check actual Runner provisioning separately from target-application credentials.
    browser or desktop inputs, and 600000 ms (10 minutes). Set limits only
    to lower that budget; larger values are rejected before execution.
    Use MCP so the run keeps its full report and retained request identity.
+   Keep the full original request, including cleanup duties. In separate guidance,
+   distinguish app/browser actions from host process work. Runner attempts to
+   close its run-owned browser after its execution decision and records cleanup
+   separately. Codex owns shutdown of a local test server it started. Do not ask
+   browser tools to stop that server or verify host processes. Keep requested
+   in-app cleanup in the scenario; do not remove expected behavior to obtain a pass.
    Keep requested behavior, caller-authored hypotheses and observation-only questions
    distinct. “Observe what remains after reload” asks for an observation; it does
    not require persistence. Compare persistence only when the caller explicitly
@@ -158,6 +164,13 @@ Check actual Runner provisioning separately from target-application credentials.
    and `assessment` distinct and use the returned report. A failed assessment
    does not show a defect in the tested app and never calls for a browser replay.
    Codex may supply useful new context when a specific gap needs it.
+6. Complete the caller-owned cleanup in the original request. Stop only servers
+   or other test processes this task started, using their retained handles or
+   recorded PIDs, and verify they ended. Read Runner's recorded browser cleanup;
+   an execution completion alone does not prove cleanup. Keep failed or unknown
+   cleanup explicit and separate from app-check results. Preserve the original
+   Runner status and report; later host cleanup does not rewrite an incomplete
+   run or turn it into a pass. Do not stop a shared or unrelated process.
 
 For an explicit execution-only task, use `loki_runner_execute`, `loki_runner_get`
 and `loki_runner_stop`. For tests run by Codex or another tool outside Kaijan,

@@ -17,9 +17,9 @@ Kaijan connection. Installed files do not prove which version answers this chat.
 
 If the identities differ or required tools are absent, explain the exact problem
 once. For a confirmed older version: “This chat still uses the earlier Kaijan
-version. Open a new chat in this project to use the update.” If no tool responds:
-“Kaijan is installed, but its tools are not available in this chat. Open a new
-chat in this project and check the connection there.” Do not call an unknown
+version. Keep this chat while we check its connection.” If no tool responds:
+“Kaijan is installed, but its tools are not available in this chat. Keep this
+chat and its saved report links while we check recovery.” Do not call an unknown
 connection an old version. Keep exact versions in the diagnostic record; do not
 make the tester interpret build hashes. Claim that saved results remain
 available only after reading the original records through the recovered route.
@@ -40,26 +40,6 @@ request key and result. If that connection is unavailable, state the unresolved
 run and its possible effects. Do not start a replacement run or stop an unrelated
 worker. A new chat does not prove that an earlier run stopped.
 
-## Use a fresh chat
-
-The verified workaround is to keep the old chat and open a new chat in the same
-project, with the same Kaijan profile. Give it the original task, action limits
-and retained IDs. Ask it to check the loaded Kaijan version and read saved work
-before continuing. Do not ask it to repeat completed actions.
-
-The user can select **New chat** in the project. Create a chat for the user only
-when that action is authorized. Check the actual tool inventory and responding
-runtime identity in the new chat before analysis or execution. Read the original
-saved record or report to confirm continuity; a new record with the same title
-does not prove retention.
-
-Some records belong to the original chat's scope. The same private profile does
-not grant a new chat access to them. If readback fails at that boundary, keep the
-old chat and its IDs. Use it to review those results after a supported reconnect.
-Do not change scope identifiers or recreate completed work to claim recovery.
-A fresh chat can start separately authorized new work, but that does not prove
-continuity of the old run.
-
 ## Recover in the same chat
 
 On the tested desktop hosts, the plugin enable switch restored missing Kaijan
@@ -74,18 +54,48 @@ tools in the same chat. Use this route when the host exposes the switch:
    Read the original saved configuration, run and report before continuing.
 
 An enabled switch alone does not prove recovery. If tools remain unavailable or
-the identity differs, keep the original work and use the fresh-chat route above.
+the identity differs, keep the original chat and records. Do not repeat the
+switch cycle or send the user between old and new chats. Continue with the
+restart check below.
 
 Use a reconnect or refresh control only if the active host exposes it for this
 connection. Name the actual control; do not invent a slash command or claim that
 a marketplace refresh also replaces this chat's running connection. Afterward,
 repeat the identity, tool and original-record checks above.
 
+## Check restart recovery
+
 For a changed local plugin, OpenAI documents restarting the ChatGPT desktop app
-to load the new files. A restart can interrupt other chats. Preserve work and use
-the host's supported restart flow with the required human control. If a restart
-cannot be done now, use a verified route above and report desktop restart
-recovery as unverified. Do not edit host databases or force-kill the host.
+to load the new files. A restart can interrupt other chats. Preserve work and
+check active operations first. Use the host's supported restart flow with the
+required human control. Do not edit host databases or force-kill the host.
+
+After restart, return to the **original chat and project**. Check its callable
+tools and selected runtime identity. Read the original Setup, test and report by
+their saved IDs, then open the native report. Compare the original result hashes
+and statuses, including stopped work, incomplete execution and unknown charges.
+A responding tool or rendered new report alone does not prove recovery.
+
+If restart cannot be checked now, say: “This chat cannot open its saved report
+yet. Keep the chat and report link. After active work ends, restart the desktop
+app and return here to check it.” Mark recovery as pending. If the same failure
+remains after restart, retain the host version, expected and responding package
+identities, original IDs, error and observed controls for host support. Do not
+infer data loss from an unreadable record or claim that restart must fix it.
+
+## Use a fresh chat for separate new work
+
+A fresh chat can restore tool access for separately authorized new work. It is
+not a recovery route for a report bound to the old chat. The same private profile
+does not grant access to another chat's saved records. Keep the original chat
+and report links; do not change scope identifiers, copy private stores or repeat
+completed actions to recreate the report.
+
+The user can select **New chat** in the same project and Kaijan profile. Create a
+chat only when authorized. Check its actual tool inventory and responding
+runtime identity before analysis or execution. If a supplied report cannot be
+read here, state that limit once and keep its recovery in the original chat.
+Do not treat a new record with the same title as retained work.
 
 ## Evidence and limits
 
@@ -98,6 +108,13 @@ discovery returned the selected `0.4.0-rowan.20261104.2` build, and native reads
 returned the exact original Setup, completed test and report. This verifies that
 route on these hosts; it does not prove desktop restart recovery or recovery
 during active work.
+
+The later RRKY check in [#2747](https://github.com/katalon-studio/loki/issues/2747)
+did not recover the original chat after an observed off/wait/on cycle. A new
+chat used the selected package, but could not read the old chat's report. The old
+native card failed to display. Desktop restart remains untested there. This is
+a separate host result; it does not erase the successful checks above.
+
 Record the host, expected and responding package identities, retained record IDs,
 control used and readback result for each new check. Do not claim acceptance from
 this guide alone.

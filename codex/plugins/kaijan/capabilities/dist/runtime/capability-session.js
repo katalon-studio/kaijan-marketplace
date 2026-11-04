@@ -20746,7 +20746,7 @@ var planningInputSchema = external_exports.union([
   }),
   external_exports.looseObject({
     version: external_exports.literal("pr-context-plan/3"),
-    captured_at: external_exports.string(),
+    captured_at: external_exports.string().describe("Capture time with a timezone, such as 2026-11-04T05:16:48Z or 2026-11-04T12:16:48+07:00. Use ISO 8601, not a named timezone such as UTC."),
     work_item: external_exports.looseObject({ title: nonempty3 }),
     sources: external_exports.array(external_exports.looseObject({
       id: nonempty3,
@@ -21557,6 +21557,7 @@ var testPlanViewSchema = external_exports.object({
     resultSha256: digest8.nullable(),
     state: external_exports.string(),
     executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string(),
     planSourceId: external_exports.string(),
     planResultSha256: external_exports.string(),
@@ -21603,6 +21604,7 @@ var summarySchema = external_exports.object({
     conflicting: count4.default(0),
     unavailable: count4.default(0)
   }),
+  proposedCounts: external_exports.object({ pass: count4, fail: count4 }).optional(),
   assessmentResults: count4.optional(),
   pullRequest: external_exports.object({
     number: external_exports.number().int().positive(),
@@ -21612,6 +21614,7 @@ var summarySchema = external_exports.object({
   runs: external_exports.array(external_exports.object({
     sourceId: digest8,
     executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string()
   })),
   plans: external_exports.array(external_exports.object({

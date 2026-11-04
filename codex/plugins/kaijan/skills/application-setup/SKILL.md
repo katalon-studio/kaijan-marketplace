@@ -17,7 +17,7 @@ For a new source selection, default to latest main. Honor an explicit branch, PR
 
 Check `isError` and `structuredContent`. Read the returned applicationId/contextId with `loki_setup_get`. Fresh configuration uses `loki.setup-context/4` and returns `map: null`. No source is sent to a model and no provider/browser action starts. A `ready` Setup state means the selected configuration was saved, not that the application was tested or that an analysis provider is ready.
 
-Use `loki_setup_resolve` with the exact expected source revision and optional target-profile revision. Its `loki.application-context/3` result has `map: null`, readiness state `configured`, `map: not-required` and `browserObserved: false`. Retain the original work item and configuration references. `authority: configuration-only` grants no browser, provider or source-transfer action.
+Use `loki_setup_resolve` with `expectedRevision` from the saved configuration's source revision. When `loki_setup_get` returns `configuration.target.profileRevision`, also pass that exact value as `expectedProfileRevision`. Omit it only when the saved configuration has no target-profile revision. Do not guess or generate a replacement revision. Its `loki.application-context/3` result has `map: null`, readiness state `configured`, `map: not-required` and `browserObserved: false`. Retain the original work item and configuration references. `authority: configuration-only` grants no browser, provider or source-transfer action.
 
 A matching request recovers its original record across reconnect. Conflicting input under a requestKey refuses. Change the selected source or goal only as a separately authorized new configuration. Do not rewrite the old record.
 

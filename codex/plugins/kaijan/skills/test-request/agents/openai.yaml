@@ -1,0 +1,3 @@
+interface:
+  display_name: "Test and report"
+  short_description: "Plan and run tests, assess results and show a report"
