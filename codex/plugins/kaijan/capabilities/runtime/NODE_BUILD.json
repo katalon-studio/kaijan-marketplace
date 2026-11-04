@@ -1,0 +1,18 @@
+{
+  "schema": "kaijan.node-runtime-preparation/1",
+  "original": {
+    "bytes": 122545856,
+    "sha256": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329"
+  },
+  "prepared": {
+    "bytes": 98133152,
+    "sha256": "5bdfd644c01a3f027b75e6d504877e650fd77091bef5095effd2f9e012b64b67"
+  },
+  "transformation": "strip-debug-local-symbols",
+  "signature": "ad-hoc-preserved-entitlements-and-runtime-flags",
+  "notarization": "not-claimed",
+  "versions": {
+    "node": "24.22.1",
+    "undici": "7.30.1"
+  }
+}

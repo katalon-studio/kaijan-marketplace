@@ -1,0 +1,5 @@
+Unicode data version 15.0.0. Copyright Unicode, Inc.
+CaseFolding-15.0.0.txt is the original standard table.
+DecimalDigits-15.0.0.json and GeneralCategory-15.0.0.json are derived
+from UnicodeData.txt; their metadata records exact source URL, hash and fields.
+See UNICODE-LICENSE.txt and https://www.unicode.org/terms_of_use.html.

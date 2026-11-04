@@ -1,0 +1,864 @@
+{
+  "uiModelerContext": {
+    "version": "2026.10.29-2108.1",
+    "source": "14ddfba827b09d9a6ed758b98049ccf6aa969569",
+    "sourceTree": "f5c3cfcd615bdb640eece5c5afb5451aa3cf973c",
+    "archiveName": "ui-modeler-2026.10.26-1.tgz",
+    "archiveSha256": "e4d011fa49b775907c5e36b07c439960e4a83e57acf0b28ed7cf99fb2fdea01f",
+    "scope": "Four promoted retained-map APIs, now additionally binding plain/working-folder snapshot versions and source-scoped connection citations. The archive metadata remains upstream baseline provenance, not a byte-equivalence claim for this accepted derivative.",
+    "members": {
+      "retained-map-read.mjs": "lib/retained-map-read.mjs",
+      "retained-map-read.d.mts": "lib/retained-map-read.d.mts",
+      "retained-map-lookup.mjs": "lib/retained-map-lookup.mjs",
+      "retained-map-lookup.d.mts": "lib/retained-map-lookup.d.mts"
+    },
+    "files": {
+      "retained-map-lookup.mjs": "4fd52586bc7c8f4be05e1964f5e28fcf5a2514741f15e663e785b9ded60c27c8",
+      "retained-map-lookup.d.mts": "18feb47533be3436932a263c142d15b06ce1e41314554cd1823bd8e1ffb6be0f",
+      "retained-map-read.mjs": "fb9ad6c9970898fba630022b97cbebdbe9c70d2d4e547420e8580ce5188eb76d",
+      "retained-map-read.d.mts": "80fbbefb38ece2504b1ff2406b715012651b0892ca370b8c58bb0c5a53435205"
+    },
+    "filesBeforeStandards": {
+      "retained-map-lookup.mjs": "59f59f305c8caa7baf0b54dec6e0fbcc7d86c789c6e620fbc70abae6e863775e",
+      "retained-map-lookup.d.mts": "18feb47533be3436932a263c142d15b06ce1e41314554cd1823bd8e1ffb6be0f",
+      "retained-map-read.mjs": "49c11ce180da2bbb69974f0fc0813581a21a0c0c4e3fad84711f0b0c2b6e35b9",
+      "retained-map-read.d.mts": "80fbbefb38ece2504b1ff2406b715012651b0892ca370b8c58bb0c5a53435205"
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "standards-derivation.json",
+      "scope": "Formatting/type-only current identities; original retained helper/reader algorithms preserved."
+    },
+    "currentDerivation": {
+      "issue": 2108,
+      "decision": "https://github.com/katalon-studio/loki/issues/2108#issuecomment-6493663058",
+      "base": "986f8ac81fb993c5c351ddbba8ee88bc00e2142f",
+      "scope": "Snapshot version support and exact work-item source-connection provenance; historical archive and original filesBeforeStandards retained."
+    }
+  },
+  "node": {
+    "version": "24.21.0",
+    "platform": "darwin-arm64",
+    "binarySha256": "ad41db092a539459e70bdf69556dbd01485c4d40a8cfe0eb482f3c29bd7ebea8"
+  },
+  "changeRisk": {
+    "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+    "packageVersion": "2026.10.26-1771.1",
+    "schemaVersion": "change-risk-finder/result/4",
+    "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
+    "files": {
+      "runtime.mjs": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
+      "method.mjs": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+      "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
+      "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
+      "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
+      "input.schema.json": "3206a2bec72a0dfadb2d872f8783fc920c768fa2031795f7d92c3ecc70a7c6db",
+      "output.schema.json": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+      "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
+      "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
+      "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+      "node_modules/@katalon-experiments/ai-client/index.d.mts": "184ee97c8b955732d182a765ecae630a1747fc8e092f16ffd35c0087b1398642",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
+      "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
+      "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
+    "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
+    "decision": "https://github.com/katalon-studio/loki/issues/1685#issuecomment-6407244037",
+    "transportMigration": {
+      "baselineSourceCommit": "953060f7fe7a557495c0071638c43ebd761eeed7",
+      "sharedPackage": "@katalon-experiments/ai-client@0.1.0",
+      "sharedSourceCommit": "61fc0b3c7e01f8272829f5137a9222b397f03c46"
+    },
+    "baselineSourceCommit": "808f533e4e9aacd4c18c2fbfe14099583faf2c3b",
+    "inputLimitCleanup": {
+      "sourceCommit": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+      "scope": "Remove unsupported native request byte/hunk gates behind public wrapper. JEV255-choice protocol guard retained. Canonical VERSION metadata1771.1 and existing #1929 private diagnostics are included; prior source/version remain baseline provenance."
+    },
+    "sourceResponseLimitCleanup": {
+      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "scope": "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved."
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "../capabilities/standards-derivation.json",
+      "scope": "Current staged file identities; original source/version/overlay provenance remains historical and immutable."
+    },
+    "componentAudit": {
+      "issue": 2173,
+      "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
+      "record": "../capabilities/component-audit.json",
+      "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+    },
+    "outputBudgetRepair": {
+      "issue": 2470,
+      "scope": "Honor the template output budget for snapshots and patches. Default six-question requests to 8000 total output tokens for reasoning and final JSON. Preserve selected model/effort, partial results, original artifacts and zero retries."
+    }
+  },
+  "prContext": {
+    "sourceCommit": "008184b0a616b16768fb0e727e7679e8534aaf97",
+    "sourceTree": "f262fe41b11b2e28da53765564478e323e54e610",
+    "packageVersion": "2026.10.27-2",
+    "archiveSha256": "1da0b30ee23aaa4fa9afb63d426e2f5df2805f43a3cbf270e8821969bc17c9c2",
+    "buildCommit": "681b3466b84a72019828dc98c584edc00e96d939",
+    "sharedSourceCommit": "c6cf6ab2e0a35d3b9026ff19ff90c9f7a688ac08",
+    "sourceQualification": "Complete accepted related26-6 archive from1756; canonical source identity accepts repository case-only URL differences with exact original bytes and preserves negative identity admission. Public MCP retains its existing four query modes; inactive task-subject research remains unexposed. Producer build681b remains distinct from merge2a891. Transport-only overlay #1441: original baseline source/build identities above are retained. transportMigration binds the new communication code and unchanged baseline members; no newer PCF research algorithm is adopted. #1935 source overlay removes unsupported active input admission limits; module VERSION now follows unchanged owning-source version metadata2026.10.27-2. All unlisted native members remain baseline.",
+    "apiDirectory": "pr-context-finder/related",
+    "files": {
+      "github-capture/authored_eligibility.mjs": "d06340eb38575279a85497c8d1f9c77b379459b512b48d5f3412e553b3f9fca6",
+      "github-capture/data/CaseFolding-15.0.0.txt": "cdd49e55eae3bbf1f0a3f6580c974a0263cb86a6a08daa10fbf705b4808a56f7",
+      "github-capture/data/DecimalDigits-15.0.0.json": "88b9925a9b4ba88054322c2bc9842ae55bc7b6dfa9423e16bbbc34357453679a",
+      "github-capture/data/GeneralCategory-15.0.0.json": "ed7fc2d78025d0bd6f7a90d09bc4e14cb01da904d14092d848c6bf96efa05a42",
+      "github-capture/data/PYTHON-LICENSE.txt": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+      "github-capture/data/PYTHON-NOTICES.txt": "3bb3315e006851a6d7fc74cefe98f5b1404ccd3d3ffdba4a259ac5668498e002",
+      "github-capture/data/UNICODE-LICENSE.txt": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "github-capture/data/UNICODE-NOTICES.txt": "700c68e92cca6906c977617b0341239bbf6be590d61d52e43e8f0048beaa2ba3",
+      "github-capture/errors.mjs": "30fb8d67965f3f74ead4d605738080ec4d735a1cd28398ae5444dbde79fc5529",
+      "github-capture/github_identity.mjs": "4e036979eacf24d5437e2d335ca08fd9e9f49661c8871d8490409ac7cb43a659",
+      "github-capture/github_references.mjs": "9ca02939a31554602844f0aaf2adafa0e8bfe1cef1f0af442c22457c668f95c8",
+      "github-capture/json_bytes.mjs": "9272aae23f8a179f36ae885e2159a2d8a646c74082ba6647f1cfd74a61c0518b",
+      "github-capture/markdown/THIRD_PARTY_NOTICES.txt": "2c0bbf7ccb00d8b72cfdac72da36bebd44994eee7f416936c8526f3ed8478fd0",
+      "github-capture/markdown/parser.mjs": "611f312c7fc3f699f25d89b6832458400b6b4de88943312943bffb5740b5114a",
+      "github-capture/python_integer.mjs": "1d3341948089022f8c955c49eea14195c30f90a37ed1b2b0e2623776f504d664",
+      "github-capture/unicode_bytes.mjs": "39b63c8199c79bbde04171c9759bb0eff592982e704842e62341898c9bf6c59c",
+      "github-capture/unicode_properties.mjs": "7cbd7c76e2e6c03925b7f0c48dd7ec6ea19ea7f86b332cef444a7201de7f2d7e",
+      "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
+      "node_modules/@katalon-experiments/ai-client/index.d.mts": "184ee97c8b955732d182a765ecae630a1747fc8e092f16ffd35c0087b1398642",
+      "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+      "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
+      "pr-context-finder/comment-origin.mjs": "a237bafd7ad08ee5b878ca0f3a40a7a98ec3bb555340b01dac52e4c676069f0b",
+      "pr-context-finder/core.mjs": "5116743c941ef50ab6749121f3f4b6ce4a1a62b38e7ec391bbd826262fd4c43a",
+      "pr-context-finder/planning/pcf_comment_filter.mjs": "f27090c03690712fb4ddfcf30e2ca990ebc09f7360b51d72fab155541696447e",
+      "pr-context-finder/planning/pcf_comment_origin.mjs": "0f35c964e0892441d7d028ac12a7a17f5bae29f247eddb9fb6a21f3d693391dc",
+      "pr-context-finder/planning/pcf_native.mjs": "bd13cfeac468ea1aa8cb498abbab1e29f9e70a9eaaf96bb89dbc3ec4aba868d8",
+      "pr-context-finder/planning/pcf_parent_select.mjs": "700c8623abae802b776a79f207ca9fdac01d57b19d5787fbd804634a93ed2cdd",
+      "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
+      "pr-context-finder/planning/shared.mjs": "d1c4ffb05f85ccc2c19b87ab4195919f7967c95f196731664b00704b2eaaf231",
+      "pr-context-finder/reference-parser.mjs": "ab90362617cde6f555d8b0e4551ed7ecf20dc8341f585bf08e5aff3eefb7be50",
+      "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b",
+      "pr-context-finder/related/PYTHON-LICENSE.txt": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+      "pr-context-finder/related/UNICODE-LICENSE.txt": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "pr-context-finder/related/UNICODE-WORD-NOTICES.txt": "088d142dd4b54eaa6e14f8f1dd13ee507b76fa68c672e62c7ada6a8960875cb5",
+      "pr-context-finder/related/URL-PARSER-NOTICES.txt": "71d40c21b9b20e49292432d1612ee99c967b232656c668f694424b96e8c33abc",
+      "pr-context-finder/related/admission.mjs": "7dbb2b8d2cf139fb165f641814b9f8ad84403281aeb1cd44d3ccbfb954f7b501",
+      "pr-context-finder/related/api.d.mts": "ebda8762c3a0e7467b666c5bc44a06b8fbeafac6272d7debd3317b4267089eca",
+      "pr-context-finder/related/api.mjs": "bdc2ba74b1110201253eed89c4c53354bd86b0cf44d73fce7350d79cd3743ec4",
+      "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07",
+      "pr-context-finder/related/capture.mjs": "f3f16fe8baf788a4646c396f8bdc4250c70389659e334870ff6d392e7831746e",
+      "pr-context-finder/related/connected-transport.mjs": "46ee1ec059e8a3941a68a0200df88f873a4f665f4afb8ca3620f3932c96f2985",
+      "pr-context-finder/related/followthrough.mjs": "840657cf4746fe08f86ecd6810e2bee2e274f3d261b57bbbc092ac5d278957bf",
+      "pr-context-finder/related/github-response.mjs": "244dbea1477546948601dcf076561031499ee4b7e7e580be57ea3bf976bcc1d4",
+      "pr-context-finder/related/index.mjs": "859fd6671bdcf6d7dc06d42e50e6808b7938c8d52475e8f33c8995ef7c64bdf1",
+      "pr-context-finder/related/input.mjs": "aaee29779da22416f19a6b4c58ab91340e796cb656fb611e7743c151c239a4f2",
+      "pr-context-finder/related/input.schema.json": "c95d5e316fc6afc90a85477401756f58ad5abf93b1b72a1c0ec31583d505fb6b",
+      "pr-context-finder/related/intent-query.mjs": "8868005dad2c1ce0040df2a0ef9a6ef36b0674b7e5d7b52ed2bdd72eb510a2ca",
+      "pr-context-finder/related/json.d.mts": "52c43a87c833def6cf616e7f6bd9dd9d4ed331a055647b26886732083dc0fa92",
+      "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
+      "pr-context-finder/related/module-service.mjs": "f0d9d1e9e842ec477a41cc77c84bb0ad191c730633fc17656c5ac4c72fdad27d",
+      "pr-context-finder/related/node-runtime.json": "70af5b77a1853512015799fb16e0489ae0c163a2a57b238d7277b1bfc3281081",
+      "pr-context-finder/related/output.schema.json": "e5f20bc4c846277d247c2c31a33c9bdb5ba8351a8c104b4a53027a3c3c365dbe",
+      "pr-context-finder/related/provider.mjs": "c0cbbd1370b8e71b654bf546e8882df59825c59c4861d97dfdd521fe48604156",
+      "pr-context-finder/related/query-availability.mjs": "1c9437a8c596a6f828915a63eae0cf918936bd135e16452587c6e1eb16de8007",
+      "pr-context-finder/related/rank.mjs": "adaba459790749d16b845e1f6f5ab43109f78c27a0550163ba0dd857658a6b0f",
+      "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
+      "pr-context-finder/related/retrieval.mjs": "137b8ee79e41a71a81f68de6ee2264e3633a98ca35d693749b726f50a78419ab",
+      "pr-context-finder/related/search-intent.mjs": "078bfb552491d377d7c2781fd7d68e68a50930d6993913d3423ee532c58c1f46",
+      "pr-context-finder/related/service-adapters.mjs": "d62686be22fdcd657572c2fe74ce23fe683d20e32d1f86e335f660989997c300",
+      "pr-context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
+      "pr-context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148",
+      "pr-context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8",
+      "pr-context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b",
+      "pr-context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020",
+      "pr-context-finder/related/source-sanitizer-api.mjs": "1e0b010918167911210a8eb5555dc93d5001aa68d23d5c3465387c665747e035",
+      "pr-context-finder/related/source-page-api.mjs": "085b60c845a49c046b3f76458adc4ffd7df4ee30c0d604a97e6e18291255f2b8",
+      "pr-context-finder/related/reference-api.mjs": "2ca06bcab6fe9fbf76cdc13579574c70c6b86c3af661aa2088d639ce88a0ad1a",
+      "pr-context-finder/github-references/github_references.mjs": "2581011d203165076268f96bb753d4feb43fe7bdf81409e9b7871530f972672f",
+      "pr-context-finder/related/source-sanitizer-api.d.mts": "7d7b9eb5fd7987b68d924da70d52c5a1e69df00b6cac790656a788569513a84d",
+      "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "sharedDependency": {
+      "name": "@katalon-experiments/github-authored-records@2026.10.26-2",
+      "sourceCommit": "695fff6b5b9855743a8943edc3a2862a299b2ce1",
+      "archiveSha256": "12eb952b9b6e49e7fb376181fabe7c42789ce2baa70f7e2c8894c63f7681dc00",
+      "scope": "Existing helper2 authored/JSON/Unicode/offline payloads unchanged; reference parser and REFERENCES.md corrected from1748 are separately bound below.",
+      "referenceParserCorrection": {
+        "sourceCommit": "c6cf6ab2e0a35d3b9026ff19ff90c9f7a688ac08",
+        "path": "github-capture/github_references.mjs",
+        "sha256": "62a6e2339563895ed8eb71297a5e2186765fa9e7d1d54c9fa9c70f47f9fba7b4"
+      }
+    },
+    "transportMigration": {
+      "baselineArchiveSha256": "1a9b17fef59da24af37f228a100649fa1ff498b029c016fd2e66089771fc605b",
+      "producerCommit": "61fc0b3c7e01f8272829f5137a9222b397f03c46",
+      "changedBaselineMembers": [
+        "INTEGRITY.json",
+        "package.json",
+        "pr-context-finder/package.json",
+        "pr-context-finder/planning/pcf_comment_filter.mjs",
+        "pr-context-finder/planning/pcf_native.mjs",
+        "pr-context-finder/planning/pcf_provider.mjs",
+        "pr-context-finder/related/provider.mjs",
+        "pr-context-finder/related/records.mjs"
+      ],
+      "unchangedBaselineMembers": 80,
+      "sharedPackage": "@katalon-experiments/ai-client@0.1.0",
+      "recipe": "scripts/pcf-transport-overlay.mjs"
+    },
+    "packagingEvidence": {
+      "baselineReferenceArchiveSha256": "e7fd2446205fa1e977d3eaa5117ddb5afd737e4f9c65033148d46c7eb203979e",
+      "stagingRecipe": "Existing #1441 source overlay applied to verified preview25 member closure; all declared current member hashes match.",
+      "overlayArchiveBytesVerified": false,
+      "limitation": "Later declared overlay archive bytes were not recovered; tracked metadata alone is not acceptance."
+    },
+    "baselineSourceCommit": "2a891d5502a39be38d94eac7e6c8d95f07a8f443",
+    "inputLimitCleanup": {
+      "sourceCommit": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+      "files": {
+        "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520",
+        "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2",
+        "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de",
+        "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07",
+        "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072",
+        "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157",
+        "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7",
+        "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b",
+        "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
+        "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d",
+        "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0"
+      },
+      "scope": "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.",
+      "helpCorrection": "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic."
+    },
+    "sourceResponseLimitCleanup": {
+      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "files": {
+        "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b",
+        "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35",
+        "pr-context-finder/planning/pcf_provider.mjs": "04d025a643a667202f5837652038dc06fa3443df6bcebfe8cb371fc4a9ab4080",
+        "pr-context-finder/planning/pcf_records.mjs": "d2f3b8d08932fb1bfd712b69442d9aed28cdd6719113d09b17b41bd26e71fa9e",
+        "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a",
+        "pr-context-finder/related/api.d.mts": "fb5280aa7869c612f042a9328bf27db4954199d7124e0e0a698eed27b636b074",
+        "pr-context-finder/related/api.mjs": "4fd16438da429706b1725e1c07185ec1762ad246e6844f0d6d7d654c1b3a960c",
+        "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07",
+        "pr-context-finder/related/capture.mjs": "cc7a3beed7390fc543eb8df7271af3dc176aa25d0959064e654409caae61031d",
+        "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a",
+        "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049",
+        "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc",
+        "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced",
+        "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6",
+        "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf",
+        "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce",
+        "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade"
+      },
+      "scope": "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.",
+      "resultProtocolSource": "008184b0a616b16768fb0e727e7679e8534aaf97"
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "../capabilities/standards-derivation.json",
+      "scope": "Current staged file identities; original source/version/overlay provenance remains historical and immutable."
+    },
+    "componentExtraction": {
+      "issue": 2173,
+      "manifest": "experiments/context-finder/2173-native-methods/relocation.json",
+      "base": "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6",
+      "scope": "Unselected research engines/profiles extracted; selected methods and original request semantics retained."
+    },
+    "componentAudit": {
+      "issue": 2173,
+      "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
+      "record": "../capabilities/component-audit.json",
+      "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+    }
+  },
+  "sourceAdapters": {
+    "sourceCommit": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+    "githubPacketReader": {
+      "path": "experiments/github-capture/github_packet.mjs",
+      "gitBlob": "f94e627cbed4ea434182ee295113886c03142f56",
+      "sha256": "d862dca7613bda9947eaced008199afa8f7684c2174dfacf23d3a9342f3db978"
+    }
+  },
+  "testPlanning": {
+    "sourceCommit": "008184b0a616b16768fb0e727e7679e8534aaf97",
+    "packageVersion": "2026.10.27-3",
+    "module": "pr-context-finder/planning/pcf_plan.mjs",
+    "archiveSha256": "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d",
+    "files": {
+      "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b",
+      "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55",
+      "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
+      "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
+      "pr-context-finder/planning/pcf_plan.mjs": "44e6f315dbeb5c7844cefa1d0b693d035f4099fff0b678f71bd8219739c9d7f4",
+      "pr-context-finder/planning/pcf_provider.mjs": "e960d072d964eda02f682c6b8ee01233b9433788cef394f5ceda69fe66443dd7",
+      "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
+      "pr-context-finder/planning/prompts.mjs": "9557817ee1a7f7ce2e47dfbc049e1d9ed181ab33e5ae6e177ca31733eab47a2c",
+      "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
+      "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
+      "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+      "node_modules/@katalon-experiments/ai-client/index.d.mts": "184ee97c8b955732d182a765ecae630a1747fc8e092f16ffd35c0087b1398642",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
+      "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
+      "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "scope": "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.",
+    "diagnosticOverlay": {
+      "sourceCommit": "918bcc24a2cf1ce58636daaf1253a682d57ff589",
+      "baselineSourceCommit": "2d169e723bf21c62dbcfc4cb6a2a99368768047f",
+      "baselineArchiveSha256": "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d",
+      "baselineVersion": "2026.10.27-1",
+      "files": {
+        "pr-context-finder/planning/pcf_provider.mjs": "1d527ae4fe1c60225c833f4829c86e769d8569278b9da2d2c76a60d8bf5f74e5"
+      },
+      "scope": "Diagnostic-only provider overlay; all other standalone code/version members retained. Baseline archive/source/version identify the original package, not this derivative.",
+      "baselineMergedCommit": "e0c13f263249010df9ae803c32f8f7cbccaaede5"
+    },
+    "prerequisiteContractOverlay": {
+      "sourceCommit": "e12ea1f06dd236be0a6cc207c594d9e6158a50b3",
+      "baselineSourceCommit": "918bcc24a2cf1ce58636daaf1253a682d57ff589",
+      "baselinePackageVersion": "2026.10.27-1",
+      "baselineReferenceArchiveSha256": "b2ad35695db5a56e51c09022decd771e49d4152f41e217dfd12b5f9e34c7347c",
+      "files": {
+        "pr-context-finder/planning/pcf_plan.mjs": "b946ec3361ea687bbdf366da89841994af6f07380776f429a48ef9c5abbcb9ef"
+      },
+      "scope": "Exact accepted empty-prerequisite module; retain required array/string types, steps, source/evidence/coverage/identity checks and diagnostic provider. Package/integrity version metadata follows accepted module release; unrelated baseline members stay original."
+    },
+    "baselineConciseOverlay": {
+      "sourceCommit": "305d4d3d4951ab9b52438e86a137156c2b684a11",
+      "baseline": {
+        "sourceCommit": "e12ea1f06dd236be0a6cc207c594d9e6158a50b3",
+        "mergedCommit": "e12ea1f06dd236be0a6cc207c594d9e6158a50b3",
+        "packageVersion": "2026.10.27-2"
+      },
+      "baselineReferenceArchiveSha256": "bafd32ea73cbc8619eeb4755bb04ab18a7a32c6eb5a7b1c4529caacad3bee280",
+      "decision": "https://github.com/katalon-studio/loki/issues/1899#issuecomment-6439500992",
+      "files": {
+        "pr-context-finder/planning/pcf_plan.mjs": "32afc08ab975608a1ce291520326ca61dce2c0e44973fd686b7488454634bf47",
+        "pr-context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5"
+      },
+      "scope": "Exact concise-complete baseline instructions only; retain existing schema, evidence authority, risk and supplement requests. Historical archive/source identities remain baseline provenance."
+    },
+    "requestByteBudgetOverlay": {
+      "sourceCommit": "bdce8240c61f1f8d34fbe79015763011c9fa1f3b",
+      "files": {
+        "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366"
+      },
+      "scope": "Shared transport accepts an omitted request-byte budget; supplied positive caller budgets remain enforced. No baseline request or algorithm change."
+    },
+    "nativeDiagnosticOverlay": {
+      "sourceCommit": "80795a4ac9836edf62da228784ad038f2074d1ac",
+      "files": {
+        "pr-context-finder/planning/pcf_plan.mjs": "4beae3bdaa091f17a7105783e923b77d1ae23a970a3397750b421ccecaf8a107",
+        "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366",
+        "pr-context-finder/planning/pcf_records.mjs": "597f32a0a43d71481e5928643c237614171da23b670c6e2c67725cba7d45ff38"
+      },
+      "scope": "Independently merged #1929 validation failure diagnostics. Shared provider bytes include #1931 optional request budget; no baseline request construction change."
+    },
+    "inputLimitCleanup": {
+      "sourceCommit": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+      "files": {
+        "pr-context-finder/planning/cli.mjs": "da72d0c41b58ed81b9a802d02888af06973227c6171ccb93a98e53bf26aa4866",
+        "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520",
+        "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2",
+        "pr-context-finder/planning/pcf_plan.mjs": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5",
+        "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de",
+        "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07",
+        "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072",
+        "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157",
+        "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7",
+        "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b",
+        "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
+        "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d",
+        "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0"
+      },
+      "scope": "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.",
+      "helpCorrection": "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic."
+    },
+    "sourceResponseLimitCleanup": {
+      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "files": {
+        "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a",
+        "pr-context-finder/related/api.d.mts": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08",
+        "pr-context-finder/related/api.mjs": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee",
+        "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07",
+        "pr-context-finder/related/capture.mjs": "98c30beb60aeb451cae0586bd13ed5494ae4faa0e26a798f39e12665a100ebd1",
+        "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a",
+        "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049",
+        "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc",
+        "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced",
+        "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6",
+        "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf",
+        "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce",
+        "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b",
+        "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35",
+        "pr-context-finder/planning/pcf_provider.mjs": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee",
+        "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
+        "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade"
+      },
+      "scope": "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.",
+      "resultProtocolSource": "008184b0a616b16768fb0e727e7679e8534aaf97"
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "../capabilities/standards-derivation.json",
+      "scope": "Current staged file identities; original source/version/overlay provenance remains historical and immutable."
+    },
+    "componentExtraction": {
+      "issue": 2173,
+      "manifest": "experiments/context-finder/2173-native-methods/relocation.json",
+      "base": "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6",
+      "scope": "Unselected research engines/profiles extracted; selected methods and original request semantics retained."
+    },
+    "componentAudit": {
+      "issue": 2173,
+      "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
+      "record": "../capabilities/component-audit.json",
+      "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+    }
+  },
+  "workItemRisk": {
+    "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+    "mergedCommit": "77dd326a586562a263a0bb8f0f9175eef68afcdc",
+    "files": {
+      "work-item-review.mjs": "d97cb7d2b480b68a74b1825bf8cf55c5b08b23415835b8ad651284063067086f",
+      "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f",
+      "work-item-output.schema.json": "c8faaee3336dd92f1d97880ac62437568f371fe9a889a9fbeff1baaba1abbd53",
+      "runtime.mjs": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
+      "method.mjs": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+      "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
+      "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
+      "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
+      "input.schema.json": "3206a2bec72a0dfadb2d872f8783fc920c768fa2031795f7d92c3ecc70a7c6db",
+      "output.schema.json": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+      "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
+      "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
+      "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+      "node_modules/@katalon-experiments/ai-client/index.d.mts": "184ee97c8b955732d182a765ecae630a1747fc8e092f16ffd35c0087b1398642",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+      "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
+      "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
+      "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "scope": "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.",
+    "baselineSourceCommit": "8fea2fd74369e75acee6e6f9b147c030f40f024e",
+    "nativeDiagnosticOverlay": {
+      "sourceCommit": "80795a4ac9836edf62da228784ad038f2074d1ac",
+      "scope": "Independent #1929 private first-failure validation diagnostics; algorithm and request preserved."
+    },
+    "inputLimitCleanup": {
+      "sourceCommit": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+      "scope": "Remove factory and shared runtime fixed byte caps; output/question/model/diagnostics remain."
+    },
+    "sourceResponseLimitCleanup": {
+      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "scope": "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved."
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "../capabilities/standards-derivation.json",
+      "scope": "Current staged file identities; original source/version/overlay provenance remains historical and immutable."
+    },
+    "componentAudit": {
+      "issue": 2173,
+      "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
+      "record": "../capabilities/component-audit.json",
+      "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+    }
+  },
+  "plannerLoop": {
+    "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+    "supplementSource": "8983e43efc06b0ff18300cca27c3d6c1bad5e43e",
+    "assessmentSource": "bdce8240c61f1f8d34fbe79015763011c9fa1f3b",
+    "scope": "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.",
+    "files": {
+      "experiments/context-finder/planning/supplement.mjs": "7081c9a8e2f4f7dd845141aa275cf24e20b9a6d754c584fa0deaccc994527a71",
+      "experiments/context-finder/planning/pcf_plan.mjs": "cbe1de24b94eafe99aafc33774644d311ddd90b5f51dc5821d28857a54f0af97",
+      "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
+      "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
+      "experiments/context-finder/planning/pcf_provider.mjs": "9ddb0d57b1fb42589746f8ac6d4e01cabf165deaaf8cd7a806103027a925f74d",
+      "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
+      "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
+      "experiments/context-finder/planning/prompts.mjs": "8fb62c46a7bb64056eb7929ee740f3fdfb8aa55c1c191163f2e026e9a361cf83",
+      "experiments/work-verifier/supplied-evidence.mjs": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
+      "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+      "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+      "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
+      "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020",
+      "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b",
+      "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
+      "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148",
+      "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8",
+      "experiments/work-verifier/source-binding.mjs": "716025e562d4d79883a0bea6b12e8d37000956b0aebad07a0451ba1174ed7adb",
+      "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
+      "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
+      "experiments/work-verifier/assessment-runtime.mjs": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
+      "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "assets": {
+      "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
+      "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json"
+    },
+    "failureDiagnosticSource": "918bcc24a2cf1ce58636daaf1253a682d57ff589",
+    "prerequisiteContractSource": "e12ea1f06dd236be0a6cc207c594d9e6158a50b3",
+    "baselineConciseSource": "305d4d3d4951ab9b52438e86a137156c2b684a11",
+    "assessmentByteCapRemovalSource": "bdce8240c61f1f8d34fbe79015763011c9fa1f3b",
+    "nativeDiagnosticSource": "80795a4ac9836edf62da228784ad038f2074d1ac",
+    "inputLimitCleanupSource": "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8",
+    "sourceResponseLimitCleanupSource": "1852e6676718c6b73a108f86c42384e13db0a548",
+    "sourcePinRepair": {
+      "sourceCommit": "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c",
+      "scope": "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration."
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "../capabilities/standards-derivation.json",
+      "currentPromotedFiles": {
+        "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03",
+        "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb",
+        "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
+        "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
+        "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04",
+        "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
+        "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec",
+        "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5",
+        "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568",
+        "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6",
+        "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e",
+        "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5",
+        "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
+        "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
+        "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61",
+        "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f",
+        "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020",
+        "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b",
+        "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6",
+        "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
+        "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148",
+        "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8"
+      }
+    },
+    "componentExtraction": {
+      "issue": 2173,
+      "manifest": "experiments/context-finder/2173-native-methods/relocation.json",
+      "base": "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6",
+      "scope": "Unselected research engines/profiles extracted; selected methods and original request semantics retained."
+    },
+    "testResultsDerivation": {
+      "sourceCommit": "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7",
+      "pullRequest": 2435,
+      "scope": "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change."
+    },
+    "structuredTestAssessmentSource": "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7",
+    "scenarioOutcomeResultSlots": {
+      "issue": 2530,
+      "scope": "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks."
+    }
+  },
+  "completeResultReader": {
+    "sourceCommit": "b5fb0fa9ce667ccd070620b284f1a08546e9500b",
+    "module": "result-reader.mjs",
+    "declarations": "result-reader.d.mts",
+    "apiExports": [
+      "readCompleteResult",
+      "ResultReadError"
+    ],
+    "files": {
+      "result-reader.mjs": "56f90ab7d853dec2ddafca7d95c730ef5b22ca9ebf4a2044813a96a58c53ae3a",
+      "result-reader.d.mts": "482f67aa815a2291159245767342f2257c43af2df707fdb36efa4af1e7b46de2"
+    },
+    "scope": "Accepted read-only complete native-result consumer. Explicit caller bounds; no start, polling, retry, cache or semantic verdict. Server wire and producers unchanged.",
+    "filesBeforeStandards": {
+      "result-reader.mjs": "c85cff024fdd9955b9747a9a03065de34c03bd1e4f7d2fd035f4cfc98db7a429",
+      "result-reader.d.mts": "367b7d54ec4c1e67e0d9cfdf2a8dd24f38bf13b9152869c8bff3b16088be37e3"
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "standards-derivation.json",
+      "scope": "Formatting/type-only current identities; original retained helper/reader algorithms preserved."
+    }
+  },
+  "computerRunner": {
+    "package": "@katalon-loki/computer-runner",
+    "version": "0.1.1",
+    "sourceRevision": "e78b378bf9ac81222d0e3617b7bff1aeee1c4b22",
+    "integration": "public Node run(input, options)",
+    "files": {
+      "packages/computer-runner/package.json": "ef44fd692a774cf937f0fd84742d2e9433196b8ecc0e60fcdf5ccdbfb40061b2",
+      "packages/computer-runner/src/runner.mjs": "8850ce94de0d8b82cd2017a202c83cad100550c5a5ea61a2f65b2460e3f56588",
+      "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73",
+      "packages/computer-runner/README.md": "489037051445f61f8b42cddcc9ca25b14377d4bf27ad90efbc23b8ff1fce76ae",
+      "packages/computer-runner/flow.md": "fef7bb39f6be368cf4fe7f655b4cdac6cab0dbdff968b3828d183f6ee28c39a5",
+      "packages/computer-runner/src/runner.d.mts": "db53c3b00cafd9af33266a7d9482d5d7b4f47483c8d8788716d44acd106358fd",
+      "packages/computer-runner/src/browser.mjs": "e9346079b47a572f6409129d7833a003510f352aa0d5e3cebe75a2163727debf",
+      "packages/computer-runner/src/browser.d.mts": "3f938be898865ae431e164028c41e1c9d46feb7794a18a41836a954563f27495",
+      "packages/computer-runner/src/provider.mjs": "3ffc922ada138cf9b9ca4758e477e573d5dbd1b78fd225a0dd4edf89e64600e3",
+      "packages/computer-runner/src/application-context.mjs": "5e4d8a71ca6d797dc8045cdbc1e7c7d827a2f0da43f8150b3479399d758e3d0a",
+      "packages/computer-runner/src/execution-status.mjs": "0c10b13bd99b0d079efb5786fd3ac73e52f918694f4f26707a57a5614c4f1398",
+      "packages/computer-runner/src/redaction.mjs": "8d3f621ec09dda315dbee3331dad95f0e7d376e87537e35cef3f162c8f3bdcb8",
+      "packages/computer-runner/src/redaction.d.mts": "59e873f9637ad013884ce724d0e02b99081e19beae6b7fc52abae2e947a7f9f8",
+      "packages/computer-runner/src/navigation-policy.mjs": "3fdc0e435a79fd62aff9030677a0b42bdce16694541552cf5cb18867169b2d6f",
+      "packages/computer-runner/src/case-evidence.mjs": "7095e1f0e1292bca01f0a892aabdd611b7db8b3966dc5ceda1c8483ef3320df0",
+      "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425",
+      "packages/computer-runner/src/browser-target.mjs": "574664071009e526b7c8d08ebe3d7bc724b6007151b2ad03106647c43050589e",
+      "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263"
+    },
+    "relocation": {
+      "originalFiles": {
+        "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a",
+        "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9",
+        "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5",
+        "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2",
+        "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b",
+        "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a"
+      },
+      "decision": "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525",
+      "scope": "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities."
+    },
+    "originalPins": {
+      "package": "@katalon-loki/computer-runner",
+      "version": "0.1.0",
+      "sourceRevision": "43dd836b466fef346fb0e78030c526aa00537157",
+      "integration": "public Node run(input, options)",
+      "files": {
+        "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a",
+        "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9",
+        "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5",
+        "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580",
+        "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b",
+        "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a"
+      },
+      "relocation": {
+        "originalFiles": {
+          "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a",
+          "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9",
+          "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5",
+          "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2",
+          "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b",
+          "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a"
+        },
+        "decision": "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525",
+        "scope": "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation."
+      }
+    },
+    "httpTargetAdmission": {
+      "decision": "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609",
+      "adoptionRequest": "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534",
+      "sourceCommit": "2de819061abecfc6d5d837e8586e8f8c919d98b5",
+      "mergedCommit": "12f6a06124d3e1b28cae06edc528a3cf9330a5f7",
+      "attribution": "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.",
+      "scope": "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.",
+      "baselineRunnerSha256": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9",
+      "runnerSha256": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f",
+      "ownerReadmeSha256": "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83",
+      "ownerURLTests": {
+        "sourcePath": "experiments/computer-runner/test/url.test.mjs",
+        "promotedPath": "packages/computer-runner/test/url.test.mjs",
+        "sha256": "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717"
+      },
+      "readmeDerivation": "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains."
+    },
+    "filesBeforeStandards": {
+      "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a",
+      "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f",
+      "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5",
+      "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa",
+      "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b",
+      "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a"
+    },
+    "standardsDerivation": {
+      "baseline": "a765bbbe1e36dbef7ac839545b576abf62240cf0",
+      "proof": "standards-derivation.json",
+      "scope": "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST."
+    },
+    "browserProvisioning": {
+      "decision": "https://github.com/katalon-studio/loki/issues/2135",
+      "baseline": "a811364584",
+      "previousFiles": {
+        "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8",
+        "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263",
+        "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5",
+        "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa",
+        "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b",
+        "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a",
+        "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7"
+      },
+      "scope": "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged."
+    },
+    "modelRestoration": {
+      "decision": "https://github.com/katalon-studio/loki/issues/2161",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "scope": "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged."
+    },
+    "providerRetry": {
+      "issue": 2144,
+      "decision": "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171",
+      "candidate": "6467fb306e181ecf68d409cd948fc8581d6c588d",
+      "scope": "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget."
+    },
+    "mcpInputCancellation": {
+      "issue": 2144,
+      "finding": "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922",
+      "decision": "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067",
+      "sdk": "@openai/agents-core 0.21.0 MCPCallToolOptions.signal",
+      "scope": "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects."
+    },
+    "browserLaunchMode": {
+      "decision": "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637",
+      "option": "headless: boolean (optional trusted host selection)",
+      "default": false,
+      "scope": "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged."
+    },
+    "applicationContextQuery": {
+      "wireSchema": "loki.runner.application-context/1",
+      "agreement": "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668",
+      "producerMerge": "498314c1327b03785b0518e6613f9916061825ca",
+      "reviewedProducerHead": "22254e47f39552c81a049efad8c1fcd22b1b455b",
+      "scope": "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance."
+    },
+    "workerFailureContainment": {
+      "issue": 2022,
+      "decision": "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725",
+      "userOutcomeCorrection": "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224",
+      "baselineHead": "268c605073f6e20dce9bcb4895b58b27113ecfec",
+      "scope": "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained."
+    },
+    "reasoningEffort": "low",
+    "activeModel": "gpt-6.1-terra",
+    "modelSelection": {
+      "model": "gpt-6.1-terra",
+      "reasoningEffort": "low",
+      "authority": "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.",
+      "scope": "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium."
+    },
+    "providerCacheDefaults": {
+      "issue": 2234,
+      "decision": "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525",
+      "baseSourceRevision": "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391",
+      "scope": "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.",
+      "files": {
+        "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a",
+        "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d"
+      }
+    },
+    "caseEvidence": {
+      "task": 2316,
+      "baseSourceRevision": "835d4c3d0d15ceb44d60f84276acae10bb6c1204",
+      "scope": "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain."
+    },
+    "providerRetryPolicy": {
+      "maxAttempts": 3,
+      "backoffMs": [
+        1000,
+        2000
+      ],
+      "maxRetryAfterMs": 30000,
+      "requestTimeoutMs": 120000
+    }
+  },
+  "uiModeler": {
+    "sourceCommit": "986f8ac81fb993c5c351ddbba8ee88bc00e2142f",
+    "packageVersion": "2026.10.29-2108.4",
+    "schemaVersion": "source_inferred_visible_ui_map/2.0.0",
+    "focusedDiscoveryVersion": "work-item-source-discovery/4",
+    "pathScreeningVersion": "work-item-path-relevance/1",
+    "sourceManifestSha256": "fb11cbdf8a624b834c67ea3d75e9f543548bea2e65cbbe3137b14a63c30cd1a1",
+    "scope": "Canonical selected Node folder producer and new explicitly scoped work-item discovery; exact native algorithms retained for full mode. Current source derivation and official ownership are recorded by packages/ui-modeler/promotion.json. No legacy CLI/Python generator payload.",
+    "decision": "https://github.com/katalon-studio/loki/issues/2108#issuecomment-6493663058",
+    "files": {
+      "index.d.mts": "8beb6758d730251d4e272f20ee3cd6660491b24ad39d29fe9fb59af8352f6203",
+      "index.mjs": "6de1e8834be6fef5fcc8c485fa728153cfec33042327340d982f02fead400a95",
+      "lib/activated-surface-source.mjs": "7df00b3a4263a212238b7a39247b883f1678728c6e8536c2cd77ab3ded827468",
+      "lib/analysis-cache.mjs": "a3c46b82848bc9af40a6a66fc124e9bdc96a8212f65f1ce54dc722b5cd584643",
+      "lib/captured-framework-imports.mjs": "d9c85c9b70b225fc7531d6902746ed64c7b10ef0a5553a6755581a3f10a56a20",
+      "lib/captured-source-composition.mjs": "f63cb6cd073e860020df4af471349f676ae499e2bff491fb16994690be05133d",
+      "lib/captured-svelte-imports.mjs": "47809819514821d809c02a606546ce712c381ca3f45324855f6bff8b5c25abb1",
+      "lib/captured-template-imports.mjs": "7b06a4b30b33e0f633eb7971ff10ad49b41557e8b9230c257a7287bd7bd0f900",
+      "lib/definition-identity-collisions.mjs": "de1ea9692c3283414c928ef7bfbd1f4065410b5d9cf285f2b55e8f41f613ee99",
+      "lib/duplicate-read-upgrade.mjs": "02fa98c18250f5ba3d4226fd6157dbbd0ad7ae7417bd361c778c3dcbf02e8299",
+      "lib/empty-source-metadata.mjs": "e63147a9cdb79d5b4b1346a5af09e14b360a6d52c7b033c9486bd613ffcfcebf",
+      "lib/events-budget.mjs": "02071c485566afdcec8296513558b829d1659b46227bed3b57ddf01a45b078ca",
+      "lib/file-catalog.mjs": "ff22da4e38749a2ed56e9d3d3bbb514934e9bf089634a4666811b2ad941190bd",
+      "lib/focused-assembly.mjs": "0a13bfbaede1549b1ad191d23388d5081785b4afdfe65aa5bda86cb17215678d",
+      "lib/focused-discovery.mjs": "8bc7b324fde6a7a8ba52635feba592db04d860179b1b49283af7b0331e39d01c",
+      "lib/focused-path-screen.mjs": "d2d3098eb63b8b66df8cc64f0423192ba1a4af6c45b55653191e75942885ad15",
+      "lib/folder-definition-context.mjs": "c1d1beb916055a4d22a2ccc7d71159b319f195dc79e41ecfd204c29f54757699",
+      "lib/folder-discovery-reuse.mjs": "d04dae41f547f4f2a667e3e7e0673ba8420f82cf4d30a1274480901b059eadb7",
+      "lib/folder-page-contract.mjs": "b90def86fe5cfe8a1434611098f5d900db429545ebe4ae13f9ce47357fe38a3f",
+      "lib/folder-page-review.mjs": "8273ad411092a32f3d933a205c65601e538441fb7397b7c471e2220fed04e4d7",
+      "lib/folder-provider-catalog.mjs": "74eae9e6dd98208635db94264af03153a561e281a9979ab0a16e977907b4cfb1",
+      "lib/folder-run-budget.mjs": "aa1ceb8490bd1db7993fd7706aab0f0ff4e7998fa7aa4fe5b4cf34c090348b1f",
+      "lib/folder-workflow.mjs": "8a6ead359739d643c73a61fca4e0084d5bd51941a8350ec13ddf5f8d0507f608",
+      "lib/inventory-runtime.mjs": "0f8790b9d48959d2fb0db9fe2cdbcbbc6906fb3042b6e767a13839276d4e1333",
+      "lib/jev-implementation-context.mjs": "96b40e72a76ed25b0d640f338e8990f790df98299723333986915f0d872a14fc",
+      "lib/jev-page-context.mjs": "fa083f4d651b73859ba94dc96df2cd1da996a8529309868a57a1c906971d942c",
+      "lib/jev-seed-plan.mjs": "bab3893cfd99a40a3d962685606d6eacce4d180edc31a7e95a7156bf03763a15",
+      "lib/map-reviews.mjs": "ff260d4e415207e096d3674fa71c326c383dfbeac3e75136b647d57b863c01f5",
+      "lib/model-provider.mjs": "98f0dbf82e8c86c3ffc2fe0f7d875ff26e400265569b1a3ecb46be1c89947615",
+      "lib/pipeline-error.mjs": "7b3a649eef35f74c6c297ce3d601819b6ce58f18407e278e2eba8c8f766bee18",
+      "lib/python-data-semantics.mjs": "b3e8664d5c3d14ae65d75488c808e15c5d0e576a8a1fded7ed6e7edd43a6d6f4",
+      "lib/source-hash.mjs": "e5e57f42f524561d2b589b6d2b4e5ea030ee11ef6c2f1c9dae5976dd3066bf53",
+      "lib/source-import-adapters.mjs": "1bf4f2b973be4fbee5db52ea139e5b43113a1f1a42965636f568c4a83d27b772",
+      "lib/source-index-archive.mjs": "caf3e0b771b8271d648b628537d2824cf90439def5f9cd9b80beff963c2ae792",
+      "lib/source-index.mjs": "4bde45698389046ee22e5ed0eb311a363ada8a5516c8dad52ffc97bd278c0d54",
+      "lib/visible-continuation-protocol.mjs": "88114953710579444bf98c4fe5c170979a7f7e4e24ec7637e68b1562a21c271f",
+      "lib/visible-control-granularity.mjs": "f56cee5e6f82ed2a2f43734907b6d5bf1e10dfc2e7cdfe83ab0fedc92c399aee",
+      "lib/visible-control-sites.mjs": "a1d621312ef0fddb2cd4956b377c338aaf9c887879a598e72bd95ee3d0e5fc23",
+      "lib/visible-element-meaning.mjs": "7f2f921c1126553ac07086ddcdde0ea292ba21c30cefad52ef99daede9757cef",
+      "lib/visible-map.mjs": "f291fb197ec13169703774070d7ee616b3ed364d7ea9be957c2d27adbed69c1f",
+      "lib/visible-screening-context.mjs": "a3c06ad4503837aabadbdca62f1c3433f063133a33f736d5ab147db0831c00ac",
+      "lib/visible-source-reads.mjs": "c81a724d9fa18c1d6c8d05761eb82a8fce2c8a4217c1fc8aa04ae08ee0b5a0f6",
+      "package.json": "6f6e987cc1c3db4c1549c2fc36068e4a7ffbb176e8b9a2f247ac4657baaf4c16",
+      "promotion.json": "5faf6770ccfe25c6ab412038ee1291e60607986fa5620806e355b6c6240ac271",
+      "published-license-notices.json": "11117612e071cd5d39514d555383f940a89054dc97fc99cf559674b772837a69",
+      "README.md": "6f657ac206e26f89d1a187019d4c2b21825a7fb1fea4640635a14e788864be0f",
+      "scripts/extract_ui_visible_elements.mjs": "8ae1c98b82ee6a5b35cedef4a92bd7f9e8cc2c228bc3706704179fe32668501c",
+      "scripts/ui_binding_batches.mjs": "2991e584dfbb5f63990eed5511b6ffe22406270a0f32eab2cb37e3f4645bf137",
+      "scripts/ui_binding_read_lines.mjs": "9d5bf68dacc264022db8b9086ad2b9aec51ddbb26751cdd8f188c40ad85429ce",
+      "scripts/ui_binding_retrieval.mjs": "f2287101b46a098435b9b470d5a4f99cf2df4cc7c95d09e86c4e6b3f74a196ab",
+      "scripts/ui_compiler_imports.mjs": "6fa711f652e01d011bfb9f85374a2e5084557b476b197f9028cd6c4a32d954ef",
+      "scripts/ui_continuation_context.mjs": "da999cf220d695c80058d966ee23f958bdb9a7f2c3156ff1a255644836f6b418",
+      "scripts/ui_folder_inventory.mjs": "38036169a28b8d694b45643a6b57d88792cf1860148cb9a960a299a4bea3380f",
+      "scripts/ui_http_transport.mjs": "0f76bcc5e3e5c144d37b50320bf8af7fc6b0d6ba3c6ee496fe70eb05291221a8",
+      "scripts/ui_jev_context.mjs": "8947b823b0ca508778ae06f03d9c165cd10eb03f69a3f352b741c5716033dad5",
+      "scripts/ui_model_archive.mjs": "dd76ea3581763f9bcab187559324428ba8b3a141b1f6ecbdca00cda122cb11b8",
+      "scripts/ui_page_binding_expressions.mjs": "8b6b9999a0bbb4cdfd4d887b21f8addb58c0685ed083e318064238c00aead831",
+      "scripts/ui_page_bindings.mjs": "e045b699c424b01881e37042e62a13096e048de7c09debb3eb4028709e387e40",
+      "scripts/ui_page_map_core.mjs": "724fe3870c5cc994f0f0b1ab6a2a9e50b823e4d23e1c3001507d72ee42f747d7",
+      "scripts/ui_page_registry_relations.mjs": "8b7fea8287e300c420f590158de9b46e1a1a200cabc3fc219b87cfcd0f9f4db2",
+      "scripts/ui_page_seed_context.mjs": "65dbda333bd7568d740ee60942609ef76826d4c6ee1ee193310dbd8620bded97",
+      "scripts/ui_page_source_identity.mjs": "7173c94f3070a433c650a91294d4a24b0b2d260749d0dcab545f0a87e24c994c",
+      "scripts/ui_repo_core.mjs": "2cd7da1af7579aea487aa18abe84c899566e39debefe02106cde19e1da87242f",
+      "scripts/ui_repo_inventory.mjs": "4286952b02bbfce422baaa03e9905147343d9f49f7699908e8f3e4edd10d1e07",
+      "scripts/ui_source_ranges.mjs": "e3929eeaae6556d81e2c0b40adbc1253beb7df420dfb25edbb4d55641054f506",
+      "scripts/ui_source_retrieval.mjs": "6061fbffc506ed74f1d743ab3c40a56b9783499f725e558ceabba183f2b9f50a",
+      "scripts/ui_visible_context.mjs": "7fd083965643e459a068249dbc4c9683c594c1342ceea3ff8fadb03c61821792",
+      "scripts/ui_visible_elements.mjs": "dfb7f4332d93038bb7f8ea4fb653dacd24d4a26558f1196af200631cbeac834e",
+      "scripts/ui_visible_filter.mjs": "4ab838f62da35ce50ec8459136b6f2456c8ff672f736be0c97afa3121614c567",
+      "scripts/ui_visible_read_delivery.mjs": "94e5a5c4fe5f07b5233e96020dde4edea474bb28404ae27c41c4ac47cf8a5b9e",
+      "scripts/ui_visible_review_contract.mjs": "e9fdca105265c57448b77890f9ab46108c467c8659e4b93004afc020b3015a1a",
+      "scripts/ui_visible_rounds.mjs": "26276d546c252538370207f4ae970f4e3bd88fb55d3fb1579389ed7f7195537d",
+      "tsconfig.json": "f0b1e3a2cdb22faf4141009ed5321c5f23a924d5a928878523adeb6629c8cc02",
+      "extraction.json": "120f15677f5d618f7a70dd1bce0e32133aa995c5110a573a018b267db88f23a8",
+      "lib/folder-review-state.mjs": "6e15ca350731ec5dcaa537fcc6881dfb9168b19467906d5a59e4e2039c92f326",
+      "lib/folder-source-discovery.mjs": "708fe9a8dc8016e1e95123d4e8d2e49a1cdf8b520f014c52a3227916273395da",
+      "lib/map-invocation.mjs": "94b18e82dc6bab9afa1338c9df23d981b2cdd9e06a2a17fc3db31aa13bc51fda",
+      "lib/model-tariff.mjs": "09bfc1b721d30c939990c6450f0e49ae26924a47d8c5fa7d9c8c137d37bdbc28",
+      "lib/page-schema.mjs": "a53da32f431e142492bc14aa6bc8f41b626649c37016e630682a2026ff94e9d4",
+      "lib/source-value.mjs": "f7109f93c8f0bd769b9f4bf358c41ce0cc0970521d70b15eee3dba97c498b6f4",
+      "lib/visible-inference.mjs": "e0263926ecd4598017b980e20b916a8941b5ad14a7e4c14728a272a64aa04376",
+      "shared.mjs": "c41c3a575a7c226805dcb97e50be87e92916a951e83ae5091554d0e89a882d62",
+      "extraction-v2.json": "1c030d64177bed5d84cb3755ae1b49e91dbc19a219b0fff360c5ed4f7ace01af"
+    },
+    "componentExtraction": {
+      "issue": 2173,
+      "manifest": "packages/ui-modeler/extraction.json",
+      "base": "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6",
+      "scope": "Focused Product facade and shared native stages/contracts; optional research workflows live in experiments/ui-modeler. Selected model requests and source/Stop semantics preserved."
+    }
+  }
+}

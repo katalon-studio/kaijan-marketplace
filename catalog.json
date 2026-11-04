@@ -1,6 +1,22 @@
 {
   "schema": "kaijan-marketplace/1",
   "packages": {
+    "codex/kaijan/production": {
+      "platform": "codex",
+      "plugin": "kaijan",
+      "profile": "production",
+      "path": "codex/plugins/kaijan",
+      "channel": {
+        "schema": "kaijan-marketplace-channel/1",
+        "profile": "production",
+        "version": "0.5.0-build.41776157271.1",
+        "buildId": "0caea397-ad74-4bd0-b200-82a79ec9e6be",
+        "sourceRevision": "314090fcb32de5c39952af4763ee7db2b78eb432",
+        "treeDigest": "4ff54736c2e18973afa509119deb0a22b985ccf57746e50abe07e3ab05bb84d8",
+        "run": "41776157271",
+        "attempt": "1"
+      }
+    },
     "codex/kaijan/qa": {
       "platform": "codex",
       "plugin": "kaijan",
