@@ -1,0 +1,8 @@
+{
+  "schema": "kaijan-marketplace-channel/1",
+  "profile": "production",
+  "version": "0.5.0-bundle.4",
+  "buildId": "ff6bcb16-a218-407d-8837-8226e95554a8",
+  "sourceRevision": "f40d9924b730ee8f06db2080a7baabc6e23677fe",
+  "treeDigest": "ebba2b5e2f32c8ecd4296d713c65df4e387eb326ac2348df0cad7c4ef500d011"
+}
