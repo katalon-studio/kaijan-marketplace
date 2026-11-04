@@ -11,9 +11,12 @@ credentials and private verification reports stay outside this repository.
 | Claude | Reserved; no installable package yet | [claude](claude/) |
 | Kiro | Reserved; no installable package yet | [kiro](kiro/) |
 
-Import a single profile through Admin. There is no marketplace catalog at the
-repository root or at `codex/`. Direct desktop Git import of this repository root
-is not supported by this layout.
+Codex desktop: open Plugins → Add → Add a marketplace. Set Source to
+https://github.com/katalon-studio/kaijan-marketplace. Set Git ref to `main` and leave
+Sparse paths empty. Add the marketplace, then install Kaijan under
+Kaijan for Codex — Production. The root catalog lists only Production and points
+to the same package as `codex/production`; it does not copy the runtime.
+There is no marketplace catalog at `codex/`.
 
 Workspace admin: Import marketplace from https://github.com/katalon-studio/kaijan-marketplace,
 Path `codex/qa` for QA or `codex/production` for Production, ref `main`.
