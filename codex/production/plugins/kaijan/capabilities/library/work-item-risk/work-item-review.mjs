@@ -1,3 +1,9 @@
+import {
+  riskPresentationSchema,
+  renderRiskPresentation,
+  riskSourceRecord,
+  riskRelationInstruction,
+} from "./source-relations.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -220,6 +226,9 @@ export function createWorkItemRisk(dependencies) {
       },
       required: ["assumptions_to_confirm", "limitations"],
     };
+    if (dependencies.resolveApplicationSpan)
+      schema.properties.assumptions_to_confirm.items =
+        riskPresentationSchema(catalog);
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },
@@ -234,7 +243,14 @@ export function createWorkItemRisk(dependencies) {
         },
       },
       input: [
-        { role: "system", content: INSTRUCTIONS },
+        {
+          role: "system",
+          content:
+            INSTRUCTIONS +
+            (dependencies.resolveApplicationSpan
+              ? " " + riskRelationInstruction
+              : ""),
+        },
         {
           role: "user",
           content: JSON.stringify({
@@ -296,6 +312,26 @@ export function createWorkItemRisk(dependencies) {
     const questions = candidate.assumptions_to_confirm.map(
       (question, index) => {
         const at = `/assumptions_to_confirm/${index}`;
+        if (dependencies.resolveApplicationSpan) {
+          const row = renderRiskPresentation(
+            question,
+            prepared.catalog,
+            dependencies.resolveApplicationSpan,
+          );
+          return {
+            id: `work-item-risk-Q${index + 1}-${identity.output_sha256}`,
+            observed_source_statement: row.observed,
+            assumption_to_confirm: row.assumption_to_confirm,
+            question: row.question,
+            why_it_matters: row.why_it_matters,
+            evidence_needed: row.evidence_needed,
+            source_evidence: row.evidence_ids.map((id) => ({
+              ...offered.get(id),
+              semantic_support: "not_verified",
+            })),
+            source_projection: riskSourceRecord(question, prepared.catalog),
+          };
+        }
         responseCheck(
           exactKeys(question, fields) &&
             fields.every((key) => Object.hasOwn(question, key)),

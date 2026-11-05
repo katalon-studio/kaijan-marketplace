@@ -8,19 +8,16 @@ description: Propose baseline acceptance and risk-focused tests for a supplied i
 Read the chat guidance in the [shared Product MCP instructions](../../references/local-capabilities.md).
 
 1. Use the caller-authorized original work item. An issue is enough: no PR, diff,
-   application map or fabricated file/revision is required. Use Context Finder
-   only when related work would help; use Risk Finder when uncertainty needs
-   analysis. For a request that also asks for a risk review, use `test-request`
-   to retain both requested stages and complete the review before planning.
-   Risk analysis is optional for a plan-only request. Keep their model-authored
-   findings attributed rather than promoting them into accepted requirements.
-   Before the first planning call, read relevant linked design or task text
-   that defines the selected work item’s scope or acceptance conditions, including
-   linked sources the caller explicitly asked you to use. Keep each source's text, URI and known revision
-   together. For multiple sources, use the versioned packet below. Keep the
-   original work item as intent and the linked design as attributed context.
-   If access fails, ask for the missing source text or identify the gap before
-   using a parent-only plan. A link alone does not establish what the design says.
+   application map or fabricated file/revision is required. Normal planning reads
+   missing explicit GitHub issue/PR links within the supplied source repositories
+   and analyzes work-item risks internally. Do not arrange separate context or
+   risk calls first. Supply relevant source text already known to you; Kaijan
+   reuses it. Use the versioned packet below for multiple sources. Keep the
+   original work item as intent and linked work as context. For a requested
+   frozen-code review, use `assess-change-risk` and pass its saved answer through
+   `riskAnswers`; do not fabricate a code diff for an issue-only request.
+   If an internal source read cannot complete, use its precise source request to
+   help Kaijan. Do not substitute invented linked content.
 2. Check `loki_capabilities_list` for Test Planning readiness. Call
    `loki_test_plan` with `input` containing the
    original `title`, `body` and a nonempty string `url` source identity. For a
@@ -75,10 +72,20 @@ A missing or changed reference must be corrected before planning starts.
    completed query can contain an original producer failure; report that
    failure and partial coverage rather than an empty successful plan. Preserve
    partial/unknown accounting in internal receipts.
-5. Optional `options.deadline_ms` controls the total provider deadline. A lost
+
+   If a missing source blocks the requested tests, start the reply with the
+   specific requirement to confirm and the next action. Use the plan's recorded
+   clarification or coverage gap to identify what is missing. Use the matching
+   source request to tell the user which text to provide or which access to
+   restore. If the plan proposed no tests, say so. A source-read gap alone does
+   not establish that a source is required. Summarize unavailable background
+   sources separately as a coverage limit. Keep their exact references in the
+   saved result.
+
+5. Optional `options.deadline_ms` covers source reads, risk analysis and planning. A lost
    reply may use its original optional correlation key and input. Keep the original uncertain receipt separate from any new read-only attempt. Cancel the host request for user Stop; preserve actual known/unknown charges.
 
-Planning runs the maintained Node producer API with Luna medium. It does not execute
+Planning uses the configured model through the maintained Node APIs. It does not execute
 steps, mutate a target, prove runtime readiness
 or create permission for browser/test actions. Keep execution evidence separate.
 
@@ -127,10 +134,12 @@ other inspection. Execute only within the user's authorized target, actions and 
 The original request can already authorize the full Plan → Run → Assessment →
 Report flow; continue it when inputs suffice, without another phase approval.
 A Plan-only request never executes, and planning itself grants no new permission. Return actual
-outcomes and supporting observations through the supplied-evidence assessment
-skill; do not report merely proposed steps as execution. Explicit browser execution uses the separate test-execution skill with full scenario,
-params and target authority. Planning never dispatches it. Broader memory ingestion
-is not implemented.
+outcomes through `run-test` when execution is authorized. Its normal
+`loki_test_execute` flow runs the selected tests, assesses the retained evidence
+and creates the report. Do not send that evidence through a second assessment
+call. Use separate evidence assessment for work performed outside Kaijan.
+Provide the full scenario, params and target authority. Planning never starts
+execution. Do not report proposed steps as actions that occurred.
 
 Present the original query result with its source and coverage limits. Keep
 accounting in internal receipts. After the requested plan completes, use

@@ -24,25 +24,18 @@ can still use `run-test` directly.
 
 ## Review requirements and risks before planning
 
-A request to review risks and prepare tests selects both stages, even when the
-caller does not ask to run the application. Read the original work item and
-relevant linked requirements first. Follow links that define the selected task's
-scope, dependencies or acceptance conditions. Preserve their original text and
-source identities. Use authorized source reads and report specific access gaps;
-do not treat an unread link as reviewed context.
+Use `plan-tests` with the original work item and any relevant context already
+known to the caller. Kaijan reads missing explicit in-scope GitHub links and
+analyzes work-item risks inside its normal planning operation. Do not arrange
+separate source and risk calls just to build a test set. Inspect the returned
+preparation and plan to confirm that each requested stage completed.
 
-Use `assess-change-risk` for the requested review. A work item without code uses
-work-item risk mode. Pass its exact saved answer through `riskAnswers` to
-`plan-tests`, together with the original work item and attributed linked sources.
-Check that the returned plan covers the original requirements and requested
-review. Show the saved report before reporting those stages as complete.
-A plan alone does not complete a request for a risk review and tests. Keep any
-manual suggestions separate from saved Kaijan results. If a stage fails, retain
-that result and explain which requested work remains.
-
-For a request only to propose tests, use `plan-tests` directly. Additional risk
-analysis remains optional unless the caller requested it or a material question
-makes it useful. Neither request authorizes application execution by itself.
+If the user requests a frozen-code review, use `assess-change-risk` with the real
+change packet and pass that exact saved answer through `riskAnswers` to planning.
+Keep manual suggestions separate from saved Kaijan results. A failed source read
+can request specific missing text; do not invent that content. Show the saved
+report. A request for a plan or risk review alone does not authorize application
+execution.
 
 ## Retain the actual request
 
@@ -100,12 +93,13 @@ Inspect `loki_capabilities_list` for the responding runtime, scope and actual
 requirements. Choose only stages useful for the requested outcome:
 
 - Acquire original selected Issue/PR/body/revision/files through an authorized
-  maintained public capture API or host read. Planning does not fetch its own
-  links. Keep original text/revisions and acquisition limits. Use
+  maintained public capture API or host read. Planning reads explicit in-scope
+  GitHub links itself. Keep original text/revisions and acquisition limits. Use
   [find-related-work](../find-related-work/SKILL.md) when related context helps;
   findings inform this request and do not select a different execution target.
-- Use [assess-change-risk](../assess-change-risk/SKILL.md) for relevant uncertainty.
-  Work-item risk can use the issue/request; Change Risk needs actual frozen change
+- Normal planning includes work-item risk analysis. Use
+  [assess-change-risk](../assess-change-risk/SKILL.md) for a standalone review or
+  a requested code-change review. Change Risk needs actual frozen change
   input. Do not fabricate a diff or require code evidence for a requirements-only
   question. Use the original request and attributed source/context evidence. This release does not build or require an application map.
 - Use [plan-tests](../plan-tests/SKILL.md) with the complete original work item or

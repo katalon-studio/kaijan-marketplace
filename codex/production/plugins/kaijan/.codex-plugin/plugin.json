@@ -1,6 +1,6 @@
 {
   "name": "kaijan",
-  "version": "0.5.0-build.41815941092.1",
+  "version": "0.5.0-build.41959294449.1",
   "description": "Understand your application, plan tests and review results with Kaijan.",
   "author": {
     "name": "Kaijan"
@@ -22,7 +22,7 @@
     ],
     "logo": "./assets/kaijan-ready.png",
     "composerIcon": "./assets/kaijan-ready.png",
-    "longDescription": "Use Kaijan in chat to understand an application, assess changes and run test scenarios.\n\nStart with a message:\n\n• Use Kaijan to plan tests from my work item and code context.\n\n• Use Kaijan to assess the risk of a change.\n\n• Use Kaijan to plan and run a test scenario on my app, assess its evidence and show the report.\n\nSelect Try now to start a chat, then send one of these messages or describe your own goal. Kaijan will ask for the missing repository, change or test details.\n\nSome actions need a connection or configured AI provider. Setup can collect your goal while these execution prerequisites are pending."
+    "longDescription": "Use Kaijan in chat to understand an application, assess changes and run test scenarios.\n\nStart with a message:\n\n• Use Kaijan to plan tests from my work item and code context.\n\n• Use Kaijan to assess the risk of a change.\n\n• Use Kaijan to plan and run a test scenario on my app, assess its evidence and show the report.\n\nSelect Try now to start a chat, then send one of these messages or describe your own goal. Kaijan will ask for the missing repository, change or test details.\n\nSome actions need a connection. You can save your goal during Setup and connect before testing."
   },
   "requires_local_executor": true
 }

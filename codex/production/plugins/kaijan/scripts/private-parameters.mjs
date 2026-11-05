@@ -29,12 +29,12 @@ async function bindProfileState(build, args, home) {
     throw new Error(
       "Missing fixed plugin profile. Reinstall the selected artifact."
     );
-  const identity = JSON.stringify({
+  const identity2 = JSON.stringify({
     profile: build.profile,
     origin: build.coreOrigin,
     client: build.oauthClientId
   });
-  const key = createHash("sha256").update(identity).digest("hex").slice(0, 20);
+  const key = createHash("sha256").update(identity2).digest("hex").slice(0, 20);
   let selected;
   const forwarded = [];
   for (let i = 0; i < args.length; i++) {
@@ -839,10 +839,10 @@ function cached(getter) {
 function nullish(input3) {
   return input3 === null || input3 === void 0;
 }
-function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
-  const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+function cleanRegex(source2) {
+  const start = source2.startsWith("^") ? 1 : 0;
+  const end = source2.endsWith("$") ? source2.length - 1 : source2.length;
+  return source2.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -910,28 +910,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source, keys, wrap) {
-  const raw = sourceShape(source);
+function mirrorShape(target, source2, keys, wrap) {
+  const raw = sourceShape(source2);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source._zod.def.shape[key];
+        const value = source2._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    const desc = Object.getOwnPropertyDescriptor(source, key);
+function mirrorProps(target, source2) {
+  for (const key of Reflect.ownKeys(source2)) {
+    const desc = Object.getOwnPropertyDescriptor(source2, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source[key]);
+      deferProp(target, key, () => source2[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -1357,14 +1357,14 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count = units;
+  let count2 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count--;
+      count2--;
       i++;
     }
   }
-  return count;
+  return count2;
 }
 function getLengthableOrigin(input3) {
   if (Array.isArray(input3))
@@ -2156,8 +2156,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source) {
-  return new RegExp(`^${source}$`);
+function anchor(source2) {
+  return new RegExp(`^${source2}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -5008,11 +5008,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source = partPattern(part);
-      if (!source) {
+      const source2 = partPattern(part);
+      if (!source2) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source));
+      regexParts.push(cleanRegex(source2));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -5747,8 +5747,8 @@ function az_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getBelarusianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -8395,8 +8395,8 @@ function hu_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count, one, many) {
-  return Math.abs(count) === 1 ? one : many;
+function getArmenianPlural(count2, one, many) {
+  return Math.abs(count2) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -11134,8 +11134,8 @@ function ro_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getRussianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -13138,9 +13138,9 @@ function withParser(schema, parser) {
     installCompiledUserMethods(clone2, schema, parser);
   return clone2;
 }
-function installCompiledUserMethods(target, source, parser) {
+function installCompiledUserMethods(target, source2, parser) {
   const targetAny = target;
-  const sourceAny = source;
+  const sourceAny = source2;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -15743,10 +15743,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source of sources) {
-    for (const key of Reflect.ownKeys(source)) {
-      if (Object.prototype.propertyIsEnumerable.call(source, key)) {
-        assignProp(target, key, source[key]);
+  for (const source2 of sources) {
+    for (const key of Reflect.ownKeys(source2)) {
+      if (Object.prototype.propertyIsEnumerable.call(source2, key)) {
+        assignProp(target, key, source2[key]);
       }
     }
   }
@@ -20346,6 +20346,88 @@ var analysisJobInputSchema = external_exports.strictObject({
   leaseSeconds: external_exports.literal(90)
 });
 
+// packages/contracts/dist/analysis-customer.js
+var customerAnalysisSourceSchema = analysisSourceSchema.pick({ snapshotId: true, repositoryId: true, fullName: true, commit: true }).extend({ fullName: external_exports.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/) });
+var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
+  sourceReferenceSchema.options[0].pick({ kind: true, sha: true }).strip(),
+  sourceReferenceSchema.options[1].pick({ kind: true, name: true }).strip(),
+  sourceReferenceSchema.options[2].pick({ kind: true, number: true }).strip()
+]);
+var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
+  analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+]);
+var customerAnalysisRunSchema = external_exports.object({
+  id: external_exports.uuid(),
+  request: customerAnalysisRequestSchema,
+  phase: analysisPhaseSchema,
+  source: customerAnalysisSourceSchema.nullable(),
+  sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
+  message: external_exports.string(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string(),
+  resultUrl: external_exports.string().nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var pageSchema2 = uiModelerMapSchema.shape.pages.element.pick({
+  id: true,
+  label: true,
+  extraction_status: true
+}).strip();
+var elementSchema = uiModelerMapSchema.shape.elements.element.pick({
+  id: true,
+  page_id: true,
+  parent_element_id: true,
+  label: true,
+  kind: true,
+  display_condition: true,
+  clickable: true,
+  navigation_status: true,
+  source_refs: true
+}).strip();
+var navigationSchema = uiModelerMapSchema.shape.click_navigation.element.pick({
+  id: true,
+  element_id: true,
+  from_page_id: true,
+  to_page_id: true,
+  route_or_url: true,
+  condition: true,
+  source_refs: true
+}).strip();
+var issueSchema = external_exports.object({
+  pageId: external_exports.string().nullable(),
+  message: external_exports.string()
+});
+var customerMapSchema = external_exports.object({
+  status: uiModelerMapSchema.shape.status,
+  pages: external_exports.array(pageSchema2),
+  elements: external_exports.array(elementSchema),
+  click_navigation: external_exports.array(navigationSchema),
+  issues: external_exports.array(issueSchema),
+  limitations: external_exports.array(external_exports.string())
+});
+var customerAnalysisResultSchema = external_exports.object({
+  run: customerAnalysisRunSchema,
+  report: external_exports.object({
+    status: external_exports.enum(["complete", "partial", "failed"]),
+    fixture: external_exports.boolean(),
+    accounting: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+      action: external_exports.enum(["materialized", "not_hydrated"])
+    }))
+  }),
+  map: customerMapSchema.nullable(),
+  sourceIndex: external_exports.array(analysisSourceIndexSchema.element.pick({
+    id: true,
+    path: true,
+    sha256: true,
+    utf16Length: true
+  }).strip())
+});
+
 // packages/contracts/dist/workspace-results.js
 var resultLimits = {
   manifestBytes: 1024 * 1024,
@@ -20715,7 +20797,7 @@ var productFeedbackInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid(),
   kind: external_exports.enum(["bug", "suggestion", "feedback"]),
   title: external_exports.string().trim().min(1).max(200),
-  // Keep the rendered GitHub body within its limit after Markdown escaping.
+  // Bound report text stored in Core.
   description: external_exports.string().trim().min(1).max(5e3),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
@@ -20730,10 +20812,93 @@ var productFeedbackInputSchema = external_exports.strictObject({
 var productFeedbackSchema = productFeedbackInputSchema.extend({
   id: external_exports.uuid(),
   createdAt: external_exports.iso.datetime(),
-  github: external_exports.strictObject({
-    state: external_exports.enum(["pending", "created", "needs_review"]),
-    issueUrl: external_exports.string().regex(/^https:\/\/github\.com\/katalon-studio\/loki\/issues\/[1-9][0-9]*$/).nullable()
-  }).refine((value) => value.state === "created" === (value.issueUrl !== null), "Created feedback requires its GitHub issue URL.")
+  status: external_exports.literal("saved")
+});
+
+// packages/contracts/dist/workspace-customer.js
+var workspaceCustomerLimits = {
+  fileBytes: 4 * 1024 * 1024,
+  publicationBytes: 16 * 1024 * 1024
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count = external_exports.number().int().nonnegative();
+var source = external_exports.strictObject({ bytes: count, sha256: digest2 });
+var identity = { fileId: external_exports.uuid(), source };
+var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("available"),
+    kind: external_exports.enum(["test-report", "risk-review", "evidence-assessment"]),
+    name: external_exports.enum([
+      "test-report.json",
+      "risk-review.json",
+      "evidence-assessment.json"
+    ]),
+    content: external_exports.strictObject({
+      mediaType: external_exports.literal("application/json"),
+      bytes: count.max(workspaceCustomerLimits.fileBytes),
+      sha256: digest2
+    })
+  }),
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("unavailable"),
+    reason: external_exports.enum([
+      "unsupported-content",
+      "invalid-content",
+      "content-limit",
+      "source-unavailable"
+    ])
+  })
+]);
+var customerWorkspaceManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-result/1"),
+  publicationId: external_exports.uuid(),
+  kind: external_exports.literal("native-result"),
+  state: external_exports.literal("published"),
+  title: external_exports.string(),
+  publishedAt: external_exports.iso.datetime(),
+  sourceManifestSha256: digest2,
+  contextRefs: external_exports.array(resultContextRefSchema),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest2.optional() })),
+  relatedSources: external_exports.array(external_exports.strictObject({
+    reference: resultContextRefSchema,
+    availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+  })),
+  files: external_exports.array(customerWorkspaceFileSchema).max(256),
+  meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
+});
+var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
+  manifestSha256: digest2
+});
+var customerWorkspaceDownloadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-download/1"),
+  publicationId: external_exports.uuid(),
+  fileId: external_exports.uuid().nullable(),
+  sourceSha256: digest2,
+  mediaType: external_exports.literal("application/json"),
+  encoding: external_exports.literal("base64"),
+  bytes: count.max(workspaceCustomerLimits.fileBytes),
+  sha256: digest2,
+  data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
+});
+var customerWorkspaceListSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-list/1"),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  observedAt: external_exports.iso.datetime(),
+  watermark: count,
+  nextAfter: count.nullable(),
+  results: external_exports.array(external_exports.strictObject({
+    publicationId: external_exports.uuid(),
+    kind: external_exports.literal("native-result"),
+    state: external_exports.literal("published"),
+    publishedAt: external_exports.iso.datetime(),
+    sequence: count,
+    title: external_exports.string(),
+    fileCount: count,
+    contextRefCount: count,
+    bytes: count
+  }))
 });
 
 // packages/contracts/dist/index.js
@@ -20782,6 +20947,15 @@ var sessionContextSchema = external_exports.object({
   capabilities: external_exports.object({
     recordingProtocolVersions: external_exports.array(external_exports.string())
   })
+});
+var customerSessionSchema = external_exports.strictObject({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
 });
 var tokenResponseSchema = external_exports.object({
   access_token: opaqueSchema,
@@ -20852,7 +21026,14 @@ var coreToolErrorSchema = external_exports.strictObject({
 });
 var coreConnectionSchema = external_exports.strictObject({
   state: external_exports.literal("connected"),
-  context: sessionContextSchema,
+  context: sessionContextSchema.pick({
+    apiVersion: true,
+    user: true,
+    organization: true,
+    workspace: true,
+    permissions: true,
+    expiresAt: true
+  }).strict(),
   origin: external_exports.url(),
   observedAt: external_exports.iso.datetime()
 });
@@ -20861,17 +21042,14 @@ var coreWorkItemSchema = external_exports.strictObject({
   userId: external_exports.uuid(),
   workspaceId: external_exports.uuid(),
   workspaceName: external_exports.string(),
-  clientId: external_exports.string(),
   readAt: external_exports.iso.datetime(),
   canonicalUrl: external_exports.url()
 });
 var coreDisconnectSchema = external_exports.strictObject({
-  state: external_exports.literal("signed_out"),
-  message: external_exports.string().min(1).optional()
+  state: external_exports.literal("signed_out")
 });
 var coreConnectSchema = external_exports.strictObject({
-  state: external_exports.literal("connected"),
-  installationId: external_exports.string().min(1)
+  state: external_exports.literal("connected")
 });
 var coreToolSuccessSchemas = {
   loki_connection_status: coreConnectionSchema,
@@ -20880,6 +21058,34 @@ var coreToolSuccessSchemas = {
   kaijan_connect: coreConnectSchema,
   kaijan_submit_feedback: external_exports.strictObject({ feedback: productFeedbackSchema }),
   kaijan_get_feedback: external_exports.strictObject({ feedback: productFeedbackSchema })
+};
+var coreConnectReceiptSchema = coreConnectSchema.extend({
+  installationId: external_exports.string().min(1)
+});
+var coreDisconnectReceiptSchema = coreDisconnectSchema.extend({
+  message: external_exports.string().min(1).optional()
+});
+var coreLegacyToolSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: coreConnectionSchema.extend({
+    context: sessionContextSchema
+  }),
+  loki_read_work_item: coreWorkItemSchema.extend({ clientId: external_exports.string() }),
+  kaijan_connect: coreConnectReceiptSchema,
+  loki_disconnect: coreDisconnectReceiptSchema
+};
+var coreToolUpstreamSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: external_exports.union([
+    coreConnectionSchema,
+    coreLegacyToolSuccessSchemas.loki_connection_status
+  ]),
+  loki_read_work_item: external_exports.union([
+    coreWorkItemSchema,
+    coreLegacyToolSuccessSchemas.loki_read_work_item
+  ]),
+  kaijan_connect: external_exports.union([coreConnectSchema, coreConnectReceiptSchema]),
+  loki_disconnect: coreDisconnectReceiptSchema
 };
 var aiModelsSchema = external_exports.looseObject({
   error: external_exports.never().optional(),
@@ -21021,7 +21227,7 @@ async function boundedFile(path, maximum) {
 }
 
 // apps/codex-plugin/src/runtime-discovery.mjs
-async function installedRuntimeDiscovery(root, identity) {
+async function installedRuntimeDiscovery(root, identity2) {
   let metadataMatches = null;
   try {
     const current = JSON.parse(
@@ -21029,13 +21235,13 @@ async function installedRuntimeDiscovery(root, identity) {
         await boundedFile(join2(root, "loki-build.json"), 64 * 1024)
       )
     );
-    metadataMatches = Object.entries(identity.artifact).every(
+    metadataMatches = Object.entries(identity2.artifact).every(
       ([key, value]) => current[key] === value
     );
   } catch {
   }
   return {
-    ...identity,
+    ...identity2,
     process: {
       node: process2.version,
       platform: process2.platform,
@@ -21084,30 +21290,30 @@ async function createInstalledSession(root, build, data, broker, {
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
-  const source = join3(root, "capabilities");
+  const source2 = join3(root, "capabilities");
   const started = performance.now();
-  const identity = await verifyDistribution(source, build.capabilityDigest);
-  if (Object.values(identity.manifest.files).some((member) => "symlink" in member))
+  const identity2 = await verifyDistribution(source2, build.capabilityDigest);
+  if (Object.values(identity2.manifest.files).some((member) => "symlink" in member))
     throw Error("Installed runtime must contain regular files");
   const verified = performance.now();
-  process3.env.PATH = [join3(source, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  process3.env.PATH = [join3(source2, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage("import_library");
-  const library = await import(pathToFileURL(join3(source, "library/api.mjs")).href);
+  const library = await import(pathToFileURL(join3(source2, "library/api.mjs")).href);
   stage("init_services");
   if (Boolean(build.validationContext) !== Boolean(runnerValidation))
     throw Error(
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== identity2.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== identity2.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity.digest
+    artifactDigest: identity2.digest
   }) : void 0;
   const hostLibrary = {
     ...library,
@@ -21142,7 +21348,7 @@ async function createInstalledSession(root, build, data, broker, {
   const session = await createCapabilitySession({
     host: "codex",
     data,
-    payloadDigest: identity.digest,
+    payloadDigest: identity2.digest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -21170,6 +21376,7 @@ async function createInstalledSession(root, build, data, broker, {
     // Hai selected direct chat output for this plugin; preserve it in every scope.
     uiMode: "panel"
   });
+  session.customerReportPresentation = "panel";
   session.workspaceResults = workspaceService;
   session.privateParameters = {
     async provision(threadId, input3) {

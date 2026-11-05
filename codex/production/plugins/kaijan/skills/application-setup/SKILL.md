@@ -15,9 +15,9 @@ Use `loki_setup_list` for the selected canonical source directory when a matchin
 
 For a new source selection, default to latest main. Honor an explicit branch, PR ref or commit. The host resolves it once without switching the checkout or executing source. Keep its exact returned SHA for recovery and resolve; do not call an old local tip latest when the upstream is unavailable. Setup records a committed-source selection; it does not capture dirty working-tree bytes. A later task using dirty source must retain those bytes and digests separately.
 
-Check `isError` and `structuredContent`. Read the returned applicationId/contextId with `loki_setup_get`. Fresh configuration uses `loki.setup-context/4` and returns `map: null`. No source is sent to a model and no provider/browser action starts. A `ready` Setup state means the selected configuration was saved, not that the application was tested or that an analysis provider is ready.
+Check `isError` and `structuredContent`. Read the returned applicationId/contextId with `loki_setup_get`. Check the saved source, work item and optional target in the advertised customer result. A `ready` Setup state means the selected configuration was saved. It does not prove application access or a passed test. Do not require private storage, map or authorization fields that are absent from the customer result.
 
-Use `loki_setup_resolve` with `expectedRevision` from the saved configuration's source revision. When `loki_setup_get` returns `configuration.target.profileRevision`, also pass that exact value as `expectedProfileRevision`. Omit it only when the saved configuration has no target-profile revision. Do not guess or generate a replacement revision. Its `loki.application-context/3` result has `map: null`, readiness state `configured`, `map: not-required` and `browserObserved: false`. Retain the original work item and configuration references. `authority: configuration-only` grants no browser, provider or source-transfer action.
+Use `loki_setup_resolve` with `expectedRevision` from the saved configuration's source revision. When `loki_setup_get` returns `configuration.target.profileRevision`, also pass that exact value as `expectedProfileRevision`. Omit it only when the saved configuration has no target-profile revision. Do not guess or generate a replacement revision. Check the returned readiness: `configured`, `browserObserved: false` and application coverage `not-verified` describe saved context, not observed application behavior. Retain the original work item and configuration references. Saving context grants no test, browser or source-transfer action. Preserve a pending or refused application connection and its stated recovery; do not present it as accepted.
 
 A matching request recovers its original record across reconnect. Conflicting input under a requestKey refuses. Change the selected source or goal only as a separately authorized new configuration. Do not rewrite the old record.
 
@@ -25,11 +25,11 @@ A matching request recovers its original record across reconnect. Conflicting in
 
 Use the installed `assess-change-risk`, `plan-tests`, `run-test`, `find-related-work`, `context-handoff` or evidence/report skills when they fit the user's request. They keep their own inputs, model/runtime requirements and action authority. Do not make Setup or a map a prerequisite for an otherwise complete independent request. Risk and planning can start from the original work item and attributed code context.
 
-Do not call `loki_setup_handoff` as an automatic readiness gate. A missing consumer is explicit and does not block the independent capabilities. No simulated consumer acknowledgement may replace a real integration.
+Continue through the selected feature. Setup is not a separate handoff gate.
 
 ## Recovery and Stop
 
-Use get or wait to read the original context. Fresh Setup has no map run to poll. If Stop returns `runId: null` and `cancellationRequested: false`, no operation cancellation was requested; do not call it a confirmed stopped run.
+Use `loki_setup_get` to read the original context. Fresh Setup returns its saved configuration directly; there is no background job to poll or stop.
 
 Historical mapping records remain retained. This release does not resume them or convert them into ready configurations. Preserve their actual state, result references and unknown effects. A finished wait or an interrupted chat does not prove that historical work stopped. Retry only known failed, stopped or blocked configuration work when its prerequisite changes or the user requests it.
 

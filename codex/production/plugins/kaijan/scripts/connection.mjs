@@ -6,6 +6,37 @@ import { resolve, join as join3 } from "node:path";
 
 // apps/codex-plugin/src/auth/client.mjs
 import { spawn } from "node:child_process";
+
+// apps/codex-plugin/src/auth/errors.mjs
+var KeychainUnavailableError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+    );
+    this.name = "KeychainUnavailableError";
+    this.code = "keychain_unavailable";
+  }
+};
+var CredentialStorageUnavailableError = class extends KeychainUnavailableError {
+  constructor(operation) {
+    super();
+    this.name = "CredentialStorageUnavailableError";
+    this.code = "connection_unavailable";
+    this.message = "Kaijan cannot access its saved sign-in. Check access to its private data folder, then reconnect.";
+    this.operation = operation;
+  }
+};
+var BrokerRestartRequiredError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot use the sign-in service that is already running. Wait for Kaijan work in the affected profile to finish. Then follow Managed sign-in recovery in the Kaijan Setup guide."
+    );
+    this.name = "BrokerRestartRequiredError";
+    this.code = "broker_restart_required";
+  }
+};
+
+// apps/codex-plugin/src/auth/client.mjs
 import {
   mkdir as mkdir2,
   readFile as readFile2,
@@ -147,17 +178,6 @@ async function channelFetch(socketPath, path, options = {}) {
   });
 }
 
-// apps/codex-plugin/src/auth/errors.mjs
-var BrokerRestartRequiredError = class extends Error {
-  constructor() {
-    super(
-      "Kaijan cannot use the sign-in service that is already running. Wait for Kaijan work in the affected profile to finish. Then follow Managed sign-in recovery in the Kaijan Setup guide."
-    );
-    this.name = "BrokerRestartRequiredError";
-    this.code = "broker_restart_required";
-  }
-};
-
 // apps/codex-plugin/src/auth/version.mjs
 var brokerProtocol = 1;
 function compareVersions(left, right) {
@@ -189,7 +209,8 @@ function brokerIdentity(build) {
   return {
     protocol: brokerProtocol,
     pluginVersion: build.pluginVersion,
-    buildId: build.buildId
+    buildId: build.buildId,
+    credentialStorage: build.credentialStorage ?? "keychain-v1"
   };
 }
 function brokerCompatibility(health, build) {
@@ -197,6 +218,8 @@ function brokerCompatibility(health, build) {
   if (health.protocol !== wanted.protocol)
     throw new BrokerRestartRequiredError();
   const order = compareVersions(health.pluginVersion, wanted.pluginVersion);
+  if (order >= 0 && wanted.credentialStorage === "private-file-v1" && health.credentialStorage !== wanted.credentialStorage)
+    throw new BrokerRestartRequiredError();
   if (order === 0 && health.buildId !== wanted.buildId)
     throw Error(
       "broker_version_conflict: publish changed bytes with a new plugin version"
@@ -272,7 +295,11 @@ async function connectBroker(root, build, { home, launch } = {}) {
           signal: AbortSignal.timeout(3e3)
         });
         const result = await response.json();
-        if (response.status === 409 && result.error === "broker_busy") return;
+        if (response.status === 409 && result.error === "broker_busy") {
+          if (build.credentialStorage === "private-file-v1" && health.credentialStorage !== build.credentialStorage)
+            throw new BrokerRestartRequiredError();
+          return;
+        }
         if (!response.ok) throw Error("broker_upgrade_refused");
         for (let attempt = 0; attempt < 100 && await probe(); attempt++)
           await delay(100);
@@ -317,10 +344,16 @@ async function connectBroker(root, build, { home, launch } = {}) {
       method: "POST",
       signal: AbortSignal.timeout(2e5)
     });
-    if (!response.ok)
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      if (response.status === 503 && body?.error === "connection_unavailable" && body?.reason === "local_credential_storage")
+        throw new CredentialStorageUnavailableError("connect");
+      if (response.status === 503 && body?.error === "keychain_unavailable")
+        throw new KeychainUnavailableError();
       throw Error(
         response.status === 401 ? "connection_required" : "broker_unavailable"
       );
+    }
     return response.json();
   };
   return {

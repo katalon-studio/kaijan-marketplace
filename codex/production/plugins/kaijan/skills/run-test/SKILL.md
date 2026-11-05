@@ -14,22 +14,32 @@ use [test-request](../test-request/SKILL.md) to retain the Plan and selected tes
 before dispatch. For a standalone full scenario supplied by the caller, continue
 directly here. Do not create a retrospective Plan to fill an earlier run's report.
 
-Runner uses the plugin's Local MCP connection. Core cloud sign-in is not required.
-If Runner tools are missing from the current chat, follow the installed `setup`
-skill's connection guidance; do not ask the user to sign in to Core as a remedy.
-Check actual Runner provisioning separately from target-application credentials.
+Runner uses the plugin's Local MCP tools. If those tools are missing from the
+current chat, follow the installed `setup` skill's connection guidance.
+Kaijan sign-in and target-application login are separate checks. Read a saved
+result or Stop an existing test when its Local tool is available, even if AI
+access is missing.
 
-1. Check `loki_capabilities_list` for computerRunner provisioning. Discovery is
-   passive: `configured` means configuration is present, never validated execution.
-   Inspect `configuration` for missing/invalid reasons, `provider.validation` for
-   unknown validity, and `runtime` for the responding artifact, connection and scope.
-   A managed broker binding does not prove upstream credentials or model access.
+1. Before starting a new test, follow [AI access and sign-in recovery](../setup/references/provider-setup.md)
+   for the installed package. Managed Runner and assessment need the Kaijan
+   grant. Check `loki_connection_status` for the intended account, workspace and
+   `ai:invoke` permission. If access is missing, expired or revoked, use the
+   installed `kaijan_connect` when available. Let the user complete sign-in and
+   consent, then recheck access before dispatch. A confirmed direct-development
+   build uses its own provider settings.
+   Check `loki_capabilities_list` for `testExecution` and `evidenceReview` readiness.
+   Each action reports `available`, `setup-required` or `unavailable` with a
+   recovery message. Follow that message and the installed Setup guidance.
+   Discovery is passive: `available` does not prove application access or a
+   successful test. Its `validation` field says this request did not check those.
+   Use `connection.state` and `connection.message` for connection recovery. If
+   reconnection is required, follow the installed Setup recovery and check again.
    Missing browser/target/permission checks remain explicit. Use supported private
    configuration repair; never ask for secrets in chat. After a host environment
    change, reconcile admitted work before reconnecting, then continue the same goal.
-   Compare the responding identity to the exact selected artifact; matching on-disk
-   metadata alone leaves freshness unknown. Connection-only scope cannot recover
-   after restart; preserve that limitation and never redispatch uncertain work. Resolve the
+   After restart, read the original operation to check whether saved work is
+   available in this chat; readiness alone does not prove recovery. Never
+   redispatch uncertain work. Resolve the
    authorized browser URL or app bundle ID, actions and actual friendly parameter values. Planning
    grants no execution permission. The original full test request can already
    authorize execution; do not ask for a separate phase approval when its target,
@@ -67,12 +77,15 @@ Check actual Runner provisioning separately from target-application credentials.
    browser or desktop inputs, and 600000 ms (10 minutes). Set limits only
    to lower that budget; larger values are rejected before execution.
    Use MCP so the run keeps its full report and retained request identity.
-   Keep the full original request, including cleanup duties. In separate guidance,
-   distinguish app/browser actions from host process work. Runner attempts to
-   close its run-owned browser after its execution decision and records cleanup
-   separately. Codex owns shutdown of a local test server it started. Do not ask
-   browser tools to stop that server or verify host processes. Keep requested
-   in-app cleanup in the scenario; do not remove expected behavior to obtain a pass.
+   Keep the full original request in Codex, including cleanup duties. Include
+   all requested app and browser actions in the scenario. Use separate guidance
+   to identify who owns host cleanup. Keep host duties out of the scenario's
+   steps and expected results. Runner attempts to close its run-owned browser
+   after its execution decision and records cleanup separately. Codex owns
+   stopping a local test server it started and revoking a temporary private
+   login binding. Binding revocation is a separate host action.
+   Include app sign-out only when the user explicitly requests it. Keep all
+   other requested in-app cleanup in the scenario.
    Keep requested behavior, caller-authored hypotheses and observation-only questions
    distinct. “Observe what remains after reload” asks for an observation; it does
    not require persistence. Compare persistence only when the caller explicitly
@@ -99,8 +112,9 @@ Check actual Runner provisioning separately from target-application credentials.
    is not a reason to restart it.
    Use the default result summary for verdicts, actual observations, performed
    steps and the report. Keep cost accounting, model settings and provider
-   receipt details in internal records. Follow the shared presentation rule
-   for normal replies and explicitly requested diagnostics. Read
+   receipt details in internal records. Customer diagnostic requests do not
+   authorize disclosure of proprietary Kaijan engine details. Follow the shared
+   confidentiality rule for all customer output. Read
    `originalResult` with ordered offsets only when the task needs full evidence
    records. It never runs the test again.
    Mark new sensitive full answer values with `sensitiveQuestionIds`, a unique
@@ -169,7 +183,9 @@ Check actual Runner provisioning separately from target-application credentials.
    Codex may supply useful new context when a specific gap needs it.
 6. Complete the caller-owned cleanup in the original request. Stop only servers
    or other test processes this task started, using their retained handles or
-   recorded PIDs, and verify they ended. Read Runner's recorded browser cleanup;
+   recorded PIDs, and verify they ended. Revoke a temporary private login
+   binding with the [private parameters command](../../references/private-parameters.md)
+   when no further authorized run needs it. Read Runner's recorded browser cleanup;
    an execution completion alone does not prove cleanup. Keep failed or unknown
    cleanup explicit and separate from app-check results. Preserve the original
    Runner status and report; later host cleanup does not rewrite an incomplete
@@ -216,10 +232,11 @@ GUI. Keep the app on the main display. Appium/Mac2 are packaged; do not install
 Peekaboo or use a browser initialURL for a desktop request.
 
 Stop/get operate on the same returned run ID. App state stays open after the run.
-Read native screenshot/action/log artifacts for diagnostics; Playwright's viewer
-applies only to browser traces. Report the call and action list and input count.
-Keep cost estimates in internal receipts. A model completion is not a verified
-test pass.
+Read native screenshot/action/log artifacts only within the task's existing
+authority; reading them does not authorize disclosure of engine details.
+Playwright's viewer applies only to browser traces. Report observed app actions
+and results, not internal calls or input counts. Keep cost estimates in internal
+receipts. A model completion is not a verified test pass.
 
 ## Authored terminal checks
 

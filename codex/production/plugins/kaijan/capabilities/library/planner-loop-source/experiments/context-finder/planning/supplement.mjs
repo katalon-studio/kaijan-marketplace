@@ -1,3 +1,13 @@
+import { isDeepStrictEqual } from "node:util";
+import {
+  supplementGenerationSchema,
+  renderSupplementCandidate,
+  supplementSourceRecord,
+  supplementSourceHash,
+  supplementApplicationCatalog,
+  SUPPLEMENT_SOURCE_VERSION,
+  supplementSourceInstructions,
+} from "./supplement-source.mjs";
 import { modelSettings } from "./pcf_provider.mjs";
 import { createHash } from "node:crypto";
 import path from "node:path";
@@ -297,6 +307,38 @@ export function validateSupplement(value, prepared) {
   };
 }
 
+export function projectGeneratedSupplement(candidate, prepared) {
+  // Renderers validate each strict typed node. The existing native validator
+  // then checks the complete projected structure, IDs, memberships and roles.
+  // Its historical string-only schema walker cannot validate typed anyOf nodes.
+  const projected = renderSupplementCandidate(candidate, prepared);
+  validateSupplement(projected, prepared);
+  return projected;
+}
+export function verifySupplementSource(result, prepared) {
+  const source = result.source_projection;
+  need(
+    object(source) &&
+      Object.keys(source).sort().join() === "candidate,catalogSha256,schema" &&
+      source.schema === SUPPLEMENT_SOURCE_VERSION,
+    "Missing supplement source projection",
+  );
+  need(
+    source.catalogSha256 ===
+      supplementSourceHash(supplementApplicationCatalog(prepared)),
+    "Supplement source catalogue changed",
+  );
+  const projected = projectGeneratedSupplement(source.candidate, prepared);
+  need(
+    isDeepStrictEqual(projected, result.supplement),
+    "Supplement source projection changed",
+  );
+  return projected;
+}
+export function supplementInputHash(prepared) {
+  return digest(prepared);
+}
+
 export function requestSupplement(input, options = {}) {
   const settings = modelSettings(options.modelSettings);
   const prepared = prepareSupplement(input);
@@ -311,7 +353,7 @@ export function requestSupplement(input, options = {}) {
       model: settings.model,
       reasoning: { effort: settings.reasoning },
       store: false,
-      instructions: SUPPLEMENT_INSTRUCTIONS,
+      instructions: SUPPLEMENT_INSTRUCTIONS + supplementSourceInstructions,
       input: encodedJson(modelInput),
       ...(options.max_output_tokens === undefined
         ? {}
@@ -321,7 +363,7 @@ export function requestSupplement(input, options = {}) {
           type: "json_schema",
           name: "test_plan_supplement",
           strict: true,
-          schema: schemaFor(prepared),
+          schema: supplementGenerationSchema(schemaFor(prepared), prepared),
         },
       },
     },
@@ -330,11 +372,15 @@ export function requestSupplement(input, options = {}) {
 
 export async function supplement(input, outputDirectory, options = {}) {
   const [prepared, request] = requestSupplement(input, options);
+  let projected;
   const { plan: candidate, ...result } = await generate(
     prepared,
     request,
     outputDirectory,
-    (value) => validateSupplement(value, prepared),
+    (value) => {
+      projected = projectGeneratedSupplement(value, prepared);
+      return validateSupplement(projected, prepared);
+    },
     options,
   );
   // The model never returns these bytes or IDs. Preserve them independently,
@@ -358,7 +404,8 @@ export async function supplement(input, outputDirectory, options = {}) {
     schema: OUTPUT_VERSION,
     method: METHOD,
     ...result,
-    supplement: candidate,
+    supplement: projected,
+    source_projection: supplementSourceRecord(candidate, prepared),
     baseline: prepared.baseline,
     evidence: prepared.evidence_catalog,
     interpretation:

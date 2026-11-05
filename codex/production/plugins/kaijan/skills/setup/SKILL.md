@@ -17,7 +17,7 @@ Use a native Question for consequential missing input. A highlighted or unanswer
 
 Resolve the installed plugin root two directories above this skill. Read its `loki-build.json` and use that profile's installed tools and skills. For application configuration, follow `application-setup` in this same conversation. Save the source selection, original goal and optional target, then read the original result.
 
-This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup sends no source to a model. It returns a saved configuration with `map: null`; this is not browser observation or proof that a feature works.
+This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup returns the saved source, work item and optional target. Check the advertised customer result; do not require private map or authorization fields. Saved context is not browser observation or proof that a feature works.
 
 For a new source selection, default to latest main and honor an explicit branch, PR ref or exact commit. Keep the frozen SHA and original requestKey for readback/recovery. Setup does not include dirty files in that committed-source selection. Keep the caller's actual dirty-source evidence separate when the selected test task needs it. Ask for a target/browser only when execution needs one.
 
@@ -26,6 +26,12 @@ Use the advertised input/output schema, `isError` and `structuredContent`. Prese
 ## Connections and prerequisites
 
 Read `authArchitecture` in the installed `loki-build.json`. With `shared-broker-v1`, Core and Local use the same Kaijan sign-in. Managed analysis, planning, Runner and evidence assessment need the shared grant for AI. Source-only Setup, context retention and saved-result reads do not need AI access when Local tools are available. An explicit direct-development build uses its local provider settings for AI.
+
+If the user cancels the initial sign-in and wants to save a local source,
+continue with `application-setup` when the Local tools are available. Do not
+start sign-in again for this source-only task. Tell the user what Setup saved
+and explain any connection required for their next selected action. Private
+GitHub source reads still need their own connection check.
 
 Inspect the actual chat tool inventory and `loki_capabilities_list` when exposed. Distinguish installed/enabled, discovery, current-chat availability and selected-operation readiness. Report the exact missing boundary. Use a supported reconnect control only when needed and verify afterward. Do not infer that Core login will fix missing local tools.
 

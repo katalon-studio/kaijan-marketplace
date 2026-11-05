@@ -6,10 +6,11 @@ description: Propose baseline acceptance and risk-focused tests for a supplied i
 # Propose tests from current work
 
 1. Use the caller-authorized original work item. An issue is enough: no PR, diff,
-   application map or fabricated file/revision is required. Use Context Finder
-   only when related work would help; use Risk Finder when uncertainty needs
-   analysis. Neither is a mandatory predecessor. Keep their model-authored
-   findings attributed rather than promoting them into accepted requirements.
+   application map or fabricated file/revision is required. Normal planning reads
+   missing explicit GitHub links within the supplied source repositories and
+   analyzes work-item risks internally. Do not arrange separate context and risk
+   calls first. Supply relevant context already known to you; Kaijan reuses it.
+   Optional saved risk answers can be selected through `riskAnswers`.
 2. Check `loki_capabilities_list` for Test Planning readiness. Call
    `loki_test_plan` with `input` containing the
    original `title`, `body` and a nonempty string `url` source identity. For a
@@ -32,10 +33,10 @@ description: Propose baseline acceptance and risk-focused tests for a supplied i
    gaps. Structural validity is not semantic completeness or a test pass. A
    completed query can contain an original producer failure; report that
    failure and partial/unknown accounting rather than an empty successful plan.
-5. Optional `options.deadline_ms` controls the total provider deadline. A lost
+5. Optional `options.deadline_ms` covers source reads, risk analysis and planning. A lost
    reply may use its original optional correlation key and input. Keep the original uncertain receipt separate from any new read-only attempt. Cancel the host request for user Stop; preserve actual known/unknown charges.
 
-Planning runs the maintained Node producer API with Luna low. It does not execute
+Planning uses the configured model through the maintained Node APIs. It does not execute
 steps, mutate a target, prove runtime readiness
 or create permission for browser/test actions. Keep execution evidence separate.
 
@@ -73,6 +74,6 @@ Browser/desktop execution has a separate no-replay boundary. Immutable supplied-
 
 Validate the advertised input/output contracts and inspect MCP `isError` before consuming `structuredContent`. A tool execution error carries `error.code`, safe message and any declared recovery; an invalid-argument protocol error is separate. Preserve the original error and never substitute empty successful data. Use the identical serialized JSON TextContent only as a transport fallback, without parsing display prose. `state:complete` identifies a retained original answer, not native success or a behavioral verdict. Keep `answerId`, `resultSha256`, query reuse and all known/unknown accounting. `unknown`, `refused`, `cancelled` and `unsupported-consumption` need their explicit reason/retention fields; unknown effects never authorize replay.
 
-For Plan, inspect `result.plan`, `result.checks.status`/coverage, and `result.receipt`, or the original `loki.planning-failure/1` receipt. For Supplement, preserve `result.baseline`, `result.supplement`, checks and receipt, or `loki.supplement-failure/1`. `executed:false` remains authoritative; a structurally valid partial proposal is not an observed pass.
+For Plan, inspect `result.plan`, `result.checks.status`/coverage, `result.preparation` and `result.receipt`. Preparation keeps source-read results and the original risk receipt; the planner receipt covers only plan generation. Do not treat the planner fee as the whole operation cost. Inspect the original `loki.planning-failure/1` receipt. For Supplement, preserve `result.baseline`, `result.supplement`, checks and receipt, or `loki.supplement-failure/1`. `executed:false` remains authoritative; a structurally valid partial proposal is not an observed pass.
 
 For `unsupported-consumption`, preserve `contextId` and `detail`, read `loki_context_get`, and inspect `consumption.testPlanning` or `consumption.testSupplement`. If the exact supported input is available, pass it directly or submit a new Context record with `nativeInputs.testPlanning: {input, options?}` or `nativeInputs.testSupplement: {input, options?}`, without requestKey. For a correction use a new submission key and `supersedes`, preserving the old context ID. Otherwise identify the missing original work item, valid baseline or other required fields. Raw reports do not become planning packets, and a missing baseline must not be invented.

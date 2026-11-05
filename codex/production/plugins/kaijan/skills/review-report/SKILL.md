@@ -22,9 +22,11 @@ Use `loki_report_show` with the caller's title and exact `operations` references
 
 An incomplete query without a completed-answer locator stays in chat; do not
 replay it or invent a reference to fill this report. When no saved plan or report
-exists, state what is missing and the next action. Follow the shared presentation
-rule; omit model, provider-receipt and cost commentary from normal replies. The retained answer locator
-is supplied even for a small complete native answer. Preserve
+exists, state what is missing and the next action. Follow the shared
+confidentiality rule for all customer output, including requested diagnostics
+and exports. Do not disclose proprietary Kaijan engine details. Preserve
+customer-owned app results, evidence, limitations and recovery steps. The retained
+answer locator is supplied even for a small complete native answer. Preserve
 its actual family/ID/digest; never infer an ID from answer text, hash a body into
 an operation ID, or relabel an answerId as a runId. `result` remains the original
 native producer output. Reports read completed-answer chunks; they never query a
@@ -36,6 +38,13 @@ Retain selected runs to compare versions. Existing immutable reports reopen by
 reportId. Direct-library operation selections use genuine runId references. Never discover another user's records or fabricate a
 missing assessment, test mapping, source or app map. Opening a report does not
 start a provider or browser run.
+
+For a saved assessment with no Plan or Runner, present the assessment in chat.
+If it is already saved as a report, use `loki_report_get` with its exact
+`reportId` in the owning chat. If the report view omits verdicts or citations,
+read the original answer with `loki_advisory_result_read`, family
+`suppliedEvidence`, and the exact assessment answer ID. Keep supplied
+observations distinct from an execution by Kaijan.
 
 For a Test plan, use the original work-item title as the report title when it is
 available. Retain the exact Plan answer ID/digest; do not infer a latest plan.
@@ -51,11 +60,12 @@ assistant turn to navigate. Do not add custom inline/panel switches or imitate
 host chrome. Observe the actual panel before claiming native rendering; a display
 mode acknowledgement alone is not proof.
 
-If the user says the card stays on **Opening Kaijan report** or **Show details**
-does not open the panel, say that the panel did not open. If the panel did not
-open or the user asks to read the saved report as text, call `loki_report_get`
-in this chat with the exact saved `reportId`. If the read succeeds, show the
-saved title and requested details in chat. Use the saved steps, expectation
+When the user wants the panel and the card stays on **Opening Kaijan report**,
+use **Open app in tab** once if Codex shows that control in the owning chat.
+If the panel still does not open, say so. If the panel did not open or the user
+asks to read the saved report as text, call `loki_report_get` in the owning chat
+with the exact saved `reportId`. If the read succeeds, show the saved title and
+requested details in chat. Use the saved steps, expectation
 authority and results. Keep proposed checks distinct from executed checks.
 If the read fails, report its reason and ask for the original report in this
 chat. Keep the original IDs and digests. Do not retry the panel in a loop,

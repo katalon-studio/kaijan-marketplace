@@ -65,8 +65,9 @@ tool. Explicit analysis options override saved options. Keep that same contextId
 key and options after a lost reply. Do not convert prose, logs or test summaries
 into a frozen code packet. Incompatible context stays retained. Explain the
 missing input and useful recovery without fabricating fields; keep the exact
-unsupported-consumption receipt for explicit diagnostics. Follow the shared
-presentation rule for normal replies.
+unsupported-consumption receipt internally. Customer diagnostic requests do not
+authorize disclosure of proprietary Kaijan engine details. Follow the shared
+confidentiality rule while explaining missing customer input and recovery.
 
 For work-item uncertainty, `nativeInputs.riskFinder` contains `{packet}` under
 its maintained work-item contract; it does not require frozen code or a map.

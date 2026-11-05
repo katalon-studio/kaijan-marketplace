@@ -3,18 +3,18 @@
   "sourceRevision": "406470b0840e683b0394d1f4af548281102f8536",
   "pins": {
     "changeRisk": {
-      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "sourceCommit": "34ccd9e68a24ea193d5c761207fdba77082d3925",
       "packageVersion": "2026.10.26-1771.1",
       "schemaVersion": "change-risk-finder/result/4",
       "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
       "files": {
-        "runtime.mjs": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
-        "method.mjs": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+        "runtime.mjs": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
+        "method.mjs": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
         "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
         "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
         "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
         "input.schema.json": "3206a2bec72a0dfadb2d872f8783fc920c768fa2031795f7d92c3ecc70a7c6db",
-        "output.schema.json": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+        "output.schema.json": "21d70ffe757dd131f554df7d8a2ca41dd7a59faaf557440c44e9b329f38e175a",
         "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
         "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
@@ -22,7 +22,8 @@
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
         "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
-        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
+        "source-relations.mjs": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2"
       },
       "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
       "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
@@ -55,6 +56,12 @@
       "outputBudgetRepair": {
         "issue": 2470,
         "scope": "Honor the template output budget for snapshots and patches. Default six-question requests to 8000 total output tokens for reasoning and final JSON. Preserve selected model/effort, partial results, original artifacts and zero retries."
+      },
+      "sourceBoundRiskRelations": {
+        "sourceCommit": "34ccd9e68a24ea193d5c761207fdba77082d3925",
+        "previousSourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+        "schema": "risk-source-relations/1",
+        "scope": "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance."
       }
     },
     "prContext": {
@@ -245,10 +252,10 @@
         "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55",
         "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "pr-context-finder/planning/pcf_plan.mjs": "1c69c632397a1fa41144fe1c9a27abb4517dbc59ed413cf3f59a71b4b1c216a1",
+        "pr-context-finder/planning/pcf_plan.mjs": "82af2500e549dd3c71deeab376360a60fc620633377ecfc408e6177300da68db",
         "pr-context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
         "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
-        "pr-context-finder/planning/prompts.mjs": "8b748f3415f05b2da4bbc41fd36bd93384e8fe798a7b9be1a219d896695d6ceb",
+        "pr-context-finder/planning/prompts.mjs": "668623a77df4435437b008fc39a7f90a62ecf1a655d95efbb3438c68971c11c2",
         "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
@@ -256,7 +263,9 @@
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
         "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
-        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
+        "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
+        "pr-context-finder/planning/planning-source.mjs": "63df1ed0c8f1587afc45264855d44cdbf2af763b7bc51e62d44b59101d49563c"
       },
       "scope": "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.",
       "diagnosticOverlay": {
@@ -371,22 +380,32 @@
         "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
         "record": "../capabilities/component-audit.json",
         "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+      },
+      "sourceRelationOverlay": {
+        "issue": 2862,
+        "schema": "planning-source-relations/1",
+        "scope": "Current generation renders typed proposal relations from exact captured application spans. Scoped customer reads reconstruct the saved projection; historical free prose keeps identity and literal application excerpts with explicit qualification. Original delivery provenance and historical request records remain unchanged."
+      },
+      "literalExcerptOverlay": {
+        "issue": 3055,
+        "schema": "planning-source-relations/2",
+        "scope": "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged."
       }
     },
     "workItemRisk": {
-      "sourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+      "sourceCommit": "34ccd9e68a24ea193d5c761207fdba77082d3925",
       "mergedCommit": "77dd326a586562a263a0bb8f0f9175eef68afcdc",
       "files": {
-        "work-item-review.mjs": "d97cb7d2b480b68a74b1825bf8cf55c5b08b23415835b8ad651284063067086f",
+        "work-item-review.mjs": "c445cf9d73f92e86c36e20b1aea211d274ecdea34a7d368c2e83216b4452d878",
         "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f",
-        "work-item-output.schema.json": "c8faaee3336dd92f1d97880ac62437568f371fe9a889a9fbeff1baaba1abbd53",
-        "runtime.mjs": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
-        "method.mjs": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+        "work-item-output.schema.json": "90ad10ddf6084d7978998704bad6f3e9f7d2791f0ea3e6319c8866ff45bea6c9",
+        "runtime.mjs": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
+        "method.mjs": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
         "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
         "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
         "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
         "input.schema.json": "3206a2bec72a0dfadb2d872f8783fc920c768fa2031795f7d92c3ecc70a7c6db",
-        "output.schema.json": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+        "output.schema.json": "21d70ffe757dd131f554df7d8a2ca41dd7a59faaf557440c44e9b329f38e175a",
         "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
         "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
@@ -394,7 +413,8 @@
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
         "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
-        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+        "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
+        "source-relations.mjs": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2"
       },
       "scope": "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.",
       "baselineSourceCommit": "8fea2fd74369e75acee6e6f9b147c030f40f024e",
@@ -420,6 +440,12 @@
         "base": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
         "record": "../capabilities/component-audit.json",
         "scope": "Unselected methods/frontends extracted; selected methods and original upstream identities retained."
+      },
+      "sourceBoundRiskRelations": {
+        "sourceCommit": "34ccd9e68a24ea193d5c761207fdba77082d3925",
+        "previousSourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
+        "schema": "risk-source-relations/1",
+        "scope": "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance."
       }
     },
     "plannerLoop": {
@@ -428,15 +454,15 @@
       "assessmentSource": "bdce8240c61f1f8d34fbe79015763011c9fa1f3b",
       "scope": "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.",
       "files": {
-        "experiments/context-finder/planning/supplement.mjs": "861550bde2befadcea83a480b1f63b504c01c5db2b071c309d83814f98e7c5a3",
+        "experiments/context-finder/planning/supplement.mjs": "ac2634c41c811c514b1725f6ca5816d13802dbc82e02b2c93b39bed552780daf",
         "experiments/context-finder/planning/pcf_plan.mjs": "3c1efd48f9f291b6ab5808d5b8acf06c43fd9f1b4880a52639a7caee3a15208d",
         "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
         "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "experiments/context-finder/planning/prompts.mjs": "b50d7d73736b3ef3dbea39494b119e99a7833dba50487501fee43091a8a6c321",
-        "experiments/work-verifier/supplied-evidence.mjs": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
+        "experiments/context-finder/planning/prompts.mjs": "240e24172458a4fb610d3e556b0dc3fc8027646227c484378f8767e28585885d",
+        "experiments/work-verifier/supplied-evidence.mjs": "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1",
         "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
         "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
         "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -449,7 +475,9 @@
         "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
         "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
         "experiments/work-verifier/assessment-runtime.mjs": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
-        "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+        "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
+        "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
+        "experiments/context-finder/planning/supplement-source.mjs": "de7c304740b0453e880e0d2d558f7618561bf0b87341c1f53fa4277f70184743"
       },
       "assets": {
         "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
@@ -1123,12 +1151,12 @@
   "files": {
     "change-risk/runtime.mjs": {
       "source": "packages/risk-finder/runtime.mjs",
-      "sha256": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
+      "sha256": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
       "originalSha256": "88ec36963adff67b049029c0107df559f4479c889bb4dc7de1939ed2f00b672f"
     },
     "change-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+      "sha256": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "change-risk/question-output.mjs": {
@@ -1153,7 +1181,7 @@
     },
     "change-risk/output.schema.json": {
       "source": "packages/risk-finder/output.schema.json",
-      "sha256": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+      "sha256": "21d70ffe757dd131f554df7d8a2ca41dd7a59faaf557440c44e9b329f38e175a",
       "originalSha256": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5"
     },
     "change-risk/invocation.schema.json": {
@@ -1193,7 +1221,7 @@
     },
     "work-item-risk/work-item-review.mjs": {
       "source": "packages/risk-finder/work-item-review.mjs",
-      "sha256": "d97cb7d2b480b68a74b1825bf8cf55c5b08b23415835b8ad651284063067086f",
+      "sha256": "c445cf9d73f92e86c36e20b1aea211d274ecdea34a7d368c2e83216b4452d878",
       "originalSha256": "1f5c1d5cbe959cfd44c902fcdf59e86697415ca06695544c7a462a39b89f9938"
     },
     "work-item-risk/work-item-input.schema.json": {
@@ -1203,17 +1231,17 @@
     },
     "work-item-risk/work-item-output.schema.json": {
       "source": "packages/risk-finder/work-item-output.schema.json",
-      "sha256": "c8faaee3336dd92f1d97880ac62437568f371fe9a889a9fbeff1baaba1abbd53",
+      "sha256": "90ad10ddf6084d7978998704bad6f3e9f7d2791f0ea3e6319c8866ff45bea6c9",
       "originalSha256": "243fcf264652349112648167845120adad652fe798543f524258d50960422190"
     },
     "work-item-risk/runtime.mjs": {
       "source": "packages/risk-finder/runtime.mjs",
-      "sha256": "b6cc1848b2e62f3a7af286a5569c460fba44d6f00783673f0db12d3cee8aa180",
+      "sha256": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
       "originalSha256": "88ec36963adff67b049029c0107df559f4479c889bb4dc7de1939ed2f00b672f"
     },
     "work-item-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "f0cc35a753f46d416cd15b6d28fac350cffe09902786195fcc3ba58cd7ade739",
+      "sha256": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "work-item-risk/question-output.mjs": {
@@ -1238,7 +1266,7 @@
     },
     "work-item-risk/output.schema.json": {
       "source": "packages/risk-finder/output.schema.json",
-      "sha256": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5",
+      "sha256": "21d70ffe757dd131f554df7d8a2ca41dd7a59faaf557440c44e9b329f38e175a",
       "originalSha256": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5"
     },
     "work-item-risk/invocation.schema.json": {
@@ -1642,7 +1670,7 @@
     },
     "planning/pr-context-finder/planning/pcf_plan.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/pcf_plan.mjs",
-      "sha256": "1c69c632397a1fa41144fe1c9a27abb4517dbc59ed413cf3f59a71b4b1c216a1",
+      "sha256": "82af2500e549dd3c71deeab376360a60fc620633377ecfc408e6177300da68db",
       "originalSha256": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5"
     },
     "planning/pr-context-finder/planning/pcf_provider.mjs": {
@@ -1657,7 +1685,7 @@
     },
     "planning/pr-context-finder/planning/prompts.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/prompts.mjs",
-      "sha256": "8b748f3415f05b2da4bbc41fd36bd93384e8fe798a7b9be1a219d896695d6ceb",
+      "sha256": "668623a77df4435437b008fc39a7f90a62ecf1a655d95efbb3438c68971c11c2",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5"
     },
     "planning/pr-context-finder/planning/semantics.mjs": {
@@ -1697,7 +1725,7 @@
     },
     "planner-loop-source/experiments/context-finder/planning/supplement.mjs": {
       "source": "packages/context-finder/planning/supplement.mjs",
-      "sha256": "861550bde2befadcea83a480b1f63b504c01c5db2b071c309d83814f98e7c5a3",
+      "sha256": "ac2634c41c811c514b1725f6ca5816d13802dbc82e02b2c93b39bed552780daf",
       "originalSha256": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03"
     },
     "planner-loop-source/experiments/context-finder/planning/pcf_plan.mjs": {
@@ -1732,12 +1760,12 @@
     },
     "planner-loop-source/experiments/context-finder/planning/prompts.mjs": {
       "source": "packages/context-finder/planning/prompts.mjs",
-      "sha256": "b50d7d73736b3ef3dbea39494b119e99a7833dba50487501fee43091a8a6c321",
+      "sha256": "240e24172458a4fb610d3e556b0dc3fc8027646227c484378f8767e28585885d",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5"
     },
     "planner-loop-source/experiments/work-verifier/supplied-evidence.mjs": {
       "source": "packages/work-verifier/supplied-evidence.mjs",
-      "sha256": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
+      "sha256": "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf"
     },
     "planner-loop-source/experiments/provider-transport/index.mjs": {
@@ -1840,11 +1868,37 @@
     "planner-loop-source/experiments/provider-transport/broker-channel.mjs": {
       "source": "packages/provider-transport/broker-channel.mjs",
       "sha256": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
+    },
+    "planning/pr-context-finder/planning/source-relations.mjs": {
+      "source": "packages/context-finder/selected/planning/pr-context-finder/planning/source-relations.mjs",
+      "sha256": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2"
+    },
+    "planner-loop-source/experiments/context-finder/planning/source-relations.mjs": {
+      "source": "packages/context-finder/planning/source-relations.mjs",
+      "sha256": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2"
+    },
+    "planner-loop-source/experiments/context-finder/planning/supplement-source.mjs": {
+      "source": "packages/context-finder/planning/supplement-source.mjs",
+      "sha256": "de7c304740b0453e880e0d2d558f7618561bf0b87341c1f53fa4277f70184743"
+    },
+    "planning/pr-context-finder/planning/planning-source.mjs": {
+      "source": "packages/context-finder/selected/planning/pr-context-finder/planning/planning-source.mjs",
+      "sha256": "63df1ed0c8f1587afc45264855d44cdbf2af763b7bc51e62d44b59101d49563c"
+    },
+    "change-risk/source-relations.mjs": {
+      "source": "packages/risk-finder/source-relations.mjs",
+      "sha256": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2",
+      "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
+    },
+    "work-item-risk/source-relations.mjs": {
+      "source": "packages/risk-finder/source-relations.mjs",
+      "sha256": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2",
+      "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     }
   },
   "bundledSources": {
     "packages/context-finder/planning/supplement.mjs": {
-      "sha256": "861550bde2befadcea83a480b1f63b504c01c5db2b071c309d83814f98e7c5a3",
+      "sha256": "ac2634c41c811c514b1725f6ca5816d13802dbc82e02b2c93b39bed552780daf",
       "originalSha256": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03",
       "originalPath": "experiments/context-finder/planning/supplement.mjs"
     },
@@ -1879,12 +1933,12 @@
       "originalPath": "experiments/context-finder/planning/pcf_native.mjs"
     },
     "packages/context-finder/planning/prompts.mjs": {
-      "sha256": "b50d7d73736b3ef3dbea39494b119e99a7833dba50487501fee43091a8a6c321",
+      "sha256": "240e24172458a4fb610d3e556b0dc3fc8027646227c484378f8767e28585885d",
       "originalSha256": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5",
       "originalPath": "experiments/context-finder/planning/prompts.mjs"
     },
     "packages/work-verifier/supplied-evidence.mjs": {
-      "sha256": "3a6107f55ee1d4135f9fa67ef39f5c7dd113c64272c9c4ce9d8d3124215ebf03",
+      "sha256": "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1",
       "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf",
       "originalPath": "experiments/work-verifier/supplied-evidence.mjs"
     },
@@ -2231,6 +2285,16 @@
     },
     "packages/ui-modeler/lib/model-pins.mjs": {
       "sha256": "4321f32335e40640a068fc241154fa65f8c5d383fb24fdd3b5c5528fa0876c0e"
+    },
+    "packages/context-finder/planning/source-relations.mjs": {
+      "sha256": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2"
+    },
+    "packages/context-finder/planning/supplement-source.mjs": {
+      "sha256": "de7c304740b0453e880e0d2d558f7618561bf0b87341c1f53fa4277f70184743"
+    },
+    "packages/risk-finder/source-relations.mjs": {
+      "sha256": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2",
+      "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     }
   },
   "assets": {

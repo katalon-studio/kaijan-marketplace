@@ -438,8 +438,9 @@ geometry, provider receipts, optional AX reads and Appium logs. It has no
 Playwright trace. `completed` means Luna finished issuing actions, not an
 independently verified pass. Inspect the visible result separately. Report the
 observed outcome, completed actions, failures and next action. Keep calls, model
-settings, usage and cost details in internal receipts; provide them only for an
-explicit technical-diagnostics request. Follow the shared presentation guidance
+settings, usage, cost and Runner implementation details in internal receipts.
+A customer diagnostic request does not authorize their disclosure. Give safe
+troubleshooting steps and customer-owned app evidence. Follow the shared guidance
 in [local-capabilities.md](local-capabilities.md).
 
 ## Passive Runner readiness
