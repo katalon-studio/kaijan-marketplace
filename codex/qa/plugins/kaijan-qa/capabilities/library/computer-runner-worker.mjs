@@ -714,10 +714,10 @@ function cached(getter) {
 function nullish(input3) {
   return input3 === null || input3 === void 0;
 }
-function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
-  const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+function cleanRegex(source3) {
+  const start = source3.startsWith("^") ? 1 : 0;
+  const end = source3.endsWith("$") ? source3.length - 1 : source3.length;
+  return source3.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -785,28 +785,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source, keys, wrap) {
-  const raw = sourceShape(source);
+function mirrorShape(target, source3, keys, wrap) {
+  const raw = sourceShape(source3);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source._zod.def.shape[key];
+        const value = source3._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    const desc = Object.getOwnPropertyDescriptor(source, key);
+function mirrorProps(target, source3) {
+  for (const key of Reflect.ownKeys(source3)) {
+    const desc = Object.getOwnPropertyDescriptor(source3, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source[key]);
+      deferProp(target, key, () => source3[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -1232,14 +1232,14 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count6 = units;
+  let count7 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count6--;
+      count7--;
       i++;
     }
   }
-  return count6;
+  return count7;
 }
 function getLengthableOrigin(input3) {
   if (Array.isArray(input3))
@@ -2031,8 +2031,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source) {
-  return new RegExp(`^${source}$`);
+function anchor(source3) {
+  return new RegExp(`^${source3}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -3623,15 +3623,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id3, k) => `
-          let ${id3}_ab = false;
-          for (let i = 0; i < ${id3}.issues.length; i++) {
-            const iss = ${id3}.issues[i];
+    const prefixStr = (id4, k) => `
+          let ${id4}_ab = false;
+          for (let i = 0; i < ${id4}.issues.length; i++) {
+            const iss = ${id4}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id3}_ab = true;
+            if (iss.continue !== true) ${id4}_ab = true;
           }
-          if (${id3}_ab && ctx && ctx.abortEarly) {
+          if (${id4}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -3645,34 +3645,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id3 = ids2[key];
+      const id4 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id3} = ${parseStr(k)};`);
+      doc.write(`const ${id4} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id3}_present` : `${id3}.value !== undefined || ${id3}_present`;
+        const assign = optin === "optional" ? `${id4}_present` : `${id4}.value !== undefined || ${id4}_present`;
         doc.write(`
-        const ${id3}_present = ${isPresent};
-        if (!${id3}.issues.length || ${id3}_present) {
-          if (${id3}.issues.length) {${prefixStr(id3, k)}
+        const ${id4}_present = ${isPresent};
+        if (!${id4}.issues.length || ${id4}_present) {
+          if (${id4}.issues.length) {${prefixStr(id4, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id3}.value;
+            newResult[${k}] = ${id4}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id3}_present = ${isPresent};
-        if (${id3}.issues.length) {${prefixStr(id3, k)}
+        const ${id4}_present = ${isPresent};
+        if (${id4}.issues.length) {${prefixStr(id4, k)}
         }
-        if (!${id3}_present && !${id3}.issues.length) {
+        if (!${id4}_present && !${id4}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -3685,22 +3685,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id3}_present) {
-          newResult[${k}] = ${id3}.value;
+        if (${id4}_present) {
+          newResult[${k}] = ${id4}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id3}.issues.length) {${prefixStr(id3, k)}
+        if (${id4}.issues.length) {${prefixStr(id4, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id3}.value;`);
+          doc.write(`newResult[${k}] = ${id4}.value;`);
         } else {
           doc.write(`
-        if (${id3}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id3}.value;
+        if (${id4}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id4}.value;
         }
       `);
         }
@@ -4883,11 +4883,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source = partPattern(part);
-      if (!source) {
+      const source3 = partPattern(part);
+      if (!source3) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source));
+      regexParts.push(cleanRegex(source3));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -5622,8 +5622,8 @@ function az_default() {
 }
 
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count6, one, few, many) {
-  const absCount = Math.abs(count6);
+function getBelarusianPlural(count7, one, few, many) {
+  const absCount = Math.abs(count7);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -8270,8 +8270,8 @@ function hu_default() {
 }
 
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count6, one, many) {
-  return Math.abs(count6) === 1 ? one : many;
+function getArmenianPlural(count7, one, many) {
+  return Math.abs(count7) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -11009,8 +11009,8 @@ function ro_default() {
 }
 
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count6, one, few, many) {
-  const absCount = Math.abs(count6);
+function getRussianPlural(count7, one, few, many) {
+  const absCount = Math.abs(count7);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -13013,9 +13013,9 @@ function withParser(schema, parser) {
     installCompiledUserMethods(clone2, schema, parser);
   return clone2;
 }
-function installCompiledUserMethods(target, source, parser) {
+function installCompiledUserMethods(target, source3, parser) {
   const targetAny = target;
-  const sourceAny = source;
+  const sourceAny = source3;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -15533,12 +15533,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -15618,10 +15618,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source of sources) {
-    for (const key of Reflect.ownKeys(source)) {
-      if (Object.prototype.propertyIsEnumerable.call(source, key)) {
-        assignProp(target, key, source[key]);
+  for (const source3 of sources) {
+    for (const key of Reflect.ownKeys(source3)) {
+      if (Object.prototype.propertyIsEnumerable.call(source3, key)) {
+        assignProp(target, key, source3[key]);
       }
     }
   }
@@ -15728,26 +15728,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id3 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id3) {
-      const existing = idToSchema.get(id3);
+    const id4 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id4) {
+      const existing = idToSchema.get(id4);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id3}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id4}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id3, entry[0]);
+      idToSchema.set(id4, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id4) => id4);
+      const uriGenerator = ctx.external.uri ?? ((id5) => id5);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id3 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id3;
-      return { defId: id3, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id3)}` };
+      const id4 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id4;
+      return { defId: id4, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id4)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -15795,8 +15795,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id3 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id3) {
+    const id4 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id4) {
       extractToDef(entry);
       continue;
     }
@@ -16029,10 +16029,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id3 = ctx.external.registry.get(schema)?.id;
-    if (!id3)
+    const id4 = ctx.external.registry.get(schema)?.id;
+    if (!id4)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id3);
+    result.$id = ctx.external.uri(id4);
   }
   assignProps(result, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -16567,8 +16567,8 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   let minItems = def.items.length;
   while (minItems > 0) {
     const item = def.items[minItems - 1];
-    const optional2 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
-    if (!optional2)
+    const optional4 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
+    if (!optional4)
       break;
     minItems--;
   }
@@ -16638,7 +16638,7 @@ function stringifyKeyNames(bySchema, json4, visited) {
   const values = json4.enum ?? (json4.const !== void 0 ? [json4.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json4;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id3, ...rest } = json4;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id4, ...rest } = json4;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -19722,454 +19722,2953 @@ function date4(params) {
   return _coercedDate(ZodDate, params);
 }
 
-// src/runner-clarification.ts
-import {
-  redactor,
-  projectClarification,
-  RunnerProjectionError
-} from "@katalon-loki/computer-runner/redaction";
-import { createHash } from "node:crypto";
-
-// src/storage.ts
-import { constants } from "node:fs";
-import { mkdir, open as open2, lstat, realpath, rename, unlink } from "node:fs/promises";
-async function privateDirectory(path) {
-  await mkdir(path, { recursive: true, mode: 448 });
-  await checkPrivateDirectory(path);
-}
-async function checkPrivateDirectory(path) {
-  const info = await lstat(path);
-  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
-    throw new Error("The plugin data directory is unsafe.");
-}
-async function regularFile(path, maximum, privateRecord = false) {
-  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
-    throw new Error("The selected file read limit is invalid.");
-  const file2 = await open2(
-    path,
-    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
-  );
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
-      throw new Error("The selected file is not a bounded regular file.");
-    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
-      throw new Error("The private file is unsafe.");
-    if (maximum === void 0) return await file2.readFile();
-    const chunks = [];
-    let length = 0;
-    while (length <= maximum) {
-      const bytes2 = Buffer.allocUnsafeSlow(
-        Math.min(64 * 1024, maximum + 1 - length)
-      );
-      const result = await file2.read(bytes2, 0, bytes2.length, null);
-      if (!result.bytesRead) break;
-      length += result.bytesRead;
-      if (length > maximum)
-        throw new Error("The selected file exceeds its limit.");
-      chunks.push(bytes2.subarray(0, result.bytesRead));
-    }
-    const bytes = Buffer.allocUnsafeSlow(length);
-    let offset = 0;
-    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
-    return bytes;
-  } finally {
-    await file2.close();
-  }
-}
-function boundedFile(path, maximum) {
-  return regularFile(path, maximum);
-}
-
-// src/runner-answer-contracts.ts
-var nonempty = external_exports.string().refine((s) => Boolean(s.trim()));
-var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var runnerAnswer = external_exports.strictObject({
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty,
-  answers: external_exports.record(external_exports.string(), nonempty),
-  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
-});
-var runnerAnswerReceipt = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification-answer/1"),
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty,
-  status: external_exports.literal("retained")
-});
-var rejectionCodes = [
-  "operation_unavailable",
-  "answer_conflict",
-  "clarification_unavailable",
-  "invalid_answers",
-  "answer_effect_unestablished"
-];
-var runnerAnswerError = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification-error/1"),
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty,
-  error: external_exports.strictObject({ code: external_exports.enum(rejectionCodes) }),
-  requestDispatched: external_exports.literal(false).nullable(),
-  recovery: external_exports.string()
-});
-var runnerAnswerOutput = external_exports.union([
-  runnerAnswerReceipt,
-  runnerAnswerError
+// ../contracts/dist/report-evidence.js
+var digest = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
+var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
+var reportedTestStatusSchema = external_exports.enum([
+  "pass",
+  "fail",
+  "blocked",
+  "skipped",
+  "not-run"
 ]);
-
-// src/runner-clarification.ts
-var nonempty2 = external_exports.string().refine((s) => Boolean(s.trim()));
-var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var question = external_exports.strictObject({
-  id: nonempty2,
-  question: nonempty2,
-  kind: nonempty2
+var observedStepSchema = external_exports.strictObject({
+  id: nonempty,
+  title: nonempty,
+  status: reportedTestStatusSchema,
+  expected: nonempty,
+  actual: nonempty,
+  evidenceIds: external_exports.array(nonempty).min(1)
 });
-var clarificationRequestSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification/1"),
-  clarificationId: hashId2,
-  providerResponseId: nonempty2,
-  callId: nonempty2,
-  reason: nonempty2,
-  completedSteps: external_exports.array(nonempty2),
-  remainingSteps: external_exports.array(nonempty2),
-  evidence: external_exports.array(nonempty2),
-  questions: external_exports.array(question).min(1),
-  provenance: external_exports.literal("model-authored-unverified")
-}).superRefine((v, ctx) => {
-  if (new Set(v.questions.map((q) => q.id)).size !== v.questions.length || v.clarificationId !== digest(v.providerResponseId + "\0" + v.callId))
+var reportedTestSchema = external_exports.strictObject({
+  testId: nonempty,
+  title: nonempty,
+  status: reportedTestStatusSchema,
+  expected: nonempty,
+  actual: nonempty,
+  deliberateFailure: external_exports.boolean(),
+  steps: external_exports.array(observedStepSchema).min(1),
+  code: external_exports.strictObject({
+    path: nonempty,
+    revision: nonempty,
+    language: nonempty,
+    text: nonempty,
+    sha256: digest
+  }).nullable()
+}).superRefine((test, ctx) => {
+  if (new Set(test.steps.map((step) => step.id)).size !== test.steps.length)
+    ctx.addIssue({ code: "custom", message: "Step IDs must be unique." });
+  if (test.status === "pass" && test.steps.some((step) => step.status !== "pass"))
     ctx.addIssue({
       code: "custom",
-      message: "Invalid clarification correlation or duplicate questions"
+      message: "A passed test requires passed steps."
+    });
+  if (test.status === "fail" && !test.steps.some((step) => step.status === "fail"))
+    ctx.addIssue({
+      code: "custom",
+      message: "A failed test requires a failed step."
     });
 });
-var digest = (text5) => createHash("sha256").update(text5).digest("hex");
-
-// src/runner-clarification-worker.ts
-var answerFrame = external_exports.strictObject({
-  type: external_exports.literal("runner-clarification-answer"),
-  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
-  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
-  answers: external_exports.record(
-    external_exports.string(),
-    external_exports.string().refine((v) => Boolean(v.trim()))
-  )
+var reportPullRequestSchema = external_exports.strictObject({
+  repository,
+  number: external_exports.number().int().positive(),
+  url: external_exports.url(),
+  title: nonempty,
+  state: external_exports.enum(["open", "closed", "merged"]),
+  author: nonempty,
+  base: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  head: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  mergeCommit: revision.nullable(),
+  openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
+  capturedAt: external_exports.iso.datetime({ offset: true }),
+  files: external_exports.array(external_exports.strictObject({
+    path: nonempty,
+    status: nonempty,
+    additions: external_exports.number().int().nonnegative(),
+    deletions: external_exports.number().int().nonnegative(),
+    patch: external_exports.string().nullable()
+  })),
+  source: external_exports.strictObject({
+    kind: external_exports.literal("supplied-github-read"),
+    record: external_exports.json(),
+    sha256: digest
+  })
+}).superRefine((pr, ctx) => {
+  if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
+    ctx.addIssue({
+      code: "custom",
+      message: "Pull request URL and identity differ."
+    });
+  if (new Set(pr.files.map((file2) => file2.path)).size !== pr.files.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Changed-file paths must be unique."
+    });
 });
-function createWorkerClarification(send2, operationSignal) {
-  const seen = /* @__PURE__ */ new Set();
-  const pending = /* @__PURE__ */ new Map();
-  let closed = false;
-  const failAll = () => {
-    for (const p of pending.values())
-      p.reject(Error("Clarification IPC interrupted; do not replay"));
-    pending.clear();
-  };
-  operationSignal.addEventListener("abort", failAll, { once: true });
-  const requestClarification = async (raw, signal) => {
-    const request3 = clarificationRequestSchema.parse(raw);
-    if (closed || operationSignal.aborted || signal.aborted || seen.has(request3.clarificationId))
-      throw Error(
-        "Clarification unavailable or already requested; do not replay"
-      );
-    seen.add(request3.clarificationId);
-    const combined = AbortSignal.any([operationSignal, signal]);
-    let abort = () => {
-    };
-    const response = new Promise((resolve, reject) => {
-      pending.set(request3.clarificationId, {
-        ids: request3.questions.map((q) => q.id),
-        resolve,
-        reject
-      });
-      abort = () => {
-        pending.delete(request3.clarificationId);
-        reject(Error("Clarification wait interrupted; do not replay"));
-      };
-      combined.addEventListener("abort", abort, { once: true });
-      if (combined.aborted) abort();
+var reportVerificationSchema = external_exports.strictObject({
+  planRef: external_exports.strictObject({ answerId: digest, resultSha256: digest }),
+  repository,
+  sourceRevision: revision,
+  pullRequestUrl: external_exports.url().nullable(),
+  recordedAt: external_exports.iso.datetime({ offset: true }),
+  provenance: external_exports.literal("product-terminal-checks/1"),
+  oracle: nonempty,
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest })).min(1),
+  tests: external_exports.array(reportedTestSchema).min(1)
+}).superRefine((run, ctx) => {
+  if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Test IDs must be unique per run."
     });
-    void response.catch(() => {
+  const ids2 = new Set(run.evidence.map((item) => item.id));
+  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id4) => !ids2.has(id4)))))
+    ctx.addIssue({
+      code: "custom",
+      message: "Each step must reference supplied evidence."
     });
-    try {
-      if (combined.aborted) throw Error("Clarification interrupted");
-      await send2({ type: "runner-clarification-request", request: request3 });
-      const answer = await response;
-      if (combined.aborted) throw Error("Clarification interrupted");
-      return answer;
-    } finally {
-      combined.removeEventListener("abort", abort);
-      pending.delete(request3.clarificationId);
-    }
-  };
-  return {
-    requestClarification,
-    receive(raw) {
-      const frame = answerFrame.parse(raw);
-      const p = pending.get(frame.clarificationId);
-      if (closed || operationSignal.aborted || !p || Object.keys(frame.answers).length !== p.ids.length || p.ids.some((id3) => !Object.hasOwn(frame.answers, id3)))
-        throw Error("Late or mismatched clarification answer");
-      if (frame.sensitiveQuestionIds && (new Set(frame.sensitiveQuestionIds).size !== frame.sensitiveQuestionIds.length || frame.sensitiveQuestionIds.some(
-        (id3) => !Object.hasOwn(frame.answers, id3)
-      )))
-        throw Error("Invalid sensitive question IDs");
-      pending.delete(frame.clarificationId);
-      p.resolve({
-        answers: frame.answers,
-        ...frame.sensitiveQuestionIds === void 0 ? {} : { sensitiveQuestionIds: frame.sensitiveQuestionIds }
+});
+var reportExecutionSchema = reportVerificationSchema.safeExtend({
+  runId: digest
+});
+var reportEvidenceSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-evidence/1"),
+  pullRequests: external_exports.array(reportPullRequestSchema),
+  executions: external_exports.array(reportExecutionSchema)
+}).superRefine((input3, ctx) => {
+  if (new Set(input3.pullRequests.map((pr) => pr.url)).size !== input3.pullRequests.length || new Set(input3.executions.map((run) => run.runId)).size !== input3.executions.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "PR and run identities must be unique."
+    });
+  for (const run of input3.executions) {
+    if (run.pullRequestUrl === null)
+      continue;
+    const pr = input3.pullRequests.find((item) => item.url === run.pullRequestUrl);
+    if (!pr || pr.repository !== run.repository || !(run.sourceRevision === pr.head.sha || pr.state === "merged" && run.sourceRevision === pr.mergeCommit))
+      ctx.addIssue({
+        code: "custom",
+        message: "Run source must match the selected PR head or merge."
       });
-    },
-    close() {
-      closed = true;
-      operationSignal.removeEventListener("abort", failAll);
-      failAll();
-    }
-  };
-}
-
-// ../provider-transport/broker-channel.mjs
-import { request } from "node:http";
-import { Readable } from "node:stream";
-import { lstat as lstat2 } from "node:fs/promises";
-import { dirname } from "node:path";
-async function checkChannel(socketPath) {
-  const directory = await lstat2(dirname(socketPath));
-  const socket = await lstat2(socketPath);
-  if (!directory.isDirectory() || directory.isSymbolicLink() || directory.mode & 63 || directory.uid !== process.getuid() || !socket.isSocket() || socket.mode & 63 || socket.uid !== process.getuid())
-    throw Error("unsafe_broker_channel");
-}
-async function channelFetch(socketPath, path, options = {}) {
-  await checkChannel(socketPath);
-  return new Promise((resolve, reject) => {
-    const req = request(
-      {
-        socketPath,
-        path,
-        method: options.method ?? "GET",
-        headers: { "content-type": "application/json", ...options.headers },
-        signal: options.signal
-      },
-      (res) => {
-        const headers = new Headers();
-        for (const name of [
-          "content-type",
-          "retry-after",
-          "cache-control",
-          "mcp-protocol-version"
-        ]) {
-          if (typeof res.headers[name] === "string")
-            headers.set(name, res.headers[name]);
-        }
-        resolve(
-          new Response(
-            [204, 205, 304].includes(res.statusCode) ? null : Readable.toWeb(res),
-            { status: res.statusCode, headers }
-          )
-        );
-      }
-    );
-    req.once("error", () => reject(Error("broker_unavailable_no_replay")));
-    req.end(options.body);
-  });
-}
-
-// ../provider-transport/litellm-route.mjs
-var AiClientError = class extends Error {
-  constructor(code) {
-    super(code);
-    this.name = "AiClientError";
-    this.code = code;
   }
+});
+var reportSourcesSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-sources/1"),
+  pullRequests: external_exports.array(external_exports.strictObject({
+    capturedAt: external_exports.iso.datetime({ offset: true }),
+    record: external_exports.strictObject({
+      pullRequest: external_exports.json(),
+      files: external_exports.array(external_exports.json())
+    })
+  }))
+});
+
+// ../contracts/dist/terminal-checks.js
+var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var terminalChecksSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.terminal-checks/1"),
+  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
+  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
+  pullRequestUrl: external_exports.url().nullable(),
+  tests: external_exports.array(external_exports.strictObject({
+    testId: nonempty2,
+    title: nonempty2,
+    deliberateFailure: external_exports.boolean().default(false),
+    checks: external_exports.array(external_exports.strictObject({
+      id: nonempty2,
+      title: nonempty2,
+      field: external_exports.enum(["text", "snapshot", "url"]),
+      operator: external_exports.enum(["contains", "not-contains", "equals"]),
+      expected: nonempty2
+    })).min(1)
+  })).min(1)
+}).superRefine((input3, ctx) => {
+  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
+    ctx.addIssue({
+      code: "custom",
+      message: "Test IDs and each test's check IDs must be unique."
+    });
+  if (input3.pullRequestUrl !== null) {
+    const prefix = `https://github.com/${input3.repository}/pull/`;
+    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
+      ctx.addIssue({
+        code: "custom",
+        message: "The PR must belong to the selected repository."
+      });
+  }
+});
+var checkedPlanReferenceSchema = external_exports.strictObject({
+  answerId: digest2,
+  resultSha256: digest2,
+  selectedTestIds: external_exports.array(nonempty2).min(1)
+});
+
+// ../contracts/dist/report-view.js
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var groupSchema = external_exports.object({
+  key: external_exports.enum([
+    "why",
+    "method",
+    "prerequisites",
+    "steps",
+    "expected",
+    "execution-gaps",
+    "requirement-id",
+    "requirement-text",
+    "test-ids",
+    "coverage-status"
+  ]),
+  label: external_exports.string(),
+  start: external_exports.number().int().nonnegative(),
+  end: external_exports.number().int().nonnegative()
+});
+var reportItemSchema = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  role: external_exports.enum(["test", "requirement-coverage"]).optional(),
+  lines: external_exports.array(external_exports.string()),
+  groups: external_exports.array(groupSchema).optional(),
+  expected: external_exports.object({ text: external_exports.string().nullable(), authority: external_exports.string().nullable() }).optional(),
+  detail: external_exports.boolean().optional(),
+  stepCount: external_exports.number().int().nonnegative().optional(),
+  citations: external_exports.array(external_exports.object({ title: external_exports.string(), lines: external_exports.array(external_exports.string()) })).optional()
+});
+var sectionBase = external_exports.object({
+  title: external_exports.string(),
+  kind: external_exports.enum(["plan", "runner", "assessment"]),
+  sourceId: digest3,
+  sourceKind: external_exports.enum(["answer", "run"]),
+  resultSha256: digest3.nullable(),
+  operationState: external_exports.string(),
+  stopRequested: external_exports.boolean().nullable().optional(),
+  producerStatus: external_exports.object({
+    result: external_exports.string().nullable(),
+    receipt: external_exports.string().nullable(),
+    plan: external_exports.string().nullable()
+  }),
+  // Display status is never an authority for state or verdict.
+  status: external_exports.string(),
+  executionState: external_exports.string().nullable(),
+  testVerdict: external_exports.string().nullable(),
+  elapsedMs: external_exports.number().nonnegative().nullable(),
+  facts: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    label: external_exports.string(),
+    value: external_exports.string(),
+    supplied: external_exports.boolean().optional()
+  })),
+  items: external_exports.array(reportItemSchema),
+  assessedRunIds: external_exports.array(digest3).optional(),
+  localArtifacts: external_exports.object({
+    kind: external_exports.enum(["browser", "desktop", "unavailable"]),
+    message: external_exports.string(),
+    traceAvailable: external_exports.boolean(),
+    launchCommand: external_exports.string().optional(),
+    files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
+  }).optional()
+});
+var reportSectionSchema = external_exports.union([
+  sectionBase.extend({
+    kind: external_exports.literal("runner"),
+    sourceKind: external_exports.literal("run")
+  }),
+  sectionBase.extend({ kind: external_exports.enum(["plan", "assessment"]) })
+]);
+var reportViewSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-view/3"),
+  reportId: digest3,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: digest3.nullable(),
+  sections: external_exports.array(reportSectionSchema),
+  displayNotice: external_exports.string().nullable(),
+  evidenceContext: external_exports.object({
+    contextId: digest3,
+    recordSha256: digest3,
+    readTool: external_exports.literal("loki_context_get"),
+    provenance: external_exports.string()
+  }).optional(),
+  executionChecks: external_exports.array(reportExecutionSchema).optional()
+});
+var reportReadFailureSchema = external_exports.object({
+  error: external_exports.object({
+    code: external_exports.string().min(1),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false).optional(),
+    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
+  })
+});
+var reportReadOutputSchema = external_exports.union([
+  reportViewSchema,
+  reportReadFailureSchema
+]);
+
+// ../contracts/dist/advisory-read.js
+var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var advisoryReadInputSchema = external_exports.strictObject({
+  family: external_exports.enum([
+    "uiModeler",
+    "prContext",
+    "changeRisk",
+    "riskFinder",
+    "testPlanning",
+    "testSupplement",
+    "suppliedEvidence"
+  ]),
+  answerId: digest4,
+  offset: external_exports.number().int().nonnegative().optional()
+}).meta({ $id: "urn:kaijan:advisory-read-input:1" });
+var advisoryReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.advisory-read/1"),
+  state: external_exports.literal("complete"),
+  answerId: digest4,
+  resultSha256: digest4,
+  resultChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: external_exports.number().int().nonnegative(),
+    text: external_exports.string().min(1).refine((text5) => text5.isWellFormed()),
+    nextOffset: external_exports.number().int().positive().nullable(),
+    totalCharacters: external_exports.number().int().positive()
+  })
+}).superRefine((value, ctx) => {
+  const chunk = value.resultChunk;
+  const end = chunk.offset + chunk.text.length;
+  if (end > chunk.totalCharacters || chunk.nextOffset !== (end === chunk.totalCharacters ? null : end))
+    ctx.addIssue({
+      code: "custom",
+      path: ["resultChunk"],
+      message: "Completed answer continuation is inconsistent."
+    });
+}).meta({ $id: "urn:kaijan:advisory-read:1" });
+var advisoryReadFailureSchema = external_exports.strictObject({
+  error: external_exports.strictObject({
+    code: external_exports.string().min(1),
+    message: external_exports.string(),
+    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
+  })
+});
+var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advisoryReadFailureSchema]).meta({ $id: "urn:kaijan:advisory-read-output:1" });
+
+// ../contracts/dist/advisory.js
+var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var strings = external_exports.array(external_exports.string());
+var count = external_exports.number().int().nonnegative();
+var refs = external_exports.array(external_exports.strictObject({ evidence_id: external_exports.string() }));
+function preserveAdvisoryInput(schema) {
+  return external_exports.unknown().superRefine((value, context) => {
+    const result = schema.safeParse(value);
+    if (!result.success)
+      for (const issue3 of result.error.issues)
+        context.addIssue({ ...issue3 });
+  }).meta(external_exports.toJSONSchema(schema, { io: "input" }));
+}
+var planningInputSchema = external_exports.union([
+  external_exports.looseObject({
+    title: external_exports.string(),
+    body: external_exports.string(),
+    url: nonempty3,
+    map: external_exports.null().optional(),
+    version: external_exports.never().optional(),
+    sources: external_exports.never().optional()
+  }),
+  external_exports.looseObject({
+    version: external_exports.literal("pr-context-plan/3"),
+    captured_at: external_exports.string().describe("Capture time with a timezone, such as 2026-11-04T05:16:48Z or 2026-11-04T12:16:48+07:00. Use ISO 8601, not a named timezone such as UTC."),
+    work_item: external_exports.looseObject({ title: nonempty3 }),
+    sources: external_exports.array(external_exports.looseObject({
+      id: nonempty3,
+      kind: external_exports.enum(["intent", "implementation", "context"]),
+      uri: nonempty3,
+      revision: nonempty3,
+      text: nonempty3
+    })).min(1),
+    map: jsonObject.nullable().optional()
+  })
+]);
+var supplementInputSchema = external_exports.looseObject({
+  version: external_exports.literal("test-plan-supplement-input/1"),
+  context: planningInputSchema,
+  baseline: external_exports.looseObject({
+    text: nonempty3,
+    uri: nonempty3,
+    revision: nonempty3,
+    plan_path: external_exports.array(nonempty3).optional()
+  }),
+  risks: external_exports.array(external_exports.looseObject({
+    id: nonempty3,
+    text: nonempty3,
+    uri: nonempty3,
+    revision: nonempty3,
+    attribution: nonempty3
+  }))
+});
+var record2 = external_exports.looseObject({
+  id: nonempty3,
+  text: external_exports.string(),
+  provenance: jsonObject.nullable()
+});
+var assessmentImageReferenceSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.assessment-image-ref/1"),
+  reportId: digest5,
+  runId: digest5,
+  resultSha256: digest5,
+  manifestSha256: digest5,
+  artifactId: digest5,
+  sha256: digest5,
+  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+});
+var suppliedEvidenceInputSchema = external_exports.strictObject({
+  schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
+  work_item: external_exports.looseObject({
+    title: external_exports.string(),
+    body: external_exports.string(),
+    provenance: jsonObject.nullable()
+  }),
+  requirements: external_exports.array(record2).nullable(),
+  proposed_tests: external_exports.array(record2).nullable(),
+  outcomes: external_exports.array(record2.extend({
+    test_id: nonempty3.nullable(),
+    status: nonempty3,
+    evidence_ids: external_exports.array(nonempty3)
+  })),
+  evidence: external_exports.array(external_exports.looseObject({
+    id: nonempty3,
+    text: external_exports.string().nullable(),
+    bytes_base64: external_exports.string().nullable(),
+    media_type: external_exports.literal("image/png").optional(),
+    reference: jsonObject.nullable(),
+    provenance: jsonObject.nullable(),
+    sha256: digest5.optional(),
+    artifact_ref: assessmentImageReferenceSchema.optional()
+  })),
+  target: jsonObject.nullable(),
+  provenance: jsonObject.nullable()
+});
+var proposedPlanSchema = external_exports.strictObject({
+  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
+  objectives: external_exports.array(external_exports.strictObject({ id: external_exports.string(), text: external_exports.string(), refs })),
+  requirement_coverage: external_exports.array(external_exports.strictObject({
+    requirement_id: external_exports.string(),
+    status: external_exports.enum(["proposed", "gap"]),
+    test_ids: strings,
+    reason: external_exports.string()
+  })),
+  ambiguities: strings,
+  relevant_surfaces: external_exports.array(external_exports.strictObject({
+    description: external_exports.string(),
+    basis: external_exports.enum(["supplied", "hypothesis"]),
+    refs
+  })),
+  tests: external_exports.array(external_exports.strictObject({
+    title: nonempty3.optional(),
+    // Absent only in historical saved plans.
+    method: nonempty3,
+    id: external_exports.string(),
+    objective_ids: strings,
+    priority: external_exports.enum(["P1", "P2", "P3"]),
+    reason: external_exports.string(),
+    prerequisites: strings,
+    steps: strings,
+    expected: external_exports.strictObject({
+      text: external_exports.string(),
+      authority: external_exports.enum(["requirement", "hypothesis"]),
+      refs
+    }),
+    execution_gaps: strings
+  })),
+  disagreements: strings,
+  runner_handoff: external_exports.strictObject({
+    status: external_exports.literal("proposed_only"),
+    scenario_ids: strings,
+    required_inputs: strings
+  }),
+  limitations: strings
+});
+var nativePlanningReceiptSchema = external_exports.looseObject({
+  status: external_exports.string(),
+  unknown_charge: external_exports.boolean(),
+  unknown_usage: external_exports.boolean()
+});
+var planningFailure = (schema) => external_exports.looseObject({
+  schema: external_exports.literal(schema),
+  reason: external_exports.string(),
+  receipt_directory: external_exports.string(),
+  receipt: nativePlanningReceiptSchema
+});
+var evidenceCatalog = external_exports.array(external_exports.looseObject({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  uri: external_exports.string(),
+  revision: external_exports.string(),
+  line: count,
+  quote: external_exports.string(),
+  quote_sha256: digest5
+}));
+var nativePlanningResultSchema = external_exports.union([
+  external_exports.looseObject({
+    plan: proposedPlanSchema,
+    checks: external_exports.looseObject({
+      version: external_exports.literal("pr-context-plan-result/5"),
+      status: external_exports.enum(["structurally_valid", "structurally_valid_partial"]),
+      executed: external_exports.literal(false),
+      semantic_support: external_exports.literal("requires_review"),
+      coverage: external_exports.looseObject({ status: external_exports.enum(["complete", "partial"]) }),
+      tests: count,
+      objectives: count
+    }),
+    input_hash: digest5,
+    receipt_directory: external_exports.string(),
+    receipt: nativePlanningReceiptSchema,
+    evidence: evidenceCatalog
+  }),
+  planningFailure("loki.planning-failure/1")
+]);
+var nativeSupplementResultSchema = external_exports.union([
+  external_exports.looseObject({
+    schema: external_exports.literal("test-plan-supplement-result/1"),
+    method: external_exports.literal("baseline-preserving-risk-supplement/1"),
+    supplement: external_exports.strictObject({
+      status: external_exports.enum([
+        "proposed_supplement",
+        "no_additional_tests",
+        "needs_clarification"
+      ]),
+      additional_tests: external_exports.array(external_exports.strictObject({
+        id: external_exports.string(),
+        verification_kind: external_exports.string(),
+        method: external_exports.string(),
+        reason: external_exports.string(),
+        conditions: strings,
+        prerequisites: strings,
+        steps: strings,
+        expected: external_exports.strictObject({
+          text: external_exports.string(),
+          authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+          refs
+        }),
+        risk_ids: strings,
+        source_refs: refs,
+        baseline_relation: external_exports.strictObject({
+          test_ids: strings,
+          explanation: external_exports.string()
+        }),
+        execution_gaps: strings
+      })),
+      baseline_concerns: external_exports.array(external_exports.strictObject({
+        test_ids: strings,
+        concern: external_exports.string(),
+        question: external_exports.string(),
+        risk_ids: strings,
+        refs
+      })),
+      unanswered_questions: external_exports.array(external_exports.strictObject({
+        question: external_exports.string(),
+        risk_ids: strings,
+        baseline_test_ids: strings,
+        refs
+      })),
+      limitations: strings
+    }),
+    baseline: external_exports.looseObject({
+      text: external_exports.string(),
+      uri: external_exports.string(),
+      revision: external_exports.string(),
+      sha256: digest5,
+      bytes: count,
+      test_ids: strings
+    }),
+    checks: external_exports.looseObject({
+      version: external_exports.literal("test-plan-supplement-result/1"),
+      status: external_exports.literal("structurally_valid_supplement"),
+      executed: external_exports.literal(false),
+      semantic_support: external_exports.literal("requires_separate_review"),
+      original_baseline_sha256: digest5,
+      original_baseline_test_ids: strings
+    }),
+    input_hash: digest5,
+    receipt_directory: external_exports.string(),
+    receipt: nativePlanningReceiptSchema,
+    evidence: evidenceCatalog,
+    interpretation: external_exports.string()
+  }),
+  planningFailure("loki.supplement-failure/1")
+]);
+var nativeAssessmentResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  input_sha256: digest5,
+  request_sha256: digest5,
+  assessment: external_exports.looseObject({
+    schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+    original_candidate: jsonObject,
+    findings: external_exports.array(external_exports.looseObject({
+      id: external_exports.string(),
+      original_finding: jsonObject,
+      literal_bindings: external_exports.array(jsonObject),
+      validation_errors: strings,
+      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
+      semantic_support: external_exports.null()
+    })),
+    reported_outcomes: external_exports.array(jsonObject),
+    optional_proposal_supplied: external_exports.boolean(),
+    evidence_status: external_exports.array(jsonObject),
+    coverage: external_exports.looseObject({
+      status: external_exports.enum(["complete", "partial"]),
+      unassessed_requirement_ids: strings,
+      semantic_completeness: external_exports.null(),
+      interpretation: external_exports.string()
+    }),
+    validation_status: external_exports.enum(["partial", "complete_record_membership"]),
+    execution_authenticated: external_exports.literal(false),
+    acceptance_decision: external_exports.null()
+  }).nullable(),
+  native_receipt: nativePlanningReceiptSchema.nullable(),
+  failure: external_exports.looseObject({ reason: external_exports.string() }).nullable(),
+  native_artifact_directory: external_exports.string(),
+  complete_call_elapsed_seconds: external_exports.number().nonnegative(),
+  provider_calls_started: count,
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count, sha256: digest5 })),
+  result_persisted: external_exports.boolean(),
+  continuation_allowed: external_exports.boolean(),
+  limitations: external_exports.string(),
+  persistence_failure: external_exports.literal(true).optional()
+});
+var advisoryIncompleteSchema = external_exports.strictObject({
+  state: external_exports.enum(["unknown", "refused", "cancelled"]),
+  answerId: digest5.optional(),
+  retainedNativeFile: external_exports.strictObject({
+    path: external_exports.string(),
+    bytes: count,
+    sha256: digest5,
+    semanticAssessment: external_exports.literal("not-performed")
+  }).nullable().optional(),
+  reason: external_exports.string(),
+  replayAllowed: external_exports.literal(false),
+  accounting: external_exports.union([
+    external_exports.strictObject({
+      providerEffect: external_exports.literal("unknown"),
+      knownCostUsd: external_exports.null()
+    }),
+    external_exports.strictObject({
+      providerCallsStarted: external_exports.literal(0),
+      knownCostUsd: external_exports.literal(0)
+    })
+  ])
+});
+var advisoryContextUnavailableSchema = external_exports.strictObject({
+  state: external_exports.literal("unsupported-consumption"),
+  contextId: digest5,
+  capability: external_exports.string(),
+  detail: jsonObject,
+  contextRetained: external_exports.literal(true),
+  providerCallsStarted: external_exports.literal(0)
+});
+var advisoryExecutionFailureSchema = external_exports.strictObject({
+  error: external_exports.looseObject({
+    code: nonempty3,
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false).optional(),
+    recovery: external_exports.looseObject({
+      action: external_exports.string(),
+      instruction: external_exports.string(),
+      requestKey: external_exports.string().optional()
+    }).optional()
+  })
+});
+
+// ../contracts/dist/clarification-presentation.js
+var binding = external_exports.strictObject({
+  sourceId: external_exports.string(),
+  quote: external_exports.string().min(1).max(512)
+});
+var ordinaryPresentation = external_exports.strictObject({
+  kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
+  subject: binding,
+  choices: external_exports.array(binding).max(8)
+});
+var clarificationPresentationSchema = external_exports.union([
+  ordinaryPresentation,
+  external_exports.strictObject({
+    kind: external_exports.literal("read-only-path"),
+    subject: binding,
+    control: binding,
+    choices: external_exports.array(binding).max(0)
+  })
+]);
+
+// ../contracts/dist/runner.js
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
+var count2 = external_exports.number().int().nonnegative();
+var questions = external_exports.array(external_exports.strictObject({
+  id: external_exports.string(),
+  question: external_exports.string(),
+  kind: external_exports.string(),
+  presentation: clarificationPresentationSchema.optional()
+}));
+var progress = {
+  reason: external_exports.string(),
+  completedSteps: external_exports.array(external_exports.string()),
+  remainingSteps: external_exports.array(external_exports.string()),
+  evidence: external_exports.array(external_exports.string()),
+  questions
 };
-function providerConnection(nativeUrl, key, env = {}) {
-  let native;
-  try {
-    native = new URL(nativeUrl);
-  } catch {
-    throw new AiClientError("unsupported_native_route");
-  }
-  if (native.username || native.password || native.search || native.hash)
-    throw new AiClientError("unsupported_native_route");
-  const openai = native.origin === "https://api.openai.com" && ["/v1/responses", "/v1/models/gpt-6-luna"].includes(native.pathname);
-  const jev = native.origin === "https://openrouter.ai" && (native.pathname === "/api/v1/systemone" || /^\/api\/v1\/models\/typesafe\/jev[^?#]*\/endpoints$/.test(
-    native.pathname
-  ));
-  if (!openai && !jev) throw new AiClientError("unsupported_native_route");
-  if (env.LOKI_AUTH_BROKER_SOCKET) {
-    if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
-      throw new AiClientError("invalid_broker_channel");
-    const path = native.pathname === "/v1/responses" ? "/v1/responses" : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
-    return {
-      url: `http://localhost/ai${path}`,
-      headers: Object.fromEntries(
-        [
-          ["x-loki-plan-id", env.LOKI_TELEMETRY_PLAN_ID],
-          ["x-loki-run-id", env.LOKI_TELEMETRY_RUN_ID]
-        ].filter(
-          ([, value]) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
-        )
-      ),
-      socketPath: env.LOKI_AUTH_BROKER_SOCKET
-    };
-  }
-  if (typeof key !== "string" || !key.trim())
-    throw new AiClientError("provider_key_required");
-  return { url: native.href, headers: { Authorization: `Bearer ${key}` } };
-}
+var runnerExecutionReportSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.execution-report/1"),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
+  ...progress,
+  effects: external_exports.enum(["known", "uncertain"]),
+  basis: external_exports.literal("model-authored-unverified"),
+  responseId: external_exports.string(),
+  callId: external_exports.string()
+});
+var runnerRecoverySchema = external_exports.strictObject({
+  enabled: external_exports.boolean().optional(),
+  used: external_exports.boolean(),
+  initialEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+  currentEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+  transitions: external_exports.array(external_exports.strictObject({
+    responseId: external_exports.string(),
+    callId: external_exports.string(),
+    from: external_exports.enum(["low", "medium"]),
+    to: external_exports.literal("medium"),
+    reason: external_exports.string()
+  })).max(1)
+});
+var runnerClarificationSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification/1"),
+  clarificationId: external_exports.string(),
+  ...progress,
+  deadlineAt: external_exports.string(),
+  state: external_exports.enum(["live", "unknown"]),
+  redaction: external_exports.strictObject({
+    schema: external_exports.literal("loki.runner.safe-projection/1"),
+    revision: count2
+  }).optional()
+});
+var originalReference = external_exports.strictObject({
+  path: external_exports.string(),
+  sha256: digest6,
+  bytes: count2
+});
+var checkpointReference = originalReference.extend({
+  checkpointPath: external_exports.string()
+});
+var executionReportProvenance = external_exports.strictObject({
+  responseReference: originalReference.nullable(),
+  evidenceReferences: external_exports.array(checkpointReference),
+  providerCall: count2
+});
+var runnerNativeResultSchema = external_exports.looseObject({
+  correlation: external_exports.looseObject({
+    requestId: external_exports.string().min(1),
+    scenarioId: external_exports.string().min(1),
+    planRef: external_exports.json().optional()
+  }),
+  executionState: external_exports.enum([
+    "completed",
+    "incomplete",
+    "cancelled",
+    "blocked",
+    "unknown"
+  ]),
+  testVerdict: external_exports.string().min(1),
+  terminal: external_exports.looseObject({
+    executionReportProvenance: executionReportProvenance.nullable().optional()
+  }),
+  executionReport: runnerExecutionReportSchema.nullable().optional(),
+  recovery: runnerRecoverySchema.optional(),
+  effortAccounting: external_exports.strictObject({
+    low: count2,
+    medium: count2,
+    none: count2.optional(),
+    high: count2.optional(),
+    xhigh: count2.optional(),
+    max: count2.optional()
+  }).optional()
+});
+var runnerResultSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("reuse-not-executed"),
+    reason: external_exports.string().min(1),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    reuse: jsonObject2,
+    nativeDispatched: external_exports.literal(false)
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("not-executed"),
+    reason: external_exports.string().min(1),
+    scenarioId: external_exports.string().min(1),
+    unresolvedInputs: external_exports.array(external_exports.string()),
+    executionMethod: external_exports.string(),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    providerCallsStarted: external_exports.literal(0)
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("native-exception"),
+    reuse: jsonObject2.optional(),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    effects: external_exports.literal("unknown-do-not-replay"),
+    partialHandoff: jsonObject2,
+    privateFailure: external_exports.string(),
+    workerReceipt: external_exports.string()
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("returned"),
+    reuse: jsonObject2.optional(),
+    executionHost: external_exports.json(),
+    nativeResult: runnerNativeResultSchema,
+    executionConfig: jsonObject2,
+    assessmentFragment: external_exports.looseObject({
+      outcomes: external_exports.array(jsonObject2),
+      evidence: external_exports.array(jsonObject2),
+      target: jsonObject2,
+      provenance: jsonObject2
+    }),
+    verification: reportVerificationSchema.optional(),
+    sourceContextId: digest6.nullable().optional()
+  })
+]);
+var runnerNextActionSchema = external_exports.strictObject({
+  kind: external_exports.literal("input-required"),
+  tool: external_exports.literal("loki_runner_answer"),
+  runId: digest6,
+  clarificationId: external_exports.string().min(1),
+  deadlineAt: external_exports.string(),
+  questions,
+  instruction: external_exports.string()
+});
+var operationBase = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner-operation/1"),
+  runId: digest6,
+  state: external_exports.enum([
+    "accepted",
+    "running",
+    "finished",
+    "unknown",
+    "not-started",
+    "stopped-before-start"
+  ]),
+  replayAllowed: external_exports.literal(false),
+  pendingClarification: runnerClarificationSchema.nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  identity: jsonObject2.optional(),
+  execution: external_exports.literal("programmatic/1").optional(),
+  createdAt: external_exports.string().optional(),
+  reason: external_exports.string().optional(),
+  lastRecordedState: external_exports.enum(["accepted", "running"]).optional(),
+  stopRequested: external_exports.boolean().optional(),
+  receiptDirectory: external_exports.string().optional(),
+  providerCallsStarted: external_exports.literal(0).optional(),
+  resultValidated: external_exports.boolean().optional(),
+  resultSha256: digest6.optional(),
+  resultBytes: count2.optional(),
+  resultRecordSha256: digest6.optional(),
+  resultRecord: external_exports.json().optional(),
+  retainedNativeFile: external_exports.strictObject({
+    path: external_exports.string(),
+    bytes: count2,
+    sha256: digest6,
+    semanticAssessment: external_exports.literal("not-performed")
+  }).nullable().optional()
+});
+var resultRead = external_exports.strictObject({
+  nextOffset: external_exports.literal(0),
+  totalCharacters: external_exports.number().int().positive(),
+  instruction: external_exports.string()
+});
+var resultChunk = external_exports.strictObject({
+  encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+  offset: count2,
+  text: external_exports.string().min(1),
+  nextOffset: external_exports.number().int().positive().nullable(),
+  totalCharacters: external_exports.number().int().positive()
+});
+var finished = operationBase.extend({
+  state: external_exports.literal("finished"),
+  resultValidated: external_exports.literal(true),
+  resultSha256: digest6,
+  resultBytes: external_exports.number().int().positive()
+});
+var runnerOperationSchema = external_exports.union([
+  operationBase.extend({
+    state: external_exports.enum([
+      "accepted",
+      "running",
+      "unknown",
+      "not-started",
+      "stopped-before-start"
+    ]),
+    resultValidated: external_exports.literal(false).optional()
+  }),
+  finished.extend({ result: runnerResultSchema }),
+  finished.extend({ resultRead }),
+  finished.extend({ resultChunk })
+]);
+var runnerErrorSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner-error/1"),
+  method: external_exports.enum(["execute", "get", "stop"]),
+  runId: digest6.optional(),
+  error: external_exports.strictObject({
+    code: external_exports.enum([
+      "invalid_arguments",
+      "request_key_conflict",
+      "operation_not_found_in_scope",
+      "operation_unavailable",
+      "private_parameter_invalid",
+      "private_parameter_unavailable",
+      "private_parameter_scope_mismatch",
+      "private_parameter_target_mismatch",
+      "private_parameter_collision",
+      "private_parameter_revoked"
+    ]),
+    message: external_exports.string(),
+    // null means dispatch may have happened; failure never permits replay.
+    requestDispatched: external_exports.boolean().nullable(),
+    recovery: external_exports.strictObject({
+      action: external_exports.string(),
+      instruction: external_exports.string(),
+      requestKey: external_exports.string().optional(),
+      existingRunId: digest6.optional(),
+      existingRunScope: external_exports.string().optional()
+    })
+  })
+});
+var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
-// ../provider-transport/index.mjs
-function headersFor(connection, supplied = {}) {
-  const headers = supplied instanceof Headers || Array.isArray(supplied) ? Object.fromEntries(
-    supplied instanceof Headers ? supplied.entries() : supplied
-  ) : { ...supplied };
-  for (const name of Object.keys(headers))
-    if (["authorization", "x-loki-plan-id", "x-loki-run-id"].includes(
-      name.toLowerCase()
-    ))
-      delete headers[name];
-  return { ...headers, ...connection.headers };
-}
-function sendFetch(connection, options, transport = globalThis.fetch) {
-  if (connection.socketPath)
-    return channelFetch(
-      connection.socketPath,
-      new URL(connection.url).pathname,
-      { ...options, headers: headersFor(connection, options.headers) }
-    );
-  return transport(connection.url, {
-    ...options,
-    redirect: "error",
-    headers: headersFor(connection, options.headers)
-  });
-}
+// ../contracts/dist/assessment-preparation.js
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
+var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var assessmentReceiptSchema = external_exports.looseObject({
+  id: nonempty4,
+  attribution: nonempty4,
+  content: external_exports.json()
+});
+var assessmentPreparationLimits = {
+  packetBytes: 2 * 1024 * 1024
+};
+var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
+  reportId: digest7,
+  runId: digest7,
+  view: external_exports.literal("inspection").optional(),
+  expectedResultSha256: digest7.optional(),
+  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
+  requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
+  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
+  receipts: external_exports.array(assessmentReceiptSchema).optional(),
+  suppliedObservations: external_exports.array(assessmentReceiptSchema).optional(),
+  preflight: assessmentReceiptSchema.nullable().optional(),
+  runtimeComparison: assessmentReceiptSchema.nullable().optional(),
+  cleanup: assessmentReceiptSchema.nullable().optional(),
+  selectedArtifactIds: external_exports.array(digest7).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+})).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
+var locator = external_exports.strictObject({
+  report: external_exports.strictObject({
+    tool: external_exports.literal("loki_report_get"),
+    reportId: digest7
+  }),
+  operation: external_exports.strictObject({
+    tool: external_exports.literal("loki_runner_get"),
+    runId: digest7
+  }),
+  artifacts: external_exports.strictObject({
+    tool: external_exports.literal("loki_report_artifact_read"),
+    reportId: digest7,
+    runId: digest7
+  }),
+  resultSha256: digest7.nullable()
+});
+var issue2 = external_exports.strictObject({
+  code: external_exports.string(),
+  location: external_exports.string(),
+  detail: external_exports.string(),
+  actualCount: external_exports.number().int().nonnegative().optional(),
+  maximumCount: external_exports.number().int().positive().optional()
+});
+var indexEntry = external_exports.looseObject({
+  id: external_exports.string(),
+  basis: external_exports.enum(["original-fragment", "caller-assertion", "original-artifact"]),
+  state: external_exports.enum(["supplied", "read", "opaque-uninterpreted", "unavailable"])
+});
+var submission = external_exports.strictObject({
+  compatible: external_exports.boolean(),
+  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
+  instruction: external_exports.string()
+});
+var common = {
+  schema: external_exports.literal("loki.assessment-preparation/1"),
+  submission,
+  // These describe the selected original run, never a new assessment verdict.
+  executionState: external_exports.json(),
+  nativeVerdict: external_exports.json(),
+  accounting: jsonObject3,
+  evidenceIndex: external_exports.array(indexEntry),
+  origin: locator
+};
+var fullPreparationOutput = external_exports.union([
+  external_exports.strictObject({
+    ...common,
+    state: external_exports.enum(["prepared", "unresolved"]),
+    assessmentInput: suppliedEvidenceInputSchema.nullable(),
+    original: jsonObject3,
+    // Receipt bodies live once in assessment evidence text, addressed here as
+    // JSON pointers; inline only when no compatible assessment input exists.
+    callerAssertions: jsonObject3,
+    missingFacts: external_exports.array(issue2),
+    unresolvedReferences: external_exports.array(issue2),
+    selectedArtifacts: external_exports.array(jsonObject3),
+    unselectedArtifacts: external_exports.array(jsonObject3),
+    interpretation: external_exports.string(),
+    replayAllowed: external_exports.literal(false)
+  }),
+  external_exports.strictObject({
+    ...common,
+    state: external_exports.literal("refused"),
+    refusal: external_exports.strictObject({
+      code: external_exports.enum([
+        "selection_unavailable",
+        "selection_changed",
+        "artifact_refused",
+        "oversize"
+      ]),
+      maxBytes: external_exports.number().int().positive().optional(),
+      requiredBytes: external_exports.number().int().nonnegative().optional()
+    }),
+    assessmentInput: external_exports.null(),
+    replayAllowed: external_exports.literal(false)
+  })
+]);
+var count3 = external_exports.number().int().nonnegative();
+var assessmentInspectionLocatorSchema = external_exports.union([
+  external_exports.strictObject({
+    document: external_exports.literal("decoded-original-runner-result"),
+    pointer: external_exports.string()
+  }),
+  external_exports.strictObject({ document: external_exports.literal("request"), pointer: external_exports.string() }),
+  external_exports.strictObject({
+    document: external_exports.literal("full-preparation-packet"),
+    pointer: external_exports.string()
+  }),
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest7 })
+]);
+var section = external_exports.strictObject({
+  total: count3,
+  shown: count3,
+  omitted: count3,
+  containerLocator: assessmentInspectionLocatorSchema,
+  available: external_exports.boolean(),
+  rows: external_exports.array(jsonObject3)
+});
+var assessmentInspectionOutputSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.assessment-inspection/1"),
+  view: external_exports.literal("inspection"),
+  state: external_exports.enum(["prepared", "unresolved", "refused"]),
+  executionState: common.executionState,
+  nativeVerdict: common.nativeVerdict,
+  accounting: common.accounting,
+  origin: common.origin,
+  documents: jsonObject3,
+  factSources: jsonObject3,
+  submission: external_exports.strictObject({
+    compatible: external_exports.boolean(),
+    nextAction: external_exports.enum(["get_assessment_input", "resolve_input"]),
+    locator: assessmentInspectionLocatorSchema,
+    instruction: external_exports.string()
+  }),
+  claims: external_exports.strictObject({ outcomes: section, native: section }),
+  evidenceRecords: section,
+  callerAssertions: external_exports.strictObject({
+    preflight: jsonObject3,
+    runtimeComparison: jsonObject3,
+    cleanup: jsonObject3,
+    suppliedObservations: jsonObject3,
+    receipts: jsonObject3
+  }),
+  evidenceIndex: section,
+  selectedArtifacts: section,
+  unselectedArtifacts: section,
+  missingFacts: section,
+  unresolvedReferences: section,
+  selection: external_exports.strictObject({
+    method: external_exports.literal("mechanical-prefix-not-importance"),
+    outcomes: count3,
+    evidenceRecords: count3,
+    receiptsPerCategory: count3,
+    contentLeaves: count3,
+    contentDepth: count3,
+    stoppedSubtrees: count3,
+    stringCodePoints: count3,
+    evidenceIndex: count3,
+    selectedArtifacts: count3,
+    unselectedArtifacts: count3,
+    missingFacts: count3,
+    unresolvedReferences: count3,
+    objectKeys: external_exports.literal("UTF-16-code-unit-order"),
+    traversal: external_exports.literal("shallow-first; arrays in original index order"),
+    contentTotals: external_exports.literal("primitive and empty-container values through contentDepth; deeper leaf counts unknown"),
+    evidenceRecordOrder: external_exports.literal("original fragment order, then selected JSON artifact order; no caller receipts"),
+    reportSelection: external_exports.string(),
+    interpretation: external_exports.string()
+  }),
+  refusal: fullPreparationOutput.options[1].shape.refusal.optional(),
+  replayAllowed: external_exports.literal(false)
+});
+var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union([fullPreparationOutput, assessmentInspectionOutputSchema])).meta({ $id: "urn:kaijan:assessment-prepare-output:1" });
 
-// src/runner-context-worker.ts
+// ../contracts/dist/test-run.js
+var testRunResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  state: external_exports.string(),
+  status: external_exports.object({
+    execution: external_exports.string(),
+    assessment: external_exports.string(),
+    report: external_exports.string()
+  }),
+  // Keep recursive JSON references rooted in this output, not a nested URI.
+  execution: runnerOutputSchema.meta({ $id: void 0 }).nullable(),
+  // Default reads return literal selected fields. Full original execution and
+  // assessment records remain available through originalResult and offsets.
+  assessment: external_exports.json().nullable(),
+  preparation: external_exports.json().nullable(),
+  executionSummary: external_exports.json().nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  view: external_exports.enum(["summary", "original"]).optional(),
+  originalResult: external_exports.strictObject({
+    tool: external_exports.literal("loki_test_get"),
+    arguments: external_exports.strictObject({
+      runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+      offset: external_exports.literal(0)
+    }),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultBytes: external_exports.number().int().positive().nullable(),
+    instruction: external_exports.string()
+  }).optional(),
+  report: external_exports.looseObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).nullable(),
+  replayAllowed: external_exports.literal(false)
+});
+var testRunErrorSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  state: external_exports.literal("unavailable"),
+  replayAllowed: external_exports.literal(false),
+  error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
+});
+var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
+
+// ../contracts/dist/customer-source-display.js
+var customerSourceDisplaySchema = external_exports.object({
+  kind: external_exports.enum(["submitted-task", "application-page", "proposed-test"]),
+  sourceTextSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  fields: external_exports.array(external_exports.object({ label: external_exports.string(), text: external_exports.string() })),
+  expectation: external_exports.object({ label: external_exports.string(), text: external_exports.string() }).optional()
+});
+
+// ../contracts/dist/customer-assessment-presentation.js
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerCleanupFactsSchema = external_exports.object({
+  kind: external_exports.literal("browser-cleanup"),
+  scope: external_exports.literal("test-browser-resources"),
+  cleaned: external_exports.boolean(),
+  deadlineExceeded: external_exports.boolean(),
+  applicationObservation: external_exports.literal(false),
+  applicationCleanup: external_exports.literal("not-established")
+});
+var customerAssessmentQuoteSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  display: customerSourceDisplaySchema.optional(),
+  // The original quote hash stays exact. This receipt identifies the filtered
+  // display copy; serialized fields alone never grant source proof.
+  projection: external_exports.object({
+    schema: external_exports.literal("kaijan.customer-source-projection/1"),
+    sourceSha256: digest8,
+    sha256: digest8,
+    bytes: external_exports.number().int().nonnegative()
+  }).optional(),
+  state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
+  attribution: external_exports.enum([
+    "application-observation",
+    "caller-supplied",
+    "original-intent",
+    "proposed-test",
+    "resource-record",
+    "supplied-source"
+  ]).optional(),
+  text: external_exports.string().optional(),
+  sha256: digest8.optional(),
+  sourceSha256: digest8.optional(),
+  facts: customerCleanupFactsSchema.optional(),
+  notice: external_exports.string().optional()
+});
+var customerRecordedActionSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  sourceSha256: digest8.optional(),
+  evidenceId: external_exports.string(),
+  index: external_exports.number().int().positive(),
+  action: external_exports.object({
+    type: external_exports.enum([
+      "click",
+      "double_click",
+      "move",
+      "scroll",
+      "keypress",
+      "type",
+      "drag",
+      "wait",
+      "screenshot"
+    ]),
+    x: external_exports.number().optional(),
+    y: external_exports.number().optional(),
+    scroll_x: external_exports.number().optional(),
+    scroll_y: external_exports.number().optional(),
+    text: external_exports.string().optional(),
+    keys: external_exports.array(external_exports.string()).optional(),
+    button: external_exports.enum(["left", "right", "middle", "back", "forward"]).optional(),
+    path: external_exports.array(external_exports.tuple([external_exports.number(), external_exports.number()])).optional()
+  }),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  startedAt: external_exports.iso.datetime({ offset: true }),
+  endedAt: external_exports.iso.datetime({ offset: true }).optional(),
+  attribution: external_exports.enum(["retained-action-record", "supplied-action-record"])
+});
+var customerAssessmentStepFactsSchema = external_exports.object({
+  state: external_exports.enum(["bound", "unresolved", "supplied"]),
+  qualification: external_exports.enum([
+    "recorded_action",
+    "reported_observation",
+    "unresolved"
+  ]),
+  actions: external_exports.array(customerRecordedActionSchema),
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  notice: external_exports.string()
+});
+
+// ../contracts/dist/report-presentation.js
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count4 = external_exports.number().int().nonnegative();
+var reportExpectationAuthoritySchema = external_exports.enum([
+  "requirement",
+  "hypothesis",
+  "unresolved"
+]);
+var assessmentQuote = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  facts: true
+}).extend({ text: external_exports.string() });
+var reportTestAssessmentSchema = external_exports.object({
+  customerEvidence: external_exports.array(assessmentQuote).optional(),
+  customerRecordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  customerEvidenceIncomplete: external_exports.boolean().optional(),
+  evidenceNotice: external_exports.string().optional(),
+  customerObservedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote),
+    facts: customerAssessmentStepFactsSchema.optional()
+  })).optional(),
+  answerId: digest9,
+  resultSha256: digest9,
+  model: external_exports.string(),
+  testId: external_exports.string(),
+  expectationAuthority: reportExpectationAuthoritySchema.optional(),
+  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
+  expected: external_exports.string(),
+  actual: external_exports.string().nullable(),
+  reason: external_exports.string(),
+  evidence: external_exports.array(assessmentQuote),
+  observedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    facts: customerAssessmentStepFactsSchema.optional(),
+    evidence: external_exports.array(assessmentQuote)
+  }))
+});
+var nativeJson = external_exports.unknown().refine((value) => external_exports.json().safeParse(value).success);
+var configurationShape = external_exports.object({
+  executionMethod: external_exports.enum(["browser-ui", "desktop-ui"]),
+  browser: external_exports.literal("chromium").nullable(),
+  target: nativeJson,
+  automaticRetries: external_exports.literal(0),
+  trigger: external_exports.literal("explicit-tool-call")
+}).catchall(nativeJson);
+var configurationSchema = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
+var reportObservedPageSchema = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  accessibilityText: external_exports.string().optional(),
+  sourceSha256: digest9,
+  contentSha256: digest9,
+  contentState: external_exports.literal("projected-page-content")
+});
+var reportOutcomeNoticeSchema = external_exports.enum([
+  "The test stopped when the app tried to open a website that was not allowed for this test.",
+  "The test stopped because it could not confirm whether the page was allowed for this test.",
+  "The test stopped because it could not reach an allowed website.",
+  "Execution did not start because its connection is not configured.",
+  "The target application is unavailable.",
+  "The connection expired. Reconnect before retrying.",
+  "The test service is temporarily unavailable. Check the saved outcome before retrying.",
+  "The test could not finish. Review the saved observations before retrying."
+]);
+var testPlanViewSchema = external_exports.object({
+  schema: external_exports.literal("loki.test-plan-view/2"),
+  reportId: digest9,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: digest9.nullable(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: digest9,
+    resultSha256: digest9,
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
+  selectedPullRequestUrl: external_exports.string().nullable().optional(),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(digest9).optional(),
+    sourceId: digest9,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: digest9.nullable(),
+    state: external_exports.string(),
+    result: nativeJson
+  })).optional(),
+  runs: external_exports.array(external_exports.object({
+    sourceId: digest9,
+    resultSha256: digest9.nullable(),
+    state: external_exports.string(),
+    executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
+    executionLimit: external_exports.enum(["requests", "browser-actions", "time"]).optional(),
+    testVerdict: external_exports.string(),
+    planSourceId: external_exports.string(),
+    planResultSha256: external_exports.string(),
+    selectedTestIds: external_exports.array(external_exports.string()),
+    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    startedAt: external_exports.iso.datetime({ offset: true }).optional(),
+    observation: external_exports.string(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
+    executionReport: runnerExecutionReportSchema.nullable().optional(),
+    traceRetained: external_exports.boolean(),
+    recordedAt: external_exports.string().nullable().optional(),
+    assessments: external_exports.array(reportTestAssessmentSchema).optional(),
+    configuration: configurationSchema.nullable().optional(),
+    assertions: reportExecutionSchema.nullable().optional()
+  })),
+  pullRequests: external_exports.array(reportPullRequestSchema).optional(),
+  plans: external_exports.array(external_exports.object({
+    sourceId: digest9,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: digest9.nullable(),
+    state: external_exports.string(),
+    result: nativeJson,
+    requestTestIndexes: external_exports.array(count4)
+  }))
+});
+var reportPanelSchema = testPlanViewSchema.extend({
+  presentation: external_exports.literal("panel")
+});
+var reportLinkSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-link/1"),
+  reportId: digest9,
+  presentation: external_exports.literal("browser"),
+  previewURL: external_exports.url()
+});
+var summarySchema = external_exports.object({
+  schema: external_exports.literal("loki.test-plan-view/2"),
+  reportId: digest9,
+  title: external_exports.string(),
+  counts: external_exports.object({
+    pass: count4,
+    fail: count4,
+    blocked: count4,
+    skipped: count4,
+    "not-run": count4,
+    inconclusive: count4.default(0),
+    conflicting: count4.default(0),
+    unavailable: count4.default(0)
+  }),
+  proposedCounts: external_exports.object({ pass: count4, fail: count4 }).optional(),
+  assessmentResults: count4.optional(),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  runs: external_exports.array(external_exports.object({
+    sourceId: digest9,
+    executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
+    testVerdict: external_exports.string()
+  })),
+  plans: external_exports.array(external_exports.object({
+    sourceId: digest9,
+    resultSha256: digest9.nullable(),
+    requestTests: count4,
+    executedTests: external_exports.boolean().nullable(),
+    proposedTests: count4.nullable()
+  }))
+});
+var cardBase = external_exports.object({
+  mapId: digest9.nullable().optional(),
+  schema: external_exports.literal("loki.report-card/1"),
+  reportId: digest9,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  originalResults: external_exports.array(external_exports.object({
+    kind: external_exports.enum(["plan", "runner", "assessment"]),
+    answerId: digest9.nullable(),
+    runId: digest9.nullable(),
+    resultSha256: digest9.nullable()
+  })),
+  sourceContextId: digest9.nullable(),
+  testPlanSummary: summarySchema,
+  instructions: external_exports.string()
+});
+var reportCardSchema = external_exports.union([
+  cardBase.extend({ presentation: external_exports.literal("panel") }),
+  cardBase.extend({
+    presentation: external_exports.literal("browser"),
+    previewURL: external_exports.url()
+  })
+]).refine((card) => card.testPlanSummary.plans.length > 0 || card.testPlanSummary.runs.length > 0 || Boolean(card.mapId), "A report card requires an original Plan, Run or Map.");
+var reportShowSuccessSchema = external_exports.union([
+  reportViewSchema.extend({
+    presentation: external_exports.literal("chat"),
+    instructions: external_exports.string()
+  }),
+  reportViewSchema.extend({
+    presentation: external_exports.literal("component"),
+    presentationNotice: external_exports.string(),
+    previewURL: external_exports.url()
+  }),
+  reportCardSchema
+]);
+var reportShowOutputSchema = external_exports.union([
+  reportShowSuccessSchema,
+  reportReadFailureSchema
+]);
+var reportOpenSuccessSchema = external_exports.union([
+  reportPanelSchema,
+  reportLinkSchema
+]);
+var reportOpenOutputSchema = external_exports.union([
+  reportOpenSuccessSchema,
+  reportReadFailureSchema
+]);
+var artifactsSchema = external_exports.object({
+  kind: external_exports.enum(["browser", "desktop", "unavailable"]),
+  message: external_exports.string(),
+  traceAvailable: external_exports.boolean(),
+  reason: external_exports.enum([
+    "private-inputs",
+    "protection-unavailable",
+    "customer-view-unavailable",
+    "missing",
+    "changed",
+    "unreadable",
+    "viewer-unavailable",
+    "not-recorded",
+    "not-browser"
+  ]).optional(),
+  launchCommand: external_exports.string().optional(),
+  files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
+});
+var traceIdentity = {
+  schema: external_exports.literal("loki.report-trace/1"),
+  reportId: digest9,
+  runId: digest9
+};
+var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
+  const url2 = new URL(value);
+  const prefix = url2.pathname.match(/^\/[a-f0-9]{64}\//)?.[0];
+  return url2.protocol === "http:" && url2.hostname === "127.0.0.1" && !!url2.port && !url2.username && !url2.password && !url2.hash && !!prefix && url2.pathname === `${prefix}index.html` && [...url2.searchParams.keys()].join() === (url2.searchParams.has("case") ? "trace,case" : "trace") && (!url2.searchParams.has("case") || url2.searchParams.get("case").length > 0 && url2.searchParams.get("case").length <= 600) && url2.searchParams.get("trace") === `${url2.origin}${prefix}trace.zip`;
+});
+var reportTraceResultSchema = external_exports.union([
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  external_exports.object({ ...traceIdentity, status: external_exports.literal("closed") }),
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("unavailable")
+  })
+]);
+var customerTraceArtifacts = artifactsSchema.omit({ launchCommand: true }).extend({
+  files: external_exports.array(external_exports.never()).max(0)
+});
+var customerReportTraceResultSchema = external_exports.union([
+  external_exports.strictObject({ ...traceIdentity, status: external_exports.literal("closed") }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("unavailable"),
+    traceAvailable: external_exports.literal(false)
+  })
+]);
+var customerReportTraceOutputSchema = external_exports.union([
+  customerReportTraceResultSchema,
+  reportReadFailureSchema
+]);
+var reportTraceOutputSchema = external_exports.union([
+  reportTraceResultSchema,
+  reportReadFailureSchema
+]);
+var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
+var reportExportPreviewSchema = external_exports.object({
+  selectedKinds,
+  schema: external_exports.literal("loki.report-export-preview/1"),
+  reportId: digest9,
+  previewSha256: digest9,
+  html: external_exports.string(),
+  omitted: external_exports.array(external_exports.string()),
+  redaction: external_exports.string(),
+  included: external_exports.array(external_exports.string())
+});
+var reportExportReceiptSchema = external_exports.object({
+  selectedKinds,
+  schema: external_exports.literal("loki.report-export-receipt/1"),
+  reportId: digest9,
+  sha256: digest9,
+  path: external_exports.string(),
+  delivery: external_exports.literal("local-file-only"),
+  uploaded: external_exports.literal(false)
+});
+var reportExportPreviewOutputSchema = external_exports.union([
+  reportExportPreviewSchema,
+  reportReadFailureSchema
+]);
+var reportExportOutputSchema = external_exports.union([
+  reportExportReceiptSchema,
+  reportReadFailureSchema
+]);
+
+// ../contracts/dist/report-artifact.js
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count5 = external_exports.number().int().nonnegative();
+var captureTime = external_exports.iso.datetime({ offset: true });
+var pageCaptureBindingSchema = external_exports.object({
+  screenshot: external_exports.object({
+    name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
+    sha256: digest10,
+    capturedAt: captureTime
+  }),
+  afterAction: external_exports.number().int().positive().nullable(),
+  startedAt: captureTime,
+  finishedAt: captureTime
+});
+var reportArtifactProjectionSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-artifact-projection/1"),
+  sourceSha256: digest10,
+  sha256: digest10,
+  bytes: count5,
+  redactionRevision: count5,
+  // Only the owning manifest reader can supply this checked association.
+  pageCapture: pageCaptureBindingSchema.optional()
+});
+var reportArtifactInputSchema = external_exports.strictObject({
+  reportId: digest10,
+  runId: digest10,
+  artifactId: digest10.optional(),
+  offset: count5.optional()
+});
+var artifact = external_exports.object({
+  artifactId: digest10,
+  name: external_exports.string(),
+  mediaType: external_exports.enum(["image/png", "application/json"]),
+  bytes: count5,
+  sha256: digest10
+});
+var provenance = {
+  schema: external_exports.literal("loki.report-artifact/1"),
+  reportId: digest10,
+  runId: digest10,
+  resultSha256: digest10,
+  manifestSha256: digest10,
+  manifestSchema: external_exports.enum([
+    "loki.computer-runner.private-evidence/1",
+    "loki.mac-computer-runner.private-evidence/1"
+  ]),
+  taskId: external_exports.string(),
+  createdAt: external_exports.string(),
+  semanticAssessment: external_exports.literal("not-performed")
+};
+var reportArtifactResultSchema = external_exports.union([
+  external_exports.object({
+    ...provenance,
+    state: external_exports.literal("listed"),
+    artifacts: external_exports.array(artifact).max(50),
+    offset: count5,
+    nextOffset: count5.nullable(),
+    totalArtifacts: count5
+  }),
+  external_exports.object({
+    ...provenance,
+    state: external_exports.literal("read"),
+    artifact,
+    content: external_exports.union([
+      external_exports.object({
+        mediaType: external_exports.literal("image/png"),
+        encoding: external_exports.literal("base64"),
+        data: external_exports.string()
+      }),
+      external_exports.object({
+        mediaType: external_exports.literal("application/json"),
+        encoding: external_exports.literal("utf-8"),
+        text: external_exports.string(),
+        offset: count5,
+        nextOffset: count5.nullable(),
+        totalCodeUnits: count5,
+        // Artifact metadata identifies the private original. This identifies
+        // the complete filtered JSON, before transport pagination.
+        projection: reportArtifactProjectionSchema.optional()
+      })
+    ])
+  })
+]);
+var reportArtifactOutputSchema = external_exports.union([
+  reportArtifactResultSchema,
+  reportReadFailureSchema
+]);
+var customerIdentity = {
+  schema: external_exports.literal("kaijan.customer-artifact/1"),
+  reportId: digest10,
+  runId: digest10,
+  resultSha256: digest10,
+  createdAt: external_exports.string(),
+  semanticAssessment: external_exports.literal("not-performed")
+};
+var customerReportArtifactResultSchema = external_exports.union([
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("listed"),
+    artifacts: external_exports.array(artifact).max(50),
+    offset: count5,
+    nextOffset: count5.nullable(),
+    totalArtifacts: count5,
+    omittedArtifacts: count5
+  }),
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("read"),
+    artifact,
+    content: external_exports.union([
+      external_exports.object({
+        mediaType: external_exports.literal("image/png"),
+        encoding: external_exports.literal("base64"),
+        data: external_exports.string()
+      }),
+      external_exports.object({
+        mediaType: external_exports.literal("application/json"),
+        encoding: external_exports.literal("utf-8"),
+        text: external_exports.string(),
+        offset: count5,
+        nextOffset: count5.nullable(),
+        totalCodeUnits: count5,
+        projection: external_exports.object({
+          schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
+          sourceSha256: digest10,
+          sha256: digest10,
+          bytes: count5
+        })
+      })
+    ])
+  })
+]);
+var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
+var customerCaseEvidenceSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-case-evidence/1"),
+  planRef: external_exports.object({ answerId: digest10, resultSha256: digest10 }),
+  selectedTestIds: external_exports.array(external_exports.string().min(1)),
+  cases: external_exports.array(external_exports.object({
+    testId: external_exports.string().min(1),
+    occurrence: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    state: external_exports.enum(["recording", "ended", "interrupted"]),
+    screenshots: external_exports.array(external_exports.object({
+      name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
+      sha256: digest10,
+      capturedAt: external_exports.string()
+    }))
+  }))
+}).superRefine((value, ctx) => {
+  const selected = new Set(value.selectedTestIds);
+  const cases = value.cases.map((row) => `${row.testId}:${row.occurrence}`);
+  const images = value.cases.flatMap((row) => row.screenshots.map((image) => image.name));
+  if (selected.size !== value.selectedTestIds.length || value.cases.some((row) => !selected.has(row.testId)) || new Set(cases).size !== cases.length || new Set(images).size !== images.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Case evidence must be uniquely selected."
+    });
+});
+
+// ../contracts/dist/report-render.js
+var reportRenderMetadataSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-render/1"),
+  view_id: external_exports.uuidv4().regex(/^[a-f0-9-]+$/),
+  report_id: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  view_kind: external_exports.enum(["full_report", "test_plan_details"]),
+  presentation: external_exports.enum(["mcp_app", "loopback_url"])
+});
+var reportRenderAckSchema = reportRenderMetadataSchema.extend({
+  phase: external_exports.literal("rendered")
+});
+
+// ../contracts/dist/case-evidence.js
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var screenshot = external_exports.object({
+  name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
+  sha256: digest11,
+  capturedAt: external_exports.string()
+});
+var browserRefresh = external_exports.object({
+  kind: external_exports.literal("browser-refresh"),
+  method: external_exports.literal("page.reload"),
+  pageId: external_exports.string().optional(),
+  urlBefore: external_exports.string(),
+  waitUntil: external_exports.literal("domcontentloaded"),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  dispatchedAt: external_exports.string().optional(),
+  urlAfter: external_exports.string().optional(),
+  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
+  completedAt: external_exports.string().optional(),
+  error: external_exports.string().optional(),
+  completion: external_exports.literal("unverified").optional()
+});
+var action = external_exports.object({
+  index: external_exports.number().int().positive(),
+  type: external_exports.string(),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  startedAt: external_exports.string(),
+  endedAt: external_exports.string(),
+  operation: browserRefresh.optional()
+});
+var caseEvidenceSchema = external_exports.object({
+  schema: external_exports.literal("loki.runner.case-evidence/1"),
+  attribution: external_exports.literal("runner-declared-boundaries"),
+  planRef: external_exports.object({ answerId: digest11, resultSha256: digest11 }),
+  selectedTestIds: external_exports.array(external_exports.string().min(1)),
+  cases: external_exports.array(external_exports.object({
+    testId: external_exports.string().min(1),
+    occurrence: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    state: external_exports.enum(["recording", "ended", "interrupted"]),
+    startedAt: external_exports.string(),
+    endedAt: external_exports.string().nullable(),
+    actions: external_exports.array(action),
+    screenshots: external_exports.array(screenshot)
+  })),
+  unassignedActions: external_exports.array(action),
+  unassignedScreenshots: external_exports.array(screenshot)
+}).superRefine((record5, ctx) => {
+  const ids2 = new Set(record5.selectedTestIds);
+  const occurrences = record5.cases.map((item) => `${item.testId}:${item.occurrence}`);
+  const actions = [
+    ...record5.unassignedActions,
+    ...record5.cases.flatMap((item) => item.actions)
+  ].map((item) => item.index);
+  const screenshots = [
+    ...record5.unassignedScreenshots,
+    ...record5.cases.flatMap((item) => item.screenshots)
+  ].map((item) => item.name);
+  if (ids2.size !== record5.selectedTestIds.length || record5.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Case evidence identities must be unique and selected."
+    });
+});
+
+// ../contracts/dist/customer-planning.js
+var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
+
+// ../contracts/dist/customer-risk.js
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var source = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  uri: external_exports.string().nullable(),
+  revision: external_exports.string().nullable(),
+  line: external_exports.number().int().nonnegative(),
+  quote: external_exports.string(),
+  quote_sha256: digest12
+});
+var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
+var finding = external_exports.object({
+  id: external_exports.string(),
+  observed_code_behavior: external_exports.string().optional(),
+  observed_source_statement: external_exports.string().optional(),
+  assumption_to_confirm: external_exports.string(),
+  question: external_exports.string(),
+  why_it_matters: external_exports.string(),
+  evidence_needed: external_exports.string(),
+  source_evidence: external_exports.union([external_exports.array(external_exports.string()), external_exports.array(source)]),
+  presentationState: external_exports.enum(["bound", "unavailable"]).optional(),
+  notice: external_exports.literal(legacyRiskNotice).optional()
+});
+var customerRiskSchema = external_exports.object({
+  kind: external_exports.literal("risk-review"),
+  family: external_exports.enum(["changeRisk", "riskFinder"]),
+  status: external_exports.enum(["completed", "no_retained_cue", "partial", "refused"]),
+  assumptions_to_confirm: external_exports.array(finding),
+  interpretation: external_exports.literal("Questions to review against the cited sources; not verified defects, approved requirements, tests or observed behavior. An empty list does not establish safety."),
+  coverage: external_exports.literal("Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage.")
+});
+
+// ../contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+var progress2 = external_exports.object({
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+
+// ../contracts/dist/customer-advisory.js
+var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
+var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
+var internalCleanupExplanation = /(^|[.!?]\s+)The Runner['’]s cleanup record concerns its browser, not the host-started server\.(?=\s|$)/gi;
+function customerAuthoredText(value) {
+  const projected = value.replace(internalCleanupExplanation, "$1The supplied cleanup record does not confirm that the application server was stopped.");
+  return diagnostic.test(projected) ? customerOmittedDetail : projected;
+}
+var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var optional2 = (schema) => schema.optional();
+var strings2 = external_exports.array(external_exports.string());
+var citation = external_exports.object({
+  source_id: optional2(external_exports.string()),
+  sourceId: optional2(external_exports.string()),
+  evidence_id: optional2(external_exports.string()),
+  from_line: optional2(external_exports.number().int()),
+  through_line: optional2(external_exports.number().int())
+});
+var boundQuote = customerAssessmentQuoteSchema;
+var bindings = external_exports.array(external_exports.unknown());
+var assessmentTest = external_exports.object({
+  test_id: external_exports.string().nullable(),
+  outcome_ids: strings2,
+  expected: external_exports.string().nullable(),
+  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
+  actual: external_exports.string().nullable(),
+  reason: external_exports.string(),
+  evidence_ids: optional2(strings2),
+  citations: optional2(external_exports.array(citation)),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observed_steps: optional2(external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    citations: external_exports.array(citation),
+    evidenceQuotes: external_exports.array(boundQuote).optional(),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var assessmentFinding = external_exports.object({
+  id: external_exports.string(),
+  support: external_exports.enum(["requires-review", "needs-review"]),
+  requirement_ids: optional2(strings2),
+  test_ids: optional2(strings2),
+  outcome_ids: optional2(strings2),
+  kind: optional2(external_exports.string()),
+  claim: optional2(external_exports.string()),
+  citations: optional2(external_exports.array(citation)),
+  remaining_gap: optional2(external_exports.string()),
+  notice: optional2(external_exports.string()),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var reportedOutcome = external_exports.object({
+  id: external_exports.string(),
+  test_id: external_exports.string().nullable(),
+  status: external_exports.enum([
+    "pass",
+    "fail",
+    "blocked",
+    "inconclusive",
+    "reported-pass",
+    "reported-fail",
+    "not-executed",
+    "skipped",
+    "unknown"
+  ]),
+  evidence_ids: strings2
+});
+var customerAssessmentResultSchema = external_exports.object({
+  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  kind: external_exports.literal("evidence-assessment"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  tests: optional2(external_exports.array(assessmentTest)),
+  findings: optional2(external_exports.array(assessmentFinding)),
+  coverage: optional2(external_exports.object({
+    status: external_exports.enum(["complete", "partial"]),
+    unassessed_requirement_ids: strings2
+  })),
+  meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
+  acceptanceDecision: external_exports.null(),
+  message: optional2(external_exports.string())
+});
+var assessmentInput = external_exports.object({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  assessment: external_exports.object({
+    test_results: external_exports.array(assessmentTest.extend({
+      literal_bindings: bindings.optional(),
+      observed_steps: external_exports.array(external_exports.object({
+        description: external_exports.string(),
+        citations: external_exports.array(citation),
+        literal_bindings: bindings.optional()
+      })).optional()
+    })).optional(),
+    findings: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
+      literal_bindings: bindings.optional(),
+      original_finding: external_exports.object({
+        requirement_ids: strings2.optional(),
+        test_ids: strings2.optional(),
+        outcome_ids: strings2.optional(),
+        kind: external_exports.string().optional(),
+        claim: external_exports.string().optional(),
+        citations: external_exports.array(citation).optional(),
+        remaining_gap: external_exports.string().optional()
+      })
+    })),
+    reported_outcomes: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      test_id: external_exports.string().nullable(),
+      status: external_exports.string(),
+      evidence_ids: strings2
+    })).optional(),
+    coverage: external_exports.object({
+      status: external_exports.enum(["complete", "partial"]),
+      unassessed_requirement_ids: strings2
+    })
+  }).nullable()
+});
+var selectedPlanBinding = external_exports.object({
+  pointer: external_exports.object({ sourceId: external_exports.string() }),
+  provenance: external_exports.object({
+    reported: external_exports.object({ source: external_exports.literal("original-selected-plan-test") })
+  })
+});
+
+// ../contracts/dist/customer-report.js
+var strings3 = external_exports.array(external_exports.string());
+var operationState = external_exports.enum([
+  "accepted",
+  "running",
+  "finished",
+  "complete",
+  "unknown",
+  "unavailable",
+  "cancelled",
+  "refused",
+  "not-started",
+  "stopped-before-start"
+]);
+var executionState = external_exports.enum([
+  "",
+  "accepted",
+  "running",
+  "completed",
+  "incomplete",
+  "cancelled",
+  "blocked",
+  "unknown",
+  "not-executed",
+  "failed",
+  "stopped"
+]);
+var testVerdict = external_exports.enum([
+  "",
+  "unverified",
+  "pass",
+  "fail",
+  "unknown",
+  "inconclusive",
+  "not-run",
+  "unavailable"
+]);
+var reference = external_exports.object({ evidence_id: external_exports.string() });
+var refs2 = external_exports.array(reference);
+var customerPlanSchema = external_exports.object({
+  presentation: external_exports.object({
+    schema: external_exports.literal("kaijan.planning-presentation/1"),
+    state: external_exports.enum([
+      "source-bound-proposal",
+      "legacy-source-excerpts",
+      "unverified"
+    ]),
+    semantics: external_exports.literal("proposed-only"),
+    detailsAvailable: external_exports.boolean().optional()
+  }).optional(),
+  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
+  objectives: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), refs: refs2 })).optional(),
+  tests: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    title: external_exports.string().optional(),
+    method: external_exports.string().optional(),
+    objective_ids: strings3.optional(),
+    priority: external_exports.enum(["P1", "P2", "P3"]).optional(),
+    reason: external_exports.string().optional(),
+    prerequisites: strings3.optional(),
+    steps: strings3,
+    expected: external_exports.object({
+      text: external_exports.string(),
+      authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+      refs: refs2.optional()
+    }),
+    execution_gaps: strings3.optional()
+  })),
+  requirement_coverage: external_exports.array(external_exports.object({
+    requirement_id: external_exports.string(),
+    text: external_exports.string().optional(),
+    status: external_exports.enum(["proposed", "gap"]),
+    test_ids: strings3,
+    reason: external_exports.string().optional()
+  })).optional(),
+  ambiguities: strings3.optional(),
+  disagreements: strings3.optional(),
+  limitations: strings3.optional(),
+  relevant_surfaces: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    basis: external_exports.enum(["supplied", "hypothesis"]),
+    refs: refs2
+  })).optional(),
+  runner_handoff: external_exports.object({
+    status: external_exports.literal("proposed_only"),
+    scenario_ids: strings3,
+    required_inputs: strings3
+  }).optional()
+});
+var coverage = external_exports.object({
+  status: external_exports.enum(["complete", "partial"]),
+  unassessed_requirement_ids: strings3
+});
+var evidenceIdentity = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  uri: external_exports.string().optional(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  revision: external_exports.string(),
+  line: external_exports.number().int().nonnegative()
+});
+var quoteDigest = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerPlanEvidenceSchema = external_exports.union([
+  evidenceIdentity.extend({
+    quote: external_exports.string(),
+    quote_sha256: quoteDigest,
+    contentState: external_exports.literal("original-quote")
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("projected-risk"),
+    projection: external_exports.object({
+      kind: external_exports.literal("risk-review"),
+      text: external_exports.string(),
+      sha256: quoteDigest
+    })
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("unavailable"),
+    notice: external_exports.literal("This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation.")
+  })
+]);
+var nativeRun = testPlanViewSchema.shape.runs.element;
+var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  projection: true,
+  notice: true,
+  facts: true
+}).extend({ text: external_exports.string() });
+var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
+  answerId: true,
+  resultSha256: true,
+  testId: true,
+  expectationAuthority: true,
+  verdict: true,
+  expected: true,
+  actual: true,
+  reason: true
+}).extend({
+  evidenceNotice: external_exports.literal("Some cited source text cannot be displayed. The assessment and source identities remain separate from an application observation.").optional(),
+  evidence: external_exports.array(assessmentQuote2),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote2),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))
+});
+var executionReport = external_exports.object({
+  reason: external_exports.string().optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
+  completedSteps: strings3,
+  remainingSteps: strings3,
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
+  effects: external_exports.enum(["known", "uncertain"])
+});
+var evidenceQuote = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var assertionStep = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  evidenceIds: strings3
+});
+var assertionTest = external_exports.object({
+  testId: external_exports.string(),
+  title: external_exports.string(),
+  status: assertionStep.shape.status,
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  deliberateFailure: external_exports.boolean(),
+  steps: external_exports.array(assertionStep),
+  code: external_exports.object({
+    path: external_exports.string(),
+    revision: external_exports.string(),
+    language: external_exports.string(),
+    text: external_exports.string(),
+    sha256: evidenceQuote.shape.sha256
+  }).nullable()
+});
+var assertions = external_exports.object({
+  runId: reportExecutionSchema.shape.runId,
+  repository: reportExecutionSchema.shape.repository,
+  sourceRevision: reportExecutionSchema.shape.sourceRevision,
+  pullRequestUrl: reportExecutionSchema.shape.pullRequestUrl,
+  recordedAt: reportExecutionSchema.shape.recordedAt,
+  planRef: external_exports.object({
+    answerId: evidenceQuote.shape.sha256,
+    resultSha256: evidenceQuote.shape.sha256
+  }),
+  evidence: external_exports.array(evidenceQuote),
+  tests: external_exports.array(assertionTest)
+});
+var customerReportSchema = testPlanViewSchema.pick({
+  reportId: true,
+  title: true,
+  createdAt: true,
+  mapId: true,
+  selectedPullRequestUrl: true
+}).extend({
+  schema: external_exports.literal("kaijan.customer-report/1"),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(quoteDigest).optional(),
+    sourceId: quoteDigest,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: quoteDigest.nullable(),
+    state: operationState,
+    result: customerAssessmentResultSchema.nullable(),
+    notice: external_exports.literal("This saved assessment cannot be shown in the supported view. Other saved results remain available.").optional()
+  })).optional(),
+  presentation: external_exports.literal("panel").optional(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
+  plans: external_exports.array(testPlanViewSchema.shape.plans.element.pick({
+    sourceId: true,
+    sourceKind: true,
+    resultSha256: true,
+    state: true,
+    requestTestIndexes: true
+  }).extend({
+    state: operationState,
+    plan: customerPlanSchema.nullable(),
+    notice: external_exports.enum([
+      "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
+      "This saved plan is unavailable in the supported view. Other saved results remain available.",
+      unavailablePlanDetailsNotice
+    ]).optional(),
+    coverage: coverage.optional(),
+    evidence: external_exports.array(customerPlanEvidenceSchema).optional()
+  })),
+  runs: external_exports.array(nativeRun.pick({
+    sourceId: true,
+    resultSha256: true,
+    state: true,
+    executionState: true,
+    stoppedByUser: true,
+    testVerdict: true,
+    traceRetained: true,
+    planSourceId: true,
+    planResultSha256: true,
+    selectedTestIds: true,
+    elapsedMs: true,
+    startedAt: true,
+    recordedAt: true
+  }).extend({
+    state: operationState,
+    executionState,
+    testVerdict,
+    traceRetained: external_exports.boolean().default(false),
+    interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
+    observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
+    // Free-form terminal diagnostics are not an application observation source.
+    assessments: external_exports.array(customerAssessment).optional(),
+    executionReport: executionReport.nullable().optional(),
+    executionEvidence: customerExecutionEvidenceSchema.optional(),
+    assertions: assertions.nullable().optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional()
+  })),
+  pullRequests: external_exports.array(external_exports.object({
+    repository: reportPullRequestSchema.shape.repository,
+    number: reportPullRequestSchema.shape.number,
+    url: reportPullRequestSchema.shape.url,
+    title: reportPullRequestSchema.shape.title,
+    state: reportPullRequestSchema.shape.state,
+    author: reportPullRequestSchema.shape.author,
+    base: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    head: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    mergeCommit: reportPullRequestSchema.shape.mergeCommit,
+    openedAt: reportPullRequestSchema.shape.openedAt,
+    capturedAt: reportPullRequestSchema.shape.capturedAt,
+    files: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      status: external_exports.string(),
+      additions: external_exports.number().int().nonnegative(),
+      deletions: external_exports.number().int().nonnegative(),
+      patch: external_exports.string().nullable()
+    })),
+    source: reportPullRequestSchema.shape.source.pick({
+      kind: true,
+      sha256: true
+    })
+  })).optional()
+});
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerReportCardSchema = panelCard.pick({
+  mapId: true,
+  schema: true,
+  reportId: true,
+  title: true,
+  createdAt: true,
+  sourceContextId: true,
+  instructions: true,
+  presentation: true
+}).extend({
+  originalResults: external_exports.array(panelCard.shape.originalResults.element.pick({
+    kind: true,
+    answerId: true,
+    runId: true,
+    resultSha256: true
+  })),
+  testPlanSummary: summary.pick({
+    schema: true,
+    reportId: true,
+    title: true,
+    assessmentResults: true
+  }).extend({
+    counts: summary.shape.counts.pick({
+      pass: true,
+      fail: true,
+      blocked: true,
+      skipped: true,
+      "not-run": true,
+      inconclusive: true,
+      conflicting: true,
+      unavailable: true
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset; keep assessed proposed-check results separate in chat summaries."),
+    proposedCounts: external_exports.object({
+      pass: external_exports.number().int().nonnegative(),
+      fail: external_exports.number().int().nonnegative()
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. Subtract each subset for the other passed/failed tests. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+    pullRequest: external_exports.object({
+      number: external_exports.number().int().positive(),
+      title: external_exports.string(),
+      url: external_exports.url()
+    }).nullable(),
+    plans: external_exports.array(summary.shape.plans.element.pick({
+      sourceId: true,
+      resultSha256: true,
+      requestTests: true,
+      executedTests: true,
+      proposedTests: true
+    })),
+    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+  })
+});
+var customerReportFailureSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-error/1"),
+  error: external_exports.object({
+    code: external_exports.enum([
+      "report_unavailable",
+      "report_invalid_selection",
+      "report_projection_unavailable"
+    ]),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false),
+    recovery: external_exports.object({
+      action: external_exports.literal("read_original_report"),
+      instruction: external_exports.string()
+    })
+  })
+});
+var customerReportReadSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-read/1"),
+  presentation: external_exports.literal("chat").optional(),
+  assessments: customerReportSchema.shape.assessments,
+  reportId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+  sections: external_exports.array(external_exports.object({
+    kind: external_exports.enum(["plan", "runner", "assessment"]),
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    operationState,
+    executionState: executionState.nullable(),
+    testVerdict: testVerdict.nullable(),
+    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    stopRequested: external_exports.boolean().nullable().optional(),
+    selectedTestIds: strings3,
+    assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
+    facts: external_exports.array(external_exports.discriminatedUnion("key", [
+      external_exports.object({
+        key: external_exports.literal("proposed-checks"),
+        value: external_exports.string().regex(/^(?:[0-9]+|Unknown)$/)
+      }),
+      external_exports.object({
+        key: external_exports.literal("proposed-requirement-links"),
+        value: external_exports.string().regex(/^[0-9]+\/[0-9]+$/)
+      }),
+      external_exports.object({
+        key: external_exports.enum(["plan-run", "plan-answer"]),
+        value: external_exports.string().regex(/^[a-f0-9]{64}$/)
+      })
+    ])),
+    items: external_exports.array(reportItemSchema.pick({
+      id: true,
+      title: true,
+      lines: true,
+      stepCount: true
+    }).extend({
+      role: external_exports.enum(["test", "requirement-coverage"]),
+      groups: external_exports.array(reportItemSchema.shape.groups.unwrap().element.pick({
+        key: true,
+        label: true,
+        start: true,
+        end: true
+      })).optional(),
+      expected: external_exports.object({
+        text: external_exports.string().nullable(),
+        authority: external_exports.string().nullable()
+      }).optional()
+    })),
+    observations: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string() })),
+    detailsIncomplete: external_exports.boolean()
+  })),
+  executionChecks: external_exports.array(assertions).optional(),
+  notice: external_exports.literal("This view contains supported saved test details. Other retained details may be unavailable here. Missing details do not establish a test result.")
+});
+var customerReportOutputSchema = external_exports.union([
+  customerReportSchema,
+  customerReportCardSchema,
+  customerReportReadSchema,
+  customerReportFailureSchema
+]);
+
+// ../contracts/dist/customer-related.js
+var id = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings4 = external_exports.array(external_exports.string());
+var optional3 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional3(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional3(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional3(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional3(external_exports.string()),
+    evidence_ids: optional3(strings4),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional3(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional3(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional3(external_exports.string())
+});
+
+// ../contracts/dist/customer-supplement.js
+var strings5 = external_exports.array(external_exports.string());
+var refs3 = external_exports.array(external_exports.object({ evidence_id: external_exports.string() }));
+var tests = external_exports.array(external_exports.object({
+  id: external_exports.string(),
+  verification_kind: external_exports.string(),
+  method: external_exports.string(),
+  reason: external_exports.string(),
+  conditions: strings5,
+  prerequisites: strings5,
+  steps: strings5,
+  expected: external_exports.object({
+    text: external_exports.string(),
+    authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+    refs: refs3
+  }),
+  risk_ids: strings5,
+  source_refs: refs3,
+  baseline_relation: external_exports.object({ test_ids: strings5, explanation: external_exports.string() }),
+  execution_gaps: strings5
+}));
+var customerSupplementResultSchema = external_exports.object({
+  kind: external_exports.literal("test-supplement"),
+  status: external_exports.enum([
+    "proposed_supplement",
+    "no_additional_tests",
+    "needs_clarification",
+    "unavailable"
+  ]),
+  presentationState: external_exports.enum(["source-bound", "legacy-limited", "unavailable"]),
+  supplement: external_exports.object({
+    status: external_exports.enum([
+      "proposed_supplement",
+      "no_additional_tests",
+      "needs_clarification"
+    ]),
+    additional_tests: tests,
+    baseline_concerns: external_exports.array(external_exports.object({
+      test_ids: strings5,
+      concern: external_exports.string(),
+      question: external_exports.string(),
+      risk_ids: strings5,
+      refs: refs3
+    })),
+    unanswered_questions: external_exports.array(external_exports.object({
+      question: external_exports.string(),
+      risk_ids: strings5,
+      baseline_test_ids: strings5,
+      refs: refs3
+    })),
+    limitations: strings5
+  }).optional(),
+  baseline: external_exports.object({
+    classification: external_exports.enum([
+      "supplied-plan",
+      "generated-plan",
+      "unavailable"
+    ]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    test_ids: strings5,
+    suppliedText: external_exports.string().optional(),
+    displaySha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+    tests: external_exports.array(external_exports.object({ id: external_exports.string(), source_refs: refs3 })),
+    notice: external_exports.string()
+  }).optional(),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    source_id: external_exports.string(),
+    kind: external_exports.enum(["intent", "implementation", "context"]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    line: external_exports.number().int().nonnegative(),
+    quote: external_exports.string(),
+    quote_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"])
+  })),
+  risks: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    sourceState: external_exports.enum(["supplied", "generated-unavailable"]),
+    text: external_exports.string().optional(),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    attribution: external_exports.literal("supplied-unverified-risk")
+  })),
+  coverage: external_exports.object({
+    additions: external_exports.number().int().nonnegative(),
+    baselineTests: external_exports.number().int().nonnegative(),
+    baselineConcerns: external_exports.number().int().nonnegative(),
+    unansweredQuestions: external_exports.number().int().nonnegative(),
+    meaning: external_exports.literal("Proposed links and counts only; not proof of complete coverage or semantic support.")
+  }),
+  executed: external_exports.literal(false),
+  reviewRequired: external_exports.literal(true),
+  message: external_exports.string().optional()
+});
+
+// ../contracts/dist/local.js
+var localProtocol = "loki-local-v1";
+var localCompanionVersion = "0.1.0";
+var localAdapter = "loki-ui-modeler-local-v1";
+var localLimits = {
+  messageBytes: 256 * 1024,
+  artifactChunkBytes: 128 * 1024,
+  readRequests: 8,
+  pageSize: 100,
+  inputLifetimeMs: 30 * 60 * 1e3
+};
+var id2 = external_exports.uuid();
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var localContextSchema = external_exports.strictObject({
+  coreOrigin: external_exports.url().refine((value) => {
+    const url2 = new URL(value);
+    return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
+  }),
+  userId: id2,
+  workspaceId: id2
+});
+var localAuthSchema = external_exports.strictObject({
+  bindingId: id2,
+  secret,
+  context: localContextSchema
+});
+var localInputStateSchema = external_exports.enum([
+  "selected",
+  "preparing",
+  "ready",
+  "rejected",
+  "released"
+]);
+var localRunStateSchema = external_exports.enum([
+  "accepted",
+  "preflight",
+  "running",
+  "validating",
+  "complete",
+  "partial",
+  "failed",
+  "cancelling",
+  "cancelled",
+  "interrupted"
+]);
+var localErrorCodeSchema = external_exports.enum([
+  "invalid_request",
+  "protocol_mismatch",
+  "version_mismatch",
+  "origin_denied",
+  "pairing_denied",
+  "unauthorized",
+  "scope_changed",
+  "not_found",
+  "busy",
+  "invalid_state",
+  "expired_input",
+  "source_changed",
+  "source_rejected",
+  "secret_detected",
+  "limit_exceeded",
+  "storage_full",
+  "configuration_required",
+  "runtime_unavailable",
+  "idempotency_conflict",
+  "cli_failed",
+  "invalid_output",
+  "interrupted",
+  "outcome_unknown",
+  "cancelled",
+  "internal_error"
+]);
+var localErrorSchema = external_exports.strictObject({
+  code: localErrorCodeSchema,
+  message: external_exports.string().max(500),
+  retryable: external_exports.boolean(),
+  locations: external_exports.array(external_exports.string().max(1024)).max(20).optional(),
+  cliStarted: external_exports.boolean().nullable()
+});
+var page = {
+  offset: external_exports.number().int().nonnegative().max(1e5).default(0),
+  limit: external_exports.number().int().min(1).max(localLimits.pageSize).default(50)
+};
+var request = (method, params) => external_exports.strictObject({
+  protocol: external_exports.literal(localProtocol),
+  requestId: id2,
+  method: external_exports.literal(method),
+  params,
+  auth: localAuthSchema.optional()
+});
+var localRequestSchema = external_exports.discriminatedUnion("method", [
+  request("hello", external_exports.strictObject({
+    companionVersion: external_exports.literal(localCompanionVersion),
+    context: localContextSchema
+  })),
+  request("capabilities.list", external_exports.strictObject({})),
+  request("settings.open", external_exports.strictObject({})),
+  request("input.select", external_exports.strictObject({})),
+  request("input.prepare", external_exports.strictObject({ inputId: id2 })),
+  request("input.status", external_exports.strictObject({ inputId: id2, ...page })),
+  request("input.release", external_exports.strictObject({ inputId: id2 })),
+  request("run.start", external_exports.strictObject({
+    capability: external_exports.literal("ui-modeler"),
+    version: external_exports.literal("2026.10.18-8"),
+    inputId: id2,
+    inputDigest: digest14,
+    transferAcknowledged: external_exports.literal(true),
+    idempotencyKey: id2
+  })),
+  request("run.get", external_exports.union([
+    external_exports.strictObject({ runId: id2 }),
+    external_exports.strictObject({ idempotencyKey: id2 })
+  ])),
+  request("run.list", external_exports.strictObject(page)),
+  request("run.cancel", external_exports.strictObject({ runId: id2 })),
+  request("run.events", external_exports.strictObject({
+    runId: id2,
+    afterSequence: external_exports.number().int().nonnegative(),
+    ...page
+  })),
+  request("result.read", external_exports.strictObject({
+    runId: id2,
+    section: external_exports.enum(["summary", "screens", "elements", "connections"]),
+    ...page
+  })),
+  request("artifact.read", external_exports.strictObject({
+    runId: id2,
+    artifactId: id2,
+    offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
+    length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
+  })),
+  request("run.delete", external_exports.strictObject({ runId: id2 }))
+]);
+var omission = external_exports.strictObject({
+  path: external_exports.string().max(1024),
+  reason: external_exports.string().max(100)
+});
+var localInputSchema = external_exports.strictObject({
+  inputId: id2,
+  displayName: external_exports.string().max(255),
+  state: localInputStateSchema,
+  digest: digest14.nullable(),
+  includedFiles: external_exports.number().int().nonnegative(),
+  includedBytes: external_exports.number().int().nonnegative(),
+  omissionCount: external_exports.number().int().nonnegative(),
+  omissions: external_exports.array(omission).max(localLimits.pageSize),
+  nextOffset: external_exports.number().int().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  expiresAt: external_exports.iso.datetime(),
+  error: localErrorSchema.nullable()
+});
+var localEventSchema = external_exports.strictObject({
+  protocol: external_exports.literal(localProtocol),
+  runId: id2,
+  sequence: external_exports.number().int().positive(),
+  state: localRunStateSchema,
+  detail: external_exports.string().max(500),
+  at: external_exports.iso.datetime()
+});
+var localRunSchema = external_exports.strictObject({
+  runId: id2,
+  state: localRunStateSchema,
+  sequence: external_exports.number().int().nonnegative(),
+  capability: external_exports.literal("ui-modeler"),
+  cliVersion: external_exports.literal("2026.10.18-8"),
+  cliDigest: digest14,
+  adapter: external_exports.literal(localAdapter),
+  inputDigest: digest14,
+  sourcePolicy: external_exports.literal("local-source-v1"),
+  displayName: external_exports.string().max(255),
+  execution: external_exports.literal("local"),
+  basis: external_exports.literal("source_inferred"),
+  cliStarted: external_exports.boolean().nullable(),
+  stage: external_exports.enum(["accepted", "preflight", "execution", "output"]),
+  createdAt: external_exports.iso.datetime(),
+  endedAt: external_exports.iso.datetime().nullable(),
+  exitCode: external_exports.number().int().nullable(),
+  error: localErrorSchema.nullable(),
+  completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
+  usage: external_exports.literal("unknown"),
+  artifacts: external_exports.array(external_exports.strictObject({
+    artifactId: id2,
+    name: external_exports.string().max(255),
+    size: external_exports.number().int().nonnegative(),
+    sha256: digest14
+  })).max(100)
+});
+var localSetupSchema = external_exports.strictObject({
+  error: localErrorSchema.optional(),
+  credentials: external_exports.enum(["missing", "present"]),
+  runtime: external_exports.enum(["ready", "unavailable"])
+});
+var resultText = external_exports.string().max(4e3);
+var localResultSectionSchemas = {
+  summary: external_exports.strictObject({
+    status: external_exports.enum(["processed", "incomplete"]),
+    basis: external_exports.literal("source_inferred"),
+    runtimeVerified: external_exports.literal(false),
+    screens: external_exports.number().int().nonnegative(),
+    elements: external_exports.number().int().nonnegative(),
+    connections: external_exports.number().int().nonnegative(),
+    limitations: external_exports.array(resultText).max(100),
+    limitationCount: external_exports.number().int().nonnegative(),
+    issues: external_exports.number().int().nonnegative()
+  }),
+  screens: external_exports.strictObject({
+    id: resultText,
+    label: resultText,
+    extractionStatus: external_exports.enum([
+      "processed",
+      "incomplete",
+      "unsupported",
+      "failed",
+      "missing"
+    ])
+  }),
+  elements: external_exports.strictObject({
+    id: resultText,
+    pageId: resultText,
+    parentElementId: resultText.nullable(),
+    label: resultText,
+    kind: resultText,
+    displayCondition: resultText,
+    clickable: external_exports.boolean(),
+    navigationStatus: external_exports.enum([
+      "not_applicable",
+      "no_page_navigation",
+      "unknown",
+      "known"
+    ]),
+    sourceRefs: external_exports.array(resultText).max(20),
+    sourceRefCount: external_exports.number().int().nonnegative()
+  }),
+  connections: external_exports.strictObject({
+    id: resultText,
+    elementId: resultText,
+    fromPageId: resultText,
+    toPageId: resultText.nullable(),
+    routeOrUrl: resultText.nullable(),
+    condition: resultText,
+    sourceRefs: external_exports.array(resultText).max(20),
+    sourceRefCount: external_exports.number().int().nonnegative()
+  })
+};
+var resultPage = external_exports.discriminatedUnion("section", [
+  external_exports.strictObject({
+    section: external_exports.literal("summary"),
+    items: external_exports.array(localResultSectionSchemas.summary).max(1),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("screens"),
+    items: external_exports.array(localResultSectionSchemas.screens).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("elements"),
+    items: external_exports.array(localResultSectionSchemas.elements).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("connections"),
+    items: external_exports.array(localResultSectionSchemas.connections).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  })
+]);
+var localResultSchemas = {
+  hello: external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    companionVersion: external_exports.literal(localCompanionVersion),
+    bindingId: id2,
+    bindingSecret: secret.optional(),
+    context: localContextSchema,
+    setup: localSetupSchema
+  }),
+  "capabilities.list": external_exports.strictObject({
+    capabilities: external_exports.array(external_exports.strictObject({
+      id: external_exports.literal("ui-modeler"),
+      version: external_exports.literal("2026.10.18-8"),
+      inputs: external_exports.tuple([external_exports.literal("local-folder")]),
+      adapter: external_exports.literal(localAdapter)
+    })).length(1),
+    setup: localSetupSchema
+  }),
+  "settings.open": localSetupSchema,
+  "input.select": external_exports.strictObject({
+    cancelled: external_exports.boolean(),
+    input: localInputSchema.nullable()
+  }),
+  "input.prepare": localInputSchema,
+  "input.status": localInputSchema,
+  "input.release": external_exports.strictObject({ released: external_exports.literal(true) }),
+  "run.start": localRunSchema,
+  "run.get": localRunSchema,
+  "run.list": external_exports.strictObject({
+    runs: external_exports.array(localRunSchema).max(100),
+    nextOffset: external_exports.number().int().nullable()
+  }),
+  "run.cancel": localRunSchema,
+  "run.events": external_exports.strictObject({
+    events: external_exports.array(localEventSchema).max(100),
+    snapshot: localRunSchema,
+    resync: external_exports.boolean()
+  }),
+  "result.read": resultPage,
+  "artifact.read": external_exports.strictObject({
+    artifactId: id2,
+    offset: external_exports.number().int().nonnegative(),
+    base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
+    sha256: digest14,
+    totalSize: external_exports.number().int().nonnegative(),
+    eof: external_exports.boolean()
+  }),
+  "run.delete": external_exports.strictObject({ deleted: external_exports.literal(true) })
+};
+var localResponseSchema = external_exports.discriminatedUnion("ok", [
+  external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    requestId: id2,
+    ok: external_exports.literal(true),
+    result: external_exports.unknown()
+  }),
+  external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    requestId: id2,
+    ok: external_exports.literal(false),
+    error: localErrorSchema
+  })
+]);
+
+// src/runner-clarification-presentation.ts
 import {
-  createApplicationContextQuery,
-  validateApplicationContextRegistration,
-  validateApplicationContextReply,
-  validateApplicationContextArguments
-} from "#loki-selected/runner-context";
-function createWorkerApplicationContext(value, send2, operationSignal) {
-  const registration = validateApplicationContextRegistration(value);
-  const pending = /* @__PURE__ */ new Map();
-  const seen = /* @__PURE__ */ new Set();
-  const received = /* @__PURE__ */ new Map();
-  const completed = /* @__PURE__ */ new Map();
-  let closed = false;
-  function failAll() {
-    for (const entry of pending.values())
-      entry.reject(Error("Application-context IPC interrupted; do not replay"));
-    pending.clear();
-  }
-  operationSignal.addEventListener("abort", failAll, { once: true });
-  function receive(frame) {
-    if (!frame || typeof frame !== "object" || !("type" in frame) || !["application-context-result", "application-context-error"].includes(
-      String(frame.type)
-    ))
-      return false;
-    if (!("invocationId" in frame) || typeof frame.invocationId !== "string")
-      throw Error("Invalid application-context pairing");
-    const entry = pending.get(frame.invocationId);
-    if (closed || operationSignal.aborted || Date.now() >= Date.parse(registration.deadlineAt))
-      throw Error("Late or unknown application-context reply");
-    const reply = validateApplicationContextReply(
-      frame.invocationId,
-      frame,
-      registration.outputBytes
-    );
-    if (!entry) {
-      const original = received.get(frame.invocationId);
-      if (original?.type === reply.type && (original.type === "application-context-result" && reply.type === "application-context-result" ? original.resultJson === reply.resultJson && original.resultSha256 === reply.resultSha256 : original.type === "application-context-error" && reply.type === "application-context-error" && original.code === reply.code && original.disposition === reply.disposition && JSON.stringify(original.recovery) === JSON.stringify(reply.recovery)))
-        return true;
-      throw Error("Late or unknown application-context reply");
-    }
-    if (reply.type === "application-context-result") {
-      const result = JSON.parse(reply.resultJson);
-      if (result.requestId !== `request-${frame.invocationId}` || result.runId !== registration.runId || result.implementationSha256 !== registration.serviceIdentity)
-        throw Error("Application-context producer correlation changed");
-    }
-    pending.delete(frame.invocationId);
-    received.set(frame.invocationId, reply);
-    entry.resolve(reply);
-    return true;
-  }
-  const tool = {
-    descriptor: JSON.parse(JSON.stringify(registration.descriptor)),
-    handle: async (call, signal) => {
-      if (closed || operationSignal.aborted || signal.aborted)
-        throw Error("Operator Stop");
-      const frame = createApplicationContextQuery(registration.runId, {
-        ...call,
-        functionName: "application_context_query",
-        arguments: validateApplicationContextArguments(call.arguments)
-      });
-      if (call.functionName !== frame.functionName)
-        throw Error("Invalid application-context function name");
-      const remaining = Date.parse(registration.deadlineAt) - Date.now();
-      if (remaining <= 0)
-        throw Error("Application-context run deadline exceeded");
-      const original = completed.get(frame.invocationId);
-      if (original && original.frameJson === JSON.stringify(frame))
-        return original.output;
-      if (seen.has(frame.invocationId))
-        throw Error(
-          "Application-context invocation already sent; do not replay"
-        );
-      seen.add(frame.invocationId);
-      const combined = AbortSignal.any([
-        operationSignal,
-        signal,
-        AbortSignal.timeout(remaining)
-      ]);
-      let abort = () => {
-      };
-      const response = new Promise((resolve, reject) => {
-        pending.set(frame.invocationId, { resolve, reject });
-        abort = () => {
-          pending.delete(frame.invocationId);
-          reject(Error("Application-context wait interrupted; do not replay"));
-        };
-        combined.addEventListener("abort", abort, { once: true });
-        if (combined.aborted) abort();
-      });
-      void response.catch(() => {
-      });
-      try {
-        if (combined.aborted) throw Error("Operator Stop");
-        await send2(frame);
-        const reply = await response;
-        if (combined.aborted) throw Error("Operator Stop");
-        if (reply.type === "application-context-error" && reply.disposition === "unresolved")
-          throw Error("Application-context effect unresolved; do not replay");
-        const output2 = reply.type === "application-context-result" ? reply.resultJson : JSON.stringify(reply);
-        completed.set(frame.invocationId, {
-          frameJson: JSON.stringify(frame),
-          output: output2
-        });
-        return output2;
-      } finally {
-        combined.removeEventListener("abort", abort);
-        pending.delete(frame.invocationId);
-      }
-    }
-  };
-  return {
-    tool,
-    receive,
-    close: () => {
-      closed = true;
-      operationSignal.removeEventListener("abort", failAll);
-      failAll();
-    }
-  };
-}
-
-// src/runner-validation.ts
-import { createHash as createHash3 } from "node:crypto";
-import { appendFile } from "node:fs/promises";
-import { dirname as dirname2, join } from "node:path";
+  parseClarificationSourceId,
+  renderClarificationPresentation
+} from "@katalon-loki/computer-runner/clarification-presentation";
 
 // ../contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
@@ -20431,8 +22930,8 @@ var sourceJobCompleteSchema = external_exports.strictObject({
 
 // ../contracts/dist/map-review.js
 var text = external_exports.string().max(32768);
-var record2 = external_exports.record(external_exports.string(), external_exports.json());
-var coverage = external_exports.enum([
+var record3 = external_exports.record(external_exports.string(), external_exports.json());
+var coverage2 = external_exports.enum([
   "reviewed",
   "unreviewed",
   "missing",
@@ -20443,16 +22942,16 @@ var ids = external_exports.array(text).max(1e5);
 var mapReviewSchema = external_exports.strictObject({
   schema_version: external_exports.literal("ui-modeler-map-reviews/1.0.0"),
   processing_status: external_exports.enum(["unreviewed", "partial", "complete"]),
-  identity: record2,
-  coverage: record2,
+  identity: record3,
+  coverage: record3,
   page_claim_population: external_exports.enum(["recorded", "not_recorded"]).optional(),
   page_coverage: external_exports.array(external_exports.strictObject({
     page_id: text,
-    coverage,
+    coverage: coverage2,
     reason: text
   })).max(1e4),
-  problems: external_exports.array(record2).max(1e5),
-  evidence: record2,
+  problems: external_exports.array(record3).max(1e5),
+  evidence: record3,
   limitations: external_exports.array(text).max(1e4),
   findings: external_exports.array(external_exports.strictObject({
     id: text,
@@ -20460,9 +22959,9 @@ var mapReviewSchema = external_exports.strictObject({
     kind: text,
     claim_id: text,
     targets: external_exports.object({ page_ids: ids, element_ids: ids, navigation_ids: ids }).catchall(external_exports.json()),
-    coverage,
-    claim: record2,
-    judgment: record2.nullable(),
+    coverage: coverage2,
+    claim: record3,
+    judgment: record3.nullable(),
     verdict: external_exports.enum(["supported", "contradicted", "unverifiable"]).nullable(),
     source_evidence: external_exports.array(external_exports.object({
       line_id: text,
@@ -20470,7 +22969,7 @@ var mapReviewSchema = external_exports.strictObject({
       path: text,
       text
     }).catchall(external_exports.json())).max(1e5),
-    identity: record2,
+    identity: record3,
     evidence_documents: ids,
     error: text.nullable()
   })).max(1e5)
@@ -20552,10 +23051,10 @@ var analysisRunSchema = external_exports.strictObject({
   cancelRequested: external_exports.boolean()
 });
 var text2 = external_exports.string().max(32768);
-var id = external_exports.string().min(1).max(2048);
-var refs = external_exports.array(text2).max(1e4);
+var id3 = external_exports.string().min(1).max(2048);
+var refs4 = external_exports.array(text2).max(1e4);
 var pageSchema = external_exports.object({
-  id,
+  id: id3,
   label: text2,
   extraction_status: external_exports.enum([
     "processed",
@@ -20573,10 +23072,10 @@ var uiModelerMapSchema = external_exports.strictObject({
   status: external_exports.enum(["processed", "incomplete"]),
   pages: external_exports.array(pageSchema).max(1e4),
   elements: external_exports.array(external_exports.strictObject({
-    id,
+    id: id3,
     model_id: text2,
-    page_id: id,
-    parent_element_id: id.nullable(),
+    page_id: id3,
+    parent_element_id: id3.nullable(),
     label: text2,
     kind: text2,
     display_condition: text2,
@@ -20587,16 +23086,16 @@ var uiModelerMapSchema = external_exports.strictObject({
       "unknown",
       "known"
     ]),
-    source_refs: refs
+    source_refs: refs4
   })).max(1e5),
   click_navigation: external_exports.array(external_exports.strictObject({
-    id,
-    element_id: id,
-    from_page_id: id,
-    to_page_id: id.nullable(),
+    id: id3,
+    element_id: id3,
+    from_page_id: id3,
+    to_page_id: id3.nullable(),
     route_or_url: text2.nullable(),
     condition: text2,
-    source_refs: refs
+    source_refs: refs4
   })).max(1e5),
   issues: external_exports.array(external_exports.record(external_exports.string(), external_exports.unknown())).max(1e5),
   limitations: external_exports.array(text2).max(1e4),
@@ -20670,6 +23169,88 @@ var analysisJobInputSchema = external_exports.strictObject({
   leaseSeconds: external_exports.literal(90)
 });
 
+// ../contracts/dist/analysis-customer.js
+var customerAnalysisSourceSchema = analysisSourceSchema.pick({ snapshotId: true, repositoryId: true, fullName: true, commit: true }).extend({ fullName: external_exports.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/) });
+var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
+  sourceReferenceSchema.options[0].pick({ kind: true, sha: true }).strip(),
+  sourceReferenceSchema.options[1].pick({ kind: true, name: true }).strip(),
+  sourceReferenceSchema.options[2].pick({ kind: true, number: true }).strip()
+]);
+var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
+  analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+]);
+var customerAnalysisRunSchema = external_exports.object({
+  id: external_exports.uuid(),
+  request: customerAnalysisRequestSchema,
+  phase: analysisPhaseSchema,
+  source: customerAnalysisSourceSchema.nullable(),
+  sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
+  message: external_exports.string(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string(),
+  resultUrl: external_exports.string().nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var pageSchema2 = uiModelerMapSchema.shape.pages.element.pick({
+  id: true,
+  label: true,
+  extraction_status: true
+}).strip();
+var elementSchema = uiModelerMapSchema.shape.elements.element.pick({
+  id: true,
+  page_id: true,
+  parent_element_id: true,
+  label: true,
+  kind: true,
+  display_condition: true,
+  clickable: true,
+  navigation_status: true,
+  source_refs: true
+}).strip();
+var navigationSchema = uiModelerMapSchema.shape.click_navigation.element.pick({
+  id: true,
+  element_id: true,
+  from_page_id: true,
+  to_page_id: true,
+  route_or_url: true,
+  condition: true,
+  source_refs: true
+}).strip();
+var issueSchema = external_exports.object({
+  pageId: external_exports.string().nullable(),
+  message: external_exports.string()
+});
+var customerMapSchema = external_exports.object({
+  status: uiModelerMapSchema.shape.status,
+  pages: external_exports.array(pageSchema2),
+  elements: external_exports.array(elementSchema),
+  click_navigation: external_exports.array(navigationSchema),
+  issues: external_exports.array(issueSchema),
+  limitations: external_exports.array(external_exports.string())
+});
+var customerAnalysisResultSchema = external_exports.object({
+  run: customerAnalysisRunSchema,
+  report: external_exports.object({
+    status: external_exports.enum(["complete", "partial", "failed"]),
+    fixture: external_exports.boolean(),
+    accounting: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+      action: external_exports.enum(["materialized", "not_hydrated"])
+    }))
+  }),
+  map: customerMapSchema.nullable(),
+  sourceIndex: external_exports.array(analysisSourceIndexSchema.element.pick({
+    id: true,
+    path: true,
+    sha256: true,
+    utf16Length: true
+  }).strip())
+});
+
 // ../contracts/dist/workspace-results.js
 var resultLimits = {
   manifestBytes: 1024 * 1024,
@@ -20679,7 +23260,7 @@ var resultLimits = {
   pageSize: 100
 };
 var text3 = (max) => external_exports.string().max(max).refine((value) => Boolean(value.trim()), "Nonempty text required.");
-var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var label = text3(200).refine((value) => !Array.from(value).some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127));
 var namespace2 = external_exports.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
 var stableUrl = external_exports.url().max(2048).refine((value) => {
@@ -20703,7 +23284,7 @@ var selectedResultFileSchema = external_exports.strictObject({
   name: label.refine((value) => !/[\\/]/.test(value) && value !== "." && value !== "..", "Supply a display filename, not a path."),
   role: text3(80),
   bytes: external_exports.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
-  sha256: digest2
+  sha256: digest15
 });
 var lineage = external_exports.strictObject({
   relation: text3(80),
@@ -20711,7 +23292,7 @@ var lineage = external_exports.strictObject({
     external_exports.strictObject({
       kind: external_exports.literal("result"),
       publicationId: external_exports.uuid(),
-      sha256: digest2.optional()
+      sha256: digest15.optional()
     }),
     external_exports.strictObject({ kind: external_exports.literal("file"), fileKey: text3(128) }),
     external_exports.strictObject({
@@ -20727,7 +23308,7 @@ var input2 = external_exports.strictObject({
     name: text3(200),
     release: text3(300).nullable(),
     nativeContract: text3(300),
-    implementationSha256: digest2.optional()
+    implementationSha256: digest15.optional()
   }),
   title: label,
   nativeResultId: text3(512).optional(),
@@ -20735,7 +23316,7 @@ var input2 = external_exports.strictObject({
   provenance: external_exports.strictObject({
     description: text3(16e3),
     capturedAt: external_exports.iso.datetime().optional(),
-    inputSha256: digest2.optional()
+    inputSha256: digest15.optional()
   }),
   files: external_exports.array(selectedResultFileSchema).min(1).max(resultLimits.files),
   contextRefs: external_exports.array(resultContextRefSchema).max(resultLimits.contextRefs).default([]),
@@ -20829,13 +23410,34 @@ var sessionRecordingSchema = external_exports.strictObject({
     expiresAt: external_exports.iso.datetime()
   })
 });
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
 var sessionGrantSchema = external_exports.strictObject({
   recordingId: external_exports.uuid(),
   chunk: sessionChunkDescriptorSchema,
   url: external_exports.url(),
   issuedAt: external_exports.iso.datetime(),
   expiresAt: external_exports.iso.datetime()
-}).refine((grant) => Date.parse(grant.expiresAt) > Date.parse(grant.issuedAt), "Invalid grant interval");
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
 var navigationKindSchema = external_exports.enum([
   "start",
   "route-change",
@@ -20959,6 +23561,173 @@ var sessionReplayManifestSchema = external_exports.strictObject({
   })).max(2e3)
 });
 
+// ../contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest16,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator2 = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator2.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator2.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator2.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator2.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest16,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest16,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest16,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
 // ../contracts/dist/replay.js
 var recordedEventSchema = external_exports.strictObject({
   type: external_exports.number().int().min(0).max(4),
@@ -21014,6 +23783,47 @@ var commentSchema = commentCreateSchema.extend({
   createdAt: external_exports.iso.datetime()
 });
 
+// ../contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
 // ../contracts/dist/github.js
 var githubCredentialSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-credential/1"),
@@ -21032,6 +23842,115 @@ var githubRejectionSchema = external_exports.strictObject({
 var githubRejectionResultSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-rejection/1"),
   reconnectRequired: external_exports.boolean()
+});
+
+// ../contracts/dist/product-feedback.js
+var productFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  kind: external_exports.enum(["bug", "suggestion", "feedback"]),
+  title: external_exports.string().trim().min(1).max(200),
+  // Bound report text stored in Core.
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  diagnostics: external_exports.strictObject({
+    capability: external_exports.string().trim().min(1).max(100).optional(),
+    errorCode: external_exports.string().regex(/^[A-Za-z0-9_.:-]{1,100}$/).optional(),
+    operationId: external_exports.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+    pluginVersion: external_exports.string().regex(/^[A-Za-z0-9.+-]{1,80}$/).optional(),
+    os: external_exports.enum(["darwin", "linux", "win32", "unknown"]).optional()
+  }).optional()
+});
+var productFeedbackSchema = productFeedbackInputSchema.extend({
+  id: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved")
+});
+
+// ../contracts/dist/workspace-customer.js
+var workspaceCustomerLimits = {
+  fileBytes: 4 * 1024 * 1024,
+  publicationBytes: 16 * 1024 * 1024
+};
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count6 = external_exports.number().int().nonnegative();
+var source2 = external_exports.strictObject({ bytes: count6, sha256: digest17 });
+var identity = { fileId: external_exports.uuid(), source: source2 };
+var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("available"),
+    kind: external_exports.enum(["test-report", "risk-review", "evidence-assessment"]),
+    name: external_exports.enum([
+      "test-report.json",
+      "risk-review.json",
+      "evidence-assessment.json"
+    ]),
+    content: external_exports.strictObject({
+      mediaType: external_exports.literal("application/json"),
+      bytes: count6.max(workspaceCustomerLimits.fileBytes),
+      sha256: digest17
+    })
+  }),
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("unavailable"),
+    reason: external_exports.enum([
+      "unsupported-content",
+      "invalid-content",
+      "content-limit",
+      "source-unavailable"
+    ])
+  })
+]);
+var customerWorkspaceManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-result/1"),
+  publicationId: external_exports.uuid(),
+  kind: external_exports.literal("native-result"),
+  state: external_exports.literal("published"),
+  title: external_exports.string(),
+  publishedAt: external_exports.iso.datetime(),
+  sourceManifestSha256: digest17,
+  contextRefs: external_exports.array(resultContextRefSchema),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest17.optional() })),
+  relatedSources: external_exports.array(external_exports.strictObject({
+    reference: resultContextRefSchema,
+    availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+  })),
+  files: external_exports.array(customerWorkspaceFileSchema).max(256),
+  meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
+});
+var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
+  manifestSha256: digest17
+});
+var customerWorkspaceDownloadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-download/1"),
+  publicationId: external_exports.uuid(),
+  fileId: external_exports.uuid().nullable(),
+  sourceSha256: digest17,
+  mediaType: external_exports.literal("application/json"),
+  encoding: external_exports.literal("base64"),
+  bytes: count6.max(workspaceCustomerLimits.fileBytes),
+  sha256: digest17,
+  data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
+});
+var customerWorkspaceListSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-list/1"),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  observedAt: external_exports.iso.datetime(),
+  watermark: count6,
+  nextAfter: count6.nullable(),
+  results: external_exports.array(external_exports.strictObject({
+    publicationId: external_exports.uuid(),
+    kind: external_exports.literal("native-result"),
+    state: external_exports.literal("published"),
+    publishedAt: external_exports.iso.datetime(),
+    sequence: count6,
+    title: external_exports.string(),
+    fileCount: count6,
+    contextRefCount: count6,
+    bytes: count6
+  }))
 });
 
 // ../contracts/dist/index.js
@@ -21079,6 +23998,31 @@ var sessionContextSchema = external_exports.object({
   expiresAt: external_exports.iso.datetime(),
   capabilities: external_exports.object({
     recordingProtocolVersions: external_exports.array(external_exports.string())
+  })
+});
+var customerSessionSchema = external_exports.strictObject({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
   })
 });
 var tokenResponseSchema = external_exports.object({
@@ -21180,7 +24124,7 @@ var json2 = external_exports.unknown().refine((value) => {
     return false;
   }
 }, "Expected lossless JSON.");
-var jsonObject = json2.refine(
+var jsonObject4 = json2.refine(
   (value) => value !== null && typeof value === "object" && !Array.isArray(value),
   "Expected a JSON object."
 ).meta({ type: "object", additionalProperties: {} });
@@ -21190,9 +24134,9 @@ var contextSubmitSchema = external_exports.strictObject({
   kind: external_exports.string().min(1),
   content: json2,
   subject: json2.optional(),
-  origin: jsonObject.optional(),
-  artifacts: external_exports.array(jsonObject).optional(),
-  nativeInputs: jsonObject.optional(),
+  origin: jsonObject4.optional(),
+  artifacts: external_exports.array(jsonObject4).optional(),
+  nativeInputs: jsonObject4.optional(),
   outputFamily: external_exports.string().min(1).optional(),
   supersedes: contextIdSchema.optional()
 }).meta({ $id: "urn:kaijan:context-submission:1" });
@@ -21217,7 +24161,7 @@ var consumption = external_exports.discriminatedUnion("state", [
     reason: external_exports.string()
   })
 ]);
-var receipt = {
+var receipt2 = {
   contextId: contextIdSchema,
   recordSha256: contextIdSchema,
   sourceUri: external_exports.string().regex(/^urn:kaijan:retained-context:[a-f0-9]{64}$/),
@@ -21237,7 +24181,7 @@ var receipt = {
 };
 var contextReceiptSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.context-receipt/1"),
-  ...receipt
+  ...receipt2
 });
 var contextRecordSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.context-record/1"),
@@ -21248,13 +24192,13 @@ var contextRecordSchema = external_exports.strictObject({
     kind: external_exports.literal("agent-context"),
     nativeContract: external_exports.literal("loki.context-submission/1"),
     // Original caller JSON stays open and lossless, not a normalized UI model.
-    content: jsonObject,
+    content: jsonObject4,
     intake,
     contentSha256: contextIdSchema,
     references: external_exports.array(external_exports.never())
   })
 });
-var read = { schema: external_exports.literal("loki.context-read/1"), ...receipt };
+var read = { schema: external_exports.literal("loki.context-read/1"), ...receipt2 };
 var contextReadSchema = external_exports.union([
   external_exports.strictObject({ ...read, record: contextRecordSchema }),
   external_exports.strictObject({
@@ -21306,6 +24250,173 @@ var families = Object.freeze({
     intake: "caller-supplied only; native PCF relation judgments remain attributed context details"
   }
 });
+
+// ../provider-transport/broker-channel.mjs
+import { request as request2 } from "node:http";
+import { Readable } from "node:stream";
+import { lstat } from "node:fs/promises";
+import { dirname } from "node:path";
+async function checkChannel(socketPath) {
+  const directory = await lstat(dirname(socketPath));
+  const socket = await lstat(socketPath);
+  if (!directory.isDirectory() || directory.isSymbolicLink() || directory.mode & 63 || directory.uid !== process.getuid() || !socket.isSocket() || socket.mode & 63 || socket.uid !== process.getuid())
+    throw Error("unsafe_broker_channel");
+}
+async function channelFetch(socketPath, path, options = {}) {
+  await checkChannel(socketPath);
+  return new Promise((resolve, reject) => {
+    const req = request2(
+      {
+        socketPath,
+        path,
+        method: options.method ?? "GET",
+        headers: { "content-type": "application/json", ...options.headers },
+        signal: options.signal
+      },
+      (res) => {
+        const headers = new Headers();
+        for (const name of [
+          "content-type",
+          "retry-after",
+          "cache-control",
+          "mcp-protocol-version"
+        ]) {
+          if (typeof res.headers[name] === "string")
+            headers.set(name, res.headers[name]);
+        }
+        resolve(
+          new Response(
+            [204, 205, 304].includes(res.statusCode) ? null : Readable.toWeb(res),
+            { status: res.statusCode, headers }
+          )
+        );
+      }
+    );
+    req.once("error", () => reject(Error("broker_unavailable_no_replay")));
+    req.end(options.body);
+  });
+}
+
+// ../provider-transport/litellm-route.mjs
+var AiClientError = class extends Error {
+  constructor(code) {
+    super(code);
+    this.name = "AiClientError";
+    this.code = code;
+  }
+};
+function providerConnection(nativeUrl, key, env = {}) {
+  let native;
+  try {
+    native = new URL(nativeUrl);
+  } catch {
+    throw new AiClientError("unsupported_native_route");
+  }
+  if (native.username || native.password || native.search || native.hash)
+    throw new AiClientError("unsupported_native_route");
+  const openai = native.origin === "https://api.openai.com" && ["/v1/responses", "/v1/models/gpt-6-luna"].includes(native.pathname);
+  const jev = native.origin === "https://openrouter.ai" && (native.pathname === "/api/v1/systemone" || /^\/api\/v1\/models\/typesafe\/jev[^?#]*\/endpoints$/.test(
+    native.pathname
+  ));
+  if (!openai && !jev) throw new AiClientError("unsupported_native_route");
+  if (env.LOKI_AUTH_BROKER_SOCKET) {
+    if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
+      throw new AiClientError("invalid_broker_channel");
+    const path = native.pathname === "/v1/responses" ? "/v1/responses" : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
+    return {
+      url: `http://localhost/ai${path}`,
+      headers: Object.fromEntries(
+        [
+          ["x-loki-plan-id", env.LOKI_TELEMETRY_PLAN_ID],
+          ["x-loki-run-id", env.LOKI_TELEMETRY_RUN_ID]
+        ].filter(
+          ([, value]) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
+        )
+      ),
+      socketPath: env.LOKI_AUTH_BROKER_SOCKET
+    };
+  }
+  if (typeof key !== "string" || !key.trim())
+    throw new AiClientError("provider_key_required");
+  return { url: native.href, headers: { Authorization: `Bearer ${key}` } };
+}
+
+// ../provider-transport/index.mjs
+function headersFor(connection, supplied = {}) {
+  const headers = supplied instanceof Headers || Array.isArray(supplied) ? Object.fromEntries(
+    supplied instanceof Headers ? supplied.entries() : supplied
+  ) : { ...supplied };
+  for (const name of Object.keys(headers))
+    if (["authorization", "x-loki-plan-id", "x-loki-run-id"].includes(
+      name.toLowerCase()
+    ))
+      delete headers[name];
+  return { ...headers, ...connection.headers };
+}
+function sendFetch(connection, options, transport = globalThis.fetch) {
+  if (connection.socketPath)
+    return channelFetch(
+      connection.socketPath,
+      new URL(connection.url).pathname,
+      { ...options, headers: headersFor(connection, options.headers) }
+    );
+  return transport(connection.url, {
+    ...options,
+    redirect: "error",
+    headers: headersFor(connection, options.headers)
+  });
+}
+
+// src/storage.ts
+import { constants } from "node:fs";
+import { mkdir, open as open2, lstat as lstat2, realpath, rename, unlink } from "node:fs/promises";
+async function privateDirectory(path) {
+  await mkdir(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat2(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The plugin data directory is unsafe.");
+}
+async function regularFile(path, maximum, privateRecord = false) {
+  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
+    throw new Error("The selected file read limit is invalid.");
+  const file2 = await open2(
+    path,
+    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
+  );
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
+      throw new Error("The selected file is not a bounded regular file.");
+    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
+      throw new Error("The private file is unsafe.");
+    if (maximum === void 0) return await file2.readFile();
+    const chunks = [];
+    let length = 0;
+    while (length <= maximum) {
+      const bytes2 = Buffer.allocUnsafeSlow(
+        Math.min(64 * 1024, maximum + 1 - length)
+      );
+      const result = await file2.read(bytes2, 0, bytes2.length, null);
+      if (!result.bytesRead) break;
+      length += result.bytesRead;
+      if (length > maximum)
+        throw new Error("The selected file exceeds its limit.");
+      chunks.push(bytes2.subarray(0, result.bytesRead));
+    }
+    const bytes = Buffer.allocUnsafeSlow(length);
+    let offset = 0;
+    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
+    return bytes;
+  } finally {
+    await file2.close();
+  }
+}
+function boundedFile(path, maximum) {
+  return regularFile(path, maximum);
+}
 
 // src/provider.ts
 var keySchema = external_exports.string().min(1).max(8192);
@@ -21366,1848 +24477,11 @@ var object2 = external_exports.record(external_exports.string(), external_export
 var maxResponseBytes = 16 * 1024 * 1024;
 
 // src/query.ts
-import { createHash as createHash2, createHmac, randomBytes, randomUUID } from "node:crypto";
-
-// ../contracts/dist/report-evidence.js
-var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
-var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
-var nonempty3 = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
-var reportedTestStatusSchema = external_exports.enum([
-  "pass",
-  "fail",
-  "blocked",
-  "skipped",
-  "not-run"
-]);
-var observedStepSchema = external_exports.strictObject({
-  id: nonempty3,
-  title: nonempty3,
-  status: reportedTestStatusSchema,
-  expected: nonempty3,
-  actual: nonempty3,
-  evidenceIds: external_exports.array(nonempty3).min(1)
-});
-var reportedTestSchema = external_exports.strictObject({
-  testId: nonempty3,
-  title: nonempty3,
-  status: reportedTestStatusSchema,
-  expected: nonempty3,
-  actual: nonempty3,
-  deliberateFailure: external_exports.boolean(),
-  steps: external_exports.array(observedStepSchema).min(1),
-  code: external_exports.strictObject({
-    path: nonempty3,
-    revision: nonempty3,
-    language: nonempty3,
-    text: nonempty3,
-    sha256: digest3
-  }).nullable()
-}).superRefine((test, ctx) => {
-  if (new Set(test.steps.map((step) => step.id)).size !== test.steps.length)
-    ctx.addIssue({ code: "custom", message: "Step IDs must be unique." });
-  if (test.status === "pass" && test.steps.some((step) => step.status !== "pass"))
-    ctx.addIssue({
-      code: "custom",
-      message: "A passed test requires passed steps."
-    });
-  if (test.status === "fail" && !test.steps.some((step) => step.status === "fail"))
-    ctx.addIssue({
-      code: "custom",
-      message: "A failed test requires a failed step."
-    });
-});
-var reportPullRequestSchema = external_exports.strictObject({
-  repository,
-  number: external_exports.number().int().positive(),
-  url: external_exports.url(),
-  title: nonempty3,
-  state: external_exports.enum(["open", "closed", "merged"]),
-  author: nonempty3,
-  base: external_exports.strictObject({ ref: nonempty3, sha: revision }),
-  head: external_exports.strictObject({ ref: nonempty3, sha: revision }),
-  mergeCommit: revision.nullable(),
-  openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
-  capturedAt: external_exports.iso.datetime({ offset: true }),
-  files: external_exports.array(external_exports.strictObject({
-    path: nonempty3,
-    status: nonempty3,
-    additions: external_exports.number().int().nonnegative(),
-    deletions: external_exports.number().int().nonnegative(),
-    patch: external_exports.string().nullable()
-  })),
-  source: external_exports.strictObject({
-    kind: external_exports.literal("supplied-github-read"),
-    record: external_exports.json(),
-    sha256: digest3
-  })
-}).superRefine((pr, ctx) => {
-  if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
-    ctx.addIssue({
-      code: "custom",
-      message: "Pull request URL and identity differ."
-    });
-  if (new Set(pr.files.map((file2) => file2.path)).size !== pr.files.length)
-    ctx.addIssue({
-      code: "custom",
-      message: "Changed-file paths must be unique."
-    });
-});
-var reportVerificationSchema = external_exports.strictObject({
-  planRef: external_exports.strictObject({ answerId: digest3, resultSha256: digest3 }),
-  repository,
-  sourceRevision: revision,
-  pullRequestUrl: external_exports.url().nullable(),
-  recordedAt: external_exports.iso.datetime({ offset: true }),
-  provenance: external_exports.literal("product-terminal-checks/1"),
-  oracle: nonempty3,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty3, text: nonempty3, sha256: digest3 })).min(1),
-  tests: external_exports.array(reportedTestSchema).min(1)
-}).superRefine((run, ctx) => {
-  if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs must be unique per run."
-    });
-  const ids2 = new Set(run.evidence.map((item) => item.id));
-  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id3) => !ids2.has(id3)))))
-    ctx.addIssue({
-      code: "custom",
-      message: "Each step must reference supplied evidence."
-    });
-});
-var reportExecutionSchema = reportVerificationSchema.safeExtend({
-  runId: digest3
-});
-var reportEvidenceSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.report-evidence/1"),
-  pullRequests: external_exports.array(reportPullRequestSchema),
-  executions: external_exports.array(reportExecutionSchema)
-}).superRefine((input3, ctx) => {
-  if (new Set(input3.pullRequests.map((pr) => pr.url)).size !== input3.pullRequests.length || new Set(input3.executions.map((run) => run.runId)).size !== input3.executions.length)
-    ctx.addIssue({
-      code: "custom",
-      message: "PR and run identities must be unique."
-    });
-  for (const run of input3.executions) {
-    if (run.pullRequestUrl === null)
-      continue;
-    const pr = input3.pullRequests.find((item) => item.url === run.pullRequestUrl);
-    if (!pr || pr.repository !== run.repository || !(run.sourceRevision === pr.head.sha || pr.state === "merged" && run.sourceRevision === pr.mergeCommit))
-      ctx.addIssue({
-        code: "custom",
-        message: "Run source must match the selected PR head or merge."
-      });
-  }
-});
-var reportSourcesSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.report-sources/1"),
-  pullRequests: external_exports.array(external_exports.strictObject({
-    capturedAt: external_exports.iso.datetime({ offset: true }),
-    record: external_exports.strictObject({
-      pullRequest: external_exports.json(),
-      files: external_exports.array(external_exports.json())
-    })
-  }))
-});
-
-// ../contracts/dist/terminal-checks.js
-var nonempty4 = external_exports.string().refine((value) => Boolean(value.trim()));
-var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var terminalChecksSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.terminal-checks/1"),
-  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
-  pullRequestUrl: external_exports.url().nullable(),
-  tests: external_exports.array(external_exports.strictObject({
-    testId: nonempty4,
-    title: nonempty4,
-    deliberateFailure: external_exports.boolean().default(false),
-    checks: external_exports.array(external_exports.strictObject({
-      id: nonempty4,
-      title: nonempty4,
-      field: external_exports.enum(["text", "snapshot", "url"]),
-      operator: external_exports.enum(["contains", "not-contains", "equals"]),
-      expected: nonempty4
-    })).min(1)
-  })).min(1)
-}).superRefine((input3, ctx) => {
-  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs and each test's check IDs must be unique."
-    });
-  if (input3.pullRequestUrl !== null) {
-    const prefix = `https://github.com/${input3.repository}/pull/`;
-    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
-      ctx.addIssue({
-        code: "custom",
-        message: "The PR must belong to the selected repository."
-      });
-  }
-});
-var checkedPlanReferenceSchema = external_exports.strictObject({
-  answerId: digest4,
-  resultSha256: digest4,
-  selectedTestIds: external_exports.array(nonempty4).min(1)
-});
-
-// ../contracts/dist/report-view.js
-var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var groupSchema = external_exports.object({
-  key: external_exports.enum([
-    "why",
-    "method",
-    "prerequisites",
-    "steps",
-    "expected",
-    "execution-gaps",
-    "requirement-id",
-    "requirement-text",
-    "test-ids",
-    "coverage-status"
-  ]),
-  label: external_exports.string(),
-  start: external_exports.number().int().nonnegative(),
-  end: external_exports.number().int().nonnegative()
-});
-var reportItemSchema = external_exports.object({
-  id: external_exports.string(),
-  title: external_exports.string(),
-  role: external_exports.enum(["test", "requirement-coverage"]).optional(),
-  lines: external_exports.array(external_exports.string()),
-  groups: external_exports.array(groupSchema).optional(),
-  expected: external_exports.object({ text: external_exports.string().nullable(), authority: external_exports.string().nullable() }).optional(),
-  detail: external_exports.boolean().optional(),
-  stepCount: external_exports.number().int().nonnegative().optional(),
-  citations: external_exports.array(external_exports.object({ title: external_exports.string(), lines: external_exports.array(external_exports.string()) })).optional()
-});
-var sectionBase = external_exports.object({
-  title: external_exports.string(),
-  kind: external_exports.enum(["plan", "runner", "assessment"]),
-  sourceId: digest5,
-  sourceKind: external_exports.enum(["answer", "run"]),
-  resultSha256: digest5.nullable(),
-  operationState: external_exports.string(),
-  stopRequested: external_exports.boolean().nullable().optional(),
-  producerStatus: external_exports.object({
-    result: external_exports.string().nullable(),
-    receipt: external_exports.string().nullable(),
-    plan: external_exports.string().nullable()
-  }),
-  // Display status is never an authority for state or verdict.
-  status: external_exports.string(),
-  executionState: external_exports.string().nullable(),
-  testVerdict: external_exports.string().nullable(),
-  elapsedMs: external_exports.number().nonnegative().nullable(),
-  facts: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    label: external_exports.string(),
-    value: external_exports.string(),
-    supplied: external_exports.boolean().optional()
-  })),
-  items: external_exports.array(reportItemSchema),
-  assessedRunIds: external_exports.array(digest5).optional(),
-  localArtifacts: external_exports.object({
-    kind: external_exports.enum(["browser", "desktop", "unavailable"]),
-    message: external_exports.string(),
-    traceAvailable: external_exports.boolean(),
-    launchCommand: external_exports.string().optional(),
-    files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
-  }).optional()
-});
-var reportSectionSchema = external_exports.union([
-  sectionBase.extend({
-    kind: external_exports.literal("runner"),
-    sourceKind: external_exports.literal("run")
-  }),
-  sectionBase.extend({ kind: external_exports.enum(["plan", "assessment"]) })
-]);
-var reportViewSchema = external_exports.object({
-  schema: external_exports.literal("loki.report-view/3"),
-  reportId: digest5,
-  title: external_exports.string(),
-  createdAt: external_exports.string(),
-  mapId: digest5.nullable(),
-  sections: external_exports.array(reportSectionSchema),
-  displayNotice: external_exports.string().nullable(),
-  evidenceContext: external_exports.object({
-    contextId: digest5,
-    recordSha256: digest5,
-    readTool: external_exports.literal("loki_context_get"),
-    provenance: external_exports.string()
-  }).optional(),
-  executionChecks: external_exports.array(reportExecutionSchema).optional()
-});
-var reportReadFailureSchema = external_exports.object({
-  error: external_exports.object({
-    code: external_exports.string().min(1),
-    message: external_exports.string(),
-    requestDispatched: external_exports.literal(false).optional(),
-    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
-  })
-});
-var reportReadOutputSchema = external_exports.union([
-  reportViewSchema,
-  reportReadFailureSchema
-]);
-
-// ../contracts/dist/advisory-read.js
-var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var advisoryReadInputSchema = external_exports.strictObject({
-  family: external_exports.enum([
-    "uiModeler",
-    "prContext",
-    "changeRisk",
-    "riskFinder",
-    "testPlanning",
-    "testSupplement",
-    "suppliedEvidence"
-  ]),
-  answerId: digest6,
-  offset: external_exports.number().int().nonnegative().optional()
-}).meta({ $id: "urn:kaijan:advisory-read-input:1" });
-var advisoryReadSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.advisory-read/1"),
-  state: external_exports.literal("complete"),
-  answerId: digest6,
-  resultSha256: digest6,
-  resultChunk: external_exports.strictObject({
-    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
-    offset: external_exports.number().int().nonnegative(),
-    text: external_exports.string().min(1).refine((text5) => text5.isWellFormed()),
-    nextOffset: external_exports.number().int().positive().nullable(),
-    totalCharacters: external_exports.number().int().positive()
-  })
-}).superRefine((value, ctx) => {
-  const chunk = value.resultChunk;
-  const end = chunk.offset + chunk.text.length;
-  if (end > chunk.totalCharacters || chunk.nextOffset !== (end === chunk.totalCharacters ? null : end))
-    ctx.addIssue({
-      code: "custom",
-      path: ["resultChunk"],
-      message: "Completed answer continuation is inconsistent."
-    });
-}).meta({ $id: "urn:kaijan:advisory-read:1" });
-var advisoryReadFailureSchema = external_exports.strictObject({
-  error: external_exports.strictObject({
-    code: external_exports.string().min(1),
-    message: external_exports.string(),
-    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
-  })
-});
-var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advisoryReadFailureSchema]).meta({ $id: "urn:kaijan:advisory-read-output:1" });
-
-// ../contracts/dist/advisory.js
-var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
-var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var nonempty5 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
-var strings = external_exports.array(external_exports.string());
-var count = external_exports.number().int().nonnegative();
-var refs2 = external_exports.array(external_exports.strictObject({ evidence_id: external_exports.string() }));
-function preserveAdvisoryInput(schema) {
-  return external_exports.unknown().superRefine((value, context) => {
-    const result = schema.safeParse(value);
-    if (!result.success)
-      for (const issue3 of result.error.issues)
-        context.addIssue({ ...issue3 });
-  }).meta(external_exports.toJSONSchema(schema, { io: "input" }));
-}
-var planningInputSchema = external_exports.union([
-  external_exports.looseObject({
-    title: external_exports.string(),
-    body: external_exports.string(),
-    url: nonempty5,
-    map: external_exports.null().optional(),
-    version: external_exports.never().optional(),
-    sources: external_exports.never().optional()
-  }),
-  external_exports.looseObject({
-    version: external_exports.literal("pr-context-plan/3"),
-    captured_at: external_exports.string(),
-    work_item: external_exports.looseObject({ title: nonempty5 }),
-    sources: external_exports.array(external_exports.looseObject({
-      id: nonempty5,
-      kind: external_exports.enum(["intent", "implementation", "context"]),
-      uri: nonempty5,
-      revision: nonempty5,
-      text: nonempty5
-    })).min(1),
-    map: jsonObject2.nullable().optional()
-  })
-]);
-var supplementInputSchema = external_exports.looseObject({
-  version: external_exports.literal("test-plan-supplement-input/1"),
-  context: planningInputSchema,
-  baseline: external_exports.looseObject({
-    text: nonempty5,
-    uri: nonempty5,
-    revision: nonempty5,
-    plan_path: external_exports.array(nonempty5).optional()
-  }),
-  risks: external_exports.array(external_exports.looseObject({
-    id: nonempty5,
-    text: nonempty5,
-    uri: nonempty5,
-    revision: nonempty5,
-    attribution: nonempty5
-  }))
-});
-var record3 = external_exports.looseObject({
-  id: nonempty5,
-  text: external_exports.string(),
-  provenance: jsonObject2.nullable()
-});
-var assessmentImageReferenceSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.assessment-image-ref/1"),
-  reportId: digest7,
-  runId: digest7,
-  resultSha256: digest7,
-  manifestSha256: digest7,
-  artifactId: digest7,
-  sha256: digest7,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
-});
-var suppliedEvidenceInputSchema = external_exports.strictObject({
-  schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
-  work_item: external_exports.looseObject({
-    title: external_exports.string(),
-    body: external_exports.string(),
-    provenance: jsonObject2.nullable()
-  }),
-  requirements: external_exports.array(record3).nullable(),
-  proposed_tests: external_exports.array(record3).nullable(),
-  outcomes: external_exports.array(record3.extend({
-    test_id: nonempty5.nullable(),
-    status: nonempty5,
-    evidence_ids: external_exports.array(nonempty5)
-  })),
-  evidence: external_exports.array(external_exports.looseObject({
-    id: nonempty5,
-    text: external_exports.string().nullable(),
-    bytes_base64: external_exports.string().nullable(),
-    media_type: external_exports.literal("image/png").optional(),
-    reference: jsonObject2.nullable(),
-    provenance: jsonObject2.nullable(),
-    sha256: digest7.optional(),
-    artifact_ref: assessmentImageReferenceSchema.optional()
-  })),
-  target: jsonObject2.nullable(),
-  provenance: jsonObject2.nullable()
-});
-var proposedPlanSchema = external_exports.strictObject({
-  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
-  objectives: external_exports.array(external_exports.strictObject({ id: external_exports.string(), text: external_exports.string(), refs: refs2 })),
-  requirement_coverage: external_exports.array(external_exports.strictObject({
-    requirement_id: external_exports.string(),
-    status: external_exports.enum(["proposed", "gap"]),
-    test_ids: strings,
-    reason: external_exports.string()
-  })),
-  ambiguities: strings,
-  relevant_surfaces: external_exports.array(external_exports.strictObject({
-    description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
-    refs: refs2
-  })),
-  tests: external_exports.array(external_exports.strictObject({
-    title: nonempty5.optional(),
-    // Absent only in historical saved plans.
-    method: nonempty5,
-    id: external_exports.string(),
-    objective_ids: strings,
-    priority: external_exports.enum(["P1", "P2", "P3"]),
-    reason: external_exports.string(),
-    prerequisites: strings,
-    steps: strings,
-    expected: external_exports.strictObject({
-      text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis"]),
-      refs: refs2
-    }),
-    execution_gaps: strings
-  })),
-  disagreements: strings,
-  runner_handoff: external_exports.strictObject({
-    status: external_exports.literal("proposed_only"),
-    scenario_ids: strings,
-    required_inputs: strings
-  }),
-  limitations: strings
-});
-var nativePlanningReceiptSchema = external_exports.looseObject({
-  status: external_exports.string(),
-  unknown_charge: external_exports.boolean(),
-  unknown_usage: external_exports.boolean()
-});
-var planningFailure = (schema) => external_exports.looseObject({
-  schema: external_exports.literal(schema),
-  reason: external_exports.string(),
-  receipt_directory: external_exports.string(),
-  receipt: nativePlanningReceiptSchema
-});
-var evidenceCatalog = external_exports.array(external_exports.looseObject({
-  id: external_exports.string(),
-  source_id: external_exports.string(),
-  kind: external_exports.enum(["intent", "implementation", "context"]),
-  uri: external_exports.string(),
-  revision: external_exports.string(),
-  line: count,
-  quote: external_exports.string(),
-  quote_sha256: digest7
-}));
-var nativePlanningResultSchema = external_exports.union([
-  external_exports.looseObject({
-    plan: proposedPlanSchema,
-    checks: external_exports.looseObject({
-      version: external_exports.literal("pr-context-plan-result/5"),
-      status: external_exports.enum(["structurally_valid", "structurally_valid_partial"]),
-      executed: external_exports.literal(false),
-      semantic_support: external_exports.literal("requires_review"),
-      coverage: external_exports.looseObject({ status: external_exports.enum(["complete", "partial"]) }),
-      tests: count,
-      objectives: count
-    }),
-    input_hash: digest7,
-    receipt_directory: external_exports.string(),
-    receipt: nativePlanningReceiptSchema,
-    evidence: evidenceCatalog
-  }),
-  planningFailure("loki.planning-failure/1")
-]);
-var nativeSupplementResultSchema = external_exports.union([
-  external_exports.looseObject({
-    schema: external_exports.literal("test-plan-supplement-result/1"),
-    method: external_exports.literal("baseline-preserving-risk-supplement/1"),
-    supplement: external_exports.strictObject({
-      status: external_exports.enum([
-        "proposed_supplement",
-        "no_additional_tests",
-        "needs_clarification"
-      ]),
-      additional_tests: external_exports.array(external_exports.strictObject({
-        id: external_exports.string(),
-        verification_kind: external_exports.string(),
-        method: external_exports.string(),
-        reason: external_exports.string(),
-        conditions: strings,
-        prerequisites: strings,
-        steps: strings,
-        expected: external_exports.strictObject({
-          text: external_exports.string(),
-          authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
-          refs: refs2
-        }),
-        risk_ids: strings,
-        source_refs: refs2,
-        baseline_relation: external_exports.strictObject({
-          test_ids: strings,
-          explanation: external_exports.string()
-        }),
-        execution_gaps: strings
-      })),
-      baseline_concerns: external_exports.array(external_exports.strictObject({
-        test_ids: strings,
-        concern: external_exports.string(),
-        question: external_exports.string(),
-        risk_ids: strings,
-        refs: refs2
-      })),
-      unanswered_questions: external_exports.array(external_exports.strictObject({
-        question: external_exports.string(),
-        risk_ids: strings,
-        baseline_test_ids: strings,
-        refs: refs2
-      })),
-      limitations: strings
-    }),
-    baseline: external_exports.looseObject({
-      text: external_exports.string(),
-      uri: external_exports.string(),
-      revision: external_exports.string(),
-      sha256: digest7,
-      bytes: count,
-      test_ids: strings
-    }),
-    checks: external_exports.looseObject({
-      version: external_exports.literal("test-plan-supplement-result/1"),
-      status: external_exports.literal("structurally_valid_supplement"),
-      executed: external_exports.literal(false),
-      semantic_support: external_exports.literal("requires_separate_review"),
-      original_baseline_sha256: digest7,
-      original_baseline_test_ids: strings
-    }),
-    input_hash: digest7,
-    receipt_directory: external_exports.string(),
-    receipt: nativePlanningReceiptSchema,
-    evidence: evidenceCatalog,
-    interpretation: external_exports.string()
-  }),
-  planningFailure("loki.supplement-failure/1")
-]);
-var nativeAssessmentResultSchema = external_exports.looseObject({
-  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
-  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  input_sha256: digest7,
-  request_sha256: digest7,
-  assessment: external_exports.looseObject({
-    schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
-    original_candidate: jsonObject2,
-    findings: external_exports.array(external_exports.looseObject({
-      id: external_exports.string(),
-      original_finding: jsonObject2,
-      literal_bindings: external_exports.array(jsonObject2),
-      validation_errors: strings,
-      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
-      semantic_support: external_exports.null()
-    })),
-    reported_outcomes: external_exports.array(jsonObject2),
-    optional_proposal_supplied: external_exports.boolean(),
-    evidence_status: external_exports.array(jsonObject2),
-    coverage: external_exports.looseObject({
-      status: external_exports.enum(["complete", "partial"]),
-      unassessed_requirement_ids: strings,
-      semantic_completeness: external_exports.null(),
-      interpretation: external_exports.string()
-    }),
-    validation_status: external_exports.enum(["partial", "complete_record_membership"]),
-    execution_authenticated: external_exports.literal(false),
-    acceptance_decision: external_exports.null()
-  }).nullable(),
-  native_receipt: nativePlanningReceiptSchema.nullable(),
-  failure: external_exports.looseObject({ reason: external_exports.string() }).nullable(),
-  native_artifact_directory: external_exports.string(),
-  complete_call_elapsed_seconds: external_exports.number().nonnegative(),
-  provider_calls_started: count,
-  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count, sha256: digest7 })),
-  result_persisted: external_exports.boolean(),
-  continuation_allowed: external_exports.boolean(),
-  limitations: external_exports.string(),
-  persistence_failure: external_exports.literal(true).optional()
-});
-var advisoryIncompleteSchema = external_exports.strictObject({
-  state: external_exports.enum(["unknown", "refused", "cancelled"]),
-  answerId: digest7.optional(),
-  retainedNativeFile: external_exports.strictObject({
-    path: external_exports.string(),
-    bytes: count,
-    sha256: digest7,
-    semanticAssessment: external_exports.literal("not-performed")
-  }).nullable().optional(),
-  reason: external_exports.string(),
-  replayAllowed: external_exports.literal(false),
-  accounting: external_exports.union([
-    external_exports.strictObject({
-      providerEffect: external_exports.literal("unknown"),
-      knownCostUsd: external_exports.null()
-    }),
-    external_exports.strictObject({
-      providerCallsStarted: external_exports.literal(0),
-      knownCostUsd: external_exports.literal(0)
-    })
-  ])
-});
-var advisoryContextUnavailableSchema = external_exports.strictObject({
-  state: external_exports.literal("unsupported-consumption"),
-  contextId: digest7,
-  capability: external_exports.string(),
-  detail: jsonObject2,
-  contextRetained: external_exports.literal(true),
-  providerCallsStarted: external_exports.literal(0)
-});
-var advisoryExecutionFailureSchema = external_exports.strictObject({
-  error: external_exports.looseObject({
-    code: nonempty5,
-    message: external_exports.string(),
-    requestDispatched: external_exports.literal(false).optional(),
-    recovery: external_exports.looseObject({
-      action: external_exports.string(),
-      instruction: external_exports.string(),
-      requestKey: external_exports.string().optional()
-    }).optional()
-  })
-});
-
-// ../contracts/dist/runner.js
-var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
-var count2 = external_exports.number().int().nonnegative();
-var questions = external_exports.array(external_exports.strictObject({
-  id: external_exports.string(),
-  question: external_exports.string(),
-  kind: external_exports.string()
-}));
-var progress = {
-  reason: external_exports.string(),
-  completedSteps: external_exports.array(external_exports.string()),
-  remainingSteps: external_exports.array(external_exports.string()),
-  evidence: external_exports.array(external_exports.string()),
-  questions
-};
-var runnerExecutionReportSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.execution-report/1"),
-  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
-  ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
-  basis: external_exports.literal("model-authored-unverified"),
-  responseId: external_exports.string(),
-  callId: external_exports.string()
-});
-var runnerRecoverySchema = external_exports.strictObject({
-  enabled: external_exports.boolean().optional(),
-  used: external_exports.boolean(),
-  initialEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
-  currentEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
-  transitions: external_exports.array(external_exports.strictObject({
-    responseId: external_exports.string(),
-    callId: external_exports.string(),
-    from: external_exports.enum(["low", "medium"]),
-    to: external_exports.literal("medium"),
-    reason: external_exports.string()
-  })).max(1)
-});
-var runnerClarificationSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification/1"),
-  clarificationId: external_exports.string(),
-  ...progress,
-  deadlineAt: external_exports.string(),
-  state: external_exports.enum(["live", "unknown"]),
-  redaction: external_exports.strictObject({
-    schema: external_exports.literal("loki.runner.safe-projection/1"),
-    revision: count2
-  }).optional()
-});
-var originalReference = external_exports.strictObject({
-  path: external_exports.string(),
-  sha256: digest8,
-  bytes: count2
-});
-var checkpointReference = originalReference.extend({
-  checkpointPath: external_exports.string()
-});
-var executionReportProvenance = external_exports.strictObject({
-  responseReference: originalReference.nullable(),
-  evidenceReferences: external_exports.array(checkpointReference),
-  providerCall: count2
-});
-var runnerNativeResultSchema = external_exports.looseObject({
-  correlation: external_exports.looseObject({
-    requestId: external_exports.string().min(1),
-    scenarioId: external_exports.string().min(1),
-    planRef: external_exports.json().optional()
-  }),
-  executionState: external_exports.enum([
-    "completed",
-    "incomplete",
-    "cancelled",
-    "blocked",
-    "unknown"
-  ]),
-  testVerdict: external_exports.string().min(1),
-  terminal: external_exports.looseObject({
-    executionReportProvenance: executionReportProvenance.nullable().optional()
-  }),
-  executionReport: runnerExecutionReportSchema.nullable().optional(),
-  recovery: runnerRecoverySchema.optional(),
-  effortAccounting: external_exports.strictObject({
-    low: count2,
-    medium: count2,
-    none: count2.optional(),
-    high: count2.optional(),
-    xhigh: count2.optional(),
-    max: count2.optional()
-  }).optional()
-});
-var runnerResultSchema = external_exports.discriminatedUnion("status", [
-  external_exports.strictObject({
-    schema: external_exports.literal("loki.computer-runner-operation/1"),
-    status: external_exports.literal("reuse-not-executed"),
-    reason: external_exports.string().min(1),
-    nativeResult: external_exports.null(),
-    assessmentFragment: external_exports.null(),
-    reuse: jsonObject3,
-    nativeDispatched: external_exports.literal(false)
-  }),
-  external_exports.strictObject({
-    schema: external_exports.literal("loki.computer-runner-operation/1"),
-    status: external_exports.literal("not-executed"),
-    reason: external_exports.string().min(1),
-    scenarioId: external_exports.string().min(1),
-    unresolvedInputs: external_exports.array(external_exports.string()),
-    executionMethod: external_exports.string(),
-    nativeResult: external_exports.null(),
-    assessmentFragment: external_exports.null(),
-    providerCallsStarted: external_exports.literal(0)
-  }),
-  external_exports.strictObject({
-    schema: external_exports.literal("loki.computer-runner-operation/1"),
-    status: external_exports.literal("native-exception"),
-    reuse: jsonObject3.optional(),
-    nativeResult: external_exports.null(),
-    assessmentFragment: external_exports.null(),
-    effects: external_exports.literal("unknown-do-not-replay"),
-    partialHandoff: jsonObject3,
-    privateFailure: external_exports.string(),
-    workerReceipt: external_exports.string()
-  }),
-  external_exports.strictObject({
-    schema: external_exports.literal("loki.computer-runner-operation/1"),
-    status: external_exports.literal("returned"),
-    reuse: jsonObject3.optional(),
-    executionHost: external_exports.json(),
-    nativeResult: runnerNativeResultSchema,
-    executionConfig: jsonObject3,
-    assessmentFragment: external_exports.looseObject({
-      outcomes: external_exports.array(jsonObject3),
-      evidence: external_exports.array(jsonObject3),
-      target: jsonObject3,
-      provenance: jsonObject3
-    }),
-    verification: reportVerificationSchema.optional(),
-    sourceContextId: digest8.nullable().optional()
-  })
-]);
-var runnerNextActionSchema = external_exports.strictObject({
-  kind: external_exports.literal("input-required"),
-  tool: external_exports.literal("loki_runner_answer"),
-  runId: digest8,
-  clarificationId: external_exports.string().min(1),
-  deadlineAt: external_exports.string(),
-  questions,
-  instruction: external_exports.string()
-});
-var operationBase = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner-operation/1"),
-  runId: digest8,
-  state: external_exports.enum([
-    "accepted",
-    "running",
-    "finished",
-    "unknown",
-    "not-started",
-    "stopped-before-start"
-  ]),
-  replayAllowed: external_exports.literal(false),
-  pendingClarification: runnerClarificationSchema.nullable().optional(),
-  nextAction: runnerNextActionSchema.optional(),
-  identity: jsonObject3.optional(),
-  execution: external_exports.literal("programmatic/1").optional(),
-  createdAt: external_exports.string().optional(),
-  reason: external_exports.string().optional(),
-  lastRecordedState: external_exports.enum(["accepted", "running"]).optional(),
-  stopRequested: external_exports.boolean().optional(),
-  receiptDirectory: external_exports.string().optional(),
-  providerCallsStarted: external_exports.literal(0).optional(),
-  resultValidated: external_exports.boolean().optional(),
-  resultSha256: digest8.optional(),
-  resultBytes: count2.optional(),
-  resultRecordSha256: digest8.optional(),
-  resultRecord: external_exports.json().optional(),
-  retainedNativeFile: external_exports.strictObject({
-    path: external_exports.string(),
-    bytes: count2,
-    sha256: digest8,
-    semanticAssessment: external_exports.literal("not-performed")
-  }).nullable().optional()
-});
-var resultRead = external_exports.strictObject({
-  nextOffset: external_exports.literal(0),
-  totalCharacters: external_exports.number().int().positive(),
-  instruction: external_exports.string()
-});
-var resultChunk = external_exports.strictObject({
-  encoding: external_exports.literal("JSON text, UTF-16 offsets"),
-  offset: count2,
-  text: external_exports.string().min(1),
-  nextOffset: external_exports.number().int().positive().nullable(),
-  totalCharacters: external_exports.number().int().positive()
-});
-var finished = operationBase.extend({
-  state: external_exports.literal("finished"),
-  resultValidated: external_exports.literal(true),
-  resultSha256: digest8,
-  resultBytes: external_exports.number().int().positive()
-});
-var runnerOperationSchema = external_exports.union([
-  operationBase.extend({
-    state: external_exports.enum([
-      "accepted",
-      "running",
-      "unknown",
-      "not-started",
-      "stopped-before-start"
-    ]),
-    resultValidated: external_exports.literal(false).optional()
-  }),
-  finished.extend({ result: runnerResultSchema }),
-  finished.extend({ resultRead }),
-  finished.extend({ resultChunk })
-]);
-var runnerErrorSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner-error/1"),
-  method: external_exports.enum(["execute", "get", "stop"]),
-  runId: digest8.optional(),
-  error: external_exports.strictObject({
-    code: external_exports.enum([
-      "invalid_arguments",
-      "request_key_conflict",
-      "operation_not_found_in_scope",
-      "operation_unavailable",
-      "private_parameter_invalid",
-      "private_parameter_unavailable",
-      "private_parameter_scope_mismatch",
-      "private_parameter_target_mismatch",
-      "private_parameter_collision",
-      "private_parameter_revoked"
-    ]),
-    message: external_exports.string(),
-    // null means dispatch may have happened; failure never permits replay.
-    requestDispatched: external_exports.boolean().nullable(),
-    recovery: external_exports.strictObject({
-      action: external_exports.string(),
-      instruction: external_exports.string(),
-      requestKey: external_exports.string().optional(),
-      existingRunId: digest8.optional(),
-      existingRunScope: external_exports.string().optional()
-    })
-  })
-});
-var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
-
-// ../contracts/dist/assessment-preparation.js
-var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var jsonObject4 = external_exports.record(external_exports.string(), external_exports.json());
-var nonempty6 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
-var assessmentReceiptSchema = external_exports.looseObject({
-  id: nonempty6,
-  attribution: nonempty6,
-  content: external_exports.json()
-});
-var assessmentPreparationLimits = {
-  packetBytes: 2 * 1024 * 1024
-};
-var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
-  reportId: digest9,
-  runId: digest9,
-  view: external_exports.literal("inspection").optional(),
-  expectedResultSha256: digest9.optional(),
-  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
-  requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
-  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
-  receipts: external_exports.array(assessmentReceiptSchema).optional(),
-  suppliedObservations: external_exports.array(assessmentReceiptSchema).optional(),
-  preflight: assessmentReceiptSchema.nullable().optional(),
-  runtimeComparison: assessmentReceiptSchema.nullable().optional(),
-  cleanup: assessmentReceiptSchema.nullable().optional(),
-  selectedArtifactIds: external_exports.array(digest9).refine((ids2) => new Set(ids2).size === ids2.length).optional()
-})).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
-var locator = external_exports.strictObject({
-  report: external_exports.strictObject({
-    tool: external_exports.literal("loki_report_get"),
-    reportId: digest9
-  }),
-  operation: external_exports.strictObject({
-    tool: external_exports.literal("loki_runner_get"),
-    runId: digest9
-  }),
-  artifacts: external_exports.strictObject({
-    tool: external_exports.literal("loki_report_artifact_read"),
-    reportId: digest9,
-    runId: digest9
-  }),
-  resultSha256: digest9.nullable()
-});
-var issue2 = external_exports.strictObject({
-  code: external_exports.string(),
-  location: external_exports.string(),
-  detail: external_exports.string(),
-  actualCount: external_exports.number().int().nonnegative().optional(),
-  maximumCount: external_exports.number().int().positive().optional()
-});
-var indexEntry = external_exports.looseObject({
-  id: external_exports.string(),
-  basis: external_exports.enum(["original-fragment", "caller-assertion", "original-artifact"]),
-  state: external_exports.enum(["supplied", "read", "opaque-uninterpreted", "unavailable"])
-});
-var submission = external_exports.strictObject({
-  compatible: external_exports.boolean(),
-  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
-  instruction: external_exports.string()
-});
-var common = {
-  schema: external_exports.literal("loki.assessment-preparation/1"),
-  submission,
-  // These describe the selected original run, never a new assessment verdict.
-  executionState: external_exports.json(),
-  nativeVerdict: external_exports.json(),
-  accounting: jsonObject4,
-  evidenceIndex: external_exports.array(indexEntry),
-  origin: locator
-};
-var fullPreparationOutput = external_exports.union([
-  external_exports.strictObject({
-    ...common,
-    state: external_exports.enum(["prepared", "unresolved"]),
-    assessmentInput: suppliedEvidenceInputSchema.nullable(),
-    original: jsonObject4,
-    // Receipt bodies live once in assessment evidence text, addressed here as
-    // JSON pointers; inline only when no compatible assessment input exists.
-    callerAssertions: jsonObject4,
-    missingFacts: external_exports.array(issue2),
-    unresolvedReferences: external_exports.array(issue2),
-    selectedArtifacts: external_exports.array(jsonObject4),
-    unselectedArtifacts: external_exports.array(jsonObject4),
-    interpretation: external_exports.string(),
-    replayAllowed: external_exports.literal(false)
-  }),
-  external_exports.strictObject({
-    ...common,
-    state: external_exports.literal("refused"),
-    refusal: external_exports.strictObject({
-      code: external_exports.enum([
-        "selection_unavailable",
-        "selection_changed",
-        "artifact_refused",
-        "oversize"
-      ]),
-      maxBytes: external_exports.number().int().positive().optional(),
-      requiredBytes: external_exports.number().int().nonnegative().optional()
-    }),
-    assessmentInput: external_exports.null(),
-    replayAllowed: external_exports.literal(false)
-  })
-]);
-var count3 = external_exports.number().int().nonnegative();
-var assessmentInspectionLocatorSchema = external_exports.union([
-  external_exports.strictObject({
-    document: external_exports.literal("decoded-original-runner-result"),
-    pointer: external_exports.string()
-  }),
-  external_exports.strictObject({ document: external_exports.literal("request"), pointer: external_exports.string() }),
-  external_exports.strictObject({
-    document: external_exports.literal("full-preparation-packet"),
-    pointer: external_exports.string()
-  }),
-  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest9 })
-]);
-var section = external_exports.strictObject({
-  total: count3,
-  shown: count3,
-  omitted: count3,
-  containerLocator: assessmentInspectionLocatorSchema,
-  available: external_exports.boolean(),
-  rows: external_exports.array(jsonObject4)
-});
-var assessmentInspectionOutputSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.assessment-inspection/1"),
-  view: external_exports.literal("inspection"),
-  state: external_exports.enum(["prepared", "unresolved", "refused"]),
-  executionState: common.executionState,
-  nativeVerdict: common.nativeVerdict,
-  accounting: common.accounting,
-  origin: common.origin,
-  documents: jsonObject4,
-  factSources: jsonObject4,
-  submission: external_exports.strictObject({
-    compatible: external_exports.boolean(),
-    nextAction: external_exports.enum(["get_assessment_input", "resolve_input"]),
-    locator: assessmentInspectionLocatorSchema,
-    instruction: external_exports.string()
-  }),
-  claims: external_exports.strictObject({ outcomes: section, native: section }),
-  evidenceRecords: section,
-  callerAssertions: external_exports.strictObject({
-    preflight: jsonObject4,
-    runtimeComparison: jsonObject4,
-    cleanup: jsonObject4,
-    suppliedObservations: jsonObject4,
-    receipts: jsonObject4
-  }),
-  evidenceIndex: section,
-  selectedArtifacts: section,
-  unselectedArtifacts: section,
-  missingFacts: section,
-  unresolvedReferences: section,
-  selection: external_exports.strictObject({
-    method: external_exports.literal("mechanical-prefix-not-importance"),
-    outcomes: count3,
-    evidenceRecords: count3,
-    receiptsPerCategory: count3,
-    contentLeaves: count3,
-    contentDepth: count3,
-    stoppedSubtrees: count3,
-    stringCodePoints: count3,
-    evidenceIndex: count3,
-    selectedArtifacts: count3,
-    unselectedArtifacts: count3,
-    missingFacts: count3,
-    unresolvedReferences: count3,
-    objectKeys: external_exports.literal("UTF-16-code-unit-order"),
-    traversal: external_exports.literal("shallow-first; arrays in original index order"),
-    contentTotals: external_exports.literal("primitive and empty-container values through contentDepth; deeper leaf counts unknown"),
-    evidenceRecordOrder: external_exports.literal("original fragment order, then selected JSON artifact order; no caller receipts"),
-    reportSelection: external_exports.string(),
-    interpretation: external_exports.string()
-  }),
-  refusal: fullPreparationOutput.options[1].shape.refusal.optional(),
-  replayAllowed: external_exports.literal(false)
-});
-var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union([fullPreparationOutput, assessmentInspectionOutputSchema])).meta({ $id: "urn:kaijan:assessment-prepare-output:1" });
-
-// ../contracts/dist/test-run.js
-var testRunResultSchema = external_exports.looseObject({
-  schema: external_exports.literal("kaijan.test-run/1"),
-  runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
-  state: external_exports.string(),
-  status: external_exports.object({
-    execution: external_exports.string(),
-    assessment: external_exports.string(),
-    report: external_exports.string()
-  }),
-  // Keep recursive JSON references rooted in this output, not a nested URI.
-  execution: runnerOutputSchema.meta({ $id: void 0 }).nullable(),
-  // Default reads return literal selected fields. Full original execution and
-  // assessment records remain available through originalResult and offsets.
-  assessment: external_exports.json().nullable(),
-  preparation: external_exports.json().nullable(),
-  executionSummary: external_exports.json().nullable().optional(),
-  nextAction: runnerNextActionSchema.optional(),
-  view: external_exports.enum(["summary", "original"]).optional(),
-  originalResult: external_exports.strictObject({
-    tool: external_exports.literal("loki_test_get"),
-    arguments: external_exports.strictObject({
-      runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
-      offset: external_exports.literal(0)
-    }),
-    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
-    resultBytes: external_exports.number().int().positive().nullable(),
-    instruction: external_exports.string()
-  }).optional(),
-  report: external_exports.looseObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).nullable(),
-  replayAllowed: external_exports.literal(false)
-});
-var testRunErrorSchema = external_exports.looseObject({
-  schema: external_exports.literal("kaijan.test-run/1"),
-  runId: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
-  state: external_exports.literal("unavailable"),
-  replayAllowed: external_exports.literal(false),
-  error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
-});
-var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
-
-// ../contracts/dist/report-presentation.js
-var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var count4 = external_exports.number().int().nonnegative();
-var assessmentQuote = external_exports.object({ sourceId: external_exports.string(), text: external_exports.string() });
-var reportTestAssessmentSchema = external_exports.object({
-  answerId: digest10,
-  resultSha256: digest10,
-  model: external_exports.string(),
-  testId: external_exports.string(),
-  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
-  expected: external_exports.string(),
-  actual: external_exports.string().nullable(),
-  reason: external_exports.string(),
-  evidence: external_exports.array(assessmentQuote),
-  observedSteps: external_exports.array(external_exports.object({
-    description: external_exports.string(),
-    evidence: external_exports.array(assessmentQuote)
-  }))
-});
-var nativeJson = external_exports.unknown().refine((value) => external_exports.json().safeParse(value).success);
-var configurationShape = external_exports.object({
-  executionMethod: external_exports.enum(["browser-ui", "desktop-ui"]),
-  browser: external_exports.literal("chromium").nullable(),
-  target: nativeJson,
-  automaticRetries: external_exports.literal(0),
-  trigger: external_exports.literal("explicit-tool-call")
-}).catchall(nativeJson);
-var configurationSchema = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
-var testPlanViewSchema = external_exports.object({
-  schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest10,
-  title: external_exports.string(),
-  createdAt: external_exports.string(),
-  mapId: digest10.nullable(),
-  selectedPullRequestUrl: external_exports.string().nullable().optional(),
-  runs: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    resultSha256: digest10.nullable(),
-    state: external_exports.string(),
-    executionState: external_exports.string(),
-    testVerdict: external_exports.string(),
-    planSourceId: external_exports.string(),
-    planResultSha256: external_exports.string(),
-    selectedTestIds: external_exports.array(external_exports.string()),
-    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
-    observation: external_exports.string(),
-    executionReport: runnerExecutionReportSchema.nullable().optional(),
-    traceRetained: external_exports.boolean(),
-    recordedAt: external_exports.string().nullable().optional(),
-    assessments: external_exports.array(reportTestAssessmentSchema).optional(),
-    configuration: configurationSchema.nullable().optional(),
-    assertions: reportExecutionSchema.nullable().optional()
-  })),
-  pullRequests: external_exports.array(reportPullRequestSchema).optional(),
-  plans: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest10.nullable(),
-    state: external_exports.string(),
-    result: nativeJson,
-    requestTestIndexes: external_exports.array(count4)
-  }))
-});
-var reportPanelSchema = testPlanViewSchema.extend({
-  presentation: external_exports.literal("panel")
-});
-var reportLinkSchema = external_exports.object({
-  schema: external_exports.literal("loki.report-link/1"),
-  reportId: digest10,
-  presentation: external_exports.literal("browser"),
-  previewURL: external_exports.url()
-});
-var summarySchema = external_exports.object({
-  schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest10,
-  title: external_exports.string(),
-  counts: external_exports.object({
-    pass: count4,
-    fail: count4,
-    blocked: count4,
-    skipped: count4,
-    "not-run": count4,
-    inconclusive: count4.default(0),
-    conflicting: count4.default(0),
-    unavailable: count4.default(0)
-  }),
-  assessmentResults: count4.optional(),
-  pullRequest: external_exports.object({
-    number: external_exports.number().int().positive(),
-    title: external_exports.string(),
-    url: external_exports.url()
-  }).nullable(),
-  runs: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    executionState: external_exports.string(),
-    testVerdict: external_exports.string()
-  })),
-  plans: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    resultSha256: digest10.nullable(),
-    requestTests: count4,
-    executedTests: external_exports.boolean().nullable(),
-    proposedTests: count4.nullable()
-  }))
-});
-var cardBase = external_exports.object({
-  mapId: digest10.nullable().optional(),
-  schema: external_exports.literal("loki.report-card/1"),
-  reportId: digest10,
-  title: external_exports.string(),
-  createdAt: external_exports.string(),
-  originalResults: external_exports.array(external_exports.object({
-    kind: external_exports.enum(["plan", "runner", "assessment"]),
-    answerId: digest10.nullable(),
-    runId: digest10.nullable(),
-    resultSha256: digest10.nullable()
-  })),
-  sourceContextId: digest10.nullable(),
-  testPlanSummary: summarySchema,
-  instructions: external_exports.string()
-});
-var reportCardSchema = external_exports.union([
-  cardBase.extend({ presentation: external_exports.literal("panel") }),
-  cardBase.extend({
-    presentation: external_exports.literal("browser"),
-    previewURL: external_exports.url()
-  })
-]).refine((card) => card.testPlanSummary.plans.length > 0 || card.testPlanSummary.runs.length > 0 || Boolean(card.mapId), "A report card requires an original Plan, Run or Map.");
-var reportShowSuccessSchema = external_exports.union([
-  reportViewSchema.extend({
-    presentation: external_exports.literal("chat"),
-    instructions: external_exports.string()
-  }),
-  reportViewSchema.extend({
-    presentation: external_exports.literal("component"),
-    presentationNotice: external_exports.string(),
-    previewURL: external_exports.url()
-  }),
-  reportCardSchema
-]);
-var reportShowOutputSchema = external_exports.union([
-  reportShowSuccessSchema,
-  reportReadFailureSchema
-]);
-var reportOpenSuccessSchema = external_exports.union([
-  reportPanelSchema,
-  reportLinkSchema
-]);
-var reportOpenOutputSchema = external_exports.union([
-  reportOpenSuccessSchema,
-  reportReadFailureSchema
-]);
-var artifactsSchema = external_exports.object({
-  kind: external_exports.enum(["browser", "desktop", "unavailable"]),
-  message: external_exports.string(),
-  traceAvailable: external_exports.boolean(),
-  launchCommand: external_exports.string().optional(),
-  files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
-});
-var traceIdentity = {
-  schema: external_exports.literal("loki.report-trace/1"),
-  reportId: digest10,
-  runId: digest10
-};
-var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
-  const url2 = new URL(value);
-  const prefix = url2.pathname.match(/^\/[a-f0-9]{64}\//)?.[0];
-  return url2.protocol === "http:" && url2.hostname === "127.0.0.1" && !!url2.port && !url2.username && !url2.password && !url2.hash && !!prefix && url2.pathname === `${prefix}index.html` && [...url2.searchParams.keys()].join() === (url2.searchParams.has("case") ? "trace,case" : "trace") && (!url2.searchParams.has("case") || url2.searchParams.get("case").length > 0 && url2.searchParams.get("case").length <= 600) && url2.searchParams.get("trace") === `${url2.origin}${prefix}trace.zip`;
-});
-var reportTraceResultSchema = external_exports.union([
-  artifactsSchema.extend({
-    ...traceIdentity,
-    status: external_exports.literal("available"),
-    traceAvailable: external_exports.literal(true),
-    viewerState: external_exports.enum(["open", "closed"]),
-    viewerURL: reportTraceViewerURLSchema.optional()
-  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
-  external_exports.object({ ...traceIdentity, status: external_exports.literal("closed") }),
-  artifactsSchema.extend({
-    ...traceIdentity,
-    status: external_exports.literal("opened"),
-    traceAvailable: external_exports.literal(true),
-    viewerURL: reportTraceViewerURLSchema
-  }),
-  artifactsSchema.extend({
-    ...traceIdentity,
-    status: external_exports.literal("unavailable")
-  })
-]);
-var reportTraceOutputSchema = external_exports.union([
-  reportTraceResultSchema,
-  reportReadFailureSchema
-]);
-var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
-var reportExportPreviewSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest10,
-  previewSha256: digest10,
-  html: external_exports.string(),
-  omitted: external_exports.array(external_exports.string()),
-  redaction: external_exports.string(),
-  included: external_exports.array(external_exports.string())
-});
-var reportExportReceiptSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest10,
-  sha256: digest10,
-  path: external_exports.string(),
-  delivery: external_exports.literal("local-file-only"),
-  uploaded: external_exports.literal(false)
-});
-var reportExportPreviewOutputSchema = external_exports.union([
-  reportExportPreviewSchema,
-  reportReadFailureSchema
-]);
-var reportExportOutputSchema = external_exports.union([
-  reportExportReceiptSchema,
-  reportReadFailureSchema
-]);
-
-// ../contracts/dist/report-artifact.js
-var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var count5 = external_exports.number().int().nonnegative();
-var reportArtifactProjectionSchema = external_exports.object({
-  schema: external_exports.literal("loki.report-artifact-projection/1"),
-  sourceSha256: digest11,
-  sha256: digest11,
-  bytes: count5,
-  redactionRevision: count5
-});
-var reportArtifactInputSchema = external_exports.strictObject({
-  reportId: digest11,
-  runId: digest11,
-  artifactId: digest11.optional(),
-  offset: count5.optional()
-});
-var artifact = external_exports.object({
-  artifactId: digest11,
-  name: external_exports.string(),
-  mediaType: external_exports.enum(["image/png", "application/json"]),
-  bytes: count5,
-  sha256: digest11
-});
-var provenance = {
-  schema: external_exports.literal("loki.report-artifact/1"),
-  reportId: digest11,
-  runId: digest11,
-  resultSha256: digest11,
-  manifestSha256: digest11,
-  manifestSchema: external_exports.enum([
-    "loki.computer-runner.private-evidence/1",
-    "loki.mac-computer-runner.private-evidence/1"
-  ]),
-  taskId: external_exports.string(),
-  createdAt: external_exports.string(),
-  semanticAssessment: external_exports.literal("not-performed")
-};
-var reportArtifactResultSchema = external_exports.union([
-  external_exports.object({
-    ...provenance,
-    state: external_exports.literal("listed"),
-    artifacts: external_exports.array(artifact).max(50),
-    offset: count5,
-    nextOffset: count5.nullable(),
-    totalArtifacts: count5
-  }),
-  external_exports.object({
-    ...provenance,
-    state: external_exports.literal("read"),
-    artifact,
-    content: external_exports.union([
-      external_exports.object({
-        mediaType: external_exports.literal("image/png"),
-        encoding: external_exports.literal("base64"),
-        data: external_exports.string()
-      }),
-      external_exports.object({
-        mediaType: external_exports.literal("application/json"),
-        encoding: external_exports.literal("utf-8"),
-        text: external_exports.string(),
-        offset: count5,
-        nextOffset: count5.nullable(),
-        totalCodeUnits: count5,
-        // Artifact metadata identifies the private original. This identifies
-        // the complete filtered JSON, before transport pagination.
-        projection: reportArtifactProjectionSchema.optional()
-      })
-    ])
-  })
-]);
-var reportArtifactOutputSchema = external_exports.union([
-  reportArtifactResultSchema,
-  reportReadFailureSchema
-]);
-
-// ../contracts/dist/report-render.js
-var reportRenderMetadataSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.report-render/1"),
-  view_id: external_exports.uuidv4().regex(/^[a-f0-9-]+$/),
-  report_id: external_exports.string().regex(/^[a-f0-9]{64}$/),
-  view_kind: external_exports.enum(["full_report", "test_plan_details"]),
-  presentation: external_exports.enum(["mcp_app", "loopback_url"])
-});
-var reportRenderAckSchema = reportRenderMetadataSchema.extend({
-  phase: external_exports.literal("rendered")
-});
-
-// ../contracts/dist/case-evidence.js
-var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var screenshot = external_exports.object({
-  name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest12,
-  capturedAt: external_exports.string()
-});
-var browserRefresh = external_exports.object({
-  kind: external_exports.literal("browser-refresh"),
-  method: external_exports.literal("page.reload"),
-  pageId: external_exports.string().optional(),
-  urlBefore: external_exports.string(),
-  waitUntil: external_exports.literal("domcontentloaded"),
-  status: external_exports.enum(["invoked", "returned", "error"]),
-  dispatchedAt: external_exports.string().optional(),
-  urlAfter: external_exports.string().optional(),
-  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
-  completedAt: external_exports.string().optional(),
-  error: external_exports.string().optional(),
-  completion: external_exports.literal("unverified").optional()
-});
-var action = external_exports.object({
-  index: external_exports.number().int().positive(),
-  type: external_exports.string(),
-  status: external_exports.enum(["invoked", "returned", "error"]),
-  startedAt: external_exports.string(),
-  endedAt: external_exports.string(),
-  operation: browserRefresh.optional()
-});
-var caseEvidenceSchema = external_exports.object({
-  schema: external_exports.literal("loki.runner.case-evidence/1"),
-  attribution: external_exports.literal("runner-declared-boundaries"),
-  planRef: external_exports.object({ answerId: digest12, resultSha256: digest12 }),
-  selectedTestIds: external_exports.array(external_exports.string().min(1)),
-  cases: external_exports.array(external_exports.object({
-    testId: external_exports.string().min(1),
-    occurrence: external_exports.number().int().positive(),
-    title: external_exports.string(),
-    state: external_exports.enum(["recording", "ended", "interrupted"]),
-    startedAt: external_exports.string(),
-    endedAt: external_exports.string().nullable(),
-    actions: external_exports.array(action),
-    screenshots: external_exports.array(screenshot)
-  })),
-  unassignedActions: external_exports.array(action),
-  unassignedScreenshots: external_exports.array(screenshot)
-}).superRefine((record5, ctx) => {
-  const ids2 = new Set(record5.selectedTestIds);
-  const occurrences = record5.cases.map((item) => `${item.testId}:${item.occurrence}`);
-  const actions = [
-    ...record5.unassignedActions,
-    ...record5.cases.flatMap((item) => item.actions)
-  ].map((item) => item.index);
-  const screenshots = [
-    ...record5.unassignedScreenshots,
-    ...record5.cases.flatMap((item) => item.screenshots)
-  ].map((item) => item.name);
-  if (ids2.size !== record5.selectedTestIds.length || record5.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
-    ctx.addIssue({
-      code: "custom",
-      message: "Case evidence identities must be unique and selected."
-    });
-});
-
-// ../contracts/dist/local.js
-var localProtocol = "loki-local-v1";
-var localCompanionVersion = "0.1.0";
-var localAdapter = "loki-ui-modeler-local-v1";
-var localLimits = {
-  messageBytes: 256 * 1024,
-  artifactChunkBytes: 128 * 1024,
-  readRequests: 8,
-  pageSize: 100,
-  inputLifetimeMs: 30 * 60 * 1e3
-};
-var id2 = external_exports.uuid();
-var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
-var localContextSchema = external_exports.strictObject({
-  coreOrigin: external_exports.url().refine((value) => {
-    const url2 = new URL(value);
-    return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
-  }),
-  userId: id2,
-  workspaceId: id2
-});
-var localAuthSchema = external_exports.strictObject({
-  bindingId: id2,
-  secret,
-  context: localContextSchema
-});
-var localInputStateSchema = external_exports.enum([
-  "selected",
-  "preparing",
-  "ready",
-  "rejected",
-  "released"
-]);
-var localRunStateSchema = external_exports.enum([
-  "accepted",
-  "preflight",
-  "running",
-  "validating",
-  "complete",
-  "partial",
-  "failed",
-  "cancelling",
-  "cancelled",
-  "interrupted"
-]);
-var localErrorCodeSchema = external_exports.enum([
-  "invalid_request",
-  "protocol_mismatch",
-  "version_mismatch",
-  "origin_denied",
-  "pairing_denied",
-  "unauthorized",
-  "scope_changed",
-  "not_found",
-  "busy",
-  "invalid_state",
-  "expired_input",
-  "source_changed",
-  "source_rejected",
-  "secret_detected",
-  "limit_exceeded",
-  "storage_full",
-  "configuration_required",
-  "runtime_unavailable",
-  "idempotency_conflict",
-  "cli_failed",
-  "invalid_output",
-  "interrupted",
-  "outcome_unknown",
-  "cancelled",
-  "internal_error"
-]);
-var localErrorSchema = external_exports.strictObject({
-  code: localErrorCodeSchema,
-  message: external_exports.string().max(500),
-  retryable: external_exports.boolean(),
-  locations: external_exports.array(external_exports.string().max(1024)).max(20).optional(),
-  cliStarted: external_exports.boolean().nullable()
-});
-var page = {
-  offset: external_exports.number().int().nonnegative().max(1e5).default(0),
-  limit: external_exports.number().int().min(1).max(localLimits.pageSize).default(50)
-};
-var request2 = (method, params) => external_exports.strictObject({
-  protocol: external_exports.literal(localProtocol),
-  requestId: id2,
-  method: external_exports.literal(method),
-  params,
-  auth: localAuthSchema.optional()
-});
-var localRequestSchema = external_exports.discriminatedUnion("method", [
-  request2("hello", external_exports.strictObject({
-    companionVersion: external_exports.literal(localCompanionVersion),
-    context: localContextSchema
-  })),
-  request2("capabilities.list", external_exports.strictObject({})),
-  request2("settings.open", external_exports.strictObject({})),
-  request2("input.select", external_exports.strictObject({})),
-  request2("input.prepare", external_exports.strictObject({ inputId: id2 })),
-  request2("input.status", external_exports.strictObject({ inputId: id2, ...page })),
-  request2("input.release", external_exports.strictObject({ inputId: id2 })),
-  request2("run.start", external_exports.strictObject({
-    capability: external_exports.literal("ui-modeler"),
-    version: external_exports.literal("2026.10.18-8"),
-    inputId: id2,
-    inputDigest: digest13,
-    transferAcknowledged: external_exports.literal(true),
-    idempotencyKey: id2
-  })),
-  request2("run.get", external_exports.union([
-    external_exports.strictObject({ runId: id2 }),
-    external_exports.strictObject({ idempotencyKey: id2 })
-  ])),
-  request2("run.list", external_exports.strictObject(page)),
-  request2("run.cancel", external_exports.strictObject({ runId: id2 })),
-  request2("run.events", external_exports.strictObject({
-    runId: id2,
-    afterSequence: external_exports.number().int().nonnegative(),
-    ...page
-  })),
-  request2("result.read", external_exports.strictObject({
-    runId: id2,
-    section: external_exports.enum(["summary", "screens", "elements", "connections"]),
-    ...page
-  })),
-  request2("artifact.read", external_exports.strictObject({
-    runId: id2,
-    artifactId: id2,
-    offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
-    length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
-  })),
-  request2("run.delete", external_exports.strictObject({ runId: id2 }))
-]);
-var omission = external_exports.strictObject({
-  path: external_exports.string().max(1024),
-  reason: external_exports.string().max(100)
-});
-var localInputSchema = external_exports.strictObject({
-  inputId: id2,
-  displayName: external_exports.string().max(255),
-  state: localInputStateSchema,
-  digest: digest13.nullable(),
-  includedFiles: external_exports.number().int().nonnegative(),
-  includedBytes: external_exports.number().int().nonnegative(),
-  omissionCount: external_exports.number().int().nonnegative(),
-  omissions: external_exports.array(omission).max(localLimits.pageSize),
-  nextOffset: external_exports.number().int().nullable(),
-  createdAt: external_exports.iso.datetime(),
-  expiresAt: external_exports.iso.datetime(),
-  error: localErrorSchema.nullable()
-});
-var localEventSchema = external_exports.strictObject({
-  protocol: external_exports.literal(localProtocol),
-  runId: id2,
-  sequence: external_exports.number().int().positive(),
-  state: localRunStateSchema,
-  detail: external_exports.string().max(500),
-  at: external_exports.iso.datetime()
-});
-var localRunSchema = external_exports.strictObject({
-  runId: id2,
-  state: localRunStateSchema,
-  sequence: external_exports.number().int().nonnegative(),
-  capability: external_exports.literal("ui-modeler"),
-  cliVersion: external_exports.literal("2026.10.18-8"),
-  cliDigest: digest13,
-  adapter: external_exports.literal(localAdapter),
-  inputDigest: digest13,
-  sourcePolicy: external_exports.literal("local-source-v1"),
-  displayName: external_exports.string().max(255),
-  execution: external_exports.literal("local"),
-  basis: external_exports.literal("source_inferred"),
-  cliStarted: external_exports.boolean().nullable(),
-  stage: external_exports.enum(["accepted", "preflight", "execution", "output"]),
-  createdAt: external_exports.iso.datetime(),
-  endedAt: external_exports.iso.datetime().nullable(),
-  exitCode: external_exports.number().int().nullable(),
-  error: localErrorSchema.nullable(),
-  completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
-  usage: external_exports.literal("unknown"),
-  artifacts: external_exports.array(external_exports.strictObject({
-    artifactId: id2,
-    name: external_exports.string().max(255),
-    size: external_exports.number().int().nonnegative(),
-    sha256: digest13
-  })).max(100)
-});
-var localSetupSchema = external_exports.strictObject({
-  error: localErrorSchema.optional(),
-  credentials: external_exports.enum(["missing", "present"]),
-  runtime: external_exports.enum(["ready", "unavailable"])
-});
-var resultText = external_exports.string().max(4e3);
-var localResultSectionSchemas = {
-  summary: external_exports.strictObject({
-    status: external_exports.enum(["processed", "incomplete"]),
-    basis: external_exports.literal("source_inferred"),
-    runtimeVerified: external_exports.literal(false),
-    screens: external_exports.number().int().nonnegative(),
-    elements: external_exports.number().int().nonnegative(),
-    connections: external_exports.number().int().nonnegative(),
-    limitations: external_exports.array(resultText).max(100),
-    limitationCount: external_exports.number().int().nonnegative(),
-    issues: external_exports.number().int().nonnegative()
-  }),
-  screens: external_exports.strictObject({
-    id: resultText,
-    label: resultText,
-    extractionStatus: external_exports.enum([
-      "processed",
-      "incomplete",
-      "unsupported",
-      "failed",
-      "missing"
-    ])
-  }),
-  elements: external_exports.strictObject({
-    id: resultText,
-    pageId: resultText,
-    parentElementId: resultText.nullable(),
-    label: resultText,
-    kind: resultText,
-    displayCondition: resultText,
-    clickable: external_exports.boolean(),
-    navigationStatus: external_exports.enum([
-      "not_applicable",
-      "no_page_navigation",
-      "unknown",
-      "known"
-    ]),
-    sourceRefs: external_exports.array(resultText).max(20),
-    sourceRefCount: external_exports.number().int().nonnegative()
-  }),
-  connections: external_exports.strictObject({
-    id: resultText,
-    elementId: resultText,
-    fromPageId: resultText,
-    toPageId: resultText.nullable(),
-    routeOrUrl: resultText.nullable(),
-    condition: resultText,
-    sourceRefs: external_exports.array(resultText).max(20),
-    sourceRefCount: external_exports.number().int().nonnegative()
-  })
-};
-var resultPage = external_exports.discriminatedUnion("section", [
-  external_exports.strictObject({
-    section: external_exports.literal("summary"),
-    items: external_exports.array(localResultSectionSchemas.summary).max(1),
-    nextOffset: external_exports.number().int().nullable(),
-    total: external_exports.number().int().nonnegative()
-  }),
-  external_exports.strictObject({
-    section: external_exports.literal("screens"),
-    items: external_exports.array(localResultSectionSchemas.screens).max(100),
-    nextOffset: external_exports.number().int().nullable(),
-    total: external_exports.number().int().nonnegative()
-  }),
-  external_exports.strictObject({
-    section: external_exports.literal("elements"),
-    items: external_exports.array(localResultSectionSchemas.elements).max(100),
-    nextOffset: external_exports.number().int().nullable(),
-    total: external_exports.number().int().nonnegative()
-  }),
-  external_exports.strictObject({
-    section: external_exports.literal("connections"),
-    items: external_exports.array(localResultSectionSchemas.connections).max(100),
-    nextOffset: external_exports.number().int().nullable(),
-    total: external_exports.number().int().nonnegative()
-  })
-]);
-var localResultSchemas = {
-  hello: external_exports.strictObject({
-    protocol: external_exports.literal(localProtocol),
-    companionVersion: external_exports.literal(localCompanionVersion),
-    bindingId: id2,
-    bindingSecret: secret.optional(),
-    context: localContextSchema,
-    setup: localSetupSchema
-  }),
-  "capabilities.list": external_exports.strictObject({
-    capabilities: external_exports.array(external_exports.strictObject({
-      id: external_exports.literal("ui-modeler"),
-      version: external_exports.literal("2026.10.18-8"),
-      inputs: external_exports.tuple([external_exports.literal("local-folder")]),
-      adapter: external_exports.literal(localAdapter)
-    })).length(1),
-    setup: localSetupSchema
-  }),
-  "settings.open": localSetupSchema,
-  "input.select": external_exports.strictObject({
-    cancelled: external_exports.boolean(),
-    input: localInputSchema.nullable()
-  }),
-  "input.prepare": localInputSchema,
-  "input.status": localInputSchema,
-  "input.release": external_exports.strictObject({ released: external_exports.literal(true) }),
-  "run.start": localRunSchema,
-  "run.get": localRunSchema,
-  "run.list": external_exports.strictObject({
-    runs: external_exports.array(localRunSchema).max(100),
-    nextOffset: external_exports.number().int().nullable()
-  }),
-  "run.cancel": localRunSchema,
-  "run.events": external_exports.strictObject({
-    events: external_exports.array(localEventSchema).max(100),
-    snapshot: localRunSchema,
-    resync: external_exports.boolean()
-  }),
-  "result.read": resultPage,
-  "artifact.read": external_exports.strictObject({
-    artifactId: id2,
-    offset: external_exports.number().int().nonnegative(),
-    base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
-    sha256: digest13,
-    totalSize: external_exports.number().int().nonnegative(),
-    eof: external_exports.boolean()
-  }),
-  "run.delete": external_exports.strictObject({ deleted: external_exports.literal(true) })
-};
-var localResponseSchema = external_exports.discriminatedUnion("ok", [
-  external_exports.strictObject({
-    protocol: external_exports.literal(localProtocol),
-    requestId: id2,
-    ok: external_exports.literal(true),
-    result: external_exports.unknown()
-  }),
-  external_exports.strictObject({
-    protocol: external_exports.literal(localProtocol),
-    requestId: id2,
-    ok: external_exports.literal(false),
-    error: localErrorSchema
-  })
-]);
-
-// src/query.ts
+import { createHash, createHmac, randomBytes, randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
-var digest14 = (value) => createHash2("sha256").update(value).digest("hex");
+var digest18 = (value) => createHash("sha256").update(value).digest("hex");
 var integrationIdentity = boundedFile(fileURLToPath(import.meta.url)).then(
-  digest14
+  digest18
 );
 
 // src/operations.ts
@@ -23218,8 +24492,289 @@ function canonicalJson(value) {
   return JSON.stringify(value);
 }
 
+// src/runner-clarification.ts
+import {
+  redactor,
+  projectClarification,
+  RunnerProjectionError
+} from "@katalon-loki/computer-runner/redaction";
+import { createHash as createHash2 } from "node:crypto";
+
+// src/runner-answer-contracts.ts
+var nonempty5 = external_exports.string().refine((s) => Boolean(s.trim()));
+var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var runnerAnswer = external_exports.strictObject({
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty5,
+  answers: external_exports.record(external_exports.string(), nonempty5),
+  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
+});
+var runnerAnswerReceipt = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification-answer/1"),
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty5,
+  status: external_exports.literal("retained")
+});
+var rejectionCodes = [
+  "operation_unavailable",
+  "answer_conflict",
+  "clarification_unavailable",
+  "invalid_answers",
+  "answer_effect_unestablished"
+];
+var runnerAnswerError = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification-error/1"),
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty5,
+  error: external_exports.strictObject({ code: external_exports.enum(rejectionCodes) }),
+  requestDispatched: external_exports.literal(false).nullable(),
+  recovery: external_exports.string()
+});
+var runnerAnswerOutput = external_exports.union([
+  runnerAnswerReceipt,
+  runnerAnswerError
+]);
+
+// src/runner-clarification.ts
+var nonempty6 = external_exports.string().refine((s) => Boolean(s.trim()));
+var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var question = external_exports.strictObject({
+  id: nonempty6,
+  question: nonempty6,
+  kind: nonempty6,
+  presentation: clarificationPresentationSchema.optional()
+});
+var clarificationRequestSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification/1"),
+  clarificationId: hashId2,
+  providerResponseId: nonempty6,
+  callId: nonempty6,
+  reason: nonempty6,
+  completedSteps: external_exports.array(nonempty6),
+  remainingSteps: external_exports.array(nonempty6),
+  evidence: external_exports.array(nonempty6),
+  questions: external_exports.array(question).min(1),
+  provenance: external_exports.literal("model-authored-unverified")
+}).superRefine((v, ctx) => {
+  if (new Set(v.questions.map((q) => q.id)).size !== v.questions.length || v.clarificationId !== digest19(v.providerResponseId + "\0" + v.callId))
+    ctx.addIssue({
+      code: "custom",
+      message: "Invalid clarification correlation or duplicate questions"
+    });
+});
+var digest19 = (text5) => createHash2("sha256").update(text5).digest("hex");
+
+// src/runner-clarification-worker.ts
+var answerFrame = external_exports.strictObject({
+  type: external_exports.literal("runner-clarification-answer"),
+  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
+  answers: external_exports.record(
+    external_exports.string(),
+    external_exports.string().refine((v) => Boolean(v.trim()))
+  )
+});
+function createWorkerClarification(send2, operationSignal) {
+  const seen = /* @__PURE__ */ new Set();
+  const pending = /* @__PURE__ */ new Map();
+  let closed = false;
+  const failAll = () => {
+    for (const p of pending.values())
+      p.reject(Error("Clarification IPC interrupted; do not replay"));
+    pending.clear();
+  };
+  operationSignal.addEventListener("abort", failAll, { once: true });
+  const requestClarification = async (raw, signal) => {
+    const request3 = clarificationRequestSchema.parse(raw);
+    if (closed || operationSignal.aborted || signal.aborted || seen.has(request3.clarificationId))
+      throw Error(
+        "Clarification unavailable or already requested; do not replay"
+      );
+    seen.add(request3.clarificationId);
+    const combined = AbortSignal.any([operationSignal, signal]);
+    let abort = () => {
+    };
+    const response = new Promise((resolve, reject) => {
+      pending.set(request3.clarificationId, {
+        ids: request3.questions.map((q) => q.id),
+        resolve,
+        reject
+      });
+      abort = () => {
+        pending.delete(request3.clarificationId);
+        reject(Error("Clarification wait interrupted; do not replay"));
+      };
+      combined.addEventListener("abort", abort, { once: true });
+      if (combined.aborted) abort();
+    });
+    void response.catch(() => {
+    });
+    try {
+      if (combined.aborted) throw Error("Clarification interrupted");
+      await send2({ type: "runner-clarification-request", request: request3 });
+      const answer = await response;
+      if (combined.aborted) throw Error("Clarification interrupted");
+      return answer;
+    } finally {
+      combined.removeEventListener("abort", abort);
+      pending.delete(request3.clarificationId);
+    }
+  };
+  return {
+    requestClarification,
+    receive(raw) {
+      const frame = answerFrame.parse(raw);
+      const p = pending.get(frame.clarificationId);
+      if (closed || operationSignal.aborted || !p || Object.keys(frame.answers).length !== p.ids.length || p.ids.some((id4) => !Object.hasOwn(frame.answers, id4)))
+        throw Error("Late or mismatched clarification answer");
+      if (frame.sensitiveQuestionIds && (new Set(frame.sensitiveQuestionIds).size !== frame.sensitiveQuestionIds.length || frame.sensitiveQuestionIds.some(
+        (id4) => !Object.hasOwn(frame.answers, id4)
+      )))
+        throw Error("Invalid sensitive question IDs");
+      pending.delete(frame.clarificationId);
+      p.resolve({
+        answers: frame.answers,
+        ...frame.sensitiveQuestionIds === void 0 ? {} : { sensitiveQuestionIds: frame.sensitiveQuestionIds }
+      });
+    },
+    close() {
+      closed = true;
+      operationSignal.removeEventListener("abort", failAll);
+      failAll();
+    }
+  };
+}
+
+// src/runner-context-worker.ts
+import {
+  createApplicationContextQuery,
+  validateApplicationContextRegistration,
+  validateApplicationContextReply,
+  validateApplicationContextArguments
+} from "#loki-selected/runner-context";
+function createWorkerApplicationContext(value, send2, operationSignal) {
+  const registration = validateApplicationContextRegistration(value);
+  const pending = /* @__PURE__ */ new Map();
+  const seen = /* @__PURE__ */ new Set();
+  const received = /* @__PURE__ */ new Map();
+  const completed = /* @__PURE__ */ new Map();
+  let closed = false;
+  function failAll() {
+    for (const entry of pending.values())
+      entry.reject(Error("Application-context IPC interrupted; do not replay"));
+    pending.clear();
+  }
+  operationSignal.addEventListener("abort", failAll, { once: true });
+  function receive(frame) {
+    if (!frame || typeof frame !== "object" || !("type" in frame) || !["application-context-result", "application-context-error"].includes(
+      String(frame.type)
+    ))
+      return false;
+    if (!("invocationId" in frame) || typeof frame.invocationId !== "string")
+      throw Error("Invalid application-context pairing");
+    const entry = pending.get(frame.invocationId);
+    if (closed || operationSignal.aborted || Date.now() >= Date.parse(registration.deadlineAt))
+      throw Error("Late or unknown application-context reply");
+    const reply = validateApplicationContextReply(
+      frame.invocationId,
+      frame,
+      registration.outputBytes
+    );
+    if (!entry) {
+      const original = received.get(frame.invocationId);
+      if (original?.type === reply.type && (original.type === "application-context-result" && reply.type === "application-context-result" ? original.resultJson === reply.resultJson && original.resultSha256 === reply.resultSha256 : original.type === "application-context-error" && reply.type === "application-context-error" && original.code === reply.code && original.disposition === reply.disposition && JSON.stringify(original.recovery) === JSON.stringify(reply.recovery)))
+        return true;
+      throw Error("Late or unknown application-context reply");
+    }
+    if (reply.type === "application-context-result") {
+      const result = JSON.parse(reply.resultJson);
+      if (result.requestId !== `request-${frame.invocationId}` || result.runId !== registration.runId || result.implementationSha256 !== registration.serviceIdentity)
+        throw Error("Application-context producer correlation changed");
+    }
+    pending.delete(frame.invocationId);
+    received.set(frame.invocationId, reply);
+    entry.resolve(reply);
+    return true;
+  }
+  const tool = {
+    descriptor: JSON.parse(JSON.stringify(registration.descriptor)),
+    handle: async (call, signal) => {
+      if (closed || operationSignal.aborted || signal.aborted)
+        throw Error("Operator Stop");
+      const frame = createApplicationContextQuery(registration.runId, {
+        ...call,
+        functionName: "application_context_query",
+        arguments: validateApplicationContextArguments(call.arguments)
+      });
+      if (call.functionName !== frame.functionName)
+        throw Error("Invalid application-context function name");
+      const remaining = Date.parse(registration.deadlineAt) - Date.now();
+      if (remaining <= 0)
+        throw Error("Application-context run deadline exceeded");
+      const original = completed.get(frame.invocationId);
+      if (original && original.frameJson === JSON.stringify(frame))
+        return original.output;
+      if (seen.has(frame.invocationId))
+        throw Error(
+          "Application-context invocation already sent; do not replay"
+        );
+      seen.add(frame.invocationId);
+      const combined = AbortSignal.any([
+        operationSignal,
+        signal,
+        AbortSignal.timeout(remaining)
+      ]);
+      let abort = () => {
+      };
+      const response = new Promise((resolve, reject) => {
+        pending.set(frame.invocationId, { resolve, reject });
+        abort = () => {
+          pending.delete(frame.invocationId);
+          reject(Error("Application-context wait interrupted; do not replay"));
+        };
+        combined.addEventListener("abort", abort, { once: true });
+        if (combined.aborted) abort();
+      });
+      void response.catch(() => {
+      });
+      try {
+        if (combined.aborted) throw Error("Operator Stop");
+        await send2(frame);
+        const reply = await response;
+        if (combined.aborted) throw Error("Operator Stop");
+        if (reply.type === "application-context-error" && reply.disposition === "unresolved")
+          throw Error("Application-context effect unresolved; do not replay");
+        const output2 = reply.type === "application-context-result" ? reply.resultJson : JSON.stringify(reply);
+        completed.set(frame.invocationId, {
+          frameJson: JSON.stringify(frame),
+          output: output2
+        });
+        return output2;
+      } finally {
+        combined.removeEventListener("abort", abort);
+        pending.delete(frame.invocationId);
+      }
+    }
+  };
+  return {
+    tool,
+    receive,
+    close: () => {
+      closed = true;
+      operationSignal.removeEventListener("abort", failAll);
+      failAll();
+    }
+  };
+}
+
 // src/runner-validation.ts
-var digest15 = (value) => createHash3("sha256").update(value).digest("hex");
+import { createHash as createHash3 } from "node:crypto";
+import { appendFile } from "node:fs/promises";
+import { dirname as dirname2, join } from "node:path";
+var digest20 = (value) => createHash3("sha256").update(value).digest("hex");
 var sha = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var selector = external_exports.union([
   external_exports.strictObject({ call: external_exports.number().int().min(1).max(80) }),
@@ -23309,12 +24864,12 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
   const plan = workerSchema.parse(supplied);
   if (route === "controlled" ? !plan.faults.length || plan.faults.some((entry) => entry.kind !== "controlled-response") : plan.faults.some((entry) => entry.kind === "controlled-response"))
     throw Error("Controlled worker route mismatch; no dispatch");
-  if (plan.requestKey !== input3.requestId || plan.nativeInputSha256 !== digest15(canonicalJson(input3)) || plan.route !== route || plan.headless !== headless)
+  if (plan.requestKey !== input3.requestId || plan.nativeInputSha256 !== digest20(canonicalJson(input3)) || plan.route !== route || plan.headless !== headless)
     throw Error("Validation worker binding mismatch; no dispatch");
   const directory = dirname2(artifacts);
   await privateDirectory(directory);
   let writes = Promise.resolve();
-  const record5 = (event) => {
+  const record5 = (event2) => {
     writes = writes.then(
       () => appendFile(
         join(directory, "runner-validation.jsonl"),
@@ -23324,7 +24879,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
           bindingId: plan.bindingId,
           bindingSha256: plan.bindingSha256,
           runId: plan.runId,
-          ...event
+          ...event2
         }) + "\n",
         { mode: 384 }
       )
@@ -23355,7 +24910,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
       readRows("actions.json", actionRows),
       readRows("mcp-tool-calls.json", mcpRows)
     ]);
-    const identity = (row) => ({
+    const identity2 = (row) => ({
       index: row.index,
       providerCall: row.providerCall,
       callId: row.callId,
@@ -23366,13 +24921,13 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
       ...actions.filter(
         (row) => row.status === "returned" && !["wait", "screenshot"].includes(row.action.type)
       ).map((row) => ({
-        ...identity(row),
+        ...identity2(row),
         source: "computer",
         type: row.action.type
       })),
       ...mcp.filter(
         (row) => row.status === "returned" && (mcpInputNames.has(row.name) || row.name === "browser_tabs" && row.arguments.action !== "list")
-      ).map((row) => ({ ...identity(row), source: "mcp", type: row.name }))
+      ).map((row) => ({ ...identity2(row), source: "mcp", type: row.name }))
     ];
     const outputOrders = /* @__PURE__ */ new Map();
     for (const call of new Set(inputs.map((row) => row.providerCall))) {
@@ -23401,7 +24956,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
   return {
     async send(body, signal) {
       signal.throwIfAborted();
-      const requestSha256 = digest15(JSON.stringify(body));
+      const requestSha256 = digest20(JSON.stringify(body));
       if (!calls.has(requestSha256)) calls.set(requestSha256, calls.size + 1);
       const call = calls.get(requestSha256);
       const attempt = (attempts.get(requestSha256) ?? 0) + 1;
@@ -23746,7 +25301,7 @@ function json3(bytes) {
 }
 var maxMetadataBytes = 8 * 1024 * 1024;
 var readChunkBytes = 64 * 1024;
-async function regularRead(path, signal, { metadata = false } = {}) {
+async function regularRead(path, signal, { metadata: metadata2 = false } = {}) {
   stopped(signal);
   const handle = await open3(
     path,
@@ -23755,8 +25310,8 @@ async function regularRead(path, signal, { metadata = false } = {}) {
   try {
     const stat = await handle.stat();
     insist(stat.isFile(), "nonregular-source-member");
-    insist(!metadata || stat.size <= maxMetadataBytes, "source-capacity");
-    const digest16 = createHash4("sha256");
+    insist(!metadata2 || stat.size <= maxMetadataBytes, "source-capacity");
+    const digest21 = createHash4("sha256");
     const buffer = Buffer2.alloc(readChunkBytes);
     const chunks = [];
     let size = 0;
@@ -23771,16 +25326,16 @@ async function regularRead(path, signal, { metadata = false } = {}) {
       stopped(signal);
       if (bytesRead === 0) break;
       size += bytesRead;
-      insist(!metadata || size <= maxMetadataBytes, "source-capacity");
+      insist(!metadata2 || size <= maxMetadataBytes, "source-capacity");
       const chunk = buffer.subarray(0, bytesRead);
-      digest16.update(chunk);
-      if (metadata) chunks.push(Buffer2.from(chunk));
+      digest21.update(chunk);
+      if (metadata2) chunks.push(Buffer2.from(chunk));
     }
     insist(size === stat.size, "source-drift");
     return {
       size,
-      sha256: digest16.digest("hex"),
-      ...metadata ? { bytes: Buffer2.concat(chunks, size) } : {}
+      sha256: digest21.digest("hex"),
+      ...metadata2 ? { bytes: Buffer2.concat(chunks, size) } : {}
     };
   } finally {
     await handle.close();
@@ -23867,16 +25422,16 @@ var selectorPolicies = Object.freeze({
   instruction: "procedural-relevance/2"
 });
 var maxResponseBytes2 = 8 * 1024 * 1024;
-async function verifyExecutionSource(binding, { signal } = {}) {
+async function verifyExecutionSource(binding2, { signal } = {}) {
   stopped(signal);
-  const value = snapshot(binding);
+  const value = snapshot(binding2);
   insist(
     record4(value) && Object.keys(value).length === 2 && typeof value.directory === "string" && isAbsolute(value.directory) && typeof value.sourceSha256 === "string" && /^[a-f0-9]{64}$/.test(value.sourceSha256),
     "invalid-source-binding"
   );
-  const source = await sourceAt(value.directory, signal);
+  const source3 = await sourceAt(value.directory, signal);
   insist(
-    source.directory === value.directory && source.sourceSha256 === value.sourceSha256,
+    source3.directory === value.directory && source3.sourceSha256 === value.sourceSha256,
     "source-drift"
   );
   stopped(signal);
@@ -24033,8 +25588,8 @@ process.on("message", (message) => {
           requestAI: (body, signal) => validation.send(body, signal)
         } : managed ? { requestAI: selectedSender } : { apiKey: options.apiKey },
         signal: controller.signal,
-        onEvent: (event) => {
-          void send({ type: "event", event });
+        onEvent: (event2) => {
+          void send({ type: "event", event: event2 });
         }
       };
       if (reuseSource !== void 0)

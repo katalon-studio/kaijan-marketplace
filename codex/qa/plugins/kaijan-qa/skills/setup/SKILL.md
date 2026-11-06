@@ -17,7 +17,7 @@ Use a native Question for consequential missing input. A highlighted or unanswer
 
 Resolve the installed plugin root two directories above this skill. Read its `loki-build.json` and use that profile's installed tools and skills. For application configuration, follow `application-setup` in this same conversation. Save the source selection, original goal and optional target, then read the original result.
 
-This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup sends no source to a model. It returns a saved configuration with `map: null`; this is not browser observation or proof that a feature works.
+This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup returns the saved source, work item and optional target. Check the advertised customer result; do not require private map or authorization fields. Saved context is not browser observation or proof that a feature works.
 
 For a new source selection, default to latest main and honor an explicit branch, PR ref or exact commit. Keep the frozen SHA and original requestKey for readback/recovery. Setup does not include dirty files in that committed-source selection. Keep the caller's actual dirty-source evidence separate when the selected test task needs it. Ask for a target/browser only when execution needs one.
 
@@ -25,13 +25,24 @@ Use the advertised input/output schema, `isError` and `structuredContent`. Prese
 
 ## Connections and prerequisites
 
-Core HTTP/OAuth handles cloud account/workspace and Work Item operations. Local stdio handles Setup, context, analysis, planning, Runner and reports. Core sign-in is not a prerequisite for independent local capabilities. A connection offer does not prove that the current chat has callable tools.
+Read `authArchitecture` in the installed `loki-build.json`. With `shared-broker-v1`, Core and Local use the same Kaijan sign-in. Managed analysis, planning, Runner and evidence assessment need the shared grant for AI. Source-only Setup, context retention and saved-result reads do not need AI access when Local tools are available. An explicit direct-development build uses its local provider settings for AI.
+
+If the user cancels the initial sign-in and wants to save a local source,
+continue with `application-setup` when the Local tools are available. Do not
+start sign-in again for this source-only task. Tell the user what Setup saved
+and explain any connection required for their next selected action. Private
+GitHub source reads still need their own connection check.
 
 Inspect the actual chat tool inventory and `loki_capabilities_list` when exposed. Distinguish installed/enabled, discovery, current-chat availability and selected-operation readiness. Report the exact missing boundary. Use a supported reconnect control only when needed and verify afterward. Do not infer that Core login will fix missing local tools.
 
-Provider/runtime configuration is checked for the selected analysis or Runner action. Do not collect keys or make it a universal onboarding gate. Application login is separate from Core OAuth and model credentials. Use installed `work-item` and connection-status tools only when the requested cloud operation needs them. Do not create a Work Item as an onboarding requirement. For GitHub work, read [GitHub setup and recovery](references/github-setup.md) only when relevant.
+After an update, or when the installed instructions require tools that this chat
+does not have, read [update recovery](references/update-recovery.md). Check the
+responding package before new paid work. Preserve active work and saved results;
+do not repeat a test to repair its connection or report.
 
-When local analysis or Runner reports missing provider access on a fresh machine, read [provider setup](references/provider-setup.md). The installed package has a host-only setup command. Use an explicitly approved local credential source; never ask the user to paste a key into chat or an MCP argument. Do not treat the Codex subscription or a working terminal environment as proof that the plugin has API access.
+Check the prerequisites for the action the user selected. Application login is separate from Kaijan sign-in. Use the installed `work-item` skill when the user needs a Kaijan Work Item. Keep Work Item creation outside onboarding. For GitHub work, read [GitHub setup and recovery](references/github-setup.md).
+
+When a selected action needs AI, follow [AI access and sign-in recovery](references/provider-setup.md) for the installed mode. For managed builds, check the Kaijan connection and use the supported sign-in flow if access is missing. Use key setup only for a confirmed direct-development build. A Codex subscription does not establish Kaijan AI access.
 
 ## Finish and continue
 

@@ -25,16 +25,6 @@
       "version": "10.8.2"
     },
     {
-      "path": "node_modules/@appium/base-plugin",
-      "name": "@appium/base-plugin",
-      "version": "3.3.6"
-    },
-    {
-      "path": "node_modules/@appium/docutils",
-      "name": "@appium/docutils",
-      "version": "3.0.2"
-    },
-    {
       "path": "node_modules/@appium/logger",
       "name": "@appium/logger",
       "version": "2.0.12"
@@ -70,104 +60,9 @@
       "version": "1.7.2"
     },
     {
-      "path": "node_modules/@aws-sdk/core",
-      "name": "@aws-sdk/core",
-      "version": "3.978.3"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-env",
-      "name": "@aws-sdk/credential-provider-env",
-      "version": "3.972.74"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-http",
-      "name": "@aws-sdk/credential-provider-http",
-      "version": "3.972.76"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-ini",
-      "name": "@aws-sdk/credential-provider-ini",
-      "version": "3.973.19"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-login",
-      "name": "@aws-sdk/credential-provider-login",
-      "version": "3.972.81"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-node",
-      "name": "@aws-sdk/credential-provider-node",
-      "version": "3.972.86"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-process",
-      "name": "@aws-sdk/credential-provider-process",
-      "version": "3.972.74"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-sso",
-      "name": "@aws-sdk/credential-provider-sso",
-      "version": "3.973.18"
-    },
-    {
-      "path": "node_modules/@aws-sdk/credential-provider-web-identity",
-      "name": "@aws-sdk/credential-provider-web-identity",
-      "version": "3.972.80"
-    },
-    {
-      "path": "node_modules/@aws-sdk/nested-clients",
-      "name": "@aws-sdk/nested-clients",
-      "version": "3.997.48"
-    },
-    {
-      "path": "node_modules/@aws-sdk/signature-v4-multi-region",
-      "name": "@aws-sdk/signature-v4-multi-region",
-      "version": "3.996.48"
-    },
-    {
-      "path": "node_modules/@aws-sdk/token-providers",
-      "name": "@aws-sdk/token-providers",
-      "version": "3.1150.0"
-    },
-    {
-      "path": "node_modules/@aws-sdk/types",
-      "name": "@aws-sdk/types",
-      "version": "3.974.6"
-    },
-    {
-      "path": "node_modules/@aws-sdk/xml-builder",
-      "name": "@aws-sdk/xml-builder",
-      "version": "3.972.41"
-    },
-    {
-      "path": "node_modules/@aws/lambda-invoke-store",
-      "name": "@aws/lambda-invoke-store",
-      "version": "0.3.0"
-    },
-    {
-      "path": "node_modules/@babel/helper-string-parser",
-      "name": "@babel/helper-string-parser",
-      "version": "7.29.7"
-    },
-    {
-      "path": "node_modules/@babel/helper-validator-identifier",
-      "name": "@babel/helper-validator-identifier",
-      "version": "7.29.7"
-    },
-    {
       "path": "node_modules/@babel/parser",
       "name": "@babel/parser",
       "version": "7.29.9"
-    },
-    {
-      "path": "node_modules/@babel/types",
-      "name": "@babel/types",
-      "version": "7.29.8"
-    },
-    {
-      "path": "node_modules/@colors/colors",
-      "name": "@colors/colors",
-      "version": "1.6.1"
     },
     {
       "path": "node_modules/@dabh/diagnostics",
@@ -240,59 +135,9 @@
       "version": "5.0.0"
     },
     {
-      "path": "node_modules/@smithy/core",
-      "name": "@smithy/core",
-      "version": "3.36.0"
-    },
-    {
-      "path": "node_modules/@smithy/credential-provider-imds",
-      "name": "@smithy/credential-provider-imds",
-      "version": "4.5.2"
-    },
-    {
-      "path": "node_modules/@smithy/fetch-http-handler",
-      "name": "@smithy/fetch-http-handler",
-      "version": "5.8.0"
-    },
-    {
-      "path": "node_modules/@smithy/node-http-handler",
-      "name": "@smithy/node-http-handler",
-      "version": "4.12.1"
-    },
-    {
-      "path": "node_modules/@smithy/signature-v4",
-      "name": "@smithy/signature-v4",
-      "version": "5.7.4"
-    },
-    {
-      "path": "node_modules/@smithy/types",
-      "name": "@smithy/types",
-      "version": "4.19.0"
-    },
-    {
       "path": "node_modules/@so-ric/colorspace",
       "name": "@so-ric/colorspace",
       "version": "1.1.6"
-    },
-    {
-      "path": "node_modules/@standard-schema/spec",
-      "name": "@standard-schema/spec",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/@types/node",
-      "name": "@types/node",
-      "version": "24.19.2"
-    },
-    {
-      "path": "node_modules/@types/triple-beam",
-      "name": "@types/triple-beam",
-      "version": "1.3.5"
-    },
-    {
-      "path": "node_modules/@types/ws",
-      "name": "@types/ws",
-      "version": "8.18.2"
     },
     {
       "path": "node_modules/@vue/compiler-core",
@@ -360,16 +205,6 @@
       "version": "3.0.1"
     },
     {
-      "path": "node_modules/ansi-regex",
-      "name": "ansi-regex",
-      "version": "6.4.0"
-    },
-    {
-      "path": "node_modules/ansi-styles",
-      "name": "ansi-styles",
-      "version": "6.2.3"
-    },
-    {
       "path": "node_modules/appium",
       "name": "appium",
       "version": "3.9.0"
@@ -378,11 +213,6 @@
       "path": "node_modules/appium-mac2-driver",
       "name": "appium-mac2-driver",
       "version": "4.5.1"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/@colors/colors",
-      "name": "@colors/colors",
-      "version": "1.6.1"
     },
     {
       "path": "node_modules/appium-mac2-driver/node_modules/asyncbox",
@@ -413,186 +243,6 @@
       "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data",
       "name": "form-data",
       "version": "4.0.6"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/asynckit",
-      "name": "asynckit",
-      "version": "0.4.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/combined-stream",
-      "name": "combined-stream",
-      "version": "1.0.8"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/combined-stream/node_modules/delayed-stream",
-      "name": "delayed-stream",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag",
-      "name": "es-set-tostringtag",
-      "version": "2.1.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic",
-      "name": "get-intrinsic",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-define-property",
-      "name": "es-define-property",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto",
-      "name": "get-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto",
-      "name": "dunder-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/math-intrinsics",
-      "name": "math-intrinsics",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag",
-      "name": "has-tostringtag",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/mime-types",
-      "name": "mime-types",
-      "version": "2.1.35"
-    },
-    {
-      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data/node_modules/mime-types/node_modules/mime-db",
-      "name": "mime-db",
-      "version": "1.52.0"
     },
     {
       "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent",
@@ -640,556 +290,6 @@
       "version": "1.12.0"
     },
     {
-      "path": "node_modules/appium-xcode",
-      "name": "appium-xcode",
-      "version": "7.2.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support",
-      "name": "@appium/support",
-      "version": "7.2.9"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/logger",
-      "name": "@appium/logger",
-      "version": "2.0.12"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/logger/node_modules/lru-cache",
-      "name": "lru-cache",
-      "version": "11.5.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types",
-      "name": "@appium/types",
-      "version": "1.7.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/@appium/logger",
-      "name": "@appium/logger",
-      "version": "2.0.12"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/@appium/logger/node_modules/lru-cache",
-      "name": "lru-cache",
-      "version": "11.5.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/@appium/schema",
-      "name": "@appium/schema",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/@appium/schema/node_modules/json-schema",
-      "name": "json-schema",
-      "version": "0.4.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/type-fest",
-      "name": "type-fest",
-      "version": "5.10.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/@appium/types/node_modules/type-fest/node_modules/tagged-tag",
-      "name": "tagged-tag",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver",
-      "name": "archiver",
-      "version": "8.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/async",
-      "name": "async",
-      "version": "3.2.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/buffer-crc32",
-      "name": "buffer-crc32",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/is-stream",
-      "name": "is-stream",
-      "version": "4.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream",
-      "name": "lazystream",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "2.3.8"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/core-util-is",
-      "name": "core-util-is",
-      "version": "1.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/inherits",
-      "name": "inherits",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/isarray",
-      "name": "isarray",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/process-nextick-args",
-      "name": "process-nextick-args",
-      "version": "2.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.1.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/lazystream/node_modules/readable-stream/node_modules/util-deprecate",
-      "name": "util-deprecate",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/normalize-path",
-      "name": "normalize-path",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "4.8.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/abort-controller",
-      "name": "abort-controller",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/abort-controller/node_modules/event-target-shim",
-      "name": "event-target-shim",
-      "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/buffer",
-      "name": "buffer",
-      "version": "6.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/buffer/node_modules/base64-js",
-      "name": "base64-js",
-      "version": "1.5.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/buffer/node_modules/ieee754",
-      "name": "ieee754",
-      "version": "1.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/events",
-      "name": "events",
-      "version": "3.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/process",
-      "name": "process",
-      "version": "0.11.10"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readdir-glob",
-      "name": "readdir-glob",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readdir-glob/node_modules/minimatch",
-      "name": "minimatch",
-      "version": "10.2.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readdir-glob/node_modules/minimatch/node_modules/brace-expansion",
-      "name": "brace-expansion",
-      "version": "5.0.12"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/readdir-glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match",
-      "name": "balanced-match",
-      "version": "4.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream",
-      "name": "tar-stream",
-      "version": "3.2.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/b4a",
-      "name": "b4a",
-      "version": "1.9.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs",
-      "name": "bare-fs",
-      "version": "4.8.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-events",
-      "name": "bare-events",
-      "version": "2.9.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-path",
-      "name": "bare-path",
-      "version": "3.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream",
-      "name": "bare-stream",
-      "version": "2.13.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/b4a",
-      "name": "b4a",
-      "version": "1.9.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/bare-events",
-      "name": "bare-events",
-      "version": "2.9.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx",
-      "name": "streamx",
-      "version": "2.28.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx/node_modules/events-universal",
-      "name": "events-universal",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx/node_modules/events-universal/node_modules/bare-events",
-      "name": "bare-events",
-      "version": "2.9.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx/node_modules/fast-fifo",
-      "name": "fast-fifo",
-      "version": "1.3.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx/node_modules/text-decoder",
-      "name": "text-decoder",
-      "version": "1.2.7"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/streamx/node_modules/text-decoder/node_modules/b4a",
-      "name": "b4a",
-      "version": "1.9.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex",
-      "name": "teex",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx",
-      "name": "streamx",
-      "version": "2.28.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx/node_modules/events-universal",
-      "name": "events-universal",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx/node_modules/events-universal/node_modules/bare-events",
-      "name": "bare-events",
-      "version": "2.9.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx/node_modules/fast-fifo",
-      "name": "fast-fifo",
-      "version": "1.3.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx/node_modules/text-decoder",
-      "name": "text-decoder",
-      "version": "1.2.7"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-stream/node_modules/teex/node_modules/streamx/node_modules/text-decoder/node_modules/b4a",
-      "name": "b4a",
-      "version": "1.9.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-url",
-      "name": "bare-url",
-      "version": "2.5.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/bare-url/node_modules/bare-path",
-      "name": "bare-path",
-      "version": "3.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/bare-fs/node_modules/fast-fifo",
-      "name": "fast-fifo",
-      "version": "1.3.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/fast-fifo",
-      "name": "fast-fifo",
-      "version": "1.3.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx",
-      "name": "streamx",
-      "version": "2.28.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx/node_modules/events-universal",
-      "name": "events-universal",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx/node_modules/events-universal/node_modules/bare-events",
-      "name": "bare-events",
-      "version": "2.9.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx/node_modules/fast-fifo",
-      "name": "fast-fifo",
-      "version": "1.3.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx/node_modules/text-decoder",
-      "name": "text-decoder",
-      "version": "1.2.7"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/tar-stream/node_modules/streamx/node_modules/text-decoder/node_modules/b4a",
-      "name": "b4a",
-      "version": "1.9.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream",
-      "name": "zip-stream",
-      "version": "7.0.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons",
-      "name": "compress-commons",
-      "version": "7.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc-32",
-      "name": "crc-32",
-      "version": "1.2.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream",
-      "name": "crc32-stream",
-      "version": "7.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/crc-32",
-      "name": "crc-32",
-      "version": "1.2.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "4.8.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/abort-controller",
-      "name": "abort-controller",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/abort-controller/node_modules/event-target-shim",
-      "name": "event-target-shim",
-      "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/buffer",
-      "name": "buffer",
-      "version": "6.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/buffer/node_modules/base64-js",
-      "name": "base64-js",
-      "version": "1.5.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/buffer/node_modules/ieee754",
-      "name": "ieee754",
-      "version": "1.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/events",
-      "name": "events",
-      "version": "3.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/process",
-      "name": "process",
-      "version": "0.11.10"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/crc32-stream/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/is-stream",
-      "name": "is-stream",
-      "version": "4.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/normalize-path",
-      "name": "normalize-path",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "4.8.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/abort-controller",
-      "name": "abort-controller",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/abort-controller/node_modules/event-target-shim",
-      "name": "event-target-shim",
-      "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/buffer",
-      "name": "buffer",
-      "version": "6.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/buffer/node_modules/base64-js",
-      "name": "base64-js",
-      "version": "1.5.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/buffer/node_modules/ieee754",
-      "name": "ieee754",
-      "version": "1.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/events",
-      "name": "events",
-      "version": "3.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/process",
-      "name": "process",
-      "version": "0.11.10"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/compress-commons/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/normalize-path",
-      "name": "normalize-path",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "4.8.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/abort-controller",
-      "name": "abort-controller",
-      "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/abort-controller/node_modules/event-target-shim",
-      "name": "event-target-shim",
-      "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/buffer",
-      "name": "buffer",
-      "version": "6.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/buffer/node_modules/base64-js",
-      "name": "base64-js",
-      "version": "1.5.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/buffer/node_modules/ieee754",
-      "name": "ieee754",
-      "version": "1.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/events",
-      "name": "events",
-      "version": "3.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/process",
-      "name": "process",
-      "version": "0.11.10"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/archiver/node_modules/zip-stream/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/asyncbox",
-      "name": "asyncbox",
-      "version": "6.5.0"
-    },
-    {
       "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/asyncbox/node_modules/p-limit",
       "name": "p-limit",
       "version": "7.3.3"
@@ -1200,771 +300,6 @@
       "version": "1.2.2"
     },
     {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios",
-      "name": "axios",
-      "version": "1.20.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/follow-redirects",
-      "name": "follow-redirects",
-      "version": "1.16.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data",
-      "name": "form-data",
-      "version": "4.0.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/asynckit",
-      "name": "asynckit",
-      "version": "0.4.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/combined-stream",
-      "name": "combined-stream",
-      "version": "1.0.8"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/combined-stream/node_modules/delayed-stream",
-      "name": "delayed-stream",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag",
-      "name": "es-set-tostringtag",
-      "version": "2.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic",
-      "name": "get-intrinsic",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-define-property",
-      "name": "es-define-property",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto",
-      "name": "get-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto",
-      "name": "dunder-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/math-intrinsics",
-      "name": "math-intrinsics",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag",
-      "name": "has-tostringtag",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/mime-types",
-      "name": "mime-types",
-      "version": "2.1.35"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/form-data/node_modules/mime-types/node_modules/mime-db",
-      "name": "mime-db",
-      "version": "1.52.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent",
-      "name": "https-proxy-agent",
-      "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base",
-      "name": "agent-base",
-      "version": "6.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base/node_modules/debug",
-      "name": "debug",
-      "version": "4.4.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base/node_modules/debug/node_modules/ms",
-      "name": "ms",
-      "version": "2.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent/node_modules/debug",
-      "name": "debug",
-      "version": "4.4.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/https-proxy-agent/node_modules/debug/node_modules/ms",
-      "name": "ms",
-      "version": "2.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/axios/node_modules/proxy-from-env",
-      "name": "proxy-from-env",
-      "version": "2.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/bluebird",
-      "name": "bluebird",
-      "version": "3.7.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/bplist-creator",
-      "name": "bplist-creator",
-      "version": "0.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/bplist-creator/node_modules/stream-buffers",
-      "name": "stream-buffers",
-      "version": "3.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/bplist-parser",
-      "name": "bplist-parser",
-      "version": "0.5.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data",
-      "name": "form-data",
-      "version": "4.0.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/asynckit",
-      "name": "asynckit",
-      "version": "0.4.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/combined-stream",
-      "name": "combined-stream",
-      "version": "1.0.8"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/combined-stream/node_modules/delayed-stream",
-      "name": "delayed-stream",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag",
-      "name": "es-set-tostringtag",
-      "version": "2.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic",
-      "name": "get-intrinsic",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-define-property",
-      "name": "es-define-property",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto",
-      "name": "get-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto",
-      "name": "dunder-proto",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers",
-      "name": "call-bind-apply-helpers",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/call-bind-apply-helpers/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/dunder-proto/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms",
-      "name": "es-object-atoms",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/get-proto/node_modules/es-object-atoms/node_modules/es-errors",
-      "name": "es-errors",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/gopd",
-      "name": "gopd",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/get-intrinsic/node_modules/math-intrinsics",
-      "name": "math-intrinsics",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag",
-      "name": "has-tostringtag",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/has-tostringtag/node_modules/has-symbols",
-      "name": "has-symbols",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/es-set-tostringtag/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/hasown",
-      "name": "hasown",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/hasown/node_modules/function-bind",
-      "name": "function-bind",
-      "version": "1.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/mime-types",
-      "name": "mime-types",
-      "version": "2.1.35"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/form-data/node_modules/mime-types/node_modules/mime-db",
-      "name": "mime-db",
-      "version": "1.52.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob",
-      "name": "glob",
-      "version": "13.0.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/minimatch",
-      "name": "minimatch",
-      "version": "10.2.6"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion",
-      "name": "brace-expansion",
-      "version": "5.0.12"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match",
-      "name": "balanced-match",
-      "version": "4.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/minipass",
-      "name": "minipass",
-      "version": "7.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/path-scurry",
-      "name": "path-scurry",
-      "version": "2.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/path-scurry/node_modules/lru-cache",
-      "name": "lru-cache",
-      "version": "11.5.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/glob/node_modules/path-scurry/node_modules/minipass",
-      "name": "minipass",
-      "version": "7.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp",
-      "name": "jsftp",
-      "version": "2.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/debug",
-      "name": "debug",
-      "version": "3.2.7"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/debug/node_modules/ms",
-      "name": "ms",
-      "version": "2.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser",
-      "name": "ftp-response-parser",
-      "version": "1.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "1.1.14"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/core-util-is",
-      "name": "core-util-is",
-      "version": "1.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/inherits",
-      "name": "inherits",
-      "version": "2.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/isarray",
-      "name": "isarray",
-      "version": "0.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "0.10.31"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/once",
-      "name": "once",
-      "version": "1.4.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/once/node_modules/wrappy",
-      "name": "wrappy",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/parse-listing",
-      "name": "parse-listing",
-      "version": "1.1.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/stream-combiner",
-      "name": "stream-combiner",
-      "version": "0.2.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/stream-combiner/node_modules/duplexer",
-      "name": "duplexer",
-      "version": "0.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/stream-combiner/node_modules/through",
-      "name": "through",
-      "version": "2.3.8"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/jsftp/node_modules/unorm",
-      "name": "unorm",
-      "version": "1.6.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/klaw",
-      "name": "klaw",
-      "version": "4.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/lockfile",
-      "name": "lockfile",
-      "version": "1.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/lockfile/node_modules/signal-exit",
-      "name": "signal-exit",
-      "version": "3.0.7"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data",
-      "name": "normalize-package-data",
-      "version": "8.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/hosted-git-info",
-      "name": "hosted-git-info",
-      "version": "9.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/hosted-git-info/node_modules/lru-cache",
-      "name": "lru-cache",
-      "version": "11.5.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/semver",
-      "name": "semver",
-      "version": "7.8.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license",
-      "name": "validate-npm-package-license",
-      "version": "3.0.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-correct",
-      "name": "spdx-correct",
-      "version": "3.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-correct/node_modules/spdx-expression-parse",
-      "name": "spdx-expression-parse",
-      "version": "3.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-correct/node_modules/spdx-expression-parse/node_modules/spdx-exceptions",
-      "name": "spdx-exceptions",
-      "version": "2.5.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-correct/node_modules/spdx-expression-parse/node_modules/spdx-license-ids",
-      "name": "spdx-license-ids",
-      "version": "3.0.24"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-correct/node_modules/spdx-license-ids",
-      "name": "spdx-license-ids",
-      "version": "3.0.24"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-expression-parse",
-      "name": "spdx-expression-parse",
-      "version": "3.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-expression-parse/node_modules/spdx-exceptions",
-      "name": "spdx-exceptions",
-      "version": "2.5.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/normalize-package-data/node_modules/validate-npm-package-license/node_modules/spdx-expression-parse/node_modules/spdx-license-ids",
-      "name": "spdx-license-ids",
-      "version": "3.0.24"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/plist",
-      "name": "plist",
-      "version": "4.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/plist/node_modules/@xmldom/xmldom",
-      "name": "@xmldom/xmldom",
-      "version": "0.9.12"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/plist/node_modules/xmlbuilder",
-      "name": "xmlbuilder",
-      "version": "15.1.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/pluralize",
-      "name": "pluralize",
-      "version": "8.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sanitize-filename",
-      "name": "sanitize-filename",
-      "version": "1.6.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sanitize-filename/node_modules/truncate-utf8-bytes",
-      "name": "truncate-utf8-bytes",
-      "version": "1.0.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sanitize-filename/node_modules/truncate-utf8-bytes/node_modules/utf8-byte-length",
-      "name": "utf8-byte-length",
-      "version": "1.0.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/semver",
-      "name": "semver",
-      "version": "7.8.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp",
-      "name": "sharp",
-      "version": "0.35.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/@img/colour",
-      "name": "@img/colour",
-      "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/@img/sharp-darwin-arm64",
-      "name": "@img/sharp-darwin-arm64",
-      "version": "0.35.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/@img/sharp-darwin-arm64/node_modules/@img/sharp-libvips-darwin-arm64",
-      "name": "@img/sharp-libvips-darwin-arm64",
-      "version": "1.3.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/@img/sharp-libvips-darwin-arm64",
-      "name": "@img/sharp-libvips-darwin-arm64",
-      "version": "1.3.4"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/detect-libc",
-      "name": "detect-libc",
-      "version": "2.1.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/sharp/node_modules/semver",
-      "name": "semver",
-      "version": "7.8.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/shell-quote",
-      "name": "shell-quote",
-      "version": "1.12.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/teen_process",
-      "name": "teen_process",
-      "version": "4.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/teen_process/node_modules/shell-quote",
-      "name": "shell-quote",
-      "version": "1.12.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/type-fest",
-      "name": "type-fest",
-      "version": "5.10.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/type-fest/node_modules/tagged-tag",
-      "name": "tagged-tag",
-      "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/uuid",
-      "name": "uuid",
-      "version": "14.0.3"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/which",
-      "name": "which",
-      "version": "6.0.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/which/node_modules/isexe",
-      "name": "isexe",
-      "version": "4.0.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/yauzl",
-      "name": "yauzl",
-      "version": "3.4.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/yauzl/node_modules/pend",
-      "name": "pend",
-      "version": "1.2.0"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/asyncbox",
-      "name": "asyncbox",
-      "version": "6.5.0"
-    },
-    {
       "path": "node_modules/appium-xcode/node_modules/asyncbox/node_modules/p-limit",
       "name": "p-limit",
       "version": "7.3.3"
@@ -1973,21 +308,6 @@
       "path": "node_modules/appium-xcode/node_modules/asyncbox/node_modules/p-limit/node_modules/yocto-queue",
       "name": "yocto-queue",
       "version": "1.2.2"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/semver",
-      "name": "semver",
-      "version": "7.8.5"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/teen_process",
-      "name": "teen_process",
-      "version": "4.2.1"
-    },
-    {
-      "path": "node_modules/appium-xcode/node_modules/teen_process/node_modules/shell-quote",
-      "name": "shell-quote",
-      "version": "1.12.0"
     },
     {
       "path": "node_modules/archiver",
@@ -2030,11 +350,6 @@
       "version": "6.5.0"
     },
     {
-      "path": "node_modules/asynckit",
-      "name": "asynckit",
-      "version": "0.4.0"
-    },
-    {
       "path": "node_modules/axios",
       "name": "axios",
       "version": "1.20.0"
@@ -2055,31 +370,6 @@
       "version": "2.9.2"
     },
     {
-      "path": "node_modules/bare-fs",
-      "name": "bare-fs",
-      "version": "4.8.4"
-    },
-    {
-      "path": "node_modules/bare-path",
-      "name": "bare-path",
-      "version": "3.1.2"
-    },
-    {
-      "path": "node_modules/bare-stream",
-      "name": "bare-stream",
-      "version": "2.13.4"
-    },
-    {
-      "path": "node_modules/bare-url",
-      "name": "bare-url",
-      "version": "2.5.5"
-    },
-    {
-      "path": "node_modules/base64-js",
-      "name": "base64-js",
-      "version": "1.5.1"
-    },
-    {
       "path": "node_modules/basic-auth",
       "name": "basic-auth",
       "version": "2.0.1"
@@ -2088,11 +378,6 @@
       "path": "node_modules/bl",
       "name": "bl",
       "version": "4.1.0"
-    },
-    {
-      "path": "node_modules/bl/node_modules/buffer",
-      "name": "buffer",
-      "version": "5.7.1"
     },
     {
       "path": "node_modules/bl/node_modules/readable-stream",
@@ -2120,11 +405,6 @@
       "version": "2.4.0"
     },
     {
-      "path": "node_modules/bowser",
-      "name": "bowser",
-      "version": "2.14.1"
-    },
-    {
       "path": "node_modules/bplist-creator",
       "name": "bplist-creator",
       "version": "0.3.0"
@@ -2138,11 +418,6 @@
       "path": "node_modules/brace-expansion",
       "name": "brace-expansion",
       "version": "5.0.12"
-    },
-    {
-      "path": "node_modules/buffer",
-      "name": "buffer",
-      "version": "6.0.3"
     },
     {
       "path": "node_modules/buffer-crc32",
@@ -2185,19 +460,9 @@
       "version": "2.9.2"
     },
     {
-      "path": "node_modules/cliui",
-      "name": "cliui",
-      "version": "9.0.1"
-    },
-    {
       "path": "node_modules/clone",
       "name": "clone",
       "version": "1.0.4"
-    },
-    {
-      "path": "node_modules/color",
-      "name": "color",
-      "version": "5.0.3"
     },
     {
       "path": "node_modules/color-convert",
@@ -2208,31 +473,6 @@
       "path": "node_modules/color-name",
       "name": "color-name",
       "version": "1.1.4"
-    },
-    {
-      "path": "node_modules/color-string",
-      "name": "color-string",
-      "version": "2.1.4"
-    },
-    {
-      "path": "node_modules/color-string/node_modules/color-name",
-      "name": "color-name",
-      "version": "2.1.1"
-    },
-    {
-      "path": "node_modules/color/node_modules/color-convert",
-      "name": "color-convert",
-      "version": "3.1.3"
-    },
-    {
-      "path": "node_modules/color/node_modules/color-convert/node_modules/color-name",
-      "name": "color-name",
-      "version": "2.1.1"
-    },
-    {
-      "path": "node_modules/combined-stream",
-      "name": "combined-stream",
-      "version": "1.0.8"
     },
     {
       "path": "node_modules/compress-commons",
@@ -2253,11 +493,6 @@
       "path": "node_modules/compress-commons/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
       "name": "safe-buffer",
       "version": "5.2.1"
-    },
-    {
-      "path": "node_modules/consola",
-      "name": "consola",
-      "version": "3.4.2"
     },
     {
       "path": "node_modules/content-disposition",
@@ -2330,11 +565,6 @@
       "version": "1.0.4"
     },
     {
-      "path": "node_modules/delayed-stream",
-      "name": "delayed-stream",
-      "version": "1.0.0"
-    },
-    {
       "path": "node_modules/depd",
       "name": "depd",
       "version": "2.0.0"
@@ -2350,11 +580,6 @@
       "version": "2.1.0"
     },
     {
-      "path": "node_modules/diff",
-      "name": "diff",
-      "version": "9.0.0"
-    },
-    {
       "path": "node_modules/dunder-proto",
       "name": "dunder-proto",
       "version": "1.0.1"
@@ -2368,11 +593,6 @@
       "path": "node_modules/ee-first",
       "name": "ee-first",
       "version": "1.1.1"
-    },
-    {
-      "path": "node_modules/emoji-regex",
-      "name": "emoji-regex",
-      "version": "10.6.0"
     },
     {
       "path": "node_modules/enabled",
@@ -2410,16 +630,6 @@
       "version": "1.1.2"
     },
     {
-      "path": "node_modules/es-set-tostringtag",
-      "name": "es-set-tostringtag",
-      "version": "2.1.0"
-    },
-    {
-      "path": "node_modules/escalade",
-      "name": "escalade",
-      "version": "3.2.0"
-    },
-    {
       "path": "node_modules/escape-html",
       "name": "escape-html",
       "version": "1.0.3"
@@ -2438,11 +648,6 @@
       "path": "node_modules/event-target-shim",
       "name": "event-target-shim",
       "version": "5.0.1"
-    },
-    {
-      "path": "node_modules/events",
-      "name": "events",
-      "version": "3.3.0"
     },
     {
       "path": "node_modules/events-universal",
@@ -2560,16 +765,6 @@
       "version": "1.1.2"
     },
     {
-      "path": "node_modules/get-caller-file",
-      "name": "get-caller-file",
-      "version": "2.0.5"
-    },
-    {
-      "path": "node_modules/get-east-asian-width",
-      "name": "get-east-asian-width",
-      "version": "1.7.0"
-    },
-    {
       "path": "node_modules/get-intrinsic",
       "name": "get-intrinsic",
       "version": "1.3.0"
@@ -2603,11 +798,6 @@
       "path": "node_modules/has-symbols",
       "name": "has-symbols",
       "version": "1.1.0"
-    },
-    {
-      "path": "node_modules/has-tostringtag",
-      "name": "has-tostringtag",
-      "version": "1.0.2"
     },
     {
       "path": "node_modules/hasown",
@@ -2648,11 +838,6 @@
       "path": "node_modules/iconv-lite",
       "name": "iconv-lite",
       "version": "0.7.3"
-    },
-    {
-      "path": "node_modules/ieee754",
-      "name": "ieee754",
-      "version": "1.2.1"
     },
     {
       "path": "node_modules/inherits",
@@ -2718,11 +903,6 @@
       "path": "node_modules/jsftp/node_modules/debug",
       "name": "debug",
       "version": "3.2.7"
-    },
-    {
-      "path": "node_modules/json-schema",
-      "name": "json-schema",
-      "version": "0.4.0"
     },
     {
       "path": "node_modules/json-schema-traverse",
@@ -2830,16 +1010,6 @@
       "version": "1.1.2"
     },
     {
-      "path": "node_modules/mime-db",
-      "name": "mime-db",
-      "version": "1.52.0"
-    },
-    {
-      "path": "node_modules/mime-types",
-      "name": "mime-types",
-      "version": "2.1.35"
-    },
-    {
       "path": "node_modules/mimic-fn",
       "name": "mimic-fn",
       "version": "2.1.0"
@@ -2853,11 +1023,6 @@
       "path": "node_modules/minimatch",
       "name": "minimatch",
       "version": "10.2.6"
-    },
-    {
-      "path": "node_modules/minipass",
-      "name": "minipass",
-      "version": "7.1.3"
     },
     {
       "path": "node_modules/morgan",
@@ -2975,11 +1140,6 @@
       "version": "3.1.1"
     },
     {
-      "path": "node_modules/path-scurry",
-      "name": "path-scurry",
-      "version": "2.0.2"
-    },
-    {
       "path": "node_modules/path-to-regexp",
       "name": "path-to-regexp",
       "version": "8.4.2"
@@ -3045,11 +1205,6 @@
       "version": "2.0.8"
     },
     {
-      "path": "node_modules/proxy-from-env",
-      "name": "proxy-from-env",
-      "version": "2.1.0"
-    },
-    {
       "path": "node_modules/qs",
       "name": "qs",
       "version": "6.16.1"
@@ -3073,11 +1228,6 @@
       "path": "node_modules/readdir-glob",
       "name": "readdir-glob",
       "version": "3.0.0"
-    },
-    {
-      "path": "node_modules/require-from-string",
-      "name": "require-from-string",
-      "version": "2.0.2"
     },
     {
       "path": "node_modules/restore-cursor",
@@ -3215,19 +1365,9 @@
       "version": "3.2.0"
     },
     {
-      "path": "node_modules/spdx-exceptions",
-      "name": "spdx-exceptions",
-      "version": "2.5.0"
-    },
-    {
       "path": "node_modules/spdx-expression-parse",
       "name": "spdx-expression-parse",
       "version": "3.0.1"
-    },
-    {
-      "path": "node_modules/spdx-license-ids",
-      "name": "spdx-license-ids",
-      "version": "3.0.24"
     },
     {
       "path": "node_modules/spdy",
@@ -3280,29 +1420,14 @@
       "version": "2.28.1"
     },
     {
-      "path": "node_modules/string-width",
-      "name": "string-width",
-      "version": "7.2.0"
-    },
-    {
       "path": "node_modules/string_decoder",
       "name": "string_decoder",
       "version": "1.1.1"
     },
     {
-      "path": "node_modules/strip-ansi",
-      "name": "strip-ansi",
-      "version": "7.2.0"
-    },
-    {
       "path": "node_modules/supports-color",
       "name": "supports-color",
       "version": "7.2.0"
-    },
-    {
-      "path": "node_modules/tagged-tag",
-      "name": "tagged-tag",
-      "version": "1.0.0"
     },
     {
       "path": "node_modules/tar-stream",
@@ -3315,19 +1440,9 @@
       "version": "4.2.1"
     },
     {
-      "path": "node_modules/teex",
-      "name": "teex",
-      "version": "1.0.1"
-    },
-    {
       "path": "node_modules/text-decoder",
       "name": "text-decoder",
       "version": "1.2.7"
-    },
-    {
-      "path": "node_modules/text-hex",
-      "name": "text-hex",
-      "version": "1.0.0"
     },
     {
       "path": "node_modules/through",
@@ -3350,16 +1465,6 @@
       "version": "1.0.2"
     },
     {
-      "path": "node_modules/tslib",
-      "name": "tslib",
-      "version": "2.8.1"
-    },
-    {
-      "path": "node_modules/type-fest",
-      "name": "type-fest",
-      "version": "5.10.0"
-    },
-    {
       "path": "node_modules/type-is",
       "name": "type-is",
       "version": "2.1.0"
@@ -3380,16 +1485,6 @@
       "version": "5.9.3"
     },
     {
-      "path": "node_modules/undici",
-      "name": "undici",
-      "version": "7.30.1"
-    },
-    {
-      "path": "node_modules/undici-types",
-      "name": "undici-types",
-      "version": "7.24.6"
-    },
-    {
       "path": "node_modules/unorm",
       "name": "unorm",
       "version": "1.6.0"
@@ -3398,11 +1493,6 @@
       "path": "node_modules/unpipe",
       "name": "unpipe",
       "version": "1.0.0"
-    },
-    {
-      "path": "node_modules/utf8-byte-length",
-      "name": "utf8-byte-length",
-      "version": "1.0.5"
     },
     {
       "path": "node_modules/util-deprecate",
@@ -3485,11 +1575,6 @@
       "version": "5.2.1"
     },
     {
-      "path": "node_modules/wrap-ansi",
-      "name": "wrap-ansi",
-      "version": "9.0.2"
-    },
-    {
       "path": "node_modules/wrappy",
       "name": "wrappy",
       "version": "1.0.2"
@@ -3505,29 +1590,9 @@
       "version": "15.1.1"
     },
     {
-      "path": "node_modules/y18n",
-      "name": "y18n",
-      "version": "5.0.8"
-    },
-    {
       "path": "node_modules/yaml",
       "name": "yaml",
       "version": "2.9.1"
-    },
-    {
-      "path": "node_modules/yargs",
-      "name": "yargs",
-      "version": "18.2.0"
-    },
-    {
-      "path": "node_modules/yargs-parser",
-      "name": "yargs-parser",
-      "version": "22.0.0"
-    },
-    {
-      "path": "node_modules/yargs/node_modules/string-width",
-      "name": "string-width",
-      "version": "8.3.0"
     },
     {
       "path": "node_modules/yauzl",
@@ -3543,21 +1608,6 @@
       "path": "node_modules/zip-stream",
       "name": "zip-stream",
       "version": "7.0.5"
-    },
-    {
-      "path": "node_modules/zip-stream/node_modules/readable-stream",
-      "name": "readable-stream",
-      "version": "4.8.0"
-    },
-    {
-      "path": "node_modules/zip-stream/node_modules/readable-stream/node_modules/string_decoder",
-      "name": "string_decoder",
-      "version": "1.3.0"
-    },
-    {
-      "path": "node_modules/zip-stream/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
-      "name": "safe-buffer",
-      "version": "5.2.1"
     },
     {
       "path": "node_modules/zod",

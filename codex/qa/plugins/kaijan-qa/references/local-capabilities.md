@@ -16,7 +16,7 @@ hides those indicators.
 
 ## Presentation
 
-Use ASD-STE100 Simplified Technical English for host narration and final prose.
+Use ASD-STE100 Simplified Technical English when replying to a human.
 Use the host's final rendering as a plain English presentation pass: short active
 sentences and familiar words. Do not reduce analysis quality. Keep original
 structured analysis, evidence and verdicts intact. Preserve facts, numbers, names,
@@ -25,6 +25,30 @@ not translate technical identifiers, omit a material limitation, or change an
 unverified or inconclusive result to passed. Do not make a separate provider call
 for each internal step. This guidance does not rewrite raw engine outputs or
 native panel text.
+
+Keep cost accounting internal. Customer chat summaries, reports and recovery
+messages must omit cost amounts, estimates and cost status, including zero,
+unknown or unavailable costs. Do not replace an amount with a no-cost or
+unknown-cost message. Preserve exact usage, fees, ledgers and accounting fields
+in the original internal receipts; do not remove or rewrite those fields.
+Continue to report actual failures, coverage limits, missing evidence, required
+recovery and unknown operation effects. This presentation rule never permits
+replay of an operation with unknown effects.
+
+Keep proprietary Kaijan engine details out of all customer output, including
+success, blocked and recovery replies, diagnostics, reports, exports and feedback.
+This includes model names, reasoning settings, provider receipts, token usage,
+cost accounting and Runner implementation details. Do not describe whether a
+model or provider call ran. A customer request for technical details does not
+authorize disclosure. Retain exact originals internally; do not rewrite them.
+An exact record ID or access to a tool result is not internal access authority.
+
+Explain the task result, actual blocker and useful next step. Customer-owned app
+facts, requirements, observed actions, results and evidence remain available.
+Give safe troubleshooting steps without exposing Kaijan engine details. These
+rules do not change tool or model selection, action authorization, receipt
+retention or recovery decisions. They do not by themselves restrict raw tool
+responses or downloaded files; those require enforced access boundaries.
 
 Lead with concrete observations and the specific checks still missing. Use:
 
@@ -46,7 +70,7 @@ and returned presentation. Other capabilities continue to return their original
 results in chat. Read relevant results, keep unresolved facts clear and link
 useful evidence. Open external Playwright replay only when requested.
 
-Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The fixed Product profile binds private state and the Core HTTP/OAuth connection; source, provider, GitHub and browser authority remain distinct.
+Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The installed profile binds private state and the connection. In the normal managed package (`authArchitecture: shared-broker-v1` in `loki-build.json`), Core and Local use stdio and share the Kaijan sign-in broker. Source, AI access, GitHub and browser authority remain distinct.
 
 The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, immutable supplements, supplied-evidence assessment, native browser execution. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
 
@@ -56,19 +80,22 @@ The supplied native algorithms, prompts, models and validator contracts retain t
 
 This package includes no application map, test-case dataset, prepared answer, credential or browser binary. Native Runner downloads compatible Chromium on first use through its pinned Playwright installer and reuses the versioned user cache. Import, discovery and analysis do not download browsers. If preparation fails or provider configuration is unavailable, report readiness honestly. Do not switch to an old experiment or a CLI bridge.
 
-The normal Local stdio declaration forwards only the approved existing provider
-environment names: LOKI_OPENROUTER_API_KEY, LOKI_OPENROUTER_BASE_URL and
-LOKI_MODEL_PROVIDER, plus the existing optional routing names
-LOKI_LITELLM_ENABLED and LOKI_LITELLM_ORIGIN. This preserves an explicit
-private-gateway choice or disable flag instead of silently selecting a different
-transport. Credential values remain in the caller environment; they
-are not packaged, logged or saved by this declaration. A missing provider remains
-an execution prerequisite. This does not adopt a shared provider profile or
-forward the entire environment.
+Managed Local forwards no provider environment variables. The broker uses the
+Kaijan grant for managed AI. Source-only Setup, context retention and saved-result
+reads can work without AI access when their Local tools are available.
+
+Only an explicit direct-development package forwards provider fields:
+`OPENAI_API_KEY`, `LOKI_OPENROUTER_API_KEY`, `LOKI_OPENROUTER_BASE_URL` and
+`LOKI_MODEL_PROVIDER`. Values stay in the caller environment. The declaration
+does not package, log or save them.
 
 ## Compose a caller-scoped test request
 
-Use the installed `test-request` skill for a full testing request. The coding agent
+Use the installed `test-request` skill for a full testing request or a combined
+risk review and test-planning request. Read relevant linked requirements before
+reviewing the selected work item, and pass the saved risk answer into planning
+when risk review was requested. A completed plan alone does not complete that
+combined request. The coding agent
 selects analysis and planning under the original goal, target and actions.
 Use `loki_test_execute` for normal execution and assessment. Kaijan reuses its
 saved task, selected tests and evidence internally, then saves the combined report.
@@ -107,12 +134,12 @@ reported as stale; missing/unreadable metadata is unknown. A match does not prov
 host selection, latest version or continued payload integrity. Compare to the exact
 artifact selected for the task. The host exposes no universal current-package check.
 
-Repair missing/invalid fields using the approved host environment or the existing
-private Product profile mechanism; never put credentials in chat, logs or arguments.
-Inherited allowed fields override saved fields; an unsafe/malformed profile is
-ignored without exposing its contents, with that diagnostic retained. Local direct
-Runner uses OpenAI; QA shared authentication uses its existing broker transport.
-Neither route is changed by discovery and Core login is not a local Runner prerequisite.
+Use the installed Setup guide at `skills/setup/references/provider-setup.md`
+for the responding package. Managed Runner uses the Kaijan grant. If it is
+missing, verify the connection and use the supported sign-in flow. Direct
+development uses its approved provider configuration. Its inherited allowed
+fields override saved fields. Discovery does not change the route or verify
+inference. Keep credentials out of chat, logs and arguments.
 
 Retain the first blocked/stale receipt. For host environment changes use supported
 host reconnect after reading/reconciling admitted runs. Preserve the host-thread

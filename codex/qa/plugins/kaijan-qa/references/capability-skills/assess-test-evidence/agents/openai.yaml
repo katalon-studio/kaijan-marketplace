@@ -1,0 +1,3 @@
+interface:
+  display_name: "Assess test evidence"
+  short_description: "Compare test results with the original requirements"

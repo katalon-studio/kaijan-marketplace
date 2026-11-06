@@ -2,7 +2,9 @@
 
 Read this only when the current operation needs GitHub. Preserve the selected repository, issue/PR, exact source revision and existing operation/request key through recovery. Local source maps and supplied-input work do not require a GitHub connection.
 
-Use the installed Kaijan managed connection. `kaijan_connect` opens Core sign-in and native consent. Continue with GitHub uses the same Kaijan GitHub App to establish identity and repository access, followed by the separate Allow access step for the local runtime. Google sign-in remains available; use Connect GitHub during consent when remote data is needed. Confirm the returned Kaijan account/workspace and selected GitHub account. Never merge identities by email or silently change accounts.
+When the reader returns `provide_source_text`, ask for the issue title and description or the PR description and relevant changes. Keep each source link with its supplied text. Ask for linked task text only when needed. Continue risk analysis or test planning with that input.
+
+Use the following connection steps only when this installation provides the managed GitHub route and the chat exposes `kaijan_connect`. `kaijan_connect` opens Core sign-in and native consent. Continue with GitHub uses the same Kaijan GitHub App to establish identity and repository access, followed by the separate Allow access step for the local runtime. Google sign-in remains available; use Connect GitHub during consent when remote data is needed. Confirm the returned Kaijan account/workspace and selected GitHub account. Never merge identities by email or silently change accounts.
 
 The native runtime needs the explicit `github:credential` permission. An existing read-only Core MCP grant is insufficient. The trusted broker obtains only the user access token internally, calls GitHub directly and keeps analysis local. Do not request, paste, print or inspect provider tokens, client secrets, refresh tokens, credential files or environment dumps. Normal tools return data and source/coverage receipts, never credentials.
 

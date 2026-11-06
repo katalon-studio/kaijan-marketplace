@@ -1,6 +1,6 @@
 ---
 name: test-request
-description: Carry a Kaijan testing request through planning, execution, evidence assessment, authorized fixes and retests, and report. Use when asked to review a change and reproduce findings in the app, validate behavior, or test and report. Preserve independent single-capability use.
+description: Carry a Kaijan testing request through planning, execution, evidence assessment, authorized fixes and retests, and report. Use when asked to review work-item or change risks and prepare tests, review a change and reproduce findings in the app, validate behavior, or test and report. Preserve independent single-capability use.
 ---
 
 # Carry the caller's request to its report
@@ -22,6 +22,21 @@ a list of risk questions or a combined ad hoc scenario for that Plan. A request
 only to review risks does not start this flow. A complete caller-supplied scenario
 can still use `run-test` directly.
 
+## Review requirements and risks before planning
+
+Use `plan-tests` with the original work item and any relevant context already
+known to the caller. Kaijan reads missing explicit in-scope GitHub links and
+analyzes work-item risks inside its normal planning operation. Do not arrange
+separate source and risk calls just to build a test set. Inspect the returned
+preparation and plan to confirm that each requested stage completed.
+
+If the user requests a frozen-code review, use `assess-change-risk` with the real
+change packet and pass that exact saved answer through `riskAnswers` to planning.
+Keep manual suggestions separate from saved Kaijan results. A failed source read
+can request specific missing text; do not invent that content. Show the saved
+report. A request for a plan or risk review alone does not authorize application
+execution.
+
 ## Retain the actual request
 
 Keep the original wording, requested outcome, selected application/repository and
@@ -31,15 +46,19 @@ unrelated recent PR is not selection. Distinguish external GitHub IDs from Kaija
 Work Item UUIDs. Do not require Core login, a PR, GitHub access or a complete app
 map for operations that do not need them.
 
-Use [context-handoff](../context-handoff/SKILL.md) when retaining the request or
-passing its context between stages. Preserve original content and attribution;
-keep agent interpretation separate. If a chat-only request has no original source
-URI, retain its complete original text with `loki_context_submit`. Its returned
-`sourceUri` identifies that immutable retained record, not an external ticket or
-independently verified origin. Use that actual URI for a planning source; never
-invent a GitHub link, file, revision or source capture time. Reuse the original
-source URI when one exists. Native inputs still follow each consumer's contract;
-a stored context is not automatically compatible with every capability.
+For a chat-only work item, pass its original title and body directly to
+`loki_test_plan`. Omit `url` when no original source URI was supplied. Kaijan
+retains this input internally; no separate context call is needed. Reuse an
+actual source URI when one exists. Preserve original content and attribution,
+and keep agent interpretation separate. Use the supported source packet in
+`plan-tests` for additional sources. Never invent a source, revision or capture
+time. An existing compatible `contextId` can still supply the selected operation;
+storage alone does not make a record compatible with every capability.
+
+When the user asks for linked design or task details, read the relevant authorized
+sources before the first Plan. If a later source changes a saved expectation,
+follow the revision steps in `plan-tests` and open the revised report before
+presenting its tests.
 
 Ask a concise native host Question only for consequential missing or ambiguous
 input that available authorized context cannot resolve, such as the execution
@@ -73,12 +92,13 @@ Inspect `loki_capabilities_list` for the responding runtime, scope and actual
 requirements. Choose only stages useful for the requested outcome:
 
 - Acquire original selected Issue/PR/body/revision/files through an authorized
-  maintained public capture API or host read. Planning does not fetch its own
-  links. Keep original text/revisions and acquisition limits. Use
-  [find-related-work](../find-related-work/SKILL.md) when related context helps;
+  maintained public capture API or host read. Planning reads explicit in-scope
+  GitHub links itself. Keep original text/revisions and acquisition limits. Use
+  [find-related-work](../../references/capability-skills/find-related-work/SKILL.md) when related context helps;
   findings inform this request and do not select a different execution target.
-- Use [assess-change-risk](../assess-change-risk/SKILL.md) for relevant uncertainty.
-  Work-item risk can use the issue/request; Change Risk needs actual frozen change
+- Normal planning includes work-item risk analysis. Use
+  [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md) for a standalone review or
+  a requested code-change review. Change Risk needs actual frozen change
   input. Do not fabricate a diff or require code evidence for a requirements-only
   question. Use the original request and attributed source/context evidence. This release does not build or require an application map.
 - Use [plan-tests](../plan-tests/SKILL.md) with the complete original work item or
@@ -116,7 +136,7 @@ requirements. Choose only stages useful for the requested outcome:
   performed steps or a verdict.
 
 For tests run outside Kaijan, use
-[assess-test-evidence](../assess-test-evidence/SKILL.md) with the external results.
+[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md) with the external results.
 Narrow requests continue to use their independent owning skills. No Core entity
 or background watcher is needed for this composition.
 

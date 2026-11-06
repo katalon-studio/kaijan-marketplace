@@ -1,3 +1,11 @@
+import {
+  changeRiskCatalog,
+  riskPresentationSchema,
+  normalizeRiskExcerpts,
+  renderRiskPresentation,
+  RISK_RELATION_GUIDANCE,
+  riskSourceRecord,
+} from "./source-relations.mjs";
 import { createHash } from "node:crypto";
 import {
   bindQuestions,
@@ -419,7 +427,10 @@ export function validateChoices(response, request) {
   return response.answers;
 }
 
-export function validateAssumptions(response, { stage = "review" } = {}) {
+export function validateAssumptions(
+  response,
+  { stage = "review", packet, resolveApplicationSpan } = {},
+) {
   if (
     response?.status === "incomplete" &&
     response.incomplete_details?.reason === "max_output_tokens"
@@ -437,7 +448,45 @@ export function validateAssumptions(response, { stage = "review" } = {}) {
   );
   const text = responseText(response);
   try {
-    return bindQuestions(JSON.parse(text), text, stage);
+    const candidate = JSON.parse(text);
+    if (resolveApplicationSpan) {
+      const catalog = changeRiskCatalog(packet);
+      insist(
+        Array.isArray(candidate.assumptions_to_confirm),
+        "invalid_assumptions",
+      );
+      const presentations = candidate.assumptions_to_confirm.map((value) =>
+        normalizeRiskExcerpts(value, catalog),
+      );
+      const projected = presentations.map((presentation) => {
+        const row = renderRiskPresentation(
+          presentation,
+          catalog,
+          resolveApplicationSpan,
+        );
+        return {
+          observed_code_behavior: row.observed,
+          assumption_to_confirm: row.assumption_to_confirm,
+          question: row.question,
+          why_it_matters: row.why_it_matters,
+          evidence_needed: row.evidence_needed,
+          source_evidence: row.evidence_ids,
+        };
+      });
+      const result = bindQuestions(
+        { ...candidate, assumptions_to_confirm: projected },
+        text,
+        stage,
+      );
+      result.assumptions_to_confirm.forEach((question, index) => {
+        question.source_projection = riskSourceRecord(
+          presentations[index],
+          catalog,
+        );
+      });
+      return result;
+    }
+    return bindQuestions(candidate, text, stage);
   } catch {
     throw new RiskError("invalid_assumptions");
   }
@@ -465,9 +514,19 @@ export function initialCoverage(mode) {
   };
 }
 
-export function directRequest(packet, template) {
-  const request = assumptionsRequest(packet, [], template);
-  request.input[1].content = JSON.stringify({ source_packet: packet });
+export function directRequest(packet, template, resolveApplicationSpan) {
+  const request = assumptionsRequest(
+    packet,
+    [],
+    template,
+    resolveApplicationSpan,
+  );
+  request.input[1].content = JSON.stringify({
+    source_packet: packet,
+    ...(resolveApplicationSpan
+      ? { source_catalog: changeRiskCatalog(packet) }
+      : {}),
+  });
   return request;
 }
 
@@ -510,16 +569,29 @@ export function preflight(packet, template, mode = "guided") {
   return hunks;
 }
 
-export function assumptionsRequest(packet, selected, template) {
+export function assumptionsRequest(
+  packet,
+  selected,
+  template,
+  resolveApplicationSpan,
+) {
   const { model, reasoning, max_output_tokens } = template;
   const text = structuredClone(template.text);
   text.format.schema.properties.assumptions_to_confirm.items =
     questionContentSchema(
       text.format.schema.properties.assumptions_to_confirm.items,
     );
+  if (resolveApplicationSpan)
+    text.format.schema.properties.assumptions_to_confirm.items =
+      riskPresentationSchema(changeRiskCatalog(packet), {
+        literalExcerpts: true,
+      });
   const instructions =
     template.instructions +
-    " Return the six question content fields without display IDs. The host assigns response-local labels; labels are not semantic or cross-stage identity. Missing package internals limit affected claims only. Review visible source without downloading, installing, importing, building or executing target packages.";
+    (resolveApplicationSpan
+      ? " Return only the typed relation fields required by the output schema. Earlier free-form question field instructions do not apply."
+      : " Return the six question content fields without display IDs.") +
+    " The host assigns response-local labels; labels are not semantic or cross-stage identity. Missing package internals limit affected claims only. Review visible source without downloading, installing, importing, building or executing target packages.";
   const nonHunk = nonHunkEvidence(packet);
   return {
     model,
@@ -534,6 +606,10 @@ export function assumptionsRequest(packet, selected, template) {
         role: "system",
         content:
           instructions +
+          (resolveApplicationSpan
+            ? " Use the fixed source relation kinds. Each operand must identify one source and copy a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets or paste long code blocks. Focus on the supplied change and requested behavior. With snapshots alone, do not infer what changed. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects or permission to execute. " +
+              RISK_RELATION_GUIDANCE
+            : "") +
           (nonHunk.length
             ? " File metadata is evidence at file scope. Reported zero line deltas are not independent proof of equal bytes. Missing text remains unknown. Cite metadata by file/field; do not invent changed lines or hunk IDs. Hunk-only navigation cannot inspect these records."
             : ""),
@@ -542,6 +618,9 @@ export function assumptionsRequest(packet, selected, template) {
         role: "user",
         content: JSON.stringify({
           source_packet: packet,
+          ...(resolveApplicationSpan
+            ? { source_catalog: changeRiskCatalog(packet) }
+            : {}),
           ...(nonHunk.length
             ? { non_hunk_file_evidence: modelFileEvidence(packet) }
             : {}),
@@ -554,7 +633,13 @@ export function assumptionsRequest(packet, selected, template) {
 
 export async function evaluate(
   packet,
-  { template, call, mode = "guided", onProgress = () => {} },
+  {
+    template,
+    call,
+    mode = "guided",
+    onProgress = () => {},
+    resolveApplicationSpan,
+  },
 ) {
   const hunks = preflight(packet, template, mode);
   const coverage_details = initialCoverage(mode);
@@ -585,8 +670,9 @@ export async function evaluate(
       await call(
         "01-direct-luna-assumptions",
         "responses",
-        directRequest(packet, template),
+        directRequest(packet, template, resolveApplicationSpan),
       ),
+      { packet, resolveApplicationSpan },
     );
     coverage_details.assumptions = "complete";
     progress();
@@ -665,8 +751,9 @@ export async function evaluate(
       await call(
         "03-luna-assumptions",
         "responses",
-        assumptionsRequest(packet, selected, template),
+        assumptionsRequest(packet, selected, template, resolveApplicationSpan),
       ),
+      { packet, resolveApplicationSpan },
     );
     coverage_details.assumptions = "complete";
   }

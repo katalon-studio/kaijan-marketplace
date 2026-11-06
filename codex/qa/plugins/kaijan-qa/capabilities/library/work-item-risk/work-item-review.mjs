@@ -1,3 +1,10 @@
+import {
+  riskPresentationSchema,
+  normalizeRiskExcerpts,
+  renderRiskPresentation,
+  RISK_RELATION_GUIDANCE,
+  riskSourceRecord,
+} from "./source-relations.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -8,7 +15,6 @@ export const METHOD = "work-item-luna-uncertainties/1";
 export const MODEL = "gpt-6-luna";
 export const LIMITS = Object.freeze({
   questions: 6,
-  outputTokens: 4000,
   calls: 1,
 });
 export const sha256 = (bytes) =>
@@ -220,10 +226,14 @@ export function createWorkItemRisk(dependencies) {
       },
       required: ["assumptions_to_confirm", "limitations"],
     };
+    if (dependencies.resolveApplicationSpan)
+      schema.properties.assumptions_to_confirm.items = riskPresentationSchema(
+        catalog,
+        { literalExcerpts: true },
+      );
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },
-      max_output_tokens: LIMITS.outputTokens,
       store: false,
       text: {
         format: {
@@ -234,7 +244,15 @@ export function createWorkItemRisk(dependencies) {
         },
       },
       input: [
-        { role: "system", content: INSTRUCTIONS },
+        {
+          role: "system",
+          content:
+            INSTRUCTIONS +
+            (dependencies.resolveApplicationSpan
+              ? " Return only the typed relation fields required by the output schema; earlier free-form content field instructions do not apply. Use the fixed source relation kinds. Each operand must identify one passage and copy a complete phrase of at most 160 characters that occurs exactly once in that passage. Never count character offsets or paste long code blocks. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects, approved requirements or permission to execute. " +
+                RISK_RELATION_GUIDANCE
+              : ""),
+        },
         {
           role: "user",
           content: JSON.stringify({
@@ -296,6 +314,30 @@ export function createWorkItemRisk(dependencies) {
     const questions = candidate.assumptions_to_confirm.map(
       (question, index) => {
         const at = `/assumptions_to_confirm/${index}`;
+        if (dependencies.resolveApplicationSpan) {
+          const presentation = normalizeRiskExcerpts(
+            question,
+            prepared.catalog,
+          );
+          const row = renderRiskPresentation(
+            presentation,
+            prepared.catalog,
+            dependencies.resolveApplicationSpan,
+          );
+          return {
+            id: `work-item-risk-Q${index + 1}-${identity.output_sha256}`,
+            observed_source_statement: row.observed,
+            assumption_to_confirm: row.assumption_to_confirm,
+            question: row.question,
+            why_it_matters: row.why_it_matters,
+            evidence_needed: row.evidence_needed,
+            source_evidence: row.evidence_ids.map((id) => ({
+              ...offered.get(id),
+              semantic_support: "not_verified",
+            })),
+            source_projection: riskSourceRecord(presentation, prepared.catalog),
+          };
+        }
         responseCheck(
           exactKeys(question, fields) &&
             fields.every((key) => Object.hasOwn(question, key)),
@@ -509,7 +551,6 @@ export function createWorkItemRisk(dependencies) {
         template: {
           model: MODEL,
           reasoning: { effort: "medium" },
-          max_output_tokens: LIMITS.outputTokens,
           instructions: INSTRUCTIONS,
         },
       },

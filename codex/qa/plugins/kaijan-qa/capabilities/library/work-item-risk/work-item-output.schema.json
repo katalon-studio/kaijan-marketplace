@@ -112,6 +112,23 @@
               },
               "additionalProperties": false
             }
+          },
+          "source_projection": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["schema", "presentation", "catalogSha256"],
+            "properties": {
+              "schema": {
+                "const": "risk-source-relations/1"
+              },
+              "presentation": {
+                "type": "object"
+              },
+              "catalogSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
           }
         }
       }

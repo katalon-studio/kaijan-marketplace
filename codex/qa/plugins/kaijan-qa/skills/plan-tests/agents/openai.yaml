@@ -1,0 +1,3 @@
+interface:
+  display_name: "Plan tests"
+  short_description: "Propose tests for a work item and its risks"

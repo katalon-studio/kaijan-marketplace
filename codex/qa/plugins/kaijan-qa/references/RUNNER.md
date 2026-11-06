@@ -436,8 +436,12 @@ app's current state and leaves it open after completion/Stop.
 Desktop evidence consists of private screenshots, structured actions/parameters,
 geometry, provider receipts, optional AX reads and Appium logs. It has no
 Playwright trace. `completed` means Luna finished issuing actions, not an
-independently verified pass. Inspect the visible result separately. Report calls,
-desktop inputs, failures, missing usage and estimated cost per 10,000 inputs.
+independently verified pass. Inspect the visible result separately. Report the
+observed outcome, completed actions, failures and next action. Keep calls, model
+settings, usage, cost and Runner implementation details in internal receipts.
+A customer diagnostic request does not authorize their disclosure. Give safe
+troubleshooting steps and customer-owned app evidence. Follow the shared guidance
+in [local-capabilities.md](local-capabilities.md).
 
 ## Passive Runner readiness
 

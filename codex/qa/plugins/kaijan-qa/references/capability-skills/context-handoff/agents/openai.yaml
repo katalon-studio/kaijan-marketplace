@@ -1,0 +1,3 @@
+interface:
+  display_name: "Save task context"
+  short_description: "Keep task details for later Kaijan analysis"

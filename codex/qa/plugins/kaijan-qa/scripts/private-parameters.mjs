@@ -25,16 +25,19 @@ import {
 import { createHash, randomUUID } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
   if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
     throw new Error(
       "Missing fixed plugin profile. Reinstall the selected artifact."
     );
-  const identity = JSON.stringify({
+  const identity2 = JSON.stringify({
     profile: build.profile,
     origin: build.coreOrigin,
     client: build.oauthClientId
   });
-  const key = createHash("sha256").update(identity).digest("hex").slice(0, 20);
+  const key = createHash("sha256").update(identity2).digest("hex").slice(0, 20);
   let selected;
   const forwarded = [];
   for (let i = 0; i < args.length; i++) {
@@ -46,13 +49,15 @@ async function bindProfileState(build, args, home) {
       if (!selected || selected.startsWith("--"))
         throw new Error("Missing private state directory.");
     } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const host = arg === "--host" ? args[++i] : arg.slice(7);
-      if (host !== "codex")
-        throw new Error("This package belongs to the Codex host.");
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
+        );
     } else forwarded.push(arg);
   }
   const state = resolve(
-    selected ?? join(home, ".local", "share", "loki", "codex", build.profile, key)
+    selected ?? join(home, ".local", "share", "loki", host, build.profile, key)
   );
   await mkdir(state, { recursive: true, mode: 448 });
   if (await realpath(state) !== state || ((await stat(state)).mode & 63) !== 0)
@@ -118,7 +123,7 @@ async function bindProfileState(build, args, home) {
   } finally {
     await file2.close();
   }
-  return { state, args: [...forwarded, "--host", "codex", "--state", state] };
+  return { state, args: [...forwarded, "--host", host, "--state", state] };
 }
 
 // apps/codex-plugin/src/local-state.mjs
@@ -839,10 +844,10 @@ function cached(getter) {
 function nullish(input3) {
   return input3 === null || input3 === void 0;
 }
-function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
-  const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+function cleanRegex(source2) {
+  const start = source2.startsWith("^") ? 1 : 0;
+  const end = source2.endsWith("$") ? source2.length - 1 : source2.length;
+  return source2.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -910,28 +915,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source, keys, wrap) {
-  const raw = sourceShape(source);
+function mirrorShape(target, source2, keys, wrap) {
+  const raw = sourceShape(source2);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source._zod.def.shape[key];
+        const value = source2._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    const desc = Object.getOwnPropertyDescriptor(source, key);
+function mirrorProps(target, source2) {
+  for (const key of Reflect.ownKeys(source2)) {
+    const desc = Object.getOwnPropertyDescriptor(source2, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source[key]);
+      deferProp(target, key, () => source2[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -1357,14 +1362,14 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count = units;
+  let count2 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count--;
+      count2--;
       i++;
     }
   }
-  return count;
+  return count2;
 }
 function getLengthableOrigin(input3) {
   if (Array.isArray(input3))
@@ -2156,8 +2161,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source) {
-  return new RegExp(`^${source}$`);
+function anchor(source2) {
+  return new RegExp(`^${source2}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -5008,11 +5013,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source = partPattern(part);
-      if (!source) {
+      const source2 = partPattern(part);
+      if (!source2) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source));
+      regexParts.push(cleanRegex(source2));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -5747,8 +5752,8 @@ function az_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getBelarusianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -8395,8 +8400,8 @@ function hu_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count, one, many) {
-  return Math.abs(count) === 1 ? one : many;
+function getArmenianPlural(count2, one, many) {
+  return Math.abs(count2) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -11134,8 +11139,8 @@ function ro_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getRussianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -13138,9 +13143,9 @@ function withParser(schema, parser) {
     installCompiledUserMethods(clone2, schema, parser);
   return clone2;
 }
-function installCompiledUserMethods(target, source, parser) {
+function installCompiledUserMethods(target, source2, parser) {
   const targetAny = target;
-  const sourceAny = source;
+  const sourceAny = source2;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -15658,12 +15663,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -15743,10 +15748,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source of sources) {
-    for (const key of Reflect.ownKeys(source)) {
-      if (Object.prototype.propertyIsEnumerable.call(source, key)) {
-        assignProp(target, key, source[key]);
+  for (const source2 of sources) {
+    for (const key of Reflect.ownKeys(source2)) {
+      if (Object.prototype.propertyIsEnumerable.call(source2, key)) {
+        assignProp(target, key, source2[key]);
       }
     }
   }
@@ -20346,6 +20351,88 @@ var analysisJobInputSchema = external_exports.strictObject({
   leaseSeconds: external_exports.literal(90)
 });
 
+// packages/contracts/dist/analysis-customer.js
+var customerAnalysisSourceSchema = analysisSourceSchema.pick({ snapshotId: true, repositoryId: true, fullName: true, commit: true }).extend({ fullName: external_exports.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/) });
+var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
+  sourceReferenceSchema.options[0].pick({ kind: true, sha: true }).strip(),
+  sourceReferenceSchema.options[1].pick({ kind: true, name: true }).strip(),
+  sourceReferenceSchema.options[2].pick({ kind: true, number: true }).strip()
+]);
+var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
+  analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+]);
+var customerAnalysisRunSchema = external_exports.object({
+  id: external_exports.uuid(),
+  request: customerAnalysisRequestSchema,
+  phase: analysisPhaseSchema,
+  source: customerAnalysisSourceSchema.nullable(),
+  sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
+  message: external_exports.string(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string(),
+  resultUrl: external_exports.string().nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var pageSchema2 = uiModelerMapSchema.shape.pages.element.pick({
+  id: true,
+  label: true,
+  extraction_status: true
+}).strip();
+var elementSchema = uiModelerMapSchema.shape.elements.element.pick({
+  id: true,
+  page_id: true,
+  parent_element_id: true,
+  label: true,
+  kind: true,
+  display_condition: true,
+  clickable: true,
+  navigation_status: true,
+  source_refs: true
+}).strip();
+var navigationSchema = uiModelerMapSchema.shape.click_navigation.element.pick({
+  id: true,
+  element_id: true,
+  from_page_id: true,
+  to_page_id: true,
+  route_or_url: true,
+  condition: true,
+  source_refs: true
+}).strip();
+var issueSchema = external_exports.object({
+  pageId: external_exports.string().nullable(),
+  message: external_exports.string()
+});
+var customerMapSchema = external_exports.object({
+  status: uiModelerMapSchema.shape.status,
+  pages: external_exports.array(pageSchema2),
+  elements: external_exports.array(elementSchema),
+  click_navigation: external_exports.array(navigationSchema),
+  issues: external_exports.array(issueSchema),
+  limitations: external_exports.array(external_exports.string())
+});
+var customerAnalysisResultSchema = external_exports.object({
+  run: customerAnalysisRunSchema,
+  report: external_exports.object({
+    status: external_exports.enum(["complete", "partial", "failed"]),
+    fixture: external_exports.boolean(),
+    accounting: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+      action: external_exports.enum(["materialized", "not_hydrated"])
+    }))
+  }),
+  map: customerMapSchema.nullable(),
+  sourceIndex: external_exports.array(analysisSourceIndexSchema.element.pick({
+    id: true,
+    path: true,
+    sha256: true,
+    utf16Length: true
+  }).strip())
+});
+
 // packages/contracts/dist/workspace-results.js
 var resultLimits = {
   manifestBytes: 1024 * 1024,
@@ -20505,13 +20592,34 @@ var sessionRecordingSchema = external_exports.strictObject({
     expiresAt: external_exports.iso.datetime()
   })
 });
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
 var sessionGrantSchema = external_exports.strictObject({
   recordingId: external_exports.uuid(),
   chunk: sessionChunkDescriptorSchema,
   url: external_exports.url(),
   issuedAt: external_exports.iso.datetime(),
   expiresAt: external_exports.iso.datetime()
-}).refine((grant) => Date.parse(grant.expiresAt) > Date.parse(grant.issuedAt), "Invalid grant interval");
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
 var navigationKindSchema = external_exports.enum([
   "start",
   "route-change",
@@ -20635,6 +20743,173 @@ var sessionReplayManifestSchema = external_exports.strictObject({
   })).max(2e3)
 });
 
+// packages/contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest2,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest2,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
 // packages/contracts/dist/replay.js
 var recordedEventSchema = external_exports.strictObject({
   type: external_exports.number().int().min(0).max(4),
@@ -20690,6 +20965,47 @@ var commentSchema = commentCreateSchema.extend({
   createdAt: external_exports.iso.datetime()
 });
 
+// packages/contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
 // packages/contracts/dist/github.js
 var githubCredentialSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-credential/1"),
@@ -20708,6 +21024,115 @@ var githubRejectionSchema = external_exports.strictObject({
 var githubRejectionResultSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-rejection/1"),
   reconnectRequired: external_exports.boolean()
+});
+
+// packages/contracts/dist/product-feedback.js
+var productFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  kind: external_exports.enum(["bug", "suggestion", "feedback"]),
+  title: external_exports.string().trim().min(1).max(200),
+  // Bound report text stored in Core.
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  diagnostics: external_exports.strictObject({
+    capability: external_exports.string().trim().min(1).max(100).optional(),
+    errorCode: external_exports.string().regex(/^[A-Za-z0-9_.:-]{1,100}$/).optional(),
+    operationId: external_exports.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+    pluginVersion: external_exports.string().regex(/^[A-Za-z0-9.+-]{1,80}$/).optional(),
+    os: external_exports.enum(["darwin", "linux", "win32", "unknown"]).optional()
+  }).optional()
+});
+var productFeedbackSchema = productFeedbackInputSchema.extend({
+  id: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved")
+});
+
+// packages/contracts/dist/workspace-customer.js
+var workspaceCustomerLimits = {
+  fileBytes: 4 * 1024 * 1024,
+  publicationBytes: 16 * 1024 * 1024
+};
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count = external_exports.number().int().nonnegative();
+var source = external_exports.strictObject({ bytes: count, sha256: digest3 });
+var identity = { fileId: external_exports.uuid(), source };
+var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("available"),
+    kind: external_exports.enum(["test-report", "risk-review", "evidence-assessment"]),
+    name: external_exports.enum([
+      "test-report.json",
+      "risk-review.json",
+      "evidence-assessment.json"
+    ]),
+    content: external_exports.strictObject({
+      mediaType: external_exports.literal("application/json"),
+      bytes: count.max(workspaceCustomerLimits.fileBytes),
+      sha256: digest3
+    })
+  }),
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("unavailable"),
+    reason: external_exports.enum([
+      "unsupported-content",
+      "invalid-content",
+      "content-limit",
+      "source-unavailable"
+    ])
+  })
+]);
+var customerWorkspaceManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-result/1"),
+  publicationId: external_exports.uuid(),
+  kind: external_exports.literal("native-result"),
+  state: external_exports.literal("published"),
+  title: external_exports.string(),
+  publishedAt: external_exports.iso.datetime(),
+  sourceManifestSha256: digest3,
+  contextRefs: external_exports.array(resultContextRefSchema),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest3.optional() })),
+  relatedSources: external_exports.array(external_exports.strictObject({
+    reference: resultContextRefSchema,
+    availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+  })),
+  files: external_exports.array(customerWorkspaceFileSchema).max(256),
+  meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
+});
+var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
+  manifestSha256: digest3
+});
+var customerWorkspaceDownloadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-download/1"),
+  publicationId: external_exports.uuid(),
+  fileId: external_exports.uuid().nullable(),
+  sourceSha256: digest3,
+  mediaType: external_exports.literal("application/json"),
+  encoding: external_exports.literal("base64"),
+  bytes: count.max(workspaceCustomerLimits.fileBytes),
+  sha256: digest3,
+  data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
+});
+var customerWorkspaceListSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-list/1"),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  observedAt: external_exports.iso.datetime(),
+  watermark: count,
+  nextAfter: count.nullable(),
+  results: external_exports.array(external_exports.strictObject({
+    publicationId: external_exports.uuid(),
+    kind: external_exports.literal("native-result"),
+    state: external_exports.literal("published"),
+    publishedAt: external_exports.iso.datetime(),
+    sequence: count,
+    title: external_exports.string(),
+    fileCount: count,
+    contextRefCount: count,
+    bytes: count
+  }))
 });
 
 // packages/contracts/dist/index.js
@@ -20755,6 +21180,31 @@ var sessionContextSchema = external_exports.object({
   expiresAt: external_exports.iso.datetime(),
   capabilities: external_exports.object({
     recordingProtocolVersions: external_exports.array(external_exports.string())
+  })
+});
+var customerSessionSchema = external_exports.strictObject({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
   })
 });
 var tokenResponseSchema = external_exports.object({
@@ -20812,7 +21262,9 @@ var coreToolInputSchemas = {
   loki_connection_status: external_exports.strictObject({}),
   loki_read_work_item: external_exports.strictObject({ workItemId: external_exports.uuid() }),
   loki_disconnect: external_exports.strictObject({}),
-  kaijan_connect: external_exports.strictObject({})
+  kaijan_connect: external_exports.strictObject({}),
+  kaijan_submit_feedback: productFeedbackInputSchema,
+  kaijan_get_feedback: external_exports.strictObject({ feedbackId: external_exports.uuid() })
 };
 var coreToolErrorSchema = external_exports.strictObject({
   error: external_exports.string().min(1),
@@ -20824,7 +21276,14 @@ var coreToolErrorSchema = external_exports.strictObject({
 });
 var coreConnectionSchema = external_exports.strictObject({
   state: external_exports.literal("connected"),
-  context: sessionContextSchema,
+  context: sessionContextSchema.pick({
+    apiVersion: true,
+    user: true,
+    organization: true,
+    workspace: true,
+    permissions: true,
+    expiresAt: true
+  }).strict(),
   origin: external_exports.url(),
   observedAt: external_exports.iso.datetime()
 });
@@ -20833,18 +21292,51 @@ var coreWorkItemSchema = external_exports.strictObject({
   userId: external_exports.uuid(),
   workspaceId: external_exports.uuid(),
   workspaceName: external_exports.string(),
-  clientId: external_exports.string(),
   readAt: external_exports.iso.datetime(),
   canonicalUrl: external_exports.url()
 });
 var coreDisconnectSchema = external_exports.strictObject({
-  state: external_exports.literal("signed_out"),
-  message: external_exports.string().min(1).optional()
+  state: external_exports.literal("signed_out")
 });
 var coreConnectSchema = external_exports.strictObject({
-  state: external_exports.literal("connected"),
+  state: external_exports.literal("connected")
+});
+var coreToolSuccessSchemas = {
+  loki_connection_status: coreConnectionSchema,
+  loki_read_work_item: coreWorkItemSchema,
+  loki_disconnect: coreDisconnectSchema,
+  kaijan_connect: coreConnectSchema,
+  kaijan_submit_feedback: external_exports.strictObject({ feedback: productFeedbackSchema }),
+  kaijan_get_feedback: external_exports.strictObject({ feedback: productFeedbackSchema })
+};
+var coreConnectReceiptSchema = coreConnectSchema.extend({
   installationId: external_exports.string().min(1)
 });
+var coreDisconnectReceiptSchema = coreDisconnectSchema.extend({
+  message: external_exports.string().min(1).optional()
+});
+var coreLegacyToolSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: coreConnectionSchema.extend({
+    context: sessionContextSchema
+  }),
+  loki_read_work_item: coreWorkItemSchema.extend({ clientId: external_exports.string() }),
+  kaijan_connect: coreConnectReceiptSchema,
+  loki_disconnect: coreDisconnectReceiptSchema
+};
+var coreToolUpstreamSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: external_exports.union([
+    coreConnectionSchema,
+    coreLegacyToolSuccessSchemas.loki_connection_status
+  ]),
+  loki_read_work_item: external_exports.union([
+    coreWorkItemSchema,
+    coreLegacyToolSuccessSchemas.loki_read_work_item
+  ]),
+  kaijan_connect: external_exports.union([coreConnectSchema, coreConnectReceiptSchema]),
+  loki_disconnect: coreDisconnectReceiptSchema
+};
 var aiModelsSchema = external_exports.looseObject({
   error: external_exports.never().optional(),
   data: external_exports.array(external_exports.looseObject({ id: external_exports.string().min(1) }))
@@ -20985,7 +21477,7 @@ async function boundedFile(path, maximum) {
 }
 
 // apps/codex-plugin/src/runtime-discovery.mjs
-async function installedRuntimeDiscovery(root, identity) {
+async function installedRuntimeDiscovery(root, identity2) {
   let metadataMatches = null;
   try {
     const current = JSON.parse(
@@ -20993,13 +21485,13 @@ async function installedRuntimeDiscovery(root, identity) {
         await boundedFile(join2(root, "loki-build.json"), 64 * 1024)
       )
     );
-    metadataMatches = Object.entries(identity.artifact).every(
+    metadataMatches = Object.entries(identity2.artifact).every(
       ([key, value]) => current[key] === value
     );
   } catch {
   }
   return {
-    ...identity,
+    ...identity2,
     process: {
       node: process2.version,
       platform: process2.platform,
@@ -21012,6 +21504,22 @@ async function installedRuntimeDiscovery(root, identity) {
       nextAction: "Compare the responding identity with the exact selected artifact. Read/reconcile any admitted run before supported host reconnect; preserve the same host-thread scope and originals. Connection-only scope cannot recover across restart. Never replay unknown effects to repair freshness."
     }
   };
+}
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function claudeSessionId(environment) {
+  const id2 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id2 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id2))
+    throw Error(
+      "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
+    );
+  return id2;
 }
 
 // apps/codex-plugin/src/installed-session.mjs
@@ -21038,6 +21546,7 @@ async function createInstalledSession(root, build, data, broker, {
   onStartupStage,
   lifecycleFactory
 } = {}) {
+  const host = pluginHost(build);
   const stage = (value) => {
     try {
       onStartupStage?.(value);
@@ -21048,34 +21557,34 @@ async function createInstalledSession(root, build, data, broker, {
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
-  const source = join3(root, "capabilities");
+  const source2 = join3(root, "capabilities");
   const started = performance.now();
-  const identity = await verifyDistribution(source, build.capabilityDigest);
-  if (Object.values(identity.manifest.files).some((member) => "symlink" in member))
+  const identity2 = await verifyDistribution(source2, build.capabilityDigest);
+  if (Object.values(identity2.manifest.files).some((member) => "symlink" in member))
     throw Error("Installed runtime must contain regular files");
   const verified = performance.now();
-  process3.env.PATH = [join3(source, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  process3.env.PATH = [join3(source2, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage("import_library");
-  const library = await import(pathToFileURL(join3(source, "library/api.mjs")).href);
+  const library = await import(pathToFileURL(join3(source2, "library/api.mjs")).href);
   stage("init_services");
   if (Boolean(build.validationContext) !== Boolean(runnerValidation))
     throw Error(
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== identity2.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== identity2.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity.digest
+    artifactDigest: identity2.digest
   }) : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
@@ -21104,9 +21613,9 @@ async function createInstalledSession(root, build, data, broker, {
   ) : void 0;
   const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
   const session = await createCapabilitySession({
-    host: "codex",
+    host,
     data,
-    payloadDigest: identity.digest,
+    payloadDigest: identity2.digest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -21131,9 +21640,11 @@ async function createInstalledSession(root, build, data, broker, {
         );
       }
     } : hostLibrary,
-    // Hai selected direct chat output for this plugin; preserve it in every scope.
+    ...host === "claude_code" ? { uiEnabled: false } : {},
+    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
     uiMode: "panel"
   });
+  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.workspaceResults = workspaceService;
   session.privateParameters = {
     async provision(threadId, input3) {
@@ -21232,9 +21743,14 @@ async function main() {
   const build = JSON.parse(
     await readFile(join4(root, "loki-build.json"), "utf8")
   );
+  const host = pluginHost(build);
+  if (host === "claude_code" && args.threadId !== claudeSessionId(process.env))
+    throw Error("The login binding must use this Claude Code session.");
   const selected = await bindProfileState(
     build,
-    localStateArguments(process.env.LOKI_CODEX_STATE_DIR),
+    localStateArguments(
+      host === "claude_code" ? process.env.LOKI_CLAUDE_STATE_DIR : process.env.LOKI_CODEX_STATE_DIR
+    ),
     homedir()
   );
   const session = await createInstalledSession(root, build, selected.state);

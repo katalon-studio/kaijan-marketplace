@@ -110,7 +110,7 @@ export async function generate(
   validate,
   {
     max_request_bytes,
-    max_output_tokens_limit = 12000,
+    max_output_tokens_limit,
     transport = native,
     env = process.env,
     signal,
@@ -123,7 +123,27 @@ export async function generate(
     deadline_ms > 2147483647
   )
     throw Error("Invalid absolute request deadline");
-  const wire = utf8(encodedJson(body));
+  // No application output ceiling by default. Honor an explicit caller budget;
+  // the provider owns its model/context limits. Do not truncate test coverage.
+  const requested = body.max_output_tokens;
+  const ceiling = requested ?? max_output_tokens_limit;
+  if (
+    (Object.hasOwn(body, "max_output_tokens") &&
+      (!Number.isSafeInteger(requested) ||
+        !isJsonInteger(body, "max_output_tokens") ||
+        requested < 1)) ||
+    (max_output_tokens_limit !== undefined &&
+      (!Number.isSafeInteger(max_output_tokens_limit) ||
+        max_output_tokens_limit < 1 ||
+        ceiling > max_output_tokens_limit))
+  )
+    throw Error("Invalid explicit output token limit");
+  const wire = utf8(
+    encodedJson({
+      ...body,
+      ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
+    }),
+  );
   if (
     max_request_bytes !== undefined &&
     (!Number.isInteger(max_request_bytes) ||
@@ -131,17 +151,6 @@ export async function generate(
       wire.length > max_request_bytes)
   )
     throw Error("Full request byte bound exceeded");
-  const ceiling = body.max_output_tokens;
-  if (
-    !Number.isInteger(max_output_tokens_limit) ||
-    max_output_tokens_limit < 1 ||
-    max_output_tokens_limit > 24000 ||
-    !Number.isInteger(ceiling) ||
-    !isJsonInteger(body, "max_output_tokens") ||
-    ceiling < 1 ||
-    ceiling > max_output_tokens_limit
-  )
-    throw Error("Invalid output token guard");
   if (
     !object(body.reasoning) ||
     Object.keys(body.reasoning).length !== 1 ||
@@ -166,7 +175,7 @@ export async function generate(
     request_sha256: hash(wire),
     wire_bytes: wire.length,
     ...(max_request_bytes === undefined ? {} : { max_request_bytes }),
-    max_output_tokens: ceiling,
+    ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
     client_attempt: 1,
     automatic_retry: false,
     absolute_deadline_ms: deadline_ms,
@@ -318,7 +327,7 @@ export async function generate(
           receipt.failure_diagnostic = {
             stage: "response_completion",
             reason: "max_output_tokens",
-            max_output_tokens: ceiling,
+            max_output_tokens: ceiling ?? null,
           };
           throw new PlanningFailure(
             "provider_output_limit_no_retry",

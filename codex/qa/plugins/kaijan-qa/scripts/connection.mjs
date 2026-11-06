@@ -6,6 +6,37 @@ import { resolve, join as join3 } from "node:path";
 
 // apps/codex-plugin/src/auth/client.mjs
 import { spawn } from "node:child_process";
+
+// apps/codex-plugin/src/auth/errors.mjs
+var KeychainUnavailableError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+    );
+    this.name = "KeychainUnavailableError";
+    this.code = "keychain_unavailable";
+  }
+};
+var CredentialStorageUnavailableError = class extends KeychainUnavailableError {
+  constructor(operation) {
+    super();
+    this.name = "CredentialStorageUnavailableError";
+    this.code = "connection_unavailable";
+    this.message = "Kaijan cannot access its saved sign-in. Check access to its private data folder, then reconnect.";
+    this.operation = operation;
+  }
+};
+var BrokerRestartRequiredError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot use the sign-in service that is already running. Wait for Kaijan work in the affected profile to finish. Then follow Managed sign-in recovery in the Kaijan Setup guide."
+    );
+    this.name = "BrokerRestartRequiredError";
+    this.code = "broker_restart_required";
+  }
+};
+
+// apps/codex-plugin/src/auth/client.mjs
 import {
   mkdir as mkdir2,
   readFile as readFile2,
@@ -30,7 +61,21 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function installationPrefix(build) {
+  return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
+}
+
+// apps/codex-plugin/src/auth/profile.mjs
 async function brokerProfile(build, home = homedir()) {
+  const prefix = installationPrefix(build);
   if (!["local", "qa", "production"].includes(build.profile))
     throw Error("Invalid profile");
   const origin = new URL(build.coreOrigin);
@@ -56,7 +101,7 @@ async function brokerProfile(build, home = homedir()) {
     const temporary = join(directory, `.${randomUUID()}`);
     await writeFile(
       temporary,
-      JSON.stringify({ installationId: `kaijan-codex-plugin-${randomUUID()}` }),
+      JSON.stringify({ installationId: `${prefix}${randomUUID()}` }),
       { mode: 384, flag: "wx" }
     );
     try {
@@ -71,7 +116,7 @@ async function brokerProfile(build, home = homedir()) {
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
   const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  if (!/^kaijan-codex-plugin-[a-f0-9-]{36}$/.test(identity.installationId))
+  if (typeof identity.installationId !== "string" || !identity.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
   const state = {
@@ -178,16 +223,17 @@ function brokerIdentity(build) {
   return {
     protocol: brokerProtocol,
     pluginVersion: build.pluginVersion,
-    buildId: build.buildId
+    buildId: build.buildId,
+    credentialStorage: build.credentialStorage ?? "keychain-v1"
   };
 }
 function brokerCompatibility(health, build) {
   const wanted = brokerIdentity(build);
   if (health.protocol !== wanted.protocol)
-    throw Error(
-      "broker_restart_required: restart the Kaijan connection to load the current broker protocol"
-    );
+    throw new BrokerRestartRequiredError();
   const order = compareVersions(health.pluginVersion, wanted.pluginVersion);
+  if (order >= 0 && wanted.credentialStorage === "private-file-v1" && health.credentialStorage !== wanted.credentialStorage)
+    throw new BrokerRestartRequiredError();
   if (order === 0 && health.buildId !== wanted.buildId)
     throw Error(
       "broker_version_conflict: publish changed bytes with a new plugin version"
@@ -263,7 +309,11 @@ async function connectBroker(root, build, { home, launch } = {}) {
           signal: AbortSignal.timeout(3e3)
         });
         const result = await response.json();
-        if (response.status === 409 && result.error === "broker_busy") return;
+        if (response.status === 409 && result.error === "broker_busy") {
+          if (build.credentialStorage === "private-file-v1" && health.credentialStorage !== build.credentialStorage)
+            throw new BrokerRestartRequiredError();
+          return;
+        }
         if (!response.ok) throw Error("broker_upgrade_refused");
         for (let attempt = 0; attempt < 100 && await probe(); attempt++)
           await delay(100);
@@ -308,10 +358,16 @@ async function connectBroker(root, build, { home, launch } = {}) {
       method: "POST",
       signal: AbortSignal.timeout(2e5)
     });
-    if (!response.ok)
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      if (response.status === 503 && body?.error === "connection_unavailable" && body?.reason === "local_credential_storage")
+        throw new CredentialStorageUnavailableError("connect");
+      if (response.status === 503 && body?.error === "keychain_unavailable")
+        throw new KeychainUnavailableError();
       throw Error(
         response.status === 401 ? "connection_required" : "broker_unavailable"
       );
+    }
     return response.json();
   };
   return {
@@ -353,9 +409,10 @@ try {
     })).json();
     process.stdout.write(JSON.stringify(response) + "\n");
   }
-} catch {
+} catch (error) {
   process.stderr.write(
-    "Connection action failed. No inference request was retried.\n"
+    error instanceof BrokerRestartRequiredError ? `${error.code}: ${error.message}
+` : "Connection action failed. No inference request was retried.\n"
   );
   process.exitCode = 1;
 }

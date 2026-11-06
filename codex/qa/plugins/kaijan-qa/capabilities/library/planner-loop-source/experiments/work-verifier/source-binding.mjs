@@ -308,6 +308,8 @@ function schemaErrors(value, schema, path = "$", errors = []) {
     if (!Array.isArray(value)) errors.push({ path, reason: "array_required" });
     else if (value.length > schema.maxItems)
       errors.push({ path, reason: "array_bound_no_prefix" });
+    else if (schema.minItems !== undefined && value.length < schema.minItems)
+      errors.push({ path, reason: "array_minimum" });
     else
       value.forEach((item, index) =>
         schemaErrors(item, schema.items, `${path}[${index}]`, errors),

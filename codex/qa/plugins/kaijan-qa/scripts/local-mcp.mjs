@@ -81,10 +81,10 @@ var require_code = __commonJS({
       }
       get names() {
         var _a3;
-        return (_a3 = this._names) !== null && _a3 !== void 0 ? _a3 : this._names = this._items.reduce((names, c) => {
+        return (_a3 = this._names) !== null && _a3 !== void 0 ? _a3 : this._names = this._items.reduce((names2, c) => {
           if (c instanceof Name)
-            names[c.str] = (names[c.str] || 0) + 1;
-          return names;
+            names2[c.str] = (names2[c.str] || 0) + 1;
+          return names2;
         }, {});
       }
     };
@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names, constants5) {
-        if (!names[this.name.str])
+      optimizeNames(names2, constants5) {
+        if (!names2[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names, constants5);
+          this.rhs = optimizeExpr(this.rhs, names2, constants5);
         return this;
       }
       get names() {
@@ -431,15 +431,15 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names, constants5) {
-        if (this.lhs instanceof code_1.Name && !names[this.lhs.str] && !this.sideEffects)
+      optimizeNames(names2, constants5) {
+        if (this.lhs instanceof code_1.Name && !names2[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names, constants5);
+        this.rhs = optimizeExpr(this.rhs, names2, constants5);
         return this;
       }
       get names() {
-        const names = this.lhs instanceof code_1.Name ? {} : { ...this.lhs.names };
-        return addExprNames(names, this.rhs);
+        const names2 = this.lhs instanceof code_1.Name ? {} : { ...this.lhs.names };
+        return addExprNames(names2, this.rhs);
       }
     };
     var AssignOp = class extends Assign {
@@ -473,9 +473,9 @@ var require_codegen = __commonJS({
       }
     };
     var Throw = class extends Node {
-      constructor(error62) {
+      constructor(error63) {
         super();
-        this.error = error62;
+        this.error = error63;
       }
       render({ _n }) {
         return `throw ${this.error};` + _n;
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names, constants5) {
-        this.code = optimizeExpr(this.code, names, constants5);
+      optimizeNames(names2, constants5) {
+        this.code = optimizeExpr(this.code, names2, constants5);
         return this;
       }
       get names() {
@@ -525,20 +525,20 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names, constants5) {
+      optimizeNames(names2, constants5) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names, constants5))
+          if (n.optimizeNames(names2, constants5))
             continue;
-          subtractNames(names, n.names);
+          subtractNames(names2, n.names);
           nodes.splice(i, 1);
         }
         return nodes.length > 0 ? this : void 0;
       }
       get names() {
-        return this.nodes.reduce((names, n) => addNames(names, n.names), {});
+        return this.nodes.reduce((names2, n) => addNames(names2, n.names), {});
       }
     };
     var BlockNode = class extends ParentNode {
@@ -583,20 +583,20 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names, constants5) {
+      optimizeNames(names2, constants5) {
         var _a3;
-        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants5);
-        if (!(super.optimizeNames(names, constants5) || this.else))
+        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants5);
+        if (!(super.optimizeNames(names2, constants5) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names, constants5);
+        this.condition = optimizeExpr(this.condition, names2, constants5);
         return this;
       }
       get names() {
-        const names = super.names;
-        addExprNames(names, this.condition);
+        const names2 = super.names;
+        addExprNames(names2, this.condition);
         if (this.else)
-          addNames(names, this.else.names);
-        return names;
+          addNames(names2, this.else.names);
+        return names2;
       }
     };
     If.kind = "if";
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names, constants5) {
-        if (!super.optimizeNames(names, constants5))
+      optimizeNames(names2, constants5) {
+        if (!super.optimizeNames(names2, constants5))
           return;
-        this.iteration = optimizeExpr(this.iteration, names, constants5);
+        this.iteration = optimizeExpr(this.iteration, names2, constants5);
         return this;
       }
       get names() {
@@ -635,8 +635,8 @@ var require_codegen = __commonJS({
         return `for(${varKind} ${name}=${from}; ${name}<${to}; ${name}++)` + super.render(opts);
       }
       get names() {
-        const names = addExprNames(super.names, this.from);
-        return addExprNames(names, this.to);
+        const names2 = addExprNames(super.names, this.from);
+        return addExprNames(names2, this.to);
       }
     };
     var ForIter = class extends For {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names, constants5) {
-        if (!super.optimizeNames(names, constants5))
+      optimizeNames(names2, constants5) {
+        if (!super.optimizeNames(names2, constants5))
           return;
-        this.iterable = optimizeExpr(this.iterable, names, constants5);
+        this.iterable = optimizeExpr(this.iterable, names2, constants5);
         return this;
       }
       get names() {
@@ -695,26 +695,26 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names, constants5) {
+      optimizeNames(names2, constants5) {
         var _a3, _b;
-        super.optimizeNames(names, constants5);
-        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants5);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants5);
+        super.optimizeNames(names2, constants5);
+        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants5);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names2, constants5);
         return this;
       }
       get names() {
-        const names = super.names;
+        const names2 = super.names;
         if (this.catch)
-          addNames(names, this.catch.names);
+          addNames(names2, this.catch.names);
         if (this.finally)
-          addNames(names, this.finally.names);
-        return names;
+          addNames(names2, this.finally.names);
+        return names2;
       }
     };
     var Catch = class extends BlockNode {
-      constructor(error62) {
+      constructor(error63) {
         super();
-        this.error = error62;
+        this.error = error63;
       }
       render(opts) {
         return `catch(${this.error})` + super.render(opts);
@@ -905,9 +905,9 @@ var require_codegen = __commonJS({
         this._blockNode(node2);
         this.code(tryBody);
         if (catchCode) {
-          const error62 = this.name("e");
-          this._currNode = node2.catch = new Catch(error62);
-          catchCode(error62);
+          const error63 = this.name("e");
+          this._currNode = node2.catch = new Catch(error63);
+          catchCode(error63);
         }
         if (finallyCode) {
           this._currNode = node2.finally = new Finally();
@@ -916,8 +916,8 @@ var require_codegen = __commonJS({
         return this._endBlockNode(Catch, Finally);
       }
       // `throw` statement
-      throw(error62) {
-        return this._leafNode(new Throw(error62));
+      throw(error63) {
+        return this._leafNode(new Throw(error63));
       }
       // start self-balancing block
       block(body, nodeCount) {
@@ -992,15 +992,15 @@ var require_codegen = __commonJS({
       }
     };
     exports.CodeGen = CodeGen;
-    function addNames(names, from) {
+    function addNames(names2, from) {
       for (const n in from)
-        names[n] = (names[n] || 0) + (from[n] || 0);
-      return names;
+        names2[n] = (names2[n] || 0) + (from[n] || 0);
+      return names2;
     }
-    function addExprNames(names, from) {
-      return from instanceof code_1._CodeOrName ? addNames(names, from.names) : names;
+    function addExprNames(names2, from) {
+      return from instanceof code_1._CodeOrName ? addNames(names2, from.names) : names2;
     }
-    function optimizeExpr(expr, names, constants5) {
+    function optimizeExpr(expr, names2, constants5) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1016,18 +1016,18 @@ var require_codegen = __commonJS({
       }, []));
       function replaceName(n) {
         const c = constants5[n.str];
-        if (c === void 0 || names[n.str] !== 1)
+        if (c === void 0 || names2[n.str] !== 1)
           return n;
-        delete names[n.str];
+        delete names2[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants5[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names2[c.str] === 1 && constants5[c.str] !== void 0);
       }
     }
-    function subtractNames(names, from) {
+    function subtractNames(names2, from) {
       for (const n in from)
-        names[n] = (names[n] || 0) - (from[n] || 0);
+        names2[n] = (names2[n] || 0) - (from[n] || 0);
     }
     function not(x) {
       return typeof x == "boolean" || typeof x == "number" || x === null ? !x : (0, code_1._)`!${par(x)}`;
@@ -1061,10 +1061,10 @@ var require_util = __commonJS({
     var codegen_1 = require_codegen();
     var code_1 = require_code();
     function toHash(arr) {
-      const hash2 = {};
+      const hash6 = {};
       for (const item of arr)
-        hash2[item] = true;
-      return hash2;
+        hash6[item] = true;
+      return hash6;
     }
     exports.toHash = toHash;
     function alwaysValidSchema(it, schema) {
@@ -1225,7 +1225,7 @@ var require_names = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var names = {
+    var names2 = {
       // validation function arguments
       data: new codegen_1.Name("data"),
       // data passed to validation function
@@ -1254,7 +1254,7 @@ var require_names = __commonJS({
       jsonLen: new codegen_1.Name("jsonLen"),
       jsonPart: new codegen_1.Name("jsonPart")
     };
-    exports.default = names;
+    exports.default = names2;
   }
 });
 
@@ -1273,10 +1273,10 @@ var require_errors = __commonJS({
     exports.keyword$DataError = {
       message: ({ keyword, schemaType }) => schemaType ? (0, codegen_1.str)`"${keyword}" keyword must be ${schemaType} ($data)` : (0, codegen_1.str)`"${keyword}" keyword is invalid ($data)`
     };
-    function reportError(cxt, error62 = exports.keywordError, errorPaths, overrideAllErrors) {
+    function reportError(cxt, error63 = exports.keywordError, errorPaths, overrideAllErrors) {
       const { it } = cxt;
       const { gen, compositeRule, allErrors } = it;
-      const errObj = errorObjectCode(cxt, error62, errorPaths);
+      const errObj = errorObjectCode(cxt, error63, errorPaths);
       if (overrideAllErrors !== null && overrideAllErrors !== void 0 ? overrideAllErrors : compositeRule || allErrors) {
         addError(gen, errObj);
       } else {
@@ -1284,10 +1284,10 @@ var require_errors = __commonJS({
       }
     }
     exports.reportError = reportError;
-    function reportExtraError(cxt, error62 = exports.keywordError, errorPaths) {
+    function reportExtraError(cxt, error63 = exports.keywordError, errorPaths) {
       const { it } = cxt;
       const { gen, compositeRule, allErrors } = it;
-      const errObj = errorObjectCode(cxt, error62, errorPaths);
+      const errObj = errorObjectCode(cxt, error63, errorPaths);
       addError(gen, errObj);
       if (!(compositeRule || allErrors)) {
         returnErrors(it, names_1.default.vErrors);
@@ -1338,19 +1338,19 @@ var require_errors = __commonJS({
       schema: new codegen_1.Name("schema"),
       parentSchema: new codegen_1.Name("parentSchema")
     };
-    function errorObjectCode(cxt, error62, errorPaths) {
+    function errorObjectCode(cxt, error63, errorPaths) {
       const { createErrors } = cxt.it;
       if (createErrors === false)
         return (0, codegen_1._)`{}`;
-      return errorObject(cxt, error62, errorPaths);
+      return errorObject(cxt, error63, errorPaths);
     }
-    function errorObject(cxt, error62, errorPaths = {}) {
+    function errorObject(cxt, error63, errorPaths = {}) {
       const { gen, it } = cxt;
       const keyValues = [
         errorInstancePath(it, errorPaths),
         errorSchemaPath(cxt, errorPaths)
       ];
-      extraErrorProps(cxt, error62, keyValues);
+      extraErrorProps(cxt, error63, keyValues);
       return gen.object(...keyValues);
     }
     function errorInstancePath({ errorPath }, { instancePath }) {
@@ -1502,37 +1502,37 @@ var require_dataType = __commonJS({
       DataType2[DataType2["Wrong"] = 1] = "Wrong";
     })(DataType || (exports.DataType = DataType = {}));
     function getSchemaTypes(schema) {
-      const types = getJSONTypes(schema.type);
-      const hasNull = types.includes("null");
+      const types2 = getJSONTypes(schema.type);
+      const hasNull = types2.includes("null");
       if (hasNull) {
         if (schema.nullable === false)
           throw new Error("type: null contradicts nullable: false");
       } else {
-        if (!types.length && schema.nullable !== void 0) {
+        if (!types2.length && schema.nullable !== void 0) {
           throw new Error('"nullable" cannot be used without "type"');
         }
         if (schema.nullable === true)
-          types.push("null");
+          types2.push("null");
       }
-      return types;
+      return types2;
     }
     exports.getSchemaTypes = getSchemaTypes;
     function getJSONTypes(ts) {
-      const types = Array.isArray(ts) ? ts : ts ? [ts] : [];
-      if (types.every(rules_1.isJSONType))
-        return types;
-      throw new Error("type must be JSONType or JSONType[]: " + types.join(","));
+      const types2 = Array.isArray(ts) ? ts : ts ? [ts] : [];
+      if (types2.every(rules_1.isJSONType))
+        return types2;
+      throw new Error("type must be JSONType or JSONType[]: " + types2.join(","));
     }
     exports.getJSONTypes = getJSONTypes;
-    function coerceAndCheckDataType(it, types) {
+    function coerceAndCheckDataType(it, types2) {
       const { gen, data, opts } = it;
-      const coerceTo = coerceToTypes(types, opts.coerceTypes);
-      const checkTypes = types.length > 0 && !(coerceTo.length === 0 && types.length === 1 && (0, applicability_1.schemaHasRulesForType)(it, types[0]));
+      const coerceTo = coerceToTypes(types2, opts.coerceTypes);
+      const checkTypes = types2.length > 0 && !(coerceTo.length === 0 && types2.length === 1 && (0, applicability_1.schemaHasRulesForType)(it, types2[0]));
       if (checkTypes) {
-        const wrongType = checkDataTypes(types, data, opts.strictNumbers, DataType.Wrong);
+        const wrongType = checkDataTypes(types2, data, opts.strictNumbers, DataType.Wrong);
         gen.if(wrongType, () => {
           if (coerceTo.length)
-            coerceData(it, types, coerceTo);
+            coerceData(it, types2, coerceTo);
           else
             reportTypeError(it);
         });
@@ -1541,15 +1541,15 @@ var require_dataType = __commonJS({
     }
     exports.coerceAndCheckDataType = coerceAndCheckDataType;
     var COERCIBLE = /* @__PURE__ */ new Set(["string", "number", "integer", "boolean", "null"]);
-    function coerceToTypes(types, coerceTypes) {
-      return coerceTypes ? types.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
+    function coerceToTypes(types2, coerceTypes) {
+      return coerceTypes ? types2.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
     }
-    function coerceData(it, types, coerceTo) {
+    function coerceData(it, types2, coerceTo) {
       const { gen, data, opts } = it;
       const dataType = gen.let("dataType", (0, codegen_1._)`typeof ${data}`);
       const coerced = gen.let("coerced", (0, codegen_1._)`undefined`);
       if (opts.coerceTypes === "array") {
-        gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types, data, opts.strictNumbers), () => gen.assign(coerced, data)));
+        gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types2, data, opts.strictNumbers), () => gen.assign(coerced, data)));
       }
       gen.if((0, codegen_1._)`${coerced} !== undefined`);
       for (const t of coerceTo) {
@@ -1625,19 +1625,19 @@ var require_dataType = __commonJS({
         return checkDataType(dataTypes[0], data, strictNums, correct);
       }
       let cond;
-      const types = (0, util_1.toHash)(dataTypes);
-      if (types.array && types.object) {
+      const types2 = (0, util_1.toHash)(dataTypes);
+      if (types2.array && types2.object) {
         const notObj = (0, codegen_1._)`typeof ${data} != "object"`;
-        cond = types.null ? notObj : (0, codegen_1._)`!${data} || ${notObj}`;
-        delete types.null;
-        delete types.array;
-        delete types.object;
+        cond = types2.null ? notObj : (0, codegen_1._)`!${data} || ${notObj}`;
+        delete types2.null;
+        delete types2.array;
+        delete types2.object;
       } else {
         cond = codegen_1.nil;
       }
-      if (types.number)
-        delete types.integer;
-      for (const t in types)
+      if (types2.number)
+        delete types2.integer;
+      for (const t in types2)
         cond = (0, codegen_1.and)(cond, checkDataType(t, data, strictNums, correct));
       return cond;
     }
@@ -1763,7 +1763,7 @@ var require_code2 = __commonJS({
       return allSchemaProperties(schemaMap).filter((p) => !(0, util_1.alwaysValidSchema)(it, schemaMap[p]));
     }
     exports.schemaProperties = schemaProperties;
-    function callValidateCode({ schemaCode, data, it: { gen, topSchemaRef, schemaPath, errorPath }, it }, func, context, passSchema) {
+    function callValidateCode({ schemaCode, data, it: { gen, topSchemaRef, schemaPath, errorPath }, it }, func, context2, passSchema) {
       const dataAndSchema = passSchema ? (0, codegen_1._)`${schemaCode}, ${data}, ${topSchemaRef}${schemaPath}` : data;
       const valCxt = [
         [names_1.default.instancePath, (0, codegen_1.strConcat)(names_1.default.instancePath, errorPath)],
@@ -1774,7 +1774,7 @@ var require_code2 = __commonJS({
       if (it.opts.dynamicRef)
         valCxt.push([names_1.default.dynamicAnchors, names_1.default.dynamicAnchors]);
       const args = (0, codegen_1._)`${dataAndSchema}, ${gen.object(...valCxt)}`;
-      return context !== codegen_1.nil ? (0, codegen_1._)`${func}.call(${context}, ${args})` : (0, codegen_1._)`${func}(${args})`;
+      return context2 !== codegen_1.nil ? (0, codegen_1._)`${func}.call(${context2}, ${args})` : (0, codegen_1._)`${func}(${args})`;
     }
     exports.callValidateCode = callValidateCode;
     var newRegExp = (0, codegen_1._)`new RegExp`;
@@ -1925,10 +1925,10 @@ var require_keyword = __commonJS({
       if (def.async && !schemaEnv.$async)
         throw new Error("async keyword in sync schema");
     }
-    function useKeyword(gen, keyword, result) {
-      if (result === void 0)
+    function useKeyword(gen, keyword, result2) {
+      if (result2 === void 0)
         throw new Error(`keyword "${keyword}" failed to compile`);
-      return gen.scopeValue("keyword", typeof result == "function" ? { ref: result } : { ref: result, code: (0, codegen_1.stringify)(result) });
+      return gen.scopeValue("keyword", typeof result2 == "function" ? { ref: result2 } : { ref: result2, code: (0, codegen_1.stringify)(result2) });
     }
     function validSchemaType(schema, schemaType, allowUndefined = false) {
       return !schemaType.length || schemaType.some((st) => st === "array" ? Array.isArray(schema) : st === "object" ? schema && typeof schema == "object" && !Array.isArray(schema) : typeof schema == st || allowUndefined && typeof schema == "undefined");
@@ -2220,25 +2220,25 @@ var require_resolve = __commonJS({
       return false;
     }
     function countKeys(schema) {
-      let count8 = 0;
+      let count9 = 0;
       for (const key in schema) {
         if (key === "$ref")
           return Infinity;
-        count8++;
+        count9++;
         if (SIMPLE_INLINED.has(key))
           continue;
         if (typeof schema[key] == "object") {
-          (0, util_1.eachItem)(schema[key], (sch) => count8 += countKeys(sch));
+          (0, util_1.eachItem)(schema[key], (sch) => count9 += countKeys(sch));
         }
-        if (count8 === Infinity)
+        if (count9 === Infinity)
           return Infinity;
       }
-      return count8;
+      return count9;
     }
-    function getFullPath(resolver, id3 = "", normalize2) {
+    function getFullPath(resolver, id6 = "", normalize2) {
       if (normalize2 !== false)
-        id3 = normalizeId(id3);
-      const p = resolver.parse(id3);
+        id6 = normalizeId(id6);
+      const p = resolver.parse(id6);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2248,13 +2248,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id3) {
-      return id3 ? id3.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id6) {
+      return id6 ? id6.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id3) {
-      id3 = normalizeId(id3);
-      return resolver.resolve(baseId, id3);
+    function resolveUrl(resolver, baseId, id6) {
+      id6 = normalizeId(id6);
+      return resolver.resolve(baseId, id6);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -2442,9 +2442,9 @@ var require_validate = __commonJS({
     function typeAndKeywords(it, errsCount) {
       if (it.opts.jtd)
         return schemaKeywords(it, [], false, errsCount);
-      const types = (0, dataType_1.getSchemaTypes)(it.schema);
-      const checkedTypes = (0, dataType_1.coerceAndCheckDataType)(it, types);
-      schemaKeywords(it, types, !checkedTypes, errsCount);
+      const types2 = (0, dataType_1.getSchemaTypes)(it.schema);
+      const checkedTypes = (0, dataType_1.coerceAndCheckDataType)(it, types2);
+      schemaKeywords(it, types2, !checkedTypes, errsCount);
     }
     function checkRefsAndKeywords(it) {
       const { schema, errSchemaPath, opts, self } = it;
@@ -2494,7 +2494,7 @@ var require_validate = __commonJS({
       if (items instanceof codegen_1.Name)
         gen.assign((0, codegen_1._)`${evaluated}.items`, items);
     }
-    function schemaKeywords(it, types, typeErrors, errsCount) {
+    function schemaKeywords(it, types2, typeErrors, errsCount) {
       const { gen, schema, data, allErrors, opts, self } = it;
       const { RULES } = self;
       if (schema.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1.schemaHasRulesButRef)(schema, RULES))) {
@@ -2502,7 +2502,7 @@ var require_validate = __commonJS({
         return;
       }
       if (!opts.jtd)
-        checkStrictTypes(it, types);
+        checkStrictTypes(it, types2);
       gen.block(() => {
         for (const group of RULES.rules)
           groupKeywords(group);
@@ -2514,7 +2514,7 @@ var require_validate = __commonJS({
         if (group.type) {
           gen.if((0, dataType_2.checkDataType)(group.type, data, opts.strictNumbers));
           iterateKeywords(it, group);
-          if (types.length === 1 && types[0] === group.type && typeErrors) {
+          if (types2.length === 1 && types2[0] === group.type && typeErrors) {
             gen.else();
             (0, dataType_2.reportTypeError)(it);
           }
@@ -2538,27 +2538,27 @@ var require_validate = __commonJS({
         }
       });
     }
-    function checkStrictTypes(it, types) {
+    function checkStrictTypes(it, types2) {
       if (it.schemaEnv.meta || !it.opts.strictTypes)
         return;
-      checkContextTypes(it, types);
+      checkContextTypes(it, types2);
       if (!it.opts.allowUnionTypes)
-        checkMultipleTypes(it, types);
+        checkMultipleTypes(it, types2);
       checkKeywordTypes(it, it.dataTypes);
     }
-    function checkContextTypes(it, types) {
-      if (!types.length)
+    function checkContextTypes(it, types2) {
+      if (!types2.length)
         return;
       if (!it.dataTypes.length) {
-        it.dataTypes = types;
+        it.dataTypes = types2;
         return;
       }
-      types.forEach((t) => {
+      types2.forEach((t) => {
         if (!includesType(it.dataTypes, t)) {
           strictTypesError(it, `type "${t}" not allowed by context "${it.dataTypes.join(",")}"`);
         }
       });
-      narrowSchemaTypes(it, types);
+      narrowSchemaTypes(it, types2);
     }
     function checkMultipleTypes(it, ts) {
       if (ts.length > 1 && !(ts.length === 2 && ts.includes("null"))) {
@@ -3024,8 +3024,8 @@ var require_compile = __commonJS({
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id3 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id3] || this.schemas[id3];
+      const id6 = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id6] || this.schemas[id6];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema2.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3036,7 +3036,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id3 === (0, resolve_1.normalizeId)(ref)) {
+      if (id6 === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -3896,20 +3896,20 @@ var require_fast_uri = __commonJS({
       if (baseMalformed || relativeMalformed || baseMalformedPercentEncoding || relativeMalformedPercentEncoding || baseMalformedSchemeSpecific || relativeMalformedSchemeSpecific || baseMalformedHost || relativeMalformedHost || baseMalformedScheme || relativeMalformedScheme) {
         throw new Error(baseParsed.error || relativeParsed.error || "URI is malformed.");
       }
-      const resolved = resolveComponent(baseParsed, relativeParsed, schemelessOptions, true);
-      const resolvedSchemeHandler = getSchemeHandler(options && options.scheme || resolved.scheme);
-      const resolvedHost = resolved.host;
+      const resolved2 = resolveComponent(baseParsed, relativeParsed, schemelessOptions, true);
+      const resolvedSchemeHandler = getSchemeHandler(options && options.scheme || resolved2.scheme);
+      const resolvedHost = resolved2.host;
       const resolvedHostIsIP = resolvedHost !== void 0 && resolvedHost !== "" && (isIPv4(resolvedHost) || normalizeIPv6(resolvedHost).isIPV6);
-      if (hasForbiddenDomainHost(resolved, options || {}, resolvedSchemeHandler, resolvedHostIsIP)) {
+      if (hasForbiddenDomainHost(resolved2, options || {}, resolvedSchemeHandler, resolvedHostIsIP)) {
         throw new Error(MALFORMED_HOST_ERROR);
       }
-      canonicalizeHost(resolved, options || {}, resolvedSchemeHandler, resolvedHostIsIP);
+      canonicalizeHost(resolved2, options || {}, resolvedSchemeHandler, resolvedHostIsIP);
       const encodedASCIIHost = resolvedHost && resolvedHost.indexOf("%") !== -1 && !new RegExp("\\P{ASCII}", "u").test(resolvedHost);
-      if (resolved.error && !encodedASCIIHost) {
-        throw new Error(resolved.error);
+      if (resolved2.error && !encodedASCIIHost) {
+        throw new Error(resolved2.error);
       }
       schemelessOptions.skipEscape = true;
-      return serialize(resolved, schemelessOptions);
+      return serialize(resolved2, schemelessOptions);
     }
     function resolveComponent(base, relative2, options, skipNormalization) {
       const target = {};
@@ -4519,15 +4519,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id3;
+        let id6;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id3 = schema[schemaId];
-          if (id3 !== void 0 && typeof id3 != "string") {
+          id6 = schema[schemaId];
+          if (id6 !== void 0 && typeof id6 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id3);
+        key = (0, resolve_1.normalizeId)(key || id6);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4606,11 +4606,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id3 = schemaKeyRef[this.opts.schemaId];
-            if (id3) {
-              id3 = (0, resolve_1.normalizeId)(id3);
-              delete this.schemas[id3];
-              delete this.refs[id3];
+            let id6 = schemaKeyRef[this.opts.schemaId];
+            if (id6) {
+              id6 = (0, resolve_1.normalizeId)(id6);
+              delete this.schemas[id6];
+              delete this.refs[id6];
             }
             return this;
           }
@@ -4717,10 +4717,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta3, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id3;
+        let id6;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id3 = schema[schemaId];
+          id6 = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4730,7 +4730,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id3 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id6 || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta: meta3, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4743,9 +4743,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id3) {
-        if (this.schemas[id3] || this.refs[id3]) {
-          throw new Error(`schema with key or id "${id3}" already exists`);
+      _checkUnique(id6) {
+        if (this.schemas[id6] || this.refs[id6]) {
+          throw new Error(`schema with key or id "${id6}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -5000,12 +5000,12 @@ var require_ref = __commonJS({
       function callSyncRef() {
         cxt.result((0, code_1.callValidateCode)(cxt, v, passCxt), () => addEvaluatedFrom(v), () => addErrorsFrom(v));
       }
-      function addErrorsFrom(source) {
-        const errs = (0, codegen_1._)`${source}.errors`;
+      function addErrorsFrom(source3) {
+        const errs = (0, codegen_1._)`${source3}.errors`;
         gen.assign(names_1.default.vErrors, (0, codegen_1._)`${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`);
         gen.assign(names_1.default.errors, (0, codegen_1._)`${names_1.default.vErrors}.length`);
       }
-      function addEvaluatedFrom(source) {
+      function addEvaluatedFrom(source3) {
         var _a3;
         if (!it.opts.unevaluated)
           return;
@@ -5016,7 +5016,7 @@ var require_ref = __commonJS({
               it.props = util_1.mergeEvaluated.props(gen, schEvaluated.props, it.props);
             }
           } else {
-            const props = gen.var("props", (0, codegen_1._)`${source}.evaluated.props`);
+            const props = gen.var("props", (0, codegen_1._)`${source3}.evaluated.props`);
             it.props = util_1.mergeEvaluated.props(gen, props, it.props, codegen_1.Name);
           }
         }
@@ -5026,7 +5026,7 @@ var require_ref = __commonJS({
               it.items = util_1.mergeEvaluated.items(gen, schEvaluated.items, it.items);
             }
           } else {
-            const items = gen.var("items", (0, codegen_1._)`${source}.evaluated.items`);
+            const items = gen.var("items", (0, codegen_1._)`${source3}.evaluated.items`);
             it.items = util_1.mergeEvaluated.items(gen, items, it.items, codegen_1.Name);
           }
         }
@@ -5071,7 +5071,7 @@ var require_limitNumber = __commonJS({
       exclusiveMaximum: { okStr: "<", ok: ops.LT, fail: ops.GTE },
       exclusiveMinimum: { okStr: ">", ok: ops.GT, fail: ops.LTE }
     };
-    var error62 = {
+    var error63 = {
       message: ({ keyword, schemaCode }) => (0, codegen_1.str)`must be ${KWDs[keyword].okStr} ${schemaCode}`,
       params: ({ keyword, schemaCode }) => (0, codegen_1._)`{comparison: ${KWDs[keyword].okStr}, limit: ${schemaCode}}`
     };
@@ -5080,7 +5080,7 @@ var require_limitNumber = __commonJS({
       type: "number",
       schemaType: "number",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { keyword, data, schemaCode } = cxt;
         cxt.fail$data((0, codegen_1._)`${data} ${KWDs[keyword].fail} ${schemaCode} || isNaN(${data})`);
@@ -5096,7 +5096,7 @@ var require_multipleOf = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var error62 = {
+    var error63 = {
       message: ({ schemaCode }) => (0, codegen_1.str)`must be multiple of ${schemaCode}`,
       params: ({ schemaCode }) => (0, codegen_1._)`{multipleOf: ${schemaCode}}`
     };
@@ -5105,7 +5105,7 @@ var require_multipleOf = __commonJS({
       type: "number",
       schemaType: "number",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, schemaCode, it } = cxt;
         const prec = it.opts.multipleOfPrecision;
@@ -5152,7 +5152,7 @@ var require_limitLength = __commonJS({
     var codegen_1 = require_codegen();
     var util_1 = require_util();
     var ucs2length_1 = require_ucs2length();
-    var error62 = {
+    var error63 = {
       message({ keyword, schemaCode }) {
         const comp = keyword === "maxLength" ? "more" : "fewer";
         return (0, codegen_1.str)`must NOT have ${comp} than ${schemaCode} characters`;
@@ -5164,7 +5164,7 @@ var require_limitLength = __commonJS({
       type: "string",
       schemaType: "number",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { keyword, data, schemaCode, it } = cxt;
         const op = keyword === "maxLength" ? codegen_1.operators.GT : codegen_1.operators.LT;
@@ -5184,7 +5184,7 @@ var require_pattern = __commonJS({
     var code_1 = require_code2();
     var util_1 = require_util();
     var codegen_1 = require_codegen();
-    var error62 = {
+    var error63 = {
       message: ({ schemaCode }) => (0, codegen_1.str)`must match pattern "${schemaCode}"`,
       params: ({ schemaCode }) => (0, codegen_1._)`{pattern: ${schemaCode}}`
     };
@@ -5193,7 +5193,7 @@ var require_pattern = __commonJS({
       type: "string",
       schemaType: "string",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, $data, schema, schemaCode, it } = cxt;
         const u = it.opts.unicodeRegExp ? "u" : "";
@@ -5219,7 +5219,7 @@ var require_limitProperties = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var error62 = {
+    var error63 = {
       message({ keyword, schemaCode }) {
         const comp = keyword === "maxProperties" ? "more" : "fewer";
         return (0, codegen_1.str)`must NOT have ${comp} than ${schemaCode} properties`;
@@ -5231,7 +5231,7 @@ var require_limitProperties = __commonJS({
       type: "object",
       schemaType: "number",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { keyword, data, schemaCode } = cxt;
         const op = keyword === "maxProperties" ? codegen_1.operators.GT : codegen_1.operators.LT;
@@ -5250,7 +5250,7 @@ var require_required = __commonJS({
     var code_1 = require_code2();
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: ({ params: { missingProperty } }) => (0, codegen_1.str)`must have required property '${missingProperty}'`,
       params: ({ params: { missingProperty } }) => (0, codegen_1._)`{missingProperty: ${missingProperty}}`
     };
@@ -5259,7 +5259,7 @@ var require_required = __commonJS({
       type: "object",
       schemaType: "array",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, schema, schemaCode, data, $data, it } = cxt;
         const { opts } = it;
@@ -5330,7 +5330,7 @@ var require_limitItems = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var error62 = {
+    var error63 = {
       message({ keyword, schemaCode }) {
         const comp = keyword === "maxItems" ? "more" : "fewer";
         return (0, codegen_1.str)`must NOT have ${comp} than ${schemaCode} items`;
@@ -5342,7 +5342,7 @@ var require_limitItems = __commonJS({
       type: "array",
       schemaType: "number",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { keyword, data, schemaCode } = cxt;
         const op = keyword === "maxItems" ? codegen_1.operators.GT : codegen_1.operators.LT;
@@ -5373,7 +5373,7 @@ var require_uniqueItems = __commonJS({
     var codegen_1 = require_codegen();
     var util_1 = require_util();
     var equal_1 = require_equal();
-    var error62 = {
+    var error63 = {
       message: ({ params: { i, j } }) => (0, codegen_1.str)`must NOT have duplicate items (items ## ${j} and ${i} are identical)`,
       params: ({ params: { i, j } }) => (0, codegen_1._)`{i: ${i}, j: ${j}}`
     };
@@ -5382,7 +5382,7 @@ var require_uniqueItems = __commonJS({
       type: "array",
       schemaType: "boolean",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, $data, schema, parentSchema, schemaCode, it } = cxt;
         if (!$data && !schema)
@@ -5439,14 +5439,14 @@ var require_const = __commonJS({
     var codegen_1 = require_codegen();
     var util_1 = require_util();
     var equal_1 = require_equal();
-    var error62 = {
+    var error63 = {
       message: "must be equal to constant",
       params: ({ schemaCode }) => (0, codegen_1._)`{allowedValue: ${schemaCode}}`
     };
     var def = {
       keyword: "const",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, $data, schemaCode, schema } = cxt;
         if ($data || schema && typeof schema == "object") {
@@ -5468,7 +5468,7 @@ var require_enum = __commonJS({
     var codegen_1 = require_codegen();
     var util_1 = require_util();
     var equal_1 = require_equal();
-    var error62 = {
+    var error63 = {
       message: "must be equal to one of the allowed values",
       params: ({ schemaCode }) => (0, codegen_1._)`{allowedValues: ${schemaCode}}`
     };
@@ -5476,7 +5476,7 @@ var require_enum = __commonJS({
       keyword: "enum",
       schemaType: "array",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, $data, schema, schemaCode, it } = cxt;
         if (!$data && schema.length === 0)
@@ -5555,7 +5555,7 @@ var require_additionalItems = __commonJS({
     exports.validateAdditionalItems = void 0;
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: ({ params: { len } }) => (0, codegen_1.str)`must NOT have more than ${len} items`,
       params: ({ params: { len } }) => (0, codegen_1._)`{limit: ${len}}`
     };
@@ -5564,7 +5564,7 @@ var require_additionalItems = __commonJS({
       type: "array",
       schemaType: ["boolean", "object"],
       before: "uniqueItems",
-      error: error62,
+      error: error63,
       code(cxt) {
         const { parentSchema, it } = cxt;
         const { items } = parentSchema;
@@ -5683,7 +5683,7 @@ var require_items2020 = __commonJS({
     var util_1 = require_util();
     var code_1 = require_code2();
     var additionalItems_1 = require_additionalItems();
-    var error62 = {
+    var error63 = {
       message: ({ params: { len } }) => (0, codegen_1.str)`must NOT have more than ${len} items`,
       params: ({ params: { len } }) => (0, codegen_1._)`{limit: ${len}}`
     };
@@ -5692,7 +5692,7 @@ var require_items2020 = __commonJS({
       type: "array",
       schemaType: ["object", "boolean"],
       before: "uniqueItems",
-      error: error62,
+      error: error63,
       code(cxt) {
         const { schema, parentSchema, it } = cxt;
         const { prefixItems } = parentSchema;
@@ -5716,7 +5716,7 @@ var require_contains = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: ({ params: { min, max } }) => max === void 0 ? (0, codegen_1.str)`must contain at least ${min} valid item(s)` : (0, codegen_1.str)`must contain at least ${min} and no more than ${max} valid item(s)`,
       params: ({ params: { min, max } }) => max === void 0 ? (0, codegen_1._)`{minContains: ${min}}` : (0, codegen_1._)`{minContains: ${min}, maxContains: ${max}}`
     };
@@ -5726,7 +5726,7 @@ var require_contains = __commonJS({
       schemaType: ["object", "boolean"],
       before: "uniqueItems",
       trackErrors: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, schema, parentSchema, data, it } = cxt;
         let min;
@@ -5771,8 +5771,8 @@ var require_contains = __commonJS({
         cxt.result(valid, () => cxt.reset());
         function validateItemsWithCount() {
           const schValid = gen.name("_valid");
-          const count8 = gen.let("count", 0);
-          validateItems(schValid, () => gen.if(schValid, () => checkLimits(count8)));
+          const count9 = gen.let("count", 0);
+          validateItems(schValid, () => gen.if(schValid, () => checkLimits(count9)));
         }
         function validateItems(_valid, block) {
           gen.forRange("i", 0, len, (i) => {
@@ -5785,16 +5785,16 @@ var require_contains = __commonJS({
             block();
           });
         }
-        function checkLimits(count8) {
-          gen.code((0, codegen_1._)`${count8}++`);
+        function checkLimits(count9) {
+          gen.code((0, codegen_1._)`${count9}++`);
           if (max === void 0) {
-            gen.if((0, codegen_1._)`${count8} >= ${min}`, () => gen.assign(valid, true).break());
+            gen.if((0, codegen_1._)`${count9} >= ${min}`, () => gen.assign(valid, true).break());
           } else {
-            gen.if((0, codegen_1._)`${count8} > ${max}`, () => gen.assign(valid, false).break());
+            gen.if((0, codegen_1._)`${count9} > ${max}`, () => gen.assign(valid, false).break());
             if (min === 1)
               gen.assign(valid, true);
             else
-              gen.if((0, codegen_1._)`${count8} >= ${min}`, () => gen.assign(valid, true));
+              gen.if((0, codegen_1._)`${count9} >= ${min}`, () => gen.assign(valid, true));
           }
         }
       }
@@ -5904,7 +5904,7 @@ var require_propertyNames = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: "property name must be valid",
       params: ({ params }) => (0, codegen_1._)`{propertyName: ${params.propertyName}}`
     };
@@ -5912,7 +5912,7 @@ var require_propertyNames = __commonJS({
       keyword: "propertyNames",
       type: "object",
       schemaType: ["object", "boolean"],
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, schema, data, it } = cxt;
         if ((0, util_1.alwaysValidSchema)(it, schema))
@@ -5949,7 +5949,7 @@ var require_additionalProperties = __commonJS({
     var codegen_1 = require_codegen();
     var names_1 = require_names();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: "must NOT have additional properties",
       params: ({ params }) => (0, codegen_1._)`{additionalProperty: ${params.additionalProperty}}`
     };
@@ -5959,7 +5959,7 @@ var require_additionalProperties = __commonJS({
       schemaType: ["boolean", "object"],
       allowUndefined: true,
       trackErrors: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, schema, parentSchema, data, errsCount, it } = cxt;
         if (!errsCount)
@@ -6233,7 +6233,7 @@ var require_oneOf = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: "must match exactly one schema in oneOf",
       params: ({ params }) => (0, codegen_1._)`{passingSchemas: ${params.passing}}`
     };
@@ -6241,7 +6241,7 @@ var require_oneOf = __commonJS({
       keyword: "oneOf",
       schemaType: "array",
       trackErrors: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, schema, parentSchema, it } = cxt;
         if (!Array.isArray(schema))
@@ -6318,7 +6318,7 @@ var require_if = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: ({ params }) => (0, codegen_1.str)`must match "${params.ifClause}" schema`,
       params: ({ params }) => (0, codegen_1._)`{failingKeyword: ${params.ifClause}}`
     };
@@ -6326,7 +6326,7 @@ var require_if = __commonJS({
       keyword: "if",
       schemaType: ["object", "boolean"],
       trackErrors: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, parentSchema, it } = cxt;
         if (parentSchema.then === void 0 && parentSchema.else === void 0) {
@@ -6452,7 +6452,7 @@ var require_format = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var error62 = {
+    var error63 = {
       message: ({ schemaCode }) => (0, codegen_1.str)`must match format "${schemaCode}"`,
       params: ({ schemaCode }) => (0, codegen_1._)`{format: ${schemaCode}}`
     };
@@ -6461,7 +6461,7 @@ var require_format = __commonJS({
       type: ["number", "string"],
       schemaType: "string",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt, ruleType) {
         const { gen, data, $data, schema, schemaCode, it } = cxt;
         const { opts, errSchemaPath, schemaEnv, self } = it;
@@ -6616,7 +6616,7 @@ var require_discriminator = __commonJS({
     var compile_1 = require_compile();
     var ref_error_1 = require_ref_error();
     var util_1 = require_util();
-    var error62 = {
+    var error63 = {
       message: ({ params: { discrError, tagName } }) => discrError === types_1.DiscrError.Tag ? `tag "${tagName}" must be string` : `value of tag "${tagName}" must be in oneOf`,
       params: ({ params: { discrError, tag, tagName } }) => (0, codegen_1._)`{error: ${discrError}, tag: ${tagName}, tagValue: ${tag}}`
     };
@@ -6624,7 +6624,7 @@ var require_discriminator = __commonJS({
       keyword: "discriminator",
       type: "object",
       schemaType: "object",
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, schema, parentSchema, it } = cxt;
         const { oneOf } = parentSchema;
@@ -7156,7 +7156,7 @@ var require_limit = __commonJS({
       formatExclusiveMaximum: { okStr: "<", ok: ops.LT, fail: ops.GTE },
       formatExclusiveMinimum: { okStr: ">", ok: ops.GT, fail: ops.LTE }
     };
-    var error62 = {
+    var error63 = {
       message: ({ keyword, schemaCode }) => (0, codegen_1.str)`should be ${KWDs[keyword].okStr} ${schemaCode}`,
       params: ({ keyword, schemaCode }) => (0, codegen_1._)`{comparison: ${KWDs[keyword].okStr}, limit: ${schemaCode}}`
     };
@@ -7165,7 +7165,7 @@ var require_limit = __commonJS({
       type: "string",
       schemaType: "string",
       $data: true,
-      error: error62,
+      error: error63,
       code(cxt) {
         const { gen, data, schemaCode, keyword, it } = cxt;
         const { opts, self } = it;
@@ -7229,8 +7229,8 @@ var require_dist = __commonJS({
         return ajv;
       }
       const [formats, exportName] = opts.mode === "fast" ? [formats_1.fastFormats, fastName] : [formats_1.fullFormats, fullName];
-      const list = opts.formats || formats_1.formatNames;
-      addFormats(ajv, list, formats, exportName);
+      const list3 = opts.formats || formats_1.formatNames;
+      addFormats(ajv, list3, formats, exportName);
       if (opts.keywords)
         (0, limit_1.default)(ajv);
       return ajv;
@@ -7242,11 +7242,11 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs, exportName) {
+    function addFormats(ajv, list3, fs, exportName) {
       var _a3;
       var _b;
       (_a3 = (_b = ajv.opts.code).formats) !== null && _a3 !== void 0 ? _a3 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
-      for (const f of list)
+      for (const f of list3)
         ajv.addFormat(f, fs[f]);
     }
     module.exports = exports = formatsPlugin;
@@ -7260,6 +7260,37 @@ import process8 from "node:process";
 
 // apps/codex-plugin/src/auth/client.mjs
 import { spawn } from "node:child_process";
+
+// apps/codex-plugin/src/auth/errors.mjs
+var KeychainUnavailableError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+    );
+    this.name = "KeychainUnavailableError";
+    this.code = "keychain_unavailable";
+  }
+};
+var CredentialStorageUnavailableError = class extends KeychainUnavailableError {
+  constructor(operation) {
+    super();
+    this.name = "CredentialStorageUnavailableError";
+    this.code = "connection_unavailable";
+    this.message = "Kaijan cannot access its saved sign-in. Check access to its private data folder, then reconnect.";
+    this.operation = operation;
+  }
+};
+var BrokerRestartRequiredError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot use the sign-in service that is already running. Wait for Kaijan work in the affected profile to finish. Then follow Managed sign-in recovery in the Kaijan Setup guide."
+    );
+    this.name = "BrokerRestartRequiredError";
+    this.code = "broker_restart_required";
+  }
+};
+
+// apps/codex-plugin/src/auth/client.mjs
 import {
   mkdir as mkdir2,
   readFile as readFile2,
@@ -7284,7 +7315,36 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function installationPrefix(build) {
+  return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
+}
+function claudeSessionId(environment) {
+  const id6 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id6 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id6))
+    throw Error(
+      "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
+    );
+  return id6;
+}
+function bindHostSession(session, build, environment) {
+  if (pluginHost(build) !== "claude_code") return session;
+  const threadId = claudeSessionId(environment);
+  const forRequest = session.forRequest.bind(session);
+  session.forRequest = (metadata2) => forRequest({ ...metadata2, threadId });
+  return session;
+}
+
+// apps/codex-plugin/src/auth/profile.mjs
 async function brokerProfile(build, home = homedir()) {
+  const prefix = installationPrefix(build);
   if (!["local", "qa", "production"].includes(build.profile))
     throw Error("Invalid profile");
   const origin = new URL(build.coreOrigin);
@@ -7305,18 +7365,18 @@ async function brokerProfile(build, home = homedir()) {
   const identityPath = join(directory, "installation.json");
   try {
     await lstat(identityPath);
-  } catch (error62) {
-    if (error62.code !== "ENOENT") throw error62;
+  } catch (error63) {
+    if (error63.code !== "ENOENT") throw error63;
     const temporary = join(directory, `.${randomUUID()}`);
     await writeFile(
       temporary,
-      JSON.stringify({ installationId: `kaijan-codex-plugin-${randomUUID()}` }),
+      JSON.stringify({ installationId: `${prefix}${randomUUID()}` }),
       { mode: 384, flag: "wx" }
     );
     try {
       await link(temporary, identityPath);
-    } catch (error63) {
-      if (error63.code !== "EEXIST") throw error63;
+    } catch (error64) {
+      if (error64.code !== "EEXIST") throw error64;
     } finally {
       await unlink(temporary);
     }
@@ -7324,17 +7384,17 @@ async function brokerProfile(build, home = homedir()) {
   const identityInfo = await lstat(identityPath);
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
-  const identity3 = JSON.parse(await readFile(identityPath, "utf8"));
-  if (!/^kaijan-codex-plugin-[a-f0-9-]{36}$/.test(identity3.installationId))
+  const identity4 = JSON.parse(await readFile(identityPath, "utf8"));
+  if (typeof identity4.installationId !== "string" || !identity4.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity4.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
-  const state = {
+  const state2 = {
     read: async () => {
       try {
         return JSON.parse(await readFile(blockedPath, "utf8")) === true;
-      } catch (error62) {
-        if (error62.code === "ENOENT") return false;
-        throw error62;
+      } catch (error63) {
+        if (error63.code === "ENOENT") return false;
+        throw error63;
       }
     },
     write: async (value) => {
@@ -7349,8 +7409,8 @@ async function brokerProfile(build, home = homedir()) {
   return {
     directory,
     account,
-    state,
-    ...identity3,
+    state: state2,
+    ...identity4,
     socketPath: join(directory, "broker.sock")
   };
 }
@@ -7432,16 +7492,17 @@ function brokerIdentity(build) {
   return {
     protocol: brokerProtocol,
     pluginVersion: build.pluginVersion,
-    buildId: build.buildId
+    buildId: build.buildId,
+    credentialStorage: build.credentialStorage ?? "keychain-v1"
   };
 }
 function brokerCompatibility(health, build) {
   const wanted = brokerIdentity(build);
   if (health.protocol !== wanted.protocol)
-    throw Error(
-      "broker_restart_required: restart the Kaijan connection to load the current broker protocol"
-    );
+    throw new BrokerRestartRequiredError();
   const order = compareVersions(health.pluginVersion, wanted.pluginVersion);
+  if (order >= 0 && wanted.credentialStorage === "private-file-v1" && health.credentialStorage !== wanted.credentialStorage)
+    throw new BrokerRestartRequiredError();
   if (order === 0 && health.buildId !== wanted.buildId)
     throw Error(
       "broker_version_conflict: publish changed bytes with a new plugin version"
@@ -7478,25 +7539,25 @@ async function connectBroker(root, build, { home, launch } = {}) {
           mode: 384
         });
         break;
-      } catch (error62) {
-        if (error62.code !== "EEXIST") throw error62;
+      } catch (error63) {
+        if (error63.code !== "EEXIST") throw error63;
         try {
           const pid = Number(await readFile2(join2(lock, "pid"), "utf8"));
           if (!Number.isSafeInteger(pid) || pid <= 0)
-            throw Error("invalid_startup_owner", { cause: error62 });
+            throw Error("invalid_startup_owner", { cause: error63 });
           try {
             process.kill(pid, 0);
-          } catch (error63) {
-            if (error63.code === "ESRCH")
+          } catch (error64) {
+            if (error64.code === "ESRCH")
               await rm(lock, { recursive: true, force: true });
           }
-        } catch (error63) {
-          if (error63.code !== "ENOENT") throw error63;
+        } catch (error64) {
+          if (error64.code !== "ENOENT") throw error64;
           try {
             if (Date.now() - (await lstat3(lock)).mtimeMs > 1e4)
               await rm(lock, { recursive: true, force: true });
-          } catch (error64) {
-            if (error64.code !== "ENOENT") throw error64;
+          } catch (error65) {
+            if (error65.code !== "ENOENT") throw error65;
           }
         }
         health = await probe();
@@ -7516,8 +7577,12 @@ async function connectBroker(root, build, { home, launch } = {}) {
           body: JSON.stringify(brokerIdentity(build)),
           signal: AbortSignal.timeout(3e3)
         });
-        const result = await response.json();
-        if (response.status === 409 && result.error === "broker_busy") return;
+        const result2 = await response.json();
+        if (response.status === 409 && result2.error === "broker_busy") {
+          if (build.credentialStorage === "private-file-v1" && health.credentialStorage !== build.credentialStorage)
+            throw new BrokerRestartRequiredError();
+          return;
+        }
         if (!response.ok) throw Error("broker_upgrade_refused");
         for (let attempt = 0; attempt < 100 && await probe(); attempt++)
           await delay(100);
@@ -7528,8 +7593,8 @@ async function connectBroker(root, build, { home, launch } = {}) {
         if (!socket.isSocket() || socket.uid !== process.getuid())
           throw Error("unsafe_broker_socket");
         await unlink2(profile.socketPath);
-      } catch (error62) {
-        if (error62.code !== "ENOENT") throw error62;
+      } catch (error63) {
+        if (error63.code !== "ENOENT") throw error63;
       }
       if (launch) await launch(profile, build);
       else {
@@ -7562,10 +7627,16 @@ async function connectBroker(root, build, { home, launch } = {}) {
       method: "POST",
       signal: AbortSignal.timeout(2e5)
     });
-    if (!response.ok)
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      if (response.status === 503 && body?.error === "connection_unavailable" && body?.reason === "local_credential_storage")
+        throw new CredentialStorageUnavailableError("connect");
+      if (response.status === 503 && body?.error === "keychain_unavailable")
+        throw new KeychainUnavailableError();
       throw Error(
         response.status === 401 ? "connection_required" : "broker_unavailable"
       );
+    }
     return response.json();
   };
   return {
@@ -7585,8 +7656,8 @@ function hasMethod(value, key) {
   return "function" == typeof asRecord(value)?.[key];
 }
 function hasNestedLowLevelServer(server) {
-  const record4 = asRecord(server);
-  return !!record4 && "server" in record4 && !!asRecord(record4.server);
+  const record5 = asRecord(server);
+  return !!record5 && "server" in record5 && !!asRecord(record5.server);
 }
 function hasToolRegistry(server) {
   return !!asRecord(asRecord(server)?._registeredTools);
@@ -7787,8 +7858,8 @@ function isError(candidate) {
       return isInstanceOf(candidate, Error);
   }
 }
-function isErrorEvent(event) {
-  return isBuiltin(event, "ErrorEvent");
+function isErrorEvent(event2) {
+  return isBuiltin(event2, "ErrorEvent");
 }
 function isEvent(candidate) {
   return "u" > typeof Event && isInstanceOf(candidate, Event);
@@ -7900,10 +7971,10 @@ var isBlockedUA = function(ua, customBlockedUserAgents = []) {
   const cached2 = UA_CACHE.get(key);
   if (void 0 !== cached2) return cached2;
   const uaLower = ua.toLowerCase();
-  const result = DEFAULT_BLOCKED_UA_STRS.concat(customBlockedUserAgents).some((blockedUA) => -1 !== uaLower.indexOf(blockedUA.toLowerCase()));
+  const result2 = DEFAULT_BLOCKED_UA_STRS.concat(customBlockedUserAgents).some((blockedUA) => -1 !== uaLower.indexOf(blockedUA.toLowerCase()));
   if (UA_CACHE.size >= MAX_CACHE_ENTRIES) UA_CACHE.clear();
-  UA_CACHE.set(key, result);
-  return result;
+  UA_CACHE.set(key, result2);
+  return result2;
 };
 
 // node_modules/.pnpm/@posthog+core@1.61.1/node_modules/@posthog/core/dist/utils/number-utils.mjs
@@ -8139,9 +8210,9 @@ var uuidv7obj = () => (defaultGenerator || (defaultGenerator = new V7Generator()
 var PromiseQueue = class {
   add(promise2) {
     const promiseUUID = uuidv7();
-    const id3 = ++this.nextId;
+    const id6 = ++this.nextId;
     this.promiseByIds[promiseUUID] = {
-      id: id3,
+      id: id6,
       promise: promise2
     };
     promise2.catch(() => {
@@ -8481,7 +8552,7 @@ var osMatchers = [
   [
     /Mac OS X (\d+)[_.](\d+)[_.]?(\d+)?/i,
     (match) => {
-      const result = [
+      const result2 = [
         "Mac OS X",
         ""
       ];
@@ -8491,9 +8562,9 @@ var osMatchers = [
           match[2],
           match[3] || "0"
         ];
-        result[1] = versionParts.join(".");
+        result2[1] = versionParts.join(".");
       }
-      return result;
+      return result2;
     }
   ],
   [
@@ -8543,18 +8614,18 @@ function sanitizeString(value) {
   }
   return output2;
 }
-function assignUserAttributes(target, source) {
-  if (!source) return target;
+function assignUserAttributes(target, source3) {
+  if (!source3) return target;
   let keys = [];
   try {
-    keys = Object.keys(source);
+    keys = Object.keys(source3);
   } catch {
     keys = [];
   }
   for (const key of keys) {
     let value;
     try {
-      value = source[key];
+      value = source3[key];
     } catch {
       value = UNSERIALIZABLE_VALUE;
     }
@@ -8633,9 +8704,9 @@ function getEventUuid(uuid3, generateUuid) {
   return isValidUUID(uuid3) ? uuid3 : generateUuid();
 }
 function createNamedError(name, message) {
-  const error62 = new Error(message);
+  const error63 = new Error(message);
   try {
-    Object.defineProperty(error62, "name", {
+    Object.defineProperty(error63, "name", {
       value: name,
       writable: true,
       enumerable: true,
@@ -8643,7 +8714,7 @@ function createNamedError(name, message) {
     });
   } catch {
   }
-  return error62;
+  return error63;
 }
 function removeTrailingSlash(url2) {
   return url2?.replace(/\/+$/, "");
@@ -8680,8 +8751,8 @@ async function raceWithTimeout(promise2, timeoutMs, onTimeout) {
           try {
             onTimeout?.();
             resolve4();
-          } catch (error62) {
-            reject(error62);
+          } catch (error63) {
+            reject(error63);
           }
         }, timeoutMs);
       })
@@ -8821,7 +8892,7 @@ var ErrorPropertiesBuilder = class {
   }
   convertToExceptionList(exceptionWithStack, mechanism) {
     const exceptionList = [];
-    const append = (exception, parentId, source) => {
+    const append = (exception, parentId, source3) => {
       const exceptionId = exceptionList.length;
       const entryMechanism = void 0 === parentId ? {
         type: "string" == typeof mechanism.type && mechanism.type.length > 0 ? mechanism.type : "generic",
@@ -8834,7 +8905,7 @@ var ErrorPropertiesBuilder = class {
         exception_id: exceptionId
       } : {
         type: "chained",
-        source,
+        source: source3,
         synthetic: exception.synthetic,
         exception_id: exceptionId,
         parent_id: parentId
@@ -8856,11 +8927,11 @@ var ErrorPropertiesBuilder = class {
     return exceptionList;
   }
   buildParsingContext(hint) {
-    const context = {
+    const context2 = {
       chunkIdMap: getFilenameToChunkIdMap(this.stackParser),
       skipFirstLines: hint.skipFirstLines ?? 1
     };
-    return context;
+    return context2;
   }
   getAggregateErrors(input3) {
     try {
@@ -8879,7 +8950,7 @@ var ErrorPropertiesBuilder = class {
     }
   }
   buildCoercingContext(mechanism, hint, depth = 0) {
-    let count8 = 0;
+    let count9 = 0;
     let memberInspections = 0;
     let hasAggregate = false;
     const seen = /* @__PURE__ */ new Set();
@@ -8898,24 +8969,24 @@ var ErrorPropertiesBuilder = class {
       };
       if (wrapperDepth > MAX_WRAPPER_RECURSION || wrapperDepth > 0 && -1 !== wrappers.indexOf(input3)) return this.coerceFallback(ctx);
       const isReference = "object" == typeof input3 && null !== input3 || "function" == typeof input3;
-      if (0 === wrapperDepth && count8 >= MAX_EXCEPTIONS || isReference && seen.has(input3)) return;
+      if (0 === wrapperDepth && count9 >= MAX_EXCEPTIONS || isReference && seen.has(input3)) return;
       if (isReference) seen.add(input3);
-      if (0 === wrapperDepth) count8++;
+      if (0 === wrapperDepth) count9++;
       const errors = this.getAggregateErrors(input3);
       hasAggregate ||= !!errors;
       let exception;
       try {
         exception = this.applyCoercers(input3, ctx);
         if (!exception) throw skipped;
-      } catch (error62) {
-        if (error62 === skipped) {
-          if (0 === wrapperDepth) count8--;
+      } catch (error63) {
+        if (error63 === skipped) {
+          if (0 === wrapperDepth) count9--;
           return;
         }
-        if (!hasAggregate) throw error62;
+        if (!hasAggregate) throw error63;
         exception = this.coerceFallback(ctx);
       }
-      if (!errors || count8 >= MAX_EXCEPTIONS) return exception;
+      if (!errors || count9 >= MAX_EXCEPTIONS) return exception;
       let length;
       try {
         length = errors.length;
@@ -8924,13 +8995,13 @@ var ErrorPropertiesBuilder = class {
       }
       if (!Number.isInteger(length) || length < 0 || length > 4294967295) return exception;
       const children = [];
-      for (let index = 0; count8 < MAX_EXCEPTIONS && memberInspections < MAX_AGGREGATE_MEMBER_INSPECTIONS && index < length; index++) {
+      for (let index = 0; count9 < MAX_EXCEPTIONS && memberInspections < MAX_AGGREGATE_MEMBER_INSPECTIONS && index < length; index++) {
         memberInspections++;
         let child;
         try {
           child = ctx.next(errors[index]);
         } catch {
-          count8++;
+          count9++;
           child = this.coerceFallback(createContext(depth2 + 1));
         }
         if (child) children.push(child);
@@ -8951,10 +9022,10 @@ var ErrorPropertiesBuilder = class {
       },
       next: (input3) => coerce(input3, depth2 + 1)
     });
-    const context = createContext(depth);
+    const context2 = createContext(depth);
     return {
-      ...context,
-      apply: (input3) => coerce(input3, depth) ?? this.coerceFallback(context)
+      ...context2,
+      apply: (input3) => coerce(input3, depth) ?? this.coerceFallback(context2)
     };
   }
 };
@@ -9082,7 +9153,7 @@ var PROMISE_FRAME_FILENAME = "node:internal/promise";
 var nodeStackLineParser = (line, platform3) => {
   const lineMatch = line.match(FULL_MATCH);
   if (lineMatch) {
-    let object3;
+    let object9;
     let method;
     let functionName;
     let typeName;
@@ -9092,18 +9163,18 @@ var nodeStackLineParser = (line, platform3) => {
       let methodStart = functionName.lastIndexOf(".");
       if ("." === functionName[methodStart - 1]) methodStart--;
       if (methodStart > 0) {
-        object3 = functionName.slice(0, methodStart);
+        object9 = functionName.slice(0, methodStart);
         method = functionName.slice(methodStart + 1);
-        const objectEnd = object3.indexOf(".Module");
+        const objectEnd = object9.indexOf(".Module");
         if (objectEnd > 0) {
           functionName = functionName.slice(objectEnd + 1);
-          object3 = object3.slice(0, objectEnd);
+          object9 = object9.slice(0, objectEnd);
         }
       }
       typeName = void 0;
     }
     if (method) {
-      typeName = object3;
+      typeName = object9;
       methodName = method;
     }
     if ("<anonymous>" === method) {
@@ -9190,9 +9261,9 @@ function partialCycleLength(frames, cycle) {
 }
 function survivingFrameCount(frames, cycles) {
   const innermostCycle = cycles[0];
-  let count8 = frames.length - (innermostCycle ? innermostPartialCycleLength(frames, innermostCycle) : 0);
-  for (const cycle of cycles) count8 -= partialCycleLength(frames, cycle);
-  return count8;
+  let count9 = frames.length - (innermostCycle ? innermostPartialCycleLength(frames, innermostCycle) : 0);
+  for (const cycle of cycles) count9 -= partialCycleLength(frames, cycle);
+  return count9;
 }
 function canonicalizeCycleRotation(frames) {
   const keys = frames.map((frame) => `${frame.function}|${frame.filename}|${frame.lineno}|${frame.colno}|${frame.module}`);
@@ -9536,13 +9607,13 @@ var PromiseRejectionEventCoercer = class {
     };
     return ctx.apply(reason);
   }
-  getUnhandledRejectionReason(error62) {
+  getUnhandledRejectionReason(error63) {
     try {
-      if ("reason" in error62) return error62.reason;
-      if ("detail" in error62 && null != error62.detail && "object" == typeof error62.detail && "reason" in error62.detail) return error62.detail.reason;
+      if ("reason" in error63) return error63.reason;
+      if ("detail" in error63 && null != error63.detail && "object" == typeof error63.detail && "reason" in error63.detail) return error63.detail.reason;
     } catch {
     }
-    return error62;
+    return error63;
   }
 };
 
@@ -9621,8 +9692,8 @@ var ExceptionStepsBuffer = class {
     this._config = resolveExceptionStepsConfig(config2);
     this._trimToMaxBytes();
   }
-  add(step) {
-    const serialized = normalizeAndSerializeStep(step);
+  add(step2) {
+    const serialized = normalizeAndSerializeStep(step2);
     if (!serialized) return;
     const bytes = getUtf8ByteLength(serialized.json);
     if (bytes > this._config.max_bytes) return;
@@ -9656,15 +9727,15 @@ function normalizePositiveInteger(input3, fallback) {
   if (normalized < 0) return fallback;
   return normalized;
 }
-function normalizeAndSerializeStep(step) {
-  let json2;
+function normalizeAndSerializeStep(step2) {
+  let json3;
   try {
-    json2 = safeJsonStringify(step);
+    json3 = safeJsonStringify(step2);
   } catch {
     return;
   }
   try {
-    const parsed = JSON.parse(json2);
+    const parsed = JSON.parse(json3);
     if (!isObject(parsed)) return;
     const parsedStep = parsed;
     const message = parsedStep[EXCEPTION_STEP_INTERNAL_FIELDS.MESSAGE];
@@ -9673,7 +9744,7 @@ function normalizeAndSerializeStep(step) {
     if (!isString(timestamp) && !isNumber(timestamp)) return;
     return {
       step: parsedStep,
-      json: json2
+      json: json3
     };
   } catch {
     return;
@@ -9838,16 +9909,16 @@ var SimpleEventEmitter = class {
     this.events = {};
     this.events = {};
   }
-  on(event, listener) {
-    if (!this.events[event]) this.events[event] = [];
-    this.events[event].push(listener);
+  on(event2, listener) {
+    if (!this.events[event2]) this.events[event2] = [];
+    this.events[event2].push(listener);
     return () => {
-      this.events[event] = this.events[event].filter((x) => x !== listener);
+      this.events[event2] = this.events[event2].filter((x) => x !== listener);
     };
   }
-  emit(event, payload) {
-    for (const listener of this.events[event] || []) listener(payload);
-    for (const listener of this.events["*"] || []) listener(event, payload);
+  emit(event2, payload) {
+    for (const listener of this.events[event2] || []) listener(payload);
+    for (const listener of this.events["*"] || []) listener(event2, payload);
   }
 };
 
@@ -9908,9 +9979,9 @@ async function gzipCompress(input3, isDebug = true, options) {
     ]);
     await validateNativeGzip(compressed, inputBytes);
     return compressed;
-  } catch (error62) {
-    if (options?.rethrow) throw error62;
-    if (isDebug) console.error("Failed to gzip compress data", error62);
+  } catch (error63) {
+    if (options?.rethrow) throw error63;
+    if (isDebug) console.error("Failed to gzip compress data", error63);
     return null;
   }
 }
@@ -9951,8 +10022,8 @@ var PostHogFetchHttpError = class extends Error {
       let responseBodyText;
       try {
         responseBodyText = Promise.resolve(this.response.text());
-      } catch (error62) {
-        responseBodyText = Promise.reject(error62);
+      } catch (error63) {
+        responseBodyText = Promise.reject(error63);
       }
       this.responseBodyTextPromise = Promise.race([
         responseBodyText,
@@ -9976,10 +10047,10 @@ var PostHogFetchHttpError = class extends Error {
   }
 };
 var PostHogFetchNetworkError = class extends Error {
-  constructor(error62) {
-    super("Network error while fetching PostHog", error62 instanceof Error ? {
-      cause: error62
-    } : {}), this.error = error62, this.name = "PostHogFetchNetworkError";
+  constructor(error63) {
+    super("Network error while fetching PostHog", error63 instanceof Error ? {
+      cause: error63
+    } : {}), this.error = error63, this.name = "PostHogFetchNetworkError";
   }
 };
 var applyCallerFeatureFlagOverrides = (target, callerProperties) => {
@@ -10117,13 +10188,13 @@ var PostHogCoreStateless = class {
       this.setPersistedProperty(types_PostHogPersistedProperty.OptedOut, true);
     });
   }
-  on(event, cb) {
-    return this._events.on(event, cb);
+  on(event2, cb) {
+    return this._events.on(event2, cb);
   }
   debug(enabled = true) {
     this.removeDebugCallback?.();
     if (enabled) {
-      const removeDebugCallback = this.on("*", (event, payload) => this._logger.info(event, payload));
+      const removeDebugCallback = this.on("*", (event2, payload) => this._logger.info(event2, payload));
       this.removeDebugCallback = () => {
         removeDebugCallback();
         this.removeDebugCallback = void 0;
@@ -10181,20 +10252,20 @@ var PostHogCoreStateless = class {
     };
     await this.sendImmediate("identify", payload, options);
   }
-  captureStateless(distinctId, event, properties, options) {
+  captureStateless(distinctId, event2, properties, options) {
     this.wrap(() => {
       const payload = this.buildPayload({
         distinct_id: distinctId,
-        event,
+        event: event2,
         properties
       });
       this.enqueue("capture", payload, options);
     });
   }
-  async captureStatelessImmediate(distinctId, event, properties, options) {
+  async captureStatelessImmediate(distinctId, event2, properties, options) {
     const payload = this.buildPayload({
       distinct_id: distinctId,
-      event,
+      event: event2,
       properties
     });
     await this.sendImmediate("capture", payload, options);
@@ -10271,9 +10342,9 @@ var PostHogCoreStateless = class {
       consume: (response) => response.json()
     }, {
       retryCount: 0
-    }, this.remoteConfigRequestTimeoutMs).catch((error62) => {
-      this._logger.error("Remote config could not be loaded", error62);
-      this._events.emit("error", error62);
+    }, this.remoteConfigRequestTimeoutMs).catch((error63) => {
+      this._logger.error("Remote config could not be loaded", error63);
+      this._events.emit("error", error63);
     });
   }
   async getFlags(distinctId, groups = {}, personProperties = {}, groupProperties = {}, extraPayload = {}, fetchConfig = false) {
@@ -10310,21 +10381,21 @@ var PostHogCoreStateless = class {
     }, this.featureFlagsRequestTimeoutMs).then((response) => ({
       success: true,
       response: normalizeFlagsResponse(response)
-    })).catch((error62) => {
-      this._events.emit("error", error62);
+    })).catch((error63) => {
+      this._events.emit("error", error63);
       return {
         success: false,
-        error: this.categorizeRequestError(error62)
+        error: this.categorizeRequestError(error63)
       };
     });
   }
-  categorizeRequestError(error62) {
-    if (error62 instanceof PostHogFetchHttpError) return {
+  categorizeRequestError(error63) {
+    if (error63 instanceof PostHogFetchHttpError) return {
       type: "api_error",
-      statusCode: error62.status
+      statusCode: error63.status
     };
-    if (error62 instanceof PostHogFetchNetworkError) {
-      const cause = error62.error;
+    if (error63 instanceof PostHogFetchNetworkError) {
+      const cause = error63.error;
       if (cause instanceof Error && ("AbortError" === cause.name || "TimeoutError" === cause.name)) return {
         type: "timeout"
       };
@@ -10403,9 +10474,9 @@ var PostHogCoreStateless = class {
       geoip_disable: disableGeoip ?? this.disableGeoip
     };
     if (flagKeysToEvaluate) extraPayload["flag_keys_to_evaluate"] = flagKeysToEvaluate;
-    const result = await this.getFlags(distinctId, groups, personProperties, groupProperties, extraPayload);
-    if (!result.success) return;
-    const flagsResponse = result.response;
+    const result2 = await this.getFlags(distinctId, groups, personProperties, groupProperties, extraPayload);
+    if (!result2.success) return;
+    const flagsResponse = result2.response;
     if (flagsResponse.errorsWhileComputingFlags) console.error("[FEATURE FLAGS] Error while computing feature flags, some flags may be missing or incorrect. Learn more at https://posthog.com/docs/feature-flags/best-practices");
     if (flagsResponse.quotaLimited?.includes("feature_flags")) {
       console.warn("[FEATURE FLAGS] Feature flags quota limit exceeded - feature flags unavailable. Learn more about billing limits at https://posthog.com/docs/billing/limits-alerts");
@@ -10439,16 +10510,16 @@ var PostHogCoreStateless = class {
       consume: (response2) => {
         if (200 !== response2.status || !response2.json) {
           const msg = `Surveys API could not be loaded: ${response2.status}`;
-          const error62 = new Error(msg);
-          this._logger.error(error62);
+          const error63 = new Error(msg);
+          this._logger.error(error63);
           this._events.emit("error", new Error(msg));
           return Promise.resolve(void 0);
         }
         return response2.json();
       }
-    }).catch((error62) => {
-      this._logger.error("Surveys API could not be loaded", error62);
-      this._events.emit("error", error62);
+    }).catch((error63) => {
+      this._logger.error("Surveys API could not be loaded", error63);
+      this._events.emit("error", error63);
     });
     const newSurveys = response?.surveys;
     if (newSurveys) this._logger.info("Surveys fetched from API: ", JSON.stringify(newSurveys));
@@ -10753,8 +10824,8 @@ var PostHogCoreStateless = class {
     let serialized;
     try {
       serialized = JSON.stringify(payload);
-    } catch (error62) {
-      this.logMsgIfDebug(() => console.warn(`[PostHog] Could not serialize a ${path} batch; reporting it as too large`, error62));
+    } catch (error63) {
+      this.logMsgIfDebug(() => console.warn(`[PostHog] Could not serialize a ${path} batch; reporting it as too large`, error63));
       return {
         kind: "too-large",
         measuredLocally: true
@@ -10921,9 +10992,9 @@ var PostHogCoreStateless = class {
       }
     }, {
       ...retriableOptions,
-      retryCheck: (error62) => {
-        const shouldRetry = retriableOptions.retryCheck(error62);
-        if (shouldRetry && attempt <= retriableOptions.retryCount && error62 instanceof PostHogFetchHttpError) error62.cancelResponseBody();
+      retryCheck: (error63) => {
+        const shouldRetry = retriableOptions.retryCheck(error63);
+        if (shouldRetry && attempt <= retriableOptions.retryCount && error63 instanceof PostHogFetchHttpError) error63.cancelResponseBody();
         return shouldRetry;
       }
     });
@@ -11067,8 +11138,8 @@ function sanitizeFragmentTail(tail, headLastFieldSensitive, allowNestedUrls) {
     lastFieldSensitive: true
   };
 }
-function splitFragmentParts(hash2) {
-  const fragment = hash2.slice(1);
+function splitFragmentParts(hash6) {
+  const fragment = hash6.slice(1);
   const separator = fragment.indexOf("?");
   if (separator < 0) return {
     head: fragment,
@@ -11136,16 +11207,16 @@ function isDelimiter(character, seen, lastStructural) {
 function sanitizeUrl(value, mode) {
   const embedded = findEmbeddedAuthorityIndexes(value);
   if (0 === embedded.length) return sanitizeSingleUrl(value, mode);
-  let result = "";
+  let result2 = "";
   let start = 0;
   for (const index of embedded) {
-    result += sanitizeSingleUrl(value.slice(start, index), {
+    result2 += sanitizeSingleUrl(value.slice(start, index), {
       ...mode,
       stripPunctuation: false
     });
     start = index;
   }
-  return result + sanitizeSingleUrl(value.slice(start), mode);
+  return result2 + sanitizeSingleUrl(value.slice(start), mode);
 }
 function sanitizeSingleUrl(value, mode) {
   if (value.length > MAX_URL_LENGTH && URL_AUTHORITY_PATTERN.test(value)) return REDACTED_VALUE;
@@ -11264,15 +11335,15 @@ function redactCardInMatch(match) {
   return output2 + match.slice(cursor);
 }
 function redactPii(value) {
-  let result = value.replace(UNICODE_SPACE_PATTERN, " ");
-  result = result.replace(EMAIL_PATTERN, REDACTED_VALUE);
-  result = result.replace(IPV4_PATTERN, REDACTED_VALUE);
-  result = result.replace(IPV6_PATTERN, `$1${REDACTED_VALUE}`);
-  result = result.replace(CREDIT_CARD_CANDIDATE_PATTERN, redactCardInMatch);
-  result = result.replace(US_SSN_PATTERN, REDACTED_VALUE);
-  result = result.replace(PHONE_NANP_PATTERN, `$1${REDACTED_VALUE}`);
-  result = result.replace(PHONE_INTL_PATTERN, `$1${REDACTED_VALUE}`);
-  return result;
+  let result2 = value.replace(UNICODE_SPACE_PATTERN, " ");
+  result2 = result2.replace(EMAIL_PATTERN, REDACTED_VALUE);
+  result2 = result2.replace(IPV4_PATTERN, REDACTED_VALUE);
+  result2 = result2.replace(IPV6_PATTERN, `$1${REDACTED_VALUE}`);
+  result2 = result2.replace(CREDIT_CARD_CANDIDATE_PATTERN, redactCardInMatch);
+  result2 = result2.replace(US_SSN_PATTERN, REDACTED_VALUE);
+  result2 = result2.replace(PHONE_NANP_PATTERN, `$1${REDACTED_VALUE}`);
+  result2 = result2.replace(PHONE_INTL_PATTERN, `$1${REDACTED_VALUE}`);
+  return result2;
 }
 function sanitizeCapturedValue(value, options) {
   return sanitizeValueWith(value, (stringValue) => sanitizeString2(stringValue, options));
@@ -11286,9 +11357,9 @@ function sanitizeValueWith(value, sanitizeStringFn) {
   if (Array.isArray(value)) return value.map((item) => sanitizeValueWith(item, sanitizeStringFn));
   if (value instanceof Date) return value;
   if ("object" != typeof value) return value;
-  const result = {};
-  for (const [key, nestedValue] of Object.entries(value)) result[key] = shouldRedactKey(key) ? REDACTED_VALUE : sanitizeValueWith(nestedValue, sanitizeStringFn);
-  return result;
+  const result2 = {};
+  for (const [key, nestedValue] of Object.entries(value)) result2[key] = shouldRedactKey(key) ? REDACTED_VALUE : sanitizeValueWith(nestedValue, sanitizeStringFn);
+  return result2;
 }
 
 // node_modules/.pnpm/@posthog+core@1.61.1/node_modules/@posthog/core/dist/featureFlagLocalEvaluation.mjs
@@ -11490,7 +11561,7 @@ function getPortableRegexClasses(pattern) {
         "",
         "|",
         "("
-      ].includes(previousToken) || repetition.slice(1).some((count8) => Number(count8) > 4294967295)) return null;
+      ].includes(previousToken) || repetition.slice(1).some((count9) => Number(count9) > 4294967295)) return null;
     } else if ("*+?}".includes(character) && ("+" === pattern[index + 1] || "{" === pattern[index + 1])) return null;
     if ("*+?{".includes(character) && [
       "^",
@@ -11505,11 +11576,11 @@ function getPortableRegexClasses(pattern) {
   return classes;
 }
 function regexRequiresServerEvaluation(message) {
-  const error62 = new InconclusiveMatchError(message);
-  Object.defineProperty(error62, /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation"), {
+  const error63 = new InconclusiveMatchError(message);
+  Object.defineProperty(error63, /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation"), {
     value: true
   });
-  return error62;
+  return error63;
 }
 function matchFeatureFlagRegex(pattern, value) {
   if ("" === pattern) return true;
@@ -11518,8 +11589,8 @@ function matchFeatureFlagRegex(pattern, value) {
   let regex;
   try {
     regex = new RegExp(pattern);
-  } catch (error62) {
-    if (error62 instanceof SyntaxError) return null;
+  } catch (error63) {
+    if (error63 instanceof SyntaxError) return null;
     throw regexRequiresServerEvaluation("Regex compilation requires server evaluation");
   }
   for (const characterClass of characterClasses) try {
@@ -11867,8 +11938,8 @@ async function getHoldoutVariant(holdout, bucketingValue) {
   if (!Number.isFinite(rawPercentage)) return;
   const percentage = Math.min(Math.max(rawPercentage, 0), 100);
   if (100 !== percentage) {
-    const hash2 = await getFeatureFlagHash("holdout", bucketingValue, "", "-");
-    if (hash2 > percentage / 100) return;
+    const hash6 = await getFeatureFlagHash("holdout", bucketingValue, "", "-");
+    if (hash6 > percentage / 100) return;
   }
   return `holdout-${holdout.id}`;
 }
@@ -11927,11 +11998,11 @@ function encodeBigInt(value, logger) {
     intValue: decimal
   };
 }
-function encodeAnyValue(value, logger, state, depth) {
-  if (state.remainingNodes <= 0) return {
+function encodeAnyValue(value, logger, state2, depth) {
+  if (state2.remainingNodes <= 0) return {
     stringValue: TRUNCATED_VALUE
   };
-  state.remainingNodes--;
+  state2.remainingNodes--;
   if (isBoolean(value)) return {
     boolValue: value
   };
@@ -11972,7 +12043,7 @@ function encodeAnyValue(value, logger, state, depth) {
     stringValue: String(value)
   };
   if ("object" == typeof value && null !== value) {
-    if (state.ancestors.has(value)) return {
+    if (state2.ancestors.has(value)) return {
       stringValue: CIRCULAR_VALUE
     };
     if (depth >= MAX_JSON_SAFE_VALUE_DEPTH) return {
@@ -11985,69 +12056,69 @@ function encodeAnyValue(value, logger, state, depth) {
         stringValue: "string" == typeof iso ? sanitizeString(iso) : String(iso)
       };
     }
-    state.ancestors.add(value);
+    state2.ancestors.add(value);
     try {
       try {
         const toJSON = value.toJSON;
-        if ("function" == typeof toJSON) return encodeAnyValue(toJSON.call(value), logger, state, depth + 1);
+        if ("function" == typeof toJSON) return encodeAnyValue(toJSON.call(value), logger, state2, depth + 1);
       } catch {
       }
       if (isArray(value)) return {
         arrayValue: {
-          values: encodeArrayValues(value, logger, state, depth + 1)
+          values: encodeArrayValues(value, logger, state2, depth + 1)
         }
       };
       return {
         kvlistValue: {
-          values: encodeKeyValueList(value, logger, state, depth + 1)
+          values: encodeKeyValueList(value, logger, state2, depth + 1)
         }
       };
     } finally {
-      state.ancestors.delete(value);
+      state2.ancestors.delete(value);
     }
   }
   return {
     stringValue: sanitizeString(String(value))
   };
 }
-function encodeArrayValues(values, logger, state, depth) {
-  const result = [];
+function encodeArrayValues(values, logger, state2, depth) {
+  const result2 = [];
   const itemCount = Math.min(values.length, MAX_JSON_SAFE_VALUE_ITEMS);
   let index = 0;
-  for (; index < itemCount && state.remainingNodes > 0; index++) try {
+  for (; index < itemCount && state2.remainingNodes > 0; index++) try {
     const element = index in values ? values[index] : void 0;
     if (isNullish(element)) continue;
-    result.push(encodeAnyValue(element, logger, state, depth));
+    result2.push(encodeAnyValue(element, logger, state2, depth));
   } catch {
-    result.push({
+    result2.push({
       stringValue: UNSERIALIZABLE_VALUE
     });
   }
-  if (values.length > index) result.push({
+  if (values.length > index) result2.push({
     stringValue: TRUNCATED_VALUE
   });
-  return result;
+  return result2;
 }
-function encodeKeyValueList(attrs, logger, state, depth) {
-  const result = [];
+function encodeKeyValueList(attrs, logger, state2, depth) {
+  const result2 = [];
   for (const key in attrs) if (propertyIsEnumerable.call(attrs, key)) {
     if (!key) {
       logger?.debug("Dropping an attribute with an empty key");
       continue;
     }
-    if (result.length >= MAX_JSON_SAFE_VALUE_ITEMS || state.remainingNodes <= 0) {
+    if (result2.length >= MAX_JSON_SAFE_VALUE_ITEMS || state2.remainingNodes <= 0) {
       logger?.debug("Attributes truncated: the value exceeds the OTLP encoder budget");
       break;
     }
     try {
       const value = attrs[key];
       if (isNull(value) || isUndefined(value)) continue;
-      result.push({
+      result2.push({
         key: sanitizeString(key),
-        value: encodeAnyValue(value, logger, state, depth)
+        value: encodeAnyValue(value, logger, state2, depth)
       });
     } catch {
-      result.push({
+      result2.push({
         key: sanitizeString(key),
         value: {
           stringValue: UNSERIALIZABLE_VALUE
@@ -12055,7 +12126,7 @@ function encodeKeyValueList(attrs, logger, state, depth) {
       });
     }
   }
-  return result;
+  return result2;
 }
 
 // node_modules/.pnpm/@posthog+core@1.61.1/node_modules/@posthog/core/dist/utils/otlp-resource.mjs
@@ -12188,8 +12259,8 @@ function drawJitter() {
   return 1 - JITTER + Math.random() * JITTER * 2;
 }
 var NO_JITTER = 1;
-function backoffDelayMs(baseMs, failures, jitter, maxMs) {
-  const exponent = Math.min(Math.max(0, failures - 1), MAX_FLUSH_BACKOFF_EXPONENT);
+function backoffDelayMs(baseMs, failures2, jitter, maxMs) {
+  const exponent = Math.min(Math.max(0, failures2 - 1), MAX_FLUSH_BACKOFF_EXPONENT);
   const delay2 = baseMs * 2 ** exponent;
   const capped = void 0 === maxMs ? delay2 : Math.min(delay2, Math.max(maxMs, baseMs));
   return Math.round(capped * jitter);
@@ -12474,17 +12545,17 @@ var PostHogMetrics = class {
       this._logger.warn(`Dropping metric '${filtered.name}': attributes could not be serialized`, e);
       return;
     }
-    let state = this._series.get(key);
-    if (!state) {
+    let state2 = this._series.get(key);
+    if (!state2) {
       if (!this._admitNewSeries()) return;
-      state = {
+      state2 = {
         name: filtered.name,
         type: filtered.type,
         unit: filtered.unit,
         attributes,
         windowStartMs: Date.now()
       };
-      this._series.set(key, state);
+      this._series.set(key, state2);
     }
     const seenType = this._typeByName.get(filtered.name);
     if (void 0 === seenType) this._typeByName.set(filtered.name, filtered.type);
@@ -12492,9 +12563,9 @@ var PostHogMetrics = class {
       this._typeCollisionWarned.add(filtered.name);
       this._logger.warn(`Metric name '${filtered.name}' is already used as a ${seenType}; recording it as a ${filtered.type} too will blend both series in charts. Use a distinct name.`);
     }
-    this._fold(state, filtered.value);
+    this._fold(state2, filtered.value);
     const traceContext = this._activeTraceContext();
-    if (traceContext) state.exemplar = {
+    if (traceContext) state2.exemplar = {
       ...traceContext,
       value: filtered.value,
       timeMs: Date.now()
@@ -12519,23 +12590,23 @@ var PostHogMetrics = class {
     }
     return false;
   }
-  _fold(state, value) {
-    switch (state.type) {
+  _fold(state2, value) {
+    switch (state2.type) {
       case "count":
-        state.total = (state.total ?? 0) + value;
+        state2.total = (state2.total ?? 0) + value;
         break;
       case "gauge":
-        state.last = value;
+        state2.last = value;
         break;
       case "histogram": {
-        if (!state.hist) state.hist = {
+        if (!state2.hist) state2.hist = {
           count: 0,
           sum: 0,
           min: value,
           max: value,
           bucketCounts: new Array(DEFAULT_HISTOGRAM_BOUNDS.length + 1).fill(0)
         };
-        const hist = state.hist;
+        const hist = state2.hist;
         hist.count += 1;
         hist.sum += value;
         hist.min = Math.min(hist.min, value);
@@ -12551,19 +12622,19 @@ var PostHogMetrics = class {
     const fns = isArray(beforeSend) ? beforeSend : [
       beforeSend
     ];
-    let result = sample;
+    let result2 = sample;
     for (const fn of fns) try {
-      const next = fn(result);
+      const next = fn(result2);
       if (!next) {
         this._logger.info("Metric was rejected in beforeSend function");
         return null;
       }
-      result = next;
+      result2 = next;
     } catch (e) {
       this._logger.error("Error in beforeSend function for metric:", e);
       return null;
     }
-    return result;
+    return result2;
   }
   _armFlushTimer() {
     if (this._flushTimer.pending) return;
@@ -12613,22 +12684,22 @@ var PostHogMetrics = class {
   _buildMetrics(window) {
     const nowNano = msToUnixNano(Date.now());
     const byMetric = /* @__PURE__ */ new Map();
-    for (const state of window.values()) {
-      const metricKey = seriesKey(state.type, state.name, state.unit, void 0);
+    for (const state2 of window.values()) {
+      const metricKey = seriesKey(state2.type, state2.name, state2.unit, void 0);
       let metric = byMetric.get(metricKey);
       if (!metric) {
         metric = {
-          name: state.name,
-          ...state.unit && {
-            unit: state.unit
+          name: state2.name,
+          ...state2.unit && {
+            unit: state2.unit
           }
         };
-        if ("count" === state.type) metric.sum = {
+        if ("count" === state2.type) metric.sum = {
           aggregationTemporality: OTLP_TEMPORALITY_DELTA,
           isMonotonic: true,
           dataPoints: []
         };
-        else if ("gauge" === state.type) metric.gauge = {
+        else if ("gauge" === state2.type) metric.gauge = {
           dataPoints: []
         };
         else metric.histogram = {
@@ -12637,36 +12708,36 @@ var PostHogMetrics = class {
         };
         byMetric.set(metricKey, metric);
       }
-      const attributes = toOtlpKeyValueList(state.attributes ?? {}, this._logger);
-      const startNano = msToUnixNano(state.windowStartMs);
-      const exemplars = toOtlpExemplars(state.exemplar);
-      if ("count" === state.type) {
+      const attributes = toOtlpKeyValueList(state2.attributes ?? {}, this._logger);
+      const startNano = msToUnixNano(state2.windowStartMs);
+      const exemplars = toOtlpExemplars(state2.exemplar);
+      if ("count" === state2.type) {
         const dp = {
           attributes,
           startTimeUnixNano: startNano,
           timeUnixNano: nowNano,
-          asDouble: state.total ?? 0,
+          asDouble: state2.total ?? 0,
           ...exemplars
         };
         metric.sum.dataPoints.push(dp);
-      } else if ("gauge" === state.type) {
+      } else if ("gauge" === state2.type) {
         const dp = {
           attributes,
           timeUnixNano: nowNano,
-          asDouble: state.last ?? 0,
+          asDouble: state2.last ?? 0,
           ...exemplars
         };
         metric.gauge.dataPoints.push(dp);
-      } else if (state.hist) {
+      } else if (state2.hist) {
         const dp = {
           attributes,
           startTimeUnixNano: startNano,
           timeUnixNano: nowNano,
-          count: state.hist.count,
-          sum: state.hist.sum,
-          min: state.hist.min,
-          max: state.hist.max,
-          bucketCounts: state.hist.bucketCounts,
+          count: state2.hist.count,
+          sum: state2.hist.sum,
+          min: state2.hist.min,
+          max: state2.hist.max,
+          bucketCounts: state2.hist.bucketCounts,
           explicitBounds: DEFAULT_HISTOGRAM_BOUNDS,
           ...exemplars
         };
@@ -12857,14 +12928,14 @@ var PostHogSpan = class {
     }
     return this;
   }
-  setStatus(status2, message) {
+  setStatus(status3, message) {
     if (this._mutable("setStatus")) {
-      if ("ok" !== status2 && "error" !== status2) {
-        this._logger?.debug(`Ignoring unknown span status "${String(status2)}"; expected "ok" or "error"`);
+      if ("ok" !== status3 && "error" !== status3) {
+        this._logger?.debug(`Ignoring unknown span status "${String(status3)}"; expected "ok" or "error"`);
         return this;
       }
       this._status = {
-        code: status2,
+        code: status3,
         ...message && {
           message: truncateString(message, this._maxAttributeValueLength)
         }
@@ -12875,9 +12946,9 @@ var PostHogSpan = class {
   get statusIsExplicitlyOk() {
     return this._status?.code === "ok";
   }
-  recordException(error62) {
+  recordException(error63) {
     if (!this._mutable("recordException")) return this;
-    const { type, message, stack } = describeError(error62);
+    const { type, message, stack } = describeError(error63);
     this.addEvent(EXCEPTION_EVENT_NAME, {
       "exception.type": type,
       "exception.message": message,
@@ -12910,7 +12981,7 @@ var PostHogSpan = class {
     if (this._ended) return void this._logger?.debug("Ignoring end() on a span that has already ended");
     this._ended = true;
     const derived2 = this._now();
-    const resolved = resolveSuppliedTime(endTime, derived2, "end time", this._logger);
+    const resolved2 = resolveSuppliedTime(endTime, derived2, "end time", this._logger);
     this._onEnd({
       traceId: this._traceId,
       spanId: this._spanId,
@@ -12932,7 +13003,7 @@ var PostHogSpan = class {
       },
       events: this._events,
       startTime: this._startTime,
-      endTime: clampEndTime(resolved, this._startTime),
+      endTime: clampEndTime(resolved2, this._startTime),
       ...this._droppedAttributes && {
         droppedAttributesCount: this._droppedAttributes
       },
@@ -12964,12 +13035,12 @@ function orderedKeys(attributes, keysBeforeHook) {
     ...Object.keys(attributes).filter((key) => !seen.has(key))
   ];
 }
-function applySpanLimits(record4, autoKeys, maxAttributes, maxEvents, maxAttributesPerEvent, maxAttributeValueLength, keysBeforeHook = []) {
+function applySpanLimits(record5, autoKeys, maxAttributes, maxEvents, maxAttributesPerEvent, maxAttributeValueLength, keysBeforeHook = []) {
   let kept = 0;
   let droppedAttributes = 0;
   const attributes = {};
-  for (const key of orderedKeys(record4.attributes, keysBeforeHook)) {
-    const value = record4.attributes[key];
+  for (const key of orderedKeys(record5.attributes, keysBeforeHook)) {
+    const value = record5.attributes[key];
     if (!isNullish(value)) {
       if (!autoKeys.has(key)) {
         if (kept >= maxAttributes) {
@@ -12986,29 +13057,29 @@ function applySpanLimits(record4, autoKeys, maxAttributes, maxEvents, maxAttribu
       });
     }
   }
-  record4.attributes = attributes;
-  if (droppedAttributes) record4.droppedAttributesCount = nonNegativeCount(record4.droppedAttributesCount) + droppedAttributes;
+  record5.attributes = attributes;
+  if (droppedAttributes) record5.droppedAttributesCount = nonNegativeCount(record5.droppedAttributesCount) + droppedAttributes;
   let keptEvents = 0;
   let droppedEvents = 0;
   const events = [];
-  for (const event of record4.events) {
+  for (const event2 of record5.events) {
     if (keptEvents >= maxEvents) {
       droppedEvents++;
       continue;
     }
     keptEvents++;
-    if (event.attributes) {
-      const bounded = boundAttributes(event.attributes, maxAttributesPerEvent, maxAttributeValueLength);
-      event.attributes = bounded.attributes;
-      if (bounded.dropped) event.droppedAttributesCount = nonNegativeCount(event.droppedAttributesCount) + bounded.dropped;
+    if (event2.attributes) {
+      const bounded = boundAttributes(event2.attributes, maxAttributesPerEvent, maxAttributeValueLength);
+      event2.attributes = bounded.attributes;
+      if (bounded.dropped) event2.droppedAttributesCount = nonNegativeCount(event2.droppedAttributesCount) + bounded.dropped;
     }
-    events.push(event);
+    events.push(event2);
   }
-  record4.events = events;
-  if (droppedEvents) record4.droppedEventsCount = nonNegativeCount(record4.droppedEventsCount) + droppedEvents;
-  if (record4.status?.message) record4.status = {
-    ...record4.status,
-    message: truncateString(safeString(record4.status.message), maxAttributeValueLength)
+  record5.events = events;
+  if (droppedEvents) record5.droppedEventsCount = nonNegativeCount(record5.droppedEventsCount) + droppedEvents;
+  if (record5.status?.message) record5.status = {
+    ...record5.status,
+    message: truncateString(safeString(record5.status.message), maxAttributeValueLength)
   };
 }
 var NoopSpan = class {
@@ -13051,9 +13122,9 @@ var PassThroughSpan = class extends NoopSpan {
     return this._tracestate ?? null;
   }
 };
-function readStack(error62) {
+function readStack(error63) {
   try {
-    const stack = error62.stack;
+    const stack = error63.stack;
     return "string" == typeof stack && stack ? {
       stack
     } : {};
@@ -13086,26 +13157,26 @@ function truncateAttributeValue(value, maxLength) {
     remainingNodes: MAX_JSON_SAFE_VALUE_NODES
   }, 0);
 }
-function truncateValue(value, maxLength, state, depth) {
+function truncateValue(value, maxLength, state2, depth) {
   if (null === value || "object" != typeof value) {
     if (isNullish(value)) return value;
-    if (state.remainingNodes <= 0) return value;
-    state.remainingNodes--;
+    if (state2.remainingNodes <= 0) return value;
+    state2.remainingNodes--;
     return "string" == typeof value ? truncateString(value, maxLength) : value;
   }
-  if (state.ancestors.has(value)) return CIRCULAR_VALUE;
-  if (state.remainingNodes <= 0 || depth >= MAX_JSON_SAFE_VALUE_DEPTH) return value;
-  state.remainingNodes--;
-  state.ancestors.add(value);
+  if (state2.ancestors.has(value)) return CIRCULAR_VALUE;
+  if (state2.remainingNodes <= 0 || depth >= MAX_JSON_SAFE_VALUE_DEPTH) return value;
+  state2.remainingNodes--;
+  state2.ancestors.add(value);
   try {
     if (value instanceof Date) return value;
-    const resolved = resolveToJson(value);
-    if (resolved.selfDescribed) return isNullish(resolved.value) ? String(resolved.value) : truncateValue(resolved.value, maxLength, state, depth + 1);
+    const resolved2 = resolveToJson(value);
+    if (resolved2.selfDescribed) return isNullish(resolved2.value) ? String(resolved2.value) : truncateValue(resolved2.value, maxLength, state2, depth + 1);
     if (isArray(value)) {
       const walked = Math.min(value.length, MAX_JSON_SAFE_VALUE_ITEMS);
       const boundedItems = [];
       for (let index = 0; index < walked; index++) try {
-        boundedItems.push(truncateValue(value[index], maxLength, state, depth + 1));
+        boundedItems.push(truncateValue(value[index], maxLength, state2, depth + 1));
       } catch {
         boundedItems.push(UNSERIALIZABLE_VALUE);
       }
@@ -13118,7 +13189,7 @@ function truncateValue(value, maxLength, state, depth) {
       if (emittable >= MAX_JSON_SAFE_VALUE_ITEMS) break;
       let boundedItem;
       try {
-        boundedItem = truncateValue(value[key], maxLength, state, depth + 1);
+        boundedItem = truncateValue(value[key], maxLength, state2, depth + 1);
       } catch {
         boundedItem = UNSERIALIZABLE_VALUE;
       }
@@ -13134,7 +13205,7 @@ function truncateValue(value, maxLength, state, depth) {
   } catch {
     return value;
   } finally {
-    state.ancestors.delete(value);
+    state2.ancestors.delete(value);
   }
 }
 function resolveToJson(value) {
@@ -13150,10 +13221,10 @@ function resolveToJson(value) {
     selfDescribed: false
   };
 }
-function boundAttributes(source, max, maxLength) {
+function boundAttributes(source3, max, maxLength) {
   let keys;
   try {
-    keys = Object.keys(source);
+    keys = Object.keys(source3);
   } catch {
     return {
       attributes: {},
@@ -13170,7 +13241,7 @@ function boundAttributes(source, max, maxLength) {
     }
     let value;
     try {
-      value = truncateAttributeValue(source[key], maxLength);
+      value = truncateAttributeValue(source3[key], maxLength);
     } catch {
       value = UNSERIALIZABLE_VALUE;
     }
@@ -13196,20 +13267,20 @@ function truncateAttributes(attributes, maxLength) {
 function runWithActiveSpan(contextManager, span, fn) {
   return span === NOOP_SPAN ? fn(span) : contextManager.with(span, () => fn(span));
 }
-function describeError(error62) {
+function describeError(error63) {
   try {
-    const stack = readStack(error62);
-    if (isError(error62)) return {
-      type: error62.name || "Error",
-      message: error62.message || "",
+    const stack = readStack(error63);
+    if (isError(error63)) return {
+      type: error63.name || "Error",
+      message: error63.message || "",
       ...stack
     };
-    if ("string" == typeof error62) return {
+    if ("string" == typeof error63) return {
       type: "string",
-      message: error62
+      message: error63
     };
-    if (error62 && "object" == typeof error62) {
-      const maybe = error62;
+    if (error63 && "object" == typeof error63) {
+      const maybe = error63;
       if ("string" == typeof maybe.message) return {
         type: "string" == typeof maybe.name ? maybe.name : "Object",
         message: maybe.message,
@@ -13217,12 +13288,12 @@ function describeError(error62) {
       };
     }
     return {
-      type: typeof error62,
-      message: String(error62)
+      type: typeof error63,
+      message: String(error63)
     };
   } catch {
     return {
-      type: typeof error62,
+      type: typeof error63,
       message: ""
     };
   }
@@ -13243,10 +13314,10 @@ var SPAN_STATUS_TO_OTLP = {
 var TRACE_FLAGS_SAMPLED2 = 1;
 var SPAN_FLAGS_CONTEXT_HAS_IS_REMOTE = 256;
 var SPAN_FLAGS_CONTEXT_IS_REMOTE = 512;
-function spanFlags(record4) {
-  const traceFlags = parseInt(record4.traceFlags, 16);
+function spanFlags(record5) {
+  const traceFlags = parseInt(record5.traceFlags, 16);
   const w3c = Number.isFinite(traceFlags) ? 255 & traceFlags : TRACE_FLAGS_SAMPLED2;
-  return w3c | SPAN_FLAGS_CONTEXT_HAS_IS_REMOTE | (record4.parentIsRemote ? SPAN_FLAGS_CONTEXT_IS_REMOTE : 0);
+  return w3c | SPAN_FLAGS_CONTEXT_HAS_IS_REMOTE | (record5.parentIsRemote ? SPAN_FLAGS_CONTEXT_IS_REMOTE : 0);
 }
 function wireString(value) {
   if ("string" == typeof value) return sanitizeString(value);
@@ -13269,42 +13340,42 @@ function msToUnixNanoString(ms) {
   }
   return String(whole) + String(fractionalNanos).padStart(6, "0");
 }
-function toOtlpEvent(event, logger) {
+function toOtlpEvent(event2, logger) {
   const encoded = {
-    name: wireString(event.name),
-    timeUnixNano: msToUnixNanoString(event.timestamp)
+    name: wireString(event2.name),
+    timeUnixNano: msToUnixNanoString(event2.timestamp)
   };
-  if (event.attributes) {
-    const attributes = toOtlpKeyValueList(event.attributes, logger);
+  if (event2.attributes) {
+    const attributes = toOtlpKeyValueList(event2.attributes, logger);
     if (attributes.length) encoded.attributes = attributes;
   }
-  const dropped = nonNegativeCount(event.droppedAttributesCount);
+  const dropped = nonNegativeCount(event2.droppedAttributesCount);
   if (dropped) encoded.droppedAttributesCount = dropped;
   return encoded;
 }
-function buildOtlpSpan(record4, logger) {
+function buildOtlpSpan(record5, logger) {
   const span = {
-    traceId: record4.traceId,
-    spanId: record4.spanId,
-    name: wireString(record4.name),
-    kind: spanKindToOtlp(record4.kind),
-    startTimeUnixNano: msToUnixNanoString(record4.startTime),
-    endTimeUnixNano: msToUnixNanoString(record4.endTime),
-    flags: spanFlags(record4)
+    traceId: record5.traceId,
+    spanId: record5.spanId,
+    name: wireString(record5.name),
+    kind: spanKindToOtlp(record5.kind),
+    startTimeUnixNano: msToUnixNanoString(record5.startTime),
+    endTimeUnixNano: msToUnixNanoString(record5.endTime),
+    flags: spanFlags(record5)
   };
-  if (record4.parentSpanId) span.parentSpanId = record4.parentSpanId;
-  if (record4.traceState) span.traceState = wireString(record4.traceState);
-  const attributes = toOtlpKeyValueList(record4.attributes, logger);
+  if (record5.parentSpanId) span.parentSpanId = record5.parentSpanId;
+  if (record5.traceState) span.traceState = wireString(record5.traceState);
+  const attributes = toOtlpKeyValueList(record5.attributes, logger);
   if (attributes.length) span.attributes = attributes;
-  if (record4.events.length) span.events = record4.events.map((event) => toOtlpEvent(event, logger));
-  const droppedAttributes = nonNegativeCount(record4.droppedAttributesCount);
+  if (record5.events.length) span.events = record5.events.map((event2) => toOtlpEvent(event2, logger));
+  const droppedAttributes = nonNegativeCount(record5.droppedAttributesCount);
   if (droppedAttributes) span.droppedAttributesCount = droppedAttributes;
-  const droppedEvents = nonNegativeCount(record4.droppedEventsCount);
+  const droppedEvents = nonNegativeCount(record5.droppedEventsCount);
   if (droppedEvents) span.droppedEventsCount = droppedEvents;
-  if (record4.status) span.status = {
-    code: SPAN_STATUS_TO_OTLP[record4.status.code],
-    ...record4.status.message && {
-      message: wireString(record4.status.message)
+  if (record5.status) span.status = {
+    code: SPAN_STATUS_TO_OTLP[record5.status.code],
+    ...record5.status.message && {
+      message: wireString(record5.status.message)
     }
   };
   return span;
@@ -13363,22 +13434,22 @@ function looksLikeSpan(value) {
     return false;
   }
 }
-function isSpanRecordShape(record4) {
-  return !!record4.attributes && "object" == typeof record4.attributes && !Array.isArray(record4.attributes) && Array.isArray(record4.events) && void 0 !== record4.name && void 0 !== record4.kind && void 0 !== record4.startTime && void 0 !== record4.endTime;
+function isSpanRecordShape(record5) {
+  return !!record5.attributes && "object" == typeof record5.attributes && !Array.isArray(record5.attributes) && Array.isArray(record5.events) && void 0 !== record5.name && void 0 !== record5.kind && void 0 !== record5.startTime && void 0 !== record5.endTime;
 }
-function restoreField(record4, field, value) {
-  if (record4[field] !== value) record4[field] = value;
+function restoreField(record5, field2, value) {
+  if (record5[field2] !== value) record5[field2] = value;
 }
-function withRestoredIdentity(hooked, original) {
+function withRestoredIdentity(hooked, original2) {
   try {
     const descriptors = Object.getOwnPropertyDescriptors(hooked);
-    for (const field of [
+    for (const field2 of [
       "traceId",
       "spanId",
       "parentSpanId",
       "traceState"
-    ]) descriptors[field] = {
-      value: original[field],
+    ]) descriptors[field2] = {
+      value: original2[field2],
       enumerable: true,
       writable: true,
       configurable: true
@@ -13453,28 +13524,28 @@ var PostHogTraces = class {
       startTime,
       backdated: startTime !== now,
       clockAnchor: void 0 === toEpochMs(options?.startTime) ? parent?.clockAnchor : void 0
-    }, (record4, autoKeys) => this._onSpanEnd(record4, autoKeys), this._logger);
+    }, (record5, autoKeys) => this._onSpanEnd(record5, autoKeys), this._logger);
   }
   withSpan(name, optionsOrFn, maybeFn) {
     const options = "function" == typeof optionsOrFn ? void 0 : optionsOrFn;
     const fn = "function" == typeof optionsOrFn ? optionsOrFn : maybeFn;
     const span = this.startSpan(name, options);
     try {
-      const result = runWithActiveSpan(this._contextManager, span, fn);
-      if (isPromise(result)) return result.then((value) => {
+      const result2 = runWithActiveSpan(this._contextManager, span, fn);
+      if (isPromise(result2)) return result2.then((value) => {
         span.end();
         return value;
-      }, (error62) => {
-        this._recordCallbackError(span, error62);
+      }, (error63) => {
+        this._recordCallbackError(span, error63);
         span.end();
-        throw error62;
+        throw error63;
       });
       span.end();
-      return result;
-    } catch (error62) {
-      this._recordCallbackError(span, error62);
+      return result2;
+    } catch (error63) {
+      this._recordCallbackError(span, error63);
       span.end();
-      throw error62;
+      throw error63;
     }
   }
   getActiveSpan() {
@@ -13533,24 +13604,24 @@ var PostHogTraces = class {
     if (active2 instanceof PassThroughSpan) return remoteContext(active2.traceparent(), active2.tracestate() ?? void 0);
   }
   _autoContextAttributes() {
-    let context;
+    let context2;
     try {
-      context = this._getContext();
-    } catch (error62) {
-      this._logger.debug("Failed to read tracing context; span will carry no PostHog attributes", error62);
+      context2 = this._getContext();
+    } catch (error63) {
+      this._logger.debug("Failed to read tracing context; span will carry no PostHog attributes", error63);
       return {};
     }
     const attributes = {};
-    if (context.distinctId) attributes.posthogDistinctId = context.distinctId;
-    if (context.sessionId) attributes.sessionId = context.sessionId;
-    if (context.currentUrl) attributes["url.full"] = context.currentUrl;
-    if (context.screenName) attributes["screen.name"] = context.screenName;
-    if (context.appState) attributes["app.state"] = context.appState;
+    if (context2.distinctId) attributes.posthogDistinctId = context2.distinctId;
+    if (context2.sessionId) attributes.sessionId = context2.sessionId;
+    if (context2.currentUrl) attributes["url.full"] = context2.currentUrl;
+    if (context2.screenName) attributes["screen.name"] = context2.screenName;
+    if (context2.appState) attributes["app.state"] = context2.appState;
     return attributes;
   }
-  _recordCallbackError(span, error62) {
+  _recordCallbackError(span, error63) {
     if (!(span instanceof PostHogSpan)) return;
-    const { type, message, stack } = describeError(error62);
+    const { type, message, stack } = describeError(error63);
     span.addEvent("exception", {
       "exception.type": type,
       "exception.message": message,
@@ -13573,66 +13644,66 @@ var PostHogTraces = class {
   _onSpanEnd(incoming, autoKeys) {
     if (!this._liveSpans.delete(incoming.spanId)) return;
     if (this._instance.isDisabled || this._instance.optedOut) return void this._recordDrop(1, "the user has opted out");
-    const record4 = this._runBeforeSpanSend(incoming, autoKeys);
-    if (!record4) return;
-    this._reportLimitDrops(record4);
+    const record5 = this._runBeforeSpanSend(incoming, autoKeys);
+    if (!record5) return;
+    this._reportLimitDrops(record5);
     if (this._queue.length >= this._config.maxQueueSize) return void this._recordDrop(1, `the queue is full (${this._config.maxQueueSize}) \u2014 raise the flush frequency or reduce span volume`);
-    this._queue.push(record4);
+    this._queue.push(record5);
     try {
       this._onSpanQueued?.();
-    } catch (error62) {
-      this._logger.debug("Span queue notification failed", error62);
+    } catch (error63) {
+      this._logger.debug("Span queue notification failed", error63);
     }
     if (!(this._queue.length >= this._maxExportBatchSize) || this._consecutiveFlushFailures || this._retryAfter.isOpen()) this._armFlushTimerIfQueued();
     else this._flushInBackground();
   }
-  _reportLimitDrops(record4) {
-    const attributes = record4.droppedAttributesCount ?? 0;
-    const events = record4.droppedEventsCount ?? 0;
+  _reportLimitDrops(record5) {
+    const attributes = record5.droppedAttributesCount ?? 0;
+    const events = record5.droppedEventsCount ?? 0;
     let eventAttributes = 0;
-    for (const event of record4.events) eventAttributes += event.droppedAttributesCount ?? 0;
-    if (attributes || events || eventAttributes) this._logger.debug(`Span limits discarded data from "${record4.name}": ${attributes} attributes, ${events} events, ${eventAttributes} event attributes`);
+    for (const event2 of record5.events) eventAttributes += event2.droppedAttributesCount ?? 0;
+    if (attributes || events || eventAttributes) this._logger.debug(`Span limits discarded data from "${record5.name}": ${attributes} attributes, ${events} events, ${eventAttributes} event attributes`);
   }
-  _runBeforeSpanSend(record4, autoKeys) {
-    if (!this._config.beforeSpanSend.length) return record4;
-    const identity3 = {
-      traceId: record4.traceId,
-      spanId: record4.spanId,
-      parentSpanId: record4.parentSpanId,
-      traceState: record4.traceState
+  _runBeforeSpanSend(record5, autoKeys) {
+    if (!this._config.beforeSpanSend.length) return record5;
+    const identity4 = {
+      traceId: record5.traceId,
+      spanId: record5.spanId,
+      parentSpanId: record5.parentSpanId,
+      traceState: record5.traceState
     };
     const originalTimes = {
-      startTime: record4.startTime,
-      endTime: record4.endTime
+      startTime: record5.startTime,
+      endTime: record5.endTime
     };
     const originalDropped = {
-      attributes: record4.droppedAttributesCount,
-      events: record4.droppedEventsCount
+      attributes: record5.droppedAttributesCount,
+      events: record5.droppedEventsCount
     };
-    const keysBeforeHook = Object.keys(record4.attributes);
+    const keysBeforeHook = Object.keys(record5.attributes);
     const originalPropagation = {
-      traceFlags: record4.traceFlags,
-      parentIsRemote: record4.parentIsRemote
+      traceFlags: record5.traceFlags,
+      parentIsRemote: record5.parentIsRemote
     };
-    const originalStatus = record4.status && {
-      ...record4.status
+    const originalStatus = record5.status && {
+      ...record5.status
     };
-    let hooked = record4;
-    let current = record4;
+    let hooked = record5;
+    let current = record5;
     try {
       for (const hook of this._config.beforeSpanSend) {
-        const result = hook(hooked);
-        if (!result) {
+        const result2 = hook(hooked);
+        if (!result2) {
           this._recordDrop(1, "beforeSpanSend dropped it");
           return null;
         }
-        hooked = this._keepSpanIdentity(result, identity3);
+        hooked = this._keepSpanIdentity(result2, identity4);
       }
       const rebuilt = {
-        traceId: identity3.traceId,
-        spanId: identity3.spanId,
-        parentSpanId: identity3.parentSpanId,
-        traceState: identity3.traceState,
+        traceId: identity4.traceId,
+        spanId: identity4.spanId,
+        parentSpanId: identity4.parentSpanId,
+        traceState: identity4.traceState,
         name: hooked.name,
         kind: hooked.kind,
         status: hooked.status,
@@ -13659,11 +13730,11 @@ var PostHogTraces = class {
       current.startTime = toEpochMs(current.startTime) ?? originalTimes.startTime;
       current.endTime = clampEndTime(toEpochMs(current.endTime) ?? originalTimes.endTime, current.startTime);
       const sanitizedEvents = [];
-      for (const event of current.events) try {
+      for (const event2 of current.events) try {
         sanitizedEvents.push({
-          ...event,
-          name: sanitizeName(event.name, "Span event name", this._config.maxAttributeValueLength, this._logger),
-          timestamp: resolveSuppliedTime(event.timestamp, current.startTime, "event timestamp", this._logger)
+          ...event2,
+          name: sanitizeName(event2.name, "Span event name", this._config.maxAttributeValueLength, this._logger),
+          timestamp: resolveSuppliedTime(event2.timestamp, current.startTime, "event timestamp", this._logger)
         });
       } catch {
         this._logger.debug("beforeSpanSend left an unreadable span event; dropping it");
@@ -13671,26 +13742,26 @@ var PostHogTraces = class {
       current.events = sanitizedEvents;
       applySpanLimits(current, autoKeys, this._config.maxAttributesPerSpan, this._config.maxEventsPerSpan, this._config.maxAttributesPerEvent, this._config.maxAttributeValueLength, keysBeforeHook);
       return current;
-    } catch (error62) {
-      this._logger.debug("beforeSpanSend failed; dropping the span rather than exporting it unscrubbed", error62);
+    } catch (error63) {
+      this._logger.debug("beforeSpanSend failed; dropping the span rather than exporting it unscrubbed", error63);
       this._recordDrop(1, "beforeSpanSend failed");
       return null;
     }
   }
-  _keepSpanIdentity(hooked, original) {
-    if (hooked.traceId !== original.traceId || hooked.spanId !== original.spanId || hooked.parentSpanId !== original.parentSpanId) this._logger.debug("beforeSpanSend changed a span identity field; keeping the original ids");
+  _keepSpanIdentity(hooked, original2) {
+    if (hooked.traceId !== original2.traceId || hooked.spanId !== original2.spanId || hooked.parentSpanId !== original2.parentSpanId) this._logger.debug("beforeSpanSend changed a span identity field; keeping the original ids");
     try {
-      restoreField(hooked, "traceId", original.traceId);
-      restoreField(hooked, "spanId", original.spanId);
-      restoreField(hooked, "parentSpanId", original.parentSpanId);
-      restoreField(hooked, "traceState", original.traceState);
+      restoreField(hooked, "traceId", original2.traceId);
+      restoreField(hooked, "spanId", original2.spanId);
+      restoreField(hooked, "parentSpanId", original2.parentSpanId);
+      restoreField(hooked, "traceState", original2.traceState);
     } catch {
-      return withRestoredIdentity(hooked, original);
+      return withRestoredIdentity(hooked, original2);
     }
     return hooked;
   }
-  _recordDrop(count8, reason) {
-    this._droppedSinceWarning += count8;
+  _recordDrop(count9, reason) {
+    this._droppedSinceWarning += count9;
     this._dropReasons.add(reason);
     if (Date.now() - this._lastDropWarningAt >= this._config.flushIntervalMs) this._warnAboutDrops();
   }
@@ -13705,10 +13776,10 @@ var PostHogTraces = class {
   }
   _encodeBatch(batch) {
     const encoded = [];
-    for (const record4 of batch) try {
-      encoded.push(buildOtlpSpan(record4, this._logger));
-    } catch (error62) {
-      this._logger.debug("Failed to encode a span; dropping it", error62);
+    for (const record5 of batch) try {
+      encoded.push(buildOtlpSpan(record5, this._logger));
+    } catch (error63) {
+      this._logger.debug("Failed to encode a span; dropping it", error63);
       this._recordDrop(1, "its attributes could not be encoded");
     }
     return encoded;
@@ -13818,8 +13889,8 @@ var PostHogTraces = class {
   }
   _flushInBackground() {
     if (this._backgroundFlush) return;
-    this._backgroundFlush = this.flush().catch((error62) => {
-      this._logger.debug("Background span flush failed", error62);
+    this._backgroundFlush = this.flush().catch((error63) => {
+      this._logger.debug("Background span flush failed", error63);
     }).finally(() => {
       this._backgroundFlush = void 0;
       this._armFlushTimerIfQueuedNoEarlierThan();
@@ -14020,118 +14091,118 @@ var BUILT_IN_EVENT_NAME_BY_TYPE = {
   [MCPAnalyticsEventType.mcpToolsCall]: PostHogMCPAnalyticsEvent.ToolCall,
   [MCPAnalyticsEventType.mcpToolsList]: PostHogMCPAnalyticsEvent.ToolsList
 };
-function getDistinctId(event) {
-  return event.identifyActorGivenId || event.sessionId || "anonymous";
+function getDistinctId(event2) {
+  return event2.identifyActorGivenId || event2.sessionId || "anonymous";
 }
-function getTimestamp(event) {
-  return event.timestamp ? event.timestamp.toISOString() : (/* @__PURE__ */ new Date()).toISOString();
+function getTimestamp(event2) {
+  return event2.timestamp ? event2.timestamp.toISOString() : (/* @__PURE__ */ new Date()).toISOString();
 }
-function buildPostHogCaptureEvents(event, options = {}) {
+function buildPostHogCaptureEvents(event2, options = {}) {
   const batch = [
-    buildCaptureEvent(event)
+    buildCaptureEvent(event2)
   ];
-  if (event.isError && event.error && false !== options.enableExceptionAutocapture) batch.push(buildExceptionEvent(event));
+  if (event2.isError && event2.error && false !== options.enableExceptionAutocapture) batch.push(buildExceptionEvent(event2));
   return batch;
 }
-function buildCaptureEvent(event) {
-  const distinctId = getDistinctId(event);
-  const timestamp = getTimestamp(event);
+function buildCaptureEvent(event2) {
+  const distinctId = getDistinctId(event2);
+  const timestamp = getTimestamp(event2);
   const properties = {
     [PostHogMCPAnalyticsProperty.Interface]: "mcp",
     [PostHogMCPAnalyticsProperty.Source]: POSTHOG_MCP_ANALYTICS_SOURCE
   };
-  addSessionIdProperty(event, properties);
-  addConversationIdProperty(event, properties);
-  addPersonProcessingProperty(event, properties);
-  addGroupsProperty(event, properties);
-  addCommonEventProperties(event, properties);
-  addCustomEventProperties(event, properties);
-  addServerBuildProperty(event, properties);
+  addSessionIdProperty(event2, properties);
+  addConversationIdProperty(event2, properties);
+  addPersonProcessingProperty(event2, properties);
+  addGroupsProperty(event2, properties);
+  addCommonEventProperties(event2, properties);
+  addCustomEventProperties(event2, properties);
+  addServerBuildProperty(event2, properties);
   return {
-    event: event.eventName ?? BUILT_IN_EVENT_NAME_BY_TYPE[event.eventType],
+    event: event2.eventName ?? BUILT_IN_EVENT_NAME_BY_TYPE[event2.eventType],
     distinct_id: distinctId,
     properties,
     timestamp,
     type: "capture"
   };
 }
-function addSessionIdProperty(event, properties) {
-  if ("string" == typeof event.sessionId && event.sessionId.length > 0) properties[PostHogMCPAnalyticsProperty.SessionId] = event.sessionId;
+function addSessionIdProperty(event2, properties) {
+  if ("string" == typeof event2.sessionId && event2.sessionId.length > 0) properties[PostHogMCPAnalyticsProperty.SessionId] = event2.sessionId;
 }
-function addConversationIdProperty(event, properties) {
-  if (void 0 !== event.conversationId && "" !== event.conversationId) properties[PostHogMCPAnalyticsProperty.ConversationId] = event.conversationId;
+function addConversationIdProperty(event2, properties) {
+  if (void 0 !== event2.conversationId && "" !== event2.conversationId) properties[PostHogMCPAnalyticsProperty.ConversationId] = event2.conversationId;
 }
-function addGroupsProperty(event, properties) {
-  if (event.groups && Object.keys(event.groups).length > 0) properties.$groups = event.groups;
+function addGroupsProperty(event2, properties) {
+  if (event2.groups && Object.keys(event2.groups).length > 0) properties.$groups = event2.groups;
 }
-function addPersonProcessingProperty(event, properties) {
-  if (!event.identifyActorGivenId) properties.$process_person_profile = false;
+function addPersonProcessingProperty(event2, properties) {
+  if (!event2.identifyActorGivenId) properties.$process_person_profile = false;
 }
-function addCommonEventProperties(event, properties) {
-  if (event.resourceName) {
-    properties[PostHogMCPAnalyticsProperty.ResourceName] = event.resourceName;
-    if (event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event.resourceName;
+function addCommonEventProperties(event2, properties) {
+  if (event2.resourceName) {
+    properties[PostHogMCPAnalyticsProperty.ResourceName] = event2.resourceName;
+    if (event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event2.resourceName;
   }
-  if (event.toolDescription && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event.toolDescription;
-  if (event.toolCategory && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event.toolCategory;
-  if (event.listedToolNames && event.listedToolNames.length > 0 && event.eventType === MCPAnalyticsEventType.mcpToolsList) properties[PostHogMCPAnalyticsProperty.ListedToolNames] = event.listedToolNames;
-  if (void 0 !== event.duration) properties[PostHogMCPAnalyticsProperty.DurationMs] = event.duration;
-  if (event.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event.serverName;
-  if (event.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event.serverVersion;
-  if (event.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event.clientName;
-  if (event.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event.clientVersion;
-  if (event.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event.clientUserAgent;
-  if (event.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event.vendorClient;
-  if (event.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event.protocolVersion;
-  if (event.userIntent) properties[PostHogMCPAnalyticsProperty.Intent] = event.userIntent;
-  if (event.userIntentSource) properties[PostHogMCPAnalyticsProperty.IntentSource] = event.userIntentSource;
-  if (event.llmModel) properties[PostHogMCPAnalyticsProperty.LlmModel] = event.llmModel;
-  if (event.llmModelSource) properties[PostHogMCPAnalyticsProperty.LlmModelSource] = event.llmModelSource;
-  if (void 0 !== event.isError) properties[PostHogMCPAnalyticsProperty.IsError] = event.isError;
-  if (event.isError) {
-    const firstException = event.error?.$exception_list?.[0];
-    const errorType = event.errorType ?? firstException?.type;
+  if (event2.toolDescription && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event2.toolDescription;
+  if (event2.toolCategory && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event2.toolCategory;
+  if (event2.listedToolNames && event2.listedToolNames.length > 0 && event2.eventType === MCPAnalyticsEventType.mcpToolsList) properties[PostHogMCPAnalyticsProperty.ListedToolNames] = event2.listedToolNames;
+  if (void 0 !== event2.duration) properties[PostHogMCPAnalyticsProperty.DurationMs] = event2.duration;
+  if (event2.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event2.serverName;
+  if (event2.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event2.serverVersion;
+  if (event2.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event2.clientName;
+  if (event2.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event2.clientVersion;
+  if (event2.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event2.clientUserAgent;
+  if (event2.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event2.vendorClient;
+  if (event2.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event2.protocolVersion;
+  if (event2.userIntent) properties[PostHogMCPAnalyticsProperty.Intent] = event2.userIntent;
+  if (event2.userIntentSource) properties[PostHogMCPAnalyticsProperty.IntentSource] = event2.userIntentSource;
+  if (event2.llmModel) properties[PostHogMCPAnalyticsProperty.LlmModel] = event2.llmModel;
+  if (event2.llmModelSource) properties[PostHogMCPAnalyticsProperty.LlmModelSource] = event2.llmModelSource;
+  if (void 0 !== event2.isError) properties[PostHogMCPAnalyticsProperty.IsError] = event2.isError;
+  if (event2.isError) {
+    const firstException = event2.error?.$exception_list?.[0];
+    const errorType = event2.errorType ?? firstException?.type;
     if (errorType) properties[PostHogMCPAnalyticsProperty.ErrorType] = errorType;
     if (firstException?.value) properties[PostHogMCPAnalyticsProperty.ErrorMessage] = firstException.value;
   }
-  if (void 0 !== event.parameters) properties[PostHogMCPAnalyticsProperty.Parameters] = event.parameters;
-  if (void 0 !== event.response) properties[PostHogMCPAnalyticsProperty.Response] = event.response;
-  if (event.identifyActorData && Object.keys(event.identifyActorData).length > 0) properties.$set = {
-    ...event.identifyActorData
+  if (void 0 !== event2.parameters) properties[PostHogMCPAnalyticsProperty.Parameters] = event2.parameters;
+  if (void 0 !== event2.response) properties[PostHogMCPAnalyticsProperty.Response] = event2.response;
+  if (event2.identifyActorData && Object.keys(event2.identifyActorData).length > 0) properties.$set = {
+    ...event2.identifyActorData
   };
 }
-function addCustomEventProperties(event, properties) {
-  if (event.properties) for (const [key, value] of Object.entries(event.properties)) properties[key] = value;
+function addCustomEventProperties(event2, properties) {
+  if (event2.properties) for (const [key, value] of Object.entries(event2.properties)) properties[key] = value;
 }
-function addServerBuildProperty(event, properties) {
-  if (event.serverBuild) properties[PostHogMCPAnalyticsProperty.ServerBuild] = event.serverBuild;
+function addServerBuildProperty(event2, properties) {
+  if (event2.serverBuild) properties[PostHogMCPAnalyticsProperty.ServerBuild] = event2.serverBuild;
 }
-function buildExceptionEvent(event) {
-  const distinctId = getDistinctId(event);
-  const timestamp = getTimestamp(event);
+function buildExceptionEvent(event2) {
+  const distinctId = getDistinctId(event2);
+  const timestamp = getTimestamp(event2);
   const properties = {
     [PostHogMCPAnalyticsProperty.Interface]: "mcp"
   };
-  addSessionIdProperty(event, properties);
-  addConversationIdProperty(event, properties);
-  addPersonProcessingProperty(event, properties);
-  addGroupsProperty(event, properties);
-  if (event.error) Object.assign(properties, event.error);
-  if (event.resourceName) {
-    properties[PostHogMCPAnalyticsProperty.ResourceName] = event.resourceName;
-    if (event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event.resourceName;
+  addSessionIdProperty(event2, properties);
+  addConversationIdProperty(event2, properties);
+  addPersonProcessingProperty(event2, properties);
+  addGroupsProperty(event2, properties);
+  if (event2.error) Object.assign(properties, event2.error);
+  if (event2.resourceName) {
+    properties[PostHogMCPAnalyticsProperty.ResourceName] = event2.resourceName;
+    if (event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event2.resourceName;
   }
-  if (event.toolDescription && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event.toolDescription;
-  if (event.toolCategory && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event.toolCategory;
-  if (event.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event.serverName;
-  if (event.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event.serverVersion;
-  if (event.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event.clientName;
-  if (event.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event.clientVersion;
-  if (event.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event.clientUserAgent;
-  if (event.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event.vendorClient;
-  if (event.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event.protocolVersion;
-  addCustomEventProperties(event, properties);
-  addServerBuildProperty(event, properties);
+  if (event2.toolDescription && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event2.toolDescription;
+  if (event2.toolCategory && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event2.toolCategory;
+  if (event2.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event2.serverName;
+  if (event2.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event2.serverVersion;
+  if (event2.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event2.clientName;
+  if (event2.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event2.clientVersion;
+  if (event2.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event2.clientUserAgent;
+  if (event2.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event2.vendorClient;
+  if (event2.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event2.protocolVersion;
+  addCustomEventProperties(event2, properties);
+  addServerBuildProperty(event2, properties);
   return {
     event: PostHogMCPAnalyticsEvent.Exception,
     distinct_id: distinctId,
@@ -14202,39 +14273,39 @@ function visit(value, remainingDepth, maxBreadth, maxStringLength, memo2) {
     if (memo2.has(value)) return "[Circular ~]";
     if (remainingDepth <= 0) return Array.isArray(value) ? "[Array]" : "[Object]";
     memo2.add(value);
-    let result;
-    result = Array.isArray(value) ? visitArray(value, remainingDepth - 1, maxBreadth, maxStringLength, memo2) : visitObject(value, remainingDepth - 1, maxBreadth, maxStringLength, memo2);
+    let result2;
+    result2 = Array.isArray(value) ? visitArray(value, remainingDepth - 1, maxBreadth, maxStringLength, memo2) : visitObject(value, remainingDepth - 1, maxBreadth, maxStringLength, memo2);
     memo2.delete(value);
-    return result;
+    return result2;
   }
   return String(value);
 }
 function visitArray(arr, remainingDepth, maxBreadth, maxStringLength, memo2) {
-  const result = [];
+  const result2 = [];
   for (let i = 0; i < arr.length; i++) {
     if (i >= maxBreadth) {
-      result.push("[MaxProperties ~]");
+      result2.push("[MaxProperties ~]");
       break;
     }
-    result.push(visit(arr[i], remainingDepth, maxBreadth, maxStringLength, memo2));
+    result2.push(visit(arr[i], remainingDepth, maxBreadth, maxStringLength, memo2));
   }
-  return result;
+  return result2;
 }
 function visitObject(obj, remainingDepth, maxBreadth, maxStringLength, memo2) {
-  const result = {};
+  const result2 = {};
   const keys = Object.keys(obj);
-  let count8 = 0;
+  let count9 = 0;
   for (const key of keys) {
-    if (count8 >= maxBreadth) {
-      result["..."] = "[MaxProperties ~]";
+    if (count9 >= maxBreadth) {
+      result2["..."] = "[MaxProperties ~]";
       break;
     }
     if (void 0 !== obj[key]) {
-      result[key] = visit(obj[key], remainingDepth, maxBreadth, maxStringLength, memo2);
-      count8++;
+      result2[key] = visit(obj[key], remainingDepth, maxBreadth, maxStringLength, memo2);
+      count9++;
     }
   }
-  return result;
+  return result2;
 }
 function truncateString2(str, maxLength) {
   if (null == str) return str;
@@ -14249,11 +14320,11 @@ function truncateStackFrames(frames) {
     ...frames.slice(-half)
   ];
 }
-function truncateExceptionList(error62) {
-  if (!Array.isArray(error62.$exception_list)) return error62;
+function truncateExceptionList(error63) {
+  if (!Array.isArray(error63.$exception_list)) return error63;
   return {
-    ...error62,
-    $exception_list: error62.$exception_list.map((exception) => {
+    ...error63,
+    $exception_list: error63.$exception_list.map((exception) => {
       const next = {
         ...exception
       };
@@ -14268,30 +14339,30 @@ function truncateExceptionList(error62) {
 }
 function truncateResponseContent(response) {
   if (null == response || "object" != typeof response) return response;
-  const result = {
+  const result2 = {
     ...response
   };
-  if (Array.isArray(result.content)) result.content = result.content.map((block) => {
+  if (Array.isArray(result2.content)) result2.content = result2.content.map((block) => {
     if (null != block && "object" == typeof block && "type" in block && "text" in block && block?.type === "text" && "string" == typeof block.text && block.text.length > MAX_CONTENT_TEXT_LENGTH) return {
       ...block,
       text: block.text.slice(0, MAX_CONTENT_TEXT_LENGTH) + TRUNCATION_SUFFIX
     };
     return block;
   });
-  return result;
+  return result2;
 }
 var textEncoder = new TextEncoder();
 function jsonByteSize(value) {
   return textEncoder.encode(JSON.stringify(value)).length;
 }
 function truncateLargestFields(obj, maxBytes) {
-  const result = structuredClone(obj);
+  const result2 = structuredClone(obj);
   for (let attempt = 0; attempt < 10; attempt++) {
-    const currentSize = jsonByteSize(result);
+    const currentSize = jsonByteSize(result2);
     if (currentSize <= maxBytes) break;
     const excess = currentSize - maxBytes;
     const stringPaths = [];
-    collectStringPaths(result, [], stringPaths);
+    collectStringPaths(result2, [], stringPaths);
     stringPaths.sort((a, b) => b.length - a.length);
     if (0 === stringPaths.length) break;
     let remaining = excess + 200;
@@ -14301,16 +14372,16 @@ function truncateLargestFields(obj, maxBytes) {
       const reduction = Math.min(remaining, Math.floor(0.5 * length));
       if (reduction < 10) continue;
       const newLength = length - reduction;
-      const currentValue = getNestedValue(result, path);
+      const currentValue = getNestedValue(result2, path);
       if ("string" == typeof currentValue) {
-        setNestedValue(result, path, currentValue.slice(0, newLength) + TRUNCATION_SUFFIX);
+        setNestedValue(result2, path, currentValue.slice(0, newLength) + TRUNCATION_SUFFIX);
         remaining -= reduction;
         truncated = true;
       }
     }
     if (!truncated) break;
   }
-  return result;
+  return result2;
 }
 function collectStringPaths(obj, currentPath, results) {
   if (1 === currentPath.length && "serverBuild" === currentPath[0]) return;
@@ -14355,16 +14426,16 @@ var REDUCIBLE_FIELDS = [
   "identifyActorData",
   "error"
 ];
-function truncateToSize(event) {
-  if (jsonByteSize(event) <= MAX_EVENT_BYTES) return event;
-  const nesting = Math.max(...REDUCIBLE_FIELDS.map((field) => nestingDepth(event[field])));
+function truncateToSize(event2) {
+  if (jsonByteSize(event2) <= MAX_EVENT_BYTES) return event2;
+  const nesting = Math.max(...REDUCIBLE_FIELDS.map((field2) => nestingDepth(event2[field2])));
   let atDepthOne;
   for (let depth = nesting - 1; depth >= 1; depth--) {
-    const reduced = normalizeReducibleFields(event, depth);
+    const reduced = normalizeReducibleFields(event2, depth);
     if (jsonByteSize(reduced) <= MAX_EVENT_BYTES) return reduced;
     if (1 === depth) atDepthOne = reduced;
   }
-  return truncateLargestFields(atDepthOne ?? normalizeReducibleFields(event, 1), MAX_EVENT_BYTES);
+  return truncateLargestFields(atDepthOne ?? normalizeReducibleFields(event2, 1), MAX_EVENT_BYTES);
 }
 function nestingDepth(value, limit = MAX_DEPTH) {
   if (0 === limit || null === value || "object" != typeof value) return 0;
@@ -14375,34 +14446,34 @@ function nestingDepth(value, limit = MAX_DEPTH) {
   }
   return deepest + 1;
 }
-function normalizeReducibleFields(event, depth) {
+function normalizeReducibleFields(event2, depth) {
   const reduced = {
-    ...event
+    ...event2
   };
-  for (const field of REDUCIBLE_FIELDS) if (null != reduced[field]) reduced[field] = normalize(reduced[field], depth);
+  for (const field2 of REDUCIBLE_FIELDS) if (null != reduced[field2]) reduced[field2] = normalize(reduced[field2], depth);
   return reduced;
 }
-function truncateEvent(event) {
-  const result = {
-    ...event
+function truncateEvent(event2) {
+  const result2 = {
+    ...event2
   };
-  result.userIntent = truncateString2(result.userIntent, MAX_USER_INTENT_LENGTH);
-  result.resourceName = truncateString2(result.resourceName, MAX_RESOURCE_NAME_LENGTH);
-  result.serverName = truncateString2(result.serverName, MAX_METADATA_LENGTH);
-  result.serverVersion = truncateString2(result.serverVersion, MAX_METADATA_LENGTH);
-  result.clientName = truncateString2(result.clientName, MAX_METADATA_LENGTH);
-  result.clientVersion = truncateString2(result.clientVersion, MAX_METADATA_LENGTH);
-  result.clientUserAgent = truncateString2(result.clientUserAgent, MAX_METADATA_LENGTH);
-  result.vendorClient = truncateString2(result.vendorClient, MAX_METADATA_LENGTH);
-  result.errorType = truncateString2(result.errorType, MAX_METADATA_LENGTH);
-  result.llmModel = truncateString2(result.llmModel, MAX_METADATA_LENGTH);
-  if (null != result.error && "object" == typeof result.error) result.error = truncateExceptionList(result.error);
-  result.response = truncateResponseContent(result.response);
-  if (null != result.parameters) result.parameters = normalize(result.parameters);
-  if (null != result.response) result.response = normalize(result.response);
-  if (null != result.identifyActorData) result.identifyActorData = normalize(result.identifyActorData);
-  if (null != result.error) result.error = normalize(result.error);
-  return truncateToSize(result);
+  result2.userIntent = truncateString2(result2.userIntent, MAX_USER_INTENT_LENGTH);
+  result2.resourceName = truncateString2(result2.resourceName, MAX_RESOURCE_NAME_LENGTH);
+  result2.serverName = truncateString2(result2.serverName, MAX_METADATA_LENGTH);
+  result2.serverVersion = truncateString2(result2.serverVersion, MAX_METADATA_LENGTH);
+  result2.clientName = truncateString2(result2.clientName, MAX_METADATA_LENGTH);
+  result2.clientVersion = truncateString2(result2.clientVersion, MAX_METADATA_LENGTH);
+  result2.clientUserAgent = truncateString2(result2.clientUserAgent, MAX_METADATA_LENGTH);
+  result2.vendorClient = truncateString2(result2.vendorClient, MAX_METADATA_LENGTH);
+  result2.errorType = truncateString2(result2.errorType, MAX_METADATA_LENGTH);
+  result2.llmModel = truncateString2(result2.llmModel, MAX_METADATA_LENGTH);
+  if (null != result2.error && "object" == typeof result2.error) result2.error = truncateExceptionList(result2.error);
+  result2.response = truncateResponseContent(result2.response);
+  if (null != result2.parameters) result2.parameters = normalize(result2.parameters);
+  if (null != result2.response) result2.response = normalize(result2.response);
+  if (null != result2.identifyActorData) result2.identifyActorData = normalize(result2.identifyActorData);
+  if (null != result2.error) result2.error = normalize(result2.error);
+  return truncateToSize(result2);
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/mcp-payloads.mjs
@@ -14455,23 +14526,23 @@ function buildCapturedMcpParameters(request3) {
 function isRecord2(value) {
   return !!value && "object" == typeof value && !Array.isArray(value);
 }
-function sanitizeEvent(event) {
-  const result = {
-    ...event
+function sanitizeEvent(event2) {
+  const result2 = {
+    ...event2
   };
-  if (null != result.response) result.response = sanitizeResponse(result.response);
-  if (null != result.parameters) result.parameters = sanitizeParameters(result.parameters);
-  if (null != result.resourceName) result.resourceName = mcp_payloads_sanitizeCapturedValue(result.resourceName);
-  if (null != result.userIntent) result.userIntent = mcp_payloads_sanitizeFreeText(result.userIntent);
-  if (null != result.llmModel) result.llmModel = mcp_payloads_sanitizeCapturedValue(result.llmModel);
-  if (null != result.error) result.error = sanitizeExceptionValues(result.error);
-  return result;
+  if (null != result2.response) result2.response = sanitizeResponse(result2.response);
+  if (null != result2.parameters) result2.parameters = sanitizeParameters(result2.parameters);
+  if (null != result2.resourceName) result2.resourceName = mcp_payloads_sanitizeCapturedValue(result2.resourceName);
+  if (null != result2.userIntent) result2.userIntent = mcp_payloads_sanitizeFreeText(result2.userIntent);
+  if (null != result2.llmModel) result2.llmModel = mcp_payloads_sanitizeCapturedValue(result2.llmModel);
+  if (null != result2.error) result2.error = sanitizeExceptionValues(result2.error);
+  return result2;
 }
-function sanitizeExceptionValues(error62) {
-  if (!Array.isArray(error62.$exception_list)) return error62;
+function sanitizeExceptionValues(error63) {
+  if (!Array.isArray(error63.$exception_list)) return error63;
   return {
-    ...error62,
-    $exception_list: error62.$exception_list.map((exception) => ({
+    ...error63,
+    $exception_list: error63.$exception_list.map((exception) => ({
       ...exception,
       value: mcp_payloads_sanitizeCapturedValue(exception.value)
     }))
@@ -14479,12 +14550,12 @@ function sanitizeExceptionValues(error62) {
 }
 function sanitizeResponse(response) {
   if (isRecord2(response) && Array.isArray(response.content)) {
-    const result = mcp_payloads_sanitizeCapturedValue({
+    const result2 = mcp_payloads_sanitizeCapturedValue({
       ...response,
       content: []
     });
-    result.content = response.content.map(sanitizeContentBlock);
-    return result;
+    result2.content = response.content.map(sanitizeContentBlock);
+    return result2;
   }
   return mcp_payloads_sanitizeCapturedValue(response);
 }
@@ -14525,8 +14596,8 @@ function sanitizeParameters(obj) {
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/sink.mjs
-async function processMcpEvent(event, options, logger = log) {
-  let processed = event;
+async function processMcpEvent(event2, options, logger = log) {
+  let processed = event2;
   try {
     processed = sanitizeEvent(processed);
   } catch (err) {
@@ -14554,8 +14625,8 @@ async function applyBeforeSend(captures, beforeSend, logger) {
   if (!beforeSend) return captures;
   const kept = [];
   for (const capture of captures) try {
-    const result = await beforeSend(capture);
-    if (result) kept.push(result);
+    const result2 = await beforeSend(capture);
+    if (result2) kept.push(result2);
   } catch (err) {
     logger(`beforeSend threw for event ${capture.event}; dropping it: ${err}`);
   }
@@ -14566,10 +14637,10 @@ var McpEventSink = class {
     this.posthog = posthog;
     this.logger = logger;
   }
-  async capture(event, options) {
-    const result = await processMcpEvent(event, options, this.logger);
-    if (!result) return;
-    const { event: fullEvent, captures } = result;
+  async capture(event2, options) {
+    const result2 = await processMcpEvent(event2, options, this.logger);
+    if (!result2) return;
+    const { event: fullEvent, captures } = result2;
     try {
       for (const captureEvent2 of captures) {
         const groups = captureEvent2.properties.$groups;
@@ -14650,17 +14721,17 @@ async function handleIdentify(data, sessionId, request3, extra) {
       return mergedIdentity;
     }
     data.logger(`Warning: Supplied identify function returned null for session ${sessionId}`);
-  } catch (error62) {
-    data.logger(`Error: User supplied identify function threw an error while identifying session ${sessionId} - ${error62}`);
+  } catch (error63) {
+    data.logger(`Error: User supplied identify function threw an error while identifying session ${sessionId} - ${error63}`);
   }
   return identityBeforeRequest;
 }
-function withIdentity(sessionInfo, identity3) {
+function withIdentity(sessionInfo, identity4) {
   return {
     ...sessionInfo,
-    identifyActorGivenId: identity3?.distinctId,
-    identifyActorData: identity3?.properties || {},
-    identifyActorGroups: identity3?.groups
+    identifyActorGivenId: identity4?.distinctId,
+    identifyActorData: identity4?.properties || {},
+    identifyActorGroups: identity4?.groups
   };
 }
 async function resolveEventProperties(data, request3, extra) {
@@ -14679,11 +14750,11 @@ var version = "0.25.0";
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/headers.mjs
 function readHeaderValue(headers, name) {
   if (!headers || "object" != typeof headers) return;
-  const record4 = headers;
-  let value = record4[name];
+  const record5 = headers;
+  let value = record5[name];
   if (void 0 === value) {
-    const key = Object.keys(record4).find((k) => k.toLowerCase() === name);
-    value = void 0 === key ? void 0 : record4[key];
+    const key = Object.keys(record5).find((k) => k.toLowerCase() === name);
+    value = void 0 === key ? void 0 : record5[key];
   }
   return normalizeHeaderString(value);
 }
@@ -14697,18 +14768,18 @@ function normalizeHeaderString(value) {
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/request-headers.mjs
 function getRequestHeaders(extra) {
   if (!extra || "object" != typeof extra) return;
-  const record4 = extra;
-  const http = record4.http;
-  const requestInfo = record4.requestInfo;
-  const source = http?.req?.headers ?? requestInfo?.headers;
-  if (!source || "object" != typeof source) return;
-  return toHeaderBag(source);
+  const record5 = extra;
+  const http = record5.http;
+  const requestInfo = record5.requestInfo;
+  const source3 = http?.req?.headers ?? requestInfo?.headers;
+  if (!source3 || "object" != typeof source3) return;
+  return toHeaderBag(source3);
 }
-function toHeaderBag(source) {
+function toHeaderBag(source3) {
   try {
-    const entries = isHeadersLike(source) ? [
-      ...source.entries()
-    ] : Object.entries(source);
+    const entries = isHeadersLike(source3) ? [
+      ...source3.entries()
+    ] : Object.entries(source3);
     const bag = {};
     for (const [key, value] of entries) if ("string" == typeof key && null != value) {
       if ("string" == typeof value || Array.isArray(value)) bag[key.toLowerCase()] = value;
@@ -14718,8 +14789,8 @@ function toHeaderBag(source) {
     return;
   }
 }
-function isHeadersLike(source) {
-  const candidate = source;
+function isHeadersLike(source3) {
+  const candidate = source3;
   return "function" == typeof candidate.entries && "function" == typeof candidate.get;
 }
 
@@ -14734,22 +14805,22 @@ function nonEmptyString(value) {
 function readClientInfoValue(value) {
   if (!value || "object" != typeof value) return;
   const { name, version: version4 } = value;
-  const result = {};
+  const result2 = {};
   const clientName = nonEmptyString(name);
   const clientVersion = nonEmptyString(version4);
-  if (clientName) result.clientName = clientName;
-  if (clientVersion) result.clientVersion = clientVersion;
-  return result.clientName || result.clientVersion ? result : void 0;
+  if (clientName) result2.clientName = clientName;
+  if (clientVersion) result2.clientVersion = clientVersion;
+  return result2.clientName || result2.clientVersion ? result2 : void 0;
 }
 function readReservedKeys(bag) {
   if (!bag || "object" != typeof bag) return;
-  const record4 = bag;
-  const result = {
-    ...readClientInfoValue(record4[META_CLIENT_INFO_KEY])
+  const record5 = bag;
+  const result2 = {
+    ...readClientInfoValue(record5[META_CLIENT_INFO_KEY])
   };
-  const protocolVersion = nonEmptyString(record4[META_PROTOCOL_VERSION_KEY]);
-  if (protocolVersion) result.protocolVersion = protocolVersion;
-  return result.clientName || result.clientVersion || result.protocolVersion ? result : void 0;
+  const protocolVersion = nonEmptyString(record5[META_PROTOCOL_VERSION_KEY]);
+  if (protocolVersion) result2.protocolVersion = protocolVersion;
+  return result2.clientName || result2.clientVersion || result2.protocolVersion ? result2 : void 0;
 }
 function readMetaClientInfo(request3) {
   return readReservedKeys(request3.params?._meta);
@@ -14766,17 +14837,17 @@ function readHeaderProtocolVersion(extra) {
 }
 function readServerClientIdentity(server) {
   if (!server) return;
-  const result = {};
+  const result2 = {};
   try {
-    if (hasClientVersionAccessor(server)) Object.assign(result, readClientInfoValue(server.getClientVersion()));
+    if (hasClientVersionAccessor(server)) Object.assign(result2, readClientInfoValue(server.getClientVersion()));
     if (hasNegotiatedProtocolVersionAccessor(server)) {
       const negotiated = server.getNegotiatedProtocolVersion();
       const protocolVersion = nonEmptyString(negotiated);
-      if (protocolVersion) result.protocolVersion = protocolVersion;
+      if (protocolVersion) result2.protocolVersion = protocolVersion;
     }
   } catch {
   }
-  return result.clientName || result.clientVersion || result.protocolVersion ? result : void 0;
+  return result2.clientName || result2.clientVersion || result2.protocolVersion ? result2 : void 0;
 }
 function resolveClientIdentity({ request: request3, extra, server }) {
   const chain = [
@@ -14785,24 +14856,24 @@ function resolveClientIdentity({ request: request3, extra, server }) {
     readHeaderProtocolVersion(extra),
     readServerClientIdentity(server)
   ];
-  const result = {};
-  for (const source of chain) if (source) {
-    result.clientName ??= source.clientName;
-    result.clientVersion ??= source.clientVersion;
-    result.protocolVersion ??= source.protocolVersion;
+  const result2 = {};
+  for (const source3 of chain) if (source3) {
+    result2.clientName ??= source3.clientName;
+    result2.clientVersion ??= source3.clientVersion;
+    result2.protocolVersion ??= source3.protocolVersion;
   }
-  return result.clientName || result.clientVersion || result.protocolVersion ? result : void 0;
+  return result2.clientName || result2.clientVersion || result2.protocolVersion ? result2 : void 0;
 }
-function stampClientIdentity(event, request3, extra, server) {
+function stampClientIdentity(event2, request3, extra, server) {
   const info = resolveClientIdentity({
     request: request3,
     extra,
     server
   });
   if (!info) return;
-  if (info.clientName) event.clientName = info.clientName;
-  if (info.clientVersion) event.clientVersion = info.clientVersion;
-  if (info.protocolVersion) event.protocolVersion = info.protocolVersion;
+  if (info.clientName) event2.clientName = info.clientName;
+  if (info.clientVersion) event2.clientVersion = info.clientVersion;
+  if (info.protocolVersion) event2.protocolVersion = info.protocolVersion;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/session-token.mjs
@@ -15351,17 +15422,17 @@ function isSchemaObjectLike(value) {
 }
 function addInstructionsToOutputSchema(tool, logger = log) {
   const toolName = tool.name || "unknown";
-  const original = tool.outputSchema;
-  if (!original || "object" != typeof original) return tool;
-  if (!canDeclareOutputInstructions(original)) {
-    const schema = original;
+  const original2 = tool.outputSchema;
+  if (!original2 || "object" != typeof original2) return tool;
+  if (!canDeclareOutputInstructions(original2)) {
+    const schema = original2;
     logger(schema.properties && Object.prototype.hasOwnProperty.call(schema.properties, MCP_INSTRUCTIONS_KEY) ? `WARN: Tool "${toolName}" already declares '${MCP_INSTRUCTIONS_KEY}' in its output schema. Leaving it alone.` : `WARN: Tool "${toolName}" has a complex output schema (oneOf/allOf/anyOf/$ref). Skipping '${MCP_INSTRUCTIONS_KEY}' declaration; its session handle stays content-only.`);
     return tool;
   }
   const modifiedTool = {
     ...tool
   };
-  const outputSchema2 = JSON.parse(JSON.stringify(original));
+  const outputSchema2 = JSON.parse(JSON.stringify(original2));
   if (!outputSchema2.properties) outputSchema2.properties = {};
   outputSchema2.properties[MCP_INSTRUCTIONS_KEY] = {
     type: "object",
@@ -15376,21 +15447,21 @@ function addInstructionsToOutputSchema(tool, logger = log) {
   modifiedTool.outputSchema = outputSchema2;
   return modifiedTool;
 }
-function addInstructionsToOutputSchemas(tools, logger = log) {
-  return tools.map((tool) => addInstructionsToOutputSchema(tool, logger));
+function addInstructionsToOutputSchemas(tools2, logger = log) {
+  return tools2.map((tool) => addInstructionsToOutputSchema(tool, logger));
 }
 function buildConversationInstructions(conversationId) {
   return {
     conversation_id: conversationId
   };
 }
-function mirrorInstructionsIntoStructuredContent(result, conversationId) {
-  if (!result || "object" != typeof result) return result;
-  const structuredContent = result.structuredContent;
-  if (!structuredContent || "object" != typeof structuredContent || Array.isArray(structuredContent)) return result;
-  if (Object.prototype.hasOwnProperty.call(structuredContent, MCP_INSTRUCTIONS_KEY)) return result;
+function mirrorInstructionsIntoStructuredContent(result2, conversationId) {
+  if (!result2 || "object" != typeof result2) return result2;
+  const structuredContent = result2.structuredContent;
+  if (!structuredContent || "object" != typeof structuredContent || Array.isArray(structuredContent)) return result2;
+  if (Object.prototype.hasOwnProperty.call(structuredContent, MCP_INSTRUCTIONS_KEY)) return result2;
   return {
-    ...result,
+    ...result2,
     structuredContent: {
       ...structuredContent,
       [MCP_INSTRUCTIONS_KEY]: buildConversationInstructions(conversationId)
@@ -15532,17 +15603,17 @@ function handleReportMissing(args, logger = log) {
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/context-parameters.mjs
-function isContextEnabled(context) {
-  return false !== context;
+function isContextEnabled(context2) {
+  return false !== context2;
 }
-function getContextDescription(context) {
-  return "object" == typeof context ? context.description : void 0;
+function getContextDescription(context2) {
+  return "object" == typeof context2 ? context2.description : void 0;
 }
 function addContextParameterToTool(tool, contextDescriptionOverride, logger = log) {
   return addAnalyticsParameterToTool(tool, "context", contextDescriptionOverride || DEFAULT_CONTEXT_PARAMETER_DESCRIPTION, "context", logger);
 }
-function addContextParameterToTools(tools, contextDescriptionOverride, logger = log) {
-  return tools.map((tool) => addContextParameterToTool(tool, contextDescriptionOverride, logger));
+function addContextParameterToTools(tools2, contextDescriptionOverride, logger = log) {
+  return tools2.map((tool) => addContextParameterToTool(tool, contextDescriptionOverride, logger));
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/model-parameters.mjs
@@ -15555,8 +15626,8 @@ function getModelDescription(captureModel) {
 function addModelParameterToTool(tool, modelDescriptionOverride, logger = log) {
   return addAnalyticsParameterToTool(tool, "llm_model", modelDescriptionOverride || DEFAULT_MODEL_PARAMETER_DESCRIPTION, "model", logger);
 }
-function addModelParameterToTools(tools, modelDescriptionOverride, logger = log) {
-  return tools.map((tool) => addModelParameterToTool(tool, modelDescriptionOverride, logger));
+function addModelParameterToTools(tools2, modelDescriptionOverride, logger = log) {
+  return tools2.map((tool) => addModelParameterToTool(tool, modelDescriptionOverride, logger));
 }
 function getModelArgument(request3) {
   return normalizeModel(request3.params?.arguments?.llm_model);
@@ -15588,11 +15659,11 @@ function normalizeModel(model) {
   if (!trimmed || "unknown" === trimmed.toLowerCase()) return;
   return trimmed;
 }
-function setEventModel(event, model, source = "self_reported") {
+function setEventModel(event2, model, source3 = "self_reported") {
   const normalizedModel = normalizeModel(model);
   if (!normalizedModel) return;
-  event.llmModel = normalizedModel;
-  event.llmModelSource = source;
+  event2.llmModel = normalizedModel;
+  event2.llmModelSource = source3;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/conversation-id.mjs
@@ -15622,8 +15693,8 @@ function addConversationIdToTool(tool, logger = log) {
   };
   return modifiedTool;
 }
-function addConversationIdToTools(tools, logger = log) {
-  return tools.map((tool) => addConversationIdToTool(tool, logger));
+function addConversationIdToTools(tools2, logger = log) {
+  return tools2.map((tool) => addConversationIdToTool(tool, logger));
 }
 var MINTED_CONVERSATION_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function resolveConversationId(enabled, args) {
@@ -15641,9 +15712,9 @@ function resolveConversationId(enabled, args) {
     conversationId: uuidv7()
   };
 }
-function canInjectConversationIdPromptBack(result) {
-  if (!(result && "object" == typeof result)) return false;
-  return Array.isArray(result.content);
+function canInjectConversationIdPromptBack(result2) {
+  if (!(result2 && "object" == typeof result2)) return false;
+  return Array.isArray(result2.content);
 }
 function extractConversationId(args) {
   if (!(args && "object" == typeof args)) return;
@@ -15660,9 +15731,9 @@ function buildConversationIdPromptBack(conversationId) {
     })
   };
 }
-function injectConversationIdPromptBack(result, conversationId) {
-  if (!canInjectConversationIdPromptBack(result)) return result;
-  const resultObj = result;
+function injectConversationIdPromptBack(result2, conversationId) {
+  if (!canInjectConversationIdPromptBack(result2)) return result2;
+  const resultObj = result2;
   return {
     ...resultObj,
     content: [
@@ -15678,18 +15749,18 @@ var VENDOR_CLIENT_HEADER = "x-anthropic-client";
 function readTransportIdentity(extra) {
   const headers = getRequestHeaders(extra);
   if (!headers) return;
-  const result = {};
+  const result2 = {};
   const clientUserAgent = readHeaderValue(headers, CLIENT_USER_AGENT_HEADER);
-  if (clientUserAgent) result.clientUserAgent = clientUserAgent;
+  if (clientUserAgent) result2.clientUserAgent = clientUserAgent;
   const vendorClient = readHeaderValue(headers, VENDOR_CLIENT_HEADER);
-  if (vendorClient) result.vendorClient = vendorClient;
-  return result.clientUserAgent || result.vendorClient ? result : void 0;
+  if (vendorClient) result2.vendorClient = vendorClient;
+  return result2.clientUserAgent || result2.vendorClient ? result2 : void 0;
 }
-function stampTransportIdentity(event, extra) {
-  const identity3 = readTransportIdentity(extra);
-  if (!identity3) return;
-  if (identity3.clientUserAgent) event.clientUserAgent = identity3.clientUserAgent;
-  if (identity3.vendorClient) event.vendorClient = identity3.vendorClient;
+function stampTransportIdentity(event2, extra) {
+  const identity4 = readTransportIdentity(extra);
+  if (!identity4) return;
+  if (identity4.clientUserAgent) event2.clientUserAgent = identity4.clientUserAgent;
+  if (identity4.vendorClient) event2.vendorClient = identity4.vendorClient;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/exceptions.mjs
@@ -15700,8 +15771,8 @@ var errorPropertiesBuilder = new error_tracking_exports.ErrorPropertiesBuilder([
   new error_tracking_exports.StringCoercer(),
   new error_tracking_exports.PrimitiveCoercer()
 ], error_tracking_exports.createStackParser("node:javascript", error_tracking_exports.nodeStackLineParser));
-function captureException(error62) {
-  const normalized = isCallToolResult(error62) ? extractCallToolResultMessage(error62) : error62;
+function captureException(error63) {
+  const normalized = isCallToolResult(error63) ? extractCallToolResultMessage(error63) : error63;
   return errorPropertiesBuilder.buildFromUnknown(normalized);
 }
 function isCallToolResult(value) {
@@ -15712,14 +15783,14 @@ function isTextContentPart(value) {
   const contentPart = value;
   return "text" === contentPart.type && "string" == typeof contentPart.text;
 }
-function extractCallToolResultMessage(result) {
-  return result.content.filter(isTextContentPart).map((contentPart) => contentPart.text).join(" ").trim() || "Unknown error";
+function extractCallToolResultMessage(result2) {
+  return result2.content.filter(isTextContentPart).map((contentPart) => contentPart.text).join(" ").trim() || "Unknown error";
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/intent.mjs
 function getContextArgument(request3) {
-  const context = request3.params?.arguments?.context;
-  return "string" == typeof context && context.trim() ? context : void 0;
+  const context2 = request3.params?.arguments?.context;
+  return "string" == typeof context2 && context2.trim() ? context2 : void 0;
 }
 function normalizeIntent(intent) {
   if ("string" != typeof intent) return null;
@@ -15734,8 +15805,8 @@ async function runIntentFallback(data, request3, extra) {
       intent,
       source: "inferred"
     } : null;
-  } catch (error62) {
-    data.logger(`intentFallback callback error: ${error62}`);
+  } catch (error63) {
+    data.logger(`intentFallback callback error: ${error63}`);
     return null;
   }
 }
@@ -15747,29 +15818,29 @@ async function resolveToolCallIntent(data, request3, canCaptureContext, extra) {
   };
   return await runIntentFallback(data, request3, extra);
 }
-function setEventIntent(event, resolvedIntent) {
+function setEventIntent(event2, resolvedIntent) {
   if (!resolvedIntent) return;
-  event.userIntent = resolvedIntent.intent;
-  event.userIntentSource = resolvedIntent.source;
+  event2.userIntent = resolvedIntent.intent;
+  event2.userIntentSource = resolvedIntent.source;
 }
-function setExplicitContextIntent(event, context) {
-  const intent = normalizeIntent(context);
+function setExplicitContextIntent(event2, context2) {
+  const intent = normalizeIntent(context2);
   if (!intent) return;
-  event.userIntent = intent;
-  event.userIntentSource = "context_parameter";
+  event2.userIntent = intent;
+  event2.userIntentSource = "context_parameter";
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/tracing-helpers.mjs
-function isToolResultError(result) {
-  return !!result && "object" == typeof result && "isError" in result && true === result.isError;
+function isToolResultError(result2) {
+  return !!result2 && "object" == typeof result2 && "isError" in result2 && true === result2.isError;
 }
-async function applyResolvedMetadata(event, data, request3, extra) {
+async function applyResolvedMetadata(event2, data, request3, extra) {
   const resolvedProperties = await resolveEventProperties(data, request3, extra);
-  if (resolvedProperties) event.properties = resolvedProperties;
+  if (resolvedProperties) event2.properties = resolvedProperties;
 }
 function getContextArgument2(request3) {
-  const context = request3.params?.arguments?.context;
-  return "string" == typeof context ? context : void 0;
+  const context2 = request3.params?.arguments?.context;
+  return "string" == typeof context2 ? context2 : void 0;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/tool-input.mjs
@@ -15801,14 +15872,14 @@ function shouldRecord(fn, key, declared) {
 }
 function aliasNames(aliases) {
   if (!isRecord4(aliases)) return [];
-  return Object.values(aliases).flatMap((names) => Array.isArray(names) ? names.filter((name) => "string" == typeof name) : []);
+  return Object.values(aliases).flatMap((names2) => Array.isArray(names2) ? names2.filter((name) => "string" == typeof name) : []);
 }
 function describeAliasesUsed(aliases, input3) {
   if (!isRecord4(aliases)) return [];
   const used = [];
-  for (const [canonical, names] of Object.entries(aliases)) {
-    if (!Array.isArray(names) || Object.prototype.hasOwnProperty.call(input3, canonical)) continue;
-    const alias = names.find((name) => "string" == typeof name && Object.prototype.hasOwnProperty.call(input3, name));
+  for (const [canonical, names2] of Object.entries(aliases)) {
+    if (!Array.isArray(names2) || Object.prototype.hasOwnProperty.call(input3, canonical)) continue;
+    const alias = names2.find((name) => "string" == typeof name && Object.prototype.hasOwnProperty.call(input3, name));
     if (alias && alias.length <= MAX_KEY_LENGTH && canonical.length <= MAX_KEY_LENGTH) used.push(`${alias}:${canonical}`);
   }
   return used.sort().slice(0, MAX_INPUT_KEYS);
@@ -15824,13 +15895,13 @@ function getToolInputProperties(input3, inputSchema, options) {
       ...aliasNames(options?.inputAliases)
     ]);
     const keys = Object.keys(input3).filter((key) => known.has(key) || !ANALYTICS_KEYS.has(key));
-    const record4 = options?.shouldRecordInputKey ?? recordDeclaredOnly;
+    const record5 = options?.shouldRecordInputKey ?? recordDeclaredOnly;
     const declared = [];
     const undeclared = [];
     let hasRedacted = false;
     for (const key of keys) {
       const isDeclared = known.has(key);
-      if (key.length <= MAX_KEY_LENGTH && shouldRecord(record4, key, isDeclared)) (isDeclared ? declared : undeclared).push(key);
+      if (key.length <= MAX_KEY_LENGTH && shouldRecord(record5, key, isDeclared)) (isDeclared ? declared : undeclared).push(key);
       else hasRedacted = true;
     }
     const visibleKeys = [
@@ -15861,8 +15932,8 @@ function resolveInputAliases(data, toolName) {
   if (!toolName || !data.options.resolveInputAliases) return;
   try {
     return data.options.resolveInputAliases(toolName);
-  } catch (error62) {
-    data.logger(`Warning: resolveInputAliases failed for tool ${toolName} - ${error62}`);
+  } catch (error63) {
+    data.logger(`Warning: resolveInputAliases failed for tool ${toolName} - ${error63}`);
     return;
   }
 }
@@ -15894,15 +15965,15 @@ async function captureToolCall(params) {
     ...extraEventProperties
   };
   if (preparedEvent && omitCapturedParameters) preparedEvent.event.parameters = void 0;
-  let result;
+  let result2;
   try {
-    result = await execute2(downstreamRequest);
-  } catch (error62) {
-    publishFailedToolEvent(server, preparedEvent, error62, startTime, conversation, data.logger);
-    throw error62;
+    result2 = await execute2(downstreamRequest);
+  } catch (error63) {
+    publishFailedToolEvent(server, preparedEvent, error63, startTime, conversation, data.logger);
+    throw error63;
   }
-  const finalResult = applyConversationInstructions(preparedEvent?.event ?? null, result, conversation, ownership2);
-  publishSuccessfulToolEvent(server, preparedEvent, finalResult, startTime, data.logger, takeCapturedError, result);
+  const finalResult = applyConversationInstructions(preparedEvent?.event ?? null, result2, conversation, ownership2);
+  publishSuccessfulToolEvent(server, preparedEvent, finalResult, startTime, data.logger, takeCapturedError, result2);
   return finalResult;
 }
 function resolveToolConversation(enabled, args, extra) {
@@ -15929,15 +16000,15 @@ function getActiveAnalyticsParameterOwnership(data, toolName, override, isVirtua
   };
 }
 function enabledArgumentOwnership(enabled, ownership2, whenUnknown) {
-  const resolved = ownership2 ?? {
+  const resolved2 = ownership2 ?? {
     context: whenUnknown,
     conversationId: whenUnknown,
     llmModel: whenUnknown
   };
   return {
-    context: enabled.context && resolved.context,
-    conversationId: enabled.conversationId && resolved.conversationId,
-    llmModel: enabled.llmModel && resolved.llmModel
+    context: enabled.context && resolved2.context,
+    conversationId: enabled.conversationId && resolved2.conversationId,
+    llmModel: enabled.llmModel && resolved2.llmModel
   };
 }
 function cloneRequestWithoutOwnedAnalyticsArguments(request3, ownership2) {
@@ -15957,7 +16028,7 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
     const sessionId = getSessionId(server, extra, conversation.conversationId);
     const sessionInfo = getSessionInfo(server, data, sessionId);
     const toolName = request3.params?.name;
-    const event = {
+    const event2 = {
       sessionId,
       conversationId: conversation.conversationId,
       resourceName: toolName || "Unknown Tool Name",
@@ -15967,29 +16038,29 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
       toolCategory: toolName ? data.toolCategories.get(toolName) : void 0,
       toolDescription: toolName ? data.toolDescriptions.get(toolName) : void 0
     };
-    stampClientIdentity(event, request3, extra, server);
-    stampTransportIdentity(event, extra);
-    const identity3 = await handleIdentify(data, sessionId, request3, extra);
-    const requestAttribution = withIdentity(sessionInfo, identity3);
-    await applyResolvedMetadata(event, data, request3, extra);
-    setEventIntent(event, await resolveToolCallIntent(data, request3, canCaptureContextIntent, extra));
+    stampClientIdentity(event2, request3, extra, server);
+    stampTransportIdentity(event2, extra);
+    const identity4 = await handleIdentify(data, sessionId, request3, extra);
+    const requestAttribution = withIdentity(sessionInfo, identity4);
+    await applyResolvedMetadata(event2, data, request3, extra);
+    setEventIntent(event2, await resolveToolCallIntent(data, request3, canCaptureContextIntent, extra));
     if (isCaptureModelEnabled(data.options.captureModel)) {
       const resolvedModel = resolveModel(request3, ownership2.read.llmModel);
-      setEventModel(event, resolvedModel?.model, resolvedModel?.source);
+      setEventModel(event2, resolvedModel?.model, resolvedModel?.source);
     }
     return {
-      event,
+      event: event2,
       requestAttribution
     };
-  } catch (error62) {
-    data.logger(`Warning: PostHog MCP analytics instrumentation failed for tool ${request3.params?.name}, the tool will still run - ${error62}`);
+  } catch (error63) {
+    data.logger(`Warning: PostHog MCP analytics instrumentation failed for tool ${request3.params?.name}, the tool will still run - ${error63}`);
     return null;
   }
 }
-function applyConversationInstructions(event, result, conversation, ownership2) {
+function applyConversationInstructions(event2, result2, conversation, ownership2) {
   const conversationId = conversation.conversationId;
-  if (!conversationId) return result;
-  let updated = result;
+  if (!conversationId) return result2;
+  let updated = result2;
   let delivered = false;
   if (ownership2.outputInstructions) {
     const mirrored = mirrorInstructionsIntoStructuredContent(updated, conversationId);
@@ -16000,53 +16071,53 @@ function applyConversationInstructions(event, result, conversation, ownership2) 
     updated = injectConversationIdPromptBack(updated, conversationId);
     delivered = true;
   }
-  if (!delivered && conversation.minted && event) event.conversationId = void 0;
+  if (!delivered && conversation.minted && event2) event2.conversationId = void 0;
   return updated;
 }
-function publishSuccessfulToolEvent(server, preparedEvent, result, startTime, logger, takeCapturedError, resultBeforeInstructions) {
+function publishSuccessfulToolEvent(server, preparedEvent, result2, startTime, logger, takeCapturedError, resultBeforeInstructions) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
-    if (isToolResultError(result)) {
-      event.isError = true;
+    if (isToolResultError(result2)) {
+      event2.isError = true;
       const capturedError = takeCapturedError?.();
-      event.error = captureException(capturedError ?? resultBeforeInstructions ?? result);
-    } else event.isError = false;
-    event.response = result;
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, logger, requestAttribution);
-  } catch (error62) {
-    logger(`Warning: PostHog MCP analytics failed to publish tool event - ${error62}`);
+      event2.error = captureException(capturedError ?? resultBeforeInstructions ?? result2);
+    } else event2.isError = false;
+    event2.response = result2;
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, logger, requestAttribution);
+  } catch (error63) {
+    logger(`Warning: PostHog MCP analytics failed to publish tool event - ${error63}`);
   }
 }
-function publishFailedToolEvent(server, preparedEvent, error62, startTime, conversation, logger) {
+function publishFailedToolEvent(server, preparedEvent, error63, startTime, conversation, logger) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
-    if (conversation.minted) event.conversationId = void 0;
-    event.isError = true;
-    event.error = captureException(error62);
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, logger, requestAttribution);
+    if (conversation.minted) event2.conversationId = void 0;
+    event2.isError = true;
+    event2.error = captureException(error63);
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, logger, requestAttribution);
   } catch (publishError) {
     logger(`Warning: PostHog MCP analytics failed to publish failed tool event - ${publishError}`);
   }
 }
 function publishResourceEvent(server, preparedEvent, startTime, params, outcome3) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
     if ("error" in outcome3) {
-      event.isError = true;
-      event.error = captureException(outcome3.error);
+      event2.isError = true;
+      event2.error = captureException(outcome3.error);
     } else {
-      event.isError = false;
-      if (params.eventType === MCPAnalyticsEventType.mcpResourcesList) event.response = outcome3.result;
+      event2.isError = false;
+      if (params.eventType === MCPAnalyticsEventType.mcpResourcesList) event2.response = outcome3.result;
     }
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, params.logger, requestAttribution);
-  } catch (error62) {
-    params.logger(`Warning: PostHog MCP analytics failed to publish ${params.request.method} analytics - ${error62}`);
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, params.logger, requestAttribution);
+  } catch (error63) {
+    params.logger(`Warning: PostHog MCP analytics failed to publish ${params.request.method} analytics - ${error63}`);
   }
 }
 function traceResourceRequest(eventType, logger) {
@@ -16071,37 +16142,37 @@ async function captureResourceRequest(params) {
   try {
     const sessionId = getSessionId(server, extra);
     const sessionInfo = getSessionInfo(server, data, sessionId);
-    const event = {
+    const event2 = {
       sessionId,
       eventType,
       parameters: buildCapturedMcpParameters(request3),
       resourceName: eventType === MCPAnalyticsEventType.mcpResourcesRead ? request3.params?.uri : void 0,
       timestamp: startTime
     };
-    stampClientIdentity(event, request3, extra, server);
-    stampTransportIdentity(event, extra);
-    const identity3 = await handleIdentify(data, sessionId, request3, extra);
-    await applyResolvedMetadata(event, data, request3, extra);
+    stampClientIdentity(event2, request3, extra, server);
+    stampTransportIdentity(event2, extra);
+    const identity4 = await handleIdentify(data, sessionId, request3, extra);
+    await applyResolvedMetadata(event2, data, request3, extra);
     preparedEvent = {
-      event,
-      requestAttribution: withIdentity(sessionInfo, identity3)
+      event: event2,
+      requestAttribution: withIdentity(sessionInfo, identity4)
     };
-  } catch (error62) {
-    logger(`Warning: PostHog MCP analytics could not prepare ${request3.method} analytics - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: PostHog MCP analytics could not prepare ${request3.method} analytics - ${error63}`);
   }
-  let result;
+  let result2;
   try {
-    result = await originalHandler(request3, extra);
-  } catch (error62) {
+    result2 = await originalHandler(request3, extra);
+  } catch (error63) {
     publishResourceEvent(server, preparedEvent, startTime, params, {
-      error: error62
+      error: error63
     });
-    throw error62;
+    throw error63;
   }
   publishResourceEvent(server, preparedEvent, startTime, params, {
-    result
+    result: result2
   });
-  return result;
+  return result2;
 }
 var originalRequestHandlers = /* @__PURE__ */ new WeakMap();
 function rememberOriginalRequestHandler(server, handlerName, originalHandler) {
@@ -16129,13 +16200,13 @@ function patchRequestHandlers(server, patches) {
     const handlerName = readRequestHandlerMethod(args[0]);
     const patch = void 0 !== handlerName && Object.prototype.hasOwnProperty.call(patches, handlerName) ? patches[handlerName] : void 0;
     if (void 0 === handlerName || !patch) return originalSetRequestHandler(...args);
-    const result = originalSetRequestHandler(...args);
+    const result2 = originalSetRequestHandler(...args);
     const registeredHandler = server._requestHandlers.get(handlerName);
     if (registeredHandler) {
       rememberOriginalRequestHandler(server, handlerName, registeredHandler);
       server._requestHandlers.set(handlerName, (request3, extra) => patch(server, registeredHandler, request3, extra));
     }
-    return result;
+    return result2;
   };
 }
 async function isToolAdvertised(server, toolName, extra, logger) {
@@ -16148,8 +16219,8 @@ async function isToolAdvertised(server, toolName, extra, logger) {
     }, extra);
     if (!response || !Array.isArray(response.tools)) return;
     return response.tools.some((tool) => tool?.name === toolName);
-  } catch (error62) {
-    logger(`Warning: PostHog MCP analytics could not determine whether "${toolName}" is advertised; delegating to the server - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: PostHog MCP analytics could not determine whether "${toolName}" is advertised; delegating to the server - ${error63}`);
     return;
   }
 }
@@ -16158,75 +16229,75 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
   const startTime = /* @__PURE__ */ new Date();
   const sessionId = getSessionId(server, extra);
   const sessionInfo = getSessionInfo(server, data, sessionId);
-  const event = {
+  const event2 = {
     sessionId,
     parameters: buildCapturedMcpParameters(request3),
     eventType: MCPAnalyticsEventType.mcpToolsList,
     timestamp: startTime
   };
-  stampClientIdentity(event, request3, extra, server);
-  stampTransportIdentity(event, extra);
-  const identity3 = data ? await handleIdentify(data, sessionId, request3, extra) : void 0;
-  const requestAttribution = withIdentity(sessionInfo, identity3);
-  if (data) await applyResolvedMetadata(event, data, request3, extra);
-  const response = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
-  const tools = response.tools;
+  stampClientIdentity(event2, request3, extra, server);
+  stampTransportIdentity(event2, extra);
+  const identity4 = data ? await handleIdentify(data, sessionId, request3, extra) : void 0;
+  const requestAttribution = withIdentity(sessionInfo, identity4);
+  if (data) await applyResolvedMetadata(event2, data, request3, extra);
+  const response = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
+  const tools2 = response.tools;
   if (!data) {
     logger("Warning: PostHog MCP analytics is unable to find server tracking data. Please ensure you have called instrument(server, options) before using tool calls.");
     return response;
   }
-  if (0 === tools.length) {
+  if (0 === tools2.length) {
     data.logger("Warning: No tools found in the original list. This is likely due to the tools not being registered before PostHog MCP analytics.instrument().");
-    event.error = captureException("No tools were sent to MCP client.");
-    event.isError = true;
-    event.duration = Date.now() - startTime.getTime();
-    if (false !== data.options.sendToolsListEvent) captureEvent(server, event, data.logger, requestAttribution);
+    event2.error = captureException("No tools were sent to MCP client.");
+    event2.isError = true;
+    event2.duration = Date.now() - startTime.getTime();
+    if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
     return response;
   }
-  event.response = toolsListEnvelope(response);
-  event.listedToolNames = collectListedToolNames(tools);
-  event.isError = false;
-  event.duration = Date.now() - startTime.getTime();
-  if (false !== data.options.sendToolsListEvent) captureEvent(server, event, data.logger, requestAttribution);
+  event2.response = toolsListEnvelope(response);
+  event2.listedToolNames = collectListedToolNames(tools2);
+  event2.isError = false;
+  event2.duration = Date.now() - startTime.getTime();
+  if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
   return response;
 }
-function cacheToolAnalyticsParameterOwnership(cache, tools) {
-  for (const tool of tools) if (tool?.name) cache.set(tool.name, getAnalyticsParameterOwnership(tool.inputSchema, tool.outputSchema));
+function cacheToolAnalyticsParameterOwnership(cache, tools2) {
+  for (const tool of tools2) if (tool?.name) cache.set(tool.name, getAnalyticsParameterOwnership(tool.inputSchema, tool.outputSchema));
 }
-function collectListedToolNames(tools) {
-  if (!tools || 0 === tools.length) return;
-  const names = tools.map((tool) => tool?.name).filter((name) => "string" == typeof name);
-  return names.length > 0 ? names : void 0;
+function collectListedToolNames(tools2) {
+  if (!tools2 || 0 === tools2.length) return;
+  const names2 = tools2.map((tool) => tool?.name).filter((name) => "string" == typeof name);
+  return names2.length > 0 ? names2 : void 0;
 }
 function toolsListEnvelope(response) {
   const { tools: _tools, ...envelope } = response;
   return Object.keys(envelope).length > 0 ? envelope : void 0;
 }
-async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event, logger, requestAttribution, sendToolsListEvent) {
+async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, sendToolsListEvent) {
   try {
     const data = getServerTrackingData(server);
     const originalResponse = await originalListToolsHandler(request3, extra);
-    let tools = [
+    let tools2 = [
       ...originalResponse.tools || []
     ];
     if (data) {
-      cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, tools);
-      if (event.sessionId) {
-        const sessionSchemas = data.toolInputSchemas.get(event.sessionId) ?? /* @__PURE__ */ new Map();
-        for (const tool of tools) if (tool?.name) sessionSchemas.set(tool.name, tool.inputSchema);
-        data.toolInputSchemas.set(event.sessionId, sessionSchemas);
+      cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, tools2);
+      if (event2.sessionId) {
+        const sessionSchemas = data.toolInputSchemas.get(event2.sessionId) ?? /* @__PURE__ */ new Map();
+        for (const tool of tools2) if (tool?.name) sessionSchemas.set(tool.name, tool.inputSchema);
+        data.toolInputSchemas.set(event2.sessionId, sessionSchemas);
       }
     }
-    if (data && isContextEnabled(data.options.context)) tools = addContextParameterToTools(tools, getContextDescription(data.options.context), data.logger);
+    if (data && isContextEnabled(data.options.context)) tools2 = addContextParameterToTools(tools2, getContextDescription(data.options.context), data.logger);
     if (data) {
       const isFirstPage = request3.params?.cursor == null;
       const missingToolName = resolveMissingCapabilityToolName(data.options);
       if (data.options.reportMissing) {
-        const alreadyPresent = tools.some((tool) => tool?.name === missingToolName);
+        const alreadyPresent = tools2.some((tool) => tool?.name === missingToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject missing-capability tool "${missingToolName}" because a real tool already uses that name. The real tool will not be intercepted. To keep missing-capability reports, rename the SDK's tool with the missingCapabilityToolName option.`);
         else if (isFirstPage) {
           const virtualTool = getReportMissingToolDescriptor(missingToolName);
-          tools.push(virtualTool);
+          tools2.push(virtualTool);
           cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, [
             virtualTool
           ]);
@@ -16235,50 +16306,50 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       const feedbackOptions = resolveCollectFeedbackOptions(data.options.collectFeedback);
       if (feedbackOptions) {
         const feedbackToolName = feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME;
-        const alreadyPresent = tools.some((tool) => tool?.name === feedbackToolName);
+        const alreadyPresent = tools2.some((tool) => tool?.name === feedbackToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject agent-feedback tool "${feedbackToolName}" because a real tool already uses that name. The real tool will not be intercepted. To collect feedback alongside it, rename the SDK's tool with collectFeedback: { toolName: "..." }.`);
         else if (isFirstPage) {
           const virtualTool = getFeedbackToolDescriptor(feedbackOptions);
-          tools.push(virtualTool);
+          tools2.push(virtualTool);
           cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, [
             virtualTool
           ]);
         } else if (alreadyPresent) data.logger(`Warning: A real tool "${feedbackToolName}" on a later tools/list page is shadowed by the SDK's agent-feedback tool. Its calls will be intercepted. Rename the SDK's tool with collectFeedback: { toolName: "..." } to keep both.`);
       }
-      if (isCaptureModelEnabled(data.options.captureModel)) tools = addModelParameterToTools(tools, getModelDescription(data.options.captureModel), data.logger);
+      if (isCaptureModelEnabled(data.options.captureModel)) tools2 = addModelParameterToTools(tools2, getModelDescription(data.options.captureModel), data.logger);
       if (data.options.enableConversationId) {
-        tools = addConversationIdToTools(tools, data.logger);
-        tools = addInstructionsToOutputSchemas(tools, data.logger);
+        tools2 = addConversationIdToTools(tools2, data.logger);
+        tools2 = addInstructionsToOutputSchemas(tools2, data.logger);
       }
     }
     if (data) {
-      cacheToolDescriptions(data.toolDescriptions, tools);
-      cacheToolCategories(data.toolCategories, tools);
+      cacheToolDescriptions(data.toolDescriptions, tools2);
+      cacheToolCategories(data.toolCategories, tools2);
     }
     return {
       ...originalResponse,
-      tools
+      tools: tools2
     };
-  } catch (error62) {
-    logger(`Warning: Original list tools handler failed, this suggests an error PostHog MCP analytics did not cause - ${error62}`);
-    event.error = captureException(error62);
-    event.isError = true;
-    event.duration = event.timestamp ? Date.now() - event.timestamp.getTime() : 0;
-    if (sendToolsListEvent) captureEvent(server, event, logger, requestAttribution);
-    throw error62;
+  } catch (error63) {
+    logger(`Warning: Original list tools handler failed, this suggests an error PostHog MCP analytics did not cause - ${error63}`);
+    event2.error = captureException(error63);
+    event2.isError = true;
+    event2.duration = event2.timestamp ? Date.now() - event2.timestamp.getTime() : 0;
+    if (sendToolsListEvent) captureEvent(server, event2, logger, requestAttribution);
+    throw error63;
   }
 }
-function cacheToolDescriptions(cache, tools) {
-  if (!tools) return;
-  for (const tool of tools) if (tool?.name && "string" == typeof tool.description) cache.set(tool.name, tool.description);
+function cacheToolDescriptions(cache, tools2) {
+  if (!tools2) return;
+  for (const tool of tools2) if (tool?.name && "string" == typeof tool.description) cache.set(tool.name, tool.description);
 }
 function readToolMetaCategory(meta3) {
   const category = meta3?.category;
   return "string" == typeof category && category.length > 0 ? category : void 0;
 }
-function cacheToolCategories(cache, tools) {
-  if (!tools) return;
-  for (const tool of tools) {
+function cacheToolCategories(cache, tools2) {
+  if (!tools2) return;
+  for (const tool of tools2) {
     const category = tool?.name ? readToolMetaCategory(tool._meta) : void 0;
     if (category) cache.set(tool.name, category);
   }
@@ -16309,8 +16380,8 @@ function mintStatelessSessionOnInitialize(server, data, request3, extra) {
     data.lastActivity = /* @__PURE__ */ new Date();
     setServerTrackingData(server, data);
     return sessionId;
-  } catch (error62) {
-    data.logger(`Warning: PostHog MCP analytics failed to mint a stateless session id - ${error62}`);
+  } catch (error63) {
+    data.logger(`Warning: PostHog MCP analytics failed to mint a stateless session id - ${error63}`);
     return;
   }
 }
@@ -16325,8 +16396,8 @@ function upgradeMintedTokenToNegotiated(server, mintedSessionId, sessionInfo, ne
       protocolVersion: negotiatedProtocolVersion
     });
     writeSessionIdToTransport(transport, token);
-  } catch (error62) {
-    logger(`Warning: PostHog MCP analytics failed to upgrade the stateless session token - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: PostHog MCP analytics failed to upgrade the stateless session token - ${error63}`);
   }
 }
 function readInitializeClientInfo(request3) {
@@ -16353,24 +16424,24 @@ async function handleInitializeRequest(server, originalInitializeHandler, reques
     clientName: initializeClientInfo?.name ?? sessionInfo.clientName,
     clientVersion: initializeClientInfo?.version ?? sessionInfo.clientVersion
   };
-  const event = {
+  const event2 = {
     sessionId,
     resourceName: request3.params?.name || "Unknown Tool Name",
     eventType: MCPAnalyticsEventType.mcpInitialize,
     parameters: buildCapturedMcpParameters(request3),
     timestamp: /* @__PURE__ */ new Date()
   };
-  stampClientIdentity(event, request3, extra, server);
-  if (initializeClientInfo?.name) event.clientName = initializeClientInfo.name;
-  if (initializeClientInfo?.version) event.clientVersion = initializeClientInfo.version;
-  stampTransportIdentity(event, extra);
-  const identity3 = await handleIdentify(data, sessionId, request3, extra);
-  const requestAttribution = withIdentity(requestSessionInfo, identity3);
-  await applyResolvedMetadata(event, data, request3, extra);
-  const result = await originalInitializeHandler(request3, extra);
-  event.response = result;
-  const negotiatedProtocolVersion = readProtocolVersion(result, request3);
-  event.protocolVersion = negotiatedProtocolVersion;
+  stampClientIdentity(event2, request3, extra, server);
+  if (initializeClientInfo?.name) event2.clientName = initializeClientInfo.name;
+  if (initializeClientInfo?.version) event2.clientVersion = initializeClientInfo.version;
+  stampTransportIdentity(event2, extra);
+  const identity4 = await handleIdentify(data, sessionId, request3, extra);
+  const requestAttribution = withIdentity(requestSessionInfo, identity4);
+  await applyResolvedMetadata(event2, data, request3, extra);
+  const result2 = await originalInitializeHandler(request3, extra);
+  event2.response = result2;
+  const negotiatedProtocolVersion = readProtocolVersion(result2, request3);
+  event2.protocolVersion = negotiatedProtocolVersion;
   if (data.sessionId === sessionId) {
     data.sessionInfo = {
       ...data.sessionInfo,
@@ -16379,14 +16450,14 @@ async function handleInitializeRequest(server, originalInitializeHandler, reques
     setServerTrackingData(server, data);
   }
   if (mintedSessionId) upgradeMintedTokenToNegotiated(server, mintedSessionId, requestSessionInfo, negotiatedProtocolVersion, data.logger);
-  if (false !== data.options.sendInitializeEvent) captureEvent(server, event, data.logger, {
+  if (false !== data.options.sendInitializeEvent) captureEvent(server, event2, data.logger, {
     ...requestAttribution,
     protocolVersion: negotiatedProtocolVersion
   });
-  return result;
+  return result2;
 }
-function readProtocolVersion(result, request3) {
-  const negotiated = result?.protocolVersion;
+function readProtocolVersion(result2, request3) {
+  const negotiated = result2?.protocolVersion;
   if ("string" == typeof negotiated && negotiated.length > 0) return negotiated;
   const requested = request3.params?.protocolVersion;
   return "string" == typeof requested && requested.length > 0 ? requested : void 0;
@@ -16407,9 +16478,9 @@ function instrumentLowLevelServer(server, logger) {
     };
     patchRequestHandlers(server, handlers);
     if (!hadCallToolHandler) registerFallbackRequestHandler(server, "tools/call", unknownToolHandler, traceToolCall);
-  } catch (error62) {
-    logger(`Warning: Failed to setup tool call instrumentation - ${error62}`);
-    throw error62;
+  } catch (error63) {
+    logger(`Warning: Failed to setup tool call instrumentation - ${error63}`);
+    throw error63;
   }
 }
 async function unknownToolHandler(request3) {
@@ -16424,17 +16495,17 @@ async function handleToolCallRequest(server, originalCallToolHandler, request3, 
   const toolName = request3.params?.name;
   const isMissingCapabilityCandidate = data.options.reportMissing && toolName === resolveMissingCapabilityToolName(data.options);
   if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
-    const context = getContextArgument2(request3) || "";
+    const context2 = getContextArgument2(request3) || "";
     return await captureToolCall({
       server,
       data,
       request: request3,
       extra,
       eventType: MCPAnalyticsEventType.mcpMissingCapability,
-      explicitContextIntent: context,
+      explicitContextIntent: context2,
       parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName).inputSchema),
       execute: async () => handleReportMissing({
-        context
+        context: context2
       }, data.logger)
     });
   }
@@ -16470,8 +16541,8 @@ function resolveOriginalTool(data, toolName) {
   if (!toolName || !data.options.resolveOriginalTool) return;
   try {
     return data.options.resolveOriginalTool(toolName) ?? void 0;
-  } catch (error62) {
-    data.logger(`Warning: resolveOriginalTool failed for tool ${toolName} - ${error62}`);
+  } catch (error63) {
+    data.logger(`Warning: resolveOriginalTool failed for tool ${toolName} - ${error63}`);
     return;
   }
 }
@@ -16486,8 +16557,8 @@ var MCP_ANALYTICS_PROCESSED = /* @__PURE__ */ Symbol("__posthog_mcp_analytics_pr
 function isCallbackUpdate(value) {
   return !!value && "object" == typeof value && "callback" in value && "function" == typeof value.callback;
 }
-function addTracingToToolRegistry(tools, server, logger) {
-  return Object.fromEntries(Object.entries(tools).map(([name, tool]) => [
+function addTracingToToolRegistry(tools2, server, logger) {
+  return Object.fromEntries(Object.entries(tools2).map(([name, tool]) => [
     name,
     addTracingToToolCallbackInternal(tool, name, server, () => tool.inputSchema, logger)
   ]));
@@ -16529,8 +16600,8 @@ function setupListenerToRegisteredTools(server, logger) {
             return Reflect.set(target, property, nextValue);
           }
           return Reflect.set(target, property, value);
-        } catch (error62) {
-          logger(`Warning: Error in proxy set handler for tool ${String(property)} - ${error62}`);
+        } catch (error63) {
+          logger(`Warning: Error in proxy set handler for tool ${String(property)} - ${error63}`);
           return Reflect.set(target, property, value);
         }
       },
@@ -16547,8 +16618,8 @@ function setupListenerToRegisteredTools(server, logger) {
     const originalTools = server._registeredTools || {};
     server._registeredTools = new Proxy(originalTools, handler);
     logger("Successfully set up listener for new tool registrations");
-  } catch (error62) {
-    logger(`Warning: Failed to setup listener for registered tools - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: Failed to setup listener for registered tools - ${error63}`);
   }
 }
 function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInputSchema, logger) {
@@ -16585,9 +16656,9 @@ function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInpu
       }
       const handler = originalCallback;
       return await handler(cleanedArgs, extra);
-    } catch (error62) {
-      if (error62 instanceof Error) extra.__mcp_analytics_error = error62;
-      throw error62;
+    } catch (error63) {
+      if (error63 instanceof Error) extra.__mcp_analytics_error = error63;
+      throw error63;
     }
   };
   wrappedCallbacks.set(originalCallback, true);
@@ -16605,17 +16676,17 @@ async function handleToolCallRequest2(highLevelServer, server, originalCallToolH
   const toolName = request3.params?.name;
   const isMissingCapabilityCandidate = data.options.reportMissing && toolName === resolveMissingCapabilityToolName(data.options);
   if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
-    const context = getContextArgument2(request3) || "";
+    const context2 = getContextArgument2(request3) || "";
     return await captureToolCall({
       server,
       data,
       request: request3,
       extra,
       eventType: MCPAnalyticsEventType.mcpMissingCapability,
-      explicitContextIntent: context,
+      explicitContextIntent: context2,
       parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName).inputSchema),
       execute: async () => handleReportMissing({
-        context
+        context: context2
       }, data.logger)
     });
   }
@@ -16671,15 +16742,15 @@ function instrumentHighLevelServer(server, logger) {
       seedToolCategoriesFromRegistry(mcpAnalyticsData.toolCategories, server._registeredTools);
     }
     setupListenerToRegisteredTools(server, logger);
-  } catch (error62) {
-    logger(`Warning: Failed to setup tool call instrumentation - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: Failed to setup tool call instrumentation - ${error63}`);
   }
 }
-function seedToolDescriptionsFromRegistry(cache, tools) {
-  for (const [name, tool] of Object.entries(tools)) if ("string" == typeof tool?.description) cache.set(name, tool.description);
+function seedToolDescriptionsFromRegistry(cache, tools2) {
+  for (const [name, tool] of Object.entries(tools2)) if ("string" == typeof tool?.description) cache.set(name, tool.description);
 }
-function seedToolCategoriesFromRegistry(cache, tools) {
-  for (const [name, tool] of Object.entries(tools)) {
+function seedToolCategoriesFromRegistry(cache, tools2) {
+  for (const [name, tool] of Object.entries(tools2)) {
     const category = readToolMetaCategory(tool?._meta);
     if (category) cache.set(name, category);
   }
@@ -17134,10 +17205,10 @@ var ClientError = class _ClientError extends Error {
     Object.setPrototypeOf(this, _ClientError.prototype);
   }
 };
-function setCustomErrorPrototype(error62, constructor) {
-  error62.name = constructor.name;
-  Error.captureStackTrace(error62, constructor);
-  Object.setPrototypeOf(error62, constructor.prototype);
+function setCustomErrorPrototype(error63, constructor) {
+  error63.name = constructor.name;
+  Error.captureStackTrace(error63, constructor);
+  Object.setPrototypeOf(error63, constructor.prototype);
 }
 var RequiresServerEvaluation = class _RequiresServerEvaluation extends Error {
   constructor(message) {
@@ -17155,11 +17226,11 @@ function pickUnresolvedReason(current, next) {
   if (void 0 === current) return next;
   return UNRESOLVED_REASON_PRECEDENCE.indexOf(next) < UNRESOLVED_REASON_PRECEDENCE.indexOf(current) ? next : current;
 }
-function preserveRegexUncertainty(error62, original) {
-  if (original instanceof InconclusiveMatchError && /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation") in original) Object.defineProperty(error62, /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation"), {
+function preserveRegexUncertainty(error63, original2) {
+  if (original2 instanceof InconclusiveMatchError && /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation") in original2) Object.defineProperty(error63, /* @__PURE__ */ Symbol.for("posthog.requiresServerRegexEvaluation"), {
     value: true
   });
-  return error62;
+  return error63;
 }
 var FeatureFlagsPoller = class {
   constructor({ pollingInterval, personalApiKey, projectApiKey, timeout, host, customHeaders, ...options }) {
@@ -17205,10 +17276,10 @@ var FeatureFlagsPoller = class {
       propertyMatchingVersion: this.propertyMatchingVersion
     };
   }
-  withEvaluationSnapshot(context) {
-    if (context.definitions) return context;
+  withEvaluationSnapshot(context2) {
+    if (context2.definitions) return context2;
     return {
-      ...context,
+      ...context2,
       evaluationCache: {},
       definitions: this.currentDefinitions()
     };
@@ -17231,8 +17302,8 @@ var FeatureFlagsPoller = class {
     if (void 0 !== featureFlag) {
       const evaluationContext = this.createEvaluationContext(distinctId, groups, personProperties, groupProperties);
       try {
-        const result = await this.computeFlagAndPayloadLocally(featureFlag, evaluationContext);
-        response = result.value;
+        const result2 = await this.computeFlagAndPayloadLocally(featureFlag, evaluationContext);
+        response = result2.value;
         this.logMsgIfDebug(() => console.debug(`Successfully computed flag locally: ${key} -> ${response}`));
       } catch (e) {
         if (e instanceof RequiresServerEvaluation || e instanceof InconclusiveMatchError) this.logMsgIfDebug(() => console.debug(`${e.name} when computing flag locally: ${key}: ${e.message}`));
@@ -17346,8 +17417,8 @@ var FeatureFlagsPoller = class {
         if (depFlag) if (depFlag.active) try {
           const depResult = await this.computeFlagValueLocally(depFlag, evaluationContext);
           evaluationCache[depFlagKey] = depResult;
-        } catch (error62) {
-          throw preserveRegexUncertainty(new InconclusiveMatchError(`Error evaluating flag dependency '${depFlagKey}' for flag '${targetFlagKey}': ${error62}`, "unresolved_dependency"), error62);
+        } catch (error63) {
+          throw preserveRegexUncertainty(new InconclusiveMatchError(`Error evaluating flag dependency '${depFlagKey}' for flag '${targetFlagKey}': ${error63}`, "unresolved_dependency"), error63);
         }
         else evaluationCache[depFlagKey] = false;
         else evaluationCache[depFlagKey] = false;
@@ -17375,7 +17446,7 @@ var FeatureFlagsPoller = class {
     let inconclusiveReason;
     let regexError;
     const deferredRegexValues = /* @__PURE__ */ new Set();
-    let result;
+    let result2;
     for (const condition of flagConditions) {
       let effectiveBucketingValue = bucketingValue;
       try {
@@ -17400,7 +17471,7 @@ var FeatureFlagsPoller = class {
         if ("match" === matchResult) {
           const variantOverride = condition.variant;
           const flagVariants = flagFilters.multivariate?.variants || [];
-          result = variantOverride && flagVariants.some((variant) => variant.key === variantOverride) ? variantOverride : await this.getMatchingVariant(flag, effectiveBucketingValue) || true;
+          result2 = variantOverride && flagVariants.some((variant) => variant.key === variantOverride) ? variantOverride : await this.getMatchingVariant(flag, effectiveBucketingValue) || true;
           break;
         }
         if (earlyExitEnabled && "out_of_rollout_bound" === matchResult) {
@@ -17423,9 +17494,9 @@ var FeatureFlagsPoller = class {
         } else throw e;
       }
     }
-    if (void 0 !== result && !(regexError && [
+    if (void 0 !== result2 && !(regexError && [
       ...deferredRegexValues
-    ].some((value) => value !== result))) return result;
+    ].some((value) => value !== result2))) return result2;
     if (inconclusiveReason) throw preserveRegexUncertainty(new InconclusiveMatchError("Can't determine if feature flag is enabled or not with given properties", inconclusiveReason), regexError);
     return false;
   }
@@ -17879,8 +17950,8 @@ function getUnhandledRejectionMode(execArgv = STARTUP_EXEC_ARGV, nodeOptions = S
   return findUnhandledRejectionMode(execArgv) ?? findUnhandledRejectionMode(splitNodeOptions(nodeOptions ?? "")) ?? "throw";
 }
 var STARTUP_UNHANDLED_REJECTION_MODE = getUnhandledRejectionMode();
-function captureUncaughtException(captureFn, error62, origin) {
-  captureFn(error62, {
+function captureUncaughtException(captureFn, error63, origin) {
+  captureFn(error63, {
     mechanism: {
       type: "unhandledRejection" === origin ? "onunhandledrejection" : "onuncaughtexception",
       handled: false
@@ -17889,12 +17960,12 @@ function captureUncaughtException(captureFn, error62, origin) {
 }
 function makeUncaughtExceptionHandler(captureFn, onFatalFn) {
   let calledFatalError = false;
-  return Object.assign((error62, origin) => {
+  return Object.assign((error63, origin) => {
     const userProvidedListenersCount = global.process.listeners("uncaughtException").filter((listener) => "domainUncaughtExceptionClear" !== listener.name && true !== listener._posthogErrorHandler).length;
-    captureUncaughtException(captureFn, error62, origin);
+    captureUncaughtException(captureFn, error63, origin);
     if (!calledFatalError && 0 === userProvidedListenersCount) {
       calledFatalError = true;
-      onFatalFn(error62);
+      onFatalFn(error63);
     }
   }, {
     _posthogErrorHandler: true
@@ -17903,7 +17974,7 @@ function makeUncaughtExceptionHandler(captureFn, onFatalFn) {
 function addUncaughtExceptionListener(captureFn, onFatalFn, mode = STARTUP_UNHANDLED_REJECTION_MODE) {
   const process9 = globalThis.process;
   if (!process9) return;
-  if ("strict" === mode) return void process9.on("uncaughtExceptionMonitor", (error62, origin) => captureUncaughtException(captureFn, error62, origin));
+  if ("strict" === mode) return void process9.on("uncaughtExceptionMonitor", (error63, origin) => captureUncaughtException(captureFn, error63, origin));
   process9.on("uncaughtException", makeUncaughtExceptionHandler(captureFn, onFatalFn));
 }
 function addUnhandledRejectionListener(captureFn, mode = STARTUP_UNHANDLED_REJECTION_MODE) {
@@ -17936,11 +18007,11 @@ var error_tracking_ErrorTracking = class _error_tracking_ErrorTracking {
   static isPreviouslyCapturedError(x) {
     return isObject(x) && "__posthog_previously_captured_error" in x && true === x.__posthog_previously_captured_error;
   }
-  static async buildEventMessage(builder, error62, hint, distinctId, additionalProperties) {
+  static async buildEventMessage(builder, error63, hint, distinctId, additionalProperties) {
     const properties = {
       ...additionalProperties
     };
-    const exceptionProperties = builder.buildFromUnknown(error62, hint);
+    const exceptionProperties = builder.buildFromUnknown(error63, hint);
     exceptionProperties.$exception_list = await builder.modifyFrames(exceptionProperties.$exception_list);
     const injectedReleaseId = error_tracking_exports.getInjectedReleaseId();
     if (injectedReleaseId) properties.$release_id = injectedReleaseId;
@@ -18130,9 +18201,9 @@ function buildV1Event(message) {
     delete properties[property];
   }
   const topLevel = {};
-  for (const { property, field } of TOPLEVEL_SENTINELS) if (property in properties) {
+  for (const { property, field: field2 } of TOPLEVEL_SENTINELS) if (property in properties) {
     const value = properties[property];
-    if ("string" == typeof value) topLevel[field] = value;
+    if ("string" == typeof value) topLevel[field2] = value;
     delete properties[property];
   }
   delete properties.$lib;
@@ -18205,30 +18276,30 @@ var V1CaptureSender = class {
       try {
         captureAttempt = await this.sendOnce(url2, payload, attempt, requestId);
         const { response, signal } = captureAttempt;
-        const { status: status2 } = response;
-        if (status2 < 200 || status2 >= 300) if (!isLastAttempt && RETRYABLE_STATUSES.has(status2)) {
+        const { status: status3 } = response;
+        if (status3 < 200 || status3 >= 300) if (!isLastAttempt && RETRYABLE_STATUSES.has(status3)) {
           const retryAfterMs = this.parseRetryAfter(response);
           await captureAttempt.waitFor(captureAttempt.cancelBody()).catch(() => {
           });
           retryDelayMs = this.backoffDelay(attempt, retryAfterMs);
         } else {
-          const httpError = await this.buildHttpError(response, status2, captureAttempt.waitFor);
+          const httpError = await this.buildHttpError(response, status3, captureAttempt.waitFor);
           return this.surfaceBatchFailure(requestId, drops, pending, httpError);
         }
         else {
           let parsed;
           try {
             parsed = await captureAttempt.waitFor(this.parseResponse(response));
-          } catch (error62) {
-            if (signal.aborted) throw error62;
-            return this.surfaceBatchFailure(requestId, drops, pending, new Error(`Capture V1 returned an unparseable ${status2} response body`));
+          } catch (error63) {
+            if (signal.aborted) throw error63;
+            return this.surfaceBatchFailure(requestId, drops, pending, new Error(`Capture V1 returned an unparseable ${status3} response body`));
           }
           const retryable2 = this.classify(pending, parsed, drops);
           if (0 === retryable2.length) return this.surfacePartialDrops(requestId, drops);
           if (isLastAttempt) return void this.onError(new CaptureV1Error({
             requestId,
             drops,
-            retryExhausted: retryable2.map((event) => event.uuid)
+            retryExhausted: retryable2.map((event2) => event2.uuid)
           }));
           pending = retryable2;
           const retryAfterMs = this.parseRetryAfter(response);
@@ -18301,9 +18372,9 @@ var V1CaptureSender = class {
           if (controller.signal.aborted) cancelBody();
         }
       };
-    } catch (error62) {
+    } catch (error63) {
       clearTimeout(timer);
-      throw error62;
+      throw error63;
     }
   }
   buildHeaders(attempt, requestId) {
@@ -18322,14 +18393,14 @@ var V1CaptureSender = class {
   classify(pending, parsed, drops) {
     const results = parsed.results ?? {};
     const retryable2 = [];
-    for (const event of pending) {
-      const result = results[event.uuid];
-      if (result) {
-        if ("drop" === result.result) drops.push({
-          uuid: event.uuid,
-          details: result.details ?? void 0
+    for (const event2 of pending) {
+      const result2 = results[event2.uuid];
+      if (result2) {
+        if ("drop" === result2.result) drops.push({
+          uuid: event2.uuid,
+          details: result2.details ?? void 0
         });
-        else if ("retry" === result.result) retryable2.push(event);
+        else if ("retry" === result2.result) retryable2.push(event2);
       }
     }
     return retryable2;
@@ -18362,20 +18433,20 @@ var V1CaptureSender = class {
       results: results ?? {}
     };
   }
-  async buildHttpError(response, status2, waitFor) {
+  async buildHttpError(response, status3, waitFor) {
     let bodyText = "";
     try {
       bodyText = (await waitFor(response.text())).slice(0, 512);
     } catch {
     }
     const suffix = bodyText ? `: ${bodyText}` : "";
-    return new Error(`Capture V1 request failed with HTTP ${status2}${suffix}`);
+    return new Error(`Capture V1 request failed with HTTP ${status3}${suffix}`);
   }
   surfaceBatchFailure(requestId, drops, pending, cause) {
     this.onError(new CaptureV1Error({
       requestId,
       drops,
-      retryExhausted: pending.map((event) => event.uuid),
+      retryExhausted: pending.map((event2) => event2.uuid),
       cause
     }));
   }
@@ -18443,9 +18514,9 @@ var WAITUNTIL_DEBOUNCE_MS = 50;
 var WAITUNTIL_MAX_WAIT_MS = 500;
 var DEFAULT_NODE_HOST = "https://us.i.posthog.com";
 var _emittedDeprecations = /* @__PURE__ */ new Set();
-function emitDeprecationWarningOnce(id3, message) {
-  if (_emittedDeprecations.has(id3)) return;
-  _emittedDeprecations.add(id3);
+function emitDeprecationWarningOnce(id6, message) {
+  if (_emittedDeprecations.has(id6)) return;
+  _emittedDeprecations.add(id6);
   console.warn(`[PostHog] ${message}`);
 }
 function normalizeApiKey(value) {
@@ -18511,8 +18582,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
         onError: (err) => {
           this._events.emit("error", err);
         },
-        onLoad: (count8) => {
-          this._events.emit("localEvaluationFlagsLoaded", count8);
+        onLoad: (count9) => {
+          this._events.emit("localEvaluationFlagsLoaded", count9);
         },
         onMinimalFlagCalledEvents: (enabled) => {
           this._minimalFlagCalledEvents = enabled;
@@ -18642,8 +18713,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
   }
   async sendAiCaptureBatch(batchMessages, retryOptions) {
     const { batches, dropped } = partitionAiBatch(batchMessages);
-    for (const { event, bytes } of dropped) {
-      const message = `Event ${event} (${bytes} bytes) exceeds the ${AI_MAX_EVENT_BYTES / 1048576}MiB limit for ${AI_CAPTURE_ENDPOINT_PATH}, dropping.`;
+    for (const { event: event2, bytes } of dropped) {
+      const message = `Event ${event2} (${bytes} bytes) exceeds the ${AI_MAX_EVENT_BYTES / 1048576}MiB limit for ${AI_CAPTURE_ENDPOINT_PATH}, dropping.`;
       this._logger.error(message);
       this._events.emit("error", new Error(message));
     }
@@ -18655,9 +18726,9 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     } catch (err) {
       if (!isPostHogFetchContentTooLargeError(err)) throw err;
       if (1 === batch.length) {
-        const [event] = batch;
-        const eventName = "string" == typeof event.event ? event.event : "unknown";
-        const message = `Event ${eventName} (${eventByteSize(event)} bytes) was rejected with 413 by ${AI_CAPTURE_ENDPOINT_PATH} on its own, dropping.`;
+        const [event2] = batch;
+        const eventName = "string" == typeof event2.event ? event2.event : "unknown";
+        const message = `Event ${eventName} (${eventByteSize(event2)} bytes) was rejected with 413 by ${AI_CAPTURE_ENDPOINT_PATH} on its own, dropping.`;
         this._logger.error(message);
         this._events.emit("error", new Error(message));
         return;
@@ -18682,7 +18753,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       isDebug: this.isDebug
     }, {
       fetch: (url2, fetchOptions) => this.fetch(url2, fetchOptions),
-      onError: (error62) => this._events.emit("error", error62),
+      onError: (error63) => this._events.emit("error", error63),
       compress: (payload) => this.compressPayload(payload)
     });
     return this._v1Sender;
@@ -18710,10 +18781,10 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     return this._traces;
   }
   _tracingContext() {
-    const context = this.context?.get();
+    const context2 = this.context?.get();
     return {
-      distinctId: context?.distinctId,
-      sessionId: context?.sessionId
+      distinctId: context2?.distinctId,
+      sessionId: context2?.sessionId
     };
   }
   startSpan(name, options) {
@@ -18755,7 +18826,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     if ("$exception" === props.event && !props._originatedFromCaptureException) this._logger.warn(exceptionCaptureWarning);
   }
   _sendPreparedEvent(type, props, immediate, prepareOptions, explicitRoute) {
-    return this.addPendingPromise(this._prepareEventMessage(props, prepareOptions).then(({ distinctId, event, properties, options }) => {
+    return this.addPendingPromise(this._prepareEventMessage(props, prepareOptions).then(({ distinctId, event: event2, properties, options }) => {
       const captureOptions = {
         timestamp: options.timestamp,
         disableGeoip: options.disableGeoip,
@@ -18763,7 +18834,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       };
       const message = {
         distinctId,
-        event,
+        event: event2,
         properties: {
           ...properties,
           ...this.getCommonEventProperties()
@@ -18909,10 +18980,10 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
         cleanup();
         resolve4(false);
       }, timeoutMs);
-      const cleanup = this._events.on("localEvaluationFlagsLoaded", (count8) => {
+      const cleanup = this._events.on("localEvaluationFlagsLoaded", (count9) => {
         clearTimeout(timeout);
         cleanup();
-        resolve4(count8 > 0);
+        resolve4(count9 > 0);
       });
     });
   }
@@ -18947,7 +19018,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     groupProperties = adjustedProperties.allGroupProperties;
     const evaluationContext = this.createFeatureFlagEvaluationContext(distinctId, groups, this.personPropertiesForLocalEvaluation(distinctId, personProperties), groupProperties);
     if (void 0 == onlyEvaluateLocally) onlyEvaluateLocally = this.options.strictLocalEvaluation ?? false;
-    let result;
+    let result2;
     let flagWasLocallyEvaluated = false;
     let requestId;
     let evaluatedAt;
@@ -18970,7 +19041,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
           flagId = flag.id;
           flagReason = "Evaluated locally";
           flagHasExperiment = flag.has_experiment;
-          result = {
+          result2 = {
             key,
             enabled: false !== value,
             variant: "string" == typeof value ? value : void 0,
@@ -19009,7 +19080,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
           } catch {
             parsedPayload = flagDetail.metadata.payload;
           }
-          result = {
+          result2 = {
             key,
             enabled: flagDetail.enabled,
             variant: flagDetail.variant ?? void 0,
@@ -19022,7 +19093,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       }
     }
     if (sendFeatureFlagEvents) {
-      const response = void 0 === result ? void 0 : false === result.enabled ? false : result.variant ?? true;
+      const response = void 0 === result2 ? void 0 : false === result2.enabled ? false : result2.variant ?? true;
       const properties = {
         $feature_flag: key,
         $feature_flag_response: response,
@@ -19049,31 +19120,31 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
         properties
       });
     }
-    if (void 0 !== result && void 0 !== this._payloadOverrides && key in this._payloadOverrides) result = {
-      ...result,
+    if (void 0 !== result2 && void 0 !== this._payloadOverrides && key in this._payloadOverrides) result2 = {
+      ...result2,
       payload: this._payloadOverrides[key]
     };
-    return result;
+    return result2;
   }
   async getFeatureFlag(key, distinctId, options) {
     emitDeprecationWarningOnce("getFeatureFlag", "`getFeatureFlag` is deprecated and will be removed in a future major version. Use `posthog.evaluateFlags(distinctId, ...)` and call `flags.getFlag(key)` instead \u2014 this consolidates flag evaluation into a single `/flags` request per incoming request.");
-    const result = await this._getFeatureFlagResult(key, distinctId, {
+    const result2 = await this._getFeatureFlagResult(key, distinctId, {
       ...options,
       sendFeatureFlagEvents: options?.sendFeatureFlagEvents ?? this.options.sendFeatureFlagEvent ?? true
     });
-    if (void 0 === result) return;
-    if (false === result.enabled) return false;
-    return result.variant ?? true;
+    if (void 0 === result2) return;
+    if (false === result2.enabled) return false;
+    return result2.variant ?? true;
   }
   async getFeatureFlagPayload(key, distinctId, matchValue, options) {
     emitDeprecationWarningOnce("getFeatureFlagPayload", "`getFeatureFlagPayload` is deprecated and will be removed in a future major version. Use `posthog.evaluateFlags(distinctId, ...)` and call `flags.getFlagPayload(key)` instead \u2014 this consolidates flag evaluation into a single `/flags` request per incoming request.");
     if (void 0 !== this._payloadOverrides && key in this._payloadOverrides) return this._payloadOverrides[key];
-    const result = await this._getFeatureFlagResult(key, distinctId, {
+    const result2 = await this._getFeatureFlagResult(key, distinctId, {
       ...options,
       sendFeatureFlagEvents: false
     }, matchValue);
-    if (void 0 === result) return;
-    return result.payload ?? null;
+    if (void 0 === result2) return;
+    return result2.payload ?? null;
   }
   async getFeatureFlagResult(key, distinctIdOrOptions, options) {
     const { distinctId: resolvedDistinctId, options: resolvedOptions } = this._resolveDistinctId(distinctIdOrOptions, options);
@@ -19097,13 +19168,13 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
   }
   async isFeatureEnabled(key, distinctId, options) {
     emitDeprecationWarningOnce("isFeatureEnabled", "`isFeatureEnabled` is deprecated and will be removed in a future major version. Use `posthog.evaluateFlags(distinctId, ...)` and call `flags.isEnabled(key)` instead \u2014 this consolidates flag evaluation into a single `/flags` request per incoming request.");
-    const result = await this._getFeatureFlagResult(key, distinctId, {
+    const result2 = await this._getFeatureFlagResult(key, distinctId, {
       ...options,
       sendFeatureFlagEvents: options?.sendFeatureFlagEvents ?? this.options.sendFeatureFlagEvent ?? true
     });
-    if (void 0 === result) return;
-    if (false === result.enabled) return false;
-    const feat = result.variant ?? true;
+    if (void 0 === result2) return;
+    if (false === result2.enabled) return false;
+    const feat = result2.variant ?? true;
     return !!feat || false;
   }
   async getAllFlags(distinctIdOrOptions, options) {
@@ -19303,8 +19374,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       quotaLimited
     });
   }
-  _shouldSendMinimalFlagCalledEvent(event, properties) {
-    return "$feature_flag_called" === event && this._minimalFlagCalledEvents && false === properties.$feature_flag_has_experiment;
+  _shouldSendMinimalFlagCalledEvent(event2, properties) {
+    return "$feature_flag_called" === event2 && this._minimalFlagCalledEvents && false === properties.$feature_flag_has_experiment;
   }
   _captureFlagCalledEventIfNeeded(params) {
     const { distinctId, key, response, groups, disableGeoip, properties } = params;
@@ -19468,8 +19539,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     }
     try {
       return await this.fetch(url2, options);
-    } catch (error62) {
-      this._events.emit("error", error62);
+    } catch (error63) {
+      this._events.emit("error", error63);
       return;
     } finally {
       if (abortTimeout) clearTimeout(abortTimeout);
@@ -19554,10 +19625,10 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       evaluationCache: {}
     };
   }
-  captureException(error62, distinctId, additionalProperties, uuid3, flags) {
-    if (!error_tracking_default.isPreviouslyCapturedError(error62)) {
+  captureException(error63, distinctId, additionalProperties, uuid3, flags) {
+    if (!error_tracking_default.isPreviouslyCapturedError(error63)) {
       const syntheticException = new Error("PostHog syntheticException");
-      this.addPendingPromise(error_tracking_default.buildEventMessage(this.getErrorPropertiesBuilder(), error62, {
+      this.addPendingPromise(error_tracking_default.buildEventMessage(this.getErrorPropertiesBuilder(), error63, {
         syntheticException
       }, distinctId, additionalProperties).then((msg) => this._capturePreparedEvent({
         ...msg,
@@ -19566,10 +19637,10 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       }, false)));
     }
   }
-  async captureExceptionImmediate(error62, distinctId, additionalProperties, flags) {
-    if (!error_tracking_default.isPreviouslyCapturedError(error62)) {
+  async captureExceptionImmediate(error63, distinctId, additionalProperties, flags) {
+    if (!error_tracking_default.isPreviouslyCapturedError(error63)) {
       const syntheticException = new Error("PostHog syntheticException");
-      return this.addPendingPromise(error_tracking_default.buildEventMessage(this.getErrorPropertiesBuilder(), error62, {
+      return this.addPendingPromise(error_tracking_default.buildEventMessage(this.getErrorPropertiesBuilder(), error63, {
         syntheticException
       }, distinctId, additionalProperties).then((msg) => this.captureImmediate({
         ...msg,
@@ -19581,7 +19652,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     return this._prepareEventMessage(props);
   }
   async _prepareEventMessage(props, options = {}) {
-    const { distinctId, event, properties, groups, flags, sendFeatureFlags, timestamp, disableGeoip, uuid: uuid3 } = props;
+    const { distinctId, event: event2, properties, groups, flags, sendFeatureFlags, timestamp, disableGeoip, uuid: uuid3 } = props;
     const contextData = this.context?.get();
     const includeContextProperties = options.includeContextProperties ?? true;
     let mergedDistinctId = distinctId || contextData?.distinctId;
@@ -19592,16 +19663,16 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     } : {
       ...properties || {}
     };
-    if ("$exception" === event && !("$trace_id" in mergedProperties || "$span_id" in mergedProperties)) Object.assign(mergedProperties, await getActiveTraceProperties());
+    if ("$exception" === event2 && !("$trace_id" in mergedProperties || "$span_id" in mergedProperties)) Object.assign(mergedProperties, await getActiveTraceProperties());
     if (!mergedDistinctId) {
       mergedDistinctId = uuidv7();
       mergedProperties.$process_person_profile = false;
     }
     if (includeContextProperties && contextData?.sessionId && !mergedProperties.$session_id) mergedProperties.$session_id = contextData.sessionId;
-    const finalProperties = this._shouldSendMinimalFlagCalledEvent(event, mergedProperties) ? minimizeFlagCalledEventProperties(mergedProperties) : mergedProperties;
+    const finalProperties = this._shouldSendMinimalFlagCalledEvent(event2, mergedProperties) ? minimizeFlagCalledEventProperties(mergedProperties) : mergedProperties;
     const eventMessage = this._runBeforeSend({
       distinctId: mergedDistinctId,
-      event,
+      event: event2,
       properties: finalProperties,
       groups,
       flags,
@@ -19656,22 +19727,22 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     const fns = Array.isArray(beforeSend) ? beforeSend : [
       beforeSend
     ];
-    let result = eventMessage;
+    let result2 = eventMessage;
     for (const fn of fns) try {
-      result = fn(result);
-      if (!result) {
+      result2 = fn(result2);
+      if (!result2) {
         this._logger.info(`Event '${eventMessage.event}' was rejected in beforeSend function`);
         return null;
       }
-      if (!result.properties || 0 === Object.keys(result.properties).length) {
-        const message = `Event '${result.event}' has no properties after beforeSend function, this is likely an error.`;
+      if (!result2.properties || 0 === Object.keys(result2.properties).length) {
+        const message = `Event '${result2.event}' has no properties after beforeSend function, this is likely an error.`;
         this._logger.warn(message);
       }
-    } catch (error62) {
-      this._logger.error(`Error in before_send function for event '${eventMessage.event}':`, error62);
+    } catch (error63) {
+      this._logger.error(`Error in before_send function for event '${eventMessage.event}':`, error63);
       return null;
     }
-    return result;
+    return result2;
   }
 };
 
@@ -19684,21 +19755,21 @@ var PostHogContext = class {
   get() {
     return this.storage.getStore();
   }
-  run(context, fn, options) {
-    return this.storage.run(this.resolve(context, options), fn);
+  run(context2, fn, options) {
+    return this.storage.run(this.resolve(context2, options), fn);
   }
-  enter(context, options) {
-    this.storage.enterWith(this.resolve(context, options));
+  enter(context2, options) {
+    this.storage.enterWith(this.resolve(context2, options));
   }
-  resolve(context, options) {
-    if (options?.fresh === true) return context;
+  resolve(context2, options) {
+    if (options?.fresh === true) return context2;
     const current = this.get() || {};
     return {
-      distinctId: context.distinctId ?? current.distinctId,
-      sessionId: context.sessionId ?? current.sessionId,
+      distinctId: context2.distinctId ?? current.distinctId,
+      sessionId: context2.sessionId ?? current.sessionId,
       properties: {
         ...current.properties || {},
-        ...context.properties || {}
+        ...context2.properties || {}
       }
     };
   }
@@ -19726,8 +19797,8 @@ async function gzipCompress2(input3, isDebug = true) {
   try {
     const compressed = await gzipAsync(input3);
     return new Uint8Array(compressed);
-  } catch (error62) {
-    if (isDebug) console.error("Failed to gzip compress data", error62);
+  } catch (error63) {
+    if (isDebug) console.error("Failed to gzip compress data", error63);
     return null;
   }
 }
@@ -19750,16 +19821,16 @@ var NAME = "posthog-node";
 function createEventProcessor(_posthog, { organization, projectId, prefix, severityAllowList = [
   "error"
 ], sendExceptionsToPostHog = true } = {}) {
-  return (event) => {
-    const shouldProcessLevel = "*" === severityAllowList || severityAllowList.includes(event.level);
-    if (!shouldProcessLevel) return event;
-    if (!event.tags) event.tags = {};
-    const userId = event.tags[PostHogSentryIntegration.POSTHOG_ID_TAG];
-    if (void 0 === userId) return event;
+  return (event2) => {
+    const shouldProcessLevel = "*" === severityAllowList || severityAllowList.includes(event2.level);
+    if (!shouldProcessLevel) return event2;
+    if (!event2.tags) event2.tags = {};
+    const userId = event2.tags[PostHogSentryIntegration.POSTHOG_ID_TAG];
+    if (void 0 === userId) return event2;
     const uiHost = _posthog.options.host ?? "https://us.i.posthog.com";
     const personUrl = new URL(`/project/${_posthog.apiKey}/person/${userId}`, uiHost).toString();
-    event.tags["PostHog Person URL"] = personUrl;
-    const exceptions = event.exception?.values || [];
+    event2.tags["PostHog Person URL"] = personUrl;
+    const exceptions = event2.exception?.values || [];
     const exceptionList = exceptions.map((exception) => ({
       ...exception,
       stacktrace: exception.stacktrace ? {
@@ -19772,25 +19843,25 @@ function createEventProcessor(_posthog, { organization, projectId, prefix, sever
       } : void 0
     }));
     const properties = {
-      $exception_message: exceptions[0]?.value || event.message,
+      $exception_message: exceptions[0]?.value || event2.message,
       $exception_type: exceptions[0]?.type,
-      $exception_level: event.level,
+      $exception_level: event2.level,
       $exception_list: exceptionList,
-      $sentry_event_id: event.event_id,
-      $sentry_exception: event.exception,
-      $sentry_exception_message: exceptions[0]?.value || event.message,
+      $sentry_event_id: event2.event_id,
+      $sentry_exception: event2.exception,
+      $sentry_exception_message: exceptions[0]?.value || event2.message,
       $sentry_exception_type: exceptions[0]?.type,
-      $sentry_tags: event.tags
+      $sentry_tags: event2.tags
     };
     const injectedReleaseId = error_tracking_exports.getInjectedReleaseId();
     if (injectedReleaseId) properties.$release_id = injectedReleaseId;
-    if (organization && projectId) properties["$sentry_url"] = (prefix || "https://sentry.io/organizations/") + organization + "/issues/?project=" + projectId + "&query=" + event.event_id;
+    if (organization && projectId) properties["$sentry_url"] = (prefix || "https://sentry.io/organizations/") + organization + "/issues/?project=" + projectId + "&query=" + event2.event_id;
     if (sendExceptionsToPostHog) _posthog.capture({
       event: "$exception",
       distinctId: userId,
       properties
     });
-    return event;
+    return event2;
   };
 }
 var PostHogSentryIntegration = class {
@@ -19866,8 +19937,8 @@ function instrument(server, posthog, options = {}) {
     setServerTrackingData(lowLevelServer, mcpAnalyticsData);
     setupTrackedServer(validatedServer, lowLevelServer, logger);
     return createAnalyticsHandle(lowLevelServer);
-  } catch (error62) {
-    logger(`Warning: Failed to instrument server - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: Failed to instrument server - ${error63}`);
     return {
       capture: async () => void 0
     };
@@ -19916,22 +19987,22 @@ function setupTrackedServer(validatedServer, lowLevelServer, logger) {
   }
   try {
     instrumentLowLevelServer(lowLevelServer, logger);
-  } catch (error62) {
-    logger(`Warning: Failed to setup tool call instrumentation - ${error62}`);
+  } catch (error63) {
+    logger(`Warning: Failed to setup tool call instrumentation - ${error63}`);
   }
 }
 async function captureCustomEvent(lowLevelServer, eventData) {
   if (!eventData || "string" != typeof eventData.event || 0 === eventData.event.length) throw new Error('`capture` requires an `event` name, e.g. analytics.capture({ event: "feedback_submitted" })');
   const trackingData = getServerTrackingData(lowLevelServer);
   if (!trackingData) return;
-  const event = {
+  const event2 = {
     sessionId: trackingData.sessionId,
     eventType: MCPAnalyticsEventType.custom,
     eventName: eventData.event,
     timestamp: /* @__PURE__ */ new Date(),
     properties: eventData.properties
   };
-  await captureEvent(lowLevelServer, event, trackingData.logger);
+  await captureEvent(lowLevelServer, event2, trackingData.logger);
   trackingData.logger(`Captured event "${eventData.event}" for session ${trackingData.sessionId}`);
 }
 
@@ -20648,13 +20719,13 @@ function cached(getter) {
 function nullish(input3) {
   return input3 === null || input3 === void 0;
 }
-function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
-  const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+function cleanRegex(source3) {
+  const start = source3.startsWith("^") ? 1 : 0;
+  const end = source3.endsWith("$") ? source3.length - 1 : source3.length;
+  return source3.slice(start, end);
 }
-function floatSafeRemainder(val, step) {
-  const ratio = val / step;
+function floatSafeRemainder(val, step2) {
+  const ratio = val / step2;
   const roundedRatio = Math.round(ratio);
   const tolerance = 4 * Number.EPSILON * Math.max(Math.abs(ratio), 1);
   if (Math.abs(ratio - roundedRatio) < tolerance)
@@ -20662,9 +20733,9 @@ function floatSafeRemainder(val, step) {
   return ratio - roundedRatio;
 }
 var EVALUATING = /* @__PURE__ */ Symbol("evaluating");
-function defineLazy(object3, key, getter) {
+function defineLazy(object9, key, getter) {
   let value = void 0;
-  Object.defineProperty(object3, key, {
+  Object.defineProperty(object9, key, {
     get() {
       if (value === EVALUATING) {
         return void 0;
@@ -20676,7 +20747,7 @@ function defineLazy(object3, key, getter) {
       return value;
     },
     set(v) {
-      Object.defineProperty(object3, key, {
+      Object.defineProperty(object9, key, {
         value: v
         // configurable: true,
       });
@@ -20719,28 +20790,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source, keys, wrap) {
-  const raw = sourceShape(source);
+function mirrorShape(target, source3, keys, wrap) {
+  const raw = sourceShape(source3);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source._zod.def.shape[key];
+        const value = source3._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    const desc = Object.getOwnPropertyDescriptor(source, key);
+function mirrorProps(target, source3) {
+  for (const key of Reflect.ownKeys(source3)) {
+    const desc = Object.getOwnPropertyDescriptor(source3, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source[key]);
+      deferProp(target, key, () => source3[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -21166,14 +21237,14 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count8 = units;
+  let count9 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count8--;
+      count9--;
       i++;
     }
   }
-  return count8;
+  return count9;
 }
 function getLengthableOrigin(input3) {
   if (Array.isArray(input3))
@@ -21427,12 +21498,12 @@ function $constructor(name, initializer3, proto, params) {
     inst._zod.traits.add(name);
     initializer3(inst, def);
     if (initialized) {
-      const own2 = Object.getPrototypeOf(inst);
+      const own3 = Object.getPrototypeOf(inst);
       const ctorProto = inst._zod.constr.prototype;
-      let up = own2;
+      let up = own3;
       while (up && up !== ctorProto)
         up = Object.getPrototypeOf(up);
-      const target = up ?? own2;
+      const target = up ?? own3;
       if (!initialized.has(target)) {
         initialized.add(target);
         members(target, protoMembers);
@@ -21551,10 +21622,10 @@ function node(obj, key, make) {
   }
   return obj[key];
 }
-function flattenError(error62, mapper = (issue3) => issue3.message) {
+function flattenError(error63, mapper = (issue3) => issue3.message) {
   const fieldErrors = {};
   const formErrors = [];
-  for (const sub of error62.issues) {
+  for (const sub of error63.issues) {
     if (sub.path.length > 0) {
       node(fieldErrors, sub.path[0], () => []).push(mapper(sub));
     } else {
@@ -21563,10 +21634,10 @@ function flattenError(error62, mapper = (issue3) => issue3.message) {
   }
   return { formErrors, fieldErrors };
 }
-function formatError(error62, mapper = (issue3) => issue3.message) {
+function formatError(error63, mapper = (issue3) => issue3.message) {
   const fieldErrors = { _errors: [] };
-  const processError = (error63, path = []) => {
-    for (const issue3 of error63.issues) {
+  const processError = (error64, path = []) => {
+    for (const issue3 of error64.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
         issue3.errors.map((issues) => processError({ issues }, [...path, ...issue3.path]));
       } else if (issue3.code === "invalid_key") {
@@ -21608,14 +21679,14 @@ function formatError(error62, mapper = (issue3) => issue3.message) {
       }
     }
   };
-  processError(error62);
+  processError(error63);
   return fieldErrors;
 }
-function treeifyError(error62, mapper = (issue3) => issue3.message) {
-  const result = { errors: [] };
-  const processError = (error63, path = []) => {
+function treeifyError(error63, mapper = (issue3) => issue3.message) {
+  const result2 = { errors: [] };
+  const processError = (error64, path = []) => {
     var _a3;
-    for (const issue3 of error63.issues) {
+    for (const issue3 of error64.issues) {
       if (issue3.code === "invalid_union" && issue3.errors.length) {
         issue3.errors.map((issues) => processError({ issues }, [...path, ...issue3.path]));
       } else if (issue3.code === "invalid_key") {
@@ -21625,10 +21696,10 @@ function treeifyError(error62, mapper = (issue3) => issue3.message) {
       } else {
         const fullpath = [...path, ...issue3.path];
         if (fullpath.length === 0) {
-          result.errors.push(mapper(issue3));
+          result2.errors.push(mapper(issue3));
           continue;
         }
-        let curr = result;
+        let curr = result2;
         let i = 0;
         while (i < fullpath.length) {
           const el = fullpath[i];
@@ -21657,8 +21728,8 @@ function treeifyError(error62, mapper = (issue3) => issue3.message) {
       }
     }
   };
-  processError(error62);
-  return result;
+  processError(error63);
+  return result2;
 }
 function toDotPath(_path) {
   const segs = [];
@@ -21678,9 +21749,9 @@ function toDotPath(_path) {
   }
   return segs.join("");
 }
-function prettifyError(error62) {
+function prettifyError(error63) {
   const lines = [];
-  const issues = [...error62.issues].sort((a, b) => (a.path ?? []).length - (b.path ?? []).length);
+  const issues = [...error63.issues].sort((a, b) => (a.path ?? []).length - (b.path ?? []).length);
   for (const issue3 of issues) {
     lines.push(`\u2716 ${issue3.message}`);
     if (issue3.path?.length)
@@ -21696,16 +21767,16 @@ function finalizeParams(callee, params) {
 var _parse = (_Err) => {
   const fn = (schema, value, _ctx, _params) => {
     const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
-    const result = schema._zod.run({ value, issues: [] }, ctx);
-    if (result instanceof Promise) {
+    const result2 = schema._zod.run({ value, issues: [] }, ctx);
+    if (result2 instanceof Promise) {
       throw new $ZodAsyncError();
     }
-    if (result.issues.length) {
-      const e = new (_params?.Err ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+    if (result2.issues.length) {
+      const e = new (_params?.Err ?? _Err)(result2.issues.map((iss) => finalizeIssue(iss, ctx, config())));
       captureStackTrace(e, _params?.callee ?? fn);
       throw e;
     }
-    return result.value;
+    return result2.value;
   };
   return fn;
 };
@@ -21713,42 +21784,42 @@ var parse = /* @__PURE__ */ _parse($ZodRealError);
 var _parseAsync = (_Err) => {
   const fn = async (schema, value, _ctx, params) => {
     const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
-    let result = schema._zod.run({ value, issues: [] }, ctx);
-    if (result instanceof Promise)
-      result = await result;
-    if (result.issues.length) {
-      const e = new (params?.Err ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+    let result2 = schema._zod.run({ value, issues: [] }, ctx);
+    if (result2 instanceof Promise)
+      result2 = await result2;
+    if (result2.issues.length) {
+      const e = new (params?.Err ?? _Err)(result2.issues.map((iss) => finalizeIssue(iss, ctx, config())));
       captureStackTrace(e, params?.callee ?? fn);
       throw e;
     }
-    return result.value;
+    return result2.value;
   };
   return fn;
 };
 var parseAsync = /* @__PURE__ */ _parseAsync($ZodRealError);
 var _safeParse = (_Err) => (schema, value, _ctx) => {
   const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
-  const result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise) {
+  const result2 = schema._zod.run({ value, issues: [] }, ctx);
+  if (result2 instanceof Promise) {
     throw new $ZodAsyncError();
   }
-  return result.issues.length ? failure(_Err, result.issues, ctx) : { success: true, data: result.value };
+  return result2.issues.length ? failure(_Err, result2.issues, ctx) : { success: true, data: result2.value };
 };
 var safeParse = /* @__PURE__ */ _safeParse($ZodRealError);
 function failure(Err, issues, ctx) {
-  let error62;
+  let error63;
   return {
     success: false,
     get error() {
-      if (!error62) {
-        error62 = new Err(issues.map((iss) => finalizeIssue(iss, ctx, config())));
+      if (!error63) {
+        error63 = new Err(issues.map((iss) => finalizeIssue(iss, ctx, config())));
         issues = void 0;
         ctx = void 0;
       }
-      return error62;
+      return error63;
     },
     set error(e) {
-      error62 = e;
+      error63 = e;
       issues = void 0;
       ctx = void 0;
     }
@@ -21756,10 +21827,10 @@ function failure(Err, issues, ctx) {
 }
 var _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
   const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
-  let result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise)
-    result = await result;
-  return result.issues.length ? failure(_Err, result.issues, ctx) : { success: true, data: result.value };
+  let result2 = schema._zod.run({ value, issues: [] }, ctx);
+  if (result2 instanceof Promise)
+    result2 = await result2;
+  return result2.issues.length ? failure(_Err, result2.issues, ctx) : { success: true, data: result2.value };
 };
 var safeParseAsync = /* @__PURE__ */ _safeParseAsync($ZodRealError);
 var COMPILE_INVALID = /* @__PURE__ */ Symbol.for("zod.compile.invalid");
@@ -21777,24 +21848,24 @@ var validate = ((schema, value, _ctx) => {
 function validateFallback(schema, value, _ctx) {
   const ctx = _ctx ? { ..._ctx, async: false, abortEarly: true } : { async: false, abortEarly: true };
   const fallbackRun = schema._zod.bag.fallbackRun;
-  let result;
+  let result2;
   if (fallbackRun) {
     ctx[COMPILE_FALLBACK] = true;
-    result = fallbackRun({ value, issues: [] }, ctx);
+    result2 = fallbackRun({ value, issues: [] }, ctx);
   } else {
-    result = schema._zod.run({ value, issues: [] }, ctx);
+    result2 = schema._zod.run({ value, issues: [] }, ctx);
   }
-  if (result instanceof Promise) {
+  if (result2 instanceof Promise) {
     throw new $ZodAsyncError();
   }
-  return result.issues.length === 0;
+  return result2.issues.length === 0;
 }
 var validateAsync = async (schema, value, _ctx) => {
   const ctx = _ctx ? { ..._ctx, async: true, abortEarly: true } : { async: true, abortEarly: true };
-  let result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise)
-    result = await result;
-  return result.issues.length === 0;
+  let result2 = schema._zod.run({ value, issues: [] }, ctx);
+  if (result2 instanceof Promise)
+    result2 = await result2;
+  return result2.issues.length === 0;
 };
 var _encode = (_Err) => {
   const parse3 = _parse(_Err);
@@ -21965,8 +22036,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source) {
-  return new RegExp(`^${source}$`);
+function anchor(source3) {
+  return new RegExp(`^${source3}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -22428,22 +22499,22 @@ var $ZodCheckEndsWith = /* @__PURE__ */ $constructor("$ZodCheckEndsWith", (inst,
     });
   };
 });
-function handleCheckPropertyResult(result, payload, property) {
-  if (result.issues.length) {
-    payload.issues.push(...prefixIssues(property, result.issues));
+function handleCheckPropertyResult(result2, payload, property) {
+  if (result2.issues.length) {
+    payload.issues.push(...prefixIssues(property, result2.issues));
   }
 }
 var $ZodCheckProperty = /* @__PURE__ */ $constructor("$ZodCheckProperty", (inst, def) => {
   $ZodCheck.init(inst, def);
   inst._zod.check = (payload) => {
-    const result = def.schema._zod.run({
+    const result2 = def.schema._zod.run({
       value: payload.value[def.property],
       issues: []
     }, {});
-    if (result instanceof Promise) {
-      return result.then((result2) => handleCheckPropertyResult(result2, payload, def.property));
+    if (result2 instanceof Promise) {
+      return result2.then((result3) => handleCheckPropertyResult(result3, payload, def.property));
     }
-    handleCheckPropertyResult(result, payload, def.property);
+    handleCheckPropertyResult(result2, payload, def.property);
     return;
   };
 });
@@ -22462,12 +22533,12 @@ var $ZodCheckProperties = /* @__PURE__ */ $constructor("$ZodCheckProperties", (i
     const input3 = payload.value;
     let proms;
     for (const [key, schema] of entries) {
-      const result = schema._zod.run({ value: input3[key], issues: [] }, {});
-      if (result instanceof Promise) {
+      const result2 = schema._zod.run({ value: input3[key], issues: [] }, {});
+      if (result2 instanceof Promise) {
         proms ?? (proms = []);
-        proms.push(result.then((result2) => handleCheckPropertyResult(result2, payload, key)));
+        proms.push(result2.then((result3) => handleCheckPropertyResult(result3, payload, key)));
       } else {
-        handleCheckPropertyResult(result, payload, key);
+        handleCheckPropertyResult(result2, payload, key);
       }
     }
     if (proms)
@@ -22637,13 +22708,13 @@ var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
         }
         return handleCanaryResult(canary, payload, ctx);
       }
-      const result = inst._zod.parse(payload, ctx);
-      if (result instanceof Promise) {
+      const result2 = inst._zod.parse(payload, ctx);
+      if (result2 instanceof Promise) {
         if (ctx.async === false)
           throw new $ZodAsyncError();
-        return result.then((result2) => runChecks(result2, checks, ctx));
+        return result2.then((result3) => runChecks(result3, checks, ctx));
       }
-      return runChecks(result, checks, ctx);
+      return runChecks(result2, checks, ctx);
     };
   }
 }, {
@@ -23323,11 +23394,11 @@ function capSize(inst, size) {
 var arraySize = (input3) => Array.isArray(input3) ? input3.length : -1;
 var mapSize = (input3) => input3 instanceof Map ? input3.size : -1;
 var setSize = (input3) => input3 instanceof Set ? input3.size : -1;
-function handleArrayResult(result, final, index) {
-  if (result.issues.length) {
-    final.issues.push(...prefixIssues(index, result.issues));
+function handleArrayResult(result2, final, index) {
+  if (result2.issues.length) {
+    final.issues.push(...prefixIssues(index, result2.issues));
   }
-  final.value[index] = result.value;
+  final.value[index] = result2.value;
 }
 var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
   $ZodType.init(inst, def);
@@ -23349,15 +23420,15 @@ var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
     const abortEarly = ctx?.abortEarly;
     for (let i = 0; i < input3.length; i++) {
       const item = input3[i];
-      const result = def.element._zod.run({
+      const result2 = def.element._zod.run({
         value: item,
         issues: []
       }, ctx);
-      if (result instanceof Promise) {
-        proms.push(result.then((result2) => handleArrayResult(result2, payload, i)));
+      if (result2 instanceof Promise) {
+        proms.push(result2.then((result3) => handleArrayResult(result3, payload, i)));
       } else {
-        handleArrayResult(result, payload, i);
-        if (abortEarly && result.issues.length !== 0 && aborted(result))
+        handleArrayResult(result2, payload, i);
+        if (abortEarly && result2.issues.length !== 0 && aborted(result2))
           break;
       }
     }
@@ -23368,20 +23439,20 @@ var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
   };
   capSize(inst, arraySize);
 });
-function handlePropertyResult(result, final, key, input3, optin, optout) {
+function handlePropertyResult(result2, final, key, input3, optin, optout) {
   const isPresent = key in input3;
   const isOptionalOut = optout === "optional";
   if (!isPresent && isOptionalOut && optin === "optional") {
     return;
   }
-  if (result.issues.length) {
+  if (result2.issues.length) {
     if (optin !== void 0 && isOptionalOut && !isPresent) {
       return;
     }
-    final.issues.push(...prefixIssues(key, result.issues));
+    final.issues.push(...prefixIssues(key, result2.issues));
   }
   if (!isPresent && optin === void 0) {
-    if (!result.issues.length) {
+    if (!result2.issues.length) {
       final.issues.push({
         code: "invalid_type",
         expected: "nonoptional",
@@ -23391,12 +23462,12 @@ function handlePropertyResult(result, final, key, input3, optin, optout) {
     }
     return;
   }
-  if (result.value === void 0) {
+  if (result2.value === void 0) {
     if (isPresent || optin === "defaulted" && !isOptionalOut) {
       final.value[key] = void 0;
     }
   } else {
-    final.value[key] = result.value;
+    final.value[key] = result2.value;
   }
 }
 var NO_SYMBOL_KEYS = [];
@@ -23488,14 +23559,14 @@ var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
     const shape = zod.def.shape;
     const propValues = {};
     for (const key in shape) {
-      const field = shape[key]._zod;
-      if (field.values) {
+      const field2 = shape[key]._zod;
+      if (field2.values) {
         if (!Object.prototype.hasOwnProperty.call(propValues, key)) {
           assignProp(propValues, key, /* @__PURE__ */ new Set());
         }
-        for (const v of field.values)
+        for (const v of field2.values)
           propValues[key].add(v);
-        if (field.optin !== void 0)
+        if (field2.optin !== void 0)
           propValues[key].add(void 0);
       }
     }
@@ -23557,15 +23628,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id3, k) => `
-          let ${id3}_ab = false;
-          for (let i = 0; i < ${id3}.issues.length; i++) {
-            const iss = ${id3}.issues[i];
+    const prefixStr = (id6, k) => `
+          let ${id6}_ab = false;
+          for (let i = 0; i < ${id6}.issues.length; i++) {
+            const iss = ${id6}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id3}_ab = true;
+            if (iss.continue !== true) ${id6}_ab = true;
           }
-          if (${id3}_ab && ctx && ctx.abortEarly) {
+          if (${id6}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -23579,34 +23650,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id3 = ids2[key];
+      const id6 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id3} = ${parseStr(k)};`);
+      doc.write(`const ${id6} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id3}_present` : `${id3}.value !== undefined || ${id3}_present`;
+        const assign = optin === "optional" ? `${id6}_present` : `${id6}.value !== undefined || ${id6}_present`;
         doc.write(`
-        const ${id3}_present = ${isPresent};
-        if (!${id3}.issues.length || ${id3}_present) {
-          if (${id3}.issues.length) {${prefixStr(id3, k)}
+        const ${id6}_present = ${isPresent};
+        if (!${id6}.issues.length || ${id6}_present) {
+          if (${id6}.issues.length) {${prefixStr(id6, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id3}.value;
+            newResult[${k}] = ${id6}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id3}_present = ${isPresent};
-        if (${id3}.issues.length) {${prefixStr(id3, k)}
+        const ${id6}_present = ${isPresent};
+        if (${id6}.issues.length) {${prefixStr(id6, k)}
         }
-        if (!${id3}_present && !${id3}.issues.length) {
+        if (!${id6}_present && !${id6}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -23619,22 +23690,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id3}_present) {
-          newResult[${k}] = ${id3}.value;
+        if (${id6}_present) {
+          newResult[${k}] = ${id6}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id3}.issues.length) {${prefixStr(id3, k)}
+        if (${id6}.issues.length) {${prefixStr(id6, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id3}.value;`);
+          doc.write(`newResult[${k}] = ${id6}.value;`);
         } else {
           doc.write(`
-        if (${id3}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id3}.value;
+        if (${id6}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id6}.value;
         }
       `);
         }
@@ -23675,9 +23746,9 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
   };
 });
 function handleUnionResults(results, final, inst, ctx) {
-  for (const result of results) {
-    if (result.issues.length === 0) {
-      final.value = result.value;
+  for (const result2 of results) {
+    if (result2.issues.length === 0) {
+      final.value = result2.value;
       return final;
     }
   }
@@ -23690,7 +23761,7 @@ function handleUnionResults(results, final, inst, ctx) {
     code: "invalid_union",
     input: final.value,
     inst,
-    errors: results.map((result) => result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
+    errors: results.map((result2) => result2.issues.map((iss) => finalizeIssue(iss, ctx, config())))
   });
   return final;
 }
@@ -23719,17 +23790,17 @@ var $ZodUnion = /* @__PURE__ */ $constructor("$ZodUnion", (inst, def) => {
     let async = false;
     const results = [];
     for (const option of def.options) {
-      const result = option._zod.run({
+      const result2 = option._zod.run({
         value: payload.value,
         issues: []
       }, ctx);
-      if (result instanceof Promise) {
-        results.push(result);
+      if (result2 instanceof Promise) {
+        results.push(result2);
         async = true;
       } else {
-        if (result.issues.length === 0)
-          return result;
-        results.push(result);
+        if (result2.issues.length === 0)
+          return result2;
+        results.push(result2);
       }
     }
     if (!async)
@@ -23754,7 +23825,7 @@ function handleExclusiveUnionResults(results, final, inst, ctx) {
       code: "invalid_union",
       input: final.value,
       inst,
-      errors: results.map((result) => result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
+      errors: results.map((result2) => result2.issues.map((iss) => finalizeIssue(iss, ctx, config())))
     });
   } else {
     final.issues.push({
@@ -23779,15 +23850,15 @@ var $ZodXor = /* @__PURE__ */ $constructor("$ZodXor", (inst, def) => {
     let async = false;
     const results = [];
     for (const option of def.options) {
-      const result = option._zod.run({
+      const result2 = option._zod.run({
         value: payload.value,
         issues: []
       }, ctx);
-      if (result instanceof Promise) {
-        results.push(result);
+      if (result2 instanceof Promise) {
+        results.push(result2);
         async = true;
       } else {
-        results.push(result);
+        results.push(result2);
       }
     }
     if (!async)
@@ -23955,7 +24026,7 @@ function mergeValues(a, b) {
   }
   return { valid: false, mergeErrorPath: [] };
 }
-function handleIntersectionResults(result, left, right) {
+function handleIntersectionResults(result2, left, right) {
   const unrecKeys = /* @__PURE__ */ new Map();
   let unrecIssue;
   const keyIssues = /* @__PURE__ */ new Map();
@@ -23981,30 +24052,30 @@ function handleIntersectionResults(result, left, right) {
   };
   for (const iss of left.issues) {
     if (!collect(iss, "l"))
-      result.issues.push(iss);
+      result2.issues.push(iss);
   }
   for (const iss of right.issues) {
     if (!collect(iss, "r"))
-      result.issues.push(iss);
+      result2.issues.push(iss);
   }
   const bothKeys = [...unrecKeys].filter(([, f]) => f.l && f.r).map(([k]) => k);
   if (bothKeys.length) {
     const aggregated = unrecIssue ? bothKeys.filter((k) => unrecIssue.keys.includes(k)) : [];
     if (aggregated.length)
-      result.issues.push({ ...unrecIssue, keys: aggregated });
+      result2.issues.push({ ...unrecIssue, keys: aggregated });
     for (const k of bothKeys) {
       if (!aggregated.includes(k) && keyIssues.has(k))
-        result.issues.push(keyIssues.get(k));
+        result2.issues.push(keyIssues.get(k));
     }
   }
   const merged = mergeValues(left.value, right.value);
   if (!merged.valid) {
-    if (aborted(result))
-      return result;
+    if (aborted(result2))
+      return result2;
     throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged.mergeErrorPath)}`);
   }
-  result.value = merged.data;
-  return result;
+  result2.value = merged.data;
+  return result2;
 }
 var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
   $ZodType.init(inst, def);
@@ -24075,11 +24146,11 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
           seen = payload.issues.length;
         }
         i++;
-        const result = def.rest._zod.run({ value: el, issues: [] }, ctx);
-        if (result instanceof Promise) {
-          proms.push(result.then((r) => handleTupleResult(r, payload, i)));
+        const result2 = def.rest._zod.run({ value: el, issues: [] }, ctx);
+        if (result2 instanceof Promise) {
+          proms.push(result2.then((r) => handleTupleResult(r, payload, i)));
         } else {
-          handleTupleResult(result, payload, i);
+          handleTupleResult(result2, payload, i);
         }
       }
     }
@@ -24097,11 +24168,11 @@ function getTupleOptStart(items, key) {
   }
   return 0;
 }
-function handleTupleResult(result, final, index) {
-  if (result.issues.length) {
-    final.issues.push(...prefixIssues(index, result.issues));
+function handleTupleResult(result2, final, index) {
+  if (result2.issues.length) {
+    final.issues.push(...prefixIssues(index, result2.issues));
   }
-  final.value[index] = result.value;
+  final.value[index] = result2.value;
 }
 function handleTupleResults(itemResults, final, items, input3, optoutStart) {
   for (let i = 0; i < items.length; i++) {
@@ -24172,19 +24243,19 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
           const outKey = keyResult.value;
           if (outKey === "__proto__")
             continue;
-          const result = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
-          if (result instanceof Promise) {
-            proms.push(result.then((result2) => {
-              if (result2.issues.length) {
-                payload.issues.push(...prefixIssues(key, result2.issues));
+          const result2 = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
+          if (result2 instanceof Promise) {
+            proms.push(result2.then((result3) => {
+              if (result3.issues.length) {
+                payload.issues.push(...prefixIssues(key, result3.issues));
               }
-              payload.value[outKey] = result2.value;
+              payload.value[outKey] = result3.value;
             }));
           } else {
-            if (result.issues.length) {
-              payload.issues.push(...prefixIssues(key, result.issues));
+            if (result2.issues.length) {
+              payload.issues.push(...prefixIssues(key, result2.issues));
             }
-            payload.value[outKey] = result.value;
+            payload.value[outKey] = result2.value;
           }
         }
       }
@@ -24253,19 +24324,19 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
         const outKey = keyResult.value;
         if (outKey === "__proto__")
           continue;
-        const result = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
-        if (result instanceof Promise) {
-          proms.push(result.then((result2) => {
-            if (result2.issues.length) {
-              payload.issues.push(...prefixIssues(key, result2.issues));
+        const result2 = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
+        if (result2 instanceof Promise) {
+          proms.push(result2.then((result3) => {
+            if (result3.issues.length) {
+              payload.issues.push(...prefixIssues(key, result3.issues));
             }
-            payload.value[outKey] = result2.value;
+            payload.value[outKey] = result3.value;
           }));
         } else {
-          if (result.issues.length) {
-            payload.issues.push(...prefixIssues(key, result.issues));
+          if (result2.issues.length) {
+            payload.issues.push(...prefixIssues(key, result2.issues));
           }
-          payload.value[outKey] = result.value;
+          payload.value[outKey] = result2.value;
         }
       }
       if (unrecognized && unrecognized.length > 0) {
@@ -24380,11 +24451,11 @@ var $ZodSet = /* @__PURE__ */ $constructor("$ZodSet", (inst, def) => {
           break;
         seen = payload.issues.length;
       }
-      const result = def.valueType._zod.run({ value: item, issues: [] }, ctx);
-      if (result instanceof Promise) {
-        proms.push(result.then((result2) => handleSetResult(result2, payload)));
+      const result2 = def.valueType._zod.run({ value: item, issues: [] }, ctx);
+      if (result2 instanceof Promise) {
+        proms.push(result2.then((result3) => handleSetResult(result3, payload)));
       } else
-        handleSetResult(result, payload);
+        handleSetResult(result2, payload);
     }
     if (proms.length)
       return Promise.all(proms).then(() => payload);
@@ -24392,11 +24463,11 @@ var $ZodSet = /* @__PURE__ */ $constructor("$ZodSet", (inst, def) => {
   };
   capSize(inst, setSize);
 });
-function handleSetResult(result, final) {
-  if (result.issues.length) {
-    final.issues.push(...result.issues);
+function handleSetResult(result2, final) {
+  if (result2.issues.length) {
+    final.issues.push(...result2.issues);
   }
-  final.value.add(result.value);
+  final.value.add(result2.value);
 }
 var $ZodEnum = /* @__PURE__ */ $constructor("$ZodEnum", (inst, def) => {
   $ZodType.init(inst, def);
@@ -24481,8 +24552,8 @@ var $ZodTransform = /* @__PURE__ */ $constructor("$ZodTransform", (inst, def) =>
     return payload;
   };
 });
-function handleOptionalResult(payload, result) {
-  payload.value = result.issues.length ? void 0 : result.value;
+function handleOptionalResult(payload, result2) {
+  payload.value = result2.issues.length ? void 0 : result2.value;
   return payload;
 }
 var $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def) => {
@@ -24501,10 +24572,10 @@ var $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def) => {
     if (payload.value === void 0) {
       if (def.innerType._zod.optin !== "defaulted")
         return payload;
-      const result = def.innerType._zod.run({ value: payload.value, issues: [] }, ctx);
-      if (result instanceof Promise)
-        return result.then((result2) => handleOptionalResult(payload, result2));
-      return handleOptionalResult(payload, result);
+      const result2 = def.innerType._zod.run({ value: payload.value, issues: [] }, ctx);
+      if (result2 instanceof Promise)
+        return result2.then((result3) => handleOptionalResult(payload, result3));
+      return handleOptionalResult(payload, result2);
     }
     return def.innerType._zod.run(payload, ctx);
   };
@@ -24546,11 +24617,11 @@ var $ZodDefault = /* @__PURE__ */ $constructor("$ZodDefault", (inst, def) => {
       payload.value = def.defaultValue;
       return payload;
     }
-    const result = def.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => handleDefaultResult(result2, def));
+    const result2 = def.innerType._zod.run(payload, ctx);
+    if (result2 instanceof Promise) {
+      return result2.then((result3) => handleDefaultResult(result3, def));
     }
-    return handleDefaultResult(result, def);
+    return handleDefaultResult(result2, def);
   };
 });
 function handleDefaultResult(payload, def) {
@@ -24580,11 +24651,11 @@ var $ZodNonOptional = /* @__PURE__ */ $constructor("$ZodNonOptional", (inst, def
     return v ? new Set([...v].filter((x) => x !== void 0)) : void 0;
   });
   inst._zod.parse = (payload, ctx) => {
-    const result = def.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => handleNonOptionalResult(result2, inst));
+    const result2 = def.innerType._zod.run(payload, ctx);
+    if (result2 instanceof Promise) {
+      return result2.then((result3) => handleNonOptionalResult(result3, inst));
     }
-    return handleNonOptionalResult(result, inst);
+    return handleNonOptionalResult(result2, inst);
   };
 });
 function handleNonOptionalResult(payload, inst) {
@@ -24604,29 +24675,29 @@ var $ZodSuccess = /* @__PURE__ */ $constructor("$ZodSuccess", (inst, def) => {
     if (ctx.direction === "backward") {
       throw new $ZodEncodeError("ZodSuccess");
     }
-    const result = def.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => {
-        payload.value = result2.issues.length === 0;
+    const result2 = def.innerType._zod.run(payload, ctx);
+    if (result2 instanceof Promise) {
+      return result2.then((result3) => {
+        payload.value = result3.issues.length === 0;
         return payload;
       });
     }
-    payload.value = result.issues.length === 0;
+    payload.value = result2.issues.length === 0;
     return payload;
   };
 });
-function handleCatchResult(payload, result, def, ctx) {
-  if (!result.issues.length) {
-    payload.value = result.value;
-    if (result.memo)
+function handleCatchResult(payload, result2, def, ctx) {
+  if (!result2.issues.length) {
+    payload.value = result2.value;
+    if (result2.memo)
       payload.memo = true;
     return payload;
   }
   payload.value = def.catchValue({
-    ...result,
+    ...result2,
     value: payload.value,
     error: {
-      issues: result.issues.map((iss) => finalizeIssue(iss, ctx, config()))
+      issues: result2.issues.map((iss) => finalizeIssue(iss, ctx, config()))
     },
     input: payload.value
   });
@@ -24641,11 +24712,11 @@ var $ZodCatch = /* @__PURE__ */ $constructor("$ZodCatch", (inst, def) => {
     if (ctx.direction === "backward") {
       return def.innerType._zod.run(payload, ctx);
     }
-    const result = def.innerType._zod.run({ value: payload.value, issues: [] }, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => handleCatchResult(payload, result2, def, ctx));
+    const result2 = def.innerType._zod.run({ value: payload.value, issues: [] }, ctx);
+    if (result2 instanceof Promise) {
+      return result2.then((result3) => handleCatchResult(payload, result3, def, ctx));
     }
-    return handleCatchResult(payload, result, def, ctx);
+    return handleCatchResult(payload, result2, def, ctx);
   };
 });
 var $ZodNaN = /* @__PURE__ */ $constructor("$ZodNaN", (inst, def) => {
@@ -24714,24 +24785,24 @@ var $ZodCodec = /* @__PURE__ */ $constructor("$ZodCodec", (inst, def) => {
     }
   };
 });
-function handleCodecAResult(result, def, ctx) {
-  if (result.issues.length) {
-    result.aborted = true;
-    return result;
+function handleCodecAResult(result2, def, ctx) {
+  if (result2.issues.length) {
+    result2.aborted = true;
+    return result2;
   }
   const direction = ctx.direction || "forward";
   if (direction === "forward") {
-    const transformed = def.transform(result.value, result);
+    const transformed = def.transform(result2.value, result2);
     if (transformed instanceof Promise) {
-      return transformed.then((value) => handleCodecTxResult(result, value, def.out, ctx));
+      return transformed.then((value) => handleCodecTxResult(result2, value, def.out, ctx));
     }
-    return handleCodecTxResult(result, transformed, def.out, ctx);
+    return handleCodecTxResult(result2, transformed, def.out, ctx);
   } else {
-    const transformed = def.reverseTransform(result.value, result);
+    const transformed = def.reverseTransform(result2.value, result2);
     if (transformed instanceof Promise) {
-      return transformed.then((value) => handleCodecTxResult(result, value, def.in, ctx));
+      return transformed.then((value) => handleCodecTxResult(result2, value, def.in, ctx));
     }
-    return handleCodecTxResult(result, transformed, def.in, ctx);
+    return handleCodecTxResult(result2, transformed, def.in, ctx);
   }
 }
 function handleCodecTxResult(left, value, nextSchema, ctx) {
@@ -24754,11 +24825,11 @@ var $ZodReadonly = /* @__PURE__ */ $constructor("$ZodReadonly", (inst, def) => {
     if (ctx.direction === "backward") {
       return def.innerType._zod.run(payload, ctx);
     }
-    const result = def.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then(handleReadonlyResult);
+    const result2 = def.innerType._zod.run(payload, ctx);
+    if (result2 instanceof Promise) {
+      return result2.then(handleReadonlyResult);
     }
-    return handleReadonlyResult(result);
+    return handleReadonlyResult(result2);
   };
 });
 function handleReadonlyResult(payload) {
@@ -24790,20 +24861,20 @@ function leafPattern(schema) {
     return "(?!)";
   if (minimum !== void 0 || maximum !== void 0)
     return string({ minimum, maximum }).source;
-  const own2 = schema._zod.pattern;
-  return (isInt && own2 === number ? integer : own2)?.source;
+  const own3 = schema._zod.pattern;
+  return (isInt && own3 === number ? integer : own3)?.source;
 }
 function partPattern(schema) {
   const def = schema._zod.def;
-  const own2 = schema._zod.pattern?.source;
+  const own3 = schema._zod.pattern?.source;
   const inner = def.innerType ?? schema._zod.innerType;
   if (inner) {
     const before = inner._zod.pattern?.source;
     const after = partPattern(inner);
-    if (own2 && before && after && after !== before) {
-      return own2.replace(cleanRegex(before), () => cleanRegex(after));
+    if (own3 && before && after && after !== before) {
+      return own3.replace(cleanRegex(before), () => cleanRegex(after));
     }
-    return own2;
+    return own3;
   }
   if (def.options) {
     const sources = def.options.map(partPattern);
@@ -24817,11 +24888,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source = partPattern(part);
-      if (!source) {
+      const source3 = partPattern(part);
+      if (!source3) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source));
+      regexParts.push(cleanRegex(source3));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -24863,11 +24934,11 @@ var $ZodFunction = /* @__PURE__ */ $constructor("$ZodFunction", (inst, def) => {
     }
     return Object.defineProperty(function(...args) {
       const parsedArgs = inst._def.input ? parse(inst._def.input, args) : args;
-      const result = Reflect.apply(func, this, parsedArgs);
+      const result2 = Reflect.apply(func, this, parsedArgs);
       if (inst._def.output) {
-        return parse(inst._def.output, result);
+        return parse(inst._def.output, result2);
       }
-      return result;
+      return result2;
     }, "_zod", { value: inst._zod, enumerable: false });
   };
   inst.implementAsync = (func) => {
@@ -24876,11 +24947,11 @@ var $ZodFunction = /* @__PURE__ */ $constructor("$ZodFunction", (inst, def) => {
     }
     return Object.defineProperty(async function(...args) {
       const parsedArgs = inst._def.input ? await parseAsync(inst._def.input, args) : args;
-      const result = await Reflect.apply(func, this, parsedArgs);
+      const result2 = await Reflect.apply(func, this, parsedArgs);
       if (inst._def.output) {
-        return await parseAsync(inst._def.output, result);
+        return await parseAsync(inst._def.output, result2);
       }
-      return result;
+      return result2;
     }, "_zod", { value: inst._zod, enumerable: false });
   };
   inst._zod.parse = (payload, _ctx) => {
@@ -24969,8 +25040,8 @@ var $ZodCustom = /* @__PURE__ */ $constructor("$ZodCustom", (inst, def) => {
     return;
   };
 });
-function handleRefineResult(result, payload, input3, inst) {
-  if (!result) {
+function handleRefineResult(result2, payload, input3, inst) {
+  if (!result2) {
     const _iss = {
       code: "custom",
       input: input3,
@@ -25013,12 +25084,12 @@ function isRecursive(inst, stack, resolve4) {
   if (stack.has(inst))
     return PROVEN;
   stack.add(inst);
-  let result = NONE;
+  let result2 = NONE;
   const check2 = (child) => {
-    if (result !== PROVEN && child?._zod) {
+    if (result2 !== PROVEN && child?._zod) {
       const answer = isRecursive(child, stack, resolve4);
-      if (answer > result)
-        result = answer;
+      if (answer > result2)
+        result2 = answer;
     }
   };
   const shape = (sh, spread) => {
@@ -25034,8 +25105,8 @@ function isRecursive(inst, stack, resolve4) {
     return answer;
   };
   const merge2 = (answer) => {
-    if (answer > result)
-      result = answer;
+    if (answer > result2)
+      result2 = answer;
   };
   const def = inst._zod.def;
   const kind = def.type;
@@ -25136,7 +25207,7 @@ function isRecursive(inst, stack, resolve4) {
     }
   }
   stack.delete(inst);
-  return settle(inst, result);
+  return settle(inst, result2);
 }
 function settle(inst, answer) {
   if (answer !== ASSUMED)
@@ -25146,11 +25217,11 @@ function settle(inst, answer) {
 function isRecursiveSchema(inst) {
   return isRecursive(inst, /* @__PURE__ */ new Set(), true) !== NONE;
 }
-function bucketFor(state, inst) {
-  let bucket = state.buckets.get(inst);
+function bucketFor(state2, inst) {
+  let bucket = state2.buckets.get(inst);
   if (!bucket) {
     bucket = /* @__PURE__ */ new WeakMap();
-    state.buckets.set(inst, bucket);
+    state2.buckets.set(inst, bucket);
   }
   return bucket;
 }
@@ -25208,16 +25279,16 @@ var memo = {
         const input3 = payload.value;
         if (!isRef(input3))
           return base(payload, ctx);
-        let state = ctx[STATE];
-        if (!state) {
-          state = { buckets: /* @__PURE__ */ new WeakMap(), backEdges: void 0 };
-          ctx[STATE] = state;
+        let state2 = ctx[STATE];
+        if (!state2) {
+          state2 = { buckets: /* @__PURE__ */ new WeakMap(), backEdges: void 0 };
+          ctx[STATE] = state2;
         }
         let bucket;
         if (lastCtx === ctx) {
           bucket = lastBucket;
         } else {
-          bucket = bucketFor(state, inst);
+          bucket = bucketFor(state2, inst);
           lastCtx = ctx;
           lastBucket = bucket;
         }
@@ -25229,26 +25300,26 @@ var memo = {
               payload.issues.push(...cloneIssues(hit.issues));
           } else {
             payload.memo = true;
-            state.backEdges ?? (state.backEdges = /* @__PURE__ */ new WeakSet());
-            state.backEdges.add(hit.value);
+            state2.backEdges ?? (state2.backEdges = /* @__PURE__ */ new WeakSet());
+            state2.backEdges.add(hit.value);
           }
           return payload;
         }
         handoff = bucket;
         const depth = open.length;
-        const result = base(payload, ctx);
+        const result2 = base(payload, ctx);
         handoff = void 0;
         const entry = open.length > depth ? open.pop() : void 0;
-        if (result instanceof Promise) {
-          return result.then((r) => {
+        if (result2 instanceof Promise) {
+          return result2.then((r) => {
             if (entry)
               entry.issues = r.issues.length ? cloneIssues(r.issues) : NO_ISSUES;
             return r;
           });
         }
         if (entry)
-          entry.issues = result.issues.length ? cloneIssues(result.issues) : NO_ISSUES;
-        return result;
+          entry.issues = result2.issues.length ? cloneIssues(result2.issues) : NO_ISSUES;
+        return result2;
       };
       inst._zod.parse = wrapped;
       if (inst._zod.run === base)
@@ -25556,8 +25627,8 @@ function az_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count8, one, few, many) {
-  const absCount = Math.abs(count8);
+function getBelarusianPlural(count9, one, few, many) {
+  const absCount = Math.abs(count9);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -28204,8 +28275,8 @@ function hu_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count8, one, many) {
-  return Math.abs(count8) === 1 ? one : many;
+function getArmenianPlural(count9, one, many) {
+  return Math.abs(count9) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -29374,12 +29445,12 @@ var error33 = () => {
     }
   };
   function getSizing(origin, unitType, inclusive, targetShouldBe) {
-    const result = Sizable[origin] ?? null;
-    if (result === null)
-      return result;
+    const result2 = Sizable[origin] ?? null;
+    if (result2 === null)
+      return result2;
     return {
-      unit: result.unit[unitType],
-      verb: result.verb[targetShouldBe][inclusive ? "inclusive" : "notInclusive"]
+      unit: result2.unit[unitType],
+      verb: result2.verb[targetShouldBe][inclusive ? "inclusive" : "notInclusive"]
     };
   }
   const FormatDictionary = {
@@ -30943,8 +31014,8 @@ function ro_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count8, one, few, many) {
-  const absCount = Math.abs(count8);
+function getRussianPlural(count9, one, few, many) {
+  const absCount = Math.abs(count9);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -32907,9 +32978,9 @@ function compileValidator(schema, parser) {
 function compile(schema, options) {
   try {
     const parser = compileFn(schema);
-    const clone2 = withParser(schema, parser);
-    clone2._zod.bag.validator = compileValidator(schema, parser);
-    return clone2;
+    const clone3 = withParser(schema, parser);
+    clone3._zod.bag.validator = compileValidator(schema, parser);
+    return clone3;
   } catch (err) {
     if (options?.strict)
       throw err;
@@ -32920,7 +32991,7 @@ function withParser(schema, parser) {
   if (isRecursiveSchema(schema)) {
     throw new ZodCompileUnsupportedError("a schema whose subtree contains a reference cycle");
   }
-  const clone2 = clone(schema);
+  const clone3 = clone(schema);
   const liveRun = schema._zod.run;
   const originalRun = liveRun.__originalRun ?? liveRun;
   const wrapped = (payload, ctx) => {
@@ -32940,16 +33011,16 @@ function withParser(schema, parser) {
     return originalRun(payload, ctx);
   };
   wrapped.__originalRun = originalRun;
-  clone2._zod.bag.fallbackRun = originalRun;
-  clone2._zod.bag.validator = parser;
-  clone2._zod.run = wrapped;
+  clone3._zod.bag.fallbackRun = originalRun;
+  clone3._zod.bag.validator = parser;
+  clone3._zod.run = wrapped;
   if (!liveRun.__originalRun)
-    installCompiledUserMethods(clone2, schema, parser);
-  return clone2;
+    installCompiledUserMethods(clone3, schema, parser);
+  return clone3;
 }
-function installCompiledUserMethods(target, source, parser) {
+function installCompiledUserMethods(target, source3, parser) {
   const targetAny = target;
-  const sourceAny = source;
+  const sourceAny = source3;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -33028,10 +33099,10 @@ function newVar(ctx) {
   return `v${ctx.varCounter++}`;
 }
 function runtimeRun(schema, value) {
-  const result = schema._zod.run({ value, issues: [] }, {});
-  if (result && typeof result.then === "function")
+  const result2 = schema._zod.run({ value, issues: [] }, {});
+  if (result2 && typeof result2.then === "function")
     return INVALID;
-  const r = result;
+  const r = result2;
   return r.issues.length === 0 ? r.value : INVALID;
 }
 function compileChild(doc, ctx, schema, accessor, needsValue = true) {
@@ -33303,8 +33374,8 @@ function generateCustomRefineCheck(doc, ctx, check2, accessor) {
     const checkFn = check2._zod.check;
     const helperFn = (value) => {
       const fakePayload = { value, issues: [], addIssue: pushIssue };
-      const result = checkFn(fakePayload);
-      if (result instanceof Promise)
+      const result2 = checkFn(fakePayload);
+      if (result2 instanceof Promise)
         throwAsync();
       return fakePayload.issues.length === 0 ? fakePayload.value : INVALID;
     };
@@ -34402,10 +34473,10 @@ function generatePipeCheck(doc, ctx, schema, accessor) {
     const transformFn = def.transform;
     const helperFn = (value) => {
       const fakePayload = { value, issues: [], addIssue: pushIssue };
-      const result = transformFn(value, fakePayload);
-      if (result instanceof Promise)
+      const result2 = transformFn(value, fakePayload);
+      if (result2 instanceof Promise)
         return INVALID;
-      return fakePayload.issues.length === 0 ? result : INVALID;
+      return fakePayload.issues.length === 0 ? result2 : INVALID;
     };
     const helperConst = addUserConstant(ctx, helperFn);
     const transformedVar = newVar(ctx);
@@ -34437,10 +34508,10 @@ function generateCustomCheck(doc, ctx, schema, accessor) {
   return accessor;
 }
 function runtimeCatch(innerSchema, catchValue, value) {
-  const result = innerSchema._zod.run({ value, issues: [] }, {});
-  if (result && typeof result.then === "function")
+  const result2 = innerSchema._zod.run({ value, issues: [] }, {});
+  if (result2 && typeof result2.then === "function")
     return INVALID;
-  const r = result;
+  const r = result2;
   if (r.issues.length === 0)
     return r.value;
   return catchValue();
@@ -34477,10 +34548,10 @@ function generateTransformCheck(doc, ctx, schema, accessor) {
     const transformFn = def.transform;
     const helperFn = (value) => {
       const fakePayload = { value, issues: [], addIssue: pushIssue };
-      const result = transformFn(value, fakePayload);
-      if (result instanceof Promise)
+      const result2 = transformFn(value, fakePayload);
+      if (result2 instanceof Promise)
         return INVALID;
-      return fakePayload.issues.length === 0 ? result : INVALID;
+      return fakePayload.issues.length === 0 ? result2 : INVALID;
     };
     const helperConst = addUserConstant(ctx, helperFn);
     const outputVar = newVar(ctx);
@@ -35161,10 +35232,10 @@ function _properties(shape, params) {
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _mime(types, params) {
+function _mime(types2, params) {
   return new $ZodCheckMimeType({
     check: "mime_type",
-    mime: types,
+    mime: types2,
     ...normalizeParams(params)
   });
 }
@@ -35467,12 +35538,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -35552,10 +35623,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source of sources) {
-    for (const key of Reflect.ownKeys(source)) {
-      if (Object.prototype.propertyIsEnumerable.call(source, key)) {
-        assignProp(target, key, source[key]);
+  for (const source3 of sources) {
+    for (const key of Reflect.ownKeys(source3)) {
+      if (Object.prototype.propertyIsEnumerable.call(source3, key)) {
+        assignProp(target, key, source3[key]);
       }
     }
   }
@@ -35586,13 +35657,13 @@ function initializeContext(params) {
     external: params?.external ?? void 0
   };
 }
-function handleUnrepresentable(schema, ctx, json2, params, message) {
-  const result = typeof ctx.unrepresentable === "function" ? ctx.unrepresentable({ zodSchema: schema, path: params.path, message }) : ctx.unrepresentable;
-  if (result === "any")
+function handleUnrepresentable(schema, ctx, json3, params, message) {
+  const result2 = typeof ctx.unrepresentable === "function" ? ctx.unrepresentable({ zodSchema: schema, path: params.path, message }) : ctx.unrepresentable;
+  if (result2 === "any")
     return false;
-  if (result === void 0 || result === "throw")
+  if (result2 === void 0 || result2 === "throw")
     throw new Error(message);
-  Object.assign(json2, result);
+  Object.assign(json3, result2);
   return true;
 }
 function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
@@ -35607,13 +35678,13 @@ function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
     }
     return seen.schema;
   }
-  const result = { schema: {}, count: 1, cycle: void 0, path: _params.path };
-  ctx.seen.set(schema, result);
+  const result2 = { schema: {}, count: 1, cycle: void 0, path: _params.path };
+  ctx.seen.set(schema, result2);
   ctx.sharedDefsExtractedFor = void 0;
   ctx.sharedEmitDoneFor = void 0;
   const overrideSchema = schema._zod.toJSONSchema?.();
   if (overrideSchema) {
-    result.schema = overrideSchema;
+    result2.schema = overrideSchema;
   } else {
     const params = {
       ..._params,
@@ -35621,9 +35692,9 @@ function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
       path: _params.path
     };
     if (schema._zod.processJSONSchema) {
-      schema._zod.processJSONSchema(ctx, result.schema, params);
+      schema._zod.processJSONSchema(ctx, result2.schema, params);
     } else {
-      const _json = result.schema;
+      const _json = result2.schema;
       const processor = ctx.processors[def.type];
       if (!processor) {
         throw new Error(`[toJSONSchema]: Non-representable type encountered: ${def.type}`);
@@ -35632,22 +35703,22 @@ function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
     }
     const parent = schema._zod.parent;
     if (parent) {
-      if (!result.ref)
-        result.ref = parent;
+      if (!result2.ref)
+        result2.ref = parent;
       processSchema(parent, ctx, params);
       ctx.seen.get(parent).isParent = true;
     }
   }
   const meta3 = ctx.metadataRegistry.get(schema);
   if (meta3)
-    assignProps(result.schema, meta3);
+    assignProps(result2.schema, meta3);
   if (ctx.io === "input" && isTransforming(schema)) {
-    delete result.schema.examples;
-    delete result.schema.default;
+    delete result2.schema.examples;
+    delete result2.schema.default;
   }
-  if (ctx.io === "input" && "_prefault" in result.schema)
-    (_a3 = result.schema).default ?? (_a3.default = result.schema._prefault);
-  delete result.schema._prefault;
+  if (ctx.io === "input" && "_prefault" in result2.schema)
+    (_a3 = result2.schema).default ?? (_a3.default = result2.schema._prefault);
+  delete result2.schema._prefault;
   const _result = ctx.seen.get(schema);
   return _result.schema;
 }
@@ -35662,26 +35733,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id3 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id3) {
-      const existing = idToSchema.get(id3);
+    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id6) {
+      const existing = idToSchema.get(id6);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id3}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id6}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id3, entry[0]);
+      idToSchema.set(id6, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id4) => id4);
+      const uriGenerator = ctx.external.uri ?? ((id7) => id7);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id3 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id3;
-      return { defId: id3, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id3)}` };
+      const id6 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id6;
+      return { defId: id6, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id6)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -35729,8 +35800,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id3 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id3) {
+    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id6) {
       extractToDef(entry);
       continue;
     }
@@ -35751,7 +35822,7 @@ function compactTypeUnion(schema) {
   const options = schema.anyOf;
   if (!Array.isArray(options) || options.length === 0 || schema.type !== void 0)
     return;
-  const types = [];
+  const types2 = [];
   for (const option of options) {
     if (!option || typeof option !== "object")
       return;
@@ -35763,12 +35834,12 @@ function compactTypeUnion(schema) {
     for (const member2 of Array.isArray(type) ? type : [type]) {
       if (typeof member2 !== "string")
         return;
-      if (!types.includes(member2))
-        types.push(member2);
+      if (!types2.includes(member2))
+        types2.push(member2);
     }
   }
   delete schema.anyOf;
-  schema.type = types.length === 1 ? types[0] : types;
+  schema.type = types2.length === 1 ? types2[0] : types2;
 }
 var FOLDABLE_KEYS = /* @__PURE__ */ new Set(["type", "properties", "required", "additionalProperties"]);
 var UNION_KEYS = ["oneOf", "anyOf"];
@@ -35791,8 +35862,8 @@ function foldObjects(members2) {
   }
   const properties = {};
   const required2 = /* @__PURE__ */ new Set();
-  for (const object3 of objects) {
-    for (const key in object3.properties) {
+  for (const object9 of objects) {
+    for (const key in object9.properties) {
       if (Object.prototype.hasOwnProperty.call(properties, key))
         continue;
       const parts = [];
@@ -35806,18 +35877,18 @@ function foldObjects(members2) {
       const merged = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
       assignProp(properties, key, merged);
     }
-    for (const key of object3.required ?? [])
+    for (const key of object9.required ?? [])
       required2.add(key);
   }
   const folded = { type: "object", properties };
   if (required2.size)
     folded.required = [...required2];
-  if (objects.every((object3) => object3.additionalProperties === false)) {
+  if (objects.every((object9) => object9.additionalProperties === false)) {
     folded.additionalProperties = false;
   } else {
     const constraints = [];
-    for (const object3 of objects) {
-      const constraint = undeclaredConstraint(object3);
+    for (const object9 of objects) {
+      const constraint = undeclaredConstraint(object9);
       if (constraint && !constraints.some((seen) => JSON.stringify(seen) === JSON.stringify(constraint)))
         constraints.push(constraint);
     }
@@ -35828,12 +35899,12 @@ function foldObjects(members2) {
   }
   return folded;
 }
-function foldIntersection(json2) {
-  const allOf = json2.allOf;
+function foldIntersection(json3) {
+  const allOf = json3.allOf;
   if (!Array.isArray(allOf) || allOf.length < 2)
     return;
   for (const key of FOLDABLE_KEYS)
-    if (key in json2)
+    if (key in json3)
       return;
   const unions = allOf.filter((m) => UNION_KEYS.some((k) => Array.isArray(m[k])));
   let folded = null;
@@ -35852,8 +35923,8 @@ function foldIntersection(json2) {
   }
   if (!folded)
     return;
-  delete json2.allOf;
-  assignProps(json2, folded);
+  delete json3.allOf;
+  assignProps(json3, folded);
 }
 function finalize(ctx, schema) {
   const root = ctx.seen.get(schema);
@@ -35935,43 +36006,43 @@ function finalize(ctx, schema) {
     if (ctx.intersections.length) {
       const carriers = /* @__PURE__ */ new Map();
       for (const seen of ctx.seen.values()) {
-        for (const json2 of [seen.schema, seen.def]) {
-          const allOf = json2?.allOf;
+        for (const json3 of [seen.schema, seen.def]) {
+          const allOf = json3?.allOf;
           if (!Array.isArray(allOf))
             continue;
           const existing = carriers.get(allOf);
           if (existing)
-            existing.push(json2);
+            existing.push(json3);
           else
-            carriers.set(allOf, [json2]);
+            carriers.set(allOf, [json3]);
         }
       }
       for (const allOf of ctx.intersections) {
-        for (const json2 of carriers.get(allOf) ?? [])
-          foldIntersection(json2);
+        for (const json3 of carriers.get(allOf) ?? [])
+          foldIntersection(json3);
       }
     }
   }
-  const result = {};
+  const result2 = {};
   if (ctx.target === "draft-2020-12") {
-    result.$schema = "https://json-schema.org/draft/2020-12/schema";
+    result2.$schema = "https://json-schema.org/draft/2020-12/schema";
   } else if (ctx.target === "draft-07") {
-    result.$schema = "http://json-schema.org/draft-07/schema#";
+    result2.$schema = "http://json-schema.org/draft-07/schema#";
   } else if (ctx.target === "draft-04") {
-    result.$schema = "http://json-schema.org/draft-04/schema#";
+    result2.$schema = "http://json-schema.org/draft-04/schema#";
   } else if (ctx.target === "openapi-3.0") {
   } else {
   }
   if (ctx.external?.uri) {
-    const id3 = ctx.external.registry.get(schema)?.id;
-    if (!id3)
+    const id6 = ctx.external.registry.get(schema)?.id;
+    if (!id6)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id3);
+    result2.$id = ctx.external.uri(id6);
   }
-  assignProps(result, root.defId ? root.schema : root.def ?? root.schema);
+  assignProps(result2, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
-  if (rootMetaId !== void 0 && result.id === rootMetaId)
-    delete result.id;
+  if (rootMetaId !== void 0 && result2.id === rootMetaId)
+    delete result2.id;
   const defs = ctx.external?.defs ?? {};
   if (!ctx.external || ctx.sharedEmitDoneFor !== ctx.external) {
     for (const entry of ctx.seen.entries()) {
@@ -35989,14 +36060,14 @@ function finalize(ctx, schema) {
   } else {
     if (Object.keys(defs).length > 0) {
       if (ctx.target === "draft-2020-12") {
-        result.$defs = defs;
+        result2.$defs = defs;
       } else {
-        result.definitions = defs;
+        result2.definitions = defs;
       }
     }
   }
   try {
-    const finalized = JSON.parse(JSON.stringify(result));
+    const finalized = JSON.parse(JSON.stringify(result2));
     Object.defineProperty(finalized, "~standard", {
       value: {
         ...schema["~standard"],
@@ -36144,8 +36215,8 @@ var contributors = {
 function aggregateChecks(schema) {
   const agg = {};
   const def = schema._zod.def;
-  const list = schema._zod.traits.has("$ZodCheck") ? [schema, ...def.checks ?? []] : def.checks ?? [];
-  for (const ch of list)
+  const list3 = schema._zod.traits.has("$ZodCheck") ? [schema, ...def.checks ?? []] : def.checks ?? [];
+  for (const ch of list3)
     contributors[ch._zod.def.check]?.(agg, ch._zod.def);
   const bag = schema._zod.bag;
   if (bag.minimum !== void 0)
@@ -36183,29 +36254,29 @@ var exactPatterns = /* @__PURE__ */ new Map([
 ]);
 var exactPattern = (p) => exactPatterns.get(p) ?? p;
 var stringProcessor = (schema, ctx, _json, _params) => {
-  const json2 = _json;
-  json2.type = "string";
+  const json3 = _json;
+  json3.type = "string";
   const { minimum, maximum, format, patterns, contentEncoding, laxFormat } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json2.minLength = minimum;
+    json3.minLength = minimum;
   if (typeof maximum === "number")
-    json2.maxLength = maximum;
+    json3.maxLength = maximum;
   if (format) {
-    json2.format = formatMap[format] ?? format;
-    if (json2.format === "")
-      delete json2.format;
+    json3.format = formatMap[format] ?? format;
+    if (json3.format === "")
+      delete json3.format;
     if (format === "time" || laxFormat) {
-      delete json2.format;
+      delete json3.format;
     }
   }
   if (contentEncoding)
-    json2.contentEncoding = contentEncoding;
+    json3.contentEncoding = contentEncoding;
   if (patterns && patterns.size > 0) {
     const patternList = [...patterns].map(exactPattern);
     if (patternList.length === 1)
-      json2.pattern = patternList[0].source;
+      json3.pattern = patternList[0].source;
     else if (patternList.length > 1) {
-      json2.allOf = [
+      json3.allOf = [
         ...patternList.map((regex) => ({
           ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
           pattern: regex.source
@@ -36215,31 +36286,31 @@ var stringProcessor = (schema, ctx, _json, _params) => {
   }
 };
 var numberProcessor = (schema, ctx, _json, params) => {
-  const json2 = _json;
+  const json3 = _json;
   const { minimum, maximum, multipleOf, exclusiveMaximum, exclusiveMinimum, isInt } = aggregateChecks(schema);
-  json2.type = isInt ? "integer" : "number";
+  json3.type = isInt ? "integer" : "number";
   const exMin = typeof exclusiveMinimum === "number" && exclusiveMinimum >= (minimum ?? Number.NEGATIVE_INFINITY);
   const exMax = typeof exclusiveMaximum === "number" && exclusiveMaximum <= (maximum ?? Number.POSITIVE_INFINITY);
   const legacy = ctx.target === "draft-04" || ctx.target === "openapi-3.0";
   if (exMin) {
     if (legacy) {
-      json2.minimum = exclusiveMinimum;
-      json2.exclusiveMinimum = true;
+      json3.minimum = exclusiveMinimum;
+      json3.exclusiveMinimum = true;
     } else {
-      json2.exclusiveMinimum = exclusiveMinimum;
+      json3.exclusiveMinimum = exclusiveMinimum;
     }
   } else if (typeof minimum === "number") {
-    json2.minimum = minimum;
+    json3.minimum = minimum;
   }
   if (exMax) {
     if (legacy) {
-      json2.maximum = exclusiveMaximum;
-      json2.exclusiveMaximum = true;
+      json3.maximum = exclusiveMaximum;
+      json3.exclusiveMaximum = true;
     } else {
-      json2.exclusiveMaximum = exclusiveMaximum;
+      json3.exclusiveMaximum = exclusiveMaximum;
     }
   } else if (typeof maximum === "number") {
-    json2.maximum = maximum;
+    json3.maximum = maximum;
   }
   if (multipleOf) {
     const divisors = /* @__PURE__ */ new Set();
@@ -36247,75 +36318,75 @@ var numberProcessor = (schema, ctx, _json, params) => {
       if (Number.isFinite(divisor) && divisor !== 0)
         divisors.add(Math.abs(divisor));
       else
-        handleUnrepresentable(schema, ctx, json2, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
+        handleUnrepresentable(schema, ctx, json3, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
     }
     const [first, ...rest] = divisors;
     if (first !== void 0)
-      json2.multipleOf = first;
+      json3.multipleOf = first;
     if (rest.length)
-      json2.allOf = [...json2.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
+      json3.allOf = [...json3.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
   }
 };
-var booleanProcessor = (_schema, _ctx, json2, _params) => {
-  json2.type = "boolean";
+var booleanProcessor = (_schema, _ctx, json3, _params) => {
+  json3.type = "boolean";
 };
-var bigintProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "BigInt cannot be represented in JSON Schema");
+var bigintProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "BigInt cannot be represented in JSON Schema");
 };
-var symbolProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Symbols cannot be represented in JSON Schema");
+var symbolProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Symbols cannot be represented in JSON Schema");
 };
-var nullProcessor = (_schema, ctx, json2, _params) => {
+var nullProcessor = (_schema, ctx, json3, _params) => {
   if (ctx.target === "openapi-3.0") {
-    json2.type = "string";
-    json2.nullable = true;
-    json2.enum = [null];
+    json3.type = "string";
+    json3.nullable = true;
+    json3.enum = [null];
   } else {
-    json2.type = "null";
+    json3.type = "null";
   }
 };
-var undefinedProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Undefined cannot be represented in JSON Schema");
+var undefinedProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Undefined cannot be represented in JSON Schema");
 };
-var voidProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Void cannot be represented in JSON Schema");
+var voidProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Void cannot be represented in JSON Schema");
 };
-var neverProcessor = (_schema, _ctx, json2, _params) => {
-  json2.not = {};
+var neverProcessor = (_schema, _ctx, json3, _params) => {
+  json3.not = {};
 };
 var anyProcessor = (_schema, _ctx, _json, _params) => {
 };
 var unknownProcessor = (_schema, _ctx, _json, _params) => {
 };
-var dateProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Date cannot be represented in JSON Schema");
+var dateProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Date cannot be represented in JSON Schema");
 };
-var enumProcessor = (schema, _ctx, json2, _params) => {
+var enumProcessor = (schema, _ctx, json3, _params) => {
   const def = schema._zod.def;
   const values = getEnumValues(def.entries);
   if (values.length === 0) {
-    json2.not = {};
+    json3.not = {};
     return;
   }
   if (values.every((v) => typeof v === "number"))
-    json2.type = "number";
+    json3.type = "number";
   if (values.every((v) => typeof v === "string"))
-    json2.type = "string";
-  json2.enum = values;
+    json3.type = "string";
+  json3.enum = values;
 };
-var literalProcessor = (schema, ctx, json2, params) => {
+var literalProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   if (def.values.length === 0) {
-    json2.not = {};
+    json3.not = {};
     return;
   }
   const vals = [];
   for (const val of def.values) {
     if (val === void 0) {
-      if (handleUnrepresentable(schema, ctx, json2, params, "Literal `undefined` cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json3, params, "Literal `undefined` cannot be represented in JSON Schema"))
         return;
     } else if (typeof val === "bigint") {
-      if (handleUnrepresentable(schema, ctx, json2, params, "BigInt literals cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json3, params, "BigInt literals cannot be represented in JSON Schema"))
         return;
       vals.push(Number(val));
     } else {
@@ -36325,37 +36396,37 @@ var literalProcessor = (schema, ctx, json2, params) => {
   if (vals.length === 0) {
   } else if (vals.length === 1) {
     const val = vals[0];
-    json2.type = val === null ? "null" : typeof val;
+    json3.type = val === null ? "null" : typeof val;
     if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-      json2.enum = [val];
+      json3.enum = [val];
     } else {
-      json2.const = val;
+      json3.const = val;
     }
   } else {
     if (vals.every((v) => typeof v === "number"))
-      json2.type = "number";
+      json3.type = "number";
     if (vals.every((v) => typeof v === "string"))
-      json2.type = "string";
+      json3.type = "string";
     if (vals.every((v) => typeof v === "boolean"))
-      json2.type = "boolean";
+      json3.type = "boolean";
     if (vals.every((v) => v === null))
-      json2.type = "null";
-    json2.enum = vals;
+      json3.type = "null";
+    json3.enum = vals;
   }
 };
-var nanProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "NaN cannot be represented in JSON Schema");
+var nanProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "NaN cannot be represented in JSON Schema");
 };
-var templateLiteralProcessor = (schema, _ctx, json2, _params) => {
-  const _json = json2;
+var templateLiteralProcessor = (schema, _ctx, json3, _params) => {
+  const _json = json3;
   const pattern = schema._zod.pattern;
   if (!pattern)
     throw new Error("Pattern not found in template literal");
   _json.type = "string";
   _json.pattern = pattern.source;
 };
-var fileProcessor = (schema, _ctx, json2, _params) => {
-  const _json = json2;
+var fileProcessor = (schema, _ctx, json3, _params) => {
+  const _json = json3;
   _json.type = "string";
   _json.format = "binary";
   _json.contentEncoding = "binary";
@@ -36373,34 +36444,34 @@ var fileProcessor = (schema, _ctx, json2, _params) => {
   else
     _json.anyOf = mime.map((m) => ({ contentMediaType: m }));
 };
-var successProcessor = (_schema, _ctx, json2, _params) => {
-  json2.type = "boolean";
+var successProcessor = (_schema, _ctx, json3, _params) => {
+  json3.type = "boolean";
 };
-var customProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Custom types cannot be represented in JSON Schema");
+var customProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Custom types cannot be represented in JSON Schema");
 };
-var functionProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Function types cannot be represented in JSON Schema");
+var functionProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Function types cannot be represented in JSON Schema");
 };
-var transformProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Transforms cannot be represented in JSON Schema");
+var transformProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Transforms cannot be represented in JSON Schema");
 };
-var mapProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Map cannot be represented in JSON Schema");
+var mapProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Map cannot be represented in JSON Schema");
 };
-var setProcessor = (schema, ctx, json2, params) => {
-  handleUnrepresentable(schema, ctx, json2, params, "Set cannot be represented in JSON Schema");
+var setProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Set cannot be represented in JSON Schema");
 };
 var arrayProcessor = (schema, ctx, _json, params) => {
-  const json2 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json2.minItems = minimum;
+    json3.minItems = minimum;
   if (typeof maximum === "number")
-    json2.maxItems = maximum;
-  json2.type = "array";
-  json2.items = processSchema(def.element, ctx, {
+    json3.maxItems = maximum;
+  json3.type = "array";
+  json3.items = processSchema(def.element, ctx, {
     ...params,
     path: [...params.path, "items"]
   });
@@ -36416,44 +36487,44 @@ function inputOptin(schema) {
   return schema._zod.optin;
 }
 var objectProcessor = (schema, ctx, _json, params) => {
-  const json2 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
   const shape = def.shape;
   const symbolKeys = Object.getOwnPropertySymbols(shape);
-  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json2, params, "Symbol keys cannot be represented in JSON Schema")) {
+  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json3, params, "Symbol keys cannot be represented in JSON Schema")) {
     return;
   }
-  json2.type = "object";
-  json2.properties = {};
+  json3.type = "object";
+  json3.properties = {};
   for (const key in shape) {
-    assignProp(json2.properties, key, processSchema(shape[key], ctx, {
+    assignProp(json3.properties, key, processSchema(shape[key], ctx, {
       ...params,
       path: [...params.path, "properties", key]
     }));
   }
   const requiredKeys = [];
   for (const key of Object.keys(shape)) {
-    const field = def.shape[key];
-    if (ctx.io === "input" ? inputOptin(field) === void 0 : field._zod.optout === void 0) {
+    const field2 = def.shape[key];
+    if (ctx.io === "input" ? inputOptin(field2) === void 0 : field2._zod.optout === void 0) {
       requiredKeys.push(key);
     }
   }
   if (requiredKeys.length > 0) {
-    json2.required = requiredKeys;
+    json3.required = requiredKeys;
   }
   if (def.catchall?._zod.def.type === "never") {
-    json2.additionalProperties = false;
+    json3.additionalProperties = false;
   } else if (!def.catchall) {
     if (ctx.io === "output")
-      json2.additionalProperties = false;
+      json3.additionalProperties = false;
   } else if (def.catchall) {
-    json2.additionalProperties = processSchema(def.catchall, ctx, {
+    json3.additionalProperties = processSchema(def.catchall, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
   }
 };
-var unionProcessor = (schema, ctx, json2, params) => {
+var unionProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const isExclusive = def.inclusive === false;
   const options = def.options.map((x, i) => processSchema(x, ctx, {
@@ -36461,12 +36532,12 @@ var unionProcessor = (schema, ctx, json2, params) => {
     path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
   }));
   if (isExclusive) {
-    json2.oneOf = options;
+    json3.oneOf = options;
   } else {
-    json2.anyOf = options;
+    json3.anyOf = options;
   }
 };
-var intersectionProcessor = (schema, ctx, json2, params) => {
+var intersectionProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const a = processSchema(def.left, ctx, {
     ...params,
@@ -36481,13 +36552,13 @@ var intersectionProcessor = (schema, ctx, json2, params) => {
     ...isSimpleIntersection(a) ? a.allOf : [a],
     ...isSimpleIntersection(b) ? b.allOf : [b]
   ];
-  json2.allOf = allOf;
+  json3.allOf = allOf;
   ctx.intersections.push(allOf);
 };
 var tupleProcessor = (schema, ctx, _json, params) => {
-  const json2 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
-  json2.type = "array";
+  json3.type = "array";
   const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
   const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
   const prefixItems = def.items.map((x, i) => processSchema(x, ctx, {
@@ -36501,78 +36572,78 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   let minItems = def.items.length;
   while (minItems > 0) {
     const item = def.items[minItems - 1];
-    const optional2 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
-    if (!optional2)
+    const optional6 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
+    if (!optional6)
       break;
     minItems--;
   }
   const maxItems = def.items.length;
   const isClosed = !def.rest;
   if (ctx.target === "draft-2020-12") {
-    json2.prefixItems = prefixItems;
+    json3.prefixItems = prefixItems;
     if (isClosed) {
-      json2.items = false;
+      json3.items = false;
     } else if (rest) {
-      json2.items = rest;
+      json3.items = rest;
     }
     if (minItems > 0)
-      json2.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json2.maxItems = maxItems;
+      json3.maxItems = maxItems;
   } else if (ctx.target === "openapi-3.0") {
-    json2.items = {
+    json3.items = {
       anyOf: prefixItems
     };
     if (rest) {
-      json2.items.anyOf.push(rest);
+      json3.items.anyOf.push(rest);
     }
     if (minItems > 0)
-      json2.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json2.maxItems = maxItems;
+      json3.maxItems = maxItems;
   } else {
-    json2.items = prefixItems;
+    json3.items = prefixItems;
     if (isClosed) {
-      json2.additionalItems = false;
+      json3.additionalItems = false;
     } else if (rest) {
-      json2.additionalItems = rest;
+      json3.additionalItems = rest;
     }
     if (minItems > 0)
-      json2.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json2.maxItems = maxItems;
+      json3.maxItems = maxItems;
   }
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json2.minItems = minimum;
+    json3.minItems = minimum;
   if (typeof maximum === "number")
-    json2.maxItems = maximum;
+    json3.maxItems = maximum;
 };
-function stringifyKeyNames(bySchema, json2, visited) {
-  if (json2.$ref) {
-    if (visited.has(json2))
-      return json2;
-    visited.add(json2);
-    const def = bySchema.get(json2)?.def;
+function stringifyKeyNames(bySchema, json3, visited) {
+  if (json3.$ref) {
+    if (visited.has(json3))
+      return json3;
+    visited.add(json3);
+    const def = bySchema.get(json3)?.def;
     if (!def)
-      return json2;
+      return json3;
     const inlined = stringifyKeyNames(bySchema, def, visited);
-    return inlined === def ? json2 : inlined;
+    return inlined === def ? json3 : inlined;
   }
   for (const keyword of ["anyOf", "oneOf"]) {
-    const branches = json2[keyword];
+    const branches = json3[keyword];
     if (!Array.isArray(branches))
       continue;
     const mapped = branches.map((branch) => stringifyKeyNames(bySchema, branch, visited));
     if (mapped.some((branch, i) => branch !== branches[i]))
-      json2 = { ...json2, [keyword]: mapped };
+      json3 = { ...json3, [keyword]: mapped };
   }
-  const types = Array.isArray(json2.type) ? json2.type : [json2.type];
-  const numericType = !types.includes("string") && types.some((t) => t === "number" || t === "integer");
-  const values = json2.enum ?? (json2.const !== void 0 ? [json2.const] : void 0);
+  const types2 = Array.isArray(json3.type) ? json3.type : [json3.type];
+  const numericType = !types2.includes("string") && types2.some((t) => t === "number" || t === "integer");
+  const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
-    return json2;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id3, ...rest } = json2;
+    return json3;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id6, ...rest } = json3;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -36581,7 +36652,7 @@ function stringifyKeyNames(bySchema, json2, visited) {
     return rest;
   rest.type = "string";
   if (!values)
-    rest.pattern = (types.includes("number") ? number : integer).source;
+    rest.pattern = (types2.includes("number") ? number : integer).source;
   return rest;
 }
 var pendingRecords = /* @__PURE__ */ new WeakMap();
@@ -36592,14 +36663,14 @@ function rewriteKeyNames(ctx) {
       bySchema.set(entry.schema, entry);
   }
   const rewrites = /* @__PURE__ */ new Map();
-  for (const record4 of pendingRecords.get(ctx) ?? []) {
-    const seen = ctx.seen.get(record4);
-    const names = (seen?.def ?? seen?.schema)?.propertyNames;
-    if (!names || names === true || rewrites.has(names))
+  for (const record5 of pendingRecords.get(ctx) ?? []) {
+    const seen = ctx.seen.get(record5);
+    const names2 = (seen?.def ?? seen?.schema)?.propertyNames;
+    if (!names2 || names2 === true || rewrites.has(names2))
       continue;
-    const rewritten = stringifyKeyNames(bySchema, names, /* @__PURE__ */ new Set());
-    if (rewritten !== names)
-      rewrites.set(names, rewritten);
+    const rewritten = stringifyKeyNames(bySchema, names2, /* @__PURE__ */ new Set());
+    if (rewritten !== names2)
+      rewrites.set(names2, rewritten);
   }
   if (!rewrites.size)
     return;
@@ -36612,9 +36683,9 @@ function rewriteKeyNames(ctx) {
   }
 }
 var recordProcessor = (schema, ctx, _json, params) => {
-  const json2 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
-  json2.type = "object";
+  json3.type = "object";
   const keyType = def.keyType;
   const patterns = aggregateChecks(keyType).patterns;
   if (def.mode === "loose" && patterns && patterns.size > 0) {
@@ -36622,13 +36693,13 @@ var recordProcessor = (schema, ctx, _json, params) => {
       ...params,
       path: [...params.path, "patternProperties", "*"]
     });
-    json2.patternProperties = {};
+    json3.patternProperties = {};
     for (const pattern of patterns) {
-      assignProp(json2.patternProperties, exactPattern(pattern).source, valueSchema);
+      assignProp(json3.patternProperties, exactPattern(pattern).source, valueSchema);
     }
   } else {
     if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-      json2.propertyNames = processSchema(def.keyType, ctx, {
+      json3.propertyNames = processSchema(def.keyType, ctx, {
         ...params,
         path: [...params.path, "propertyNames"]
       });
@@ -36640,7 +36711,7 @@ var recordProcessor = (schema, ctx, _json, params) => {
       }
       pending.push(schema);
     }
-    json2.additionalProperties = processSchema(def.valueType, ctx, {
+    json3.additionalProperties = processSchema(def.valueType, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
@@ -36650,19 +36721,19 @@ var recordProcessor = (schema, ctx, _json, params) => {
   if (keyValues && !def.partial && !omittableOnInput) {
     const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
     if (validKeyValues.length > 0) {
-      json2.required = validKeyValues.map(String);
+      json3.required = validKeyValues.map(String);
     }
   }
 };
-var nullableProcessor = (schema, ctx, json2, params) => {
+var nullableProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const inner = processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   if (ctx.target === "openapi-3.0") {
     seen.ref = def.innerType;
-    json2.nullable = true;
+    json3.nullable = true;
   } else {
-    json2.anyOf = [inner, { type: "null" }];
+    json3.anyOf = [inner, { type: "null" }];
   }
 };
 var nonoptionalProcessor = (schema, ctx, _json, params) => {
@@ -36672,7 +36743,7 @@ var nonoptionalProcessor = (schema, ctx, _json, params) => {
   seen.ref = def.innerType;
 };
 var UNREPRESENTABLE_DEFAULT = /* @__PURE__ */ Symbol();
-function serializeDefaultValue(value, schema, ctx, json2, params) {
+function serializeDefaultValue(value, schema, ctx, json3, params) {
   let unrepresentable = false;
   const serialized = JSON.stringify(value, (_, val) => {
     if (typeof val !== "bigint")
@@ -36682,30 +36753,30 @@ function serializeDefaultValue(value, schema, ctx, json2, params) {
   });
   if (!unrepresentable)
     return JSON.parse(serialized);
-  handleUnrepresentable(schema, ctx, json2, params, "BigInt defaults cannot be represented in JSON Schema");
+  handleUnrepresentable(schema, ctx, json3, params, "BigInt defaults cannot be represented in JSON Schema");
   return UNREPRESENTABLE_DEFAULT;
 }
-var defaultProcessor = (schema, ctx, json2, params) => {
+var defaultProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json2, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json2.default = value;
+    json3.default = value;
 };
-var prefaultProcessor = (schema, ctx, json2, params) => {
+var prefaultProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   if (ctx.io !== "input")
     return;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json2, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json2._prefault = value;
+    json3._prefault = value;
 };
-var catchProcessor = (schema, ctx, json2, params) => {
+var catchProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
@@ -36714,10 +36785,10 @@ var catchProcessor = (schema, ctx, json2, params) => {
   try {
     catchValue = def.catchValue(void 0);
   } catch {
-    handleUnrepresentable(schema, ctx, json2, params, "Dynamic catch values are not supported in JSON Schema");
+    handleUnrepresentable(schema, ctx, json3, params, "Dynamic catch values are not supported in JSON Schema");
     return;
   }
-  json2.default = catchValue;
+  json3.default = catchValue;
 };
 var pipeProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -36727,12 +36798,12 @@ var pipeProcessor = (schema, ctx, _json, params) => {
   const seen = ctx.seen.get(schema);
   seen.ref = innerType;
 };
-var readonlyProcessor = (schema, ctx, json2, params) => {
+var readonlyProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  json2.readOnly = true;
+  json3.readOnly = true;
 };
 var promiseProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -36900,8 +36971,8 @@ var JSONSchemaGenerator = class {
     this.ctx.sharedDefsExtractedFor = void 0;
     this.ctx.sharedEmitDoneFor = void 0;
     extractDefs(this.ctx, schema);
-    const result = finalize(this.ctx, schema);
-    const { "~standard": _, ...plainResult } = result;
+    const result2 = finalize(this.ctx, schema);
+    const { "~standard": _, ...plainResult } = result2;
     return plainResult;
   }
 };
@@ -37374,7 +37445,7 @@ var _ZodString = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodString.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json2, params) => stringProcessor(inst, ctx, json2, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => stringProcessor(inst, ctx, json3, params);
   },
   /* @__PURE__ */ util_exports.derived({
     format: (inst) => aggregateChecks(inst).format ?? null,
@@ -37733,7 +37804,7 @@ var ZodNumber = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodNumber.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json2, params) => numberProcessor(inst, ctx, json2, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => numberProcessor(inst, ctx, json3, params);
     inst.isFinite = true;
   },
   /* @__PURE__ */ util_exports.derived({
@@ -37823,7 +37894,7 @@ function uint32(params) {
 var ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def) => {
   $ZodBoolean.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => booleanProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => booleanProcessor(inst, ctx, json3, params);
 });
 function boolean2(params) {
   return _boolean(ZodBoolean, params);
@@ -37833,7 +37904,7 @@ var ZodBigInt = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodBigInt.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json2, params) => bigintProcessor(inst, ctx, json2, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => bigintProcessor(inst, ctx, json3, params);
   },
   /* @__PURE__ */ util_exports.derived({
     minValue: (inst) => aggregateChecks(inst).minimum ?? null,
@@ -37891,7 +37962,7 @@ function uint64(params) {
 var ZodSymbol = /* @__PURE__ */ $constructor("ZodSymbol", (inst, def) => {
   $ZodSymbol.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => symbolProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => symbolProcessor(inst, ctx, json3, params);
 });
 function symbol(params) {
   return _symbol(ZodSymbol, params);
@@ -37899,7 +37970,7 @@ function symbol(params) {
 var ZodUndefined = /* @__PURE__ */ $constructor("ZodUndefined", (inst, def) => {
   $ZodUndefined.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => undefinedProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => undefinedProcessor(inst, ctx, json3, params);
 });
 function _undefined3(params) {
   return _undefined2(ZodUndefined, params);
@@ -37907,7 +37978,7 @@ function _undefined3(params) {
 var ZodNull = /* @__PURE__ */ $constructor("ZodNull", (inst, def) => {
   $ZodNull.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => nullProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nullProcessor(inst, ctx, json3, params);
 });
 function _null3(params) {
   return _null2(ZodNull, params);
@@ -37915,7 +37986,7 @@ function _null3(params) {
 var ZodAny = /* @__PURE__ */ $constructor("ZodAny", (inst, def) => {
   $ZodAny.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => anyProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => anyProcessor(inst, ctx, json3, params);
 });
 function any() {
   return _any(ZodAny);
@@ -37923,7 +37994,7 @@ function any() {
 var ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def) => {
   $ZodUnknown.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => unknownProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unknownProcessor(inst, ctx, json3, params);
 });
 function unknown() {
   return _unknown(ZodUnknown);
@@ -37931,7 +38002,7 @@ function unknown() {
 var ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def) => {
   $ZodNever.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => neverProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => neverProcessor(inst, ctx, json3, params);
 });
 function never(params) {
   return _never(ZodNever, params);
@@ -37939,7 +38010,7 @@ function never(params) {
 var ZodVoid = /* @__PURE__ */ $constructor("ZodVoid", (inst, def) => {
   $ZodVoid.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => voidProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => voidProcessor(inst, ctx, json3, params);
 });
 function _void2(params) {
   return _void(ZodVoid, params);
@@ -37949,7 +38020,7 @@ var ZodDate = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodDate.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json2, params) => dateProcessor(inst, ctx, json2, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => dateProcessor(inst, ctx, json3, params);
     inst.min = (value, params) => inst.check(_gte(value, params));
     inst.max = (value, params) => inst.check(_lte(value, params));
   },
@@ -37971,7 +38042,7 @@ var ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodArray.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => arrayProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => arrayProcessor(inst, ctx, json3, params);
   inst.element = def.element;
 }, {
   min(n, params) {
@@ -38001,7 +38072,7 @@ var ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodObjectJIT.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => objectProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => objectProcessor(inst, ctx, json3, params);
   util_exports.installLazyProp(inst, "shape", (self) => self._zod.def.shape, false);
 }, {
   keyof() {
@@ -38074,7 +38145,7 @@ function looseObject(shape, params) {
 var ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def) => {
   $ZodUnion.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => unionProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
   inst.options = def.options;
 });
 function union(options, params) {
@@ -38087,7 +38158,7 @@ function union(options, params) {
 var ZodXor = /* @__PURE__ */ $constructor("ZodXor", (inst, def) => {
   ZodUnion.init(inst, def);
   $ZodXor.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => unionProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
   inst.options = def.options;
 });
 function xor(options, params) {
@@ -38113,7 +38184,7 @@ function discriminatedUnion(discriminator, options, params) {
 var ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def) => {
   $ZodIntersection.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => intersectionProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => intersectionProcessor(inst, ctx, json3, params);
 });
 function intersection(left, right) {
   return new ZodIntersection({
@@ -38126,7 +38197,7 @@ var ZodTuple = /* @__PURE__ */ $constructor("ZodTuple", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTuple.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => tupleProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => tupleProcessor(inst, ctx, json3, params);
 }, {
   rest(rest) {
     return this.clone({
@@ -38159,7 +38230,7 @@ var ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodRecord.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => recordProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => recordProcessor(inst, ctx, json3, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
 });
@@ -38201,7 +38272,7 @@ var ZodMap = /* @__PURE__ */ $constructor("ZodMap", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodMap.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => mapProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => mapProcessor(inst, ctx, json3, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
   inst.min = (...args) => inst.check(_minSize(...args));
@@ -38221,7 +38292,7 @@ var ZodSet = /* @__PURE__ */ $constructor("ZodSet", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodSet.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => setProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => setProcessor(inst, ctx, json3, params);
   inst.min = (...args) => inst.check(_minSize(...args));
   inst.nonempty = (params) => inst.check(_minSize(1, params));
   inst.max = (...args) => inst.check(_maxSize(...args));
@@ -38237,7 +38308,7 @@ function set(valueType, params) {
 var ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def) => {
   $ZodEnum.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => enumProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => enumProcessor(inst, ctx, json3, params);
   inst.enum = def.entries;
   inst.options = [...inst._zod.values];
   const keys = new Set(Object.keys(def.entries));
@@ -38290,7 +38361,7 @@ function nativeEnum(entries, params) {
 var ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def) => {
   $ZodLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => literalProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => literalProcessor(inst, ctx, json3, params);
   inst.values = new Set(def.values);
   Object.defineProperty(inst, "value", {
     get() {
@@ -38311,10 +38382,10 @@ function literal(value, params) {
 var ZodFile = /* @__PURE__ */ $constructor("ZodFile", (inst, def) => {
   $ZodFile.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => fileProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => fileProcessor(inst, ctx, json3, params);
   inst.min = (size, params) => inst.check(_minSize(size, params));
   inst.max = (size, params) => inst.check(_maxSize(size, params));
-  inst.mime = (types, params) => inst.check(_mime(Array.isArray(types) ? types : [types], params));
+  inst.mime = (types2, params) => inst.check(_mime(Array.isArray(types2) ? types2 : [types2], params));
 });
 function file(params) {
   return _file(ZodFile, params);
@@ -38323,7 +38394,7 @@ var ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTransform.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => transformProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => transformProcessor(inst, ctx, json3, params);
   inst._zod.parse = (payload, _ctx) => {
     if (_ctx.direction === "backward") {
       throw new $ZodEncodeError(inst.constructor.name);
@@ -38362,7 +38433,7 @@ function transform(fn) {
 var ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def) => {
   $ZodOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => optionalProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function optional(innerType) {
@@ -38374,7 +38445,7 @@ function optional(innerType) {
 var ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def) => {
   $ZodExactOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => optionalProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function exactOptional(innerType) {
@@ -38386,7 +38457,7 @@ function exactOptional(innerType) {
 var ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def) => {
   $ZodNullable.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => nullableProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nullableProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nullable(innerType) {
@@ -38401,7 +38472,7 @@ function nullish2(innerType) {
 var ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def) => {
   $ZodDefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => defaultProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => defaultProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeDefault = inst.unwrap;
 });
@@ -38417,7 +38488,7 @@ function _default2(innerType, defaultValue) {
 var ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def) => {
   $ZodPrefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => prefaultProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => prefaultProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function prefault(innerType, defaultValue) {
@@ -38432,7 +38503,7 @@ function prefault(innerType, defaultValue) {
 var ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def) => {
   $ZodNonOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => nonoptionalProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nonoptionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nonoptional(innerType, params) {
@@ -38445,7 +38516,7 @@ function nonoptional(innerType, params) {
 var ZodSuccess = /* @__PURE__ */ $constructor("ZodSuccess", (inst, def) => {
   $ZodSuccess.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => successProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => successProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function success(innerType) {
@@ -38457,7 +38528,7 @@ function success(innerType) {
 var ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def) => {
   $ZodCatch.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => catchProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => catchProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeCatch = inst.unwrap;
 });
@@ -38471,7 +38542,7 @@ function _catch2(innerType, catchValue) {
 var ZodNaN = /* @__PURE__ */ $constructor("ZodNaN", (inst, def) => {
   $ZodNaN.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => nanProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nanProcessor(inst, ctx, json3, params);
 });
 function nan(params) {
   return _nan(ZodNaN, params);
@@ -38479,7 +38550,7 @@ function nan(params) {
 var ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def) => {
   $ZodPipe.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => pipeProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => pipeProcessor(inst, ctx, json3, params);
   inst.in = def.in;
   inst.out = def.out;
 });
@@ -38521,7 +38592,7 @@ var ZodPreprocess = /* @__PURE__ */ $constructor("ZodPreprocess", (inst, def) =>
 var ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def) => {
   $ZodReadonly.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => readonlyProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => readonlyProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function readonly(innerType) {
@@ -38533,7 +38604,7 @@ function readonly(innerType) {
 var ZodTemplateLiteral = /* @__PURE__ */ $constructor("ZodTemplateLiteral", (inst, def) => {
   $ZodTemplateLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => templateLiteralProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => templateLiteralProcessor(inst, ctx, json3, params);
 });
 function templateLiteral(parts, params) {
   return new ZodTemplateLiteral({
@@ -38545,7 +38616,7 @@ function templateLiteral(parts, params) {
 var ZodLazy = /* @__PURE__ */ $constructor("ZodLazy", (inst, def) => {
   $ZodLazy.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => lazyProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => lazyProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.getter();
 });
 function lazy(getter) {
@@ -38557,7 +38628,7 @@ function lazy(getter) {
 var ZodPromise = /* @__PURE__ */ $constructor("ZodPromise", (inst, def) => {
   $ZodPromise.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => promiseProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => promiseProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function promise(innerType) {
@@ -38569,7 +38640,7 @@ function promise(innerType) {
 var ZodFunction = /* @__PURE__ */ $constructor("ZodFunction", (inst, def) => {
   $ZodFunction.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => functionProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => functionProcessor(inst, ctx, json3, params);
 });
 function _function(params) {
   return new ZodFunction({
@@ -38581,7 +38652,7 @@ function _function(params) {
 var ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def) => {
   $ZodCustom.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json2, params) => customProcessor(inst, ctx, json2, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => customProcessor(inst, ctx, json3, params);
 });
 function check(fn) {
   const ch = new $ZodCheck({
@@ -38847,13 +38918,13 @@ function checkObjectGuards(objectSchema, guards) {
     }
     if (guards.keySchema) {
       for (const key of keys) {
-        const result = guards.keySchema.safeParse(key);
-        if (result.success)
+        const result2 = guards.keySchema.safeParse(key);
+        if (result2.success)
           continue;
         payload.issues.push({
           code: "invalid_key",
           origin: "record",
-          issues: result.error.issues,
+          issues: result2.error.issues,
           input: key,
           path: [key],
           continue: true
@@ -39040,8 +39111,8 @@ function convertBaseSchema(schema, ctx) {
       });
     }
     ctx.processing.add(refPath);
-    const resolved = resolveRef(refPath, ctx);
-    const zodSchema2 = convertSchema(resolved, ctx);
+    const resolved2 = resolveRef(refPath, ctx);
+    const zodSchema2 = convertSchema(resolved2, ctx);
     ctx.refs.set(refPath, zodSchema2);
     ctx.processing.delete(refPath);
     return zodSchema2;
@@ -39219,11 +39290,11 @@ function convertBaseSchema(schema, ctx) {
         } else if (schemasToIntersect.length === 1) {
           zodSchema = schemasToIntersect[0];
         } else {
-          let result = z.intersection(schemasToIntersect[0], schemasToIntersect[1]);
+          let result2 = z.intersection(schemasToIntersect[0], schemasToIntersect[1]);
           for (let i = 2; i < schemasToIntersect.length; i++) {
-            result = z.intersection(result, schemasToIntersect[i]);
+            result2 = z.intersection(result2, schemasToIntersect[i]);
           }
-          zodSchema = result;
+          zodSchema = result2;
         }
         if (schema.additionalProperties === false) {
           const propertyKeys = Object.keys(shape);
@@ -39334,38 +39405,38 @@ function convertSchema(schema, ctx) {
   if (typeof schema === "boolean") {
     return schema ? z.any() : z.never();
   }
-  let baseSchema = convertBaseSchema(schema, ctx);
+  let baseSchema2 = convertBaseSchema(schema, ctx);
   const hasExplicitType = schema.type || schema.enum !== void 0 || schema.const !== void 0;
   if (schema.anyOf && Array.isArray(schema.anyOf)) {
     const options = schema.anyOf.map((s) => convertSchema(s, ctx));
     const anyOfUnion = z.union(options);
-    baseSchema = hasExplicitType ? z.intersection(baseSchema, anyOfUnion) : anyOfUnion;
+    baseSchema2 = hasExplicitType ? z.intersection(baseSchema2, anyOfUnion) : anyOfUnion;
   }
   if (schema.oneOf && Array.isArray(schema.oneOf)) {
     const options = schema.oneOf.map((s) => convertSchema(s, ctx));
     const oneOfUnion = z.xor(options);
-    baseSchema = hasExplicitType ? z.intersection(baseSchema, oneOfUnion) : oneOfUnion;
+    baseSchema2 = hasExplicitType ? z.intersection(baseSchema2, oneOfUnion) : oneOfUnion;
   }
   if (schema.allOf && Array.isArray(schema.allOf)) {
     if (schema.allOf.length === 0) {
-      baseSchema = hasExplicitType ? baseSchema : z.any();
+      baseSchema2 = hasExplicitType ? baseSchema2 : z.any();
     } else {
-      let result = hasExplicitType ? baseSchema : convertSchema(schema.allOf[0], ctx);
+      let result2 = hasExplicitType ? baseSchema2 : convertSchema(schema.allOf[0], ctx);
       const startIdx = hasExplicitType ? 0 : 1;
       for (let i = startIdx; i < schema.allOf.length; i++) {
-        result = z.intersection(result, convertSchema(schema.allOf[i], ctx));
+        result2 = z.intersection(result2, convertSchema(schema.allOf[i], ctx));
       }
-      baseSchema = result;
+      baseSchema2 = result2;
     }
   }
   if (schema.nullable === true && ctx.version === "openapi-3.0") {
-    baseSchema = z.nullable(baseSchema);
+    baseSchema2 = z.nullable(baseSchema2);
   }
   if (schema.readOnly === true) {
-    baseSchema = z.readonly(baseSchema);
+    baseSchema2 = z.readonly(baseSchema2);
   }
   if (schema.default !== void 0) {
-    baseSchema = baseSchema.default(schema.default);
+    baseSchema2 = baseSchema2.default(schema.default);
   }
   const extraMeta = {};
   const coreMetadataKeys = ["$id", "id", "$comment", "$anchor", "$vocabulary", "$dynamicRef", "$dynamicAnchor"];
@@ -39404,12 +39475,12 @@ function convertSchema(schema, ctx) {
     }
   }
   if (Object.keys(extraMeta).length > 0) {
-    ctx.registry.add(baseSchema, extraMeta);
+    ctx.registry.add(baseSchema2, extraMeta);
   }
   if (schema.description) {
-    baseSchema = baseSchema.describe(schema.description);
+    baseSchema2 = baseSchema2.describe(schema.description);
   }
-  return baseSchema;
+  return baseSchema2;
 }
 function fromJSONSchema(schema, params) {
   if (typeof schema === "boolean") {
@@ -39553,9 +39624,9 @@ function visit2(schema, fnOrHandlers) {
         return newInput === def.input && newOutput === def.output ? s : clone(s, { ...def, input: newInput, output: newOutput });
       }
       case "lazy": {
-        const original = def.getter;
+        const original2 = def.getter;
         const { _cachedInner, ...rest } = def;
-        return clone(s, { ...rest, getter: () => run(original()) });
+        return clone(s, { ...rest, getter: () => run(original2()) });
       }
       // A leaf by choice: `parts` are regex fragments, not data positions.
       case "template_literal":
@@ -39822,6 +39893,22 @@ var mapFinishedPropertiesSchema = external_exports.strictObject({
   error_code: external_exports.null(),
   error_message: external_exports.null()
 });
+var planningFailureMessages = {
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -39840,7 +39927,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   map_components_total: external_exports.null(),
   cases_without_component: external_exports.null(),
   cases_missing_expected_result: metricCount,
-  groups_count: external_exports.null()
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional()
+}).refine((value) => {
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
 });
 var runStartedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
@@ -39857,15 +39951,26 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
   cases_blocked: metricCount,
-  cases_unverified: external_exports.null(),
-  cases_not_run: external_exports.null(),
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
   results_by_category: external_exports.null(),
-  result_basis: external_exports.literal("product_terminal_checks").nullable(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
@@ -39874,6 +39979,17 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     "Native execution did not return a validated result.",
     "Native execution was blocked."
   ]).nullable()
+}).refine((value) => {
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count9) => count9 !== null) && counts.reduce((sum, count9) => sum + (count9 ?? 0), 0) === value.cases_total;
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
@@ -40071,7 +40187,9 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   cached_input_tokens: nativeTokenCount,
   output_tokens: nativeTokenCount,
   reasoning_tokens: nativeTokenCount,
-  cost_usd: external_exports.null(),
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum(["litellm_response_header", "provider_usage_cost"]).optional(),
   outcome: external_exports.null(),
   latency_ms: external_exports.number().finite().nonnegative(),
   http_status: external_exports.number().int().min(100).max(599).nullable(),
@@ -40089,7 +40207,11 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
     "core_inference_native_usage/1"
   ])
 }).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
+  if (value.cost_basis === "provider_usage_cost" && !native)
+    return false;
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
@@ -40107,8 +40229,8 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
     return false;
   if (value.reasoning_tokens !== null && value.reasoning_tokens > (value.output_tokens ?? -1))
     return false;
-  const plan = value.plan_id ?? null, run = value.run_id ?? null;
-  return value.operation_id === (run ?? plan) && value.capability === (run ? "run" : plan ? "plan" : null);
+  const plan2 = value.plan_id ?? null, run = value.run_id ?? null;
+  return value.operation_id === (run ?? plan2) && value.capability === (run ? "run" : plan2 ? "plan" : null);
 }, "Native usage and operation attribution must be coherent.");
 var coreInferenceTelemetryCaptureSchema = external_exports.strictObject({
   event_uuid: external_exports.uuidv4(),
@@ -40124,6 +40246,7 @@ var coreTelemetryActorSchema = external_exports.strictObject({
 
 // apps/codex-plugin/src/telemetry/collector.mjs
 function createTelemetryCollector(broker, build) {
+  const host = pluginHost(build);
   let lease = null, stopped = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
@@ -40148,25 +40271,25 @@ function createTelemetryCollector(broker, build) {
     });
   }, 1e3);
   timer.unref();
-  const submit = (event, properties, observation = {}) => {
+  const submit = (event2, properties, observation2 = {}) => {
     try {
-      const epoch = Object.hasOwn(observation, "epoch") ? observation.epoch : lease;
+      const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
       const clientVersion = telemetryVersionSchema.safeParse(
-        observation.clientVersion
+        observation2.clientVersion
       );
       const capture = localTelemetryCaptureSchema.parse({
         event_uuid: randomUUID2(),
-        client_ts: observation.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
-        event,
-        event_version: event === "$mcp_tool_call" ? 2 : 1,
+        client_ts: observation2.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
+        event: event2,
+        event_version: event2 === "$mcp_tool_call" ? 2 : 1,
         component: "local_runtime",
         plugin_version: build.pluginVersion,
         release: `loki@${build.pluginVersion}+${build.sourceRevision}`,
         install_channel: build.profile === "local" ? "dev" : build.profile === "qa" ? "qa" : build.profile === "production" ? "early_access" : "unknown",
         cohort: null,
-        // Startup is the fixed installed Codex entrypoint; MCP uses its public handshake.
-        host: event !== "$mcp_tool_call" ? "codex" : /codex/i.test(observation.clientName ?? "") ? "codex" : observation.clientName === "claude-code" ? "claude_code" : "unknown",
+        // Lifecycle comes from the fixed entrypoint; MCP uses its public handshake.
+        host: event2 !== "$mcp_tool_call" ? host : /codex/i.test(observation2.clientName ?? "") ? "codex" : observation2.clientName === "claude-code" ? "claude_code" : "unknown",
         host_version: clientVersion.success ? clientVersion.data : null,
         host_surface: "unknown",
         host_thread_id: null,
@@ -40207,19 +40330,19 @@ function createTelemetryCollector(broker, build) {
     bind() {
       const epoch = lease;
       return {
-        emit(event, properties) {
-          submit(event, properties, { epoch });
+        emit(event2, properties) {
+          submit(event2, properties, { epoch });
         }
       };
     },
     /** @template {keyof import('@loki/contracts/telemetry').LocalTelemetryProperties} K
      * @param {K} event
      * @param {import('@loki/contracts/telemetry').LocalTelemetryProperties[K]} properties */
-    emit(event, properties) {
-      submit(event, properties);
+    emit(event2, properties) {
+      submit(event2, properties);
     },
-    captureMcp(properties, observation) {
-      submit("$mcp_tool_call", properties, observation);
+    captureMcp(properties, observation2) {
+      submit("$mcp_tool_call", properties, observation2);
     },
     flushLocal,
     async close() {
@@ -40236,9 +40359,9 @@ function createLocalTelemetry(broker, build) {
   let client;
   return {
     ...collector,
-    instrument(server, tools, { observabilityControls = [] } = {}) {
+    instrument(server, tools2, { observabilityControls = [] } = {}) {
       let initializing = true, failed = false;
-      const known = new Set(tools.map((tool) => tool.name));
+      const known = new Set(tools2.map((tool) => tool.name));
       const controls = new Set(
         observabilityControls.filter((name) => known.has(name))
       );
@@ -40273,10 +40396,10 @@ function createLocalTelemetry(broker, build) {
               request3.params?._meta?.["kaijan/invoked_by"]
             ) ? request3.params._meta["kaijan/invoked_by"] : "unknown"
           }),
-          beforeSend: (event) => {
+          beforeSend: (event2) => {
             try {
-              const properties = event.properties;
-              if (event.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
+              const properties = event2.properties;
+              if (event2.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
                 return null;
               collector.captureMcp(
                 {
@@ -40289,7 +40412,7 @@ function createLocalTelemetry(broker, build) {
                 },
                 {
                   epoch: properties.identity_epoch,
-                  timestamp: new Date(event.timestamp).toISOString(),
+                  timestamp: new Date(event2.timestamp).toISOString(),
                   clientName: properties.$mcp_client_name,
                   clientVersion: properties.$mcp_client_version
                 }
@@ -40321,7 +40444,7 @@ function createLocalTelemetry(broker, build) {
 import { performance } from "node:perf_hooks";
 var identity = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 var count = (value) => Number.isSafeInteger(value) && value >= 0 ? value : null;
-var member = (value, choices) => choices.includes(value) ? value : null;
+var member = (value, choices2) => choices2.includes(value) ? value : null;
 var duration3 = (input3) => input3.durationKnown === true && Number.isFinite(input3.durationMs) && input3.durationMs >= 0 ? input3.durationMs : null;
 var kinds = [
   "button",
@@ -40353,7 +40476,7 @@ var prerequisites = [
   "git_unavailable",
   "invalid_source"
 ];
-var outcome = (status2, reason) => ({ status: status2, reason });
+var outcome = (status3, reason) => ({ status: status3, reason });
 function elementKinds(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const entries = Object.entries(value);
@@ -40374,7 +40497,7 @@ function createSetupMapEvents({
     throw new TypeError("Invalid internal lifecycle observer configuration");
   const seen = /* @__PURE__ */ new Map();
   let closed = false, lastClock = -Infinity;
-  function submit(event, input3, properties) {
+  function submit(event2, input3, properties) {
     if (closed) return outcome("dropped", "closed");
     if (!identity(input3.transitionKey))
       return outcome("unsupported", "transition-key-unavailable");
@@ -40383,12 +40506,12 @@ function createSetupMapEvents({
       return outcome("dropped", "clock-unavailable");
     lastClock = now;
     for (const [key2, expires] of seen) if (expires <= now) seen.delete(key2);
-    const key = `${event}:${input3.transitionKey}`;
+    const key = `${event2}:${input3.transitionKey}`;
     if (seen.has(key)) return outcome("ignored", "duplicate-transition");
     if (seen.size >= maxTransitions) return outcome("dropped", "capacity");
     seen.set(key, now + retentionMs);
     if (claim2) {
-      const accepted = claim2({ event, transitionKey: input3.transitionKey });
+      const accepted = claim2({ event: event2, transitionKey: input3.transitionKey });
       if (accepted !== true) {
         Promise.resolve(accepted).catch(() => {
         });
@@ -40396,19 +40519,19 @@ function createSetupMapEvents({
       }
     }
     try {
-      Promise.resolve(emit(event, Object.freeze(properties))).catch(() => {
+      Promise.resolve(emit(event2, Object.freeze(properties))).catch(() => {
       });
       return outcome("submitted", "callback-attempted");
     } catch {
       return outcome("dropped", "emit-failed");
     }
   }
-  function observe(project) {
+  function observe(project2) {
     return (input3) => {
       try {
         if (!input3 || typeof input3 !== "object")
           return outcome("unsupported", "lifecycle-evidence-unavailable");
-        return project(input3);
+        return project2(input3);
       } catch {
         return outcome("dropped", "observer-failed");
       }
@@ -40474,18 +40597,18 @@ function createSetupMapEvents({
     mapFinished: observe((input3) => {
       if (!firstTerminal(input3) || input3.newOperation !== true || input3.reuse !== "none")
         return outcome("ignored", "not-first-map-terminal");
-      const result = {
+      const result2 = {
         ready: "completed",
         incomplete: "partial",
         failed: "failed",
         stopped: "stopped"
       };
-      if (typeof input3.state !== "string" || !Object.hasOwn(result, input3.state))
+      if (typeof input3.state !== "string" || !Object.hasOwn(result2, input3.state))
         return outcome("unsupported", "map-state-unmapped");
       const totals = input3.countsSource === "validated-full-projection" ? input3.counts : null;
       return submit("Map Build Finished", input3, {
         map_id: identity(input3.mapId) ? input3.mapId : null,
-        outcome: result[input3.state],
+        outcome: result2[input3.state],
         duration_ms: duration3(input3),
         pages_count: count(totals?.pages),
         elements_count: count(totals?.elements),
@@ -40563,7 +40686,8 @@ var planCompletion = external_exports.strictObject({
   outcome: external_exports.enum(["proposed_plan", "needs_clarification", "failed"]),
   startedAtMs: milliseconds.nullable(),
   casesTotal: count2.nullable(),
-  casesMissingExpectedResult: count2.nullable()
+  casesMissingExpectedResult: count2.nullable(),
+  errorCode: planningFailureCodeSchema.nullable().optional()
 }).refine(
   (value) => value.outcome === "failed" ? value.casesTotal === null && value.casesMissingExpectedResult === null : value.casesMissingExpectedResult === null || value.casesTotal !== null && value.casesMissingExpectedResult <= value.casesTotal
 );
@@ -40623,7 +40747,24 @@ var runCompletion = external_exports.strictObject({
   resultKind: external_exports.enum(["returned", "native-exception"]).nullable(),
   nativeExecutionState: external_exports.enum(["completed", "incomplete", "cancelled", "blocked", "unknown"]).nullable(),
   checks: terminalChecks.nullable(),
-  checkSummary: checkSummary.nullable().optional()
+  checkSummary: checkSummary.nullable().optional(),
+  assessedSummary: external_exports.strictObject({
+    provenance: external_exports.enum([
+      "saved-report-assessments/1",
+      "selected-test-inventory/1"
+    ]),
+    planId: opaqueId.nullable(),
+    planResultSha256: opaqueId.nullable(),
+    total: count2.positive(),
+    passed: count2,
+    failed: count2,
+    blocked: count2,
+    unverified: count2,
+    notRun: count2
+  }).refine(
+    (value) => value.total === value.passed + value.failed + value.blocked + value.unverified + value.notRun && value.planId === null === (value.planResultSha256 === null) && (value.provenance !== "selected-test-inventory/1" || value.unverified === value.total)
+  ).nullable().optional(),
+  finishedAtMs: milliseconds.optional()
 }).refine(
   (value) => value.operationState === "finished" && value.resultValidated && (value.resultKind === "native-exception" && value.nativeExecutionState === null && value.checks === null && !value.checkSummary || value.resultKind === "returned" && ["completed", "incomplete", "cancelled", "blocked"].includes(
     value.nativeExecutionState
@@ -40677,17 +40818,17 @@ function createCapabilityTelemetryObserver({
       return null;
     }
   }
-  function reserve(event, value, identity3, caseId) {
-    const key = JSON.stringify([event, identity3, caseId ?? null]);
+  function reserve(event2, value, identity4, caseId) {
+    const key = JSON.stringify([event2, identity4, caseId ?? null]);
     if (seen.has(key) || seen.size >= maxTransitions) return false;
     seen.add(key);
     if (!claim2) return true;
     try {
       const selected = claim2(
         Object.freeze({
-          event,
+          event: event2,
           transitionKey: value.transitionKey,
-          identity: identity3,
+          identity: identity4,
           caseId: caseId ?? null
         })
       );
@@ -40699,9 +40840,9 @@ function createCapabilityTelemetryObserver({
       return false;
     }
   }
-  function send(event, properties) {
+  function send(event2, properties) {
     try {
-      void Promise.resolve(emit(event, Object.freeze(properties))).catch(
+      void Promise.resolve(emit(event2, Object.freeze(properties))).catch(
         () => {
         }
       );
@@ -40710,10 +40851,10 @@ function createCapabilityTelemetryObserver({
       return false;
     }
   }
-  function observe(schema, input3, project) {
+  function observe(schema, input3, project2) {
     try {
       const parsed = schema.safeParse(input3);
-      return parsed.success ? project(parsed.data) : false;
+      return parsed.success ? project2(parsed.data) : false;
     } catch {
       return false;
     }
@@ -40741,7 +40882,9 @@ function createCapabilityTelemetryObserver({
           map_components_total: null,
           cases_without_component: null,
           cases_missing_expected_result: value.casesMissingExpectedResult,
-          groups_count: null
+          groups_count: null,
+          error_code: value.outcome === "failed" ? value.errorCode ?? "planning_failed" : null,
+          error_message: value.outcome === "failed" ? planningFailureMessages[value.errorCode ?? "planning_failed"] : null
         });
       });
     },
@@ -40771,10 +40914,13 @@ function createCapabilityTelemetryObserver({
       return observe(runCompletion, input3, (value) => {
         const start = starts.get(value.runId);
         const checks = value.checks;
-        const summary = value.checkSummary ?? null;
-        if (summary && (checks || start && (!start.plan || summary.planId !== start.plan.answerId || summary.planResultSha256 !== start.plan.resultSha256 || summary.total !== start.plan.selectedTestsCount)))
+        const summary3 = value.checkSummary ?? null;
+        const assessed = value.assessedSummary?.provenance === "saved-report-assessments/1" || !checks && !summary3 ? value.assessedSummary ?? null : null;
+        if (assessed && (!start || assessed.planId !== (start.plan?.answerId ?? null) || assessed.planResultSha256 !== (start.plan?.resultSha256 ?? null) || start.plan && assessed.total !== start.plan.selectedTestsCount || value.resultKind === "native-exception" && (assessed.passed || assessed.failed)))
           return false;
-        if (summary && value.nativeExecutionState !== "completed" && (summary.passed || summary.failed))
+        if (summary3 && (checks || start && (!start.plan || summary3.planId !== start.plan.answerId || summary3.planResultSha256 !== start.plan.resultSha256 || summary3.total !== start.plan.selectedTestsCount)))
+          return false;
+        if (summary3 && value.nativeExecutionState !== "completed" && (summary3.passed || summary3.failed))
           return false;
         if (checks) {
           if (start && (!start.plan || checks.planId !== start.plan.answerId || checks.planResultSha256 !== start.plan.resultSha256 || checks.cases.length !== start.plan.selectedTestsCount))
@@ -40783,7 +40929,10 @@ function createCapabilityTelemetryObserver({
             return false;
         }
         if (!reserve("Test Run Finished", value, value.runId)) return false;
-        const duration4 = elapsed(start?.at ?? null, now());
+        const duration4 = elapsed(
+          start?.at ?? null,
+          value.finishedAtMs ?? now()
+        );
         starts.delete(value.runId);
         for (const item of checks?.cases ?? []) {
           if (!item.caseId || !reserve("Test Case Finished", value, value.runId, item.caseId))
@@ -40805,22 +40954,23 @@ function createCapabilityTelemetryObserver({
             is_retest: null
           });
         }
-        const [result, code, message] = outcome2(value);
+        const [result2, code, message] = outcome2(value);
         const cases = checks?.cases;
         return send("Test Run Finished", {
           run_id: value.runId,
           session_id: null,
-          outcome: result,
+          outcome: result2,
           duration_ms: duration4,
-          cases_passed: cases ? cases.filter((item) => item.status === "pass").length : summary?.passed ?? null,
-          cases_failed: cases ? cases.filter((item) => item.status === "fail").length : summary?.failed ?? null,
-          cases_blocked: cases ? cases.filter((item) => item.status === "blocked").length : summary?.blocked ?? null,
-          cases_unverified: null,
-          cases_not_run: null,
+          ...assessed ? { cases_total: assessed.total } : {},
+          cases_passed: assessed ? assessed.passed : cases ? cases.filter((item) => item.status === "pass").length : summary3?.passed ?? null,
+          cases_failed: assessed ? assessed.failed : cases ? cases.filter((item) => item.status === "fail").length : summary3?.failed ?? null,
+          cases_blocked: assessed ? assessed.blocked : cases ? cases.filter((item) => item.status === "blocked").length : summary3?.blocked ?? null,
+          cases_unverified: assessed?.unverified ?? null,
+          cases_not_run: assessed?.notRun ?? null,
           results_by_category: null,
-          result_basis: checks || summary ? "product_terminal_checks" : null,
-          check_status: checks || summary ? "checked" : "unchecked",
-          evidence_items_count: checks?.evidenceCount ?? summary?.evidenceCount ?? null,
+          result_basis: assessed ? assessed.provenance === "saved-report-assessments/1" ? "saved_report_assessments" : "selected_test_inventory" : checks || summary3 ? "product_terminal_checks" : null,
+          check_status: assessed ? assessed.provenance === "saved-report-assessments/1" ? "checked" : "unchecked" : checks || summary3 ? "checked" : "unchecked",
+          evidence_items_count: checks?.evidenceCount ?? summary3?.evidenceCount ?? null,
           error_code: code,
           error_message: message
         });
@@ -40832,18 +40982,18 @@ function createCapabilityTelemetryObserver({
 // apps/codex-plugin/src/telemetry/lifecycle.mjs
 function createBoundLifecycle(telemetry) {
   const bound = telemetry?.bind();
-  const emit = (event, properties) => {
+  const emit = (event2, properties) => {
     try {
-      void Promise.resolve(bound?.emit(event, properties)).catch(() => {
+      void Promise.resolve(bound?.emit(event2, properties)).catch(() => {
       });
     } catch {
     }
   };
   const map2 = createSetupMapEvents({ emit });
   const capabilities = createCapabilityTelemetryObserver({ emit });
-  const observe = (event) => {
-    if (!event || typeof event !== "object") return;
-    const { kind, ...value } = event;
+  const observe = (event2) => {
+    if (!event2 || typeof event2 !== "object") return;
+    const { kind, ...value } = event2;
     switch (kind) {
       case "user-input-requested":
         emit("User Input Requested", {
@@ -41449,6 +41599,88 @@ var analysisJobInputSchema = external_exports.strictObject({
   leaseSeconds: external_exports.literal(90)
 });
 
+// packages/contracts/dist/analysis-customer.js
+var customerAnalysisSourceSchema = analysisSourceSchema.pick({ snapshotId: true, repositoryId: true, fullName: true, commit: true }).extend({ fullName: external_exports.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/) });
+var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
+  sourceReferenceSchema.options[0].pick({ kind: true, sha: true }).strip(),
+  sourceReferenceSchema.options[1].pick({ kind: true, name: true }).strip(),
+  sourceReferenceSchema.options[2].pick({ kind: true, number: true }).strip()
+]);
+var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
+  analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+]);
+var customerAnalysisRunSchema = external_exports.object({
+  id: external_exports.uuid(),
+  request: customerAnalysisRequestSchema,
+  phase: analysisPhaseSchema,
+  source: customerAnalysisSourceSchema.nullable(),
+  sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
+  message: external_exports.string(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string(),
+  resultUrl: external_exports.string().nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var pageSchema2 = uiModelerMapSchema.shape.pages.element.pick({
+  id: true,
+  label: true,
+  extraction_status: true
+}).strip();
+var elementSchema = uiModelerMapSchema.shape.elements.element.pick({
+  id: true,
+  page_id: true,
+  parent_element_id: true,
+  label: true,
+  kind: true,
+  display_condition: true,
+  clickable: true,
+  navigation_status: true,
+  source_refs: true
+}).strip();
+var navigationSchema = uiModelerMapSchema.shape.click_navigation.element.pick({
+  id: true,
+  element_id: true,
+  from_page_id: true,
+  to_page_id: true,
+  route_or_url: true,
+  condition: true,
+  source_refs: true
+}).strip();
+var issueSchema = external_exports.object({
+  pageId: external_exports.string().nullable(),
+  message: external_exports.string()
+});
+var customerMapSchema = external_exports.object({
+  status: uiModelerMapSchema.shape.status,
+  pages: external_exports.array(pageSchema2),
+  elements: external_exports.array(elementSchema),
+  click_navigation: external_exports.array(navigationSchema),
+  issues: external_exports.array(issueSchema),
+  limitations: external_exports.array(external_exports.string())
+});
+var customerAnalysisResultSchema = external_exports.object({
+  run: customerAnalysisRunSchema,
+  report: external_exports.object({
+    status: external_exports.enum(["complete", "partial", "failed"]),
+    fixture: external_exports.boolean(),
+    accounting: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+      action: external_exports.enum(["materialized", "not_hydrated"])
+    }))
+  }),
+  map: customerMapSchema.nullable(),
+  sourceIndex: external_exports.array(analysisSourceIndexSchema.element.pick({
+    id: true,
+    path: true,
+    sha256: true,
+    utf16Length: true
+  }).strip())
+});
+
 // packages/contracts/dist/workspace-results.js
 var resultLimits = {
   manifestBytes: 1024 * 1024,
@@ -41531,41 +41763,41 @@ var resultPublicationInputSchema = external_exports.discriminatedUnion("kind", [
       sourceRefs: external_exports.array(resultContextRefSchema).max(resultLimits.contextRefs).default([])
     })
   })
-]).superRefine((value, context) => {
+]).superRefine((value, context2) => {
   if (["ui-modeler/retained-bundle", "loki/map-projection/1"].includes(value.producer.nativeContract) && value.kind !== "application-map")
-    context.addIssue({
+    context2.addIssue({
       code: "custom",
       path: ["kind"],
       message: "Known full-map artifacts use the latest-map contract."
     });
   if (value.producer.nativeContract === "ui-modeler/retained-bundle")
-    context.addIssue({
+    context2.addIssue({
       code: "custom",
       path: ["producer"],
       message: "Retained bundles include source corpus; select map files or an existing projection explicitly."
     });
   const keys = new Set(value.files.map((file2) => file2.key));
   if (keys.size !== value.files.length)
-    context.addIssue({
+    context2.addIssue({
       code: "custom",
       path: ["files"],
       message: "Selected file keys must be distinct."
     });
   if (value.kind === "native-result" && value.files.some((file2) => ["application-map", "map-bundle"].includes(file2.role)))
-    context.addIssue({
+    context2.addIssue({
       code: "custom",
       path: ["files"],
       message: "Full app maps use the latest-map contract."
     });
   if (value.kind === "application-map" && value.files.filter((file2) => file2.role === "application-map").length !== 1)
-    context.addIssue({
+    context2.addIssue({
       code: "custom",
       path: ["files"],
       message: "Select one app-map file and any permitted companion files."
     });
   for (const [index, edge] of value.relationships.entries())
     if (edge.target.kind === "file" && !keys.has(edge.target.fileKey))
-      context.addIssue({
+      context2.addIssue({
         code: "custom",
         path: ["relationships", index],
         message: "Relationship points to an unselected file; use an unresolved reference instead."
@@ -41608,13 +41840,34 @@ var sessionRecordingSchema = external_exports.strictObject({
     expiresAt: external_exports.iso.datetime()
   })
 });
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
 var sessionGrantSchema = external_exports.strictObject({
   recordingId: external_exports.uuid(),
   chunk: sessionChunkDescriptorSchema,
   url: external_exports.url(),
   issuedAt: external_exports.iso.datetime(),
   expiresAt: external_exports.iso.datetime()
-}).refine((grant) => Date.parse(grant.expiresAt) > Date.parse(grant.issuedAt), "Invalid grant interval");
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
 var navigationKindSchema = external_exports.enum([
   "start",
   "route-change",
@@ -41738,6 +41991,173 @@ var sessionReplayManifestSchema = external_exports.strictObject({
   })).max(2e3)
 });
 
+// packages/contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest2,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest2,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
 // packages/contracts/dist/replay.js
 var recordedEventSchema = external_exports.strictObject({
   type: external_exports.number().int().min(0).max(4),
@@ -41793,6 +42213,47 @@ var commentSchema = commentCreateSchema.extend({
   createdAt: external_exports.iso.datetime()
 });
 
+// packages/contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
 // packages/contracts/dist/github.js
 var githubCredentialSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-credential/1"),
@@ -41811,6 +42272,115 @@ var githubRejectionSchema = external_exports.strictObject({
 var githubRejectionResultSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-rejection/1"),
   reconnectRequired: external_exports.boolean()
+});
+
+// packages/contracts/dist/product-feedback.js
+var productFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  kind: external_exports.enum(["bug", "suggestion", "feedback"]),
+  title: external_exports.string().trim().min(1).max(200),
+  // Bound report text stored in Core.
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  diagnostics: external_exports.strictObject({
+    capability: external_exports.string().trim().min(1).max(100).optional(),
+    errorCode: external_exports.string().regex(/^[A-Za-z0-9_.:-]{1,100}$/).optional(),
+    operationId: external_exports.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+    pluginVersion: external_exports.string().regex(/^[A-Za-z0-9.+-]{1,80}$/).optional(),
+    os: external_exports.enum(["darwin", "linux", "win32", "unknown"]).optional()
+  }).optional()
+});
+var productFeedbackSchema = productFeedbackInputSchema.extend({
+  id: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved")
+});
+
+// packages/contracts/dist/workspace-customer.js
+var workspaceCustomerLimits = {
+  fileBytes: 4 * 1024 * 1024,
+  publicationBytes: 16 * 1024 * 1024
+};
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count3 = external_exports.number().int().nonnegative();
+var source = external_exports.strictObject({ bytes: count3, sha256: digest3 });
+var identity2 = { fileId: external_exports.uuid(), source };
+var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    ...identity2,
+    state: external_exports.literal("available"),
+    kind: external_exports.enum(["test-report", "risk-review", "evidence-assessment"]),
+    name: external_exports.enum([
+      "test-report.json",
+      "risk-review.json",
+      "evidence-assessment.json"
+    ]),
+    content: external_exports.strictObject({
+      mediaType: external_exports.literal("application/json"),
+      bytes: count3.max(workspaceCustomerLimits.fileBytes),
+      sha256: digest3
+    })
+  }),
+  external_exports.strictObject({
+    ...identity2,
+    state: external_exports.literal("unavailable"),
+    reason: external_exports.enum([
+      "unsupported-content",
+      "invalid-content",
+      "content-limit",
+      "source-unavailable"
+    ])
+  })
+]);
+var customerWorkspaceManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-result/1"),
+  publicationId: external_exports.uuid(),
+  kind: external_exports.literal("native-result"),
+  state: external_exports.literal("published"),
+  title: external_exports.string(),
+  publishedAt: external_exports.iso.datetime(),
+  sourceManifestSha256: digest3,
+  contextRefs: external_exports.array(resultContextRefSchema),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest3.optional() })),
+  relatedSources: external_exports.array(external_exports.strictObject({
+    reference: resultContextRefSchema,
+    availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+  })),
+  files: external_exports.array(customerWorkspaceFileSchema).max(256),
+  meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
+});
+var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
+  manifestSha256: digest3
+});
+var customerWorkspaceDownloadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-download/1"),
+  publicationId: external_exports.uuid(),
+  fileId: external_exports.uuid().nullable(),
+  sourceSha256: digest3,
+  mediaType: external_exports.literal("application/json"),
+  encoding: external_exports.literal("base64"),
+  bytes: count3.max(workspaceCustomerLimits.fileBytes),
+  sha256: digest3,
+  data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
+});
+var customerWorkspaceListSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-list/1"),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  observedAt: external_exports.iso.datetime(),
+  watermark: count3,
+  nextAfter: count3.nullable(),
+  results: external_exports.array(external_exports.strictObject({
+    publicationId: external_exports.uuid(),
+    kind: external_exports.literal("native-result"),
+    state: external_exports.literal("published"),
+    publishedAt: external_exports.iso.datetime(),
+    sequence: count3,
+    title: external_exports.string(),
+    fileCount: count3,
+    contextRefCount: count3,
+    bytes: count3
+  }))
 });
 
 // packages/contracts/dist/index.js
@@ -41858,6 +42428,31 @@ var sessionContextSchema = external_exports.object({
   expiresAt: external_exports.iso.datetime(),
   capabilities: external_exports.object({
     recordingProtocolVersions: external_exports.array(external_exports.string())
+  })
+});
+var customerSessionSchema = external_exports.strictObject({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
   })
 });
 var tokenResponseSchema = external_exports.object({
@@ -41915,7 +42510,9 @@ var coreToolInputSchemas = {
   loki_connection_status: external_exports.strictObject({}),
   loki_read_work_item: external_exports.strictObject({ workItemId: external_exports.uuid() }),
   loki_disconnect: external_exports.strictObject({}),
-  kaijan_connect: external_exports.strictObject({})
+  kaijan_connect: external_exports.strictObject({}),
+  kaijan_submit_feedback: productFeedbackInputSchema,
+  kaijan_get_feedback: external_exports.strictObject({ feedbackId: external_exports.uuid() })
 };
 var coreToolErrorSchema = external_exports.strictObject({
   error: external_exports.string().min(1),
@@ -41927,7 +42524,14 @@ var coreToolErrorSchema = external_exports.strictObject({
 });
 var coreConnectionSchema = external_exports.strictObject({
   state: external_exports.literal("connected"),
-  context: sessionContextSchema,
+  context: sessionContextSchema.pick({
+    apiVersion: true,
+    user: true,
+    organization: true,
+    workspace: true,
+    permissions: true,
+    expiresAt: true
+  }).strict(),
   origin: external_exports.url(),
   observedAt: external_exports.iso.datetime()
 });
@@ -41936,18 +42540,51 @@ var coreWorkItemSchema = external_exports.strictObject({
   userId: external_exports.uuid(),
   workspaceId: external_exports.uuid(),
   workspaceName: external_exports.string(),
-  clientId: external_exports.string(),
   readAt: external_exports.iso.datetime(),
   canonicalUrl: external_exports.url()
 });
 var coreDisconnectSchema = external_exports.strictObject({
-  state: external_exports.literal("signed_out"),
-  message: external_exports.string().min(1).optional()
+  state: external_exports.literal("signed_out")
 });
 var coreConnectSchema = external_exports.strictObject({
-  state: external_exports.literal("connected"),
+  state: external_exports.literal("connected")
+});
+var coreToolSuccessSchemas = {
+  loki_connection_status: coreConnectionSchema,
+  loki_read_work_item: coreWorkItemSchema,
+  loki_disconnect: coreDisconnectSchema,
+  kaijan_connect: coreConnectSchema,
+  kaijan_submit_feedback: external_exports.strictObject({ feedback: productFeedbackSchema }),
+  kaijan_get_feedback: external_exports.strictObject({ feedback: productFeedbackSchema })
+};
+var coreConnectReceiptSchema = coreConnectSchema.extend({
   installationId: external_exports.string().min(1)
 });
+var coreDisconnectReceiptSchema = coreDisconnectSchema.extend({
+  message: external_exports.string().min(1).optional()
+});
+var coreLegacyToolSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: coreConnectionSchema.extend({
+    context: sessionContextSchema
+  }),
+  loki_read_work_item: coreWorkItemSchema.extend({ clientId: external_exports.string() }),
+  kaijan_connect: coreConnectReceiptSchema,
+  loki_disconnect: coreDisconnectReceiptSchema
+};
+var coreToolUpstreamSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: external_exports.union([
+    coreConnectionSchema,
+    coreLegacyToolSuccessSchemas.loki_connection_status
+  ]),
+  loki_read_work_item: external_exports.union([
+    coreWorkItemSchema,
+    coreLegacyToolSuccessSchemas.loki_read_work_item
+  ]),
+  kaijan_connect: external_exports.union([coreConnectSchema, coreConnectReceiptSchema]),
+  loki_disconnect: coreDisconnectReceiptSchema
+};
 var aiModelsSchema = external_exports.looseObject({
   error: external_exports.never().optional(),
   data: external_exports.array(external_exports.looseObject({ id: external_exports.string().min(1) }))
@@ -41976,16 +42613,16 @@ var ModelDiscoveryFailure = class extends Error {
     };
   }
 };
-function modelHttpGuidance(status2) {
-  if (status2 === 401)
+function modelHttpGuidance(status3) {
+  if (status3 === 401)
     return "Model metadata requires a Core connection. Use kaijan_connect. Available models are unknown; no inference was requested.";
-  if (status2 === 403)
+  if (status3 === 403)
     return "Model discovery was forbidden. Check AI permissions on the current Core grant and the service access policy. Available models are unknown; no inference was requested.";
-  if (status2 === 429)
+  if (status3 === 429)
     return "Model discovery is rate limited. Wait before requesting metadata again. Available models are unknown; no inference was requested.";
-  if (status2 === 503)
+  if (status3 === 503)
     return "Model metadata is unavailable. Check the local Auth Broker and Core AI service before requesting metadata again. Available models are unknown; no inference was requested.";
-  if (status2 >= 500)
+  if (status3 >= 500)
     return "The model metadata service is unavailable. Check the Core AI service before requesting metadata again. Available models are unknown; no inference was requested.";
   return "Core rejected model discovery. Check the installed endpoint and requested metadata operation. Available models are unknown; no inference was requested.";
 }
@@ -42056,7 +42693,7 @@ function withModelDiscovery(catalog, broker, InvalidParams) {
     }
   };
 }
-var modelDiscoveryFailure = (error62) => error62 instanceof ModelDiscoveryFailure ? error62.publicFailure : null;
+var modelDiscoveryFailure = (error63) => error63 instanceof ModelDiscoveryFailure ? error63.publicFailure : null;
 
 // apps/codex-plugin/src/runtime-discovery.mjs
 import { join as join3 } from "node:path";
@@ -42074,10 +42711,10 @@ async function boundedFile(path, maximum) {
     const bytes = Buffer.alloc(maximum + 1);
     let length = 0;
     while (length <= maximum) {
-      const result = await file2.read(bytes, length, bytes.length - length, null);
-      if (!result.bytesRead)
+      const result2 = await file2.read(bytes, length, bytes.length - length, null);
+      if (!result2.bytesRead)
         break;
-      length += result.bytesRead;
+      length += result2.bytesRead;
     }
     if (length > maximum)
       throw new Error("The selected file exceeds its limit.");
@@ -42088,7 +42725,7 @@ async function boundedFile(path, maximum) {
 }
 
 // apps/codex-plugin/src/runtime-discovery.mjs
-async function installedRuntimeDiscovery(root, identity3) {
+async function installedRuntimeDiscovery(root, identity4) {
   let metadataMatches = null;
   try {
     const current = JSON.parse(
@@ -42096,13 +42733,13 @@ async function installedRuntimeDiscovery(root, identity3) {
         await boundedFile(join3(root, "loki-build.json"), 64 * 1024)
       )
     );
-    metadataMatches = Object.entries(identity3.artifact).every(
+    metadataMatches = Object.entries(identity4.artifact).every(
       ([key, value]) => current[key] === value
     );
   } catch {
   }
   return {
-    ...identity3,
+    ...identity4,
     process: {
       node: process2.version,
       platform: process2.platform,
@@ -42141,44 +42778,45 @@ async function createInstalledSession(root, build, data, broker, {
   onStartupStage,
   lifecycleFactory
 } = {}) {
-  const stage = (value) => {
+  const host = pluginHost(build);
+  const stage2 = (value) => {
     try {
       onStartupStage?.(value);
     } catch {
     }
   };
-  stage("verify_payload");
+  stage2("verify_payload");
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
-  const source = join4(root, "capabilities");
+  const source3 = join4(root, "capabilities");
   const started = performance3.now();
-  const identity3 = await verifyDistribution(source, build.capabilityDigest);
-  if (Object.values(identity3.manifest.files).some((member2) => "symlink" in member2))
+  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
+  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
     throw Error("Installed runtime must contain regular files");
   const verified = performance3.now();
-  process3.env.PATH = [join4(source, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
-  stage("import_library");
-  const library = await import(pathToFileURL(join4(source, "library/api.mjs")).href);
-  stage("init_services");
+  process3.env.PATH = [join4(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  stage2("import_library");
+  const library = await import(pathToFileURL(join4(source3, "library/api.mjs")).href);
+  stage2("init_services");
   if (Boolean(build.validationContext) !== Boolean(runnerValidation))
     throw Error(
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity3.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity3.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity3.digest
+    artifactDigest: identity4.digest
   }) : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
@@ -42207,9 +42845,9 @@ async function createInstalledSession(root, build, data, broker, {
   ) : void 0;
   const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
   const session = await createCapabilitySession({
-    host: "codex",
+    host,
     data,
-    payloadDigest: identity3.digest,
+    payloadDigest: identity4.digest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -42234,9 +42872,11 @@ async function createInstalledSession(root, build, data, broker, {
         );
       }
     } : hostLibrary,
-    // Hai selected direct chat output for this plugin; preserve it in every scope.
+    ...host === "claude_code" ? { uiEnabled: false } : {},
+    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
     uiMode: "panel"
   });
+  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.workspaceResults = workspaceService;
   session.privateParameters = {
     async provision(threadId, input3) {
@@ -42261,7 +42901,7 @@ async function createInstalledSession(root, build, data, broker, {
     }
   };
   const originalFailure = session.failure.bind(session);
-  session.failure = (error62) => modelDiscoveryFailure(error62) ?? originalFailure(error62);
+  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
   const initialized = performance3.now();
   session.runtimeIdentity = Object.freeze({
     pluginVersion: build.pluginVersion,
@@ -43832,8 +44472,8 @@ import { join as join5, resolve } from "node:path";
 // apps/codex-plugin/src/setup/contracts.mjs
 import { createHash as createHash2 } from "node:crypto";
 import { URL as URL2 } from "node:url";
-var digest2 = (value) => createHash2("sha256").update(JSON.stringify(value)).digest("hex");
-var identity2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest4 = (value) => createHash2("sha256").update(JSON.stringify(value)).digest("hex");
+var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var requestKey = external_exports.string().min(8).max(120);
 var label2 = external_exports.string().min(1).max(1e3);
@@ -43847,7 +44487,7 @@ var targetSchema = external_exports.strictObject({
     return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
   }),
   profileId: external_exports.string().min(1).max(80),
-  profileRevision: identity2.optional()
+  profileRevision: identity3.optional()
 });
 var configurationSchema = external_exports.strictObject({
   source: sourceSchema,
@@ -43873,8 +44513,8 @@ var listSchema = external_exports.strictObject({
   offset: external_exports.number().int().min(0).default(0)
 });
 var handleSchema = external_exports.strictObject({
-  applicationId: identity2,
-  contextId: identity2
+  applicationId: identity3,
+  contextId: identity3
 });
 var commandSchema = handleSchema.extend({ requestKey });
 var waitSchema = handleSchema.extend({
@@ -43882,7 +44522,9 @@ var waitSchema = handleSchema.extend({
 });
 var resolveSchema = handleSchema.extend({
   expectedRevision: revision,
-  expectedProfileRevision: identity2.optional()
+  expectedProfileRevision: identity3.optional().describe(
+    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
+  )
 });
 var handoffSchema = resolveSchema.extend({ requestKey });
 var workItemReadinessScopeSchema = external_exports.strictObject({
@@ -43901,7 +44543,7 @@ var workItemReadinessScopeSchema = external_exports.strictObject({
   ).optional()
 });
 var mappingSchema = external_exports.strictObject({
-  mapId: identity2,
+  mapId: identity3,
   pages: external_exports.array(external_exports.strictObject({ id: label2, title: label2 })).max(200),
   pagePreviewLimit: external_exports.literal(40).optional(),
   coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
@@ -43912,8 +44554,8 @@ var mappingSchema = external_exports.strictObject({
       recovery: label2
     })
   ).optional(),
-  answerId: identity2.optional(),
-  resultSha256: identity2.optional(),
+  answerId: identity3.optional(),
+  resultSha256: identity3.optional(),
   snapshotTree: revision.optional()
 });
 var provenanceSchema = external_exports.strictObject({
@@ -43926,23 +44568,23 @@ var authorizationSchema = external_exports.discriminatedUnion("kind", [
     kind: external_exports.literal("host-managed-tool-dispatch"),
     host: external_exports.literal("codex"),
     policy: external_exports.literal("host-managed"),
-    scopeId: identity2,
+    scopeId: identity3,
     requestId: external_exports.union([external_exports.string().max(200), external_exports.number().int()]),
     tool: external_exports.enum(["loki_setup_prepare", "loki_setup_retry"]),
-    argumentsSha256: identity2,
-    configurationSha256: identity2
+    argumentsSha256: identity3,
+    configurationSha256: identity3
   }),
   external_exports.strictObject({ kind: external_exports.literal("controlled-selection-only") })
 ]);
 var consumerReceiptSchema = external_exports.strictObject({
   accepted: external_exports.boolean(),
-  contextId: identity2,
-  receiptId: identity2,
+  contextId: identity3,
+  receiptId: identity3,
   provenance: provenanceSchema
 });
 var mapReceiptSchema = external_exports.strictObject({
-  requestKey: identity2,
-  runId: identity2,
+  requestKey: identity3,
+  runId: identity3,
   sourceRevision: revision,
   state: external_exports.enum([
     "running",
@@ -43953,7 +44595,7 @@ var mapReceiptSchema = external_exports.strictObject({
     "uncertain"
   ]),
   progress: label2,
-  resultId: identity2.nullable(),
+  resultId: identity3.nullable(),
   data: mappingSchema.nullable(),
   provenance: provenanceSchema,
   executionSettled: external_exports.boolean().optional()
@@ -43991,7 +44633,7 @@ var mappedSetupContextSchema = handleSchema.extend({
   configuration: configurationSchema.extend({
     configurationRefs: configurationSchema.shape.configurationRefs.removeDefault()
   }),
-  configurationHash: identity2,
+  configurationHash: identity3,
   sourceIdentity: external_exports.strictObject({
     device: external_exports.number().int(),
     inode: external_exports.number().int()
@@ -43999,14 +44641,14 @@ var mappedSetupContextSchema = handleSchema.extend({
   provenance: provenanceSchema,
   state: setupStateSchema,
   missing: missingSchema,
-  authorityRef: identity2.nullable(),
+  authorityRef: identity3.nullable(),
   authorityKind: external_exports.enum(["host-managed-tool-dispatch", "controlled-selection-only"]).nullable(),
   authority: authorizationSchema.optional(),
   owner: external_exports.uuid(),
   map: external_exports.strictObject({
-    requestKey: identity2,
-    runId: identity2.nullable(),
-    resultId: identity2.nullable(),
+    requestKey: identity3,
+    runId: identity3.nullable(),
+    resultId: identity3.nullable(),
     data: mappingSchema.nullable(),
     sourceRevision: revision.optional(),
     state: mapReceiptSchema.shape.state.optional(),
@@ -44016,7 +44658,7 @@ var mappedSetupContextSchema = handleSchema.extend({
   }),
   progress: label2,
   error: label2.nullable(),
-  supersededBy: identity2.optional()
+  supersededBy: identity3.optional()
 });
 var setupContextSchema = external_exports.union([
   mappedSetupContextSchema,
@@ -44033,7 +44675,7 @@ var setupListOutputSchema = external_exports.strictObject({
       source: sourceSchema,
       target: targetSchema.optional(),
       state: setupStateSchema,
-      supersededBy: identity2.nullable(),
+      supersededBy: identity3.nullable(),
       provenance: provenanceSchema
     })
   ).max(50),
@@ -44041,19 +44683,19 @@ var setupListOutputSchema = external_exports.strictObject({
 });
 var setupStopOutputSchema = setupReceiptSchema.extend({
   ...setupSummarySchema.shape,
-  runId: identity2.nullable(),
+  runId: identity3.nullable(),
   cancellationRequested: external_exports.boolean()
 });
 var mappedResolveOutputSchema = external_exports.strictObject({
   application: external_exports.strictObject({
     schema: external_exports.literal("loki.application-context/2"),
-    contextId: identity2,
+    contextId: identity3,
     source: sourceSchema,
     target: targetSchema.nullable(),
     map: external_exports.strictObject({
-      mapId: identity2,
-      runId: identity2,
-      resultId: identity2,
+      mapId: identity3,
+      runId: identity3,
+      resultId: identity3,
       sourceRevision: revision,
       preview: mappingSchema
     }),
@@ -44066,10 +44708,10 @@ var mappedResolveOutputSchema = external_exports.strictObject({
   }),
   setup: handleSchema.extend({
     version: external_exports.number().int().positive(),
-    mapRunId: identity2,
-    mapResultId: identity2,
+    mapRunId: identity3,
+    mapResultId: identity3,
     configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
-    authorityRef: identity2
+    authorityRef: identity3
   }),
   authority: external_exports.enum([
     "host-managed-tool-dispatch",
@@ -44079,7 +44721,7 @@ var mappedResolveOutputSchema = external_exports.strictObject({
 var configuredResolveOutputSchema = external_exports.strictObject({
   application: external_exports.strictObject({
     schema: external_exports.literal("loki.application-context/3"),
-    contextId: identity2,
+    contextId: identity3,
     source: sourceSchema,
     target: targetSchema.nullable(),
     workItem: external_exports.string().min(1).max(1e5).nullable(),
@@ -44166,8 +44808,8 @@ var recoveryMessages = {
   setup_output_invalid: "The Setup response did not match its advertised contract. Read retained state with the original identities before recovery; do not replay an operation whose effects are unknown.",
   setup_interrupted: "The request was interrupted. Read the original context to confirm its state and any pending Stop. Request cancellation alone does not prove producer cancellation."
 };
-function failure2(error62) {
-  const code = error62 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error62.code) ? error62.code : error62?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
+function failure2(error63) {
+  const code = error63 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error63.code) ? error63.code : error63?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
   return {
     code,
     message: (Object.hasOwn(recoveryMessages, code) ? recoveryMessages[code] : void 0) ?? "Read the original Setup context before retrying. Keep its application, source version and request key."
@@ -44210,9 +44852,9 @@ async function openSetupStore(directory) {
         const value = fn();
         database.exec("COMMIT");
         return value;
-      } catch (error62) {
+      } catch (error63) {
         database.exec("ROLLBACK");
-        throw error62;
+        throw error63;
       }
     },
     version(applicationId) {
@@ -44226,11 +44868,11 @@ async function openSetupStore(directory) {
       if (!row) throw new SetupFailure("unknown_application_context");
       return JSON.parse(row.value);
     },
-    matching(applicationId, hash2) {
-      const rows = database.prepare(
+    matching(applicationId, hash6) {
+      const rows2 = database.prepare(
         "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
-      ).all(applicationId, hash2);
-      return rows.length ? JSON.parse(rows[0].value) : null;
+      ).all(applicationId, hash6);
+      return rows2.length ? JSON.parse(rows2[0].value) : null;
     },
     list(directory2, offset) {
       return database.prepare(
@@ -44247,22 +44889,22 @@ async function openSetupStore(directory) {
         JSON.stringify(value)
       );
     },
-    command(scope, key, hash2) {
+    command(scope, key, hash6) {
       const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
       if (!row) return null;
-      if (row.digest !== hash2) throw new SetupFailure("request_conflict");
+      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
       return JSON.parse(row.value);
     },
-    receipt(scope, key, hash2, value) {
-      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash2, JSON.stringify(value));
+    receipt(scope, key, hash6, value) {
+      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
     },
-    complete(scope, key, hash2, value) {
+    complete(scope, key, hash6, value) {
       database.prepare(
         "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
-      ).run(JSON.stringify(value), scope, key, hash2);
+      ).run(JSON.stringify(value), scope, key, hash6);
     },
     observe(contextId, value) {
-      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest2(value), JSON.stringify(value));
+      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest4(value), JSON.stringify(value));
     },
     producer(key) {
       const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
@@ -44289,7 +44931,7 @@ import { realpath as realpath3, lstat as lstat6 } from "node:fs/promises";
 import { isAbsolute as isAbsolute3 } from "node:path";
 import { randomUUID as randomUUID4 } from "node:crypto";
 var execute = promisify2(execFile);
-async function resolveSourceRevision(source, signal) {
+async function resolveSourceRevision(source3, signal) {
   const git = async (args, cleanup = false) => (await execute(
     "git",
     [
@@ -44300,7 +44942,7 @@ async function resolveSourceRevision(source, signal) {
       "-c",
       "protocol.ext.allow=never",
       "-C",
-      source.directory,
+      source3.directory,
       ...args
     ],
     {
@@ -44309,15 +44951,15 @@ async function resolveSourceRevision(source, signal) {
       signal: cleanup ? void 0 : signal
     }
   )).stdout.trim();
-  const requested = source.revision ?? "main";
+  const requested = source3.revision ?? "main";
   if (/^[a-f0-9]{40}$/.test(requested)) {
-    await inspectSource({ ...source, revision: requested });
+    await inspectSource({ ...source3, revision: requested });
     return requested;
   }
   const ref = requested.startsWith("refs/") ? requested : `refs/heads/${requested}`;
   try {
     const head = await git(["rev-parse", "--verify", "HEAD^{commit}"]);
-    await inspectSource({ ...source, revision: head });
+    await inspectSource({ ...source3, revision: head });
     await git(["check-ref-format", ref]);
     let remote = false;
     try {
@@ -44363,19 +45005,19 @@ async function resolveSourceRevision(source, signal) {
     } finally {
       await git(["update-ref", "-d", temporary], true);
     }
-  } catch (error62) {
+  } catch (error63) {
     if (signal?.aborted) throw signal.reason;
-    if (error62 instanceof SetupFailure) throw error62;
-    if (error62.code === "ENOENT" && error62.path === "git")
+    if (error63 instanceof SetupFailure) throw error63;
+    if (error63.code === "ENOENT" && error63.path === "git")
       throw new SetupFailure("git_unavailable");
     throw new SetupFailure("source_revision_unavailable");
   }
 }
-async function inspectSource(source) {
+async function inspectSource(source3) {
   try {
-    if (!isAbsolute3(source.directory) || source.directory.includes("\0") || await realpath3(source.directory) !== source.directory)
+    if (!isAbsolute3(source3.directory) || source3.directory.includes("\0") || await realpath3(source3.directory) !== source3.directory)
       throw Error();
-    const stat2 = await lstat6(source.directory);
+    const stat2 = await lstat6(source3.directory);
     if (!stat2.isDirectory()) throw Error();
     const git = async (args) => (await execute(
       "git",
@@ -44385,7 +45027,7 @@ async function inspectSource(source) {
         "-c",
         "core.fsmonitor=false",
         "-C",
-        source.directory,
+        source3.directory,
         ...args
       ],
       {
@@ -44393,13 +45035,13 @@ async function inspectSource(source) {
         maxBuffer: 16384
       }
     )).stdout.trim();
-    if (await git(["rev-parse", "--show-toplevel"]) !== source.directory)
+    if (await git(["rev-parse", "--show-toplevel"]) !== source3.directory)
       throw Error();
-    if (await git(["rev-parse", "--verify", `${source.revision}^{commit}`]) !== source.revision)
+    if (await git(["rev-parse", "--verify", `${source3.revision}^{commit}`]) !== source3.revision)
       throw Error();
     return { device: stat2.dev, inode: stat2.ino };
-  } catch (error62) {
-    if (error62.code === "ENOENT" && error62.path === "git")
+  } catch (error63) {
+    if (error63.code === "ENOENT" && error63.path === "git")
       throw new SetupFailure("git_unavailable");
     throw new SetupFailure("invalid_source");
   }
@@ -44505,51 +45147,51 @@ async function createSetup({
     durationMs: performance4.now() - telemetryStarts.get(value.contextId)
   });
   const read = (input3) => store.get(input3.applicationId, input3.contextId);
-  async function summarize(receipt, stop = false) {
-    let value = read(receipt);
+  async function summarize(receipt2, stop = false) {
+    let value = read(receipt2);
     if (!stop) {
       await verify(value);
-      value = read(receipt);
+      value = read(receipt2);
     }
-    let nextAction;
+    let nextAction3;
     switch (value.state) {
       case "blocked":
       case "awaiting-authority":
-        nextAction = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
+        nextAction3 = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
         break;
       case "admitting":
       case "mapping":
-        nextAction = "Wait on this original context. A receipt does not establish application readiness.";
+        nextAction3 = "Wait on this original context. A receipt does not establish application readiness.";
         break;
       case "uncertain":
-        nextAction = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
+        nextAction3 = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
         break;
       case "stop-requested":
-        nextAction = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
+        nextAction3 = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
         break;
       case "incomplete":
-        nextAction = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
+        nextAction3 = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
         break;
       case "ready":
-        nextAction = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
+        nextAction3 = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
         if (value.map?.data?.readinessScope?.sourceLimitations?.length)
-          nextAction += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
+          nextAction3 += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
         break;
       default:
-        nextAction = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
+        nextAction3 = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
     }
     if (!mapper && value.map && active.has(value.state))
-      nextAction = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
-    if (stop && !receipt.cancellationRequested) {
-      nextAction = receipt.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
+      nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
+    if (stop && !receipt2.cancellationRequested) {
+      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
     }
     if (value.provenance.kind === "controlled-fixture")
-      nextAction += " Controlled fixture only; no real application readiness or producer success is established.";
+      nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
     return {
-      ...receipt,
+      ...receipt2,
       state: value.state,
       missing: [...value.missing],
-      nextAction,
+      nextAction: nextAction3,
       provenance: value.provenance
     };
   }
@@ -44560,27 +45202,27 @@ async function createSetup({
     return value;
   });
   async function verify(value) {
-    if (digest2(await inspectSource(value.configuration.source)) !== digest2(value.sourceIdentity))
+    if (digest4(await inspectSource(value.configuration.source)) !== digest4(value.sourceIdentity))
       throw new SetupFailure("source_identity_changed");
-    if (mapper && digest2(provenance2) !== digest2(value.provenance))
+    if (mapper && digest4(provenance2) !== digest4(value.provenance))
       throw new SetupFailure("adapter_changed");
   }
-  function reserve(scope, input3, configuration, sourceIdentity, retry = false) {
+  function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
     return store.transaction(() => {
-      const hash2 = digest2(input3), previous = store.command(scope, input3.requestKey, hash2);
+      const hash6 = digest4(input3), previous = store.command(scope, input3.requestKey, hash6);
       if (previous) return { receipt: { ...previous, recovered: true } };
-      const applicationId = digest2({
+      const applicationId = digest4({
         installation: store.installation,
-        directory: configuration.source.directory,
+        directory: configuration2.source.directory,
         sourceIdentity
       });
-      const configurationHash = digest2({ configuration, provenance: provenance2 });
+      const configurationHash = digest4({ configuration: configuration2, provenance: provenance2 });
       const existing = store.matching(applicationId, configurationHash);
       if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
-        const receipt2 = handle(existing);
-        store.receipt(scope, input3.requestKey, hash2, receipt2);
+        const receipt3 = handle(existing);
+        store.receipt(scope, input3.requestKey, hash6, receipt3);
         return {
-          receipt: { ...receipt2, reused: true },
+          receipt: { ...receipt3, reused: true },
           retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
             transitionKey: existing.contextId,
             setupId: existing.contextId,
@@ -44596,8 +45238,8 @@ async function createSetup({
         schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
         applicationId,
         version: version4,
-        contextId: digest2({ applicationId, version: version4, configurationHash }),
-        configuration,
+        contextId: digest4({ applicationId, version: version4, configurationHash }),
+        configuration: configuration2,
         configurationHash,
         sourceIdentity,
         provenance: provenance2,
@@ -44618,39 +45260,39 @@ async function createSetup({
         store.put(previousContext);
       }
       store.put(value);
-      const receipt = handle(value);
-      store.receipt(scope, input3.requestKey, hash2, receipt);
-      return { receipt, value };
+      const receipt2 = handle(value);
+      store.receipt(scope, input3.requestKey, hash6, receipt2);
+      return { receipt: receipt2, value };
     });
   }
   function applyMap(input3, raw) {
-    const result = mapReceiptSchema.parse(raw);
-    store.observe(input3.contextId, result);
+    const result2 = mapReceiptSchema.parse(raw);
+    store.observe(input3.contextId, result2);
     let firstTerminal = false;
     const accepted = edit(input3, (value) => {
-      if (result.requestKey !== value.map.requestKey || result.sourceRevision !== value.configuration.source.revision || digest2(result.provenance) !== digest2(value.provenance) || value.map.runId && value.map.runId !== result.runId)
+      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest4(result2.provenance) !== digest4(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
         throw new SetupFailure("map_scope_mismatch");
-      if (result.state === "ready" && (!result.data || !result.resultId))
+      if (result2.state === "ready" && (!result2.data || !result2.resultId))
         throw new SetupFailure("invalid_map_result");
       if (terminal.has(value.state)) return;
-      value.map = { ...value.map, ...result };
-      if (value.state === "stop-requested" && result.state !== "stopped") {
-        if (!result.executionSettled) return;
+      value.map = { ...value.map, ...result2 };
+      if (value.state === "stop-requested" && result2.state !== "stopped") {
+        if (!result2.executionSettled) return;
         value.state = "stopped";
-        value.progress = `Setup stopped; original map operation settled as ${result.state}`;
+        value.progress = `Setup stopped; original map operation settled as ${result2.state}`;
         value.missing = [];
         firstTerminal = true;
         return;
       }
-      value.state = result.state === "running" ? "mapping" : result.state;
-      value.progress = result.progress;
+      value.state = result2.state === "running" ? "mapping" : result2.state;
+      value.progress = result2.progress;
       value.missing = [];
-      value.error = result.state === "failed" ? "map_failed" : null;
+      value.error = result2.state === "failed" ? "map_failed" : null;
       firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
         value.state
       );
     });
-    if (firstTerminal) finished2(accepted, result.executionSettled === true);
+    if (firstTerminal) finished2(accepted, result2.executionSettled === true);
     return accepted;
   }
   async function initialize(value, signal, invocation) {
@@ -44660,13 +45302,13 @@ async function createSetup({
       if (!mapper) {
         await verify(value);
         signal?.throwIfAborted();
-        const configured = edit(value, (current) => {
+        const configured2 = edit(value, (current) => {
           if (current.state !== "awaiting-authority") return;
           current.state = "ready";
           current.missing = [];
           current.progress = "Application source and optional target configured; no map generated";
         });
-        finished2(configured, true);
+        finished2(configured2, true);
         return;
       }
       const parsed = missingSchema.safeParse(
@@ -44705,14 +45347,14 @@ async function createSetup({
       if (!parsedAuthorization.success)
         throw new SetupFailure("invalid_source_authorization");
       const authority = parsedAuthorization.data;
-      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest2(value.configuration))
+      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest4(value.configuration))
         throw new SetupFailure("source_authorization_scope_mismatch");
       signal?.throwIfAborted();
       await verify(value);
       if (read(value).state !== "awaiting-authority") return;
       edit(value, (current) => {
         if (current.state !== "awaiting-authority") return;
-        current.authorityRef = digest2({
+        current.authorityRef = digest4({
           contextId: value.contextId,
           owner: owner2,
           authority
@@ -44726,7 +45368,7 @@ async function createSetup({
       if (read(value).state !== "admitting") return;
       try {
         signal?.throwIfAborted();
-        const result = await mapper.start(
+        const result2 = await mapper.start(
           { requestKey: value.contextId, ...value.configuration },
           signal,
           {
@@ -44734,7 +45376,7 @@ async function createSetup({
             setupOperationId: value.contextId
           }
         );
-        applyMap(value, result);
+        applyMap(value, result2);
         if (read(value).state === "stop-requested")
           await api.stop({
             applicationId: value.applicationId,
@@ -44756,15 +45398,15 @@ async function createSetup({
             requestKey: `interrupt-${value.map.requestKey}`
           });
       }
-    } catch (error62) {
+    } catch (error63) {
       const interrupted = edit(value, (current) => {
         if (current.state === "awaiting-authority") {
           current.state = signal?.aborted ? "stopped" : "blocked";
           current.missing = [
-            error62 instanceof SetupFailure ? error62.code : "setup_interrupted"
+            error63 instanceof SetupFailure ? error63.code : "setup_interrupted"
           ];
           current.progress = "Setup confirmation or prerequisites were not completed; explicitly retry when ready";
-          current.error = error62 instanceof SetupFailure ? error62.code : "setup_interrupted";
+          current.error = error63 instanceof SetupFailure ? error63.code : "setup_interrupted";
         }
       });
       if (["blocked", "stopped"].includes(interrupted.state))
@@ -44778,7 +45420,7 @@ async function createSetup({
       signal?.throwIfAborted();
       const input3 = prepareSchema.parse(raw);
       if (input3.configuration.target) {
-        input3.configuration.target.profileRevision ??= digest2({
+        input3.configuration.target.profileRevision ??= digest4({
           url: input3.configuration.target.url,
           profileId: input3.configuration.target.profileId
         });
@@ -44786,17 +45428,17 @@ async function createSetup({
       const previous = store.command(
         "prepare",
         input3.requestKey,
-        digest2(input3)
+        digest4(input3)
       );
       if (previous) return summarize({ ...previous, recovered: true });
-      const configuration = structuredClone(input3.configuration);
-      configuration.source.revision = await resolveSourceRevision(
-        configuration.source,
+      const configuration2 = structuredClone(input3.configuration);
+      configuration2.source.revision = await resolveSourceRevision(
+        configuration2.source,
         signal
       );
       signal?.throwIfAborted();
-      const sourceIdentity = await inspectSource(configuration.source);
-      const reserved = reserve("prepare", input3, configuration, sourceIdentity);
+      const sourceIdentity = await inspectSource(configuration2.source);
+      const reserved = reserve("prepare", input3, configuration2, sourceIdentity);
       if (reserved.retainedSelection) {
         try {
           void Promise.resolve(
@@ -44818,9 +45460,9 @@ async function createSetup({
       return summarize(reserved.receipt);
     },
     list(raw) {
-      const input3 = listSchema.parse(raw), rows = store.list(input3.directory, input3.offset);
+      const input3 = listSchema.parse(raw), rows2 = store.list(input3.directory, input3.offset);
       return {
-        contexts: rows.slice(0, 50).map((value) => ({
+        contexts: rows2.slice(0, 50).map((value) => ({
           ...handle(value),
           source: value.configuration.source,
           target: value.configuration.target,
@@ -44828,29 +45470,29 @@ async function createSetup({
           supersededBy: value.supersededBy ?? null,
           provenance: value.provenance
         })),
-        nextOffset: rows.length > 50 ? input3.offset + 50 : null
+        nextOffset: rows2.length > 50 ? input3.offset + 50 : null
       };
     },
     async get(raw) {
       const input3 = handleSchema.parse(raw), value = read(input3);
       await verify(value);
       if (mapper && active.has(value.state)) {
-        let result;
+        let result2;
         try {
-          result = await mapper.get({
+          result2 = await mapper.get({
             requestKey: value.map.requestKey,
             runId: value.map.runId
           });
         } catch {
           return read(input3);
         }
-        return applyMap(input3, result);
+        return applyMap(input3, result2);
       }
       return read(input3);
     },
     async wait(raw, signal) {
       const { timeoutMs, ...input3 } = waitSchema.parse(raw);
-      const original = read(input3);
+      const original2 = read(input3);
       const deadline = new AbortController();
       const bounded = AbortSignal.any([
         deadline.signal,
@@ -44864,7 +45506,7 @@ async function createSetup({
       );
       let abort, stopDeadline;
       try {
-        const result = await Promise.race([
+        const result2 = await Promise.race([
           (async () => {
             const value = await this.get(input3);
             bounded.throwIfAborted();
@@ -44880,13 +45522,13 @@ async function createSetup({
             if (bounded.aborted) abort();
           })
         ]);
-        return result ? applyMap(input3, result) : read(input3);
-      } catch (error62) {
+        return result2 ? applyMap(input3, result2) : read(input3);
+      } catch (error63) {
         if (signal?.aborted) {
           await Promise.race([
             this.stop({
               ...input3,
-              requestKey: `interrupt-${original.map?.requestKey ?? original.contextId}`
+              requestKey: `interrupt-${original2.map?.requestKey ?? original2.contextId}`
             }),
             new Promise((resolve4) => {
               stopDeadline = () => resolve4();
@@ -44896,7 +45538,7 @@ async function createSetup({
               if (deadline.signal.aborted) stopDeadline();
             })
           ]);
-        } else if (!deadline.signal.aborted) throw error62;
+        } else if (!deadline.signal.aborted) throw error63;
         return read(input3);
       } finally {
         clearTimeout(timer);
@@ -44909,7 +45551,7 @@ async function createSetup({
       const observer = snapshotObserver();
       const input3 = commandSchema.parse(raw), value = read(input3);
       await verify(value);
-      const previous = store.command("retry", input3.requestKey, digest2(input3));
+      const previous = store.command("retry", input3.requestKey, digest4(input3));
       if (previous) return summarize({ ...previous, recovered: true });
       const reserved = reserve(
         "retry",
@@ -44942,7 +45584,7 @@ async function createSetup({
       const input3 = commandSchema.parse(raw);
       let stoppedBeforeAdmission = false;
       const reserved = store.transaction(() => {
-        const hash2 = digest2(input3), previous = store.command("stop", input3.requestKey, hash2);
+        const hash6 = digest4(input3), previous = store.command("stop", input3.requestKey, hash6);
         if (previous) {
           const value2 = read(input3);
           return {
@@ -44964,13 +45606,13 @@ async function createSetup({
           value.progress = "Stop requested for this original map";
           store.put(value);
         }
-        const receipt = {
+        const receipt2 = {
           ...handle(value),
           runId: value.map?.runId ?? null,
           cancellationRequested: cancel
         };
-        store.receipt("stop", input3.requestKey, hash2, receipt);
-        return { receipt, value, cancel };
+        store.receipt("stop", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, value, cancel };
       });
       if (stoppedBeforeAdmission) finished2(reserved.value, true);
       if (reserved.cancel && mapper) {
@@ -44993,19 +45635,19 @@ async function createSetup({
       if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
         throw new SetupFailure("stale_application_context");
       if (value.schema === "loki.setup-context/4" && value.state === "ready") {
-        const source2 = value.configuration.source;
+        const source4 = value.configuration.source;
         const target2 = value.configuration.target ?? null;
         const workItem = value.configuration.workItem ?? null;
         return {
           application: {
             schema: "loki.application-context/3",
-            contextId: digest2({
-              source: source2,
+            contextId: digest4({
+              source: source4,
               target: target2,
               workItem,
               provenance: value.provenance
             }),
-            source: source2,
+            source: source4,
             target: target2,
             workItem,
             map: null,
@@ -45029,26 +45671,26 @@ async function createSetup({
       }
       if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
         throw new SetupFailure("application_not_ready");
-      const source = value.configuration.source, target = value.configuration.target ?? null;
+      const source3 = value.configuration.source, target = value.configuration.target ?? null;
       const map2 = {
         mapId: value.map.data.mapId,
         runId: value.map.runId,
         resultId: value.map.resultId,
-        sourceRevision: source.revision,
+        sourceRevision: source3.revision,
         preview: value.map.data
       };
-      const readiness = {
+      const readiness2 = {
         state: "ready",
         missing: [],
         ...value.map.data.readinessScope ? { scope: value.map.data.readinessScope } : {}
       };
       const application = {
         schema: "loki.application-context/2",
-        contextId: digest2({ source, target, map: map2, readiness, provenance: provenance2 }),
-        source,
+        contextId: digest4({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
+        source: source3,
         target: target ?? null,
         map: map2,
-        readiness,
+        readiness: readiness2,
         provenance: provenance2
       };
       return {
@@ -45073,16 +45715,16 @@ async function createSetup({
         expectedRevision: input3.expectedRevision,
         expectedProfileRevision: input3.expectedProfileRevision
       });
-      const hash2 = digest2(input3);
+      const hash6 = digest4(input3);
       const reserved = store.transaction(() => {
-        const previous = store.command("handoff", input3.requestKey, hash2);
+        const previous = store.command("handoff", input3.requestKey, hash6);
         if (previous) return { receipt: previous, recovered: true };
-        const receipt = {
+        const receipt2 = {
           ...payload,
           consumer: { state: "pending", provenance: provenance2 }
         };
-        store.receipt("handoff", input3.requestKey, hash2, receipt);
-        return { receipt, recovered: false };
+        store.receipt("handoff", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, recovered: false };
       });
       if (reserved.receipt.consumer.state !== "pending")
         return { ...reserved.receipt, recovered: true };
@@ -45095,16 +45737,16 @@ async function createSetup({
       }
       if (!rawResult)
         return { ...reserved.receipt, recovered: reserved.recovered };
-      const result = consumerReceiptSchema.parse(rawResult);
-      if (result.contextId !== payload.application.contextId || result.provenance?.kind !== provenance2.kind)
+      const result2 = consumerReceiptSchema.parse(rawResult);
+      if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
         throw new SetupFailure("consumer_scope_mismatch");
       return store.transaction(() => {
-        const prior = store.command("handoff", input3.requestKey, hash2);
+        const prior = store.command("handoff", input3.requestKey, hash6);
         if (prior.consumer.state !== "pending")
           return { ...prior, recovered: true };
-        const receipt = { ...payload, consumer: result };
-        store.complete("handoff", input3.requestKey, hash2, receipt);
-        return receipt;
+        const receipt2 = { ...payload, consumer: result2 };
+        store.complete("handoff", input3.requestKey, hash6, receipt2);
+        return receipt2;
       });
     },
     close() {
@@ -45122,11 +45764,284 @@ async function createSetup({
   return api;
 }
 
+// apps/codex-plugin/src/setup/customer-output.mjs
+var configuration = external_exports.object({
+  source: sourceSchema,
+  workItem: external_exports.string().optional(),
+  target: targetSchema.optional(),
+  configurationRefs: external_exports.array(
+    external_exports.object({
+      kind: external_exports.enum(["source", "target"]),
+      handle: external_exports.string()
+    })
+  )
+});
+var state = external_exports.enum([
+  "awaiting-confirmation",
+  "blocked",
+  "preparing",
+  "uncertain",
+  "stop-requested",
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var handle2 = {
+  applicationId: identity3,
+  contextId: identity3,
+  version: external_exports.number().int().positive()
+};
+var summary = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup/1"),
+  ...handle2,
+  state,
+  missing: external_exports.array(external_exports.string()),
+  nextAction: external_exports.string(),
+  recovered: external_exports.boolean().optional(),
+  reused: external_exports.boolean().optional(),
+  cancellationRequested: external_exports.boolean().optional(),
+  supersededBy: identity3.optional(),
+  configuration: configuration.optional(),
+  notice: external_exports.string().optional()
+});
+var list = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup-list/1"),
+  contexts: external_exports.array(
+    external_exports.object({
+      ...handle2,
+      source: sourceSchema,
+      target: targetSchema.optional(),
+      state,
+      supersededBy: identity3.nullable(),
+      notice: external_exports.string().optional()
+    })
+  ),
+  nextOffset: external_exports.number().int().nonnegative().nullable()
+});
+var resolved = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-application/1"),
+  application: external_exports.object({
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().nullable(),
+    readiness: external_exports.object({
+      state: external_exports.literal("configured"),
+      browserObserved: external_exports.literal(false),
+      applicationCoverage: external_exports.literal("not-verified")
+    })
+  }),
+  setup: external_exports.object(handle2),
+  nextAction: external_exports.string(),
+  consumer: external_exports.object({
+    state: external_exports.enum(["pending", "accepted", "refused"]),
+    accepted: external_exports.boolean().optional()
+  }).optional(),
+  recovered: external_exports.boolean().optional(),
+  notice: external_exports.string().optional()
+});
+var error62 = external_exports.object({
+  error: external_exports.object({ code: external_exports.string(), message: external_exports.string() })
+});
+var customerSetupOutputSchemas = Object.fromEntries(
+  [
+    ["loki_setup_list", list],
+    ...["prepare", "get", "wait", "retry", "stop"].map((name) => [
+      `loki_setup_${name}`,
+      summary
+    ]),
+    ["loki_setup_resolve", resolved],
+    ["loki_setup_handoff", resolved]
+  ].map(([name, success2]) => [name, external_exports.union([success2, error62])])
+);
+var statuses = {
+  "awaiting-authority": "awaiting-confirmation",
+  admitting: "preparing",
+  mapping: "preparing"
+};
+var status2 = (value) => state.parse(statuses[value] ?? value);
+var selection2 = (value) => configuration.parse({
+  ...value,
+  configurationRefs: value.configurationRefs.filter(
+    (ref) => ["source", "target"].includes(ref.kind)
+  )
+});
+var notice = (value) => value.provenance?.kind === "controlled-fixture" ? { notice: "Test data only. This does not verify the application." } : {};
+var missingLabels = {
+  "source-authorization": "Permission to read the selected source",
+  "work-item-or-mapping-question": "The work item to check",
+  "model-provider": "Kaijan sign-in and connection",
+  "admitted-map-producer": "Application setup support"
+};
+function nextAction(value) {
+  switch (value.state) {
+    case "ready":
+      return "Source context is saved. Planning needs a work item; running tests also needs a target and authorization. Setup does not verify application behavior.";
+    case "uncertain":
+      return "Read this original context to check what happened. Do not retry or create replacement work while its effects are unknown.";
+    case "stop-requested":
+      return "Stop is still pending. Read this original context again; do not assume the work has stopped.";
+    case "mapping":
+    case "admitting":
+      return "Preparation is unfinished. Keep this saved context and check its state. Do not start replacement work.";
+    case "blocked":
+    case "awaiting-authority":
+      return "Resolve the listed missing input or access, then retry only this known blocked setup when authorized.";
+    case "superseded":
+      return "This context has been replaced. Read the replacement context before continuing.";
+    case "incomplete":
+      return "Only part of the source context is available. Keep the saved record and resolve the missing input before continuing.";
+    default:
+      return "Setup did not complete. Keep the original context and check the selected source and access before an authorized retry.";
+  }
+}
+var failures = {
+  consumer_integration_unavailable: [
+    "application_connection_unavailable",
+    "This application connection is unavailable. Your saved source remains available for planning and testing."
+  ],
+  unknown_application_context: [
+    "setup_unavailable",
+    "This saved Setup is unavailable in this chat. Use its original chat and exact application and context IDs."
+  ],
+  request_conflict: [
+    "request_conflict",
+    "This request key belongs to different input. Read its original Setup. Use a new key only for separately authorized new work; never to recover unknown effects."
+  ],
+  retry_not_required: [
+    "retry_not_required",
+    "Read the saved Setup. Retry only known failed, stopped or blocked work after its missing input changes or when requested."
+  ],
+  stale_application_context: [
+    "stale_application_context",
+    "Use the exact source and target revisions from the saved Setup. A different source selection requires a new request."
+  ],
+  application_not_ready: [
+    "application_not_ready",
+    "Setup is not ready. Read its saved state and resolve the missing input or access."
+  ],
+  source_revision_unavailable: [
+    "source_revision_unavailable",
+    "The selected source revision is unavailable. Check the repository, branch or commit and your access."
+  ],
+  source_revision_ambiguous: [
+    "source_revision_ambiguous",
+    "The source revision is ambiguous. Supply an exact branch, tag or commit."
+  ],
+  invalid_source: [
+    "invalid_source",
+    "The selected source cannot be read. Check the project directory and repository access."
+  ],
+  source_identity_changed: [
+    "source_changed",
+    "The selected source has changed. Review the source selection before continuing."
+  ],
+  setup_interrupted: [
+    "setup_interrupted",
+    "The request was interrupted. Read the original Setup to check its state before continuing. Do not replay unknown effects."
+  ]
+};
+function customerSetupFailure(code) {
+  const [safeCode, message] = failures[code] ?? [
+    "setup_unavailable",
+    "Setup could not complete. Read the original saved context and check the selected source and access. Do not replay work with unknown effects."
+  ];
+  return error62.parse({ error: { code: safeCode, message } });
+}
+function projectCustomerSetup(name, value) {
+  if (value.error && typeof value.error === "object")
+    return customerSetupFailure(value.error.code);
+  if (name === "loki_setup_list")
+    return list.parse({
+      schema: "kaijan.customer-setup-list/1",
+      contexts: value.contexts.map((item) => ({
+        ...item,
+        state: status2(item.state),
+        ...notice(item)
+      })),
+      nextOffset: value.nextOffset
+    });
+  if (["loki_setup_resolve", "loki_setup_handoff"].includes(name)) {
+    const application = value.application;
+    return resolved.parse({
+      schema: "kaijan.customer-application/1",
+      application: {
+        contextId: application.contextId,
+        source: application.source,
+        target: application.target,
+        workItem: application.workItem ?? application.readiness.scope?.workItem ?? null,
+        readiness: {
+          state: "configured",
+          browserObserved: false,
+          applicationCoverage: "not-verified"
+        }
+      },
+      setup: value.setup,
+      nextAction: "Use the saved source and work item for the requested task. Application behavior has not been checked; testing needs its own authorization.",
+      ...value.consumer ? {
+        consumer: value.consumer.state === "pending" ? { state: "pending" } : {
+          state: value.consumer.accepted ? "accepted" : "refused",
+          accepted: value.consumer.accepted
+        }
+      } : {},
+      ...value.recovered === void 0 ? {} : { recovered: value.recovered },
+      ...notice(application)
+    });
+  }
+  return summary.parse({
+    schema: "kaijan.customer-setup/1",
+    ...Object.fromEntries(
+      [
+        "applicationId",
+        "contextId",
+        "version",
+        "recovered",
+        "reused",
+        "supersededBy",
+        "cancellationRequested"
+      ].filter((key) => value[key] !== void 0).map((key) => [key, value[key]])
+    ),
+    state: status2(value.state),
+    missing: [
+      ...new Set(
+        value.missing.map(
+          (item) => missingLabels[item] ?? "Application setup needs attention"
+        )
+      )
+    ],
+    nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
+    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
+    ...notice(value)
+  });
+}
+var customerSetupDescriptions = {
+  loki_setup_list: "Find saved application setups for the selected project directory. This does not start tests or change the source.",
+  loki_setup_prepare: "Save the selected application's committed source revision, work item and optional test target. Resolve the selected Git ref without changing the checkout; unsaved edits are not included. Keep the same requestKey after a lost reply. This does not test application behavior.",
+  loki_setup_get: "Read the original saved application setup and its current state. Do not recreate unfinished work to recover a result.",
+  loki_setup_wait: "Read or wait for the original Setup state. Do not restart unfinished work or assume unknown effects have stopped.",
+  loki_setup_retry: "Retry only a known failed, stopped or blocked Setup after its missing input changes or the user requests it. Keep the original source selection. Do not replay work with unknown effects.",
+  loki_setup_stop: "Request Stop for this exact original Setup. Read its state afterward; a request alone does not confirm it stopped.",
+  loki_setup_resolve: "Read the configured application source, work item and optional target using the exact saved source and target revisions. Setup is not a test result and grants no permission to run tests.",
+  loki_setup_handoff: "Use the saved application configuration with an available connected application. Acknowledgment does not verify application behavior."
+};
+
 // apps/codex-plugin/src/setup/mcp.mjs
+var customerPrepareSchema = prepareSchema.extend({
+  configuration: prepareSchema.shape.configuration.extend({
+    configurationRefs: external_exports.array(
+      external_exports.strictObject({
+        kind: external_exports.enum(["source", "target"]),
+        handle: external_exports.string().min(1).max(200)
+      })
+    ).max(30).default([])
+  })
+});
 function invalidSetupInput(message, data) {
-  const error62 = new McpError(ErrorCode.InvalidParams, message, data);
-  error62.message = message;
-  return error62;
+  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
+  error63.message = message;
+  return error63;
 }
 async function createSetupTools({
   directory,
@@ -45155,7 +46070,7 @@ async function createSetupTools({
     [
       "loki_setup_prepare",
       "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
-      prepareSchema,
+      customerPrepareSchema,
       (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
       false
     ],
@@ -45202,27 +46117,17 @@ async function createSetupTools({
       false
     ]
   ];
-  const configurationDescriptions = {
-    loki_setup_list: "Find saved application configurations for the selected project directory. No source scan, provider call or browser action.",
-    loki_setup_prepare: "Save the selected application's source revision, original work item and optional target configuration. Resolve the selected Git ref once without changing the checkout. No map building, source transfer to a model, provider configuration or browser action is required. Keep the original requestKey after a lost reply.",
-    loki_setup_get: "Read the original saved application configuration and its actual state. Historical mapping records remain unchanged; this release never restarts mapping.",
-    loki_setup_wait: "Read the original Setup configuration. Fresh Setup does not start a map or provider operation. Historical unknown effects remain retained and are not replayed.",
-    loki_setup_retry: "Retry known failed, stopped or blocked application configuration after its missing input changes or the user requests it. No map or provider operation starts; preserve the original source selection and receipts.",
-    loki_setup_stop: "Stop only this original Setup context. Configuration-only Setup has no map run or browser operation to cancel. Do not treat a receipt as confirmation that historical unknown work stopped.",
-    loki_setup_resolve: "Read the configured application source, original work item and optional target using their exact expected revisions. Map is not required. Configuration is not observed application behavior or an execution grant; risk, planning and Runner use their own supplied inputs and authority.",
-    loki_setup_handoff: "Send the saved configuration only through a supported consumer. Unavailable consumer integration does not block Setup, risk analysis, test planning or Runner and never falls back to a fixture."
-  };
-  const tools = definitions.map(([name, description, schema, , readOnly]) => ({
+  const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
     name,
-    description: mapper ? description : configurationDescriptions[name],
+    description: customerSetupDescriptions[name],
     inputSchema: {
       ...external_exports.toJSONSchema(schema, { io: "input" }),
       $id: `urn:loki:${name}:input:1`
     },
     outputSchema: {
       type: "object",
-      ...external_exports.toJSONSchema(setupOutputSchemas[name]),
-      $id: `urn:loki:${name}:output:${setupOutputVersion(name)}`
+      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
+      $id: `urn:kaijan:${name}:customer-output:1`
     },
     annotations: {
       readOnlyHint: readOnly,
@@ -45250,26 +46155,37 @@ async function createSetupTools({
     }
     try {
       signal?.throwIfAborted();
-      const result = await definition[3](parsed.data, signal, invocation);
-      const text4 = JSON.stringify(result);
-      const wire = JSON.parse(text4);
-      if (!setupSuccessSchemas[name].safeParse(wire).success)
+      const result2 = await definition[3](parsed.data, signal, invocation);
+      const text4 = JSON.stringify(result2);
+      const original2 = JSON.parse(text4);
+      if (!setupSuccessSchemas[name].safeParse(original2).success)
         throw new SetupFailure("setup_output_invalid");
+      const wire = projectCustomerSetup(name, original2);
       return {
         structuredContent: wire,
-        content: [{ type: "text", text: text4 }]
+        content: [{ type: "text", text: JSON.stringify(wire) }]
       };
-    } catch (error62) {
-      const result = { error: failure2(error62) };
-      setupErrorOutputSchema.parse(result);
+    } catch (error63) {
+      const result2 = customerSetupFailure(failure2(error63).code);
       return {
         isError: true,
-        structuredContent: result,
-        content: [{ type: "text", text: JSON.stringify(result) }]
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
       };
     }
   };
-  return { tools, invoke, setup, close: () => setup.close() };
+  return {
+    tools: tools2,
+    // Configuration-only Setup returns synchronously. There is no mapping job
+    // to wait for or stop, and no handoff when no consumer is connected.
+    hiddenTools: [
+      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
+      ...!consumer ? ["loki_setup_handoff"] : []
+    ],
+    invoke,
+    setup,
+    close: () => setup.close()
+  };
 }
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
@@ -45322,14 +46238,14 @@ var StdioServerTransport = class {
       try {
         this._readBuffer.append(chunk);
         this.processReadBuffer();
-      } catch (error62) {
-        this.onerror?.(error62);
+      } catch (error63) {
+        this.onerror?.(error63);
         this.close().catch(() => {
         });
       }
     };
-    this._onerror = (error62) => {
-      this.onerror?.(error62);
+    this._onerror = (error63) => {
+      this.onerror?.(error63);
     };
     this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
   }
@@ -45352,8 +46268,8 @@ var StdioServerTransport = class {
           break;
         }
         this.onmessage?.(message);
-      } catch (error62) {
-        this.onerror?.(error62);
+      } catch (error63) {
+        this.onerror?.(error63);
       }
     }
   }
@@ -45369,8 +46285,8 @@ var StdioServerTransport = class {
   }
   send(message) {
     return new Promise((resolve4) => {
-      const json2 = serializeMessage(message);
-      if (this._stdout.write(json2)) {
+      const json3 = serializeMessage(message);
+      if (this._stdout.write(json3)) {
         resolve4();
       } else {
         this._stdout.once("drain", resolve4);
@@ -45394,16 +46310,19 @@ import {
 import { createHash as createHash3, randomUUID as randomUUID6 } from "node:crypto";
 import { dirname as dirname3, join as join6, resolve as resolve2 } from "node:path";
 async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
   if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
     throw new Error(
       "Missing fixed plugin profile. Reinstall the selected artifact."
     );
-  const identity3 = JSON.stringify({
+  const identity4 = JSON.stringify({
     profile: build.profile,
     origin: build.coreOrigin,
     client: build.oauthClientId
   });
-  const key = createHash3("sha256").update(identity3).digest("hex").slice(0, 20);
+  const key = createHash3("sha256").update(identity4).digest("hex").slice(0, 20);
   let selected;
   const forwarded = [];
   for (let i = 0; i < args.length; i++) {
@@ -45415,18 +46334,20 @@ async function bindProfileState(build, args, home) {
       if (!selected || selected.startsWith("--"))
         throw new Error("Missing private state directory.");
     } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const host = arg === "--host" ? args[++i] : arg.slice(7);
-      if (host !== "codex")
-        throw new Error("This package belongs to the Codex host.");
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
+        );
     } else forwarded.push(arg);
   }
-  const state = resolve2(
-    selected ?? join6(home, ".local", "share", "loki", "codex", build.profile, key)
+  const state2 = resolve2(
+    selected ?? join6(home, ".local", "share", "loki", host, build.profile, key)
   );
-  await mkdir5(state, { recursive: true, mode: 448 });
-  if (await realpath4(state) !== state || ((await stat(state)).mode & 63) !== 0)
+  await mkdir5(state2, { recursive: true, mode: 448 });
+  if (await realpath4(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
     throw new Error("Use a canonical private state directory with mode 0700.");
-  const path = join6(state, "plugin-profile.json");
+  const path = join6(state2, "plugin-profile.json");
   const expected = {
     schemaVersion: 1,
     profile: build.profile,
@@ -45440,9 +46361,9 @@ async function bindProfileState(build, args, home) {
   );
   try {
     file2 = await readBinding();
-  } catch (error62) {
-    if (error62.code !== "ENOENT") throw error62;
-    if ((await readdir(state)).length) {
+  } catch (error63) {
+    if (error63.code !== "ENOENT") throw error63;
+    if ((await readdir(state2)).length) {
       try {
         file2 = await readBinding();
       } catch (readError) {
@@ -45453,7 +46374,7 @@ async function bindProfileState(build, args, home) {
         );
       }
     } else {
-      const temporary = join6(dirname3(state), `.loki-profile-${randomUUID6()}`);
+      const temporary = join6(dirname3(state2), `.loki-profile-${randomUUID6()}`);
       const created = await open4(temporary, "wx", 384);
       try {
         try {
@@ -45487,11 +46408,65 @@ async function bindProfileState(build, args, home) {
   } finally {
     await file2.close();
   }
-  return { state, args: [...forwarded, "--host", "codex", "--state", state] };
+  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
 }
 
+// apps/codex-plugin/src/claude-tool-schema.mjs
+var alternatives = /* @__PURE__ */ new Map([
+  [
+    "loki_test_execute",
+    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
+  ],
+  [
+    "loki_report_show",
+    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
+  ]
+]);
+function claudeToolDefinition(tool) {
+  const guidance = tool && alternatives.get(tool.name);
+  if (!guidance || !Array.isArray(tool.inputSchema?.anyOf)) return tool;
+  const { anyOf, ...root } = tool.inputSchema;
+  if (anyOf.length < 2 || anyOf.some(
+    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
+      (key) => ![
+        "type",
+        "properties",
+        "required",
+        "additionalProperties"
+      ].includes(key)
+    )
+  ))
+    throw new Error("Unsupported Claude tool input layout.");
+  const properties = {};
+  for (const branch of anyOf)
+    for (const [name, schema] of Object.entries(branch.properties)) {
+      const previous = properties[name];
+      if (previous === void 0) properties[name] = schema;
+      else if (JSON.stringify(previous) !== JSON.stringify(schema))
+        throw new Error("Conflicting Claude tool input field.");
+    }
+  const required2 = (anyOf[0].required ?? []).filter(
+    (name) => anyOf.every((branch) => branch.required?.includes(name))
+  );
+  return {
+    ...tool,
+    inputSchema: {
+      ...root,
+      type: "object",
+      properties,
+      ...required2.length ? { required: required2 } : {},
+      additionalProperties: false
+    },
+    description: `${tool.description}
+${guidance}`
+  };
+}
+
+// apps/codex-plugin/src/customer-plan-selection.mjs
+import { isDeepStrictEqual } from "node:util";
+
 // packages/contracts/dist/report-evidence.js
-var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
 var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
@@ -45523,17 +46498,17 @@ var reportedTestSchema = external_exports.strictObject({
     revision: nonempty,
     language: nonempty,
     text: nonempty,
-    sha256: digest3
+    sha256: digest5
   }).nullable()
 }).superRefine((test, ctx) => {
-  if (new Set(test.steps.map((step) => step.id)).size !== test.steps.length)
+  if (new Set(test.steps.map((step2) => step2.id)).size !== test.steps.length)
     ctx.addIssue({ code: "custom", message: "Step IDs must be unique." });
-  if (test.status === "pass" && test.steps.some((step) => step.status !== "pass"))
+  if (test.status === "pass" && test.steps.some((step2) => step2.status !== "pass"))
     ctx.addIssue({
       code: "custom",
       message: "A passed test requires passed steps."
     });
-  if (test.status === "fail" && !test.steps.some((step) => step.status === "fail"))
+  if (test.status === "fail" && !test.steps.some((step2) => step2.status === "fail"))
     ctx.addIssue({
       code: "custom",
       message: "A failed test requires a failed step."
@@ -45561,7 +46536,7 @@ var reportPullRequestSchema = external_exports.strictObject({
   source: external_exports.strictObject({
     kind: external_exports.literal("supplied-github-read"),
     record: external_exports.json(),
-    sha256: digest3
+    sha256: digest5
   })
 }).superRefine((pr, ctx) => {
   if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
@@ -45576,14 +46551,14 @@ var reportPullRequestSchema = external_exports.strictObject({
     });
 });
 var reportVerificationSchema = external_exports.strictObject({
-  planRef: external_exports.strictObject({ answerId: digest3, resultSha256: digest3 }),
+  planRef: external_exports.strictObject({ answerId: digest5, resultSha256: digest5 }),
   repository,
   sourceRevision: revision2,
   pullRequestUrl: external_exports.url().nullable(),
   recordedAt: external_exports.iso.datetime({ offset: true }),
   provenance: external_exports.literal("product-terminal-checks/1"),
   oracle: nonempty,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest3 })).min(1),
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest5 })).min(1),
   tests: external_exports.array(reportedTestSchema).min(1)
 }).superRefine((run, ctx) => {
   if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
@@ -45592,14 +46567,14 @@ var reportVerificationSchema = external_exports.strictObject({
       message: "Test IDs must be unique per run."
     });
   const ids2 = new Set(run.evidence.map((item) => item.id));
-  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id3) => !ids2.has(id3)))))
+  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step2) => step2.evidenceIds.some((id6) => !ids2.has(id6)))))
     ctx.addIssue({
       code: "custom",
       message: "Each step must reference supplied evidence."
     });
 });
 var reportExecutionSchema = reportVerificationSchema.safeExtend({
-  runId: digest3
+  runId: digest5
 });
 var reportEvidenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.report-evidence/1"),
@@ -45635,7 +46610,7 @@ var reportSourcesSchema = external_exports.strictObject({
 
 // packages/contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
-var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var terminalChecksSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.terminal-checks/1"),
   repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
@@ -45669,13 +46644,13 @@ var terminalChecksSchema = external_exports.strictObject({
   }
 });
 var checkedPlanReferenceSchema = external_exports.strictObject({
-  answerId: digest4,
-  resultSha256: digest4,
+  answerId: digest6,
+  resultSha256: digest6,
   selectedTestIds: external_exports.array(nonempty2).min(1)
 });
 
 // packages/contracts/dist/report-view.js
-var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var groupSchema = external_exports.object({
   key: external_exports.enum([
     "why",
@@ -45707,9 +46682,9 @@ var reportItemSchema = external_exports.object({
 var sectionBase = external_exports.object({
   title: external_exports.string(),
   kind: external_exports.enum(["plan", "runner", "assessment"]),
-  sourceId: digest5,
+  sourceId: digest7,
   sourceKind: external_exports.enum(["answer", "run"]),
-  resultSha256: digest5.nullable(),
+  resultSha256: digest7.nullable(),
   operationState: external_exports.string(),
   stopRequested: external_exports.boolean().nullable().optional(),
   producerStatus: external_exports.object({
@@ -45729,7 +46704,7 @@ var sectionBase = external_exports.object({
     supplied: external_exports.boolean().optional()
   })),
   items: external_exports.array(reportItemSchema),
-  assessedRunIds: external_exports.array(digest5).optional(),
+  assessedRunIds: external_exports.array(digest7).optional(),
   localArtifacts: external_exports.object({
     kind: external_exports.enum(["browser", "desktop", "unavailable"]),
     message: external_exports.string(),
@@ -45747,15 +46722,15 @@ var reportSectionSchema = external_exports.union([
 ]);
 var reportViewSchema = external_exports.object({
   schema: external_exports.literal("loki.report-view/3"),
-  reportId: digest5,
+  reportId: digest7,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest5.nullable(),
+  mapId: digest7.nullable(),
   sections: external_exports.array(reportSectionSchema),
   displayNotice: external_exports.string().nullable(),
   evidenceContext: external_exports.object({
-    contextId: digest5,
-    recordSha256: digest5,
+    contextId: digest7,
+    recordSha256: digest7,
     readTool: external_exports.literal("loki_context_get"),
     provenance: external_exports.string()
   }).optional(),
@@ -45775,7 +46750,7 @@ var reportReadOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/advisory-read.js
-var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var advisoryReadInputSchema = external_exports.strictObject({
   family: external_exports.enum([
     "uiModeler",
@@ -45786,14 +46761,14 @@ var advisoryReadInputSchema = external_exports.strictObject({
     "testSupplement",
     "suppliedEvidence"
   ]),
-  answerId: digest6,
+  answerId: digest8,
   offset: external_exports.number().int().nonnegative().optional()
 }).meta({ $id: "urn:kaijan:advisory-read-input:1" });
 var advisoryReadSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.advisory-read/1"),
   state: external_exports.literal("complete"),
-  answerId: digest6,
-  resultSha256: digest6,
+  answerId: digest8,
+  resultSha256: digest8,
   resultChunk: external_exports.strictObject({
     encoding: external_exports.literal("JSON text, UTF-16 offsets"),
     offset: external_exports.number().int().nonnegative(),
@@ -45822,17 +46797,17 @@ var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advis
 
 // packages/contracts/dist/advisory.js
 var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
-var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var strings = external_exports.array(external_exports.string());
-var count3 = external_exports.number().int().nonnegative();
+var count4 = external_exports.number().int().nonnegative();
 var refs2 = external_exports.array(external_exports.strictObject({ evidence_id: external_exports.string() }));
 function preserveAdvisoryInput(schema) {
-  return external_exports.unknown().superRefine((value, context) => {
-    const result = schema.safeParse(value);
-    if (!result.success)
-      for (const issue3 of result.error.issues)
-        context.addIssue({ ...issue3 });
+  return external_exports.unknown().superRefine((value, context2) => {
+    const result2 = schema.safeParse(value);
+    if (!result2.success)
+      for (const issue3 of result2.error.issues)
+        context2.addIssue({ ...issue3 });
   }).meta(external_exports.toJSONSchema(schema, { io: "input" }));
 }
 var planningInputSchema = external_exports.union([
@@ -45846,7 +46821,7 @@ var planningInputSchema = external_exports.union([
   }),
   external_exports.looseObject({
     version: external_exports.literal("pr-context-plan/3"),
-    captured_at: external_exports.string(),
+    captured_at: external_exports.string().describe("Capture time with a timezone, such as 2026-11-04T05:16:48Z or 2026-11-04T12:16:48+07:00. Use ISO 8601, not a named timezone such as UTC."),
     work_item: external_exports.looseObject({ title: nonempty3 }),
     sources: external_exports.array(external_exports.looseObject({
       id: nonempty3,
@@ -45882,12 +46857,12 @@ var record3 = external_exports.looseObject({
 });
 var assessmentImageReferenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.assessment-image-ref/1"),
-  reportId: digest7,
-  runId: digest7,
-  resultSha256: digest7,
-  manifestSha256: digest7,
-  artifactId: digest7,
-  sha256: digest7,
+  reportId: digest9,
+  runId: digest9,
+  resultSha256: digest9,
+  manifestSha256: digest9,
+  artifactId: digest9,
+  sha256: digest9,
   bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
@@ -45911,7 +46886,7 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
     media_type: external_exports.literal("image/png").optional(),
     reference: jsonObject.nullable(),
     provenance: jsonObject.nullable(),
-    sha256: digest7.optional(),
+    sha256: digest9.optional(),
     artifact_ref: assessmentImageReferenceSchema.optional()
   })),
   target: jsonObject.nullable(),
@@ -45974,9 +46949,9 @@ var evidenceCatalog = external_exports.array(external_exports.looseObject({
   kind: external_exports.enum(["intent", "implementation", "context"]),
   uri: external_exports.string(),
   revision: external_exports.string(),
-  line: count3,
+  line: count4,
   quote: external_exports.string(),
-  quote_sha256: digest7
+  quote_sha256: digest9
 }));
 var nativePlanningResultSchema = external_exports.union([
   external_exports.looseObject({
@@ -45987,10 +46962,10 @@ var nativePlanningResultSchema = external_exports.union([
       executed: external_exports.literal(false),
       semantic_support: external_exports.literal("requires_review"),
       coverage: external_exports.looseObject({ status: external_exports.enum(["complete", "partial"]) }),
-      tests: count3,
-      objectives: count3
+      tests: count4,
+      objectives: count4
     }),
-    input_hash: digest7,
+    input_hash: digest9,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog
@@ -46047,8 +47022,8 @@ var nativeSupplementResultSchema = external_exports.union([
       text: external_exports.string(),
       uri: external_exports.string(),
       revision: external_exports.string(),
-      sha256: digest7,
-      bytes: count3,
+      sha256: digest9,
+      bytes: count4,
       test_ids: strings
     }),
     checks: external_exports.looseObject({
@@ -46056,10 +47031,10 @@ var nativeSupplementResultSchema = external_exports.union([
       status: external_exports.literal("structurally_valid_supplement"),
       executed: external_exports.literal(false),
       semantic_support: external_exports.literal("requires_separate_review"),
-      original_baseline_sha256: digest7,
+      original_baseline_sha256: digest9,
       original_baseline_test_ids: strings
     }),
-    input_hash: digest7,
+    input_hash: digest9,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog,
@@ -46070,8 +47045,8 @@ var nativeSupplementResultSchema = external_exports.union([
 var nativeAssessmentResultSchema = external_exports.looseObject({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  input_sha256: digest7,
-  request_sha256: digest7,
+  input_sha256: digest9,
+  request_sha256: digest9,
   assessment: external_exports.looseObject({
     schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
     original_candidate: jsonObject,
@@ -46100,8 +47075,8 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
   failure: external_exports.looseObject({ reason: external_exports.string() }).nullable(),
   native_artifact_directory: external_exports.string(),
   complete_call_elapsed_seconds: external_exports.number().nonnegative(),
-  provider_calls_started: count3,
-  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count3, sha256: digest7 })),
+  provider_calls_started: count4,
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest9 })),
   result_persisted: external_exports.boolean(),
   continuation_allowed: external_exports.boolean(),
   limitations: external_exports.string(),
@@ -46109,11 +47084,11 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
 });
 var advisoryIncompleteSchema = external_exports.strictObject({
   state: external_exports.enum(["unknown", "refused", "cancelled"]),
-  answerId: digest7.optional(),
+  answerId: digest9.optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
-    bytes: count3,
-    sha256: digest7,
+    bytes: count4,
+    sha256: digest9,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional(),
   reason: external_exports.string(),
@@ -46131,7 +47106,7 @@ var advisoryIncompleteSchema = external_exports.strictObject({
 });
 var advisoryContextUnavailableSchema = external_exports.strictObject({
   state: external_exports.literal("unsupported-consumption"),
-  contextId: digest7,
+  contextId: digest9,
   capability: external_exports.string(),
   detail: jsonObject,
   contextRetained: external_exports.literal(true),
@@ -46150,14 +47125,35 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
   })
 });
 
+// packages/contracts/dist/clarification-presentation.js
+var binding = external_exports.strictObject({
+  sourceId: external_exports.string(),
+  quote: external_exports.string().min(1).max(512)
+});
+var ordinaryPresentation = external_exports.strictObject({
+  kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
+  subject: binding,
+  choices: external_exports.array(binding).max(8)
+});
+var clarificationPresentationSchema = external_exports.union([
+  ordinaryPresentation,
+  external_exports.strictObject({
+    kind: external_exports.literal("read-only-path"),
+    subject: binding,
+    control: binding,
+    choices: external_exports.array(binding).max(0)
+  })
+]);
+
 // packages/contracts/dist/runner.js
-var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
-var count4 = external_exports.number().int().nonnegative();
+var count5 = external_exports.number().int().nonnegative();
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),
-  kind: external_exports.string()
+  kind: external_exports.string(),
+  presentation: clarificationPresentationSchema.optional()
 }));
 var progress = {
   reason: external_exports.string(),
@@ -46196,13 +47192,13 @@ var runnerClarificationSchema = external_exports.strictObject({
   state: external_exports.enum(["live", "unknown"]),
   redaction: external_exports.strictObject({
     schema: external_exports.literal("loki.runner.safe-projection/1"),
-    revision: count4
+    revision: count5
   }).optional()
 });
 var originalReference = external_exports.strictObject({
   path: external_exports.string(),
-  sha256: digest8,
-  bytes: count4
+  sha256: digest10,
+  bytes: count5
 });
 var checkpointReference = originalReference.extend({
   checkpointPath: external_exports.string()
@@ -46210,7 +47206,7 @@ var checkpointReference = originalReference.extend({
 var executionReportProvenance = external_exports.strictObject({
   responseReference: originalReference.nullable(),
   evidenceReferences: external_exports.array(checkpointReference),
-  providerCall: count4
+  providerCall: count5
 });
 var runnerNativeResultSchema = external_exports.looseObject({
   correlation: external_exports.looseObject({
@@ -46232,12 +47228,12 @@ var runnerNativeResultSchema = external_exports.looseObject({
   executionReport: runnerExecutionReportSchema.nullable().optional(),
   recovery: runnerRecoverySchema.optional(),
   effortAccounting: external_exports.strictObject({
-    low: count4,
-    medium: count4,
-    none: count4.optional(),
-    high: count4.optional(),
-    xhigh: count4.optional(),
-    max: count4.optional()
+    low: count5,
+    medium: count5,
+    none: count5.optional(),
+    high: count5.optional(),
+    xhigh: count5.optional(),
+    max: count5.optional()
   }).optional()
 });
 var runnerResultSchema = external_exports.discriminatedUnion("status", [
@@ -46286,13 +47282,13 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
       provenance: jsonObject2
     }),
     verification: reportVerificationSchema.optional(),
-    sourceContextId: digest8.nullable().optional()
+    sourceContextId: digest10.nullable().optional()
   })
 ]);
 var runnerNextActionSchema = external_exports.strictObject({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: digest8,
+  runId: digest10,
   clarificationId: external_exports.string().min(1),
   deadlineAt: external_exports.string(),
   questions,
@@ -46300,7 +47296,7 @@ var runnerNextActionSchema = external_exports.strictObject({
 });
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
-  runId: digest8,
+  runId: digest10,
   state: external_exports.enum([
     "accepted",
     "running",
@@ -46321,14 +47317,14 @@ var operationBase = external_exports.strictObject({
   receiptDirectory: external_exports.string().optional(),
   providerCallsStarted: external_exports.literal(0).optional(),
   resultValidated: external_exports.boolean().optional(),
-  resultSha256: digest8.optional(),
-  resultBytes: count4.optional(),
-  resultRecordSha256: digest8.optional(),
+  resultSha256: digest10.optional(),
+  resultBytes: count5.optional(),
+  resultRecordSha256: digest10.optional(),
   resultRecord: external_exports.json().optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
-    bytes: count4,
-    sha256: digest8,
+    bytes: count5,
+    sha256: digest10,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional()
 });
@@ -46339,7 +47335,7 @@ var resultRead = external_exports.strictObject({
 });
 var resultChunk = external_exports.strictObject({
   encoding: external_exports.literal("JSON text, UTF-16 offsets"),
-  offset: count4,
+  offset: count5,
   text: external_exports.string().min(1),
   nextOffset: external_exports.number().int().positive().nullable(),
   totalCharacters: external_exports.number().int().positive()
@@ -46347,7 +47343,7 @@ var resultChunk = external_exports.strictObject({
 var finished = operationBase.extend({
   state: external_exports.literal("finished"),
   resultValidated: external_exports.literal(true),
-  resultSha256: digest8,
+  resultSha256: digest10,
   resultBytes: external_exports.number().int().positive()
 });
 var runnerOperationSchema = external_exports.union([
@@ -46368,7 +47364,7 @@ var runnerOperationSchema = external_exports.union([
 var runnerErrorSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-error/1"),
   method: external_exports.enum(["execute", "get", "stop"]),
-  runId: digest8.optional(),
+  runId: digest10.optional(),
   error: external_exports.strictObject({
     code: external_exports.enum([
       "invalid_arguments",
@@ -46389,7 +47385,7 @@ var runnerErrorSchema = external_exports.strictObject({
       action: external_exports.string(),
       instruction: external_exports.string(),
       requestKey: external_exports.string().optional(),
-      existingRunId: digest8.optional(),
+      existingRunId: digest10.optional(),
       existingRunScope: external_exports.string().optional()
     })
   })
@@ -46397,7 +47393,7 @@ var runnerErrorSchema = external_exports.strictObject({
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
 // packages/contracts/dist/assessment-preparation.js
-var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
 var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var assessmentReceiptSchema = external_exports.looseObject({
@@ -46409,10 +47405,10 @@ var assessmentPreparationLimits = {
   packetBytes: 2 * 1024 * 1024
 };
 var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
-  reportId: digest9,
-  runId: digest9,
+  reportId: digest11,
+  runId: digest11,
   view: external_exports.literal("inspection").optional(),
-  expectedResultSha256: digest9.optional(),
+  expectedResultSha256: digest11.optional(),
   work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
   requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
   proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
@@ -46421,23 +47417,23 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   preflight: assessmentReceiptSchema.nullable().optional(),
   runtimeComparison: assessmentReceiptSchema.nullable().optional(),
   cleanup: assessmentReceiptSchema.nullable().optional(),
-  selectedArtifactIds: external_exports.array(digest9).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+  selectedArtifactIds: external_exports.array(digest11).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
-var locator = external_exports.strictObject({
+var locator2 = external_exports.strictObject({
   report: external_exports.strictObject({
     tool: external_exports.literal("loki_report_get"),
-    reportId: digest9
+    reportId: digest11
   }),
   operation: external_exports.strictObject({
     tool: external_exports.literal("loki_runner_get"),
-    runId: digest9
+    runId: digest11
   }),
   artifacts: external_exports.strictObject({
     tool: external_exports.literal("loki_report_artifact_read"),
-    reportId: digest9,
-    runId: digest9
+    reportId: digest11,
+    runId: digest11
   }),
-  resultSha256: digest9.nullable()
+  resultSha256: digest11.nullable()
 });
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
@@ -46464,7 +47460,7 @@ var common = {
   nativeVerdict: external_exports.json(),
   accounting: jsonObject3,
   evidenceIndex: external_exports.array(indexEntry),
-  origin: locator
+  origin: locator2
 };
 var fullPreparationOutput = external_exports.union([
   external_exports.strictObject({
@@ -46499,7 +47495,7 @@ var fullPreparationOutput = external_exports.union([
     replayAllowed: external_exports.literal(false)
   })
 ]);
-var count5 = external_exports.number().int().nonnegative();
+var count6 = external_exports.number().int().nonnegative();
 var assessmentInspectionLocatorSchema = external_exports.union([
   external_exports.strictObject({
     document: external_exports.literal("decoded-original-runner-result"),
@@ -46510,12 +47506,12 @@ var assessmentInspectionLocatorSchema = external_exports.union([
     document: external_exports.literal("full-preparation-packet"),
     pointer: external_exports.string()
   }),
-  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest9 })
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest11 })
 ]);
 var section = external_exports.strictObject({
-  total: count5,
-  shown: count5,
-  omitted: count5,
+  total: count6,
+  shown: count6,
+  omitted: count6,
   containerLocator: assessmentInspectionLocatorSchema,
   available: external_exports.boolean(),
   rows: external_exports.array(jsonObject3)
@@ -46552,18 +47548,18 @@ var assessmentInspectionOutputSchema = external_exports.strictObject({
   unresolvedReferences: section,
   selection: external_exports.strictObject({
     method: external_exports.literal("mechanical-prefix-not-importance"),
-    outcomes: count5,
-    evidenceRecords: count5,
-    receiptsPerCategory: count5,
-    contentLeaves: count5,
-    contentDepth: count5,
-    stoppedSubtrees: count5,
-    stringCodePoints: count5,
-    evidenceIndex: count5,
-    selectedArtifacts: count5,
-    unselectedArtifacts: count5,
-    missingFacts: count5,
-    unresolvedReferences: count5,
+    outcomes: count6,
+    evidenceRecords: count6,
+    receiptsPerCategory: count6,
+    contentLeaves: count6,
+    contentDepth: count6,
+    stoppedSubtrees: count6,
+    stringCodePoints: count6,
+    evidenceIndex: count6,
+    selectedArtifacts: count6,
+    unselectedArtifacts: count6,
+    missingFacts: count6,
+    unresolvedReferences: count6,
     objectKeys: external_exports.literal("UTF-16-code-unit-order"),
     traversal: external_exports.literal("shallow-first; arrays in original index order"),
     contentTotals: external_exports.literal("primitive and empty-container values through contentDepth; deeper leaf counts unknown"),
@@ -46617,15 +47613,238 @@ var testRunErrorSchema = external_exports.looseObject({
 });
 var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
 
+// packages/contracts/dist/customer-source-display.js
+var customerSourceDisplaySchema = external_exports.object({
+  kind: external_exports.enum(["submitted-task", "application-page", "proposed-test"]),
+  sourceTextSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  fields: external_exports.array(external_exports.object({ label: external_exports.string(), text: external_exports.string() })),
+  expectation: external_exports.object({ label: external_exports.string(), text: external_exports.string() }).optional()
+});
+
+// packages/contracts/dist/customer-assessment-presentation.js
+var retainedProof = /* @__PURE__ */ new WeakMap();
+var record4 = (value) => value !== null && typeof value === "object";
+function retainVerifiedAssessmentSource(value) {
+  retainedProof.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedAssessmentSource(value) {
+  return record4(value) && retainedProof.get(value) === JSON.stringify(value);
+}
+function copyAssessmentPresentationProof(source3, target) {
+  if (!record4(source3) || !record4(target))
+    return target;
+  if (hasVerifiedAssessmentSource(source3))
+    retainVerifiedAssessmentSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      copyAssessmentPresentationProof(source3[key], target[key]);
+  return target;
+}
+function equalAssessmentSourceValues(source3, target) {
+  if (Object.is(source3, target))
+    return true;
+  if (!record4(source3) || !record4(target) || Array.isArray(source3) !== Array.isArray(target))
+    return false;
+  const sourceKeys = Object.keys(source3).filter((key) => source3[key] !== void 0);
+  const targetKeys = Object.keys(target).filter((key) => target[key] !== void 0);
+  return sourceKeys.length === targetKeys.length && sourceKeys.every((key) => Object.hasOwn(target, key) && equalAssessmentSourceValues(source3[key], target[key]));
+}
+function transferAssessmentPresentationProof(source3, target, verifySource) {
+  if (!verifySource || !record4(source3) || !record4(target))
+    return target;
+  if (verifySource(source3) === true && equalAssessmentSourceValues(source3, target))
+    retainVerifiedAssessmentSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferAssessmentPresentationProof(source3[key], target[key], verifySource);
+  return target;
+}
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerCleanupFactsSchema = external_exports.object({
+  kind: external_exports.literal("browser-cleanup"),
+  scope: external_exports.literal("test-browser-resources"),
+  cleaned: external_exports.boolean(),
+  deadlineExceeded: external_exports.boolean(),
+  applicationObservation: external_exports.literal(false),
+  applicationCleanup: external_exports.literal("not-established")
+});
+var customerAssessmentQuoteSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  display: customerSourceDisplaySchema.optional(),
+  // The original quote hash stays exact. This receipt identifies the filtered
+  // display copy; serialized fields alone never grant source proof.
+  projection: external_exports.object({
+    schema: external_exports.literal("kaijan.customer-source-projection/1"),
+    sourceSha256: digest12,
+    sha256: digest12,
+    bytes: external_exports.number().int().nonnegative()
+  }).optional(),
+  state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
+  attribution: external_exports.enum([
+    "application-observation",
+    "caller-supplied",
+    "original-intent",
+    "proposed-test",
+    "resource-record",
+    "supplied-source"
+  ]).optional(),
+  text: external_exports.string().optional(),
+  sha256: digest12.optional(),
+  sourceSha256: digest12.optional(),
+  facts: customerCleanupFactsSchema.optional(),
+  notice: external_exports.string().optional()
+});
+var assessmentSourceUnavailable = "The cited source is retained but cannot be shown in this view. Its absence does not establish a pass, failure or permission to repeat actions.";
+function customerCleanupText(facts) {
+  const closure = facts.cleaned ? "The test browser was confirmed closed." : "The test browser was not confirmed closed at the cleanup check.";
+  return closure + (facts.deadlineExceeded ? " The cleanup time limit was reached." : "");
+}
+function projectAssessmentQuotes(values = []) {
+  return values.map((value) => {
+    const quote = customerAssessmentQuoteSchema.parse(value);
+    const verified = hasVerifiedAssessmentSource(value);
+    if (quote.state === "derived-facts" && quote.facts)
+      return copyAssessmentPresentationProof(value, {
+        sourceId: quote.sourceId,
+        state: "derived-facts",
+        attribution: verified ? "resource-record" : "supplied-source",
+        ...verified && quote.sourceSha256 !== void 0 ? { sourceSha256: quote.sourceSha256 } : {},
+        facts: quote.facts,
+        text: customerCleanupText(quote.facts)
+      });
+    if (quote.state === "literal-source" && quote.text !== void 0)
+      return copyAssessmentPresentationProof(value, {
+        sourceId: quote.sourceId,
+        state: "literal-source",
+        attribution: verified ? quote.attribution ?? "supplied-source" : "supplied-source",
+        text: quote.text,
+        ...verified && quote.notice !== void 0 ? { notice: quote.notice } : {},
+        ...verified && quote.sha256 !== void 0 ? { sha256: quote.sha256 } : {},
+        ...verified && quote.sourceSha256 !== void 0 ? { sourceSha256: quote.sourceSha256 } : {},
+        ...verified && quote.projection && quote.projection?.sourceSha256 === quote.sha256 ? { projection: quote.projection } : {},
+        ...verified && quote.display && quote.display.sourceTextSha256 === quote.sha256 ? { display: quote.display } : {}
+      });
+    return {
+      sourceId: quote.sourceId,
+      state: "unavailable",
+      notice: assessmentSourceUnavailable
+    };
+  });
+}
+function presentAssessmentText(_verdict, actual, _quotes, steps, reason) {
+  return {
+    actual,
+    reason,
+    descriptions: steps.map((step2) => step2.description)
+  };
+}
+var customerRecordedActionSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  sourceSha256: digest12.optional(),
+  evidenceId: external_exports.string(),
+  index: external_exports.number().int().positive(),
+  action: external_exports.object({
+    type: external_exports.enum([
+      "click",
+      "double_click",
+      "move",
+      "scroll",
+      "keypress",
+      "type",
+      "drag",
+      "wait",
+      "screenshot"
+    ]),
+    x: external_exports.number().optional(),
+    y: external_exports.number().optional(),
+    scroll_x: external_exports.number().optional(),
+    scroll_y: external_exports.number().optional(),
+    text: external_exports.string().optional(),
+    keys: external_exports.array(external_exports.string()).optional(),
+    button: external_exports.enum(["left", "right", "middle", "back", "forward"]).optional(),
+    path: external_exports.array(external_exports.tuple([external_exports.number(), external_exports.number()])).optional()
+  }),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  startedAt: external_exports.iso.datetime({ offset: true }),
+  endedAt: external_exports.iso.datetime({ offset: true }).optional(),
+  attribution: external_exports.enum(["retained-action-record", "supplied-action-record"])
+});
+var customerAssessmentStepFactsSchema = external_exports.object({
+  state: external_exports.enum(["bound", "unresolved", "supplied"]),
+  qualification: external_exports.enum([
+    "recorded_action",
+    "reported_observation",
+    "unresolved"
+  ]),
+  actions: external_exports.array(customerRecordedActionSchema),
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  notice: external_exports.string()
+});
+var assessmentActionQualification = "These are recorded action attempts and returns for the selected outcomes. A return is not proof of the expected application effect. Record indexes give order within one source only; no order across sources is established.";
+function projectAssessmentActions(values = []) {
+  return values.map((value) => {
+    const row = customerRecordedActionSchema.parse(value);
+    const supplied = { ...row };
+    delete supplied.sourceSha256;
+    return hasVerifiedAssessmentSource(value) ? copyAssessmentPresentationProof(value, {
+      ...row,
+      attribution: "retained-action-record"
+    }) : { ...supplied, attribution: "supplied-action-record" };
+  });
+}
+function projectAssessmentStepFacts(value) {
+  const row = copyAssessmentPresentationProof(value, customerAssessmentStepFactsSchema.parse(value));
+  const verified = hasVerifiedAssessmentSource(value);
+  return copyAssessmentPresentationProof(value, {
+    state: verified ? row.state : "supplied",
+    qualification: row.qualification,
+    actions: projectAssessmentActions(row.actions),
+    observations: projectAssessmentQuotes(row.observations),
+    notice: verified ? row.state === "unresolved" ? "No bound action or observation supports this reported step. Keep this gap; do not repeat application actions to replace it." : assessmentActionQualification : "Supplied step references have not been rebound to the retained input. They do not establish performed steps or chronology."
+  });
+}
+function presentAssessmentFinding(kind, supported, content) {
+  return {
+    ...kind === void 0 ? {} : { kind },
+    support: supported ? "requires-review" : "needs-review",
+    ...content
+  };
+}
+
 // packages/contracts/dist/report-presentation.js
-var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var count6 = external_exports.number().int().nonnegative();
-var assessmentQuote = external_exports.object({ sourceId: external_exports.string(), text: external_exports.string() });
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count7 = external_exports.number().int().nonnegative();
+var reportExpectationAuthoritySchema = external_exports.enum([
+  "requirement",
+  "hypothesis",
+  "unresolved"
+]);
+var assessmentQuote = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  facts: true
+}).extend({ text: external_exports.string() });
 var reportTestAssessmentSchema = external_exports.object({
-  answerId: digest10,
-  resultSha256: digest10,
+  customerEvidence: external_exports.array(assessmentQuote).optional(),
+  customerRecordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  customerEvidenceIncomplete: external_exports.boolean().optional(),
+  evidenceNotice: external_exports.string().optional(),
+  customerObservedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote),
+    facts: customerAssessmentStepFactsSchema.optional()
+  })).optional(),
+  answerId: digest13,
+  resultSha256: digest13,
   model: external_exports.string(),
   testId: external_exports.string(),
+  expectationAuthority: reportExpectationAuthoritySchema.optional(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   expected: external_exports.string(),
   actual: external_exports.string().nullable(),
@@ -46633,6 +47852,7 @@ var reportTestAssessmentSchema = external_exports.object({
   evidence: external_exports.array(assessmentQuote),
   observedSteps: external_exports.array(external_exports.object({
     description: external_exports.string(),
+    facts: customerAssessmentStepFactsSchema.optional(),
     evidence: external_exports.array(assessmentQuote)
   }))
 });
@@ -46645,24 +47865,60 @@ var configurationShape = external_exports.object({
   trigger: external_exports.literal("explicit-tool-call")
 }).catchall(nativeJson);
 var configurationSchema2 = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
+var reportObservedPageSchema = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  accessibilityText: external_exports.string().optional(),
+  sourceSha256: digest13,
+  contentSha256: digest13,
+  contentState: external_exports.literal("projected-page-content")
+});
+var reportOutcomeNoticeSchema = external_exports.enum([
+  "The test stopped when the app tried to open a website that was not allowed for this test.",
+  "The test stopped because it could not confirm whether the page was allowed for this test.",
+  "The test stopped because it could not reach an allowed website.",
+  "Execution did not start because its connection is not configured.",
+  "The target application is unavailable.",
+  "The connection expired. Reconnect before retrying.",
+  "The test service is temporarily unavailable. Check the saved outcome before retrying.",
+  "The test could not finish. Review the saved observations before retrying."
+]);
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest10,
+  reportId: digest13,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest10.nullable(),
+  mapId: digest13.nullable(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: digest13,
+    resultSha256: digest13,
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
   selectedPullRequestUrl: external_exports.string().nullable().optional(),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(digest13).optional(),
+    sourceId: digest13,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: digest13.nullable(),
+    state: external_exports.string(),
+    result: nativeJson
+  })).optional(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    resultSha256: digest10.nullable(),
+    sourceId: digest13,
+    resultSha256: digest13.nullable(),
     state: external_exports.string(),
     executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
+    executionLimit: external_exports.enum(["requests", "browser-actions", "time"]).optional(),
     testVerdict: external_exports.string(),
     planSourceId: external_exports.string(),
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
     executionReport: runnerExecutionReportSchema.nullable().optional(),
     traceRetained: external_exports.boolean(),
     recordedAt: external_exports.string().nullable().optional(),
@@ -46672,12 +47928,12 @@ var testPlanViewSchema = external_exports.object({
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest10,
+    sourceId: digest13,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest10.nullable(),
+    resultSha256: digest13.nullable(),
     state: external_exports.string(),
     result: nativeJson,
-    requestTestIndexes: external_exports.array(count6)
+    requestTestIndexes: external_exports.array(count7)
   }))
 });
 var reportPanelSchema = testPlanViewSchema.extend({
@@ -46685,56 +47941,58 @@ var reportPanelSchema = testPlanViewSchema.extend({
 });
 var reportLinkSchema = external_exports.object({
   schema: external_exports.literal("loki.report-link/1"),
-  reportId: digest10,
+  reportId: digest13,
   presentation: external_exports.literal("browser"),
   previewURL: external_exports.url()
 });
 var summarySchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest10,
+  reportId: digest13,
   title: external_exports.string(),
   counts: external_exports.object({
-    pass: count6,
-    fail: count6,
-    blocked: count6,
-    skipped: count6,
-    "not-run": count6,
-    inconclusive: count6.default(0),
-    conflicting: count6.default(0),
-    unavailable: count6.default(0)
+    pass: count7,
+    fail: count7,
+    blocked: count7,
+    skipped: count7,
+    "not-run": count7,
+    inconclusive: count7.default(0),
+    conflicting: count7.default(0),
+    unavailable: count7.default(0)
   }),
-  assessmentResults: count6.optional(),
+  proposedCounts: external_exports.object({ pass: count7, fail: count7 }).optional(),
+  assessmentResults: count7.optional(),
   pullRequest: external_exports.object({
     number: external_exports.number().int().positive(),
     title: external_exports.string(),
     url: external_exports.url()
   }).nullable(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest10,
+    sourceId: digest13,
     executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string()
   })),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest10,
-    resultSha256: digest10.nullable(),
-    requestTests: count6,
+    sourceId: digest13,
+    resultSha256: digest13.nullable(),
+    requestTests: count7,
     executedTests: external_exports.boolean().nullable(),
-    proposedTests: count6.nullable()
+    proposedTests: count7.nullable()
   }))
 });
 var cardBase = external_exports.object({
-  mapId: digest10.nullable().optional(),
+  mapId: digest13.nullable().optional(),
   schema: external_exports.literal("loki.report-card/1"),
-  reportId: digest10,
+  reportId: digest13,
   title: external_exports.string(),
   createdAt: external_exports.string(),
   originalResults: external_exports.array(external_exports.object({
     kind: external_exports.enum(["plan", "runner", "assessment"]),
-    answerId: digest10.nullable(),
-    runId: digest10.nullable(),
-    resultSha256: digest10.nullable()
+    answerId: digest13.nullable(),
+    runId: digest13.nullable(),
+    resultSha256: digest13.nullable()
   })),
-  sourceContextId: digest10.nullable(),
+  sourceContextId: digest13.nullable(),
   testPlanSummary: summarySchema,
   instructions: external_exports.string()
 });
@@ -46773,13 +48031,24 @@ var artifactsSchema = external_exports.object({
   kind: external_exports.enum(["browser", "desktop", "unavailable"]),
   message: external_exports.string(),
   traceAvailable: external_exports.boolean(),
+  reason: external_exports.enum([
+    "private-inputs",
+    "protection-unavailable",
+    "customer-view-unavailable",
+    "missing",
+    "changed",
+    "unreadable",
+    "viewer-unavailable",
+    "not-recorded",
+    "not-browser"
+  ]).optional(),
   launchCommand: external_exports.string().optional(),
   files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
 });
 var traceIdentity = {
   schema: external_exports.literal("loki.report-trace/1"),
-  reportId: digest10,
-  runId: digest10
+  reportId: digest13,
+  runId: digest13
 };
 var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
   const url2 = new URL(value);
@@ -46806,6 +48075,34 @@ var reportTraceResultSchema = external_exports.union([
     status: external_exports.literal("unavailable")
   })
 ]);
+var customerTraceArtifacts = artifactsSchema.omit({ launchCommand: true }).extend({
+  files: external_exports.array(external_exports.never()).max(0)
+});
+var customerReportTraceResultSchema = external_exports.union([
+  external_exports.strictObject({ ...traceIdentity, status: external_exports.literal("closed") }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("unavailable"),
+    traceAvailable: external_exports.literal(false)
+  })
+]);
+var customerReportTraceOutputSchema = external_exports.union([
+  customerReportTraceResultSchema,
+  reportReadFailureSchema
+]);
 var reportTraceOutputSchema = external_exports.union([
   reportTraceResultSchema,
   reportReadFailureSchema
@@ -46814,8 +48111,8 @@ var selectedKinds = external_exports.array(external_exports.enum(["plan", "runne
 var reportExportPreviewSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest10,
-  previewSha256: digest10,
+  reportId: digest13,
+  previewSha256: digest13,
   html: external_exports.string(),
   omitted: external_exports.array(external_exports.string()),
   redaction: external_exports.string(),
@@ -46824,8 +48121,8 @@ var reportExportPreviewSchema = external_exports.object({
 var reportExportReceiptSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest10,
-  sha256: digest10,
+  reportId: digest13,
+  sha256: digest13,
   path: external_exports.string(),
   delivery: external_exports.literal("local-file-only"),
   uploaded: external_exports.literal(false)
@@ -46840,34 +48137,47 @@ var reportExportOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/report-artifact.js
-var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var count7 = external_exports.number().int().nonnegative();
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count8 = external_exports.number().int().nonnegative();
+var captureTime = external_exports.iso.datetime({ offset: true });
+var pageCaptureBindingSchema = external_exports.object({
+  screenshot: external_exports.object({
+    name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
+    sha256: digest14,
+    capturedAt: captureTime
+  }),
+  afterAction: external_exports.number().int().positive().nullable(),
+  startedAt: captureTime,
+  finishedAt: captureTime
+});
 var reportArtifactProjectionSchema = external_exports.object({
   schema: external_exports.literal("loki.report-artifact-projection/1"),
-  sourceSha256: digest11,
-  sha256: digest11,
-  bytes: count7,
-  redactionRevision: count7
+  sourceSha256: digest14,
+  sha256: digest14,
+  bytes: count8,
+  redactionRevision: count8,
+  // Only the owning manifest reader can supply this checked association.
+  pageCapture: pageCaptureBindingSchema.optional()
 });
 var reportArtifactInputSchema = external_exports.strictObject({
-  reportId: digest11,
-  runId: digest11,
-  artifactId: digest11.optional(),
-  offset: count7.optional()
+  reportId: digest14,
+  runId: digest14,
+  artifactId: digest14.optional(),
+  offset: count8.optional()
 });
 var artifact = external_exports.object({
-  artifactId: digest11,
+  artifactId: digest14,
   name: external_exports.string(),
   mediaType: external_exports.enum(["image/png", "application/json"]),
-  bytes: count7,
-  sha256: digest11
+  bytes: count8,
+  sha256: digest14
 });
 var provenance = {
   schema: external_exports.literal("loki.report-artifact/1"),
-  reportId: digest11,
-  runId: digest11,
-  resultSha256: digest11,
-  manifestSha256: digest11,
+  reportId: digest14,
+  runId: digest14,
+  resultSha256: digest14,
+  manifestSha256: digest14,
   manifestSchema: external_exports.enum([
     "loki.computer-runner.private-evidence/1",
     "loki.mac-computer-runner.private-evidence/1"
@@ -46881,9 +48191,9 @@ var reportArtifactResultSchema = external_exports.union([
     ...provenance,
     state: external_exports.literal("listed"),
     artifacts: external_exports.array(artifact).max(50),
-    offset: count7,
-    nextOffset: count7.nullable(),
-    totalArtifacts: count7
+    offset: count8,
+    nextOffset: count8.nullable(),
+    totalArtifacts: count8
   }),
   external_exports.object({
     ...provenance,
@@ -46899,9 +48209,9 @@ var reportArtifactResultSchema = external_exports.union([
         mediaType: external_exports.literal("application/json"),
         encoding: external_exports.literal("utf-8"),
         text: external_exports.string(),
-        offset: count7,
-        nextOffset: count7.nullable(),
-        totalCodeUnits: count7,
+        offset: count8,
+        nextOffset: count8.nullable(),
+        totalCodeUnits: count8,
         // Artifact metadata identifies the private original. This identifies
         // the complete filtered JSON, before transport pagination.
         projection: reportArtifactProjectionSchema.optional()
@@ -46913,6 +48223,77 @@ var reportArtifactOutputSchema = external_exports.union([
   reportArtifactResultSchema,
   reportReadFailureSchema
 ]);
+var customerIdentity = {
+  schema: external_exports.literal("kaijan.customer-artifact/1"),
+  reportId: digest14,
+  runId: digest14,
+  resultSha256: digest14,
+  createdAt: external_exports.string(),
+  semanticAssessment: external_exports.literal("not-performed")
+};
+var customerReportArtifactResultSchema = external_exports.union([
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("listed"),
+    artifacts: external_exports.array(artifact).max(50),
+    offset: count8,
+    nextOffset: count8.nullable(),
+    totalArtifacts: count8,
+    omittedArtifacts: count8
+  }),
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("read"),
+    artifact,
+    content: external_exports.union([
+      external_exports.object({
+        mediaType: external_exports.literal("image/png"),
+        encoding: external_exports.literal("base64"),
+        data: external_exports.string()
+      }),
+      external_exports.object({
+        mediaType: external_exports.literal("application/json"),
+        encoding: external_exports.literal("utf-8"),
+        text: external_exports.string(),
+        offset: count8,
+        nextOffset: count8.nullable(),
+        totalCodeUnits: count8,
+        projection: external_exports.object({
+          schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
+          sourceSha256: digest14,
+          sha256: digest14,
+          bytes: count8
+        })
+      })
+    ])
+  })
+]);
+var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
+var customerCaseEvidenceSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-case-evidence/1"),
+  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
+  selectedTestIds: external_exports.array(external_exports.string().min(1)),
+  cases: external_exports.array(external_exports.object({
+    testId: external_exports.string().min(1),
+    occurrence: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    state: external_exports.enum(["recording", "ended", "interrupted"]),
+    screenshots: external_exports.array(external_exports.object({
+      name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
+      sha256: digest14,
+      capturedAt: external_exports.string()
+    }))
+  }))
+}).superRefine((value, ctx) => {
+  const selected = new Set(value.selectedTestIds);
+  const cases = value.cases.map((row) => `${row.testId}:${row.occurrence}`);
+  const images = value.cases.flatMap((row) => row.screenshots.map((image) => image.name));
+  if (selected.size !== value.selectedTestIds.length || value.cases.some((row) => !selected.has(row.testId)) || new Set(cases).size !== cases.length || new Set(images).size !== images.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Case evidence must be uniquely selected."
+    });
+});
 
 // packages/contracts/dist/report-render.js
 var reportRenderMetadataSchema = external_exports.strictObject({
@@ -46927,10 +48308,10 @@ var reportRenderAckSchema = reportRenderMetadataSchema.extend({
 });
 
 // packages/contracts/dist/case-evidence.js
-var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var screenshot = external_exports.object({
   name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest12,
+  sha256: digest15,
   capturedAt: external_exports.string()
 });
 var browserRefresh = external_exports.object({
@@ -46958,7 +48339,7 @@ var action = external_exports.object({
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
   attribution: external_exports.literal("runner-declared-boundaries"),
-  planRef: external_exports.object({ answerId: digest12, resultSha256: digest12 }),
+  planRef: external_exports.object({ answerId: digest15, resultSha256: digest15 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -46972,23 +48353,1763 @@ var caseEvidenceSchema = external_exports.object({
   })),
   unassignedActions: external_exports.array(action),
   unassignedScreenshots: external_exports.array(screenshot)
-}).superRefine((record4, ctx) => {
-  const ids2 = new Set(record4.selectedTestIds);
-  const occurrences = record4.cases.map((item) => `${item.testId}:${item.occurrence}`);
+}).superRefine((record5, ctx) => {
+  const ids2 = new Set(record5.selectedTestIds);
+  const occurrences = record5.cases.map((item) => `${item.testId}:${item.occurrence}`);
   const actions = [
-    ...record4.unassignedActions,
-    ...record4.cases.flatMap((item) => item.actions)
+    ...record5.unassignedActions,
+    ...record5.cases.flatMap((item) => item.actions)
   ].map((item) => item.index);
   const screenshots = [
-    ...record4.unassignedScreenshots,
-    ...record4.cases.flatMap((item) => item.screenshots)
+    ...record5.unassignedScreenshots,
+    ...record5.cases.flatMap((item) => item.screenshots)
   ].map((item) => item.name);
-  if (ids2.size !== record4.selectedTestIds.length || record4.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
+  if (ids2.size !== record5.selectedTestIds.length || record5.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
     ctx.addIssue({
       code: "custom",
       message: "Case evidence identities must be unique and selected."
     });
 });
+
+// packages/contracts/dist/customer-planning.js
+var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
+var proof = /* @__PURE__ */ new WeakMap();
+var json2 = (value) => JSON.stringify(value);
+function retainCustomerPlanningSource(value) {
+  if (value !== null && typeof value === "object")
+    proof.set(value, json2(value));
+  return value;
+}
+function hasCustomerPlanningSource(value) {
+  return value !== null && typeof value === "object" && proof.get(value) === json2(value);
+}
+function transferCustomerPlanningSource(source3, target, verify) {
+  if (!verify || source3 === null || target === null || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  if (verify(source3) && json2(source3) === json2(target))
+    retainCustomerPlanningSource(target);
+  for (const key of Object.keys(target)) {
+    if (Object.hasOwn(source3, key))
+      transferCustomerPlanningSource(source3[key], target[key], verify);
+  }
+  return target;
+}
+function copyCustomerPlanningSource(source3, target) {
+  return transferCustomerPlanningSource(source3, target, hasCustomerPlanningSource);
+}
+function customerPlanningId(kind, original2, sha256, allowPublicAlias = false) {
+  const canonical = kind === "R" ? /^R-[a-f0-9]{12}$/ : kind === "E" ? /^E-[a-f0-9]{16}$/ : new RegExp(`^${kind}[1-9][0-9]{0,5}$`);
+  return canonical.test(original2) || allowPublicAlias && new RegExp(`^${kind}-[a-f0-9]{64}$`).test(original2) ? original2 : `${kind}-${sha256(original2)}`;
+}
+
+// packages/contracts/dist/customer-risk.js
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var source2 = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  uri: external_exports.string().nullable(),
+  revision: external_exports.string().nullable(),
+  line: external_exports.number().int().nonnegative(),
+  quote: external_exports.string(),
+  quote_sha256: digest16
+});
+var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
+var finding = external_exports.object({
+  id: external_exports.string(),
+  observed_code_behavior: external_exports.string().optional(),
+  observed_source_statement: external_exports.string().optional(),
+  assumption_to_confirm: external_exports.string(),
+  question: external_exports.string(),
+  why_it_matters: external_exports.string(),
+  evidence_needed: external_exports.string(),
+  source_evidence: external_exports.union([external_exports.array(external_exports.string()), external_exports.array(source2)]),
+  presentationState: external_exports.enum(["bound", "unavailable"]).optional(),
+  notice: external_exports.literal(legacyRiskNotice).optional()
+});
+var customerRiskSchema = external_exports.object({
+  kind: external_exports.literal("risk-review"),
+  family: external_exports.enum(["changeRisk", "riskFinder"]),
+  status: external_exports.enum(["completed", "no_retained_cue", "partial", "refused"]),
+  assumptions_to_confirm: external_exports.array(finding),
+  interpretation: external_exports.literal("Questions to review against the cited sources; not verified defects, approved requirements, tests or observed behavior. An empty list does not establish safety."),
+  coverage: external_exports.literal("Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage.")
+});
+var proofs = /* @__PURE__ */ new WeakMap();
+function retainVerifiedRiskSource(value) {
+  proofs.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedRiskSource(value) {
+  return !!value && typeof value === "object" && proofs.get(value) === JSON.stringify(value);
+}
+function transferCustomerRiskProof(source3, target, verify) {
+  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
+    retainVerifiedRiskSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferCustomerRiskProof(source3[key], target[key], verify);
+  return target;
+}
+var safeId = (value, index) => /^(?:review|work-item-risk)-Q[1-6]-[a-f0-9]{64}$/.test(value) ? value : `risk-Q${index + 1}`;
+function projectCustomerRiskResult(value) {
+  const parsed = customerRiskSchema.parse(value);
+  const original2 = value.assumptions_to_confirm;
+  const result2 = {
+    ...parsed,
+    assumptions_to_confirm: parsed.assumptions_to_confirm.map((row, index) => {
+      const proved = hasVerifiedRiskSource(original2[index]);
+      const output2 = {
+        ...row,
+        id: proved ? row.id : safeId(row.id, index),
+        source_evidence: proved ? row.source_evidence : [],
+        ...proved && row.presentationState === "bound" ? {} : {
+          observed_code_behavior: void 0,
+          observed_source_statement: void 0,
+          assumption_to_confirm: "Retained risk question needs source review.",
+          question: "Which intended application behavior applies to the available source excerpts?",
+          why_it_matters: "The original proposed consequence cannot be shown without a supported source-bound relation.",
+          evidence_needed: "Review the retained application sources and clarify the intended behavior.",
+          presentationState: "unavailable",
+          notice: legacyRiskNotice
+        }
+      };
+      return proved ? retainVerifiedRiskSource(output2) : output2;
+    })
+  };
+  return transferCustomerRiskProof(result2, customerRiskSchema.parse(result2), hasVerifiedRiskSource);
+}
+function projectCustomerRisk(value, family2) {
+  const native = external_exports.object({
+    schema: external_exports.literal(family2 === "changeRisk" ? "change-risk-finder/result/4" : "risk-finder/work-item-result/1"),
+    status: customerRiskSchema.shape.status,
+    assumptions_to_confirm: external_exports.array(finding)
+  }).parse(value);
+  return projectCustomerRiskResult({
+    kind: "risk-review",
+    family: family2,
+    status: native.status,
+    assumptions_to_confirm: native.assumptions_to_confirm,
+    interpretation: "Questions to review against the cited sources; not verified defects, approved requirements, tests or observed behavior. An empty list does not establish safety.",
+    coverage: "Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage."
+  });
+}
+var evidenceProofs = /* @__PURE__ */ new WeakMap();
+function retainCustomerRiskEvidence(evidence2, result2) {
+  if (!result2.assumptions_to_confirm.every(hasVerifiedRiskSource))
+    throw Error("Risk source proof is unavailable");
+  evidenceProofs.set(evidence2, {
+    fingerprint: JSON.stringify(evidence2),
+    result: result2,
+    resultFingerprint: JSON.stringify(result2)
+  });
+  return evidence2;
+}
+function getVerifiedCustomerRiskEvidence(value) {
+  if (!value || typeof value !== "object")
+    return void 0;
+  const proof4 = evidenceProofs.get(value);
+  return proof4 && proof4.fingerprint === JSON.stringify(value) && proof4.resultFingerprint === JSON.stringify(proof4.result) ? proof4.result : void 0;
+}
+function transferCustomerRiskEvidence(source3, target, verify = getVerifiedCustomerRiskEvidence) {
+  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  const result2 = verify(source3);
+  if (result2 !== void 0 && JSON.stringify(source3) === JSON.stringify(target)) {
+    const parsed = customerRiskSchema.parse(result2);
+    for (const row of parsed.assumptions_to_confirm)
+      retainVerifiedRiskSource(row);
+    retainCustomerRiskEvidence(target, parsed);
+  }
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferCustomerRiskEvidence(source3[key], target[key], verify);
+  return target;
+}
+
+// packages/contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+function projectCustomerExecutionEvidence(input3) {
+  const parsed = customerExecutionEvidenceSchema.safeParse(input3);
+  const value = parsed.success ? copyAssessmentPresentationProof(input3, parsed.data) : { observations: [], actions: [], cleanup: void 0, notice: "" };
+  return {
+    observations: projectAssessmentQuotes(value.observations),
+    actions: projectAssessmentActions(value.actions),
+    ...value.cleanup ? { cleanup: projectAssessmentQuotes([value.cleanup])[0] } : {},
+    notice: value.observations.length || value.actions.length ? "Application evidence is shown separately from the test result. An action return does not prove its expected effect; indexes give order within one source only." : "Application observations and action records are unavailable in this view. This does not establish a pass or permission to repeat actions."
+  };
+}
+function customerExecutionStatus(state2, effects) {
+  const message = state2 === "completed" || state2 === "complete" ? "Execution finished." : state2 === "cancelled" || state2 === "stopped" ? "The test stopped before it finished." : state2 === "blocked" || state2 === "stuck" ? "The test could not continue." : state2 === "incomplete" ? "The test did not finish." : state2 === "needs_input" ? "The test needs more information." : "The execution result is not confirmed.";
+  return message + (effects === "uncertain" ? " Some action effects remain uncertain." : "");
+}
+var progress2 = external_exports.object({
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+function projectCustomerExecutionProgress(input3) {
+  const value = progress2.parse(input3);
+  return {
+    ...value.status ? { status: value.status } : {},
+    ...value.effects ? { effects: value.effects } : {},
+    reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
+    completedSteps: value.completedSteps ?? [],
+    remainingSteps: value.remainingSteps ?? [],
+    questions: value.questions ?? []
+  };
+}
+function transferVerifiedExecutionEvidence(input3, verifySource) {
+  const value = customerExecutionEvidenceSchema.parse(input3);
+  const original2 = input3;
+  const transfer = (source3, target) => {
+    if (verifySource?.(source3) === true && equalAssessmentSourceValues(source3, target))
+      retainVerifiedAssessmentSource(target);
+  };
+  value.observations.forEach((quote, index) => transfer(original2.observations[index], quote));
+  value.actions.forEach((action2, index) => transfer(original2.actions[index], action2));
+  if (value.cleanup)
+    transfer(original2.cleanup, value.cleanup);
+  return projectCustomerExecutionEvidence(value);
+}
+
+// packages/contracts/dist/customer-advisory.js
+var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
+var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
+var internalCleanupExplanation = /(^|[.!?]\s+)The Runner['’]s cleanup record concerns its browser, not the host-started server\.(?=\s|$)/gi;
+function customerAuthoredText(value) {
+  const projected = value.replace(internalCleanupExplanation, "$1The supplied cleanup record does not confirm that the application server was stopped.");
+  return diagnostic.test(projected) ? customerOmittedDetail : projected;
+}
+var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var optional2 = (schema) => schema.optional();
+var strings2 = external_exports.array(external_exports.string());
+var citation = external_exports.object({
+  source_id: optional2(external_exports.string()),
+  sourceId: optional2(external_exports.string()),
+  evidence_id: optional2(external_exports.string()),
+  from_line: optional2(external_exports.number().int()),
+  through_line: optional2(external_exports.number().int())
+});
+var boundQuote = customerAssessmentQuoteSchema;
+var bindings = external_exports.array(external_exports.unknown());
+var assessmentTest = external_exports.object({
+  test_id: external_exports.string().nullable(),
+  outcome_ids: strings2,
+  expected: external_exports.string().nullable(),
+  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
+  actual: external_exports.string().nullable(),
+  reason: external_exports.string(),
+  evidence_ids: optional2(strings2),
+  citations: optional2(external_exports.array(citation)),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observed_steps: optional2(external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    citations: external_exports.array(citation),
+    evidenceQuotes: external_exports.array(boundQuote).optional(),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var assessmentFinding = external_exports.object({
+  id: external_exports.string(),
+  support: external_exports.enum(["requires-review", "needs-review"]),
+  requirement_ids: optional2(strings2),
+  test_ids: optional2(strings2),
+  outcome_ids: optional2(strings2),
+  kind: optional2(external_exports.string()),
+  claim: optional2(external_exports.string()),
+  citations: optional2(external_exports.array(citation)),
+  remaining_gap: optional2(external_exports.string()),
+  notice: optional2(external_exports.string()),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var reportedOutcome = external_exports.object({
+  id: external_exports.string(),
+  test_id: external_exports.string().nullable(),
+  status: external_exports.enum([
+    "pass",
+    "fail",
+    "blocked",
+    "inconclusive",
+    "reported-pass",
+    "reported-fail",
+    "not-executed",
+    "skipped",
+    "unknown"
+  ]),
+  evidence_ids: strings2
+});
+var customerAssessmentResultSchema = external_exports.object({
+  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  kind: external_exports.literal("evidence-assessment"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  tests: optional2(external_exports.array(assessmentTest)),
+  findings: optional2(external_exports.array(assessmentFinding)),
+  coverage: optional2(external_exports.object({
+    status: external_exports.enum(["complete", "partial"]),
+    unassessed_requirement_ids: strings2
+  })),
+  meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
+  acceptanceDecision: external_exports.null(),
+  message: optional2(external_exports.string())
+});
+var assessmentInput = external_exports.object({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  assessment: external_exports.object({
+    test_results: external_exports.array(assessmentTest.extend({
+      literal_bindings: bindings.optional(),
+      observed_steps: external_exports.array(external_exports.object({
+        description: external_exports.string(),
+        citations: external_exports.array(citation),
+        literal_bindings: bindings.optional()
+      })).optional()
+    })).optional(),
+    findings: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
+      literal_bindings: bindings.optional(),
+      original_finding: external_exports.object({
+        requirement_ids: strings2.optional(),
+        test_ids: strings2.optional(),
+        outcome_ids: strings2.optional(),
+        kind: external_exports.string().optional(),
+        claim: external_exports.string().optional(),
+        citations: external_exports.array(citation).optional(),
+        remaining_gap: external_exports.string().optional()
+      })
+    })),
+    reported_outcomes: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      test_id: external_exports.string().nullable(),
+      status: external_exports.string(),
+      evidence_ids: strings2
+    })).optional(),
+    coverage: external_exports.object({
+      status: external_exports.enum(["complete", "partial"]),
+      unassessed_requirement_ids: strings2
+    })
+  }).nullable()
+});
+function projectCustomerAssessmentText(actual, reason, descriptions2, verdict = "inconclusive", quotes = [], stepQuotes = []) {
+  return presentAssessmentText(verdict, actual, quotes, descriptions2.map((description, index) => ({
+    description,
+    evidenceQuotes: stepQuotes[index]
+  })), reason);
+}
+function projectCustomerAssessmentResult(value) {
+  const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, field2]) => field2 !== void 0));
+  const parsed = copyAssessmentPresentationProof(value, customerAssessmentResultSchema.parse(value));
+  return omitAbsent({
+    ...parsed,
+    ...parsed.message === void 0 ? {} : {
+      message: parsed.status === "first_response_failure" ? "The assessment did not complete. Preserve the supplied evidence; do not replay execution." : "Review the saved assessment and cited sources. This is not an acceptance decision."
+    },
+    tests: parsed.tests?.map((row) => {
+      const evidenceQuotes = projectAssessmentQuotes(row.evidenceQuotes);
+      const steps = row.observed_steps?.map((step2) => ({
+        ...step2,
+        evidenceQuotes: projectAssessmentQuotes(step2.evidenceQuotes),
+        ...step2.facts ? { facts: projectAssessmentStepFacts(step2.facts) } : {}
+      }));
+      const prose = presentAssessmentText(row.verdict, row.actual, evidenceQuotes, steps ?? [], row.reason);
+      return retainVerifiedAssessmentSource(omitAbsent({
+        ...row,
+        expected: projectAssessmentExpected(row, evidenceQuotes),
+        recordedActions: projectAssessmentActions(row.recordedActions),
+        actual: prose.actual,
+        reason: prose.reason,
+        evidenceQuotes,
+        observed_steps: steps?.map((step2, index) => ({
+          ...step2,
+          description: prose.descriptions[index]
+        }))
+      }));
+    }),
+    findings: parsed.findings?.map((finding2) => omitAbsent({
+      ...finding2,
+      ...presentAssessmentFinding(finding2.kind, finding2.support === "requires-review", {
+        ...finding2.claim === void 0 ? {} : { claim: finding2.claim },
+        ...finding2.remaining_gap === void 0 ? {} : { remaining_gap: finding2.remaining_gap },
+        ...finding2.notice === void 0 ? {} : { notice: finding2.notice }
+      }),
+      evidenceQuotes: projectAssessmentQuotes(finding2.evidenceQuotes)
+    }))
+  });
+}
+var selectedPlanBinding = external_exports.object({
+  pointer: external_exports.object({ sourceId: external_exports.string() }),
+  provenance: external_exports.object({
+    reported: external_exports.object({ source: external_exports.literal("original-selected-plan-test") })
+  })
+});
+var selectedPlanNotice = "The saved proposal needs review against its original application sources. Its generated details are not available in this view.";
+function projectAssessmentExpected(value, quotes = []) {
+  const verified = hasVerifiedAssessmentSource(value) || quotes.some((quote) => hasVerifiedAssessmentSource(quote) && quote.text === value.expected && ["original-intent", "caller-supplied", "proposed-test"].includes(quote.attribution ?? ""));
+  return value.expected === null || verified ? value.expected : selectedPlanNotice;
+}
+function projectCustomerAssessment(value, sources) {
+  const native = assessmentInput.parse(value), body = native.assessment;
+  const selectedSources = /* @__PURE__ */ new Set();
+  const collect = (values) => {
+    for (const value2 of values ?? []) {
+      const parsed = selectedPlanBinding.safeParse(value2);
+      if (parsed.success)
+        selectedSources.add(parsed.data.pointer.sourceId);
+    }
+  };
+  for (const row of body?.test_results ?? []) {
+    collect(row.literal_bindings);
+    for (const step2 of row.observed_steps ?? [])
+      collect(step2.literal_bindings);
+  }
+  for (const row of body?.findings ?? [])
+    collect(row.literal_bindings);
+  const safeQuotes = (values) => (values ?? []).map((quote) => {
+    if (!selectedSources.has(quote.sourceId))
+      return quote;
+    if (hasVerifiedAssessmentSource(quote) && quote.attribution === "proposed-test" && quote.display?.kind === "proposed-test" && quote.sourceSha256 !== void 0 && quote.sha256 !== void 0 && quote.display.sourceTextSha256 === quote.sha256)
+      return quote;
+    return {
+      sourceId: quote.sourceId,
+      state: "unavailable",
+      notice: selectedPlanNotice
+    };
+  });
+  return projectCustomerAssessmentResult({
+    kind: "evidence-assessment",
+    status: native.status,
+    reportedOutcomes: body?.reported_outcomes?.map((row) => ({
+      ...row,
+      status: reportedOutcome.shape.status.safeParse(row.status).success ? row.status : "unknown"
+    })),
+    tests: body?.test_results?.map((row, index) => {
+      const quotes = safeQuotes(sources?.tests[index]);
+      const expectationSources = [
+        ...quotes,
+        ...sources?.expectedSources?.[index] ? [sources.expectedSources[index]] : []
+      ];
+      return retainVerifiedAssessmentSource({
+        ...row,
+        expected: projectAssessmentExpected(row, expectationSources),
+        evidenceQuotes: quotes,
+        recordedActions: sources?.actions?.[index] ?? [],
+        observed_steps: row.observed_steps?.map((step2, stepIndex) => ({
+          ...step2,
+          evidenceQuotes: safeQuotes(sources?.steps[index]?.[stepIndex]),
+          ...sources?.stepFacts?.[index]?.[stepIndex] ? { facts: sources.stepFacts[index][stepIndex] } : {}
+        }))
+      });
+    }),
+    findings: body?.findings.map((row, index) => {
+      const content = row.original_finding;
+      const supported = row.status === "bound_model_assessment";
+      return {
+        ...content,
+        id: row.id,
+        support: supported ? "requires-review" : "needs-review",
+        evidenceQuotes: safeQuotes(sources?.findings[index]),
+        ...!supported ? {
+          notice: "This finding lacks validated support. Review the original task and evidence; do not treat it as a verified defect."
+        } : {}
+      };
+    }),
+    coverage: body?.coverage,
+    meaning: "Record coverage only; not proof that all requirements were tested or passed.",
+    acceptanceDecision: null,
+    ...native.status === "first_response_failure" ? {
+      message: "The assessment did not complete. Preserve the supplied evidence; do not replay execution."
+    } : {}
+  });
+}
+
+// packages/contracts/dist/customer-report.js
+var strings3 = external_exports.array(external_exports.string());
+var operationState = external_exports.enum([
+  "accepted",
+  "running",
+  "finished",
+  "complete",
+  "unknown",
+  "unavailable",
+  "cancelled",
+  "refused",
+  "not-started",
+  "stopped-before-start"
+]);
+var executionState = external_exports.enum([
+  "",
+  "accepted",
+  "running",
+  "completed",
+  "incomplete",
+  "cancelled",
+  "blocked",
+  "unknown",
+  "not-executed",
+  "failed",
+  "stopped"
+]);
+var testVerdict = external_exports.enum([
+  "",
+  "unverified",
+  "pass",
+  "fail",
+  "unknown",
+  "inconclusive",
+  "not-run",
+  "unavailable"
+]);
+var reference = external_exports.object({ evidence_id: external_exports.string() });
+var refs3 = external_exports.array(reference);
+var customerPlanSchema = external_exports.object({
+  presentation: external_exports.object({
+    schema: external_exports.literal("kaijan.planning-presentation/1"),
+    state: external_exports.enum([
+      "source-bound-proposal",
+      "legacy-source-excerpts",
+      "unverified"
+    ]),
+    semantics: external_exports.literal("proposed-only"),
+    detailsAvailable: external_exports.boolean().optional()
+  }).optional(),
+  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
+  objectives: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), refs: refs3 })).optional(),
+  tests: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    title: external_exports.string().optional(),
+    method: external_exports.string().optional(),
+    objective_ids: strings3.optional(),
+    priority: external_exports.enum(["P1", "P2", "P3"]).optional(),
+    reason: external_exports.string().optional(),
+    prerequisites: strings3.optional(),
+    steps: strings3,
+    expected: external_exports.object({
+      text: external_exports.string(),
+      authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+      refs: refs3.optional()
+    }),
+    execution_gaps: strings3.optional()
+  })),
+  requirement_coverage: external_exports.array(external_exports.object({
+    requirement_id: external_exports.string(),
+    text: external_exports.string().optional(),
+    status: external_exports.enum(["proposed", "gap"]),
+    test_ids: strings3,
+    reason: external_exports.string().optional()
+  })).optional(),
+  ambiguities: strings3.optional(),
+  disagreements: strings3.optional(),
+  limitations: strings3.optional(),
+  relevant_surfaces: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    basis: external_exports.enum(["supplied", "hypothesis"]),
+    refs: refs3
+  })).optional(),
+  runner_handoff: external_exports.object({
+    status: external_exports.literal("proposed_only"),
+    scenario_ids: strings3,
+    required_inputs: strings3
+  }).optional()
+});
+var coverage2 = external_exports.object({
+  status: external_exports.enum(["complete", "partial"]),
+  unassessed_requirement_ids: strings3
+});
+var evidenceIdentity = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  uri: external_exports.string().optional(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  revision: external_exports.string(),
+  line: external_exports.number().int().nonnegative()
+});
+var quoteDigest = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerPlanEvidenceSchema = external_exports.union([
+  evidenceIdentity.extend({
+    quote: external_exports.string(),
+    quote_sha256: quoteDigest,
+    contentState: external_exports.literal("original-quote")
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("projected-risk"),
+    projection: external_exports.object({
+      kind: external_exports.literal("risk-review"),
+      text: external_exports.string(),
+      sha256: quoteDigest
+    })
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("unavailable"),
+    notice: external_exports.literal("This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation.")
+  })
+]);
+function projectCustomerPlanEvidence(values, sha256) {
+  return projectPlanEvidence(values, sha256, false);
+}
+function projectPlanEvidence(values, sha256, suppliedQuote) {
+  if (!Array.isArray(values))
+    return [];
+  return values.map((value) => {
+    const raw = evidenceIdentity.extend({
+      quote: external_exports.string(),
+      quote_sha256: quoteDigest,
+      uri: external_exports.string().optional()
+    }).parse(value);
+    const riskProof = getVerifiedCustomerRiskEvidence(value);
+    const selected = /^saved-risk:(changeRisk|riskFinder):([a-f0-9]{64})$/.exec(raw.source_id);
+    const verifiedRisk = riskProof !== void 0 && selected !== null && raw.kind === "context" && raw.uri === `kaijan-answer://${selected[1]}/${selected[2]}` && sha256(raw.quote) === raw.quote_sha256 && raw.revision === raw.quote_sha256 && riskProof.family === selected[1];
+    const verified = hasCustomerPlanningSource(value) || verifiedRisk;
+    const identity4 = evidenceIdentity.parse(raw);
+    if (!verified && !suppliedQuote)
+      return customerPlanEvidenceSchema.parse({
+        ...identity4,
+        id: customerPlanningId("E", raw.id, sha256),
+        source_id: `source-${sha256(raw.source_id)}`,
+        uri: "",
+        revision: "",
+        originalQuoteSha256: raw.quote_sha256,
+        contentState: "unavailable",
+        notice: "This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation."
+      });
+    const reserved = raw.source_id.startsWith("saved-risk:") || raw.uri?.startsWith("kaijan-answer://") || raw.uri?.startsWith("kaijan-planning://") || raw.source_id === "kaijan-planning-source-requests";
+    if (!reserved && sha256(raw.quote) === raw.quote_sha256)
+      return customerPlanEvidenceSchema.parse({
+        ...identity4,
+        quote: raw.quote,
+        quote_sha256: raw.quote_sha256,
+        contentState: "original-quote"
+      });
+    const unavailable3 = () => customerPlanEvidenceSchema.parse({
+      ...identity4,
+      originalQuoteSha256: raw.quote_sha256,
+      contentState: "unavailable",
+      notice: "This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation."
+    });
+    if (!selected || raw.kind !== "context" || raw.uri !== `kaijan-answer://${selected[1]}/${selected[2]}` || sha256(raw.quote) !== raw.quote_sha256)
+      return unavailable3();
+    try {
+      const proved = verifiedRisk ? riskProof : void 0;
+      const projected = proved && proved.family === selected[1] ? projectCustomerRiskResult(proved) : projectCustomerRisk(JSON.parse(raw.quote), selected[1]);
+      const text4 = JSON.stringify(projected);
+      const result2 = customerPlanEvidenceSchema.parse({
+        ...identity4,
+        originalQuoteSha256: raw.quote_sha256,
+        contentState: "projected-risk",
+        projection: { kind: "risk-review", text: text4, sha256: sha256(text4) }
+      });
+      return proved ? retainCustomerRiskEvidence(result2, projected) : result2;
+    } catch {
+      return unavailable3();
+    }
+  });
+}
+function projectCustomerSavedPlanEvidence(values, sha256) {
+  return values?.map((value) => {
+    if (value.contentState === "original-quote")
+      return projectPlanEvidence([value], sha256, true)[0];
+    if (value.contentState === "unavailable")
+      return value;
+    const identity4 = evidenceIdentity.parse(value);
+    const unavailable3 = () => customerPlanEvidenceSchema.parse({
+      ...identity4,
+      originalQuoteSha256: value.originalQuoteSha256,
+      contentState: "unavailable",
+      notice: "This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation."
+    });
+    const selected = /^saved-risk:(changeRisk|riskFinder):([a-f0-9]{64})$/.exec(value.source_id);
+    if (!selected || value.kind !== "context" || value.uri !== `kaijan-answer://${selected[1]}/${selected[2]}` || sha256(value.projection.text) !== value.projection.sha256)
+      return unavailable3();
+    try {
+      const proved = getVerifiedCustomerRiskEvidence(value);
+      const risk = projectCustomerRiskResult(proved ?? JSON.parse(value.projection.text));
+      if (risk.family !== selected[1])
+        return unavailable3();
+      const text4 = JSON.stringify(risk);
+      const result2 = customerPlanEvidenceSchema.parse({
+        ...identity4,
+        originalQuoteSha256: value.originalQuoteSha256,
+        contentState: "projected-risk",
+        projection: { kind: "risk-review", text: text4, sha256: sha256(text4) }
+      });
+      return proved ? retainCustomerRiskEvidence(result2, risk) : result2;
+    } catch {
+      return unavailable3();
+    }
+  });
+}
+function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, originalIds = false) {
+  void _evidence;
+  void _nativeCatalog;
+  const plan2 = copyCustomerPlanningSource(input3, customerPlanSchema.parse(input3));
+  const verified = hasCustomerPlanningSource(plan2);
+  const text4 = (value, role) => value === void 0 ? void 0 : verified ? value : role === "expectation" ? "The recorded expectation needs review against the retained application sources." : role === "step" ? "This proposed step needs review against the retained application sources." : "This proposal detail needs review against the retained application sources.";
+  const list3 = (values, role) => values?.map((value) => text4(value, role));
+  const id6 = (kind, value) => customerPlanningId(kind, value, sha256, !originalIds);
+  const references = (values) => values?.map((row) => ({ evidence_id: id6("E", row.evidence_id) }));
+  const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, value]) => value !== void 0));
+  const projected = {
+    ...plan2,
+    presentation: verified ? plan2.presentation ?? {
+      schema: "kaijan.planning-presentation/1",
+      state: "legacy-source-excerpts",
+      semantics: "proposed-only"
+    } : {
+      schema: "kaijan.planning-presentation/1",
+      state: "unverified",
+      semantics: "proposed-only"
+    },
+    objectives: plan2.objectives?.map((row) => ({
+      ...row,
+      id: id6("O", row.id),
+      text: text4(row.text, "objective"),
+      refs: references(row.refs)
+    })),
+    tests: plan2.tests.map((row) => omitAbsent({
+      ...row,
+      id: id6("T", row.id),
+      objective_ids: row.objective_ids?.map((value) => id6("O", value)),
+      title: text4(row.title, "title"),
+      method: text4(row.method, "method"),
+      reason: text4(row.reason, "reason"),
+      prerequisites: list3(row.prerequisites, "prerequisite"),
+      steps: list3(row.steps, "step"),
+      execution_gaps: list3(row.execution_gaps, "gap"),
+      expected: omitAbsent({
+        ...row.expected,
+        text: text4(row.expected.text, "expectation"),
+        refs: references(row.expected.refs)
+      })
+    })),
+    requirement_coverage: plan2.requirement_coverage?.map((row) => omitAbsent({
+      ...row,
+      requirement_id: id6("R", row.requirement_id),
+      test_ids: row.test_ids.map((value) => id6("T", value)),
+      text: text4(row.text, "coverage"),
+      reason: text4(row.reason, "coverage")
+    })),
+    ambiguities: list3(plan2.ambiguities, "ambiguity"),
+    disagreements: list3(plan2.disagreements, "disagreement"),
+    limitations: verified ? plan2.limitations : [
+      .../* @__PURE__ */ new Set([
+        ...list3(plan2.limitations, "limitation") ?? [],
+        "Some saved proposal details lack verified application sources. Review the retained source excerpts before using this plan; no action or expected result is inferred."
+      ])
+    ],
+    relevant_surfaces: plan2.relevant_surfaces?.map((row) => ({
+      ...row,
+      description: text4(row.description, "surface"),
+      refs: references(row.refs)
+    })),
+    runner_handoff: plan2.runner_handoff === void 0 ? void 0 : {
+      ...plan2.runner_handoff,
+      scenario_ids: plan2.runner_handoff.scenario_ids.map((value) => id6("T", value)),
+      required_inputs: list3(plan2.runner_handoff.required_inputs, "required-input")
+    }
+  };
+  const output2 = customerPlanSchema.parse(omitAbsent(projected));
+  return verified ? retainCustomerPlanningSource(output2) : output2;
+}
+var nativeRun = testPlanViewSchema.shape.runs.element;
+var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  projection: true,
+  notice: true,
+  facts: true
+}).extend({ text: external_exports.string() });
+var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
+  answerId: true,
+  resultSha256: true,
+  testId: true,
+  expectationAuthority: true,
+  verdict: true,
+  expected: true,
+  actual: true,
+  reason: true
+}).extend({
+  evidenceNotice: external_exports.literal("Some cited source text cannot be displayed. The assessment and source identities remain separate from an application observation.").optional(),
+  evidence: external_exports.array(assessmentQuote2),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote2),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))
+});
+function projectLinkedAssessment(value) {
+  const prepare = (quotes) => projectAssessmentQuotes(quotes.map((quote) => copyAssessmentPresentationProof(quote, {
+    ...quote,
+    state: quote.facts ? "derived-facts" : "literal-source"
+  })));
+  const evidence2 = prepare(value.evidence);
+  const steps = value.observedSteps.map((step2) => ({
+    ...step2,
+    quotes: prepare(step2.evidence)
+  }));
+  const prose = projectCustomerAssessmentText(value.actual, value.reason, steps.map((step2) => step2.description), value.verdict, value.evidenceNotice ? [...evidence2, { sourceId: "", state: "unavailable" }] : evidence2, steps.map((step2) => step2.quotes));
+  const flatten = (quotes) => quotes.flatMap((quote) => quote.text === void 0 ? [] : [
+    copyAssessmentPresentationProof(quote, {
+      ...quote,
+      text: quote.text
+    })
+  ]);
+  return copyAssessmentPresentationProof(value, {
+    ...value,
+    expected: projectAssessmentExpected(value, evidence2),
+    actual: prose.actual,
+    reason: prose.reason,
+    evidence: flatten(evidence2),
+    recordedActions: projectAssessmentActions(value.recordedActions),
+    observedSteps: steps.map((step2, index) => ({
+      description: prose.descriptions[index],
+      evidence: flatten(step2.quotes),
+      ...step2.facts ? { facts: projectAssessmentStepFacts(step2.facts) } : {}
+    }))
+  });
+}
+var executionReport = external_exports.object({
+  reason: external_exports.string().optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
+  completedSteps: strings3,
+  remainingSteps: strings3,
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
+  effects: external_exports.enum(["known", "uncertain"])
+});
+var evidenceQuote = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var assertionStep = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  evidenceIds: strings3
+});
+var assertionTest = external_exports.object({
+  testId: external_exports.string(),
+  title: external_exports.string(),
+  status: assertionStep.shape.status,
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  deliberateFailure: external_exports.boolean(),
+  steps: external_exports.array(assertionStep),
+  code: external_exports.object({
+    path: external_exports.string(),
+    revision: external_exports.string(),
+    language: external_exports.string(),
+    text: external_exports.string(),
+    sha256: evidenceQuote.shape.sha256
+  }).nullable()
+});
+var assertions = external_exports.object({
+  runId: reportExecutionSchema.shape.runId,
+  repository: reportExecutionSchema.shape.repository,
+  sourceRevision: reportExecutionSchema.shape.sourceRevision,
+  pullRequestUrl: reportExecutionSchema.shape.pullRequestUrl,
+  recordedAt: reportExecutionSchema.shape.recordedAt,
+  planRef: external_exports.object({
+    answerId: evidenceQuote.shape.sha256,
+    resultSha256: evidenceQuote.shape.sha256
+  }),
+  evidence: external_exports.array(evidenceQuote),
+  tests: external_exports.array(assertionTest)
+});
+var customerReportSchema = testPlanViewSchema.pick({
+  reportId: true,
+  title: true,
+  createdAt: true,
+  mapId: true,
+  selectedPullRequestUrl: true
+}).extend({
+  schema: external_exports.literal("kaijan.customer-report/1"),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(quoteDigest).optional(),
+    sourceId: quoteDigest,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: quoteDigest.nullable(),
+    state: operationState,
+    result: customerAssessmentResultSchema.nullable(),
+    notice: external_exports.literal("This saved assessment cannot be shown in the supported view. Other saved results remain available.").optional()
+  })).optional(),
+  presentation: external_exports.literal("panel").optional(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
+  plans: external_exports.array(testPlanViewSchema.shape.plans.element.pick({
+    sourceId: true,
+    sourceKind: true,
+    resultSha256: true,
+    state: true,
+    requestTestIndexes: true
+  }).extend({
+    state: operationState,
+    plan: customerPlanSchema.nullable(),
+    notice: external_exports.enum([
+      "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
+      "This saved plan is unavailable in the supported view. Other saved results remain available.",
+      unavailablePlanDetailsNotice
+    ]).optional(),
+    coverage: coverage2.optional(),
+    evidence: external_exports.array(customerPlanEvidenceSchema).optional()
+  })),
+  runs: external_exports.array(nativeRun.pick({
+    sourceId: true,
+    resultSha256: true,
+    state: true,
+    executionState: true,
+    stoppedByUser: true,
+    testVerdict: true,
+    traceRetained: true,
+    planSourceId: true,
+    planResultSha256: true,
+    selectedTestIds: true,
+    elapsedMs: true,
+    startedAt: true,
+    recordedAt: true
+  }).extend({
+    state: operationState,
+    executionState,
+    testVerdict,
+    traceRetained: external_exports.boolean().default(false),
+    interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
+    observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
+    // Free-form terminal diagnostics are not an application observation source.
+    assessments: external_exports.array(customerAssessment).optional(),
+    executionReport: executionReport.nullable().optional(),
+    executionEvidence: customerExecutionEvidenceSchema.optional(),
+    assertions: assertions.nullable().optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional()
+  })),
+  pullRequests: external_exports.array(external_exports.object({
+    repository: reportPullRequestSchema.shape.repository,
+    number: reportPullRequestSchema.shape.number,
+    url: reportPullRequestSchema.shape.url,
+    title: reportPullRequestSchema.shape.title,
+    state: reportPullRequestSchema.shape.state,
+    author: reportPullRequestSchema.shape.author,
+    base: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    head: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    mergeCommit: reportPullRequestSchema.shape.mergeCommit,
+    openedAt: reportPullRequestSchema.shape.openedAt,
+    capturedAt: reportPullRequestSchema.shape.capturedAt,
+    files: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      status: external_exports.string(),
+      additions: external_exports.number().int().nonnegative(),
+      deletions: external_exports.number().int().nonnegative(),
+      patch: external_exports.string().nullable()
+    })),
+    source: reportPullRequestSchema.shape.source.pick({
+      kind: true,
+      sha256: true
+    })
+  })).optional()
+});
+var panelCard = reportCardSchema.options[0];
+var summary2 = panelCard.shape.testPlanSummary;
+var customerReportCardSchema = panelCard.pick({
+  mapId: true,
+  schema: true,
+  reportId: true,
+  title: true,
+  createdAt: true,
+  sourceContextId: true,
+  instructions: true,
+  presentation: true
+}).extend({
+  originalResults: external_exports.array(panelCard.shape.originalResults.element.pick({
+    kind: true,
+    answerId: true,
+    runId: true,
+    resultSha256: true
+  })),
+  testPlanSummary: summary2.pick({
+    schema: true,
+    reportId: true,
+    title: true,
+    assessmentResults: true
+  }).extend({
+    counts: summary2.shape.counts.pick({
+      pass: true,
+      fail: true,
+      blocked: true,
+      skipped: true,
+      "not-run": true,
+      inconclusive: true,
+      conflicting: true,
+      unavailable: true
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset; keep assessed proposed-check results separate in chat summaries."),
+    proposedCounts: external_exports.object({
+      pass: external_exports.number().int().nonnegative(),
+      fail: external_exports.number().int().nonnegative()
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. Subtract each subset for the other passed/failed tests. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+    pullRequest: external_exports.object({
+      number: external_exports.number().int().positive(),
+      title: external_exports.string(),
+      url: external_exports.url()
+    }).nullable(),
+    plans: external_exports.array(summary2.shape.plans.element.pick({
+      sourceId: true,
+      resultSha256: true,
+      requestTests: true,
+      executedTests: true,
+      proposedTests: true
+    })),
+    runs: external_exports.array(summary2.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+  })
+});
+var customerReportFailureSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-error/1"),
+  error: external_exports.object({
+    code: external_exports.enum([
+      "report_unavailable",
+      "report_invalid_selection",
+      "report_projection_unavailable"
+    ]),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false),
+    recovery: external_exports.object({
+      action: external_exports.literal("read_original_report"),
+      instruction: external_exports.string()
+    })
+  })
+});
+var customerReportReadSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-read/1"),
+  presentation: external_exports.literal("chat").optional(),
+  assessments: customerReportSchema.shape.assessments,
+  reportId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+  sections: external_exports.array(external_exports.object({
+    kind: external_exports.enum(["plan", "runner", "assessment"]),
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    operationState,
+    executionState: executionState.nullable(),
+    testVerdict: testVerdict.nullable(),
+    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    stopRequested: external_exports.boolean().nullable().optional(),
+    selectedTestIds: strings3,
+    assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
+    facts: external_exports.array(external_exports.discriminatedUnion("key", [
+      external_exports.object({
+        key: external_exports.literal("proposed-checks"),
+        value: external_exports.string().regex(/^(?:[0-9]+|Unknown)$/)
+      }),
+      external_exports.object({
+        key: external_exports.literal("proposed-requirement-links"),
+        value: external_exports.string().regex(/^[0-9]+\/[0-9]+$/)
+      }),
+      external_exports.object({
+        key: external_exports.enum(["plan-run", "plan-answer"]),
+        value: external_exports.string().regex(/^[a-f0-9]{64}$/)
+      })
+    ])),
+    items: external_exports.array(reportItemSchema.pick({
+      id: true,
+      title: true,
+      lines: true,
+      stepCount: true
+    }).extend({
+      role: external_exports.enum(["test", "requirement-coverage"]),
+      groups: external_exports.array(reportItemSchema.shape.groups.unwrap().element.pick({
+        key: true,
+        label: true,
+        start: true,
+        end: true
+      })).optional(),
+      expected: external_exports.object({
+        text: external_exports.string().nullable(),
+        authority: external_exports.string().nullable()
+      }).optional()
+    })),
+    observations: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string() })),
+    detailsIncomplete: external_exports.boolean()
+  })),
+  executionChecks: external_exports.array(assertions).optional(),
+  notice: external_exports.literal("This view contains supported saved test details. Other retained details may be unavailable here. Missing details do not establish a test result.")
+});
+var customerReportOutputSchema = external_exports.union([
+  customerReportSchema,
+  customerReportCardSchema,
+  customerReportReadSchema,
+  customerReportFailureSchema
+]);
+function projectReportResult(input3, sha256) {
+  const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, customerReportSchema.parse(input3))));
+  return {
+    ...value,
+    plans: value.plans.map((source3) => {
+      const plan2 = source3.plan === null ? null : projectCustomerPlan(source3.plan, source3.evidence, sha256);
+      const unavailable3 = plan2?.presentation?.detailsAvailable === false;
+      const evidence2 = projectCustomerSavedPlanEvidence(source3.evidence, sha256)?.map((row) => {
+        const id6 = customerPlanningId("E", row.id, sha256, true);
+        if (id6 === row.id)
+          return row;
+        const mapped = { ...row, id: id6 };
+        const risk = getVerifiedCustomerRiskEvidence(row);
+        return risk ? retainCustomerRiskEvidence(mapped, risk) : mapped;
+      });
+      return {
+        ...source3,
+        evidence: evidence2,
+        coverage: source3.coverage ? {
+          ...source3.coverage,
+          unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id6) => customerPlanningId("R", id6, sha256, true))
+        } : source3.coverage,
+        plan: unavailable3 ? null : plan2,
+        ...unavailable3 ? { notice: unavailablePlanDetailsNotice } : {}
+      };
+    }),
+    assessments: value.assessments?.map((source3) => ({
+      ...source3,
+      result: source3.result === null ? null : projectCustomerAssessmentResult(source3.result)
+    })),
+    runs: value.runs.map((run) => ({
+      ...run,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id6) => customerPlanningId("T", id6, sha256, true)) : run.selectedTestIds,
+      assertions: run.assertions && run.planSourceId ? {
+        ...run.assertions,
+        tests: run.assertions.tests.map((row) => ({
+          ...row,
+          testId: customerPlanningId("T", row.testId, sha256, true)
+        }))
+      } : run.assertions,
+      executionEvidence: projectCustomerExecutionEvidence(run.executionEvidence),
+      executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse(projectCustomerExecutionProgress(run.executionReport)),
+      assessments: run.assessments?.map((row) => {
+        const projected = projectLinkedAssessment(row);
+        return copyAssessmentPresentationProof(projected, {
+          ...projected,
+          testId: run.planSourceId ? customerPlanningId("T", row.testId, sha256, true) : row.testId
+        });
+      })
+    }))
+  };
+}
+function projectCustomerTestPlanView(input3, sha256) {
+  const object9 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
+  const record5 = (value2) => object9(value2) ? value2 : {};
+  const value = testPlanViewSchema.omit({ plans: true, runs: true, pullRequests: true, assessments: true }).extend({
+    presentation: external_exports.literal("panel").optional(),
+    plans: external_exports.array(external_exports.unknown()),
+    runs: external_exports.array(external_exports.unknown()),
+    pullRequests: external_exports.unknown().optional(),
+    assessments: external_exports.array(external_exports.unknown()).optional()
+  }).parse(input3);
+  const plans = value.plans.map((source3) => {
+    const native = source3.result;
+    const identity4 = {
+      sourceId: source3.sourceId,
+      sourceKind: source3.sourceKind,
+      resultSha256: source3.resultSha256,
+      state: source3.state,
+      requestTestIndexes: source3.requestTestIndexes
+    };
+    if (record5(native).schema === "loki.planning-failure/1")
+      return {
+        ...identity4,
+        plan: null,
+        notice: "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan."
+      };
+    if (!object9(native) || !object9(native.plan) || native.version !== void 0 && native.version !== "pr-context-plan-result/5" || native.schema !== void 0 || record5(native.checks).version !== void 0 && record5(native.checks).version !== "pr-context-plan-result/5")
+      return {
+        ...identity4,
+        plan: null,
+        notice: "This saved plan is unavailable in the supported view. Other saved results remain available."
+      };
+    const plan2 = customerPlanSchema.safeParse(native.plan);
+    if (!plan2.success)
+      return {
+        ...identity4,
+        plan: null,
+        notice: "This saved plan is unavailable in the supported view. Other saved results remain available."
+      };
+    return {
+      ...identity4,
+      plan: hasCustomerPlanningSource(native.plan) ? copyCustomerPlanningSource(native.plan, plan2.data) : projectCustomerPlan(plan2.data, [], sha256, void 0, true),
+      coverage: record5(native.checks).coverage,
+      evidence: projectCustomerPlanEvidence(native.evidence, sha256)
+    };
+  });
+  return projectReportResult({
+    schema: "kaijan.customer-report/1",
+    reportId: value.reportId,
+    title: value.title,
+    createdAt: value.createdAt,
+    mapId: value.mapId,
+    selectedPullRequestUrl: value.selectedPullRequestUrl,
+    assessmentFailures: value.assessmentFailures,
+    assessments: value.assessments?.map(({ result: result2, ...identity4 }) => {
+      try {
+        const customer = customerAssessmentResultSchema.safeParse(result2);
+        return {
+          ...identity4,
+          result: customer.success ? copyAssessmentPresentationProof(result2, customer.data) : projectCustomerAssessment(result2)
+        };
+      } catch {
+        return {
+          ...identity4,
+          result: null,
+          notice: "This saved assessment cannot be shown in the supported view. Other saved results remain available."
+        };
+      }
+    }),
+    ...value.presentation === "panel" ? { presentation: "panel" } : {},
+    plans,
+    runs: value.runs.map((run) => ({
+      ...run,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id6) => customerPlanningId("T", id6, sha256)) : run.selectedTestIds,
+      assertions: run.assertions && run.planSourceId ? {
+        ...run.assertions,
+        tests: run.assertions.tests.map((row) => ({
+          ...row,
+          testId: customerPlanningId("T", row.testId, sha256)
+        }))
+      } : run.assertions,
+      assessments: run.assessments?.map((assessment2) => copyAssessmentPresentationProof(assessment2, {
+        ...assessment2,
+        testId: run.planSourceId ? customerPlanningId("T", assessment2.testId, sha256) : assessment2.testId,
+        evidence: assessment2.customerEvidence ?? [],
+        recordedActions: assessment2.customerRecordedActions ?? [],
+        observedSteps: assessment2.customerObservedSteps ?? assessment2.observedSteps.map((step2) => ({
+          description: step2.description,
+          evidence: []
+        })),
+        ...assessment2.customerEvidenceIncomplete || assessment2.customerEvidence === void 0 && (assessment2.evidence.length > 0 || assessment2.observedSteps.some((step2) => step2.evidence.length > 0)) ? {
+          evidenceNotice: "Some cited source text cannot be displayed. The assessment and source identities remain separate from an application observation."
+        } : {}
+      })),
+      ...typeof run.observation === "string" && run.observation.length > 0 ? {
+        observationNotice: "Some saved observations are not available in this view. This does not mean no observations were recorded."
+      } : {},
+      ...["requests", "browser-actions", "time"].includes(run.executionLimit ?? "") ? {
+        interruptionNote: "The test stopped before it finished. Review the recorded steps before continuing."
+      } : {}
+    })),
+    pullRequests: value.pullRequests
+  }, sha256);
+}
+function projectCustomerPageObservations(result2, sha256) {
+  const record5 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
+  const evidence2 = record5(record5(result2).assessmentFragment).evidence;
+  return (Array.isArray(evidence2) ? evidence2 : []).flatMap((raw) => {
+    const item = record5(raw);
+    if (record5(item.provenance).source !== "runner-terminal-browser-observation" || typeof item.id !== "string" || typeof item.text !== "string" || typeof item.sha256 !== "string" || sha256(item.text) !== item.sha256)
+      return [];
+    let text4;
+    let accessibilityText;
+    try {
+      const page2 = record5(JSON.parse(item.text));
+      if (typeof page2.text !== "string" && typeof page2.snapshot !== "string")
+        return [];
+      text4 = typeof page2.text === "string" ? page2.text : "";
+      accessibilityText = typeof page2.snapshot === "string" ? page2.snapshot : void 0;
+    } catch {
+      text4 = item.text;
+    }
+    const content = {
+      text: text4,
+      ...accessibilityText === void 0 ? {} : { accessibilityText }
+    };
+    return [
+      {
+        id: item.id,
+        ...content,
+        sourceSha256: item.sha256,
+        contentSha256: sha256(JSON.stringify(content)),
+        contentState: "projected-page-content"
+      }
+    ];
+  });
+}
+
+// packages/contracts/dist/customer-related.js
+var id2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings4 = external_exports.array(external_exports.string());
+var optional3 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional3(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional3(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional3(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional3(external_exports.string()),
+    evidence_ids: optional3(strings4),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional3(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id2.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id2,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional3(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional3(external_exports.string())
+});
+var proof2 = /* @__PURE__ */ new WeakMap();
+var object2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var rows = (value) => Array.isArray(value) ? value.filter(object2) : [];
+function retainVerifiedRelatedSource(value) {
+  proof2.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedRelatedSource(value) {
+  return object2(value) && proof2.get(value) === JSON.stringify(value);
+}
+function transferRelatedSourceProof(source3, target, verify) {
+  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
+    retainVerifiedRelatedSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferRelatedSourceProof(source3[key], target[key], verify);
+  return target;
+}
+var reasons = {
+  same_work: "Suggested shared work. Review the cited sources; this is not verified identity.",
+  explicit_fix: "A cited source claims a fix. The repair has not been verified.",
+  explicit_reference: "Suggested source reference. Review the cited sources for relevance.",
+  adjacent_capability: "Suggested related functionality. This does not establish the same requirement or failure.",
+  shared_vocabulary: "Suggested topic overlap. Shared terms do not establish the same work.",
+  unsupported: "The recorded review did not support a relationship.",
+  unjudged: "This item has not been assessed for relevance."
+};
+var links = {
+  literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
+  timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
+};
+var unavailable = "The retained source is unavailable in this view.";
+var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
+var safeRelation = (value) => {
+  if (typeof value !== "string" || !Object.hasOwn(reasons, value))
+    throw Error("Unknown related-work relationship");
+  return value;
+};
+function projectCustomerRelatedResult(input3) {
+  if (!object2(input3) || input3.schema !== "pr-context-related/1" && input3.kind !== "related-work")
+    throw Error("Unsupported related-work result");
+  const native = input3.schema === "pr-context-related/1";
+  const scope = object2(input3.scope) ? input3.scope : {};
+  const admitted = (source3, target) => hasVerifiedRelatedSource(source3) ? retainVerifiedRelatedSource(target) : target;
+  const candidate = (row) => {
+    const known = hasVerifiedRelatedSource(row);
+    const relationship = safeRelation(row.relationship_type);
+    return admitted(row, {
+      id: referenceId(row.id),
+      kind: row.kind,
+      title: known ? row.title : "Source title unavailable",
+      url: known ? row.url : "",
+      state: row.state,
+      relation: row.relation,
+      relationship_type: relationship,
+      reason: reasons[relationship],
+      evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
+      sourceState: known ? "available" : "unavailable",
+      ...!known ? { notice: unavailable } : {},
+      direct_links: (known ? rows(row.direct_links) : []).flatMap((link3) => {
+        if (!hasVerifiedRelatedSource(link3) || typeof link3.type !== "string" || !Object.hasOwn(links, link3.type))
+          return [];
+        return [
+          admitted(link3, {
+            type: link3.type,
+            source_uri: link3.source_uri,
+            explanation: links[link3.type],
+            ...link3.depth === 1 || link3.depth === 2 ? { depth: link3.depth } : {},
+            ...link3.depth === 2 ? {
+              via_issue_key: link3.via_issue_key,
+              source_evidence_id: link3.source_evidence_id
+            } : {}
+          })
+        ];
+      })
+    });
+  };
+  const evidence2 = rows(input3.evidence).map((row) => {
+    const known = hasVerifiedRelatedSource(row);
+    return admitted(row, {
+      id: referenceId(row.id),
+      text: known ? row.text : "Source excerpt unavailable",
+      source_uri: known ? row.source_uri : "",
+      revision: known ? row.revision : "",
+      sha256: known ? row.sha256 : null,
+      omitted_characters: known ? row.omitted_characters : 0,
+      sourceState: known ? "available" : "unavailable"
+    });
+  });
+  const references = rows(native ? input3.literal_references : input3.literalReferences);
+  const unjudged = rows(native ? scope.unjudged : input3.unjudged);
+  const uninspected = rows(native ? scope.uninspected_references : input3.uninspected);
+  const candidates = rows(input3.candidates).map(candidate);
+  const missing = (values) => values.filter((row) => !hasVerifiedRelatedSource(row)).length;
+  const prior = !native && object2(input3.sourceCoverage) && hasVerifiedRelatedSource(input3.sourceCoverage) ? input3.sourceCoverage : {};
+  const priorCount = (key) => Number.isSafeInteger(prior[key]) && prior[key] >= 0 ? prior[key] : 0;
+  const selected = {
+    kind: "related-work",
+    status: input3.status,
+    ...hasVerifiedRelatedSource(input3.seed) ? { seed: input3.seed } : {},
+    candidates,
+    evidence: evidence2,
+    literalReferences: references.filter(hasVerifiedRelatedSource),
+    unjudged: unjudged.filter(hasVerifiedRelatedSource),
+    uninspected: uninspected.filter(hasVerifiedRelatedSource),
+    sourceCoverage: retainVerifiedRelatedSource({
+      unavailableCandidates: candidates.filter((row) => row.sourceState === "unavailable").length,
+      unavailableExcerpts: evidence2.filter((row) => row.sourceState === "unavailable").length,
+      unavailableReferences: missing(references) + priorCount("unavailableReferences"),
+      unavailableUnjudgedItems: missing(unjudged) + priorCount("unavailableUnjudgedItems"),
+      unavailableUninspectedItems: missing(uninspected) + priorCount("unavailableUninspectedItems")
+    }),
+    reviewRequired: true,
+    message: "Relationships are suggestions, not verified fixes. Unavailable source text and unassessed items remain coverage gaps."
+  };
+  const parsed = customerRelatedResultSchema.parse(selected);
+  const copy = (source3, target) => {
+    if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+      return;
+    if (hasVerifiedRelatedSource(source3))
+      retainVerifiedRelatedSource(target);
+    for (const key of Object.keys(target))
+      if (Object.hasOwn(source3, key))
+        copy(source3[key], target[key]);
+  };
+  copy(selected, parsed);
+  return parsed;
+}
+
+// packages/contracts/dist/customer-supplement.js
+var strings5 = external_exports.array(external_exports.string());
+var refs4 = external_exports.array(external_exports.object({ evidence_id: external_exports.string() }));
+var tests = external_exports.array(external_exports.object({
+  id: external_exports.string(),
+  verification_kind: external_exports.string(),
+  method: external_exports.string(),
+  reason: external_exports.string(),
+  conditions: strings5,
+  prerequisites: strings5,
+  steps: strings5,
+  expected: external_exports.object({
+    text: external_exports.string(),
+    authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+    refs: refs4
+  }),
+  risk_ids: strings5,
+  source_refs: refs4,
+  baseline_relation: external_exports.object({ test_ids: strings5, explanation: external_exports.string() }),
+  execution_gaps: strings5
+}));
+var customerSupplementResultSchema = external_exports.object({
+  kind: external_exports.literal("test-supplement"),
+  status: external_exports.enum([
+    "proposed_supplement",
+    "no_additional_tests",
+    "needs_clarification",
+    "unavailable"
+  ]),
+  presentationState: external_exports.enum(["source-bound", "legacy-limited", "unavailable"]),
+  supplement: external_exports.object({
+    status: external_exports.enum([
+      "proposed_supplement",
+      "no_additional_tests",
+      "needs_clarification"
+    ]),
+    additional_tests: tests,
+    baseline_concerns: external_exports.array(external_exports.object({
+      test_ids: strings5,
+      concern: external_exports.string(),
+      question: external_exports.string(),
+      risk_ids: strings5,
+      refs: refs4
+    })),
+    unanswered_questions: external_exports.array(external_exports.object({
+      question: external_exports.string(),
+      risk_ids: strings5,
+      baseline_test_ids: strings5,
+      refs: refs4
+    })),
+    limitations: strings5
+  }).optional(),
+  baseline: external_exports.object({
+    classification: external_exports.enum([
+      "supplied-plan",
+      "generated-plan",
+      "unavailable"
+    ]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    test_ids: strings5,
+    suppliedText: external_exports.string().optional(),
+    displaySha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+    tests: external_exports.array(external_exports.object({ id: external_exports.string(), source_refs: refs4 })),
+    notice: external_exports.string()
+  }).optional(),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    source_id: external_exports.string(),
+    kind: external_exports.enum(["intent", "implementation", "context"]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    line: external_exports.number().int().nonnegative(),
+    quote: external_exports.string(),
+    quote_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"])
+  })),
+  risks: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    sourceState: external_exports.enum(["supplied", "generated-unavailable"]),
+    text: external_exports.string().optional(),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    attribution: external_exports.literal("supplied-unverified-risk")
+  })),
+  coverage: external_exports.object({
+    additions: external_exports.number().int().nonnegative(),
+    baselineTests: external_exports.number().int().nonnegative(),
+    baselineConcerns: external_exports.number().int().nonnegative(),
+    unansweredQuestions: external_exports.number().int().nonnegative(),
+    meaning: external_exports.literal("Proposed links and counts only; not proof of complete coverage or semantic support.")
+  }),
+  executed: external_exports.literal(false),
+  reviewRequired: external_exports.literal(true),
+  message: external_exports.string().optional()
+});
+var proof3 = /* @__PURE__ */ new WeakMap();
+function retainVerifiedSupplementSource(value) {
+  proof3.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedSupplementSource(value) {
+  return value !== null && typeof value === "object" && proof3.get(value) === JSON.stringify(value);
+}
+function transferSupplementSourceProof(source3, target, verify) {
+  if (target !== null && typeof target === "object" && verify(source3) && JSON.stringify(source3) === JSON.stringify(target))
+    retainVerifiedSupplementSource(target);
+  return target;
+}
+var supplementUnsupportedRelation = "This saved proposal relation has no verified source-bound presentation. Review the linked application sources; no action or expected result is inferred.";
+var object3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
+var list2 = (value) => Array.isArray(value) ? value : [];
+function supplementPublicId(kind, value, hash6) {
+  return `${kind}-${hash6(JSON.stringify(value ?? null))}`;
+}
+function projectCustomerSupplementResult(value, hash6) {
+  if (hasVerifiedSupplementSource(value)) {
+    const parsed = customerSupplementResultSchema.parse(value);
+    return retainVerifiedSupplementSource(parsed);
+  }
+  const native = object3(value), body = object3(native.supplement), baseline = object3(native.baseline);
+  const id6 = (kind, v) => supplementPublicId(kind, v, hash6);
+  const links2 = (value2, kind) => list2(value2).map((v) => id6(kind, v));
+  const references = (value2) => list2(value2).map((v) => ({
+    evidence_id: id6("source", object3(v).evidence_id)
+  }));
+  const additions = list2(body.additional_tests).map(object3), concerns = list2(body.baseline_concerns).map(object3), questions2 = list2(body.unanswered_questions).map(object3);
+  const status3 = external_exports.enum(["proposed_supplement", "no_additional_tests", "needs_clarification"]).safeParse(body.status);
+  if (!status3.success)
+    return customerSupplementResultSchema.parse({
+      kind: "test-supplement",
+      status: "unavailable",
+      presentationState: "unavailable",
+      evidence: [],
+      risks: [],
+      coverage: {
+        additions: 0,
+        baselineTests: 0,
+        baselineConcerns: 0,
+        unansweredQuestions: 0,
+        meaning: "Proposed links and counts only; not proof of complete coverage or semantic support."
+      },
+      executed: false,
+      reviewRequired: true,
+      message: "The retained supplement cannot be represented in this view. Keep its original record; do not replay it."
+    });
+  const text4 = supplementUnsupportedRelation;
+  return customerSupplementResultSchema.parse({
+    kind: "test-supplement",
+    status: status3.data,
+    presentationState: "legacy-limited",
+    supplement: {
+      status: status3.data,
+      additional_tests: additions.map((row) => ({
+        id: id6("addition", row.id),
+        verification_kind: "Proposed verification; purpose needs review",
+        method: "Proposed approach needs confirmation",
+        reason: text4,
+        conditions: [text4],
+        prerequisites: [],
+        steps: [text4],
+        expected: {
+          text: "The recorded expectation needs review against the linked application sources.",
+          authority: ["requirement", "hypothesis", "unresolved"].includes(String(object3(row.expected).authority)) ? object3(row.expected).authority : "unresolved",
+          refs: references(object3(row.expected).refs)
+        },
+        risk_ids: links2(row.risk_ids, "risk"),
+        source_refs: references(row.source_refs),
+        baseline_relation: {
+          test_ids: links2(object3(row.baseline_relation).test_ids, "baseline"),
+          explanation: text4
+        },
+        execution_gaps: [text4]
+      })),
+      baseline_concerns: concerns.map((row) => ({
+        test_ids: links2(row.test_ids, "baseline"),
+        concern: text4,
+        question: text4,
+        risk_ids: links2(row.risk_ids, "risk"),
+        refs: references(row.refs)
+      })),
+      unanswered_questions: questions2.map((row) => ({
+        question: text4,
+        risk_ids: links2(row.risk_ids, "risk"),
+        baseline_test_ids: links2(row.baseline_test_ids, "baseline"),
+        refs: references(row.refs)
+      })),
+      limitations: [text4]
+    },
+    baseline: {
+      classification: "unavailable",
+      uri: "",
+      revision: "",
+      sha256: null,
+      test_ids: links2(baseline.test_ids, "baseline"),
+      tests: links2(baseline.test_ids, "baseline").map((id7) => ({
+        id: id7,
+        source_refs: []
+      })),
+      notice: "Original baseline retained; source presentation is unavailable and no approval is inferred."
+    },
+    evidence: list2(native.evidence).map(object3).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
+      id: id6("source", row.id),
+      source_id: id6("source-document", row.source_id),
+      kind: row.kind,
+      uri: "",
+      revision: "",
+      line: 0,
+      quote: "Source excerpt unavailable in this view.",
+      quote_sha256: null,
+      sourceState: "unavailable"
+    })),
+    risks: [],
+    coverage: {
+      additions: additions.length,
+      baselineTests: list2(baseline.test_ids).length,
+      baselineConcerns: concerns.length,
+      unansweredQuestions: questions2.length,
+      meaning: "Proposed links and counts only; not proof of complete coverage or semantic support."
+    },
+    executed: false,
+    reviewRequired: true
+  });
+}
 
 // packages/contracts/dist/local.js
 var localProtocol = "loki-local-v1";
@@ -47001,19 +50122,19 @@ var localLimits = {
   pageSize: 100,
   inputLifetimeMs: 30 * 60 * 1e3
 };
-var id2 = external_exports.uuid();
-var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id3 = external_exports.uuid();
+var digest18 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
   coreOrigin: external_exports.url().refine((value) => {
     const url2 = new URL(value);
     return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
   }),
-  userId: id2,
-  workspaceId: id2
+  userId: id3,
+  workspaceId: id3
 });
 var localAuthSchema = external_exports.strictObject({
-  bindingId: id2,
+  bindingId: id3,
   secret,
   context: localContextSchema
 });
@@ -47076,7 +50197,7 @@ var page = {
 };
 var request2 = (method, params) => external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  requestId: id2,
+  requestId: id3,
   method: external_exports.literal(method),
   params,
   auth: localAuthSchema.optional()
@@ -47089,50 +50210,50 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
   request2("capabilities.list", external_exports.strictObject({})),
   request2("settings.open", external_exports.strictObject({})),
   request2("input.select", external_exports.strictObject({})),
-  request2("input.prepare", external_exports.strictObject({ inputId: id2 })),
-  request2("input.status", external_exports.strictObject({ inputId: id2, ...page })),
-  request2("input.release", external_exports.strictObject({ inputId: id2 })),
+  request2("input.prepare", external_exports.strictObject({ inputId: id3 })),
+  request2("input.status", external_exports.strictObject({ inputId: id3, ...page })),
+  request2("input.release", external_exports.strictObject({ inputId: id3 })),
   request2("run.start", external_exports.strictObject({
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
-    inputId: id2,
-    inputDigest: digest13,
+    inputId: id3,
+    inputDigest: digest18,
     transferAcknowledged: external_exports.literal(true),
-    idempotencyKey: id2
+    idempotencyKey: id3
   })),
   request2("run.get", external_exports.union([
-    external_exports.strictObject({ runId: id2 }),
-    external_exports.strictObject({ idempotencyKey: id2 })
+    external_exports.strictObject({ runId: id3 }),
+    external_exports.strictObject({ idempotencyKey: id3 })
   ])),
   request2("run.list", external_exports.strictObject(page)),
-  request2("run.cancel", external_exports.strictObject({ runId: id2 })),
+  request2("run.cancel", external_exports.strictObject({ runId: id3 })),
   request2("run.events", external_exports.strictObject({
-    runId: id2,
+    runId: id3,
     afterSequence: external_exports.number().int().nonnegative(),
     ...page
   })),
   request2("result.read", external_exports.strictObject({
-    runId: id2,
+    runId: id3,
     section: external_exports.enum(["summary", "screens", "elements", "connections"]),
     ...page
   })),
   request2("artifact.read", external_exports.strictObject({
-    runId: id2,
-    artifactId: id2,
+    runId: id3,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
     length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
   })),
-  request2("run.delete", external_exports.strictObject({ runId: id2 }))
+  request2("run.delete", external_exports.strictObject({ runId: id3 }))
 ]);
 var omission = external_exports.strictObject({
   path: external_exports.string().max(1024),
   reason: external_exports.string().max(100)
 });
 var localInputSchema = external_exports.strictObject({
-  inputId: id2,
+  inputId: id3,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
-  digest: digest13.nullable(),
+  digest: digest18.nullable(),
   includedFiles: external_exports.number().int().nonnegative(),
   includedBytes: external_exports.number().int().nonnegative(),
   omissionCount: external_exports.number().int().nonnegative(),
@@ -47144,21 +50265,21 @@ var localInputSchema = external_exports.strictObject({
 });
 var localEventSchema = external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  runId: id2,
+  runId: id3,
   sequence: external_exports.number().int().positive(),
   state: localRunStateSchema,
   detail: external_exports.string().max(500),
   at: external_exports.iso.datetime()
 });
 var localRunSchema = external_exports.strictObject({
-  runId: id2,
+  runId: id3,
   state: localRunStateSchema,
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
   cliVersion: external_exports.literal("2026.10.18-8"),
-  cliDigest: digest13,
+  cliDigest: digest18,
   adapter: external_exports.literal(localAdapter),
-  inputDigest: digest13,
+  inputDigest: digest18,
   sourcePolicy: external_exports.literal("local-source-v1"),
   displayName: external_exports.string().max(255),
   execution: external_exports.literal("local"),
@@ -47172,10 +50293,10 @@ var localRunSchema = external_exports.strictObject({
   completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
   usage: external_exports.literal("unknown"),
   artifacts: external_exports.array(external_exports.strictObject({
-    artifactId: id2,
+    artifactId: id3,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
-    sha256: digest13
+    sha256: digest18
   })).max(100)
 });
 var localSetupSchema = external_exports.strictObject({
@@ -47265,7 +50386,7 @@ var localResultSchemas = {
   hello: external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
     companionVersion: external_exports.literal(localCompanionVersion),
-    bindingId: id2,
+    bindingId: id3,
     bindingSecret: secret.optional(),
     context: localContextSchema,
     setup: localSetupSchema
@@ -47301,10 +50422,10 @@ var localResultSchemas = {
   }),
   "result.read": resultPage,
   "artifact.read": external_exports.strictObject({
-    artifactId: id2,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
-    sha256: digest13,
+    sha256: digest18,
     totalSize: external_exports.number().int().nonnegative(),
     eof: external_exports.boolean()
   }),
@@ -47313,17 +50434,891 @@ var localResultSchemas = {
 var localResponseSchema = external_exports.discriminatedUnion("ok", [
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id2,
+    requestId: id3,
     ok: external_exports.literal(true),
     result: external_exports.unknown()
   }),
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id2,
+    requestId: id3,
     ok: external_exports.literal(false),
     error: localErrorSchema
   })
 ]);
+
+// apps/codex-plugin/src/customer-output.mjs
+import { createHash as createHash4 } from "node:crypto";
+
+// apps/codex-plugin/src/customer-cleanup-output.mjs
+var digest19 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerBrowserCleanupSchema = external_exports.strictObject({
+  scope: external_exports.literal("this-run-browser"),
+  state: external_exports.enum(["complete", "incomplete", "unknown"]),
+  deadlineExceeded: external_exports.boolean().nullable(),
+  message: external_exports.string()
+});
+var unknown2 = () => ({
+  scope: "this-run-browser",
+  state: "unknown",
+  deadlineExceeded: null,
+  message: "Browser closure could not be confirmed."
+});
+var context = external_exports.object({
+  state: external_exports.literal("ready"),
+  runId: digest19,
+  resultSha256: digest19,
+  target: external_exports.object({ app: external_exports.string().min(1).optional() }).optional(),
+  cleanupEvidence: external_exports.unknown().optional()
+});
+var cleanupEvidence = external_exports.object({
+  state: external_exports.literal("ready"),
+  record: external_exports.object({
+    cleaned: external_exports.boolean(),
+    deadlineExceeded: external_exports.boolean()
+  })
+});
+async function customerBrowserCleanup(execution2, readContext) {
+  if (execution2?.state !== "finished") return void 0;
+  if (!digest19.safeParse(execution2.runId).success || !digest19.safeParse(execution2.resultSha256).success || typeof readContext !== "function")
+    return unknown2();
+  try {
+    const value = context.parse(await readContext({ runId: execution2.runId }));
+    if (value.runId !== execution2.runId || value.resultSha256 !== execution2.resultSha256)
+      return unknown2();
+    if (value.target?.app !== void 0) return void 0;
+    const { cleaned, deadlineExceeded } = cleanupEvidence.parse(
+      value.cleanupEvidence
+    ).record;
+    return customerBrowserCleanupSchema.parse({
+      scope: "this-run-browser",
+      state: cleaned ? "complete" : "incomplete",
+      deadlineExceeded,
+      message: (cleaned ? "The test browser was confirmed closed." : "The test browser was not confirmed closed at the cleanup check.") + (deadlineExceeded ? " The cleanup time limit was reached." : "")
+    });
+  } catch {
+    return unknown2();
+  }
+}
+
+// apps/codex-plugin/src/customer-output.mjs
+var executionTools = /* @__PURE__ */ new Set([
+  "loki_test_execute",
+  "loki_test_get",
+  "loki_test_stop",
+  "loki_runner_execute",
+  "loki_runner_get",
+  "loki_runner_stop",
+  "loki_runner_answer"
+]);
+var customerInstructions = "Follow the caller-authorized task and selected application. Preserve customer tests, source citations, observations, coverage limits and separate execution and assessment results. Planning does not authorize execution. Ask for missing task inputs. Keep implementation details, model and reasoning settings, provider receipts, usage and accounting private, including when diagnostics are requested. Explain actual failures and useful recovery in product terms. Read or Stop the original operation after uncertain effects; never replay it or start replacement work to recover a result. A finished operation is not a passed test.";
+var hasCustomerExecutionOutput = (name) => executionTools.has(name);
+var developmentTools = /* @__PURE__ */ new Set([
+  "kaijan_ai_models",
+  "loki_report_export_preview",
+  "loki_report_export"
+]);
+var isCustomerToolAllowed = (name) => !developmentTools.has(name);
+var hash2 = (value) => createHash4("sha256").update(value).digest("hex");
+var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings6 = external_exports.array(external_exports.string());
+var optional4 = (schema) => schema.optional();
+var generatedText = external_exports.string();
+var generatedStrings = external_exports.array(generatedText);
+var question = external_exports.object({
+  id: external_exports.string(),
+  question: generatedText,
+  kind: optional4(generatedText)
+});
+var progress3 = external_exports.object({
+  status: optional4(external_exports.enum(["needs_input", "stuck", "blocked", "complete"])),
+  reason: optional4(generatedText),
+  completedSteps: optional4(generatedStrings),
+  remainingSteps: optional4(generatedStrings),
+  questions: optional4(external_exports.array(question)),
+  effects: optional4(external_exports.enum(["known", "uncertain"]))
+});
+var customerQuestion = external_exports.strictObject({
+  id: id4,
+  question: external_exports.string(),
+  kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"])
+});
+var clarification = progress3.extend({
+  questions: external_exports.array(customerQuestion),
+  bindingState: external_exports.enum(["bound", "unavailable"]),
+  clarificationId: id4,
+  deadlineAt: external_exports.string(),
+  state: external_exports.enum(["live", "unknown"])
+});
+var nextAction2 = external_exports.object({
+  kind: external_exports.literal("input-required"),
+  tool: external_exports.literal("loki_runner_answer"),
+  runId: id4,
+  clarificationId: id4,
+  deadlineAt: external_exports.string(),
+  questions: external_exports.array(customerQuestion)
+});
+var assessment = customerAssessmentResultSchema.omit({ kind: true, meaning: true, acceptanceDecision: true, coverage: true }).extend({
+  state: external_exports.enum([
+    "complete",
+    "unknown",
+    "refused",
+    "cancelled",
+    "unavailable"
+  ]),
+  answerId: optional4(id4),
+  resultSha256: optional4(id4),
+  status: customerAssessmentResultSchema.shape.status.optional(),
+  coverage: customerAssessmentResultSchema.shape.coverage.unwrap().extend({ meaning: customerAssessmentResultSchema.shape.meaning }).optional()
+});
+var step = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  status: external_exports.string(),
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  evidenceIds: strings6
+});
+var verification = external_exports.object({
+  tests: external_exports.array(
+    external_exports.object({
+      testId: external_exports.string(),
+      title: external_exports.string(),
+      status: external_exports.string(),
+      expected: external_exports.string(),
+      actual: external_exports.string(),
+      steps: external_exports.array(step)
+    })
+  ),
+  evidence: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), sha256: id4 }))
+});
+var result = external_exports.object({
+  status: external_exports.enum([
+    "returned",
+    "not-executed",
+    "reuse-not-executed",
+    "native-exception"
+  ]),
+  executionState: optional4(
+    external_exports.enum(["completed", "incomplete", "cancelled", "blocked", "unknown"])
+  ),
+  testVerdict: optional4(external_exports.string()),
+  observation: optional4(generatedText),
+  answer: optional4(generatedText),
+  executionReport: optional4(progress3.nullable()),
+  unresolvedInputs: optional4(strings6),
+  effects: optional4(external_exports.enum(["unknown-do-not-replay"])),
+  message: optional4(external_exports.string()),
+  elapsedMs: optional4(external_exports.number().nonnegative()),
+  verification: optional4(verification)
+});
+var lifecycle = external_exports.enum([
+  "accepted",
+  "running",
+  "finished",
+  "unknown",
+  "not-started",
+  "stopped-before-start",
+  "unavailable"
+]);
+var execution = external_exports.object({
+  runId: id4,
+  state: lifecycle,
+  replayAllowed: external_exports.literal(false),
+  stopRequested: optional4(external_exports.boolean()),
+  createdAt: optional4(external_exports.string()),
+  resultSha256: optional4(id4),
+  result: optional4(result),
+  pendingClarification: optional4(clarification.nullable()),
+  nextAction: optional4(nextAction2)
+});
+var stage = external_exports.enum([
+  "pending",
+  "not-started",
+  "starting",
+  "running",
+  "waiting-for-input",
+  "stop-requested",
+  "stopped",
+  "finished",
+  "complete",
+  "completed",
+  "incomplete",
+  "cancelled",
+  "blocked",
+  "unknown",
+  "unavailable",
+  "returned",
+  "returned_assessment",
+  "first_response_failure",
+  "error",
+  "preparing",
+  "preparation-error",
+  "preparation-refused",
+  "input-unavailable",
+  "context-unavailable",
+  "not-executed",
+  "reuse-not-executed",
+  "native-exception",
+  "ready",
+  "created",
+  "saved",
+  "refused",
+  "unresolved",
+  "read-required",
+  "not-saved",
+  "saving",
+  "saving-combined",
+  "combined",
+  "stopped-before-start",
+  "accepted"
+]);
+var failure3 = external_exports.object({
+  code: external_exports.string(),
+  message: external_exports.string(),
+  requestDispatched: external_exports.boolean().nullable(),
+  recovery: external_exports.object({
+    action: external_exports.string(),
+    instruction: external_exports.string(),
+    requestKey: optional4(external_exports.string()),
+    existingRunId: optional4(id4)
+  })
+});
+var customerExecutionSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-execution/1"),
+  kind: external_exports.enum(["test", "execution", "answer"]),
+  browserCleanup: customerBrowserCleanupSchema.optional(),
+  executionEvidence: customerExecutionEvidenceSchema.optional(),
+  runId: optional4(id4),
+  state: lifecycle,
+  replayAllowed: external_exports.literal(false),
+  stopRequested: optional4(external_exports.boolean()),
+  createdAt: optional4(external_exports.string()),
+  resultSha256: optional4(id4),
+  result: optional4(result),
+  execution: optional4(execution.nullable()),
+  status: optional4(
+    external_exports.object({ execution: stage, assessment: stage, report: stage })
+  ),
+  assessment: optional4(assessment.nullable()),
+  report: optional4(external_exports.object({ reportId: id4 }).nullable()),
+  pendingClarification: optional4(clarification.nullable()),
+  nextAction: optional4(nextAction2),
+  clarificationId: optional4(id4),
+  answerKey: optional4(external_exports.string()),
+  answerStatus: optional4(external_exports.literal("retained")),
+  error: optional4(failure3)
+});
+var projection2 = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-execution-page/1"),
+  runId: id4,
+  resultSha256: id4.optional(),
+  projectionSha256: id4,
+  encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+  offset: external_exports.number().int().nonnegative(),
+  text: external_exports.string(),
+  nextOffset: external_exports.number().int().positive().nullable(),
+  totalCharacters: external_exports.number().int().positive(),
+  replayAllowed: external_exports.literal(false)
+});
+var readHint = external_exports.strictObject({
+  tool: external_exports.enum(["loki_test_get", "loki_runner_get"]),
+  arguments: external_exports.strictObject({
+    runId: id4,
+    offset: external_exports.literal(0),
+    projectionSha256: id4
+  })
+});
+var customerOutputSchema = external_exports.union([
+  customerExecutionSchema.extend({
+    projectionSha256: id4,
+    resultRead: readHint.optional()
+  }),
+  projection2
+]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
+function customerExecutionInput(tool) {
+  if (!["loki_runner_execute", "loki_test_execute"].includes(tool.name))
+    return tool.inputSchema;
+  const input3 = structuredClone(tool.inputSchema);
+  const projectRequest = (schema) => {
+    const limits = schema?.properties?.options?.properties?.limits;
+    if (limits?.properties && Object.hasOwn(limits.properties, "calls")) {
+      delete limits.properties.calls;
+      if (Array.isArray(limits.required))
+        limits.required = limits.required.filter((name) => name !== "calls");
+    }
+    for (const key of ["anyOf", "oneOf", "allOf"])
+      if (Array.isArray(schema?.[key])) schema[key].forEach(projectRequest);
+  };
+  projectRequest(input3);
+  return input3;
+}
+function customerToolDefinition(tool) {
+  if (!isCustomerToolAllowed(tool.name)) return null;
+  if (!executionTools.has(tool.name)) return tool;
+  const read = tool.name.endsWith("_get");
+  return {
+    name: tool.name,
+    title: tool.title,
+    annotations: tool.annotations,
+    description: tool.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    inputSchema: read ? external_exports.toJSONSchema(
+      external_exports.strictObject({
+        runId: id4,
+        offset: external_exports.number().int().nonnegative().optional(),
+        projectionSha256: id4.optional()
+      })
+    ) : customerExecutionInput(tool),
+    outputSchema: {
+      ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
+      type: "object"
+    }
+  };
+}
+var errorMessages = {
+  invalid_arguments: [
+    "The test input is invalid.",
+    "correct_arguments",
+    "Correct the input. Keep the original run when recovering existing work."
+  ],
+  request_key_conflict: [
+    "This request key belongs to different work.",
+    "recover_original_or_select_new_work",
+    "Recover the original work with its original key and input. Use a new key only for distinct authorized work."
+  ],
+  operation_not_found_in_scope: [
+    "This test is unavailable in this chat.",
+    "use_original_conversation_and_receipt",
+    "Return to the original chat and run. Do not start another test to replace uncertain work."
+  ],
+  answer_conflict: [
+    "This answer key belongs to a different answer.",
+    "recover_original_answer",
+    "Use the original answer key and unchanged answer."
+  ],
+  clarification_unavailable: [
+    "This question is no longer available to answer.",
+    "read_original_run",
+    "Read the original run. Do not create a replacement run."
+  ],
+  invalid_answers: [
+    "The answer does not match the pending questions.",
+    "correct_answers",
+    "Answer the exact pending questions using their original identifiers."
+  ],
+  answer_effect_unestablished: [
+    "The answer was retained, but its delivery is not confirmed.",
+    "read_original_run",
+    "Read the original run. Do not replay the test or submit a different answer to recover it."
+  ],
+  customer_read_restart: [
+    "The saved result view changed or the page selection is invalid.",
+    "read_from_start",
+    "Read this same run again at offset zero. Do not rerun the test."
+  ]
+};
+function customerFailure(name, value = {}, runId) {
+  const native = value?.error ?? value;
+  let code = Object.hasOwn(errorMessages, native?.code) ? native.code : "operation_unavailable";
+  if (native?.code === "invalid_params") code = "invalid_arguments";
+  const [message, action2, instruction] = errorMessages[code] ?? [
+    "The test or its saved result is unavailable. Effects may be unknown.",
+    "preserve_original_run",
+    "Keep the original run and read it in its owning chat. Do not replay work or infer successful cleanup or a test verdict."
+  ];
+  return customerExecutionSchema.parse({
+    schema: "kaijan.customer-execution/1",
+    kind: name.startsWith("loki_test_") ? "test" : name.endsWith("_answer") ? "answer" : "execution",
+    ...id4.safeParse(runId ?? value?.runId).success ? { runId: runId ?? value.runId } : {},
+    state: "unavailable",
+    replayAllowed: false,
+    error: {
+      code,
+      message,
+      requestDispatched: native?.requestDispatched === false || value?.requestDispatched === false || code === "invalid_arguments" ? false : null,
+      recovery: {
+        action: action2,
+        instruction,
+        ...code === "request_key_conflict" && typeof native?.recovery?.requestKey === "string" ? { requestKey: native.recovery.requestKey } : {},
+        ...id4.safeParse(native?.recovery?.existingRunId).success ? { existingRunId: native.recovery.existingRunId } : {}
+      }
+    }
+  });
+}
+function hasSavedPlanSelection(value) {
+  const native = value?.nativeResult ?? value;
+  const correlation = native?.correlation;
+  const reference2 = correlation?.planRef;
+  if (reference2 && checkedPlanReferenceSchema.safeParse({
+    answerId: reference2.answerId,
+    resultSha256: reference2.resultSha256,
+    selectedTestIds: reference2.selectedTestIds ?? correlation.selectedTestIds
+  }).success)
+    return true;
+  const checks = value?.verification;
+  return checks?.provenance === "product-terminal-checks/1" && id4.safeParse(checks.planRef?.answerId).success && id4.safeParse(checks.planRef?.resultSha256).success;
+}
+var planTestId = (value) => customerPlanningId("T", value, hash2);
+function executionResult(value) {
+  if (!value || ![
+    "returned",
+    "not-executed",
+    "reuse-not-executed",
+    "native-exception"
+  ].includes(value.status))
+    throw Error("Unsupported execution result");
+  if (value.status === "returned") {
+    const native = value.nativeResult ?? value;
+    return result.parse({
+      status: value.status,
+      executionState: native.executionState,
+      testVerdict: native.testVerdict,
+      answer: customerExecutionStatus(
+        native.executionState,
+        native.executionReport?.effects
+      ),
+      executionReport: native.executionReport === null || native.executionReport === void 0 ? native.executionReport : projectCustomerExecutionProgress(native.executionReport),
+      elapsedMs: native.elapsedMs,
+      verification: value.verification && hasSavedPlanSelection(value) ? {
+        ...value.verification,
+        tests: value.verification.tests.map((row) => ({
+          ...row,
+          testId: planTestId(row.testId)
+        }))
+      } : value.verification
+    });
+  }
+  return result.parse({
+    status: value.status,
+    ...value.status === "native-exception" ? {
+      effects: "unknown-do-not-replay",
+      message: "Execution could not finish. Keep the original run; effects may be unknown."
+    } : {
+      unresolvedInputs: value.unresolvedInputs,
+      message: "Execution did not start. Resolve the missing test inputs before requesting new work."
+    }
+  });
+}
+function executionView(value) {
+  if (value.schema !== "loki.runner-operation/1")
+    throw Error("Unsupported execution record");
+  return execution.parse({
+    ...value,
+    pendingClarification: value.pendingClarification,
+    nextAction: value.nextAction ? {
+      ...value.nextAction,
+      questions: value.nextAction.questions
+    } : void 0,
+    ...value.result ? { result: executionResult(value.result) } : {}
+  });
+}
+function assessmentView(value, savedPlan = false, presentation, progressOnly = false) {
+  if (value === null || value === void 0) return null;
+  const identity4 = {
+    state: value.error ? "unavailable" : value.state,
+    answerId: value.answerId,
+    resultSha256: value.resultSha256
+  };
+  if (progressOnly) return assessment.parse(identity4);
+  let view2;
+  try {
+    view2 = presentation ? projectCustomerAssessmentResult(presentation) : value.result && !value.error ? projectCustomerAssessment(value.result) : void 0;
+  } catch {
+  }
+  if (!view2)
+    return assessment.parse({
+      ...identity4,
+      message: "The evidence assessment is unavailable. Preserve the original test and evidence; do not replay execution."
+    });
+  if (!presentation && savedPlan) {
+    view2 = {
+      ...view2,
+      tests: view2.tests?.map((row) => ({
+        ...row,
+        test_id: typeof row.test_id === "string" ? planTestId(row.test_id) : row.test_id
+      })),
+      findings: view2.findings?.map((row) => ({
+        ...row,
+        test_ids: row.test_ids?.map(planTestId)
+      })),
+      reportedOutcomes: view2.reportedOutcomes?.map((row) => ({
+        ...row,
+        test_id: typeof row.test_id === "string" ? planTestId(row.test_id) : row.test_id
+      }))
+    };
+  }
+  return assessment.parse({
+    ...view2,
+    ...identity4,
+    coverage: view2.coverage ? { ...view2.coverage, meaning: view2.meaning } : void 0
+  });
+}
+async function readAssessmentPresentation(value, options, invocation) {
+  const reference2 = value?.schema === "kaijan.test-run/1" ? value.assessment : void 0;
+  if (reference2?.state !== "complete" || reference2.error || !id4.safeParse(reference2.answerId).success || !id4.safeParse(reference2.resultSha256).success || typeof options.readAssessmentPresentation !== "function")
+    return void 0;
+  try {
+    const source3 = await options.readAssessmentPresentation(
+      { answerId: reference2.answerId, resultSha256: reference2.resultSha256 },
+      invocation
+    );
+    return projectCustomerAssessmentResult(
+      transferAssessmentPresentationProof(
+        source3,
+        structuredClone(source3),
+        options.verifyCustomerAssessmentSource
+      )
+    );
+  } catch {
+    return void 0;
+  }
+}
+function combinedStatusRead(name, value) {
+  return name === "loki_test_get" && ["accepted", "running"].includes(value?.state);
+}
+function project(name, value, assessmentPresentation) {
+  if (value?.error) return customerFailure(name, value);
+  const kind = name.startsWith("loki_test_") ? "test" : name.endsWith("_answer") ? "answer" : "execution";
+  const base = {
+    schema: "kaijan.customer-execution/1",
+    kind,
+    replayAllowed: false
+  };
+  if (kind === "answer") {
+    if (value.schema !== "loki.runner.clarification-answer/1" || value.status !== "retained")
+      throw Error("Unsupported answer");
+    return customerExecutionSchema.parse({
+      ...base,
+      runId: value.runId,
+      state: "accepted",
+      clarificationId: value.clarificationId,
+      answerKey: value.answerKey,
+      answerStatus: "retained"
+    });
+  }
+  if (kind === "execution")
+    return customerExecutionSchema.parse({ ...base, ...executionView(value) });
+  if (value.schema !== "kaijan.test-run/1") throw Error("Unsupported test");
+  const nested = value.execution?.error ? null : value.execution ? executionView(value.execution) : null;
+  return customerExecutionSchema.parse({
+    ...base,
+    runId: value.runId,
+    state: value.state,
+    stopRequested: value.stopRequested,
+    resultSha256: value.resultSha256,
+    status: value.status,
+    execution: nested,
+    result: value.executionSummary ? executionResult(value.executionSummary) : void 0,
+    assessment: assessmentView(
+      value.assessment,
+      hasSavedPlanSelection(value.execution?.result),
+      assessmentPresentation,
+      combinedStatusRead(name, value)
+    ),
+    report: value.report,
+    nextAction: value.nextAction ? {
+      ...value.nextAction,
+      questions: value.nextAction.questions
+    } : nested?.nextAction,
+    ...value.execution?.error ? { error: customerFailure(name, value.execution).error } : {}
+  });
+}
+async function original(catalog, tool, first, invocation) {
+  const runId = id4.parse(first.runId), expected = id4.parse(first.resultSha256);
+  let offset = 0, text4 = "", total;
+  for (let pages = 0; pages < 4096; pages++) {
+    invocation?.signal?.throwIfAborted();
+    const page2 = await catalog.invoke(tool, { runId, offset }, invocation);
+    catalog.validateOutput?.(tool, page2);
+    const chunk = page2.resultChunk;
+    if (page2.runId !== runId || page2.resultSha256 !== expected || !chunk || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 60 * 1024 * 1024 || total !== void 0 && total !== chunk.totalCharacters)
+      throw Error("Invalid retained page");
+    total = chunk.totalCharacters;
+    text4 += chunk.text;
+    offset += chunk.text.length;
+    if (offset > total) throw Error("Invalid retained size");
+    if (chunk.nextOffset === null) {
+      if (offset !== total || hash2(text4) !== expected)
+        throw Error("Changed retained result");
+      return JSON.parse(text4);
+    }
+    if (chunk.nextOffset !== offset) throw Error("Invalid retained offset");
+  }
+  throw Error("Retained page limit");
+}
+async function hydrate(catalog, name, value, invocation) {
+  if (value?.error) return value;
+  if (name.startsWith("loki_test_") && value.originalResult) {
+    const raw = await original(catalog, "loki_test_get", value, invocation);
+    value = {
+      ...raw,
+      schema: value.schema,
+      runId: value.runId,
+      state: value.state,
+      stopRequested: value.stopRequested,
+      resultSha256: value.resultSha256
+    };
+  }
+  if (value?.schema === "loki.runner-operation/1" && (value.resultRead || value.resultChunk))
+    return {
+      ...value,
+      result: await original(catalog, "loki_runner_get", value, invocation)
+    };
+  if (value?.execution && (value.execution.resultRead || value.execution.resultChunk))
+    value = {
+      ...value,
+      execution: await hydrate(
+        catalog,
+        "loki_runner_get",
+        value.execution,
+        invocation
+      )
+    };
+  return value;
+}
+function customerFailureOutput(name, value, runId) {
+  const dto = customerFailure(name, value, runId);
+  return { ...dto, projectionSha256: hash2(JSON.stringify(dto)) };
+}
+var customerPending = external_exports.strictObject({
+  clarificationId: id4,
+  deadlineAt: external_exports.string(),
+  state: external_exports.enum(["live", "unknown"]),
+  bindingState: external_exports.enum(["bound", "unavailable"]),
+  reason: external_exports.enum([
+    "The test needs the following task or application information.",
+    "The test needs a read-only way to view the requested information.",
+    "The saved question lacks a verified task or application reference and cannot be displayed. Its original pending state is retained; do not replay the test."
+  ]),
+  questions: external_exports.array(customerQuestion)
+});
+async function bindPendingQuestions(value, read) {
+  if (value?.schema === "kaijan.test-run/1") {
+    const execution2 = value.execution ? await bindPendingQuestions(value.execution, read) : value.execution;
+    return {
+      ...value,
+      execution: execution2,
+      nextAction: execution2?.schema === "loki.runner-operation/1" ? execution2.nextAction : void 0
+    };
+  }
+  if (value?.schema !== "loki.runner-operation/1") return value;
+  const pending = value.pendingClarification;
+  if (!pending) return { ...value, nextAction: void 0 };
+  let safe;
+  try {
+    if (typeof read !== "function")
+      throw Error("No scoped clarification reader");
+    const selected = await read({ runId: value.runId });
+    if (selected?.runId !== value.runId) throw Error("Different run");
+    safe = customerPending.parse(selected.pendingClarification);
+    if (safe.clarificationId !== pending.clarificationId || safe.deadlineAt !== pending.deadlineAt)
+      throw Error("Changed clarification");
+  } catch {
+    safe = {
+      clarificationId: pending.clarificationId,
+      deadlineAt: pending.deadlineAt,
+      state: pending.state === "live" ? "live" : "unknown",
+      bindingState: "unavailable",
+      reason: "The saved question lacks a verified task or application reference and cannot be displayed. Its original pending state is retained; do not replay the test.",
+      questions: []
+    };
+  }
+  return {
+    ...value,
+    pendingClarification: safe,
+    nextAction: safe.state === "live" && safe.bindingState === "bound" && safe.questions.length ? {
+      kind: "input-required",
+      tool: "loki_runner_answer",
+      runId: value.runId,
+      clarificationId: safe.clarificationId,
+      deadlineAt: safe.deadlineAt,
+      questions: safe.questions
+    } : void 0
+  };
+}
+function bindProtectedProgress(projected, execution2, context2) {
+  const selected = context2?.state === "ready" && context2.runId === execution2?.runId && context2.resultSha256 === execution2?.resultSha256 ? progress3.safeParse(context2.protectedExecutionProgress) : { success: false };
+  for (const value of [projected.result, projected.execution?.result]) {
+    const original2 = value?.executionReport;
+    if (original2 === null || original2 === void 0) continue;
+    value.executionReport = selected.success && selected.data.status === original2.status && selected.data.effects === original2.effects ? selected.data : projectCustomerExecutionProgress({
+      status: original2.status,
+      effects: original2.effects
+    });
+  }
+}
+async function invokeCustomerExecution(catalog, name, args = {}, invocation, options = {}) {
+  let retainedRunId = args?.runId;
+  try {
+    const paging = name.endsWith("_get") && args.offset !== void 0;
+    if (paging && (!Number.isSafeInteger(args.offset) || args.offset < 0 || args.offset > 0 && !id4.safeParse(args.projectionSha256).success) || !paging && args.projectionSha256 !== void 0)
+      return customerFailureOutput(
+        name,
+        { code: "customer_read_restart", requestDispatched: false },
+        args.runId
+      );
+    const { projectionSha256, ...input3 } = args;
+    if (paging) delete input3.offset;
+    if (name === "loki_runner_answer" && (!catalog.tools?.some((tool) => tool.name === name) || typeof options.answerCustomerClarification !== "function"))
+      return customerFailureOutput(
+        name,
+        { code: "clarification_unavailable", requestDispatched: false },
+        retainedRunId
+      );
+    const native = name === "loki_runner_answer" ? await options.answerCustomerClarification(input3, invocation) : await catalog.invoke(name, input3, invocation);
+    if (id4.safeParse(native?.runId).success) retainedRunId = native.runId;
+    catalog.validateOutput?.(name, native);
+    const hydrated = await hydrate(catalog, name, native, invocation);
+    const projected = project(
+      name,
+      await bindPendingQuestions(hydrated, options.readCustomerClarification),
+      combinedStatusRead(name, hydrated) ? void 0 : await readAssessmentPresentation(hydrated, options, invocation)
+    );
+    if (!projected.error && projected.kind !== "answer") {
+      const execution2 = projected.kind === "test" ? hydrated.execution : hydrated;
+      let retained;
+      const readContext = typeof options.readCleanupContext === "function" ? (reference2) => retained ??= Promise.resolve().then(
+        () => options.readCleanupContext(reference2)
+      ) : void 0;
+      const browserCleanup = await customerBrowserCleanup(
+        execution2,
+        readContext
+      );
+      let context2;
+      try {
+        context2 = retained ? await retained : execution2?.state === "finished" && (projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+      } catch {
+      }
+      bindProtectedProgress(projected, execution2, context2);
+      const includeExecutionEvidence = !combinedStatusRead(name, projected);
+      if (execution2?.state === "finished" && includeExecutionEvidence) {
+        let evidence2;
+        try {
+          if (context2?.state === "ready" && context2.runId === execution2.runId && context2.resultSha256 === execution2.resultSha256)
+            evidence2 = context2.executionEvidence ? transferVerifiedExecutionEvidence(
+              context2.executionEvidence,
+              options.verifyCustomerEvidenceSource
+            ) : void 0;
+        } catch {
+        }
+        projected.executionEvidence = projectCustomerExecutionEvidence(evidence2);
+      }
+      if (browserCleanup !== void 0)
+        projected.browserCleanup = browserCleanup;
+    }
+    const dto = JSON.parse(JSON.stringify(projected));
+    const text4 = JSON.stringify(dto), digest21 = hash2(text4);
+    if (paging) {
+      if (projectionSha256 !== void 0 && projectionSha256 !== digest21 || args.offset >= text4.length || args.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[args.offset]))
+        return customerFailureOutput(
+          name,
+          { code: "customer_read_restart", requestDispatched: false },
+          args.runId
+        );
+      let end = Math.min(args.offset + 16e3, text4.length);
+      if (end < text4.length && /[\uDC00-\uDFFF]/.test(text4[end])) end--;
+      return projection2.parse({
+        schema: "kaijan.customer-execution-page/1",
+        runId: dto.runId,
+        resultSha256: dto.resultSha256,
+        projectionSha256: digest21,
+        encoding: "JSON text, UTF-16 offsets",
+        offset: args.offset,
+        text: text4.slice(args.offset, end),
+        nextOffset: end < text4.length ? end : null,
+        totalCharacters: text4.length,
+        replayAllowed: false
+      });
+    }
+    return customerOutputSchema.parse({
+      ...dto,
+      projectionSha256: digest21,
+      ...dto.runId && dto.kind !== "answer" && !dto.error ? {
+        resultRead: {
+          tool: dto.kind === "test" ? "loki_test_get" : "loki_runner_get",
+          arguments: {
+            runId: dto.runId,
+            offset: 0,
+            projectionSha256: digest21
+          }
+        }
+      } : {}
+    });
+  } catch (error63) {
+    return customerFailureOutput(
+      name,
+      {
+        code: error63?.code,
+        requestDispatched: error63?.requestDispatched,
+        recovery: error63?.recovery
+      },
+      retainedRunId
+    );
+  }
+}
+
+// apps/codex-plugin/src/customer-plan-selection.mjs
+var executions = /* @__PURE__ */ new Set(["loki_test_execute", "loki_runner_execute"]);
+var object4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
+var omitTestIds = (checks) => ({
+  ...checks,
+  tests: checks.tests.map((test) => {
+    const copy = { ...test };
+    delete copy.testId;
+    return copy;
+  })
+});
+async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
+  if (!executions.has(name)) return { arguments: args };
+  const invalid = () => ({
+    error: customerFailureOutput(name, {
+      code: "invalid_arguments",
+      requestDispatched: false
+    })
+  });
+  if (!object4(args)) return invalid();
+  const saved = args.savedTests !== void 0;
+  const checked = args.planRef !== void 0 && (args.checks !== void 0 || object4(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key)));
+  if (!saved && !checked)
+    return args.checks === void 0 ? { arguments: args } : invalid();
+  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0) || typeof options.resolveSelection !== "function")
+    return invalid();
+  try {
+    invocation?.signal?.throwIfAborted();
+    const key = saved ? "savedTests" : "planRef";
+    const reference2 = checkedPlanReferenceSchema.parse(args[key]);
+    const input3 = {
+      reference: reference2,
+      ...args.checks === void 0 ? {} : { checks: structuredClone(args.checks) }
+    };
+    const resolved2 = await options.resolveSelection(structuredClone(input3));
+    invocation?.signal?.throwIfAborted();
+    const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
+    if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
+      return invalid();
+    if (args.checks === void 0) {
+      if (resolved2.checks !== void 0) return invalid();
+    } else {
+      if (!object4(resolved2.checks) || !Array.isArray(resolved2.checks.tests) || !object4(args.checks) || !Array.isArray(args.checks.tests) || !isDeepStrictEqual(
+        omitTestIds(args.checks),
+        omitTestIds(resolved2.checks)
+      ))
+        return invalid();
+      const ids2 = resolved2.checks.tests.map((test) => test.testId);
+      if (ids2.length !== selected.selectedTestIds.length || new Set(ids2).size !== ids2.length || ids2.some((id6) => !selected.selectedTestIds.includes(id6)))
+        return invalid();
+    }
+    return {
+      arguments: {
+        ...args,
+        [key]: selected,
+        ...args.checks === void 0 ? {} : { checks: resolved2.checks }
+      }
+    };
+  } catch {
+    return invalid();
+  }
+}
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
 function isZ4Schema2(s) {
@@ -47332,12 +51327,12 @@ function isZ4Schema2(s) {
 }
 function safeParse3(schema, data) {
   if (isZ4Schema2(schema)) {
-    const result2 = safeParse(schema, data);
-    return result2;
+    const result3 = safeParse(schema, data);
+    return result3;
   }
   const v3Schema = schema;
-  const result = v3Schema.safeParse(data);
-  return result;
+  const result2 = v3Schema.safeParse(data);
+  return result2;
 }
 function getObjectShape2(schema) {
   if (!schema)
@@ -47389,8 +51384,8 @@ function getLiteralValue2(schema) {
 }
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/interfaces.js
-function isTerminal(status2) {
-  return status2 === "completed" || status2 === "failed" || status2 === "cancelled";
+function isTerminal(status3) {
+  return status3 === "completed" || status3 === "failed" || status3 === "cancelled";
 }
 
 // node_modules/.pnpm/zod-to-json-schema@3.25.2_zod@4.6.7/node_modules/zod-to-json-schema/dist/esm/parsers/string.js
@@ -47410,11 +51405,11 @@ function getMethodLiteral(schema) {
   return value;
 }
 function parseWithCompat(schema, data) {
-  const result = safeParse3(schema, data);
-  if (!result.success) {
-    throw result.error;
+  const result2 = safeParse3(schema, data);
+  if (!result2.success) {
+    throw result2.error;
   }
-  return result.data;
+  return result2.data;
 }
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js
@@ -47474,8 +51469,8 @@ var Protocol = class {
                     resolver(message);
                   } else {
                     const errorMessage = message;
-                    const error62 = new McpError(errorMessage.error.code, errorMessage.error.message, errorMessage.error.data);
-                    resolver(error62);
+                    const error63 = new McpError(errorMessage.error.code, errorMessage.error.message, errorMessage.error.data);
+                    resolver(error63);
                   }
                 } else {
                   const messageType = queuedMessage.type === "response" ? "Response" : "Error";
@@ -47495,12 +51490,12 @@ var Protocol = class {
             return await handleTaskResult();
           }
           if (isTerminal(task.status)) {
-            const result = await this._taskStore.getTaskResult(taskId, extra.sessionId);
+            const result2 = await this._taskStore.getTaskResult(taskId, extra.sessionId);
             this._clearTaskQueue(taskId, extra.sessionId);
             return {
-              ...result,
+              ...result2,
               _meta: {
-                ...result._meta,
+                ...result2._meta,
                 [RELATED_TASK_META_KEY]: {
                   taskId
                 }
@@ -47519,8 +51514,8 @@ var Protocol = class {
             nextCursor,
             _meta: {}
           };
-        } catch (error62) {
-          throw new McpError(ErrorCode.InvalidParams, `Failed to list tasks: ${error62 instanceof Error ? error62.message : String(error62)}`);
+        } catch (error63) {
+          throw new McpError(ErrorCode.InvalidParams, `Failed to list tasks: ${error63 instanceof Error ? error63.message : String(error63)}`);
         }
       });
       this.setRequestHandler(CancelTaskRequestSchema, async (request3, extra) => {
@@ -47542,11 +51537,11 @@ var Protocol = class {
             _meta: {},
             ...cancelledTask
           };
-        } catch (error62) {
-          if (error62 instanceof McpError) {
-            throw error62;
+        } catch (error63) {
+          if (error63 instanceof McpError) {
+            throw error63;
           }
-          throw new McpError(ErrorCode.InvalidRequest, `Failed to cancel task: ${error62 instanceof Error ? error62.message : String(error62)}`);
+          throw new McpError(ErrorCode.InvalidRequest, `Failed to cancel task: ${error63 instanceof Error ? error63.message : String(error63)}`);
         }
       });
     }
@@ -47607,9 +51602,9 @@ var Protocol = class {
       this._onclose();
     };
     const _onerror = this.transport?.onerror;
-    this._transport.onerror = (error62) => {
-      _onerror?.(error62);
-      this._onerror(error62);
+    this._transport.onerror = (error63) => {
+      _onerror?.(error63);
+      this._onerror(error63);
     };
     const _onmessage = this._transport?.onmessage;
     this._transport.onmessage = (message, extra) => {
@@ -47640,22 +51635,22 @@ var Protocol = class {
       controller.abort();
     }
     this._requestHandlerAbortControllers.clear();
-    const error62 = McpError.fromError(ErrorCode.ConnectionClosed, "Connection closed");
+    const error63 = McpError.fromError(ErrorCode.ConnectionClosed, "Connection closed");
     this._transport = void 0;
     this.onclose?.();
     for (const handler of responseHandlers.values()) {
-      handler(error62);
+      handler(error63);
     }
   }
-  _onerror(error62) {
-    this.onerror?.(error62);
+  _onerror(error63) {
+    this.onerror?.(error63);
   }
   _onnotification(notification) {
     const handler = this._notificationHandlers.get(notification.method) ?? this.fallbackNotificationHandler;
     if (handler === void 0) {
       return;
     }
-    Promise.resolve().then(() => handler(notification)).catch((error62) => this._onerror(new Error(`Uncaught error in notification handler: ${error62}`)));
+    Promise.resolve().then(() => handler(notification)).catch((error63) => this._onerror(new Error(`Uncaught error in notification handler: ${error63}`)));
   }
   _onrequest(request3, extra) {
     const handler = this._requestHandlers.get(request3.method) ?? this.fallbackRequestHandler;
@@ -47685,15 +51680,15 @@ var Protocol = class {
       };
       if (relatedTaskId && relatedTaskLookup) {
         const queuedError = { type: "error", message: errorResponse, timestamp: Date.now() };
-        relatedTaskLookup.then(() => this._enqueueTaskMessage(relatedTaskId, queuedError, sessionId), () => capturedTransport?.send(errorResponse)).catch((error62) => this._onerror(new Error(`Failed to send an error response: ${error62}`)));
+        relatedTaskLookup.then(() => this._enqueueTaskMessage(relatedTaskId, queuedError, sessionId), () => capturedTransport?.send(errorResponse)).catch((error63) => this._onerror(new Error(`Failed to send an error response: ${error63}`)));
       } else if (relatedTaskId && this._taskMessageQueue) {
         this._enqueueTaskMessage(relatedTaskId, {
           type: "error",
           message: errorResponse,
           timestamp: Date.now()
-        }, capturedTransport?.sessionId).catch((error62) => this._onerror(new Error(`Failed to enqueue error response: ${error62}`)));
+        }, capturedTransport?.sessionId).catch((error63) => this._onerror(new Error(`Failed to enqueue error response: ${error63}`)));
       } else {
-        capturedTransport?.send(errorResponse).catch((error62) => this._onerror(new Error(`Failed to send an error response: ${error62}`)));
+        capturedTransport?.send(errorResponse).catch((error63) => this._onerror(new Error(`Failed to send an error response: ${error63}`)));
       }
       return;
     }
@@ -47714,7 +51709,7 @@ var Protocol = class {
         }
         await this.notification(notification, notificationOptions);
       },
-      sendRequest: async (r, resultSchema, options) => {
+      sendRequest: async (r, resultSchema2, options) => {
         if (abortController.signal.aborted) {
           throw new McpError(ErrorCode.ConnectionClosed, "Request was cancelled");
         }
@@ -47726,7 +51721,7 @@ var Protocol = class {
         if (effectiveTaskId && taskStore) {
           await taskStore.updateTaskStatus(effectiveTaskId, "input_required");
         }
-        return await this.request(r, resultSchema, requestOptions);
+        return await this.request(r, resultSchema2, requestOptions);
       },
       authInfo: extra?.authInfo,
       requestId: request3.id,
@@ -47744,12 +51739,12 @@ var Protocol = class {
       if (taskCreationParams) {
         this.assertTaskHandlerCapability(request3.method);
       }
-    }).then(() => handler(request3, fullExtra)).then(async (result) => {
+    }).then(() => handler(request3, fullExtra)).then(async (result2) => {
       if (abortController.signal.aborted) {
         return;
       }
       const response = {
-        result,
+        result: result2,
         jsonrpc: "2.0",
         id: request3.id
       };
@@ -47762,7 +51757,7 @@ var Protocol = class {
       } else {
         await capturedTransport?.send(response);
       }
-    }, async (error62) => {
+    }, async (error63) => {
       if (abortController.signal.aborted) {
         return;
       }
@@ -47770,9 +51765,9 @@ var Protocol = class {
         jsonrpc: "2.0",
         id: request3.id,
         error: {
-          code: Number.isSafeInteger(error62["code"]) ? error62["code"] : ErrorCode.InternalError,
-          message: error62.message ?? "Internal error",
-          ...error62["data"] !== void 0 && { data: error62["data"] }
+          code: Number.isSafeInteger(error63["code"]) ? error63["code"] : ErrorCode.InternalError,
+          message: error63.message ?? "Internal error",
+          ...error63["data"] !== void 0 && { data: error63["data"] }
         }
       };
       if (relatedTaskId && this._taskMessageQueue && relatedTaskFound) {
@@ -47784,7 +51779,7 @@ var Protocol = class {
       } else {
         await capturedTransport?.send(errorResponse);
       }
-    }).catch((error62) => this._onerror(new Error(`Failed to send response: ${error62}`))).finally(() => {
+    }).catch((error63) => this._onerror(new Error(`Failed to send response: ${error63}`))).finally(() => {
       if (this._requestHandlerAbortControllers.get(request3.id) === abortController) {
         this._requestHandlerAbortControllers.delete(request3.id);
       }
@@ -47803,11 +51798,11 @@ var Protocol = class {
     if (timeoutInfo && responseHandler && timeoutInfo.resetTimeoutOnProgress) {
       try {
         this._resetTimeout(messageId);
-      } catch (error62) {
+      } catch (error63) {
         this._responseHandlers.delete(messageId);
         this._progressHandlers.delete(messageId);
         this._cleanupTimeout(messageId);
-        responseHandler(error62);
+        responseHandler(error63);
         return;
       }
     }
@@ -47821,8 +51816,8 @@ var Protocol = class {
       if (isJSONRPCResultResponse(response)) {
         resolver(response);
       } else {
-        const error62 = new McpError(response.error.code, response.error.message, response.error.data);
-        resolver(error62);
+        const error63 = new McpError(response.error.code, response.error.message, response.error.data);
+        resolver(error63);
       }
       return;
     }
@@ -47835,9 +51830,9 @@ var Protocol = class {
     this._cleanupTimeout(messageId);
     let isTaskResponse = false;
     if (isJSONRPCResultResponse(response) && response.result && typeof response.result === "object") {
-      const result = response.result;
-      if (result.task && typeof result.task === "object") {
-        const task = result.task;
+      const result2 = response.result;
+      if (result2.task && typeof result2.task === "object") {
+        const task = result2.task;
         if (typeof task.taskId === "string") {
           isTaskResponse = true;
           this._taskProgressTokens.set(task.taskId, messageId);
@@ -47850,8 +51845,8 @@ var Protocol = class {
     if (isJSONRPCResultResponse(response)) {
       handler(response);
     } else {
-      const error62 = McpError.fromError(response.error.code, response.error.message, response.error.data);
-      handler(error62);
+      const error63 = McpError.fromError(response.error.code, response.error.message, response.error.data);
+      handler(error63);
     }
   }
   get transport() {
@@ -47890,16 +51885,16 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.requestStream()` to access this method.
    */
-  async *requestStream(request3, resultSchema, options) {
+  async *requestStream(request3, resultSchema2, options) {
     const { task } = options ?? {};
     if (!task) {
       try {
-        const result = await this.request(request3, resultSchema, options);
-        yield { type: "result", result };
-      } catch (error62) {
+        const result2 = await this.request(request3, resultSchema2, options);
+        yield { type: "result", result: result2 };
+      } catch (error63) {
         yield {
           type: "error",
-          error: error62 instanceof McpError ? error62 : new McpError(ErrorCode.InternalError, String(error62))
+          error: error63 instanceof McpError ? error63 : new McpError(ErrorCode.InternalError, String(error63))
         };
       }
       return;
@@ -47918,8 +51913,8 @@ var Protocol = class {
         yield { type: "taskStatus", task: task2 };
         if (isTerminal(task2.status)) {
           if (task2.status === "completed") {
-            const result = await this.getTaskResult({ taskId }, resultSchema, options);
-            yield { type: "result", result };
+            const result2 = await this.getTaskResult({ taskId }, resultSchema2, options);
+            yield { type: "result", result: result2 };
           } else if (task2.status === "failed") {
             yield {
               type: "error",
@@ -47934,18 +51929,18 @@ var Protocol = class {
           return;
         }
         if (task2.status === "input_required") {
-          const result = await this.getTaskResult({ taskId }, resultSchema, options);
-          yield { type: "result", result };
+          const result2 = await this.getTaskResult({ taskId }, resultSchema2, options);
+          yield { type: "result", result: result2 };
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
         await new Promise((resolve4) => setTimeout(resolve4, pollInterval));
         options?.signal?.throwIfAborted();
       }
-    } catch (error62) {
+    } catch (error63) {
       yield {
         type: "error",
-        error: error62 instanceof McpError ? error62 : new McpError(ErrorCode.InternalError, String(error62))
+        error: error63 instanceof McpError ? error63 : new McpError(ErrorCode.InternalError, String(error63))
       };
     }
   }
@@ -47954,11 +51949,11 @@ var Protocol = class {
    *
    * Do not use this method to emit notifications! Use notification() instead.
    */
-  request(request3, resultSchema, options) {
+  request(request3, resultSchema2, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
     return new Promise((resolve4, reject) => {
-      const earlyReject = (error62) => {
-        reject(error62);
+      const earlyReject = (error63) => {
+        reject(error63);
       };
       if (!this._transport) {
         earlyReject(new Error("Not connected"));
@@ -48018,9 +52013,9 @@ var Protocol = class {
             requestId: messageId,
             reason: String(reason)
           }
-        }, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error63) => this._onerror(new Error(`Failed to send cancellation: ${error63}`)));
-        const error62 = reason instanceof McpError ? reason : new McpError(ErrorCode.RequestTimeout, String(reason));
-        reject(error62);
+        }, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error64) => this._onerror(new Error(`Failed to send cancellation: ${error64}`)));
+        const error63 = reason instanceof McpError ? reason : new McpError(ErrorCode.RequestTimeout, String(reason));
+        reject(error63);
       };
       this._responseHandlers.set(messageId, (response) => {
         if (options?.signal?.aborted) {
@@ -48030,14 +52025,14 @@ var Protocol = class {
           return reject(response);
         }
         try {
-          const parseResult = safeParse3(resultSchema, response.result);
+          const parseResult = safeParse3(resultSchema2, response.result);
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
             resolve4(parseResult.data);
           }
-        } catch (error62) {
-          reject(error62);
+        } catch (error63) {
+          reject(error63);
         }
       });
       options?.signal?.addEventListener("abort", () => {
@@ -48061,14 +52056,14 @@ var Protocol = class {
           type: "request",
           message: jsonrpcRequest,
           timestamp: Date.now()
-        }).catch((error62) => {
+        }).catch((error63) => {
           this._cleanupTimeout(messageId);
-          reject(error62);
+          reject(error63);
         });
       } else {
-        this._transport.send(jsonrpcRequest, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error62) => {
+        this._transport.send(jsonrpcRequest, { relatedRequestId, resumptionToken, onresumptiontoken }).catch((error63) => {
           this._cleanupTimeout(messageId);
-          reject(error62);
+          reject(error63);
         });
       }
     });
@@ -48086,8 +52081,8 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.getTaskResult()` to access this method.
    */
-  async getTaskResult(params, resultSchema, options) {
-    return this.request({ method: "tasks/result", params }, resultSchema, options);
+  async getTaskResult(params, resultSchema2, options) {
+    return this.request({ method: "tasks/result", params }, resultSchema2, options);
   }
   /**
    * Lists tasks, optionally starting from a pagination cursor.
@@ -48161,7 +52156,7 @@ var Protocol = class {
             }
           };
         }
-        this._transport?.send(jsonrpcNotification2, options).catch((error62) => this._onerror(error62));
+        this._transport?.send(jsonrpcNotification2, options).catch((error63) => this._onerror(error63));
       });
       return;
     }
@@ -48330,8 +52325,8 @@ var Protocol = class {
         }
         return task;
       },
-      storeTaskResult: async (taskId, status2, result) => {
-        await taskStore.storeTaskResult(taskId, status2, result, sessionId);
+      storeTaskResult: async (taskId, status3, result2) => {
+        await taskStore.storeTaskResult(taskId, status3, result2, sessionId);
         const task = await taskStore.getTask(taskId, sessionId);
         if (task) {
           const notification = TaskStatusNotificationSchema.parse({
@@ -48347,15 +52342,15 @@ var Protocol = class {
       getTaskResult: (taskId) => {
         return taskStore.getTaskResult(taskId, sessionId);
       },
-      updateTaskStatus: async (taskId, status2, statusMessage) => {
+      updateTaskStatus: async (taskId, status3, statusMessage) => {
         const task = await taskStore.getTask(taskId, sessionId);
         if (!task) {
           throw new McpError(ErrorCode.InvalidParams, `Task "${taskId}" not found - it may have been cleaned up`);
         }
         if (isTerminal(task.status)) {
-          throw new McpError(ErrorCode.InvalidParams, `Cannot update task "${taskId}" from terminal status "${task.status}" to "${status2}". Terminal states (completed, failed, cancelled) cannot transition to other states.`);
+          throw new McpError(ErrorCode.InvalidParams, `Cannot update task "${taskId}" from terminal status "${task.status}" to "${status3}". Terminal states (completed, failed, cancelled) cannot transition to other states.`);
         }
-        await taskStore.updateTaskStatus(taskId, status2, statusMessage, sessionId);
+        await taskStore.updateTaskStatus(taskId, status3, statusMessage, sessionId);
         const updatedTask = await taskStore.getTask(taskId, sessionId);
         if (updatedTask) {
           const notification = TaskStatusNotificationSchema.parse({
@@ -48378,20 +52373,20 @@ function isPlainObject3(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 function mergeCapabilities(base, additional) {
-  const result = { ...base };
+  const result2 = { ...base };
   for (const key in additional) {
     const k = key;
     const addValue = additional[k];
     if (addValue === void 0)
       continue;
-    const baseValue = result[k];
+    const baseValue = result2[k];
     if (isPlainObject3(baseValue) && isPlainObject3(addValue)) {
-      result[k] = { ...baseValue, ...addValue };
+      result2[k] = { ...baseValue, ...addValue };
     } else {
-      result[k] = addValue;
+      result2[k] = addValue;
     }
   }
-  return result;
+  return result2;
 }
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/validation/ajv-provider.js
@@ -48481,8 +52476,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  requestStream(request3, resultSchema, options) {
-    return this._server.requestStream(request3, resultSchema, options);
+  requestStream(request3, resultSchema2, options) {
+    return this._server.requestStream(request3, resultSchema2, options);
   }
   /**
    * Sends a sampling request and returns an AsyncGenerator that yields response messages.
@@ -48550,7 +52545,7 @@ var ExperimentalServerTasks = class {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id3) => toolResultIds.has(id3))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id6) => toolResultIds.has(id6))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -48647,8 +52642,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async getTaskResult(taskId, resultSchema, options) {
-    return this._server.getTaskResult({ taskId }, resultSchema, options);
+  async getTaskResult(taskId, resultSchema2, options) {
+    return this._server.getTaskResult({ taskId }, resultSchema2, options);
   }
   /**
    * Lists tasks with optional pagination.
@@ -48789,16 +52784,16 @@ var Server = class extends Protocol {
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call request: ${errorMessage}`);
         }
         const { params } = validatedRequest.data;
-        const result = await Promise.resolve(handler(request3, extra));
+        const result2 = await Promise.resolve(handler(request3, extra));
         if (params.task) {
-          const taskValidationResult = safeParse3(CreateTaskResultSchema, result);
+          const taskValidationResult = safeParse3(CreateTaskResultSchema, result2);
           if (!taskValidationResult.success) {
             const errorMessage = taskValidationResult.error instanceof Error ? taskValidationResult.error.message : String(taskValidationResult.error);
             throw new McpError(ErrorCode.InvalidParams, `Invalid task creation result: ${errorMessage}`);
           }
           return taskValidationResult.data;
         }
-        const validationResult = safeParse3(CallToolResultSchema, result);
+        const validationResult = safeParse3(CallToolResultSchema, result2);
         if (!validationResult.success) {
           const errorMessage = validationResult.error instanceof Error ? validationResult.error.message : String(validationResult.error);
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call result: ${errorMessage}`);
@@ -48975,7 +52970,7 @@ var Server = class extends Protocol {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id3) => toolResultIds.has(id3))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id6) => toolResultIds.has(id6))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -49007,22 +53002,22 @@ var Server = class extends Protocol {
           throw new Error("Client does not support form elicitation.");
         }
         const formParams = params.mode === "form" ? params : { ...params, mode: "form" };
-        const result = await this.request({ method: "elicitation/create", params: formParams }, ElicitResultSchema, options);
-        if (result.action === "accept" && result.content && formParams.requestedSchema) {
+        const result2 = await this.request({ method: "elicitation/create", params: formParams }, ElicitResultSchema, options);
+        if (result2.action === "accept" && result2.content && formParams.requestedSchema) {
           try {
             const validator = this._jsonSchemaValidator.getValidator(formParams.requestedSchema);
-            const validationResult = validator(result.content);
+            const validationResult = validator(result2.content);
             if (!validationResult.valid) {
               throw new McpError(ErrorCode.InvalidParams, `Elicitation response content does not match requested schema: ${validationResult.errorMessage}`);
             }
-          } catch (error62) {
-            if (error62 instanceof McpError) {
-              throw error62;
+          } catch (error63) {
+            if (error63 instanceof McpError) {
+              throw error63;
             }
-            throw new McpError(ErrorCode.InternalError, `Error validating elicitation response: ${error62 instanceof Error ? error62.message : String(error62)}`);
+            throw new McpError(ErrorCode.InternalError, `Error validating elicitation response: ${error63 instanceof Error ? error63.message : String(error63)}`);
           }
         }
-        return result;
+        return result2;
       }
     }
   }
@@ -49083,13 +53078,1603 @@ var Server = class extends Protocol {
 
 // apps/codex-plugin/src/capability-mcp.mjs
 import process6 from "node:process";
+
+// apps/codex-plugin/src/customer-discovery-output.mjs
+var readiness = external_exports.strictObject({
+  state: external_exports.enum(["available", "setup-required", "unavailable"]),
+  message: external_exports.string()
+});
+var customerDiscoveryInputSchema = external_exports.strictObject({});
+var customerDiscoverySchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-capabilities/1"),
+  context: readiness,
+  changeReview: readiness,
+  relatedWork: readiness,
+  workItemReview: readiness,
+  testPlanning: readiness,
+  additionalTests: readiness,
+  evidenceReview: readiness,
+  testExecution: readiness,
+  connection: external_exports.strictObject({
+    state: external_exports.enum(["current", "reconnect-required", "not-checked"]),
+    message: external_exports.string()
+  }),
+  validation: external_exports.literal("Not checked by this request.")
+});
+var unavailable2 = () => ({
+  state: "unavailable",
+  message: "This action is unavailable. Open Kaijan setup to check the connection."
+});
+var configured = () => ({
+  state: "available",
+  message: "Available for an authorized task. Application access has not been checked."
+});
+var setupRequired = () => ({
+  state: "setup-required",
+  message: "Open Kaijan setup to complete the connection, then continue the same task."
+});
+function service(value) {
+  if (value?.state === "ready")
+    return value.providerConfigured === true ? configured() : value.providerConfigured === false ? setupRequired() : unavailable2();
+  return value?.state === "unconfigured" ? setupRequired() : unavailable2();
+}
+function customerDiscoveryTool(tool) {
+  if (tool.name !== "loki_capabilities_list") return null;
+  return {
+    name: tool.name,
+    title: "Check Kaijan readiness",
+    description: "Check available Kaijan actions and connection readiness. This does not perform analysis, run a test, verify application access or prove that an existing result passed. Keep original requests after uncertain effects; do not repeat work to recover a result.",
+    inputSchema: external_exports.toJSONSchema(customerDiscoveryInputSchema),
+    outputSchema: external_exports.toJSONSchema(customerDiscoverySchema),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
+    }
+  };
+}
+function projectCustomerDiscovery(value) {
+  const valid = value?.schema === "loki.capability-discovery/1";
+  const native = valid ? value : {};
+  const freshness = native.runtime?.freshness;
+  return customerDiscoverySchema.parse({
+    schema: "kaijan.customer-capabilities/1",
+    context: native.contextIntake?.state === "available" ? {
+      state: "available",
+      message: "Save relevant task context that the caller has authorized."
+    } : unavailable2(),
+    changeReview: service(native.changeRisk),
+    relatedWork: service(native.prContext),
+    workItemReview: service(native.riskFinder),
+    testPlanning: service(native.testPlanning),
+    additionalTests: service(native.testSupplement),
+    evidenceReview: service(native.suppliedEvidence),
+    testExecution: native.testRun?.available === true && native.computerRunner?.state === "configured" && native.computerRunner?.providerConfigured === true ? configured() : native.testRun?.available === true && native.computerRunner?.state === "blocked" ? setupRequired() : unavailable2(),
+    connection: freshness?.state === "stale" || freshness?.installedMetadataMatches === false ? {
+      state: "reconnect-required",
+      message: "Reconnect Kaijan in this chat. Keep original test and report references; do not repeat work with an unknown outcome."
+    } : {
+      state: "not-checked",
+      message: "This request does not verify that the installed plugin is current."
+    },
+    validation: "Not checked by this request."
+  });
+}
+async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery) {
+  try {
+    const native = await catalog.invoke(
+      "loki_capabilities_list",
+      {},
+      invocation
+    );
+    catalog.validateOutput?.("loki_capabilities_list", native);
+    let runtime;
+    if (typeof runtimeDiscovery === "function") {
+      try {
+        runtime = await runtimeDiscovery();
+      } catch {
+      }
+    }
+    return projectCustomerDiscovery({
+      ...native,
+      ...runtime ? { runtime } : {}
+    });
+  } catch {
+    return projectCustomerDiscovery(null);
+  }
+}
+
+// apps/codex-plugin/src/customer-report-output.mjs
+import { createHash as createHash5 } from "node:crypto";
+var tools = /* @__PURE__ */ new Set([
+  "loki_report_get",
+  "loki_report_open",
+  "loki_report_show"
+]);
+var hasCustomerReportOutput = (name) => tools.has(name);
+var cardInstructions = (summary3) => {
+  const base = "Show this saved test summary. Open its exact reportId for details. If the saved card does not open, use Open app in tab once when available, then read the exact saved report as text in its original chat. Unrun proposed tests are not executed results. Do not replay work to recover a report.";
+  const { counts, proposedCounts: proposed } = summary3;
+  if (!proposed || proposed.pass > counts.pass || proposed.fail > counts.fail)
+    return `${base} Keep assessed proposed-check results separate in chat. Read the saved tests' expectation authority before summarizing passes and failures; the proposed-check breakdown is unavailable.`;
+  const results = [
+    [counts.pass - proposed.pass, "passed"],
+    [counts.fail - proposed.fail, "failed"],
+    [
+      proposed.pass,
+      `proposed ${proposed.pass === 1 ? "check" : "checks"} passed`
+    ],
+    [
+      proposed.fail,
+      `proposed ${proposed.fail === 1 ? "check" : "checks"} failed`
+    ],
+    [counts.blocked, "blocked"],
+    [counts.skipped, "skipped"],
+    [counts["not-run"], "not run"],
+    [counts.inconclusive, "could not check"],
+    [counts.conflicting, "with different results"],
+    [
+      counts.unavailable,
+      `${counts.unavailable === 1 ? "result" : "results"} unavailable`
+    ]
+  ].filter(([count9]) => count9 > 0).map(([count9, label3]) => `${count9} ${label3}`).join(" \xB7 ");
+  return `${base} Keep assessed proposed-check results separate in chat. Proposed checks assess hypotheses. ${results ? `Saved result counts: ${results}.` : "There are no saved test results."}`;
+};
+var object6 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var isAssessmentOnly = (value) => value?.schema === "loki.report-view/3" && Array.isArray(value.sections) && value.sections.length > 0 && value.sections.every((section2) => section2?.kind === "assessment");
+function customerReportFailure(code = "report_projection_unavailable") {
+  const selection3 = ["invalid_arguments", "invalid_params"].includes(code);
+  const unavailable3 = [
+    "report_not_found",
+    "report_unavailable",
+    "operation_not_found_in_scope",
+    "context_not_found_in_scope",
+    "answer_not_found_in_scope",
+    "report_read_unavailable"
+  ].includes(code);
+  return customerReportFailureSchema.parse({
+    schema: "kaijan.customer-report-error/1",
+    error: {
+      code: selection3 ? "report_invalid_selection" : unavailable3 ? "report_unavailable" : "report_projection_unavailable",
+      message: selection3 ? "The report selection is invalid." : unavailable3 ? "This saved report is unavailable in this chat." : "The saved report cannot be shown in the supported customer view.",
+      requestDispatched: false,
+      recovery: {
+        action: "read_original_report",
+        instruction: "Use the exact saved report in its original chat. Do not rerun tests to recreate a report. If it remains unavailable, ask for help with this report."
+      }
+    }
+  });
+}
+function projectCustomerReport(value) {
+  try {
+    if (!object6(value)) return customerReportFailure();
+    if (value.error) return customerReportFailure(value.error.code);
+    if (value.schema === "loki.report-view/3") {
+      return customerReportReadSchema.parse({
+        schema: "kaijan.customer-report-read/1",
+        ...isAssessmentOnly(value) ? { presentation: "chat" } : {},
+        reportId: value.reportId,
+        title: value.title,
+        createdAt: value.createdAt,
+        mapId: value.mapId,
+        sections: value.sections.map((section2) => {
+          const items = section2.items.filter(
+            (item) => ["test", "requirement-coverage"].includes(item.role)
+          );
+          return {
+            kind: section2.kind,
+            sourceId: section2.sourceId,
+            sourceKind: section2.sourceKind,
+            resultSha256: section2.resultSha256,
+            operationState: section2.operationState,
+            executionState: section2.executionState,
+            testVerdict: section2.testVerdict,
+            elapsedMs: section2.elapsedMs,
+            stopRequested: section2.stopRequested,
+            selectedTestIds: section2.items.filter(
+              (item) => item.id === "selected-tests" && section2.kind === "runner"
+            ).flatMap((item) => item.lines),
+            assessedRunIds: section2.assessedRunIds ?? [],
+            facts: section2.facts.filter(
+              (fact) => [
+                "proposed-checks",
+                "proposed-requirement-links",
+                "plan-run",
+                "plan-answer"
+              ].includes(fact.key)
+            ),
+            items,
+            // This exact provenance marker is produced from the observed page;
+            // generic producer facts and flattened diagnostic strings are not.
+            observations: section2.facts.filter(
+              (fact) => fact.supplied === true && fact.key.startsWith("terminal-observation:")
+            ).map((fact) => ({
+              id: fact.key.slice("terminal-observation:".length),
+              text: fact.value
+            })),
+            detailsIncomplete: items.length !== section2.items.length || section2.facts.some(
+              (fact) => !(fact.supplied === true && fact.key.startsWith("terminal-observation:"))
+            )
+          };
+        }),
+        executionChecks: value.executionChecks,
+        notice: "This view contains supported saved test details. Other retained details may be unavailable here. Missing details do not establish a test result."
+      });
+    }
+    if (value.schema === "loki.report-card/1") {
+      if (value.presentation !== "panel") return customerReportFailure();
+      const testPlanSummary = customerReportCardSchema.shape.testPlanSummary.parse(
+        value.testPlanSummary
+      );
+      return customerReportCardSchema.parse({
+        schema: value.schema,
+        presentation: "panel",
+        reportId: value.reportId,
+        title: value.title,
+        createdAt: value.createdAt,
+        mapId: value.mapId,
+        originalResults: value.originalResults,
+        sourceContextId: value.sourceContextId,
+        testPlanSummary,
+        instructions: cardInstructions(testPlanSummary)
+      });
+    }
+    if (value.schema !== "loki.test-plan-view/2" || !Array.isArray(value.plans) || !Array.isArray(value.runs))
+      return customerReportFailure();
+    return projectCustomerTestPlanView(
+      value,
+      (text4) => createHash5("sha256").update(text4).digest("hex")
+    );
+  } catch {
+    return customerReportFailure();
+  }
+}
+function customerReportToolDefinition(tool, { presentation } = {}) {
+  if (!hasCustomerReportOutput(tool.name)) return tool;
+  const resourceUri = "ui://loki/test-plan/card/v45.html";
+  return {
+    name: tool.name,
+    title: tool.title,
+    annotations: tool.annotations,
+    inputSchema: tool.inputSchema,
+    ...presentation !== "chat" && tool.name === "loki_report_show" && tool._meta?.ui?.resourceUri === resourceUri ? {
+      _meta: { ui: { resourceUri }, "openai/outputTemplate": resourceUri }
+    } : presentation !== "chat" && tool.name === "loki_report_open" ? {
+      _meta: {
+        ui: { visibility: ["model", "app"] },
+        "openai/widgetAccessible": true
+      }
+    } : {},
+    description: "Read the selected saved customer test report in its original chat. Preserve requirements, proposed tests, observed evidence and separate assessments. Keep assessed proposed-check results distinct from requirement results. This does not run tests. Unsupported saved formats remain unavailable; never replay work to recreate a report.",
+    outputSchema: {
+      ...external_exports.toJSONSchema(customerReportOutputSchema, { io: "input" }),
+      type: "object"
+    }
+  };
+}
+function retainedCustomerEvidenceView(value, options) {
+  if (value?.schema !== "loki.test-plan-view/2") return value;
+  const clone3 = structuredClone(value);
+  transferAssessmentPresentationProof(
+    value,
+    clone3,
+    options.verifyCustomerEvidenceSource
+  );
+  transferCustomerPlanningSource(
+    value,
+    clone3,
+    options.verifyCustomerPlanningSource
+  );
+  transferCustomerRiskEvidence(
+    value,
+    clone3,
+    options.verifyCustomerRiskEvidence
+  );
+  return clone3;
+}
+async function invokeCustomerReportWithMetadata(catalog, name, args, invocation, options = {}) {
+  if (!hasCustomerReportOutput(name))
+    return { result: customerReportFailure() };
+  if (name === "loki_report_get" || name === "loki_report_open" && options.presentation === "chat") {
+    const selected = external_exports.strictObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).safeParse(args);
+    if (!selected.success)
+      return { result: customerReportFailure("invalid_arguments") };
+    if (typeof options.readReportView !== "function")
+      return { result: customerReportFailure("report_unavailable") };
+    try {
+      invocation?.signal?.throwIfAborted();
+      const view2 = await options.readReportView(
+        selected.data.reportId,
+        invocation
+      );
+      invocation?.signal?.throwIfAborted();
+      if (view2?.reportId !== selected.data.reportId || view2.schema !== "loki.test-plan-view/2" && !isAssessmentOnly(view2))
+        return { result: customerReportFailure("report_unavailable") };
+      return {
+        result: projectCustomerReport(
+          retainedCustomerEvidenceView(view2, options)
+        )
+      };
+    } catch {
+      return { result: customerReportFailure("report_unavailable") };
+    }
+  }
+  if (name !== "loki_report_get" && !["panel", "chat"].includes(options.presentation))
+    return { result: customerReportFailure() };
+  try {
+    const original2 = await catalog.invoke(name, args, invocation);
+    catalog.validateOutput?.(name, original2);
+    let nativeMetadata;
+    try {
+      if (name !== "loki_report_get")
+        nativeMetadata = catalog.reportViewMetadata?.(original2);
+    } catch {
+    }
+    let value = original2;
+    if (options.presentation === "chat" && name === "loki_report_show" && typeof original2?.reportId === "string" && typeof options.readReportView === "function") {
+      invocation?.signal?.throwIfAborted();
+      value = await options.readReportView(original2.reportId, invocation);
+      invocation?.signal?.throwIfAborted();
+      if (value?.reportId !== original2.reportId)
+        return { result: customerReportFailure("report_unavailable") };
+    }
+    if (name === "loki_report_show" && isAssessmentOnly(original2) && typeof options.readReportView === "function") {
+      invocation?.signal?.throwIfAborted();
+      value = await options.readReportView(original2.reportId, invocation);
+      invocation?.signal?.throwIfAborted();
+      if (value?.reportId !== original2.reportId || value.schema !== "loki.test-plan-view/2" || value.plans?.length !== 0 || value.runs?.length !== 0 || !value.assessments?.length)
+        return { result: customerReportFailure("report_unavailable") };
+    }
+    const projected = projectCustomerReport(
+      retainedCustomerEvidenceView(value, options)
+    );
+    const result2 = options.presentation !== "chat" && value !== original2 && !projected.error ? customerReportReadSchema.parse({
+      ...projectCustomerReport(original2),
+      assessments: projected.assessments
+    }) : projected;
+    const parsed = reportRenderMetadataSchema.safeParse(nativeMetadata);
+    return {
+      result: result2,
+      ...options.presentation !== "chat" && !result2.error && parsed.success && parsed.data.report_id === result2.reportId && parsed.data.presentation === "mcp_app" ? {
+        metadata: { "loki/report-render": parsed.data }
+      } : {}
+    };
+  } catch (error63) {
+    return { result: customerReportFailure(error63?.code) };
+  }
+}
+
+// apps/codex-plugin/src/customer-proposal-source.mjs
+import { createHash as createHash6 } from "node:crypto";
+var hash3 = (text4) => createHash6("sha256").update(text4).digest("hex");
+async function readCustomerProposalSource(family2, native, options) {
+  if (native?.state !== "complete") return void 0;
+  if (family2 === "testPlanning" && native.result?.schema === "loki.planning-failure/1" || family2 === "testSupplement" && native.result?.schema === "loki.supplement-failure/1")
+    return void 0;
+  const reference2 = {
+    answerId: native.answerId,
+    resultSha256: native.resultSha256
+  };
+  const { read, verify } = options.proposalReaders?.[family2] ?? {};
+  let transfer, field2;
+  if (family2 === "testPlanning") {
+    transfer = transferCustomerPlanningSource;
+    field2 = "plan";
+  } else if (family2 === "testSupplement") {
+    transfer = transferSupplementSourceProof;
+    field2 = "result";
+  } else if (family2 === "changeRisk" || family2 === "riskFinder") {
+    transfer = transferCustomerRiskProof;
+    field2 = "result";
+  }
+  if (!transfer || typeof read !== "function" || typeof verify !== "function")
+    return void 0;
+  try {
+    const original2 = await read(reference2);
+    if (original2?.answerId !== reference2.answerId || original2?.resultSha256 !== reference2.resultSha256 || family2 === "testPlanning" && !verify(original2))
+      return void 0;
+    return family2 === "testPlanning" ? transfer(original2, structuredClone(original2), verify) : transfer(original2[field2], structuredClone(original2[field2]), verify);
+  } catch {
+    return void 0;
+  }
+}
+async function readCustomerProposalEvidence(evidence2, options) {
+  if (!Array.isArray(evidence2)) return evidence2;
+  const result2 = copyCustomerPlanningSource(
+    evidence2,
+    structuredClone(evidence2)
+  );
+  for (const row of result2) {
+    const selected = /^saved-risk:(changeRisk|riskFinder):([a-f0-9]{64})$/.exec(
+      row?.source_id
+    );
+    if (!selected || row.kind !== "context" || row.uri !== `kaijan-answer://${selected[1]}/${selected[2]}` || typeof row.quote !== "string" || hash3(row.quote) !== row.quote_sha256 || row.revision !== row.quote_sha256)
+      continue;
+    try {
+      const projection3 = await readCustomerProposalSource(
+        selected[1],
+        {
+          state: "complete",
+          answerId: selected[2],
+          resultSha256: row.quote_sha256
+        },
+        options
+      );
+      if (projection3?.family === selected[1])
+        retainCustomerRiskEvidence(row, projection3);
+    } catch {
+    }
+  }
+  return result2;
+}
+
+// apps/codex-plugin/src/customer-advisory-output.mjs
+import { createHash as createHash7 } from "node:crypto";
+
+// apps/codex-plugin/src/customer-input-corrections.mjs
+var object7 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var own2 = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
+var types = /* @__PURE__ */ new Set([
+  "object",
+  "array",
+  "string",
+  "number",
+  "integer",
+  "boolean",
+  "null"
+]);
+function choices(schema, root, seen = /* @__PURE__ */ new Set()) {
+  if (!object7(schema) || seen.has(schema)) return [];
+  const next = new Set(seen).add(schema);
+  const result2 = [schema];
+  if (typeof schema.$ref === "string" && schema.$ref.startsWith("#/")) {
+    let target = root;
+    for (const key of schema.$ref.slice(2).split("/")) {
+      const decoded = key.replaceAll("~1", "/").replaceAll("~0", "~");
+      target = object7(target) && own2(target, decoded) ? target[decoded] : null;
+    }
+    result2.push(...choices(target, root, next));
+  }
+  for (const key of ["anyOf", "oneOf", "allOf"])
+    for (const child of Array.isArray(schema[key]) ? schema[key] : [])
+      result2.push(...choices(child, root, next));
+  return result2;
+}
+function field(root, path) {
+  let nodes = choices(root, root);
+  const safePath = [];
+  for (const part of path) {
+    const next = [];
+    let publicPart;
+    for (const node2 of nodes) {
+      if (typeof part === "string" && object7(node2.properties) && own2(node2.properties, part)) {
+        publicPart = part;
+        next.push(...choices(node2.properties[part], root));
+      } else if (Number.isSafeInteger(part) && part >= 0 && object7(node2.items)) {
+        publicPart = part;
+        next.push(...choices(node2.items, root));
+      } else if (part === "[key]" && object7(node2.additionalProperties)) {
+        publicPart = "[key]";
+        next.push(...choices(node2.additionalProperties, root));
+      }
+    }
+    if (publicPart === void 0 || !next.length) return null;
+    safePath.push(publicPart);
+    nodes = next;
+  }
+  const expected = [
+    ...new Set(
+      nodes.flatMap(
+        (node2) => (Array.isArray(node2.type) ? node2.type : [node2.type]).filter(
+          (type) => types.has(type)
+        )
+      )
+    )
+  ];
+  return expected.length ? { path: safePath, expected } : null;
+}
+function customerInputCorrections(catalog, name, error63) {
+  if (error63?.code !== "invalid_params" || error63?.requestDispatched !== false || !Array.isArray(error63.issues))
+    return [];
+  const root = catalog.tools?.find((tool) => tool.name === name)?.inputSchema;
+  if (!object7(root)) return [];
+  const result2 = /* @__PURE__ */ new Map();
+  for (const issue3 of error63.issues) {
+    if (!Array.isArray(issue3?.path)) continue;
+    const correction = field(root, issue3.path);
+    if (correction) result2.set(JSON.stringify(correction.path), correction);
+  }
+  return [...result2.values()];
+}
+
+// apps/codex-plugin/src/customer-planning-recovery.mjs
+var temporaryStatuses = /* @__PURE__ */ new Set([502, 503, 504]);
+function capturedFailure(native) {
+  const receipt2 = native?.receipt;
+  return native?.schema === "loki.planning-failure/1" && receipt2 && receipt2.body_complete === true && receipt2.capture_error === null && Number.isSafeInteger(receipt2.started_calls) && receipt2.started_calls > 0;
+}
+function planningTemporaryFailureMessage(native) {
+  if (!capturedFailure(native)) return void 0;
+  const receipt2 = native.receipt;
+  if (temporaryStatuses.has(receipt2.http_status))
+    return "Kaijan could not make a test plan because a service was unavailable. Keep this answer. You can ask for a new plan later.";
+  if (native.reason === "provider_output_limit_no_retry" && receipt2.http_status === 200 && receipt2.status === "output_limit" && receipt2.automatic_retry === false && receipt2.failure_diagnostic?.stage === "response_completion" && receipt2.failure_diagnostic?.reason === "max_output_tokens")
+    return "The planning service reported a response limit before it finished. No test plan was saved. You can ask for a new plan. This does not run any tests.";
+  return void 0;
+}
+function planningTemporaryFailureGuidance(answer) {
+  if (answer?.state !== "complete") return void 0;
+  const message = planningTemporaryFailureMessage(answer.result);
+  return message ? {
+    message,
+    recovery: {
+      action: "request-new-plan",
+      instruction: "Only request a new plan when the user has authorized that separate request. It does not repeat a test. Keep the original answer and any completed test unchanged."
+    }
+  } : void 0;
+}
+
+// apps/codex-plugin/src/customer-advisory-output.mjs
+var hash4 = (value) => createHash7("sha256").update(value).digest("hex");
+var id5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var optional5 = (value) => value.optional();
+var advisoryFamilies = {
+  loki_pr_context_find_related: "prContext",
+  loki_context_finder_find_related: "prContext",
+  loki_change_risk_analyze: "changeRisk",
+  loki_risk_finder_analyze: "riskFinder",
+  loki_test_plan: "testPlanning",
+  loki_test_supplement: "testSupplement",
+  loki_test_evidence_assess: "suppliedEvidence"
+};
+var family = external_exports.enum([...new Set(Object.values(advisoryFamilies))]);
+var hasCustomerAdvisoryOutput = (name) => name in advisoryFamilies || name === "loki_advisory_result_read";
+var evidence = customerPlanEvidenceSchema;
+var plan = customerPlanSchema;
+var sourceRead = external_exports.object({
+  url: external_exports.url().regex(/^https:\/\/github\.com\/[^/]+\/[^/]+\/(issues|pull)\/\d+$/),
+  status: external_exports.enum(["read", "needs_source"]),
+  request: optional5(external_exports.string())
+});
+var preparation = external_exports.object({
+  ready: external_exports.boolean(),
+  reads: external_exports.array(sourceRead),
+  riskState: external_exports.enum([
+    "complete",
+    "reused",
+    "unknown",
+    "refused",
+    "cancelled",
+    "unavailable"
+  ]),
+  riskStatus: external_exports.enum(["completed", "no_retained_cue", "partial", "refused"]).optional()
+});
+var planResult = external_exports.object({
+  kind: external_exports.literal("test-plan"),
+  status: external_exports.enum(["proposed_plan", "needs_clarification", "unavailable"]),
+  plan: optional5(plan),
+  evidence: optional5(external_exports.array(evidence)),
+  coverage: optional5(external_exports.enum(["complete", "partial"])),
+  executed: external_exports.literal(false),
+  reviewRequired: external_exports.literal(true),
+  preparation: optional5(preparation),
+  message: optional5(external_exports.string())
+});
+var resultSchema = external_exports.union([
+  customerRiskSchema,
+  planResult,
+  customerSupplementResultSchema,
+  customerAssessmentResultSchema,
+  customerRelatedResultSchema
+]);
+var recovery = external_exports.object({
+  action: external_exports.enum([
+    "read-original",
+    "correct-source",
+    "return-to-original-chat",
+    "restart-customer-read",
+    "check-readiness",
+    "request-new-plan"
+  ]),
+  instruction: external_exports.string()
+});
+var baseSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-advisory/1"),
+  family,
+  state: external_exports.enum([
+    "complete",
+    "unknown",
+    "refused",
+    "cancelled",
+    "unsupported-consumption",
+    "unavailable"
+  ]),
+  answerId: optional5(id5),
+  resultSha256: optional5(id5),
+  result: optional5(resultSchema),
+  contextId: optional5(id5),
+  replayAllowed: external_exports.literal(false),
+  message: optional5(external_exports.string()),
+  recovery: optional5(recovery),
+  error: optional5(
+    external_exports.object({
+      code: external_exports.enum([
+        "invalid_arguments",
+        "request_key_conflict",
+        "answer_unavailable",
+        "answer_integrity_failed",
+        "customer_read_restart",
+        "advisory_unavailable"
+      ]),
+      message: external_exports.string(),
+      requestDispatched: external_exports.boolean().nullable(),
+      corrections: external_exports.array(
+        external_exports.object({
+          path: external_exports.array(
+            external_exports.union([external_exports.string(), external_exports.number().int().nonnegative()])
+          ),
+          expected: external_exports.array(
+            external_exports.enum([
+              "object",
+              "array",
+              "string",
+              "number",
+              "integer",
+              "boolean",
+              "null"
+            ])
+          ).min(1)
+        })
+      ).optional()
+    })
+  )
+});
+var readInput = external_exports.strictObject({
+  family,
+  answerId: id5,
+  offset: external_exports.number().int().nonnegative().default(0),
+  projectionSha256: optional5(id5),
+  resultSha256: optional5(id5)
+});
+var pageSchema3 = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-advisory-page/1"),
+  family,
+  answerId: id5,
+  resultSha256: id5,
+  projectionSha256: id5,
+  encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+  offset: external_exports.number().int().nonnegative(),
+  text: external_exports.string(),
+  nextOffset: external_exports.number().int().positive().nullable(),
+  totalCharacters: external_exports.number().int().positive(),
+  replayAllowed: external_exports.literal(false)
+});
+var customerAdvisoryOutputSchema = external_exports.union([
+  baseSchema.extend({
+    projectionSha256: id5,
+    resultRead: optional5(
+      external_exports.object({
+        tool: external_exports.literal("loki_advisory_result_read"),
+        arguments: readInput
+      })
+    )
+  }),
+  pageSchema3
+]);
+var descriptions = {
+  prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
+  changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
+  riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
+  testPlanning: "Propose acceptance and risk-focused tests for the selected work. Read only authorized linked sources; ask for missing source access or text. Planning never executes tests.",
+  testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
+  suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
+};
+function customerAdvisoryToolDefinition(tool) {
+  if (!hasCustomerAdvisoryOutput(tool.name)) return void 0;
+  return {
+    name: tool.name,
+    title: tool.title,
+    description: tool.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool.name]],
+    inputSchema: tool.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool),
+    outputSchema: {
+      ...external_exports.toJSONSchema(customerAdvisoryOutputSchema, { io: "input" }),
+      type: "object"
+    },
+    annotations: tool.annotations
+  };
+}
+function customerAdvisoryInput(tool) {
+  if (advisoryFamilies[tool.name] !== "prContext") return tool.inputSchema;
+  const original2 = tool.inputSchema.properties?.options;
+  if (!original2?.properties) return tool.inputSchema;
+  const keys = [
+    "repositories",
+    "timeout",
+    "maxCandidates",
+    "maxDiscovered",
+    "commentOriginFilter",
+    "actorPolicy",
+    "followDiscovered",
+    "sourcePrivacy"
+  ];
+  return {
+    ...tool.inputSchema,
+    properties: {
+      ...tool.inputSchema.properties,
+      options: {
+        type: "object",
+        additionalProperties: false,
+        properties: Object.fromEntries(
+          keys.filter((key) => original2.properties[key]).map((key) => [key, original2.properties[key]])
+        )
+      }
+    }
+  };
+}
+function preparationView(value) {
+  if (value === void 0) return void 0;
+  if (value?.schema !== "kaijan.planning-preparation/1")
+    throw Error("Unknown preparation");
+  const state2 = value.risk?.status === "reused" ? "reused" : value.risk?.state ?? (["completed", "partial", "refused", "no_retained_cue"].includes(
+    value.risk?.status
+  ) ? "complete" : "unavailable");
+  return preparation.parse({
+    ready: value.ready,
+    riskState: state2,
+    riskStatus: ["completed", "no_retained_cue", "partial", "refused"].includes(
+      value.risk?.status
+    ) ? value.risk.status : void 0,
+    reads: value.reads.map(
+      (row) => sourceRead.parse({
+        url: row.url,
+        status: row.status,
+        ...row.status === "needs_source" ? {
+          request: "Provide the source text or restore access only if the requested tests need it."
+        } : {}
+      })
+    )
+  });
+}
+function planningConnectionGuidance(native) {
+  if (native?.schema !== "loki.planning-failure/1" || native.receipt?.status !== "not_started" || native.receipt.unknown_charge !== false || native.receipt.unknown_usage !== false)
+    return void 0;
+  const message = native.reason === "keychain_unavailable" ? "Kaijan could not access the saved connection. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_required" ? "Kaijan needs a connection before it can plan tests. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_unavailable" ? "Kaijan could not check the connection. No test plan was produced. Check Kaijan connection readiness." : void 0;
+  return message ? {
+    message,
+    recovery: {
+      action: "check-readiness",
+      instruction: "Use loki_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
+    }
+  } : void 0;
+}
+function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) {
+  if (fam === "changeRisk" || fam === "riskFinder")
+    return proposal ? projectCustomerRiskResult(proposal) : projectCustomerRisk(native, fam);
+  if (fam === "testPlanning") {
+    const prep = preparationView(native.preparation);
+    if (native.schema === "loki.planning-failure/1")
+      return planResult.parse({
+        kind: "test-plan",
+        status: "unavailable",
+        executed: false,
+        reviewRequired: true,
+        preparation: prep,
+        message: planningConnectionGuidance(native)?.message ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
+      });
+    if (native.checks?.version !== "pr-context-plan-result/5" || native.checks.executed !== false)
+      throw Error("Unknown plan");
+    const evidence2 = projectCustomerPlanEvidence(
+      external_exports.array(external_exports.unknown()).parse(proposalEvidence ?? native.evidence),
+      hash4
+    ).map((row) => {
+      const id6 = customerPlanningId("E", row.id, hash4, true);
+      return id6 === row.id ? row : { ...row, id: id6 };
+    });
+    return planResult.parse({
+      kind: "test-plan",
+      status: native.plan.status,
+      // The scoped host reader carries proof across the bundle boundary.
+      // Native catalogs and serialized presentation markers grant no proof.
+      plan: projectCustomerPlan(
+        proposal ?? native.plan,
+        evidence2,
+        hash4,
+        native.evidence,
+        proposal === void 0
+      ),
+      evidence: evidence2,
+      coverage: native.checks.coverage.status,
+      executed: false,
+      reviewRequired: true,
+      preparation: prep,
+      ...native.plan.status === "needs_clarification" && {
+        message: "Answer the plan's clarification before asking for a new plan. Use the related source reads if the clarification needs one of those sources."
+      }
+    });
+  }
+  if (fam === "testSupplement") {
+    if (native.schema === "loki.supplement-failure/1")
+      return projectCustomerSupplementResult(native, hash4);
+    if (native.schema !== "test-plan-supplement-result/1" || native.checks?.executed !== false)
+      throw Error("Unknown supplement");
+    return projectCustomerSupplementResult(proposal ?? native, hash4);
+  }
+  if (fam === "prContext") return projectCustomerRelatedResult(native);
+  if (fam === "suppliedEvidence") return projectCustomerAssessment(native);
+  throw Error("Unknown advisory family");
+}
+function failure4(fam, code = "advisory_unavailable", answerId, dispatched = null, corrections = []) {
+  if (code === "invalid_params") code = "invalid_arguments";
+  if (["answer_not_found_in_scope", "answer_not_complete"].includes(code))
+    code = "answer_unavailable";
+  const safe = [
+    "invalid_arguments",
+    "request_key_conflict",
+    "answer_unavailable",
+    "answer_integrity_failed",
+    "customer_read_restart"
+  ].includes(code) ? code : "advisory_unavailable";
+  const correctionText = corrections.map(
+    (item) => `${item.path.join(".") || "request"} (${item.expected.join(" or ")})`
+  ).join("; ");
+  const message = safe === "customer_read_restart" ? "The saved view changed or the page position is invalid. Read it again from offset zero." : safe === "request_key_conflict" ? "This request key belongs to different work. Keep the original key and input to recover that answer. Use a new key only for distinct authorized work; do not replay work with uncertain effects." : safe === "invalid_arguments" ? correctionText ? `Check these input fields: ${correctionText}. Use an allowed input option from the tool schema. The request was not sent.` : "The selected input is invalid. Correct the source or selection before requesting distinct work." : "This answer is unavailable. Return to the original chat and preserve the retained answer; do not replay uncertain work.";
+  return baseSchema.parse({
+    schema: "kaijan.customer-advisory/1",
+    family: fam,
+    state: "unavailable",
+    ...id5.safeParse(answerId).success ? { answerId } : {},
+    replayAllowed: false,
+    error: {
+      code: safe,
+      message,
+      requestDispatched: dispatched,
+      ...corrections.length ? { corrections } : {}
+    },
+    recovery: {
+      action: safe === "customer_read_restart" ? "restart-customer-read" : safe === "invalid_arguments" ? "correct-source" : "return-to-original-chat",
+      instruction: message
+    }
+  });
+}
+function view(fam, native, assessmentPresentation, relatedView, proposal, proposalEvidence) {
+  if (native?.error)
+    return failure4(
+      fam,
+      native.error.code,
+      void 0,
+      native.error.requestDispatched === false ? false : null
+    );
+  const base = {
+    schema: "kaijan.customer-advisory/1",
+    family: fam,
+    state: native.state,
+    answerId: native.answerId,
+    replayAllowed: false
+  };
+  if (native.state === "complete")
+    return baseSchema.parse({
+      ...base,
+      resultSha256: native.resultSha256,
+      result: fam === "suppliedEvidence" && assessmentPresentation ? projectCustomerAssessmentResult(assessmentPresentation) : fam === "prContext" && relatedView ? projectCustomerRelatedResult(relatedView) : projectCustomerAdvisoryResult(
+        fam,
+        native.result,
+        proposal,
+        proposalEvidence
+      ),
+      ...fam === "testPlanning" ? planningConnectionGuidance(native.result) ?? planningTemporaryFailureGuidance(native) : void 0,
+      ...["changeRisk", "riskFinder"].includes(fam) && native.result?.error_code === "provider_not_configured" && native.result?.accounting?.calls_started === 0 ? {
+        message: "Kaijan is not ready for this analysis. Check connection readiness and complete the required setup.",
+        recovery: {
+          action: "check-readiness",
+          instruction: "Use loki_capabilities_list to check readiness, then complete Kaijan setup or sign in as required. Keep this answer. Request distinct authorized work only after setup is ready; do not replay uncertain work."
+        }
+      } : {},
+      ...fam === "changeRisk" && native.result?.status === "refused" && native.result?.error_code === "invalid_patch" && native.result?.accounting?.calls_started === 0 && native.result?.accounting?.unknown_cost_calls === 0 && Array.isArray(native.result?.ledger) && native.result.ledger.length === 0 ? {
+        recovery: {
+          action: "correct-source",
+          instruction: "Provide complete hunk text beginning with @@ in each textual file patch. Keep diff headers outside patch. Preserve all source lines and coverage. Preserve this answer and original input; submit corrected input as distinct work with a new request key."
+        }
+      } : {}
+    });
+  if (native.state === "unsupported-consumption")
+    return baseSchema.parse({
+      ...base,
+      contextId: native.contextId,
+      message: "The saved context cannot be used for this task. Keep it and provide compatible source text or select the correct work item.",
+      recovery: {
+        action: "correct-source",
+        instruction: "Provide source content that matches the selected task. Do not replay earlier work to recover it."
+      }
+    });
+  if (["unknown", "cancelled", "refused"].includes(native.state))
+    return baseSchema.parse({
+      ...base,
+      message: native.state === "unknown" ? "The analysis outcome is uncertain. Preserve this answer; do not replay it." : native.state === "cancelled" ? "The analysis was cancelled. Preserve this answer and any retained evidence." : "The analysis did not produce a usable answer. Check the selected source; do not replay uncertain work.",
+      recovery: {
+        action: "read-original",
+        instruction: "Use the retained answer in the original chat. Do not start replacement work to recover it."
+      }
+    });
+  throw Error("Unknown advisory state");
+}
+async function readOriginal(catalog, fam, answerId, invocation, expected) {
+  let text4 = "", offset = 0, bytes = 0, total, digest21;
+  for (let pages = 0; pages < 32768; pages++) {
+    invocation?.signal?.throwIfAborted();
+    const value = await catalog.invoke(
+      "loki_advisory_result_read",
+      { family: fam, answerId, offset },
+      invocation
+    );
+    catalog.validateOutput?.("loki_advisory_result_read", value);
+    if (value?.error)
+      throw Object.assign(Error("Saved answer unavailable"), {
+        code: value.error.code
+      });
+    const chunk = value.resultChunk;
+    if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id5.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
+      throw Error("Invalid saved answer");
+    digest21 ??= value.resultSha256;
+    total ??= chunk.totalCharacters;
+    if (digest21 !== value.resultSha256 || total !== chunk.totalCharacters)
+      throw Error("Changed saved answer");
+    text4 += chunk.text;
+    offset += chunk.text.length;
+    bytes += Buffer.byteLength(chunk.text);
+    if (bytes > 20 * 1024 * 1024 || offset > total || chunk.nextOffset !== (offset === total ? null : offset))
+      throw Error("Invalid saved answer length");
+    if (chunk.nextOffset === null) {
+      if (hash4(text4) !== digest21 || expected !== void 0 && expected !== digest21)
+        throw Object.assign(Error("Saved answer integrity failed"), {
+          code: "answer_integrity_failed"
+        });
+      return {
+        state: "complete",
+        answerId,
+        resultSha256: digest21,
+        result: JSON.parse(text4)
+      };
+    }
+  }
+  throw Error("Saved answer page limit");
+}
+function finish(dto) {
+  const clean = JSON.parse(JSON.stringify(dto)), projectionSha256 = hash4(JSON.stringify(clean));
+  return {
+    ...clean,
+    projectionSha256,
+    ...dto.state === "complete" && dto.answerId ? {
+      resultRead: {
+        tool: "loki_advisory_result_read",
+        arguments: {
+          family: dto.family,
+          answerId: dto.answerId,
+          resultSha256: dto.resultSha256,
+          offset: 0,
+          projectionSha256
+        }
+      }
+    } : {}
+  };
+}
+async function relatedPresentation(fam, native, options) {
+  if (fam !== "prContext" || native?.state !== "complete" || typeof options.readRelatedPresentation !== "function" || typeof options.verifyCustomerRelatedSource !== "function")
+    return void 0;
+  const original2 = await options.readRelatedPresentation({
+    answerId: native.answerId,
+    resultSha256: native.resultSha256
+  });
+  if (original2?.answerId !== native.answerId || original2?.resultSha256 !== native.resultSha256)
+    throw Error("Related-work presentation selection changed");
+  return transferRelatedSourceProof(
+    original2.result,
+    structuredClone(original2.result),
+    options.verifyCustomerRelatedSource
+  );
+}
+async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, options = {}) {
+  const customerView = async (family2, native) => {
+    let presentation;
+    if (family2 === "suppliedEvidence" && native.state === "complete" && typeof options.readAssessmentPresentation === "function") {
+      try {
+        presentation = await options.readAssessmentPresentation(
+          { answerId: native.answerId, resultSha256: native.resultSha256 },
+          invocation
+        );
+        presentation = transferAssessmentPresentationProof(
+          presentation,
+          structuredClone(presentation),
+          options.verifyCustomerEvidenceSource
+        );
+      } catch {
+      }
+    }
+    const proposal = await readCustomerProposalSource(family2, native, options);
+    return view(
+      family2,
+      native,
+      presentation,
+      await relatedPresentation(family2, native, options),
+      family2 === "testPlanning" ? proposal?.plan : proposal,
+      family2 === "testPlanning" && native.state === "complete" ? await readCustomerProposalEvidence(
+        proposal?.evidence ?? native.result?.evidence,
+        options
+      ) : void 0
+    );
+  };
+  let fam = advisoryFamilies[name] ?? (family.safeParse(args.family).success ? args.family : "testPlanning"), answerId = args.answerId;
+  try {
+    if (name === "loki_advisory_result_read") {
+      const parsed = readInput.safeParse(args);
+      if (!parsed.success)
+        return finish(failure4(fam, "invalid_arguments", answerId, false));
+      const input3 = parsed.data;
+      fam = input3.family;
+      if (input3.offset > 0 && !input3.projectionSha256)
+        return finish(failure4(fam, "customer_read_restart", answerId, false));
+      const original2 = await readOriginal(
+        catalog,
+        fam,
+        input3.answerId,
+        invocation,
+        input3.resultSha256
+      );
+      const dto = await customerView(fam, original2);
+      const text4 = JSON.stringify(dto), projectionSha256 = hash4(text4);
+      if (input3.projectionSha256 && input3.projectionSha256 !== projectionSha256 || input3.offset >= text4.length || input3.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[input3.offset]))
+        return finish(failure4(fam, "customer_read_restart", answerId, false));
+      let end = Math.min(input3.offset + 16e3, text4.length);
+      if (end < text4.length && /[\uDC00-\uDFFF]/.test(text4[end])) end--;
+      return pageSchema3.parse({
+        schema: "kaijan.customer-advisory-page/1",
+        family: fam,
+        answerId: input3.answerId,
+        resultSha256: dto.resultSha256,
+        projectionSha256,
+        encoding: "JSON text, UTF-16 offsets",
+        offset: input3.offset,
+        text: text4.slice(input3.offset, end),
+        nextOffset: end < text4.length ? end : null,
+        totalCharacters: text4.length,
+        replayAllowed: false
+      });
+    }
+    const native = await catalog.invoke(name, args, invocation);
+    if (id5.safeParse(native?.answerId).success) answerId = native.answerId;
+    catalog.validateOutput?.(name, native);
+    const verified = native?.state === "complete" ? {
+      ...native,
+      ...await readOriginal(
+        catalog,
+        fam,
+        native.answerId,
+        invocation,
+        native.resultSha256
+      )
+    } : native;
+    return finish(await customerView(fam, verified));
+  } catch (error63) {
+    return finish(
+      failure4(
+        fam,
+        error63?.code,
+        answerId,
+        error63?.requestDispatched === false ? false : null,
+        customerInputCorrections(catalog, name, error63)
+      )
+    );
+  }
+}
+
+// apps/codex-plugin/src/customer-preparation-output.mjs
+import { createHash as createHash8 } from "node:crypto";
+var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var hash5 = (value) => createHash8("sha256").update(JSON.stringify(value)).digest("hex");
+var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var clone2 = (value) => JSON.parse(JSON.stringify(value));
+var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
+var hasCustomerPreparationOutput = (name) => names.has(name);
+var requestJson = external_exports.toJSONSchema(assessmentPrepareInputSchema, {
+  io: "input"
+});
+delete requestJson.properties.view;
+requestJson.$id = "urn:kaijan:saved-assessment-selection:1";
+var savedRequestSchema = external_exports.unknown().superRefine((value, context2) => {
+  const parsed = assessmentPrepareInputSchema.safeParse(value);
+  if (!parsed.success || value.view !== void 0)
+    context2.addIssue({
+      code: "custom",
+      message: "Invalid saved evidence selection"
+    });
+}).meta(requestJson);
+var savedAssessmentSelectorSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.saved-assessment/1"),
+  request: savedRequestSchema,
+  resultSha256: digest20.optional(),
+  inputSha256: digest20.optional()
+});
+var selectorJson = external_exports.toJSONSchema(savedAssessmentSelectorSchema, {
+  io: "input"
+});
+var customerPreparationFailureSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-preparation-error/1"),
+  error: external_exports.strictObject({
+    code: external_exports.enum([
+      "preparation_invalid_selection",
+      "preparation_unavailable",
+      "preparation_changed"
+    ]),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false),
+    replayAllowed: external_exports.literal(false),
+    recovery: external_exports.string()
+  })
+});
+function customerPreparationFailure(code = "preparation_unavailable") {
+  const selected = [
+    "preparation_invalid_selection",
+    "preparation_changed"
+  ].includes(code) ? code : "preparation_unavailable";
+  return customerPreparationFailureSchema.parse({
+    schema: "kaijan.customer-preparation-error/1",
+    error: {
+      code: selected,
+      message: selected === "preparation_invalid_selection" ? "The saved evidence selection is invalid." : selected === "preparation_changed" ? "The saved evidence no longer matches this selection." : "This saved evidence is unavailable in this chat.",
+      requestDispatched: false,
+      replayAllowed: false,
+      recovery: "Prepare the exact saved report and run again in their original chat. Resolve missing task inputs there. Do not repeat application actions to recover evidence. No assessment or execution started."
+    }
+  });
+}
+var callerReceipt = external_exports.object({
+  id: external_exports.string(),
+  attribution: external_exports.string(),
+  content: external_exports.json()
+});
+var observation = external_exports.strictObject({
+  role: external_exports.enum([
+    "caller-observation",
+    "caller-receipt",
+    "caller-preflight",
+    "caller-comparison",
+    "caller-cleanup"
+  ]),
+  receipt: callerReceipt
+});
+var gap = external_exports.strictObject({
+  role: external_exports.enum([
+    "task",
+    "test-intent",
+    "application",
+    "evidence",
+    "execution",
+    "verification"
+  ]),
+  message: external_exports.string()
+});
+var assessmentSummarySchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-assessment-preparation/1"),
+  state: external_exports.enum(["prepared", "unresolved", "refused"]),
+  compatible: external_exports.boolean(),
+  reportId: digest20,
+  runId: digest20,
+  resultSha256: digest20.nullable(),
+  execution: external_exports.strictObject({
+    state: external_exports.enum([
+      "completed",
+      "incomplete",
+      "cancelled",
+      "blocked",
+      "failed",
+      "stopped",
+      "not-executed",
+      "unknown"
+    ]),
+    reportedVerdict: external_exports.enum([
+      "pass",
+      "fail",
+      "blocked",
+      "inconclusive",
+      "unverified",
+      "unknown"
+    ])
+  }),
+  outcomes: external_exports.array(
+    external_exports.strictObject({
+      testId: external_exports.string().nullable(),
+      status: external_exports.enum([
+        "pass",
+        "fail",
+        "blocked",
+        "inconclusive",
+        "reported-pass",
+        "reported-fail",
+        "not-executed",
+        "unknown"
+      ]),
+      evidenceReferenced: external_exports.boolean()
+    })
+  ),
+  observations: external_exports.array(
+    external_exports.union([
+      observation,
+      external_exports.strictObject({
+        role: external_exports.literal("saved-application-observation"),
+        observation: reportObservedPageSchema.pick({
+          id: true,
+          text: true,
+          accessibilityText: true,
+          sourceSha256: true,
+          contentSha256: true,
+          contentState: true
+        })
+      })
+    ])
+  ),
+  evidence: external_exports.strictObject({
+    selected: external_exports.number().int().nonnegative(),
+    available: external_exports.number().int().nonnegative(),
+    omitted: external_exports.number().int().nonnegative()
+  }),
+  gaps: external_exports.array(gap),
+  assessmentInput: savedAssessmentSelectorSchema.nullable(),
+  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
+  instruction: external_exports.string(),
+  replayAllowed: external_exports.literal(false)
+});
+var candidateSchema = external_exports.strictObject({
+  reference: external_exports.string().regex(/^execution:[a-f0-9]{64}$/),
+  task: external_exports.string(),
+  steps: external_exports.array(external_exports.string())
+});
+var reuseSummarySchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.customer-reuse-preparation/1"),
+  state: external_exports.enum(["approval-required", "unavailable"]),
+  currentTask: external_exports.string(),
+  runIds: external_exports.array(digest20),
+  approvalSha256: digest20,
+  currentRequestSha256: digest20,
+  candidates: external_exports.array(candidateSchema),
+  unavailableRunIds: external_exports.array(digest20),
+  omitted: external_exports.number().int().nonnegative(),
+  consent: external_exports.string(),
+  replayAllowed: external_exports.literal(false)
+});
+var customerPreparationOutputSchema = external_exports.union([
+  assessmentSummarySchema,
+  reuseSummarySchema,
+  customerPreparationFailureSchema
+]).meta({ $id: "urn:kaijan:customer-preparation-output:1" });
+function preparationRequest(args) {
+  if (!assessmentPrepareInputSchema.safeParse(args).success) return null;
+  const request3 = clone2(args);
+  delete request3.view;
+  return request3;
+}
+function boundPacket(packet, request3) {
+  return packet?.schema === "loki.assessment-preparation/1" && ["prepared", "unresolved", "refused"].includes(packet.state) && packet.origin?.report?.reportId === request3.reportId && packet.origin?.operation?.runId === request3.runId && (packet.origin.resultSha256 === null || digest20.safeParse(packet.origin.resultSha256).success);
+}
+function preparedInput(packet) {
+  return packet.state !== "refused" && packet.submission?.compatible === true && suppliedEvidenceInputSchema.safeParse(packet.assessmentInput).success && digest20.safeParse(packet.origin.resultSha256).success;
+}
+function fixedGaps(packet) {
+  const gaps = /* @__PURE__ */ new Map();
+  const add = (role, message) => gaps.set(role + message, { role, message });
+  for (const item of [
+    ...packet.missingFacts ?? [],
+    ...packet.unresolvedReferences ?? []
+  ]) {
+    if (item.location === "accounting.original") continue;
+    if (item.location === "work_item" || item.location === "requirements")
+      add("task", "Some original work-item requirements are unavailable.");
+    else if (item.location === "proposed_tests")
+      add("test-intent", "Some original proposed tests are unavailable.");
+    else if (item.location === "target")
+      add("application", "The original application identity is unavailable.");
+    else if (item.code === "incomplete_execution")
+      add(
+        "execution",
+        "The original execution did not finish. Retained observations do not complete the remaining work."
+      );
+    else if (item.location === "nativeVerdict")
+      add("verification", "No original test verdict is available.");
+    else
+      add(
+        "evidence",
+        "Some saved evidence or references remain unresolved. Assessment must preserve this limitation."
+      );
+  }
+  return [...gaps.values()];
+}
+function callerObservations(request3) {
+  const values = [];
+  for (const [key, role] of [
+    ["suppliedObservations", "caller-observation"],
+    ["receipts", "caller-receipt"],
+    ["preflight", "caller-preflight"],
+    ["runtimeComparison", "caller-comparison"],
+    ["cleanup", "caller-cleanup"]
+  ]) {
+    const receipts = Array.isArray(request3[key]) ? request3[key] : request3[key] ? [request3[key]] : [];
+    for (const receipt2 of receipts)
+      values.push({ role, receipt: callerReceipt.parse(receipt2) });
+  }
+  return values;
+}
+function applicationPageObservations(input3, packet) {
+  return (input3?.evidence ?? []).flatMap((item) => {
+    const provenance2 = item.provenance;
+    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash8("sha256").update(item.text).digest("hex") !== item.sha256)
+      return [];
+    try {
+      const page2 = external_exports.object({
+        page: external_exports.object({
+          text: external_exports.string().optional(),
+          accessibilityText: external_exports.string().optional()
+        })
+      }).parse(JSON.parse(item.text)).page;
+      if (page2.text === void 0 && page2.accessibilityText === void 0)
+        return [];
+      const content = {
+        text: page2.text ?? "",
+        ...page2.accessibilityText === void 0 ? {} : { accessibilityText: page2.accessibilityText }
+      };
+      return [
+        {
+          id: item.id,
+          ...content,
+          sourceSha256: item.sha256,
+          contentSha256: hash5(content),
+          contentState: "projected-page-content"
+        }
+      ];
+    } catch {
+      return [];
+    }
+  });
+}
+function projectCustomerAssessmentPreparation(packet, request3) {
+  try {
+    if (!boundPacket(packet, request3)) return customerPreparationFailure();
+    const compatible = preparedInput(packet);
+    const state2 = packet.executionState?.native;
+    const verdict = packet.nativeVerdict;
+    const input3 = compatible ? packet.assessmentInput : null;
+    return assessmentSummarySchema.parse({
+      schema: "kaijan.customer-assessment-preparation/1",
+      state: packet.state,
+      compatible,
+      reportId: request3.reportId,
+      runId: request3.runId,
+      resultSha256: packet.origin.resultSha256,
+      execution: {
+        state: [
+          "completed",
+          "incomplete",
+          "cancelled",
+          "blocked",
+          "failed",
+          "stopped",
+          "not-executed"
+        ].includes(state2) ? state2 : "unknown",
+        reportedVerdict: [
+          "pass",
+          "fail",
+          "blocked",
+          "inconclusive",
+          "unverified"
+        ].includes(verdict) ? verdict : "unknown"
+      },
+      outcomes: (input3?.outcomes ?? []).map((item) => ({
+        testId: typeof item.test_id === "string" ? item.test_id : null,
+        status: [
+          "pass",
+          "fail",
+          "blocked",
+          "inconclusive",
+          "reported-pass",
+          "reported-fail",
+          "not-executed"
+        ].includes(item.status) ? item.status : "unknown",
+        evidenceReferenced: Array.isArray(item.evidence_ids) && item.evidence_ids.length > 0
+      })),
+      observations: [
+        ...callerObservations(request3),
+        ...[
+          ...projectCustomerPageObservations(
+            { assessmentFragment: input3 },
+            (text4) => createHash8("sha256").update(text4).digest("hex")
+          ),
+          ...applicationPageObservations(input3, packet)
+        ].map((observation2) => ({
+          role: "saved-application-observation",
+          observation: observation2
+        }))
+      ],
+      evidence: {
+        selected: packet.selectedArtifacts?.length ?? 0,
+        available: packet.selectedArtifacts?.filter((item) => item.state === "read").length ?? 0,
+        omitted: packet.unselectedArtifacts?.length ?? 0
+      },
+      gaps: fixedGaps(packet),
+      assessmentInput: compatible ? {
+        schema: "kaijan.saved-assessment/1",
+        request: request3,
+        resultSha256: packet.origin.resultSha256,
+        inputSha256: hash5(input3)
+      } : null,
+      nextAction: compatible ? "submit_assessment" : "resolve_input",
+      instruction: compatible ? "If assessment is authorized, submit this assessmentInput selector unchanged. It resolves the original saved evidence inside this chat. Preparation is not an assessment or a test pass. Listed outcomes are original reports, not independent verification." : "Resolve the missing selection or task inputs from the original saved report. No assessment started. Do not repeat application actions to recover evidence.",
+      replayAllowed: false
+    });
+  } catch {
+    return customerPreparationFailure();
+  }
+}
+function projectCustomerReusePreparation(value) {
+  try {
+    if (value?.schema !== "loki.runner-reuse-preview/1" || !["approval-required", "unavailable"].includes(value.state))
+      return customerPreparationFailure(
+        value?.state === "invalid-arguments" ? "preparation_invalid_selection" : void 0
+      );
+    const candidates = value.candidates.map((candidate) => {
+      if (candidate.projection?.author !== "capability-host:authored-intent" || candidate.projection?.revision !== "loki.runner-reuse-projection/1" || candidate.projection?.nonsecret !== true || candidate.historicalObservations?.summaries?.length !== 0 || candidate.historicalFinalClaim?.summary !== null)
+        throw Error("Unbound intent");
+      return {
+        reference: candidate.reference,
+        task: candidate.authoredTask.summary,
+        steps: candidate.procedure.steps
+      };
+    });
+    return reuseSummarySchema.parse({
+      schema: "kaijan.customer-reuse-preparation/1",
+      state: value.state,
+      currentTask: value.query.task,
+      runIds: value.runIds,
+      approvalSha256: value.approvalSha256,
+      currentRequestSha256: value.currentRequestSha256,
+      candidates,
+      unavailableRunIds: (value.unavailable ?? []).map((item) => item.runId),
+      omitted: (value.rejected?.length ?? 0) + (value.excludedOperations?.length ?? 0),
+      consent: "Review these saved task instructions before allowing Kaijan to use them for the new task. They describe intended steps, not observed success. Approve only content you are allowed to share with the service. To proceed, explicitly authorize execution with the identical current request and reuse:{runIds,approvalSha256}. Changed input or evidence requires a new preview. Preparation itself performs no application actions and grants no execution authority.",
+      replayAllowed: false
+    });
+  } catch {
+    return customerPreparationFailure();
+  }
+}
+function extendCustomerAssessmentInputSchema(inputSchema) {
+  if (!object8(inputSchema?.properties?.input))
+    throw Error("Assessment input schema unavailable");
+  return {
+    ...inputSchema,
+    $id: "urn:kaijan:customer-assessment-request:1",
+    properties: {
+      ...inputSchema.properties,
+      input: { anyOf: [inputSchema.properties.input, selectorJson] }
+    }
+  };
+}
+function schemaWithoutProse(value, propertyMap = false) {
+  if (Array.isArray(value))
+    return value.map((item) => schemaWithoutProse(item));
+  if (!object8(value)) return value;
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      ([key]) => propertyMap || !["description", "title", "examples", "$comment"].includes(key)
+    ).map(([key, item]) => [
+      key,
+      schemaWithoutProse(
+        item,
+        !propertyMap && [
+          "properties",
+          "patternProperties",
+          "$defs",
+          "definitions",
+          "dependentSchemas"
+        ].includes(key)
+      )
+    ])
+  );
+}
+function preparationInputSchema(tool) {
+  if (tool.name === "loki_assessment_prepare")
+    return external_exports.toJSONSchema(assessmentPrepareInputSchema, { io: "input" });
+  const schema = schemaWithoutProse(tool.inputSchema);
+  const limits = schema?.properties?.current?.properties?.options?.properties?.limits;
+  if (limits?.properties) {
+    limits.properties = Object.fromEntries(
+      Object.entries(limits.properties).filter(([key]) => key === "ms")
+    );
+  }
+  return schema;
+}
+function customerPreparationToolDefinition(tool) {
+  if (!hasCustomerPreparationOutput(tool.name)) return tool;
+  return {
+    name: tool.name,
+    title: tool.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      openWorldHint: false
+    },
+    inputSchema: preparationInputSchema(tool),
+    outputSchema: {
+      ...external_exports.toJSONSchema(customerPreparationOutputSchema),
+      type: "object"
+    },
+    description: tool.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
+  };
+}
+async function invokeCustomerPreparation(catalog, name, args, invocation) {
+  try {
+    if (!hasCustomerPreparationOutput(name))
+      return customerPreparationFailure();
+    invocation?.signal?.throwIfAborted();
+    if (name === "loki_runner_reuse_prepare")
+      return projectCustomerReusePreparation(
+        await catalog.invoke(name, args, invocation)
+      );
+    const request3 = preparationRequest(args);
+    if (!request3)
+      return customerPreparationFailure("preparation_invalid_selection");
+    const packet = await catalog.invoke(name, request3, invocation);
+    return projectCustomerAssessmentPreparation(packet, request3);
+  } catch {
+    return customerPreparationFailure();
+  }
+}
+async function resolveCustomerAssessmentArguments(catalog, args, invocation) {
+  if (args?.input?.schema !== "kaijan.saved-assessment/1")
+    return { arguments: args };
+  try {
+    const parsed = savedAssessmentSelectorSchema.safeParse(args.input);
+    if (!parsed.success || args.contextId !== void 0)
+      return {
+        error: customerPreparationFailure("preparation_invalid_selection")
+      };
+    invocation?.signal?.throwIfAborted();
+    const selector = parsed.data;
+    const request3 = preparationRequest(selector.request);
+    if (!request3)
+      return {
+        error: customerPreparationFailure("preparation_invalid_selection")
+      };
+    const packet = await catalog.invoke(
+      "loki_assessment_prepare",
+      request3,
+      invocation
+    );
+    invocation?.signal?.throwIfAborted();
+    if (!boundPacket(packet, request3) || !preparedInput(packet))
+      return { error: customerPreparationFailure() };
+    if (selector.resultSha256 !== void 0 && packet.origin.resultSha256 !== selector.resultSha256 || selector.inputSha256 !== void 0 && hash5(packet.assessmentInput) !== selector.inputSha256)
+      return { error: customerPreparationFailure("preparation_changed") };
+    return { arguments: { ...args, input: packet.assessmentInput } };
+  } catch {
+    return { error: customerPreparationFailure() };
+  }
+}
+
+// apps/codex-plugin/src/capability-mcp.mjs
+var cachedReportCardUris = /* @__PURE__ */ new Set([
+  "ui://loki/test-plan/card/v38.html",
+  "ui://loki/test-plan/card/v39.html",
+  "ui://loki/test-plan/card/v40.html",
+  "ui://loki/test-plan/card/v41.html",
+  "ui://loki/test-plan/card/v42.html",
+  "ui://loki/test-plan/card/v43.html",
+  "ui://loki/test-plan/card/v44.html"
+]);
 function invalidParams(message, data) {
-  const error62 = new McpError(ErrorCode.InvalidParams, message, data);
-  error62.message = message;
-  return error62;
+  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
+  error63.message = message;
+  return error63;
 }
 function capabilityMcpRegistration(session, setup) {
-  const controls = typeof session.catalog.reportRenderControl === "function" ? [
+  const controls = session.customerReportPresentation !== "chat" && typeof session.catalog.reportRenderControl === "function" ? [
     {
       name: "loki_report_rendered",
       title: "Confirm report render",
@@ -49111,14 +54696,56 @@ function capabilityMcpRegistration(session, setup) {
     }
   ] : [];
   return {
-    tools: [...session.catalog.tools, ...setup?.tools ?? [], ...controls],
+    tools: [...session.catalog.tools, ...setup?.tools ?? [], ...controls].map((tool) => {
+      const definition = customerDiscoveryTool(tool) ?? customerAdvisoryToolDefinition(tool) ?? (hasCustomerPreparationOutput(tool.name) ? customerPreparationToolDefinition(tool) : hasCustomerReportOutput(tool.name) ? customerReportToolDefinition(tool, {
+        presentation: session.customerReportPresentation
+      }) : customerToolDefinition(tool));
+      return tool.name === "loki_test_evidence_assess" && definition ? {
+        ...definition,
+        inputSchema: extendCustomerAssessmentInputSchema(
+          definition.inputSchema
+        ),
+        outputSchema: {
+          type: "object",
+          anyOf: [
+            definition.outputSchema,
+            external_exports.toJSONSchema(customerPreparationFailureSchema)
+          ]
+        }
+      } : definition;
+    }).filter(Boolean).map(
+      (tool) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool) : tool
+    ),
     observabilityControls: controls.map((tool) => tool.name)
   };
 }
+function capabilityMcpDiscovery(tools2, setup) {
+  const hidden = /* @__PURE__ */ new Set([
+    "loki_pr_context_find_related",
+    ...setup?.hiddenTools ?? []
+  ]);
+  const internalPreparation = /* @__PURE__ */ new Set([
+    "loki_context_submit",
+    "loki_context_get",
+    "loki_assessment_prepare",
+    "loki_context_finder_find_related",
+    "loki_change_risk_analyze",
+    "loki_risk_finder_analyze"
+  ]);
+  return tools2.filter((tool) => !hidden.has(tool.name)).map(
+    (tool) => internalPreparation.has(tool.name) ? {
+      ...tool,
+      _meta: {
+        ...tool._meta,
+        ui: { ...tool._meta?.ui, visibility: ["app"] }
+      }
+    } : tool
+  );
+}
 function createCapabilityMcpServer(session, version4, setup) {
   const { catalog } = session;
-  const { tools } = capabilityMcpRegistration(session, setup);
-  if (new Set(tools.map((tool) => tool.name)).size !== tools.length)
+  const { tools: tools2 } = capabilityMcpRegistration(session, setup);
+  if (new Set(tools2.map((tool) => tool.name)).size !== tools2.length)
     throw new Error("Duplicate local tool registration");
   const lifetime = new AbortController();
   const pendingSetup = /* @__PURE__ */ new Set();
@@ -49127,25 +54754,45 @@ function createCapabilityMcpServer(session, version4, setup) {
     { name: "kaijan-local", version: version4 },
     {
       capabilities: { tools: {}, resources: {} },
-      instructions: session.instructions
+      instructions: customerInstructions
     }
   );
   Object.defineProperty(server, "registeredToolCount", {
-    value: tools.length,
+    value: tools2.length,
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools
+    tools: capabilityMcpDiscovery(tools2, setup)
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [...catalog.resources]
   }));
-  server.setRequestHandler(ReadResourceRequestSchema, ({ params }) => {
-    if (!catalog.resources.some((item) => item.uri === params.uri))
+  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool) => tool.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
+  server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
+    const uri = cachedReportCardUris.has(params.uri) ? reportCardUri ?? params.uri : params.uri;
+    if (!catalog.resources.some((item) => item.uri === uri))
       throw invalidParams("Unknown Kaijan resource.");
-    return catalog.readResource(params.uri);
+    try {
+      const resource = await catalog.readResource(uri);
+      if (uri === params.uri) return resource;
+      return {
+        ...resource,
+        contents: resource.contents.map(
+          (content) => content.uri === uri ? { ...content, uri: params.uri } : content
+        )
+      };
+    } catch {
+      const message = "The selected Kaijan view could not be read. Reopen the view or read the saved result in chat.";
+      const error63 = new McpError(ErrorCode.InternalError, message);
+      error63.message = message;
+      throw error63;
+    }
   });
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
+    if (!isCustomerToolAllowed(params.name) || !tools2.some((tool) => tool.name === params.name))
+      throw invalidParams(
+        "Unknown local Kaijan tool. Use tools/list to discover supported tool names."
+      );
     if (params.name === "loki_report_rendered" && session.forRequest && (typeof params._meta?.threadId !== "string" || !params._meta.threadId.trim())) {
       return {
         _meta: { "loki/observability-control": "loki_report_rendered" },
@@ -49153,58 +54800,261 @@ function createCapabilityMcpServer(session, version4, setup) {
         content: [{ type: "text", text: '{"accepted":false}' }]
       };
     }
-    const selected = session.forRequest ? await session.forRequest(params._meta) : session;
-    const scopeMetadata = selected.scope ? { "kaijan/scope": selected.scope } : {};
-    const reportMetadata = session.runtimeIdentity && [
-      "loki_report_show",
-      "loki_report_open",
-      "loki_ui_modeler_show_map"
-    ].includes(params.name) ? {
-      "kaijan/runtime": {
-        ...session.runtimeIdentity,
-        resourceUri: catalog.tools.find((tool) => tool.name === "loki_report_show")?._meta?.ui?.resourceUri ?? null
-      }
-    } : {};
-    const withScope = (result) => ({
-      ...result,
-      _meta: {
-        ...result._meta,
-        ...scopeMetadata,
-        ...reportMetadata,
-        ...selected.catalog.reportViewMetadata?.(result.structuredContent) ? {
-          "loki/report-render": selected.catalog.reportViewMetadata(
-            result.structuredContent
-          )
-        } : {}
-      }
-    });
-    const scopedCatalog = selected.catalog;
-    if (params.name === "loki_report_rendered" && typeof scopedCatalog.reportRenderControl === "function") {
-      const result = extra.signal.aborted || lifetime.signal.aborted ? { accepted: false } : scopedCatalog.reportRenderControl(params.arguments);
-      return withScope({
-        _meta: { "loki/observability-control": "loki_report_rendered" },
-        structuredContent: result,
-        content: [{ type: "text", text: JSON.stringify(result) }]
-      });
-    }
-    const scopedSetup = setup?.tools.some((tool) => tool.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
-    if (scopedSetup) setupInstances.add(scopedSetup);
-    if (scopedSetup?.tools.some((tool) => tool.name === params.name)) {
-      const pending = scopedSetup.invoke(
-        params.name,
-        params.arguments,
-        AbortSignal.any([extra.signal, lifetime.signal]),
+    let selected;
+    try {
+      selected = session.forRequest ? await session.forRequest(params._meta) : session;
+    } catch {
+      const error63 = new McpError(
+        ErrorCode.InternalError,
+        "This chat cannot access the selected work. No new work started. Return to the original chat and retained result; do not replay work with uncertain effects.",
         {
-          origin: "codex-local-mcp",
-          requestId: extra.requestId,
-          tool: params.name,
-          argumentsSha256: digest2(params.arguments ?? {}),
-          scope: selected.scope
+          code: "scope_unavailable",
+          requestDispatched: false,
+          replayAllowed: false
         }
       );
+      error63.message = "This chat cannot access the selected work. No new work started. Return to the original chat and retained result; do not replay work with uncertain effects.";
+      throw error63;
+    }
+    const scopedCatalog = selected.catalog;
+    if (hasCustomerPreparationOutput(params.name)) {
+      const result2 = await invokeCustomerPreparation(
+        scopedCatalog,
+        params.name,
+        params.arguments ?? {},
+        { signal: AbortSignal.any([extra.signal, lifetime.signal]) }
+      );
+      return {
+        ...result2.error ? { isError: true } : {},
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    if (hasCustomerAdvisoryOutput(params.name)) {
+      const invocation = {
+        signal: AbortSignal.any([extra.signal, lifetime.signal])
+      };
+      const resolved2 = params.name === "loki_test_evidence_assess" ? await resolveCustomerAssessmentArguments(
+        scopedCatalog,
+        params.arguments ?? {},
+        invocation
+      ) : { arguments: params.arguments ?? {} };
+      if (resolved2.error) {
+        return {
+          isError: true,
+          structuredContent: resolved2.error,
+          content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
+        };
+      }
+      const result2 = await invokeCustomerAdvisory(
+        scopedCatalog,
+        params.name,
+        resolved2.arguments,
+        invocation,
+        {
+          proposalReaders: Object.fromEntries(
+            [
+              [
+                "testPlanning",
+                "readCustomerPlan",
+                "verifyCustomerPlanningSource"
+              ],
+              [
+                "testSupplement",
+                "readCustomerSupplement",
+                "verifyCustomerSupplementSource"
+              ],
+              ["changeRisk", "readCustomerView", "verifyCustomerRiskSource"],
+              ["riskFinder", "readCustomerView", "verifyCustomerRiskSource"]
+            ].map(([family2, reader, verifier]) => {
+              const service2 = selected.services?.[family2];
+              return [
+                family2,
+                {
+                  read: typeof service2?.[reader] === "function" ? service2[reader].bind(service2) : void 0,
+                  verify: typeof service2?.[verifier] === "function" ? service2[verifier].bind(service2) : void 0
+                }
+              ];
+            })
+          ),
+          readRelatedPresentation: selected.services?.prContext?.readCustomerView?.bind(
+            selected.services.prContext
+          ),
+          verifyCustomerRelatedSource: selected.services?.prContext?.verifyCustomerRelatedSource?.bind(
+            selected.services.prContext
+          ),
+          verifyCustomerEvidenceSource: typeof selected.services?.suppliedEvidence?.verifyCustomerEvidenceSource === "function" ? (value) => selected.services.suppliedEvidence.verifyCustomerEvidenceSource(
+            value
+          ) : void 0,
+          readAssessmentPresentation: typeof selected.services?.suppliedEvidence?.readCustomerAssessment === "function" ? (reference2) => selected.services.suppliedEvidence.readCustomerAssessment(
+            reference2
+          ) : void 0
+        }
+      );
+      return {
+        ...result2.error ? { isError: true } : {},
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    if (hasCustomerReportOutput(params.name)) {
+      const envelope = await invokeCustomerReportWithMetadata(
+        scopedCatalog,
+        params.name,
+        params.arguments ?? {},
+        { signal: AbortSignal.any([extra.signal, lifetime.signal]) },
+        {
+          presentation: session.customerReportPresentation,
+          verifyCustomerEvidenceSource: typeof selected.services?.reports?.verifyCustomerEvidenceSource === "function" ? (value) => selected.services.reports.verifyCustomerEvidenceSource(value) : void 0,
+          verifyCustomerPlanningSource: selected.services?.reports?.verifyCustomerPlanningSource?.bind(
+            selected.services.reports
+          ),
+          verifyCustomerRiskEvidence: selected.services?.reports?.verifyCustomerRiskEvidence?.bind(
+            selected.services.reports
+          ),
+          readReportView: typeof selected.services?.reports?.readTestPlanView === "function" ? (reportId, invocation) => selected.services.reports.readTestPlanView(
+            reportId,
+            invocation?.signal
+          ) : void 0
+        }
+      );
+      const result2 = JSON.parse(JSON.stringify(envelope.result));
+      return {
+        ...result2.error ? { isError: true } : {},
+        ...envelope.metadata ? { _meta: envelope.metadata } : {},
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    if (params.name === "loki_capabilities_list") {
+      if (!customerDiscoveryInputSchema.safeParse(params.arguments ?? {}).success)
+        throw invalidParams(
+          "Invalid tool arguments. This readiness check accepts no fields."
+        );
+      const result2 = await invokeCustomerDiscovery(
+        scopedCatalog,
+        {
+          signal: AbortSignal.any([extra.signal, lifetime.signal])
+        },
+        session.runtimeDiscovery?.bind(session)
+      );
+      return {
+        ...result2.error ? { isError: true } : {},
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    if (hasCustomerExecutionOutput(params.name)) {
+      const invocation = {
+        signal: AbortSignal.any([extra.signal, lifetime.signal])
+      };
+      const resolved2 = await resolveCustomerPlanArguments(
+        params.name,
+        params.arguments ?? {},
+        invocation,
+        {
+          resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
+            selected.services.testPlanning
+          )
+        }
+      );
+      if (resolved2.error) {
+        return {
+          isError: true,
+          structuredContent: resolved2.error,
+          content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
+        };
+      }
+      const result2 = await invokeCustomerExecution(
+        scopedCatalog,
+        params.name,
+        resolved2.arguments,
+        invocation,
+        {
+          readAssessmentPresentation: selected.services?.suppliedEvidence?.readCustomerAssessment?.bind(
+            selected.services.suppliedEvidence
+          ),
+          verifyCustomerAssessmentSource: selected.services?.suppliedEvidence?.verifyCustomerEvidenceSource?.bind(
+            selected.services.suppliedEvidence
+          ),
+          readCustomerClarification: typeof selected.services?.computerRunner?.readCustomerClarification === "function" ? (reference2) => selected.services.computerRunner.readCustomerClarification(
+            reference2
+          ) : void 0,
+          answerCustomerClarification: typeof selected.services?.computerRunner?.answerCustomerClarification === "function" ? (input3) => selected.services.computerRunner.answerCustomerClarification(
+            input3
+          ) : void 0,
+          verifyCustomerEvidenceSource: typeof selected.services?.computerRunner?.verifyCustomerEvidenceSource === "function" ? (value) => selected.services.computerRunner.verifyCustomerEvidenceSource(
+            value
+          ) : void 0,
+          readCleanupContext: typeof selected.services?.computerRunner?.getAssessmentContext === "function" ? (reference2) => selected.services.computerRunner.getAssessmentContext(
+            reference2
+          ) : void 0
+        }
+      );
+      return {
+        ...result2.error ? { isError: true } : {},
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    if (params.name === "loki_report_rendered" && typeof scopedCatalog.reportRenderControl === "function") {
+      let accepted = false;
+      try {
+        if (!extra.signal.aborted && !lifetime.signal.aborted)
+          accepted = scopedCatalog.reportRenderControl(params.arguments)?.accepted === true;
+      } catch {
+      }
+      const result2 = { accepted };
+      return {
+        _meta: { "loki/observability-control": "loki_report_rendered" },
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+    const setupFailure = () => {
+      const result2 = customerSetupFailure("setup_scope_unavailable");
+      return {
+        isError: true,
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    };
+    let scopedSetup;
+    try {
+      scopedSetup = setup?.tools.some((tool) => tool.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
+    } catch {
+      return setupFailure();
+    }
+    if (scopedSetup) setupInstances.add(scopedSetup);
+    if (scopedSetup?.tools.some((tool) => tool.name === params.name)) {
+      let pending;
+      try {
+        pending = scopedSetup.invoke(
+          params.name,
+          params.arguments,
+          AbortSignal.any([extra.signal, lifetime.signal]),
+          {
+            origin: "codex-local-mcp",
+            requestId: extra.requestId,
+            tool: params.name,
+            argumentsSha256: digest4(params.arguments ?? {}),
+            scope: selected.scope
+          }
+        );
+      } catch (error63) {
+        if (error63 instanceof McpError && error63.code === ErrorCode.InvalidParams)
+          throw invalidParams(
+            "Invalid Setup arguments. Use the advertised input schema."
+          );
+        return setupFailure();
+      }
       pendingSetup.add(pending);
       try {
-        return withScope(await pending);
+        return await pending;
+      } catch (error63) {
+        if (error63 instanceof McpError && error63.code === ErrorCode.InvalidParams)
+          throw error63;
+        return setupFailure();
       } finally {
         pendingSetup.delete(pending);
       }
@@ -49215,7 +55065,7 @@ function createCapabilityMcpServer(session, version4, setup) {
       );
     extra.signal.throwIfAborted();
     try {
-      let result = await scopedCatalog.invoke(
+      let result2 = await scopedCatalog.invoke(
         params.name,
         params.arguments ?? {},
         {
@@ -49223,51 +55073,51 @@ function createCapabilityMcpServer(session, version4, setup) {
         }
       );
       if (params.name === "loki_capabilities_list" && session.runtimeDiscovery) {
-        result = {
-          ...result,
+        result2 = {
+          ...result2,
           runtime: {
             ...await session.runtimeDiscovery(),
             scope: selected.scope ?? null
           }
         };
       }
-      scopedCatalog.validateOutput?.(params.name, result);
-      return withScope({
+      scopedCatalog.validateOutput?.(params.name, result2);
+      return {
         ...[
           "loki.runner-error/1",
           "loki.runner.clarification-error/1"
-        ].includes(result?.schema) ? { isError: true } : {},
-        structuredContent: result,
-        content: params.name === "loki_report_artifact_read" && result?.schema === "loki.report-artifact/1" && result.state === "read" && result.content.mediaType === "image/png" ? [
+        ].includes(result2?.schema) ? { isError: true } : {},
+        structuredContent: result2,
+        content: params.name === "loki_report_artifact_read" && result2?.schema === "kaijan.customer-artifact/1" && result2.state === "read" && result2.content.mediaType === "image/png" ? [
           {
             type: "text",
             text: JSON.stringify({
-              ...result,
+              ...result2,
               content: { mediaType: "image/png", encoding: "mcp-image" }
             })
           },
           {
             type: "image",
             mimeType: "image/png",
-            data: result.content.data
+            data: result2.content.data
           }
-        ] : [{ type: "text", text: JSON.stringify(result) }]
-      });
-    } catch (error62) {
-      if (error62?.code === "invalid_params")
-        throw invalidParams(
-          error62.issues?.length ? error62.message : "Invalid tool arguments. Use the advertised schema.",
-          { code: "invalid_params", issues: error62.issues ?? [] }
-        );
-      const result = scopedCatalog.failureOutput?.(params.name, error62) ?? {
-        error: session.failure(error62)
+        ] : [{ type: "text", text: JSON.stringify(result2) }]
       };
-      scopedCatalog.validateOutput?.(params.name, result);
-      return withScope({
+    } catch (error63) {
+      if (error63?.code === "invalid_params")
+        throw invalidParams(
+          error63.issues?.length ? error63.message : "Invalid tool arguments. Use the advertised schema.",
+          { code: "invalid_params", issues: error63.issues ?? [] }
+        );
+      const result2 = scopedCatalog.failureOutput?.(params.name, error63) ?? {
+        error: session.failure(error63)
+      };
+      scopedCatalog.validateOutput?.(params.name, result2);
+      return {
         isError: true,
-        structuredContent: result,
-        content: [{ type: "text", text: JSON.stringify(result) }]
-      });
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
     }
   });
   server.onclose = () => {
@@ -49280,7 +55130,7 @@ function createCapabilityMcpServer(session, version4, setup) {
         )
       ])
     ).then((results) => {
-      if (results.some((result) => result.status === "rejected"))
+      if (results.some((result2) => result2.status === "rejected"))
         process6.exitCode = 1;
     });
   };
@@ -49317,12 +55167,16 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
   const build = JSON.parse(
     await readFile3(join7(root, "loki-build.json"), "utf8")
   );
+  const host = pluginHost(build);
+  if (host === "claude_code") claudeSessionId(process7.env);
   if (process7.env.LOKI_CORE_ORIGIN && process7.env.LOKI_CORE_ORIGIN !== build.coreOrigin)
     throw Error("Profile mismatch");
   if (process7.argv.length !== 2) throw Error("Unexpected launch arguments");
   const selected = await bindProfileState(
     build,
-    localStateArguments(process7.env.LOKI_CODEX_STATE_DIR),
+    localStateArguments(
+      host === "claude_code" ? process7.env.LOKI_CLAUDE_STATE_DIR : process7.env.LOKI_CODEX_STATE_DIR
+    ),
     homedir2()
   );
   const broker = build.authArchitecture === "shared-broker-v1" ? await connectBroker(root, build) : void 0;
@@ -49344,11 +55198,12 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
         runnerValidation,
         applicationContext,
         lifecycleFactory: () => createBoundLifecycle(telemetry).observe,
-        onStartupStage: (stage) => {
-          startupStage = stage;
+        onStartupStage: (stage2) => {
+          startupStage = stage2;
         }
       }
     );
+    bindHostSession(session, build, process7.env);
     startupStage = "init_services";
     const setupByScope = /* @__PURE__ */ new Map();
     const setupForScope = (scope) => {
@@ -49364,12 +55219,12 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
             ...ports,
             createTelemetry: () => createBoundLifecycle(telemetry).setup
           });
-        } catch (error62) {
+        } catch (error63) {
           try {
             await ports.close?.();
           } catch {
           }
-          throw error62;
+          throw error63;
         }
         const closeSetup = scopedSetup.close;
         let setupClosed = false;
@@ -49440,7 +55295,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
     } catch {
     }
     return server;
-  } catch (error62) {
+  } catch (error63) {
     try {
       startupTelemetry?.emit(
         "Runtime Start Failed",
@@ -49465,15 +55320,17 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
       await session?.close();
     } catch {
     }
-    throw error62;
+    throw error63;
   }
 }
 
 // apps/codex-plugin/src/local-mcp-entry.mjs
-installedLocalMcp().catch(() => {
-  process8.stderr.write(
-    '{"error":{"code":"local_mcp_unavailable","message":"The fixed plugin profile, payload or private state could not be validated."}}\n'
-  );
+installedLocalMcp().catch((error63) => {
+  const failure5 = error63 instanceof BrokerRestartRequiredError ? { code: error63.code, message: error63.message } : {
+    code: "local_mcp_unavailable",
+    message: "The fixed plugin profile, payload or private state could not be validated."
+  };
+  process8.stderr.write(JSON.stringify({ error: failure5 }) + "\n");
   process8.exitCode = 1;
 });
 /*! For license information please see local-mcp.mjs.LEGAL.txt */

@@ -7,8 +7,8 @@ var __export = (target, all) => {
 
 // apps/codex-plugin/src/auth/broker-entry.mjs
 import { readFile as readFile2 } from "node:fs/promises";
-import { randomUUID as randomUUID3 } from "node:crypto";
-import { join as join3, resolve } from "node:path";
+import { randomUUID as randomUUID4 } from "node:crypto";
+import { join as join4, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -26,7 +26,21 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function installationPrefix(build) {
+  return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
+}
+
+// apps/codex-plugin/src/auth/profile.mjs
 async function brokerProfile(build, home = homedir()) {
+  const prefix = installationPrefix(build);
   if (!["local", "qa", "production"].includes(build.profile))
     throw Error("Invalid profile");
   const origin = new URL(build.coreOrigin);
@@ -52,7 +66,7 @@ async function brokerProfile(build, home = homedir()) {
     const temporary = join(directory, `.${randomUUID()}`);
     await writeFile(
       temporary,
-      JSON.stringify({ installationId: `kaijan-codex-plugin-${randomUUID()}` }),
+      JSON.stringify({ installationId: `${prefix}${randomUUID()}` }),
       { mode: 384, flag: "wx" }
     );
     try {
@@ -67,7 +81,7 @@ async function brokerProfile(build, home = homedir()) {
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
   const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  if (!/^kaijan-codex-plugin-[a-f0-9-]{36}$/.test(identity.installationId))
+  if (typeof identity.installationId !== "string" || !identity.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
   const state = {
@@ -97,47 +111,119 @@ async function brokerProfile(build, home = homedir()) {
   };
 }
 
-// apps/codex-plugin/src/auth/keychain.mjs
-import { spawn } from "node:child_process";
-function keychainStore(helper, account) {
-  if (process.platform !== "darwin") throw Error("macOS Keychain is required");
-  const call = (operation, value) => new Promise((resolve2, reject) => {
-    const child = spawn(helper, [], { stdio: ["pipe", "pipe", "ignore"] });
-    const timer = setTimeout(() => child.kill(), 3e4);
-    let output2 = "";
-    child.stdout.on("data", (chunk) => {
-      output2 += chunk;
-      if (output2.length > 32768) child.kill();
-    });
-    child.on("error", () => {
-      clearTimeout(timer);
-      reject(Error("keychain_unavailable"));
-    });
-    child.on("close", (code) => {
-      clearTimeout(timer);
-      try {
-        if (code !== 0) throw Error();
-        resolve2(JSON.parse(output2));
-      } catch {
-        reject(Error("keychain_unavailable"));
-      }
-    });
-    child.stdin.on("error", () => {
-    });
-    child.stdin.end(
-      JSON.stringify({ operation, account, ...value ? { value } : {} })
+// apps/codex-plugin/src/auth/file-store.mjs
+import { constants } from "node:fs";
+import { lstat as lstat2, open, realpath as realpath2, rename as rename2, unlink as unlink2 } from "node:fs/promises";
+import { join as join2 } from "node:path";
+import { randomUUID as randomUUID2 } from "node:crypto";
+
+// apps/codex-plugin/src/auth/errors.mjs
+var ConnectionRequiredError = class extends Error {
+  constructor() {
+    super("connection_required");
+    this.name = "ConnectionRequiredError";
+  }
+};
+var KeychainUnavailableError = class extends Error {
+  constructor() {
+    super(
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
-  });
+    this.name = "KeychainUnavailableError";
+    this.code = "keychain_unavailable";
+  }
+};
+var CredentialStorageUnavailableError = class extends KeychainUnavailableError {
+  constructor(operation) {
+    super();
+    this.name = "CredentialStorageUnavailableError";
+    this.code = "connection_unavailable";
+    this.message = "Kaijan cannot access its saved sign-in. Check access to its private data folder, then reconnect.";
+    this.operation = operation;
+  }
+};
+
+// apps/codex-plugin/src/auth/file-store.mjs
+var maximumBytes = 32768;
+function fileCredentialStore(directory) {
+  const path = join2(directory, "credentials.json");
+  const safeFile = (info) => info.isFile() && !info.isSymbolicLink() && info.uid === process.getuid() && !(info.mode & 63) && info.nlink === 1 && info.size <= maximumBytes;
+  async function checkDirectory() {
+    const info = await lstat2(directory);
+    if (!info.isDirectory() || info.isSymbolicLink() || info.uid !== process.getuid() || info.mode & 63 || await realpath2(directory) !== directory)
+      throw Error("unsafe_directory");
+  }
+  async function checkTarget() {
+    try {
+      if (!safeFile(await lstat2(path))) throw Error("unsafe_file");
+    } catch (error62) {
+      if (error62.code !== "ENOENT") throw error62;
+    }
+  }
+  const guarded = (operation, task) => async (...args) => {
+    try {
+      await checkDirectory();
+      return await task(...args);
+    } catch {
+      throw new CredentialStorageUnavailableError(operation);
+    }
+  };
   return {
-    read: () => call("read"),
-    write: (value) => call("write", value),
-    delete: () => call("delete")
+    read: guarded("read", async () => {
+      let file2;
+      try {
+        file2 = await open(
+          path,
+          constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
+        );
+      } catch (error62) {
+        if (error62.code === "ENOENT") return null;
+        throw error62;
+      }
+      try {
+        if (!safeFile(await file2.stat())) throw Error("unsafe_file");
+        const bytes = await file2.readFile();
+        if (bytes.length > maximumBytes) throw Error("oversized_file");
+        const value = JSON.parse(bytes.toString("utf8"));
+        if (!value || typeof value !== "object" || Array.isArray(value))
+          throw Error("invalid_file");
+        return value;
+      } finally {
+        await file2.close();
+      }
+    }),
+    write: guarded("write", async (value) => {
+      await checkTarget();
+      const bytes = Buffer.from(JSON.stringify(value));
+      if (bytes.length > maximumBytes) throw Error("oversized_file");
+      const temporary = join2(directory, `.credentials-${randomUUID2()}`);
+      try {
+        const file2 = await open(temporary, "wx", 384);
+        try {
+          await file2.writeFile(bytes);
+          await file2.sync();
+        } finally {
+          await file2.close();
+        }
+        await rename2(temporary, path);
+      } finally {
+        await unlink2(temporary).catch((error62) => {
+          if (error62.code !== "ENOENT") throw error62;
+        });
+      }
+    }),
+    delete: guarded("delete", async () => {
+      await checkTarget();
+      await unlink2(path).catch((error62) => {
+        if (error62.code !== "ENOENT") throw error62;
+      });
+    })
   };
 }
 
 // apps/codex-plugin/src/auth/oauth.mjs
 import { createServer } from "node:http";
-import { randomBytes } from "node:crypto";
+import { randomBytes as randomBytes2 } from "node:crypto";
 
 // node_modules/.pnpm/pkce-challenge@5.0.1/node_modules/pkce-challenge/dist/index.node.js
 var crypto;
@@ -152,8 +238,8 @@ async function random(size) {
   const evenDistCutoff = Math.pow(2, 8) - Math.pow(2, 8) % mask.length;
   let result = "";
   while (result.length < size) {
-    const randomBytes2 = await getRandomValues(size - result.length);
-    for (const randomByte of randomBytes2) {
+    const randomBytes3 = await getRandomValues(size - result.length);
+    for (const randomByte of randomBytes3) {
       if (randomByte < evenDistCutoff) {
         result += mask[randomByte % mask.length];
       }
@@ -5398,7 +5484,7 @@ function bucketFor(state, inst) {
   return bucket;
 }
 var handoff;
-var open = [];
+var open2 = [];
 var memo = {
   alloc(_inst, payload, empty) {
     const bucket = handoff;
@@ -5407,7 +5493,7 @@ var memo = {
     handoff = void 0;
     const entry = { value: empty, issues: null };
     bucket.set(payload.value, entry);
-    open.push(entry);
+    open2.push(entry);
     return empty;
   },
   guard(inst) {
@@ -5478,10 +5564,10 @@ var memo = {
           return payload;
         }
         handoff = bucket;
-        const depth = open.length;
+        const depth = open2.length;
         const result = base(payload, ctx);
         handoff = void 0;
-        const entry = open.length > depth ? open.pop() : void 0;
+        const entry = open2.length > depth ? open2.pop() : void 0;
         if (result instanceof Promise) {
           return result.then((r) => {
             if (entry)
@@ -22260,13 +22346,40 @@ async function registerClient(authorizationServerUrl, { metadata, clientMetadata
   return RegistrationResponseSchema.parse(await response.json());
 }
 
-// apps/codex-plugin/src/auth/errors.mjs
-var ConnectionRequiredError = class extends Error {
-  constructor() {
-    super("connection_required");
-    this.name = "ConnectionRequiredError";
-  }
+// apps/codex-plugin/src/auth/completion.mjs
+import { randomBytes } from "node:crypto";
+var messages = {
+  connected: ["Kaijan is connected", "Return to Codex to continue your work."],
+  cancelled: [
+    "Connection cancelled",
+    "Return to Codex. You can connect again when you are ready."
+  ],
+  failed: [
+    "Kaijan could not connect",
+    "Return to Codex and try connecting again."
+  ]
 };
+async function sendCompletion(response, outcome, host = "codex") {
+  if (response.destroyed) return;
+  const [title, originalMessage] = messages[outcome];
+  const message = host === "claude_code" ? originalMessage.replace("Codex", "Claude Code") : originalMessage;
+  const nonce = randomBytes(18).toString("base64url");
+  response.writeHead(outcome === "failed" ? 503 : 200, {
+    "Cache-Control": "no-store",
+    "Content-Type": "text/html; charset=utf-8",
+    "Referrer-Policy": "no-referrer",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": `default-src 'none'; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'`
+  });
+  const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${title} \xB7 Kaijan</title><script nonce="${nonce}">history.replaceState(null,"","/oauth/loki/complete");</script><style nonce="${nonce}">
+    :root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif;color:#ececec;background:#141414}*{box-sizing:border-box}body{margin:0;padding:24px}header{font-size:28px;font-weight:800;letter-spacing:-1px}main{width:min(100%,560px);margin:48px auto;padding:32px;border:1px solid #303030;border-radius:20px;background:#1e1e1e}h1{font-size:28px;line-height:1.2;margin:0 0 16px}p{font-size:16px;line-height:1.6;margin:0;color:#c4c4c4}.hint{margin-top:20px;color:#a0a0a0;font-size:14px}@media(max-width:480px){body{padding:20px}main{padding:24px}h1{font-size:24px}}
+  </style></head><body><header>Kaijan</header><main><h1>${title}</h1><p>${message}</p><p class="hint">You can close this tab.</p></main></body></html>`;
+  await new Promise((resolve2) => {
+    response.once("finish", resolve2);
+    response.once("close", resolve2);
+    response.end(body);
+  });
+}
 
 // apps/codex-plugin/src/auth/oauth.mjs
 var defaultScope = "session:read work-items:read ai:invoke";
@@ -22288,10 +22401,15 @@ var BrokerAuthorization = class {
     openBrowser,
     state,
     telemetryIdentity,
-    scopes = defaultScope.split(" ")
+    onCredentialsLoaded,
+    scopes = defaultScope.split(" "),
+    host = "codex"
   }) {
     if (!Array.isArray(scopes) || !scopes.includes("session:read") || new Set(scopes).size !== scopes.length || scopes.some((value) => !allowedScopes.has(value)))
       throw Error("invalid_broker_scope");
+    if (!["codex", "claude_code"].includes(host))
+      throw Error("invalid_broker_host");
+    this.host = host;
     this.scope = scopes.join(" ");
     Object.assign(this, {
       origin,
@@ -22299,24 +22417,48 @@ var BrokerAuthorization = class {
       store,
       openBrowser,
       state,
-      telemetryIdentity
+      telemetryIdentity,
+      onCredentialsLoaded
     });
     this.resource = `${origin}/api/v1`;
     this.ready = this.load();
     this.pending = null;
   }
   async load() {
-    const saved = await this.store.read();
+    this.blocked = await this.state.read();
+    try {
+      await this.readCredentials();
+    } catch (error62) {
+      if (!(error62 instanceof KeychainUnavailableError)) throw error62;
+      this.credentialError = error62;
+    }
+  }
+  async readCredentials(interactive = false) {
+    const saved = await this.store.read({ interactive });
     if (saved && saved.origin !== this.origin)
       throw Error("keychain_profile_mismatch");
+    this.onCredentialsLoaded?.(saved);
     this.saved = saved;
-    this.blocked = await this.state.read();
+    this.credentialsLoaded = true;
+    this.credentialError = null;
+  }
+  async requireCredentials(interactive = false) {
+    if (!this.credentialError) return;
+    if (interactive) {
+      this.credentialRead ??= this.readCredentials(true).finally(() => {
+        this.credentialRead = null;
+      });
+      await this.credentialRead;
+    }
+    if (this.credentialError) throw this.credentialError;
   }
   async ensure({ interactive = false } = {}) {
     await this.ready;
+    await this.requireCredentials(interactive);
     if (this.loggingOut) throw new ConnectionRequiredError();
     if (this.pending) return this.pending;
-    if (this.blocked && !interactive) throw new ConnectionRequiredError();
+    if (!interactive && (this.blocked || !this.saved))
+      throw new ConnectionRequiredError();
     if (this.saved && !this.scope.split(" ").every(
       (value) => this.saved.tokens.scope?.split(" ").includes(value)
     ) && !interactive)
@@ -22325,10 +22467,10 @@ var BrokerAuthorization = class {
       return;
     this.pending = Promise.resolve().then(async () => {
       if (interactive) {
-        this.blocked = false;
-        await this.state.write(false);
+        this.blocked = true;
+        await this.state.write(true);
       }
-      await this.authorize();
+      await this.authorize(interactive);
     }).catch(async (error62) => {
       this.blocked = true;
       await this.state.write(true);
@@ -22338,32 +22480,39 @@ var BrokerAuthorization = class {
     });
     return this.pending;
   }
-  async authorize() {
+  async authorize(interactive = false) {
     let redirected = false;
     const scope = this.scope;
     let verifier;
     let accept, reject;
+    let callbackAccepted = false;
     const callback = new Promise((resolve2, fail) => {
       accept = resolve2;
       reject = fail;
     });
     callback.catch(() => {
     });
-    this.cancelLogin = () => reject(new ConnectionRequiredError());
+    this.cancelLogin = () => {
+      if (callbackAccepted) return;
+      callbackAccepted = true;
+      reject(new ConnectionRequiredError());
+    };
     const server = createServer((req, res) => {
       const url2 = new URL(req.url, redirectUrl);
-      if (req.method !== "GET" || req.headers.host !== new URL(redirectUrl).host || req.headers.origin || url2.pathname !== "/oauth/loki/callback" || url2.searchParams.getAll("state").length !== 1 || url2.searchParams.get("state") !== callbackState) {
+      if (callbackAccepted || req.method !== "GET" || req.headers.host !== new URL(redirectUrl).host || req.headers.origin || url2.pathname !== "/oauth/loki/callback" || url2.searchParams.getAll("state").length !== 1 || url2.searchParams.get("state") !== callbackState) {
         res.writeHead(400).end("Invalid callback");
         return;
       }
-      res.setHeader("Cache-Control", "no-store");
-      res.setHeader("Content-Type", "text/plain; charset=utf-8");
       if (url2.searchParams.has("error")) {
-        res.end("Connection cancelled. Return to Codex.");
-        reject(new ConnectionRequiredError());
+        callbackAccepted = true;
+        clearTimeout(timer);
+        void sendCompletion(res, "cancelled", this.host).finally(
+          () => reject(new ConnectionRequiredError())
+        );
       } else if (/^[A-Za-z0-9_-]{43}$/.test(url2.searchParams.get("code") ?? "") && url2.searchParams.getAll("code").length === 1) {
-        res.end("Approval received. Return to Codex.");
-        accept(url2.searchParams.get("code"));
+        callbackAccepted = true;
+        clearTimeout(timer);
+        void exchange(url2.searchParams.get("code"), res);
       } else res.writeHead(400).end("Invalid authorization code");
     });
     await new Promise((resolve2, fail) => {
@@ -22371,11 +22520,8 @@ var BrokerAuthorization = class {
       server.listen(0, "127.0.0.1", resolve2);
     });
     const redirectUrl = `http://127.0.0.1:${server.address().port}/oauth/loki/callback`;
-    const callbackState = randomBytes(32).toString("base64url");
-    const timer = setTimeout(
-      () => reject(new ConnectionRequiredError()),
-      18e4
-    );
+    const callbackState = randomBytes2(32).toString("base64url");
+    const timer = setTimeout(this.cancelLogin, 18e4);
     const provider = {
       redirectUrl,
       clientMetadata: {
@@ -22399,7 +22545,7 @@ var BrokerAuthorization = class {
           expiresAt: Date.now() + tokens.expires_in * 1e3,
           telemetryEpoch: this.telemetryIdentity?.({ newIdentity: redirected })
         };
-        await this.store.write(saved);
+        await this.store.write(saved, { interactive });
         this.saved = saved;
         this.githubReconnectRequired = false;
         this.blocked = false;
@@ -22411,6 +22557,7 @@ var BrokerAuthorization = class {
       },
       codeVerifier: () => verifier,
       redirectToAuthorization: async (url2) => {
+        if (!interactive) throw new ConnectionRequiredError();
         if (url2.origin !== this.origin || url2.pathname !== "/oauth/mcp/authorize")
           throw Error("invalid_authorization_server");
         redirected = true;
@@ -22423,7 +22570,7 @@ var BrokerAuthorization = class {
       },
       invalidateCredentials: async (kind) => {
         if (["all", "tokens"].includes(kind)) {
-          await this.store.delete();
+          await this.store.delete({ interactive });
           this.saved = null;
         }
       }
@@ -22444,11 +22591,26 @@ var BrokerAuthorization = class {
         });
       }
     };
-    try {
-      if (await auth(provider, options) === "REDIRECT") {
-        const authorizationCode = await callback;
+    const exchange = async (authorizationCode, response) => {
+      try {
         if (await auth(provider, { ...options, authorizationCode }) !== "AUTHORIZED")
           throw Error("authorization_failed");
+        const cancelled = this.loggingOut;
+        await sendCompletion(
+          response,
+          cancelled ? "cancelled" : "connected",
+          this.host
+        );
+        if (cancelled) reject(new ConnectionRequiredError());
+        else accept();
+      } catch (error62) {
+        await sendCompletion(response, "failed", this.host);
+        reject(error62);
+      }
+    };
+    try {
+      if (await auth(provider, options) === "REDIRECT") {
+        await callback;
       }
     } finally {
       clearTimeout(timer);
@@ -22487,7 +22649,7 @@ var BrokerAuthorization = class {
   /** Telemetry may reuse a live grant, but must never start or refresh a login. */
   async telemetryRequest(options) {
     await this.ready;
-    if (this.blocked || this.loggingOut || this.pending || !this.saved || this.saved.expiresAt <= Date.now() + 3e4 || !this.saved.tokens.scope?.split(" ").includes("session:read"))
+    if (this.credentialError || this.blocked || this.loggingOut || this.pending || !this.saved || this.saved.expiresAt <= Date.now() + 3e4 || !this.saved.tokens.scope?.split(" ").includes("session:read"))
       return null;
     return fetch(`${this.origin}/api/v1/telemetry/events`, {
       ...options,
@@ -22499,8 +22661,15 @@ var BrokerAuthorization = class {
     });
   }
   async logout() {
+    const wasLoggingOut = this.loggingOut;
     this.loggingOut = true;
-    await this.ready;
+    try {
+      await this.ready;
+      await this.requireCredentials();
+    } catch (error62) {
+      this.loggingOut = wasLoggingOut;
+      throw error62;
+    }
     this.cancelLogin?.();
     await this.pending?.catch(() => {
     });
@@ -22563,7 +22732,8 @@ function brokerIdentity(build) {
   return {
     protocol: brokerProtocol,
     pluginVersion: build.pluginVersion,
-    buildId: build.buildId
+    buildId: build.buildId,
+    credentialStorage: build.credentialStorage ?? "keychain-v1"
   };
 }
 
@@ -22674,7 +22844,7 @@ async function startBroker({
         return json2(200, {
           epoch: telemetry?.lease({
             unsettled: Boolean(
-              authorization.pending || authorization.blocked || authorization.loggingOut
+              authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut
             )
           }) ?? null,
           ...telemetry?.stats()
@@ -22691,7 +22861,7 @@ async function startBroker({
           const input2 = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
           const currentLease = telemetry?.lease({
             unsettled: Boolean(
-              authorization.pending || authorization.blocked || authorization.loggingOut
+              authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut
             )
           });
           const accepted = currentLease && input2.epoch === currentLease ? telemetry.enqueue(input2.event, input2.epoch) : false;
@@ -22766,7 +22936,15 @@ async function startBroker({
       if (response.body) await pipeline(Readable.fromWeb(response.body), res);
       else res.end();
     } catch (error62) {
-      if (!res.headersSent && error62 instanceof ConnectionRequiredError)
+      if (!res.headersSent && error62 instanceof CredentialStorageUnavailableError)
+        json2(503, {
+          error: error62.code,
+          reason: "local_credential_storage",
+          message: error62.message
+        });
+      else if (!res.headersSent && error62 instanceof KeychainUnavailableError)
+        json2(503, { error: error62.code, message: error62.message });
+      else if (!res.headersSent && error62 instanceof ConnectionRequiredError)
         json2(401, {
           error: "connection_required",
           message: "Use kaijan_connect to authorize this Kaijan connection."
@@ -22798,9 +22976,9 @@ async function startBroker({
 
 // apps/codex-plugin/src/telemetry/outbox.mjs
 import { DatabaseSync } from "node:sqlite";
-import { constants, openSync, fstatSync, closeSync } from "node:fs";
-import { randomUUID as randomUUID2 } from "node:crypto";
-import { join as join2 } from "node:path";
+import { constants as constants2, openSync, fstatSync, closeSync } from "node:fs";
+import { randomUUID as randomUUID3 } from "node:crypto";
+import { join as join3 } from "node:path";
 
 // packages/contracts/dist/telemetry.js
 var telemetryLimits = {
@@ -22946,6 +23124,22 @@ var mapFinishedPropertiesSchema = external_exports.strictObject({
   error_code: external_exports.null(),
   error_message: external_exports.null()
 });
+var planningFailureMessages = {
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -22964,7 +23158,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   map_components_total: external_exports.null(),
   cases_without_component: external_exports.null(),
   cases_missing_expected_result: metricCount,
-  groups_count: external_exports.null()
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional()
+}).refine((value) => {
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
 });
 var runStartedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
@@ -22981,15 +23182,26 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
   cases_blocked: metricCount,
-  cases_unverified: external_exports.null(),
-  cases_not_run: external_exports.null(),
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
   results_by_category: external_exports.null(),
-  result_basis: external_exports.literal("product_terminal_checks").nullable(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
@@ -22998,6 +23210,17 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     "Native execution did not return a validated result.",
     "Native execution was blocked."
   ]).nullable()
+}).refine((value) => {
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count) => count !== null) && counts.reduce((sum, count) => sum + (count ?? 0), 0) === value.cases_total;
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
@@ -23195,7 +23418,9 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   cached_input_tokens: nativeTokenCount,
   output_tokens: nativeTokenCount,
   reasoning_tokens: nativeTokenCount,
-  cost_usd: external_exports.null(),
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum(["litellm_response_header", "provider_usage_cost"]).optional(),
   outcome: external_exports.null(),
   latency_ms: external_exports.number().finite().nonnegative(),
   http_status: external_exports.number().int().min(100).max(599).nullable(),
@@ -23213,7 +23438,11 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
     "core_inference_native_usage/1"
   ])
 }).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
+  if (value.cost_basis === "provider_usage_cost" && !native)
+    return false;
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
@@ -23248,10 +23477,10 @@ var coreTelemetryActorSchema = external_exports.strictObject({
 
 // apps/codex-plugin/src/telemetry/outbox.mjs
 function openTelemetryOutbox({ directory, installationId }) {
-  const path = join2(directory, "telemetry.sqlite");
+  const path = join3(directory, "telemetry.sqlite");
   const fd = openSync(
     path,
-    constants.O_CREAT | constants.O_RDWR | constants.O_NOFOLLOW | constants.O_NONBLOCK,
+    constants2.O_CREAT | constants2.O_RDWR | constants2.O_NOFOLLOW | constants2.O_NONBLOCK,
     384
   );
   try {
@@ -23268,7 +23497,7 @@ function openTelemetryOutbox({ directory, installationId }) {
     INSERT OR IGNORE INTO metadata VALUES('seq','0'),('dropped','0');`);
   const read = (key) => db.prepare("SELECT value FROM metadata WHERE key=?").get(key)?.value;
   const write = (key, value) => db.prepare("INSERT OR REPLACE INTO metadata VALUES(?,?)").run(key, String(value));
-  if (!read("epoch")) write("epoch", randomUUID2());
+  if (!read("epoch")) write("epoch", randomUUID3());
   let disabled = false, sending = false, stopped = false, attempt = 0, nextAt = 0;
   let controller;
   const drop = (count) => write("dropped", Number(read("dropped")) + count);
@@ -23299,9 +23528,9 @@ function openTelemetryOutbox({ directory, installationId }) {
   };
   maintain();
   const epoch = () => disabled ? null : read("epoch");
-  const rotate = (selected = randomUUID2()) => {
+  const rotate = (selected = randomUUID3()) => {
     const checked = telemetryIdentityEpochSchema.safeParse(selected);
-    const next = checked.success ? checked.data : randomUUID2();
+    const next = checked.success ? checked.data : randomUUID3();
     controller?.abort();
     try {
       transaction(() => {
@@ -23314,7 +23543,7 @@ function openTelemetryOutbox({ directory, installationId }) {
       return next;
     } catch {
       disabled = true;
-      return randomUUID2();
+      return randomUUID3();
     }
   };
   const enqueue = (input2, lease) => {
@@ -23348,7 +23577,10 @@ function openTelemetryOutbox({ directory, installationId }) {
       } : event;
       const payload = telemetryEventSchema.parse({
         ...observed,
-        install_id: installationId.replace(/^kaijan-codex-plugin-/, ""),
+        install_id: installationId.replace(
+          /^kaijan-(?:codex|claude)-plugin-/,
+          ""
+        ),
         identity_epoch: lease,
         seq
       });
@@ -23378,7 +23610,7 @@ function openTelemetryOutbox({ directory, installationId }) {
           events: rows.map((row) => JSON.parse(row.payload))
         });
         if (batch.events.some(
-          (event, index) => event.event_uuid !== rows[index].uuid || event.identity_epoch !== selected || event.install_id !== installationId.replace(/^kaijan-codex-plugin-/, "")
+          (event, index) => event.event_uuid !== rows[index].uuid || event.identity_epoch !== selected || event.install_id !== installationId.replace(/^kaijan-(?:codex|claude)-plugin-/, "")
         ))
           throw Error("invalid_telemetry_journal");
       } catch {
@@ -23460,7 +23692,7 @@ function openTelemetryOutbox({ directory, installationId }) {
         return telemetryIdentityEpochSchema.safeParse(selected).success ? selected : rotate();
       } catch {
         disabled = true;
-        return randomUUID2();
+        return randomUUID3();
       }
     },
     start(authorization) {
@@ -23492,7 +23724,7 @@ async function main() {
   if (process.argv.length !== 2) throw Error();
   const root = resolve(import.meta.dirname, "..");
   const build = JSON.parse(
-    await readFile2(join3(root, "loki-build.json"), "utf8")
+    await readFile2(join4(root, "loki-build.json"), "utf8")
   );
   const profile = await brokerProfile(build);
   let telemetry;
@@ -23502,19 +23734,21 @@ async function main() {
   }
   const authorization = new BrokerAuthorization({
     origin: build.coreOrigin,
+    host: pluginHost(build),
     clientId: build.runtimeClientId,
     scopes: build.runtimeScopes,
-    store: keychainStore(join3(root, "scripts/keychain"), profile.account),
+    store: fileCredentialStore(profile.directory),
     state: profile.state,
     // A grant still carries a fresh fence when its journal is unavailable. On
     // restart, recovered old bytes cannot adopt this new account's grant.
-    telemetryIdentity: (change) => telemetry?.identity(change) ?? randomUUID3(),
+    telemetryIdentity: (change) => telemetry?.identity(change) ?? randomUUID4(),
+    onCredentialsLoaded: (saved) => telemetry?.resume({
+      authenticated: Boolean(saved),
+      epoch: saved?.telemetryEpoch
+    }),
     openBrowser: (url2) => execute("/usr/bin/open", [url2], { timeout: 1e4 })
   });
-  await authorization.ready;
-  telemetry?.resume({
-    authenticated: Boolean(authorization.saved),
-    epoch: authorization.saved?.telemetryEpoch
+  void authorization.ready.catch(() => {
   });
   const stopTelemetry = telemetry?.start(authorization);
   const broker = await startBroker({
@@ -23536,7 +23770,7 @@ async function main() {
 }
 main().catch(() => {
   process.stderr.write(
-    "Auth broker could not start. Check Keychain and the private profile.\n"
+    "Auth broker could not start. Check the private sign-in folder.\n"
   );
   process.exitCode = 1;
 });

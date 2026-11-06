@@ -90,7 +90,11 @@ export async function run(packet, options) {
   return runWithMethod(packet, options, {
     config: modeConfig(options.mode),
     preflight,
-    evaluate,
+    evaluate: (packet, context) =>
+      evaluate(packet, {
+        ...context,
+        resolveApplicationSpan: options.resolveApplicationSpan,
+      }),
     schema: SCHEMA,
     invocation: invocationRecord,
   });

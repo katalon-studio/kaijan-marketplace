@@ -1,7 +1,23 @@
+import {
+  sourceGenerationSchema,
+  mapPlanningText,
+  verifyPlanningSourceRecord,
+  projectLegacyPlanning,
+  validatePlanningRelationAuthority,
+  SOURCE_PLAN_VERSION,
+  GENERATED_PLAN_VERSION,
+  generatedProposalRecord,
+  verifyGeneratedProposalRecord,
+  renderSourcePlanText,
+} from "./planning-source.mjs";
+export { projectLegacyPlanning } from "./planning-source.mjs";
+export { resolveApplicationSpan } from "./source-relations.mjs";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import { encodedJson, utf8 } from "../related/json.mjs";
 import {
   digest,
+  save,
   validationFailure,
   pointer,
   referenceDiagnostic,
@@ -22,12 +38,7 @@ import {
   splitlines,
   zonedDate,
 } from "./semantics.mjs";
-import {
-  SPECIALIZED,
-  LEDGER_INSTRUCTIONS,
-  METHOD_INSTRUCTIONS,
-  CONCISE_COMPLETE_INSTRUCTIONS,
-} from "./prompts.mjs";
+import { SPECIALIZED, METHOD_INSTRUCTIONS } from "./prompts.mjs";
 export {
   SPECIALIZED,
   LEDGER_INSTRUCTIONS,
@@ -36,11 +47,13 @@ export {
 export const VERSION = "pr-context-plan/3",
   RELEASE_VERSION = "2026.10.27-3";
 export const generationContract = () => ({
+  presentation_contract: GENERATED_PLAN_VERSION,
   model: MODEL,
   reasoning_effort: REASONING_EFFORT,
   model_configurable: true,
   reasoning_configurable: true,
-  maximum_output_tokens: 8000,
+  maximum_output_tokens: null,
+  maximum_source_corrections: 0,
 });
 const REF = {
   type: "object",
@@ -126,11 +139,14 @@ export function literalRequirements(packet) {
       quote: s.text,
     }));
 }
+export function validateCaptureTime(value) {
+  need(typeof value === "string", "Missing capture time");
+  return zonedDate(value);
+}
 export function validateInput(packet) {
   need(object(packet), "Input object required");
   need(packet.version === VERSION, "Unsupported input version");
-  need(typeof packet.captured_at === "string", "Missing capture time");
-  zonedDate(packet.captured_at);
+  validateCaptureTime(packet.captured_at);
   need(
     object(packet.work_item) &&
       typeof packet.work_item.title === "string" &&
@@ -180,16 +196,57 @@ export function validateSchema(value, schema) {
   return validateSchemaAt(value, schema, "");
 }
 function validateSchemaAt(value, schema, at) {
+  if (schema.anyOf) {
+    for (const variant of schema.anyOf) {
+      try {
+        validateSchemaAt(value, variant, at);
+        return;
+      } catch {
+        /* Try only declared variants. */
+      }
+    }
+    need(false, "Unsupported source relation shape", () => ({
+      path: at,
+      rule: "source_relation_shape",
+    }));
+  }
   const kind = schema.type;
   need(
     kind === "object"
       ? object(value)
       : kind === "array"
         ? Array.isArray(value)
-        : typeof value === "string",
+        : kind === "integer"
+          ? Number.isSafeInteger(value)
+          : typeof value === "string",
     "Output type mismatch",
     () => ({ path: at, rule: "output_type", expected_type: kind }),
   );
+  if (Object.hasOwn(schema, "const"))
+    need(value === schema.const, "Unknown source relation", () => ({
+      path: at,
+      rule: "source_relation_kind",
+    }));
+  if (kind === "integer")
+    need(
+      (schema.minimum === undefined || value >= schema.minimum) &&
+        (schema.maximum === undefined || value <= schema.maximum),
+      "Source span bound is invalid",
+      () => ({ path: at, rule: "source_span_bound" }),
+    );
+  if (schema.pattern)
+    need(
+      new RegExp(schema.pattern).test(value),
+      "Invalid planning identity",
+      () => ({ path: at, rule: "planning_identity" }),
+    );
+  if (kind === "array")
+    need(
+      (schema.minItems === undefined || value.length >= schema.minItems) &&
+        (schema.maxItems === undefined || value.length <= schema.maxItems),
+      "Source relation arity is invalid",
+      () => ({ path: at, rule: "source_relation_arity" }),
+    );
   if (schema.enum)
     need(schema.enum.includes(value), "Unknown output enum", () => ({
       path: at,
@@ -426,7 +483,7 @@ export function validatePlan(plan, packet) {
     unassessed_requirement_ids: missingRequirements,
     runner_handoff: {
       reported_scenario_ids: [...handoff],
-      order_origin: "model_reported_order",
+      order_origin: "supplied_plan_reference_order",
       omitted_test_ids: missingHandoff,
       membership: tests.map((id) => ({
         test_id: id,
@@ -536,20 +593,229 @@ export function schemaFor(packet) {
     } else if (Array.isArray(node)) for (const value of node) bind(value);
   };
   bind(schema);
+  const intentIds = packet.evidence_catalog
+    .filter((row) => row.kind === "intent")
+    .map((row) => row.id);
   schema.properties.objectives.items.properties.refs.items.properties.evidence_id.enum =
-    packet.evidence_catalog
-      .filter((row) => row.kind === "intent")
-      .map((row) => row.id);
+    intentIds;
+  // Constrain generation without changing saved plans or the validation guard.
+  // Context can support a proposed check, but cannot establish a requirement.
+  const expected = schema.properties.tests.items.properties.expected;
+  const requirement = copy(expected),
+    hypothesis = copy(expected);
+  requirement.properties.authority.enum = ["requirement"];
+  requirement.properties.refs.minItems = 1;
+  requirement.properties.refs.items.properties.evidence_id.enum = intentIds;
+  hypothesis.properties.authority.enum = ["hypothesis"];
+  schema.properties.tests.items.properties.expected = {
+    anyOf: [requirement, hypothesis],
+  };
   return schema;
 }
+// Generation stores each membership beside the complete test. Public plans keep
+// their existing shape; old plans still use the independent validator above.
+function generationShape(schema) {
+  const value = copy(schema);
+  // Keep an independent declaration before full definitions. Projection must
+  // not conceal an intended test whose body is missing from generation.
+  const properties = {};
+  for (const [key, property] of Object.entries(value.properties)) {
+    if (key === "tests")
+      properties.test_outline = arr(obj({ id: S, purpose: S }));
+    properties[key] = property;
+  }
+  value.properties = properties;
+  value.required = Object.keys(properties);
+  const test = value.properties.tests.items;
+  test.properties.requirement_ids = arr(S);
+  test.properties.runner_selection = {
+    type: "string",
+    enum: ["selected", "not_selected"],
+  };
+  test.required.push("requirement_ids", "runner_selection");
+  const row = value.properties.requirement_coverage.items;
+  delete row.properties.status;
+  delete row.properties.test_ids;
+  row.required = ["requirement_id", "reason"];
+  delete value.properties.runner_handoff.properties.scenario_ids;
+  value.properties.runner_handoff.required = ["status", "required_inputs"];
+  return value;
+}
+export function generationSchemaFor(packet, version = GENERATED_PLAN_VERSION) {
+  const schema = generationShape(schemaFor(packet));
+  // An inventory entry can have at most one coverage row, regardless of how
+  // many tests check it. Empty partial plans remain valid.
+  schema.properties.requirement_coverage.maxItems =
+    packet.requirement_inventory.length;
+  schema.properties.tests.items.properties.requirement_ids.items = {
+    type: "string",
+    enum: packet.requirement_inventory.map((row) => row.id),
+  };
+  return sourceGenerationSchema(schema, packet.evidence_catalog, version);
+}
+export function projectGeneratedSourcePlan(
+  value,
+  packet,
+  version = SOURCE_PLAN_VERSION,
+) {
+  validateSchema(value, generationSchemaFor(packet, version));
+  need(
+    Array.isArray(value?.tests) &&
+      value.tests.every((row) => /^T[1-9][0-9]{0,5}$/.test(row.id)) &&
+      Array.isArray(value?.objectives) &&
+      value.objectives.every((row) => /^O[1-9][0-9]{0,5}$/.test(row.id)),
+    "Invalid source-plan identity",
+  );
+  if (version === GENERATED_PLAN_VERSION)
+    return projectGeneratedPlan(value, packet);
+  validatePlanningRelationAuthority(value, packet.evidence_catalog);
+  return projectGeneratedPlan(
+    mapPlanningText(value, (text) =>
+      renderSourcePlanText(text, packet.evidence_catalog, version),
+    ),
+    packet,
+  );
+}
+/** Called only by a scoped retained-answer reader. This function verifies the
+ * source projection; it does not authenticate arbitrary imported results. */
+export const planningInputHash = digest;
+export function customerPlanFromRetained(result, input) {
+  const packet = prepare(input);
+  need(
+    equal(result.evidence, packet.evidence_catalog),
+    "Saved planning sources do not match the original input",
+  );
+  need(
+    equal(result.checks, validatePlan(result.plan, packet)),
+    "Saved planning checks do not match the original input",
+  );
+  if (result.source_projection?.schema === GENERATED_PLAN_VERSION)
+    return verifyGeneratedProposalRecord(result, (candidate) =>
+      projectGeneratedSourcePlan(candidate, packet, GENERATED_PLAN_VERSION),
+    );
+  return result.source_projection
+    ? verifyPlanningSourceRecord(result, projectGeneratedPlan)
+    : projectLegacyPlanning(result.plan, result.evidence);
+}
+export function projectGeneratedPlan(value, packet) {
+  validateSchema(value, generationShape(SCHEMA));
+  const outlined = value.test_outline.map((test) => test.id);
+  const defined = value.tests.map((test) => test.id);
+  need(
+    new Set(outlined).size === outlined.length &&
+      outlined.length === defined.length &&
+      outlined.every((id) => defined.includes(id)) &&
+      defined.every((id) => outlined.includes(id)),
+    "Test outline and full definitions do not match",
+    () => ({
+      path: "/test_outline",
+      rule: "complete_test_definitions",
+      missing_test_ids: outlined.filter((id) => !defined.includes(id)),
+      undeclared_test_ids: defined.filter((id) => !outlined.includes(id)),
+    }),
+  );
+  const inventory = packet.requirement_inventory.map((row) => row.id);
+  const reported = value.requirement_coverage.map((row) => row.requirement_id);
+  for (const [index, test] of value.tests.entries()) {
+    need(
+      new Set(test.requirement_ids).size === test.requirement_ids.length &&
+        test.requirement_ids.every(
+          (id) => inventory.includes(id) && reported.includes(id),
+        ),
+      "Unknown, duplicate or unreported test requirement",
+      () =>
+        referenceDiagnostic(
+          `/tests/${index}/requirement_ids`,
+          test.requirement_ids,
+          inventory.filter((id) => reported.includes(id)),
+        ),
+    );
+  }
+  // copy handles the lossless JSON parser's values. Never mutate provider data.
+  const projected = copy(value);
+  delete projected.test_outline;
+  for (const test of projected.tests) {
+    delete test.requirement_ids;
+    delete test.runner_selection;
+  }
+  projected.requirement_coverage = value.requirement_coverage.map((row) => {
+    const ids = value.tests
+      .filter((test) => test.requirement_ids.includes(row.requirement_id))
+      .map((test) => test.id);
+    return {
+      ...copy(row),
+      status: ids.length ? "proposed" : "gap",
+      test_ids: ids,
+    };
+  });
+  projected.runner_handoff.scenario_ids = value.tests
+    .filter((test) => test.runner_selection === "selected")
+    .map((test) => test.id);
+  return projected;
+}
+const GENERATION_MEMBERSHIP_INSTRUCTIONS =
+  "\nThe host supplies requirement_inventory entries containing complete intent sources. They are a source checklist, not proof of semantic coverage. Consider all supplied intent. First list every distinct functional and change-impact check in test_outline with its ID and purpose. Then write one complete test definition for each outlined ID, with no missing or extra definitions. Do not remove distinct checks to make the lists fit. Each test's requirement_ids names the supplied entries it checks; runner_selection states selected or not_selected. Return one requirement_coverage row per inventory entry, with a reason explaining coverage or the gap. Do not repeat test IDs in coverage or handoff. The host derives their links from these exact definitions in test order. Keep all test content, including tests not selected for Runner. An empty membership is a gap, not permission to invent behavior. Explicit implementation requirements need source checks or a stated gap; visual similarity cannot prove source ownership. Do not invent thresholds or expected behavior. Use concise wording while preserving distinct conditions, prerequisites, actions, observable expectations, source authority and missing inputs.";
+
+const MODEL_INPUT_INSTRUCTIONS =
+  "\nFor model_input_version planning-source-text/1, a source's text_from_evidence_id points to its complete text in that evidence_catalog entry's quote. Read that entire quote as the source text. Source identity, attribution and authority remain on the source; the reference does not change them. All citation IDs, line numbers and quote spans refer to the unchanged evidence catalog.";
+
+/** Only the model view changes. Original input and retained proof stay complete. */
+export function planningModelInput(prepared) {
+  if (
+    Object.hasOwn(prepared, "model_input_version") ||
+    prepared.sources.some((source) =>
+      Object.hasOwn(source, "text_from_evidence_id"),
+    )
+  )
+    return prepared;
+  const view = copy(prepared);
+  let changed = false;
+  for (const source of view.sources) {
+    const rows = view.evidence_catalog.filter(
+      (row) =>
+        row.source_id === source.id &&
+        row.kind === source.kind &&
+        row.uri === source.uri &&
+        row.revision === source.revision &&
+        row.line === 1 &&
+        row.quote === source.text &&
+        row.quote_sha256 ===
+          createHash("sha256").update(utf8(source.text)).digest("hex") &&
+        ["authority_limit", "attribution", "provenance"].every(
+          (key) => !Object.hasOwn(row, key) || equal(row[key], source[key]),
+        ),
+    );
+    if (
+      rows.length !== 1 ||
+      typeof rows[0].id !== "string" ||
+      view.evidence_catalog.filter((row) => row.id === rows[0].id).length !== 1
+    )
+      continue;
+    delete source.text;
+    source.text_from_evidence_id = rows[0].id;
+    changed = true;
+  }
+  if (!changed) return prepared;
+  view.model_input_version = "planning-source-text/1";
+  // input is itself a JSON string in the wire body. Include that escaping and
+  // the extra instruction before accepting a smaller model representation.
+  return utf8(encodedJson(encodedJson(view))).length +
+    utf8(encodedJson(MODEL_INPUT_INSTRUCTIONS)).length -
+    2 <
+    utf8(encodedJson(encodedJson(prepared))).length
+    ? view
+    : prepared;
+}
+
 export function requestFor(
   packet,
   model = MODEL,
-  max_output_tokens = 8000,
+  max_output_tokens,
   reasoning = REASONING_EFFORT,
 ) {
   modelSettings({ model, reasoning });
   const prepared = prepare(packet);
+  const modelInput = planningModelInput(prepared);
   return [
     prepared,
     {
@@ -558,18 +824,18 @@ export function requestFor(
       store: false,
       instructions:
         SPECIALIZED +
-        LEDGER_INSTRUCTIONS +
         METHOD_INSTRUCTIONS +
-        "\n\n" +
-        CONCISE_COMPLETE_INSTRUCTIONS,
-      input: encodedJson(prepared),
-      max_output_tokens,
+        GENERATION_MEMBERSHIP_INSTRUCTIONS +
+        "\nWrite useful generated QA prose in plain English. Give complete steps with clear actions, application objects and observable results. Do not reduce a procedure to source fragments or fixed action templates. This prose is a proposed interpretation, not a literal quote or an executed result. Preserve exact evidence references, requirement authority, priorities and test membership. Use all supplied source and risk context. Cite intent only for requirement expectations; mark inferred expected behavior as hypothesis. Retain unclear procedures and missing inputs as execution gaps, and leave affected tests out of Runner selection until the gaps are resolved. Runner selection is a proposed handoff, never permission or readiness proof. Retain supplied target, test-data and permission details in prerequisites or runner_handoff.required_inputs. Resolve prerequisites against the complete caller task and Setup before asking for input. Do not claim a supplied target or data is missing. Method describes the proposed verification approach. Use T1, T2, ... test IDs and O1, O2, ... objective IDs; preserve their links." +
+        (modelInput === prepared ? "" : MODEL_INPUT_INSTRUCTIONS),
+      input: encodedJson(modelInput),
+      ...(max_output_tokens === undefined ? {} : { max_output_tokens }),
       text: {
         format: {
           type: "json_schema",
           name: "pr_context_plan",
           strict: true,
-          schema: schemaFor(prepared),
+          schema: generationSchemaFor(prepared),
         },
       },
     },
@@ -580,16 +846,41 @@ export async function plan(packet, output_dir, model, options = {}) {
   const [prepared, request] = requestFor(
     packet,
     model ?? settings.model,
-    options.max_output_tokens ?? 8000,
+    options.max_output_tokens,
     settings.reasoning,
   );
+  let projected, projection, sourceProjection;
   const result = await generate(
     prepared,
     request,
     output_dir,
-    (value) => validatePlan(value, prepared),
+    (value) => {
+      projected = projectGeneratedSourcePlan(
+        value,
+        prepared,
+        GENERATED_PLAN_VERSION,
+      );
+      sourceProjection = generatedProposalRecord(
+        value,
+        prepared.evidence_catalog,
+      );
+      const checks = validatePlan(projected, prepared);
+      projection = {
+        version: "test-membership/1",
+        candidate_sha256: digest(value),
+        plan_sha256: digest(projected),
+        links: "derived_from_model_test_membership_in_test_order",
+        order_origin: "derived_from_model_test_order",
+      };
+      save(join(output_dir, "projected-plan.json"), projected);
+      save(join(output_dir, "generation-projection.json"), projection);
+      return checks;
+    },
     options,
   );
+  result.plan = projected;
+  result.source_projection = sourceProjection;
+  result.generation_projection = projection;
   result.evidence = prepared.evidence_catalog;
   if (Object.hasOwn(prepared, "input_projection"))
     result.input_projection = prepared.input_projection;

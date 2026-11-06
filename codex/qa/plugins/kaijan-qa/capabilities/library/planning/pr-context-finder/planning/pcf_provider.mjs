@@ -49,6 +49,66 @@ export function modelSettings(
 const hash = (data) => createHash("sha256").update(data).digest("hex");
 const object = (value) =>
   value !== null && typeof value === "object" && !Array.isArray(value);
+// Keep native validation inline. Only the outgoing schema shares repeated
+// components, so evidence enums do not multiply at every application-text leaf.
+export function compactRequestSchema(schema) {
+  const counts = new Map();
+  let hasReferences = false;
+  const children = (node, visit) => {
+    const result = structuredClone(node);
+    for (const key of ["properties", "$defs", "definitions"])
+      if (object(node[key]))
+        result[key] = Object.fromEntries(
+          Object.entries(node[key]).map(([name, value]) => [
+            name,
+            visit(value),
+          ]),
+        );
+    for (const key of ["items", "additionalProperties", "not"])
+      if (object(node[key])) result[key] = visit(node[key]);
+    for (const key of ["anyOf", "oneOf", "allOf", "prefixItems"])
+      if (Array.isArray(node[key])) result[key] = node[key].map(visit);
+    return result;
+  };
+  const shareable = (node) =>
+    object(node.properties) ||
+    Array.isArray(node.anyOf) ||
+    Array.isArray(node.enum);
+  const count = (node) => {
+    if (!object(node)) return node;
+    // Existing reference scopes need their own resolver. Never relocate them.
+    if (Object.keys(node).some((key) => key.startsWith("$")))
+      hasReferences = true;
+    if (shareable(node)) {
+      const key = JSON.stringify(node);
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    children(node, count);
+    return node;
+  };
+  count(schema);
+  if (hasReferences) return schema;
+  const definitions = {},
+    names = new Map();
+  const compact = (node, root = false) => {
+    if (!object(node)) return node;
+    const key = JSON.stringify(node);
+    if (!root && shareable(node) && counts.get(key) > 1) {
+      let name = names.get(key);
+      if (!name) {
+        name = `part_${names.size}`;
+        names.set(key, name);
+        definitions[name] = children(node, (child) => compact(child));
+      }
+      return { $ref: `#/$defs/${name}` };
+    }
+    return children(node, (child) => compact(child));
+  };
+  const result = compact(schema, true);
+  return Object.keys(definitions).length
+    ? { ...result, $defs: definitions }
+    : result;
+}
 export async function capture(response, file, maximum) {
   const fd = openNew(file);
   let complete = false,
@@ -110,6 +170,7 @@ export async function generate(
   validate,
   {
     max_request_bytes,
+    max_output_tokens_limit,
     transport = native,
     env = process.env,
     signal,
@@ -122,7 +183,38 @@ export async function generate(
     deadline_ms > 2147483647
   )
     throw Error("Invalid absolute request deadline");
-  const wire = utf8(encodedJson(body));
+  // No application output ceiling by default. Honor an explicit caller budget;
+  // the provider owns its model/context limits. Do not truncate test coverage.
+  const requested = body.max_output_tokens;
+  const ceiling = requested ?? max_output_tokens_limit;
+  if (
+    (Object.hasOwn(body, "max_output_tokens") &&
+      (!Number.isSafeInteger(requested) ||
+        !isJsonInteger(body, "max_output_tokens") ||
+        requested < 1)) ||
+    (max_output_tokens_limit !== undefined &&
+      (!Number.isSafeInteger(max_output_tokens_limit) ||
+        max_output_tokens_limit < 1 ||
+        ceiling > max_output_tokens_limit))
+  )
+    throw Error("Invalid explicit output token limit");
+  const wire = utf8(
+    encodedJson({
+      ...body,
+      ...(body.text?.format?.type === "json_schema"
+        ? {
+            text: {
+              ...body.text,
+              format: {
+                ...body.text.format,
+                schema: compactRequestSchema(body.text.format.schema),
+              },
+            },
+          }
+        : {}),
+      ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
+    }),
+  );
   if (
     max_request_bytes !== undefined &&
     (!Number.isInteger(max_request_bytes) ||
@@ -130,14 +222,6 @@ export async function generate(
       wire.length > max_request_bytes)
   )
     throw Error("Full request byte bound exceeded");
-  const ceiling = body.max_output_tokens;
-  if (
-    !Number.isInteger(ceiling) ||
-    !isJsonInteger(body, "max_output_tokens") ||
-    ceiling < 1 ||
-    ceiling > 8000
-  )
-    throw Error("Invalid output token guard");
   if (
     !object(body.reasoning) ||
     Object.keys(body.reasoning).length !== 1 ||
@@ -162,7 +246,7 @@ export async function generate(
     request_sha256: hash(wire),
     wire_bytes: wire.length,
     ...(max_request_bytes === undefined ? {} : { max_request_bytes }),
-    max_output_tokens: ceiling,
+    ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
     client_attempt: 1,
     automatic_retry: false,
     absolute_deadline_ms: deadline_ms,
@@ -303,6 +387,25 @@ export async function generate(
           );
         }
         save(path.join(root, "usage-receipt.json"), receipt);
+        if (
+          receipt.http_status === 200 &&
+          raw.model === body.model &&
+          !truth(raw.error) &&
+          raw.status === "incomplete" &&
+          raw.incomplete_details?.reason === "max_output_tokens"
+        ) {
+          receipt.status = "output_limit";
+          receipt.failure_diagnostic = {
+            stage: "response_completion",
+            reason: "max_output_tokens",
+            max_output_tokens: ceiling ?? null,
+          };
+          throw new PlanningFailure(
+            "provider_output_limit_no_retry",
+            root,
+            receipt,
+          );
+        }
         if (
           receipt.http_status !== 200 ||
           raw.status !== "completed" ||
