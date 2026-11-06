@@ -73,9 +73,9 @@ access is missing.
    not-executed. See the [Runner contract](../../references/RUNNER.md).
    For headless browser execution, set `options.headless: true` on this MCP
    request. Omission keeps the headed default. This option is browser-only.
-   Omit `options.limits` to use the native budget: 80 provider calls, 150
-   browser or desktop inputs, and 600000 ms (10 minutes). Set limits only
-   to lower that budget; larger values are rejected before execution.
+   Omit `options.limits` unless the caller needs a shorter time limit or a
+   smaller action limit. Use only the fields and bounds in the selected tool's
+   input schema. Keep the same run if a limit prevents completion.
    Use MCP so the run keeps its full report and retained request identity.
    Keep the full original request in Codex, including cleanup duties. Include
    all requested app and browser actions in the scenario. Use separate guidance
@@ -162,19 +162,14 @@ access is missing.
    effects or a worker that started and then lost its result.
    Never replace or replay unknown effects. Honor Stop with `loki_test_stop`,
    then read actual cancellation, partial evidence and cleanup. Stop requested
-   does not prove remote computation or billing ended.
-   Browser provider transient HTTP responses retry quietly within the same request
-   (three attempts, 1s/2s backoff, Retry-After capped at 30s). Stop/deadline interrupt
-   waits and body reads. Keep every attempt's original usage/unknown charges;
-   never restart the run or repeat browser actions to recover a provider failure.
-   Uncertain transport, incomplete bodies and invalid/auth errors do not retry.
-   For browser execution, the first known-effects `stuck` raises Terra effort from low to
-   medium for one recovery phase within original limits;
-   a second returns reason and completed/remaining steps. A `blocked` report ends
-   incomplete without escalation and keeps the reason and remaining checks. Missing input does not
-   consume escalation. Errors, uncertain effects, safety, Stop, deadline and exhausted
-   limits never auto-recover or replay. Desktop does not support the clarification
-   or recovery behavior.
+   does not prove that all work or cleanup ended.
+   A temporary connection failure may recover within the same operation. Keep
+   its original result and uncertainty; do not restart the run or repeat browser
+   actions to recover a failed response. Use the returned reason, completed steps,
+   remaining steps and any live question to decide what to do next. A blocked
+   result ends incomplete. Errors, uncertain effects, task restrictions, Stop
+   and deadlines never authorize replay or broader access. Desktop does not
+   support the browser clarification behavior.
 5. Kaijan assesses the retained run internally. It reuses the original scenario,
    parameters, linked Plan and captured evidence. Do not copy the test objects,
    select screenshots or submit a second routine assessment. Keep `execution`
@@ -193,20 +188,14 @@ access is missing.
 
 For an explicit execution-only task, use `loki_runner_execute`, `loki_runner_get`
 and `loki_runner_stop`. For tests run by Codex or another tool outside Kaijan,
-use [assess-test-evidence](../assess-test-evidence/SKILL.md). These independent
+use [assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md). These independent
 paths do not replace the normal combined test flow.
 
-For detailed browser review, Playwright tracing is on by default. If trace.saved is
-true, open nativeResult.trace.path from the package root with its pinned tools:
-
-```sh
-./capabilities/runtime/node ./capabilities/library/node_modules/playwright-core/cli.js show-trace \
-  --host 127.0.0.1 --port 0 "/absolute/path/from/nativeResult.trace.path"
-```
-
-Keep the viewer process alive while reviewing its task tab; close that tab and
-stop only that viewer process afterward. Keep raw traces local. Browser trace
-content and provider HTTP/request records are separate. Each execution has an
+To inspect an existing browser recording, follow
+[View a saved browser trace](../review-report/SKILL.md#view-a-saved-browser-trace).
+Use the saved report/run and the supported local viewer, including for sign-in
+runs. Do not start another test or use the artifact reader as a trace viewer.
+Browser trace content and provider HTTP/request records are separate. Each execution has an
 isolated Node API worker; worker loss/host disconnect preserves partial evidence
 and never licenses replay. Inspect executionHost and the private worker receipt
 when the IPC handoff is uncertain.

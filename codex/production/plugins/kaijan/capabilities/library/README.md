@@ -40,11 +40,10 @@ Plan tests, and original planning input when available. Standalone scenarios
 keep their caller-supplied attribution. Explicit values (including null)
 override these defaults. Attributed `receipts`, `preflight`, `runtimeComparison`,
 `cleanup` and `suppliedObservations` add optional caller context.
-Omit `selectedArtifactIds` to include all
-supported public report-readable JSON and PNG evidence for that Run. The existing
-reader applies integrity and privacy checks. No caller file-selection loop is
-needed. An explicit `selectedArtifactIds` array from `loki_report_artifact_read`
-is an optional override; an empty array selects no artifacts.
+Preparation uses the saved recap when available. Omit `selectedArtifactIds`
+to prepare without original artifacts. To include a specific original artifact,
+select its ID from `loki_report_artifact_read`. The reader verifies its integrity
+and applies privacy checks.
 Receipts use `{id, attribution, content}`;
 `suppliedObservations` may supply separately attributed interpretations.
 `expectedResultSha256` optionally pins the selected result. First call the same

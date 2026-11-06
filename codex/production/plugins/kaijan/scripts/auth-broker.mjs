@@ -26,7 +26,21 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function installationPrefix(build) {
+  return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
+}
+
+// apps/codex-plugin/src/auth/profile.mjs
 async function brokerProfile(build, home = homedir()) {
+  const prefix = installationPrefix(build);
   if (!["local", "qa", "production"].includes(build.profile))
     throw Error("Invalid profile");
   const origin = new URL(build.coreOrigin);
@@ -52,7 +66,7 @@ async function brokerProfile(build, home = homedir()) {
     const temporary = join(directory, `.${randomUUID()}`);
     await writeFile(
       temporary,
-      JSON.stringify({ installationId: `kaijan-codex-plugin-${randomUUID()}` }),
+      JSON.stringify({ installationId: `${prefix}${randomUUID()}` }),
       { mode: 384, flag: "wx" }
     );
     try {
@@ -67,7 +81,7 @@ async function brokerProfile(build, home = homedir()) {
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
   const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  if (!/^kaijan-codex-plugin-[a-f0-9-]{36}$/.test(identity.installationId))
+  if (typeof identity.installationId !== "string" || !identity.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
   const state = {
@@ -22345,9 +22359,10 @@ var messages = {
     "Return to Codex and try connecting again."
   ]
 };
-async function sendCompletion(response, outcome) {
+async function sendCompletion(response, outcome, host = "codex") {
   if (response.destroyed) return;
-  const [title, message] = messages[outcome];
+  const [title, originalMessage] = messages[outcome];
+  const message = host === "claude_code" ? originalMessage.replace("Codex", "Claude Code") : originalMessage;
   const nonce = randomBytes(18).toString("base64url");
   response.writeHead(outcome === "failed" ? 503 : 200, {
     "Cache-Control": "no-store",
@@ -22387,10 +22402,14 @@ var BrokerAuthorization = class {
     state,
     telemetryIdentity,
     onCredentialsLoaded,
-    scopes = defaultScope.split(" ")
+    scopes = defaultScope.split(" "),
+    host = "codex"
   }) {
     if (!Array.isArray(scopes) || !scopes.includes("session:read") || new Set(scopes).size !== scopes.length || scopes.some((value) => !allowedScopes.has(value)))
       throw Error("invalid_broker_scope");
+    if (!["codex", "claude_code"].includes(host))
+      throw Error("invalid_broker_host");
+    this.host = host;
     this.scope = scopes.join(" ");
     Object.assign(this, {
       origin,
@@ -22487,7 +22506,7 @@ var BrokerAuthorization = class {
       if (url2.searchParams.has("error")) {
         callbackAccepted = true;
         clearTimeout(timer);
-        void sendCompletion(res, "cancelled").finally(
+        void sendCompletion(res, "cancelled", this.host).finally(
           () => reject(new ConnectionRequiredError())
         );
       } else if (/^[A-Za-z0-9_-]{43}$/.test(url2.searchParams.get("code") ?? "") && url2.searchParams.getAll("code").length === 1) {
@@ -22577,11 +22596,15 @@ var BrokerAuthorization = class {
         if (await auth(provider, { ...options, authorizationCode }) !== "AUTHORIZED")
           throw Error("authorization_failed");
         const cancelled = this.loggingOut;
-        await sendCompletion(response, cancelled ? "cancelled" : "connected");
+        await sendCompletion(
+          response,
+          cancelled ? "cancelled" : "connected",
+          this.host
+        );
         if (cancelled) reject(new ConnectionRequiredError());
         else accept();
       } catch (error62) {
-        await sendCompletion(response, "failed");
+        await sendCompletion(response, "failed", this.host);
         reject(error62);
       }
     };
@@ -23101,6 +23124,22 @@ var mapFinishedPropertiesSchema = external_exports.strictObject({
   error_code: external_exports.null(),
   error_message: external_exports.null()
 });
+var planningFailureMessages = {
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -23119,7 +23158,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   map_components_total: external_exports.null(),
   cases_without_component: external_exports.null(),
   cases_missing_expected_result: metricCount,
-  groups_count: external_exports.null()
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional()
+}).refine((value) => {
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
 });
 var runStartedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
@@ -23136,15 +23182,26 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
   cases_blocked: metricCount,
-  cases_unverified: external_exports.null(),
-  cases_not_run: external_exports.null(),
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
   results_by_category: external_exports.null(),
-  result_basis: external_exports.literal("product_terminal_checks").nullable(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
@@ -23153,6 +23210,17 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     "Native execution did not return a validated result.",
     "Native execution was blocked."
   ]).nullable()
+}).refine((value) => {
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count) => count !== null) && counts.reduce((sum, count) => sum + (count ?? 0), 0) === value.cases_total;
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
@@ -23350,7 +23418,9 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   cached_input_tokens: nativeTokenCount,
   output_tokens: nativeTokenCount,
   reasoning_tokens: nativeTokenCount,
-  cost_usd: external_exports.null(),
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum(["litellm_response_header", "provider_usage_cost"]).optional(),
   outcome: external_exports.null(),
   latency_ms: external_exports.number().finite().nonnegative(),
   http_status: external_exports.number().int().min(100).max(599).nullable(),
@@ -23368,7 +23438,11 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
     "core_inference_native_usage/1"
   ])
 }).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
+  if (value.cost_basis === "provider_usage_cost" && !native)
+    return false;
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
@@ -23503,7 +23577,10 @@ function openTelemetryOutbox({ directory, installationId }) {
       } : event;
       const payload = telemetryEventSchema.parse({
         ...observed,
-        install_id: installationId.replace(/^kaijan-codex-plugin-/, ""),
+        install_id: installationId.replace(
+          /^kaijan-(?:codex|claude)-plugin-/,
+          ""
+        ),
         identity_epoch: lease,
         seq
       });
@@ -23533,7 +23610,7 @@ function openTelemetryOutbox({ directory, installationId }) {
           events: rows.map((row) => JSON.parse(row.payload))
         });
         if (batch.events.some(
-          (event, index) => event.event_uuid !== rows[index].uuid || event.identity_epoch !== selected || event.install_id !== installationId.replace(/^kaijan-codex-plugin-/, "")
+          (event, index) => event.event_uuid !== rows[index].uuid || event.identity_epoch !== selected || event.install_id !== installationId.replace(/^kaijan-(?:codex|claude)-plugin-/, "")
         ))
           throw Error("invalid_telemetry_journal");
       } catch {
@@ -23657,6 +23734,7 @@ async function main() {
   }
   const authorization = new BrokerAuthorization({
     origin: build.coreOrigin,
+    host: pluginHost(build),
     clientId: build.runtimeClientId,
     scopes: build.runtimeScopes,
     store: fileCredentialStore(profile.directory),

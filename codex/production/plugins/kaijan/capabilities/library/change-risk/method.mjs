@@ -3,6 +3,7 @@ import {
   riskPresentationSchema,
   normalizeRiskExcerpts,
   renderRiskPresentation,
+  RISK_RELATION_GUIDANCE,
   riskSourceRecord,
 } from "./source-relations.mjs";
 import { createHash } from "node:crypto";
@@ -606,7 +607,8 @@ export function assumptionsRequest(
         content:
           instructions +
           (resolveApplicationSpan
-            ? " Use the fixed source relation kinds. Each operand must identify one source and copy a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets or paste long code blocks. Focus on the supplied change and requested behavior. With snapshots alone, do not infer what changed. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects or permission to execute."
+            ? " Use the fixed source relation kinds. Each operand must identify one source and copy a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets or paste long code blocks. Focus on the supplied change and requested behavior. With snapshots alone, do not infer what changed. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects or permission to execute. " +
+              RISK_RELATION_GUIDANCE
             : "") +
           (nonHunk.length
             ? " File metadata is evidence at file scope. Reported zero line deltas are not independent proof of equal bytes. Missing text remains unknown. Cite metadata by file/field; do not invent changed lines or hunk IDs. Hunk-only navigation cannot inspect these records."

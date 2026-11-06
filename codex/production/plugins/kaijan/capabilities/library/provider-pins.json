@@ -48,7 +48,7 @@
     "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
     "files": {
       "runtime.mjs": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
-      "method.mjs": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
+      "method.mjs": "ba256eebd90eb56bc16d4c6b2bc7fc1ae58b78638ef168c0851158222819ea54",
       "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
       "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
       "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
@@ -62,7 +62,7 @@
       "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
       "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
       "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
-      "source-relations.mjs": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2"
+      "source-relations.mjs": "96d21907f9fd25208c705a263cf33b4ebb7871182fb8cbc21e1e43868a1624a2"
     },
     "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
     "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
@@ -101,6 +101,10 @@
       "previousSourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
       "schema": "risk-source-relations/1",
       "scope": "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance."
+    },
+    "evidenceQuestionOverlay": {
+      "issue": 3071,
+      "scope": "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets."
     }
   },
   "prContext": {
@@ -299,10 +303,10 @@
       "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55",
       "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
       "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-      "pr-context-finder/planning/pcf_plan.mjs": "82af2500e549dd3c71deeab376360a60fc620633377ecfc408e6177300da68db",
-      "pr-context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
+      "pr-context-finder/planning/pcf_plan.mjs": "0441621abb07f6bcb2437732ab32097bba09f8ce4b8f81ba6c78db8df626538d",
+      "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c",
       "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
-      "pr-context-finder/planning/prompts.mjs": "668623a77df4435437b008fc39a7f90a62ecf1a655d95efbb3438c68971c11c2",
+      "pr-context-finder/planning/prompts.mjs": "31354aa855371929f3f49c2261516be9ed464f68829d7e6aadfde155f9c44ee5",
       "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
       "node_modules/@katalon-experiments/ai-client/package.json": "20ecfdba62740e5f157477d027188a40f0a92dcb5784a1ecce736c1b328e8219",
       "node_modules/@katalon-experiments/ai-client/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
@@ -312,7 +316,7 @@
       "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
       "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
       "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
-      "pr-context-finder/planning/planning-source.mjs": "63df1ed0c8f1587afc45264855d44cdbf2af763b7bc51e62d44b59101d49563c"
+      "pr-context-finder/planning/planning-source.mjs": "8a00a037598e2f220ac07e1c5a163e7302e81313fc23a18739d9f0c5e2c562fa"
     },
     "scope": "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.",
     "diagnosticOverlay": {
@@ -437,17 +441,30 @@
       "issue": 3055,
       "schema": "planning-source-relations/2",
       "scope": "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged."
+    },
+    "requestSchemaSharingOverlay": {
+      "issue": "https://github.com/katalon-studio/loki/issues/3138",
+      "baselineSourceCommit": "64e6a58779a6f9da319fb946e1178ee2f53b65a9",
+      "files": {
+        "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c"
+      },
+      "scope": "Share identical inline schema components through definitions in outgoing structured requests. Keep the expanded native validators, all source and test constraints, explicit output budgets, original records and no-replay behavior. Does not establish the cause of historical incomplete service responses."
+    },
+    "generatedProposalOverlay": {
+      "issue": 3110,
+      "schema": "planning-generated-proposal/1",
+      "scope": "New plans retain complete generated QA prose as proposed interpretation. Scoped saved reads revalidate the original input, exact evidence and requirement references, candidate and catalog hashes, full test definitions and derived coverage/Runner membership. Keep historical source-relation/1 and /2 readers, earlier plan bytes and original pin provenance unchanged. No automatic source correction call, execution or readiness claim."
     }
   },
   "workItemRisk": {
     "sourceCommit": "34ccd9e68a24ea193d5c761207fdba77082d3925",
     "mergedCommit": "77dd326a586562a263a0bb8f0f9175eef68afcdc",
     "files": {
-      "work-item-review.mjs": "c445cf9d73f92e86c36e20b1aea211d274ecdea34a7d368c2e83216b4452d878",
+      "work-item-review.mjs": "5c6b2c553d9a08344313a469cdb206069caf2d9535b2f63dc80a71217a5b82bc",
       "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f",
       "work-item-output.schema.json": "90ad10ddf6084d7978998704bad6f3e9f7d2791f0ea3e6319c8866ff45bea6c9",
       "runtime.mjs": "df03f20f9674137b2b28ecf4a6a0a52101c3c2545268c459686e7a11a2330cd0",
-      "method.mjs": "4987a82736b1ae2b782b8d6c0da6389cf9b015f2092a4ea2ee0e22c77222ad41",
+      "method.mjs": "ba256eebd90eb56bc16d4c6b2bc7fc1ae58b78638ef168c0851158222819ea54",
       "question-output.mjs": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96",
       "frozen-direct-template.json": "d9dcd406b5491dd438b644bf195280f1626c9224512430badba8fffc592a4664",
       "frozen-luna-template.json": "689ba7ae9debc53d91063e235b34336223e3e2fb073c461ab81ef7bc009a606d",
@@ -461,7 +478,7 @@
       "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "36d8ef342457082f2466b4d3f6201b8ee922c4cc23f5f11ed2d4c1f51376fe51",
       "node_modules/@katalon-experiments/ai-client/README.md": "7857363eaf8abc47153ed255d4acaad21cb0809d885e354b8ad67e4cc54146a3",
       "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
-      "source-relations.mjs": "3eaa348b062efd77b9732da04350cc7a61708939f73045043dbab04d6ab823b2"
+      "source-relations.mjs": "96d21907f9fd25208c705a263cf33b4ebb7871182fb8cbc21e1e43868a1624a2"
     },
     "scope": "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.",
     "baselineSourceCommit": "8fea2fd74369e75acee6e6f9b147c030f40f024e",
@@ -493,6 +510,19 @@
       "previousSourceCommit": "1852e6676718c6b73a108f86c42384e13db0a548",
       "schema": "risk-source-relations/1",
       "scope": "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance."
+    },
+    "literalRiskExcerptOverlay": {
+      "issue": 3071,
+      "schema": "risk-source-relations/1",
+      "scope": "New Work Item Risk responses copy unique complete source phrases; the host derives retained UTF-16 spans. Keep historical saved offsets, source proof, original answers and the one-call accounting contract. No replay or output-budget change."
+    },
+    "serviceOutputBudgetOverlay": {
+      "issue": 3231,
+      "scope": "Remove only the unrequested Work Item Risk 4000-token response ceiling. Preserve service limits, one dispatch, strict validation, original failure receipts and honest partial coverage. Explicit Change Risk template budgets remain unchanged; no new customer setting or replay."
+    },
+    "evidenceQuestionOverlay": {
+      "issue": 3071,
+      "scope": "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets."
     }
   },
   "plannerLoop": {
@@ -501,15 +531,15 @@
     "assessmentSource": "bdce8240c61f1f8d34fbe79015763011c9fa1f3b",
     "scope": "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.",
     "files": {
-      "experiments/context-finder/planning/supplement.mjs": "ac2634c41c811c514b1725f6ca5816d13802dbc82e02b2c93b39bed552780daf",
+      "experiments/context-finder/planning/supplement.mjs": "8c9f2bcb550ba18bd6aaf32535c41fe8ee968347d2a4950fa3567903d350bb57",
       "experiments/context-finder/planning/pcf_plan.mjs": "3c1efd48f9f291b6ab5808d5b8acf06c43fd9f1b4880a52639a7caee3a15208d",
       "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
       "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
       "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
       "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
       "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-      "experiments/context-finder/planning/prompts.mjs": "240e24172458a4fb610d3e556b0dc3fc8027646227c484378f8767e28585885d",
-      "experiments/work-verifier/supplied-evidence.mjs": "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1",
+      "experiments/context-finder/planning/prompts.mjs": "cccfa792e47d674c34cd256c56414c092211f20e36ff35aa3d00fe27b3761164",
+      "experiments/work-verifier/supplied-evidence.mjs": "72f530c68f866071cfeb3c0151e88d73434bc493e7042186cd21a423bbfc1075",
       "experiments/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3",
       "experiments/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976",
       "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -518,13 +548,15 @@
       "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
       "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148",
       "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8",
-      "experiments/work-verifier/source-binding.mjs": "716025e562d4d79883a0bea6b12e8d37000956b0aebad07a0451ba1174ed7adb",
+      "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23",
       "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
       "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
       "experiments/work-verifier/assessment-runtime.mjs": "d39558972e590a6e2c6fee594095498a1ad75ec5283ed73e94530629c40075f5",
       "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
       "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
-      "experiments/context-finder/planning/supplement-source.mjs": "de7c304740b0453e880e0d2d558f7618561bf0b87341c1f53fa4277f70184743"
+      "experiments/context-finder/planning/supplement-source.mjs": "9e91f3fb2c55310832fa0d51327f65abab6e06cc04cfb52ed4f07ab310e12b66",
+      "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b",
+      "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8"
     },
     "assets": {
       "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
@@ -584,6 +616,12 @@
     "scenarioOutcomeResultSlots": {
       "issue": 2530,
       "scope": "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks."
+    },
+    "declaredLinkCitation": {
+      "issue": 3109,
+      "previousSha256": "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1",
+      "sha256": "88bda6bf9c25137f3a137fee76332d535eb46c302449510038c08f436ddd27e9",
+      "scope": "New shared-run responses explicitly return the exact full inventory citation in a required schema field. Preserve proposal, outcome and evidence guards, original candidates, one-call execution and historical request digests."
     }
   },
   "completeResultReader": {
@@ -616,25 +654,25 @@
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "61255c54af94ac2536895246e00395421ddab0e3012482e9914fe9a4a2011264",
-      "packages/computer-runner/src/runner.mjs": "bac812551dcf39dcd93ab869cb40e64da41ba7e0cad4943619b251033dfc5a5a",
+      "packages/computer-runner/src/runner.mjs": "337c665899e18d50679690a8a20922c38e6f2602d6001d156b045d48a9e15b3b",
       "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73",
-      "packages/computer-runner/README.md": "6f90b1bc645353a06bea1f5da96c181819d53f145918943f6de88961d90be468",
+      "packages/computer-runner/README.md": "bf36a202c50177f120828467079cffe9345c3274529dd8bada3f430e44fd5e59",
       "packages/computer-runner/flow.md": "fef7bb39f6be368cf4fe7f655b4cdac6cab0dbdff968b3828d183f6ee28c39a5",
-      "packages/computer-runner/src/runner.d.mts": "b1a22d0135d45926bd390ebdf9b6e34c33042e4ec5c572354d2b73f659760791",
-      "packages/computer-runner/src/browser.mjs": "e9346079b47a572f6409129d7833a003510f352aa0d5e3cebe75a2163727debf",
-      "packages/computer-runner/src/browser.d.mts": "3f938be898865ae431e164028c41e1c9d46feb7794a18a41836a954563f27495",
+      "packages/computer-runner/src/runner.d.mts": "97e371c538dd9acb2be3e08dcb593be3327962be861b5dd54a1ddec5f67679e0",
+      "packages/computer-runner/src/browser.mjs": "581dcfaec3cf18b0f755ecbdc494e5bc8b0a964d4cfacdf57a1bbe770b11ae41",
+      "packages/computer-runner/src/browser.d.mts": "d5eae621e67a9106c96cc61a060abb672c8109eab803617f5a8275e714c99518",
       "packages/computer-runner/src/provider.mjs": "3ffc922ada138cf9b9ca4758e477e573d5dbd1b78fd225a0dd4edf89e64600e3",
       "packages/computer-runner/src/application-context.mjs": "5e4d8a71ca6d797dc8045cdbc1e7c7d827a2f0da43f8150b3479399d758e3d0a",
-      "packages/computer-runner/src/execution-status.mjs": "94b6de7fa2e81d5da2485084e9278fc1331a39792cfcd9fbff0ca60b9db00471",
-      "packages/computer-runner/src/redaction.mjs": "566108c9b6b66b2731a75e9ec929515dad3b511822d4da55b35db686fb4cdd06",
+      "packages/computer-runner/src/execution-status.mjs": "cbff540d23b4f1452afc7beeefbfb34c956e512e08553b97ca47ce4f8eeb228b",
+      "packages/computer-runner/src/redaction.mjs": "44e478782d3cacee98c0ffcaac4f4a59a777d74fdceb1a55cfe7667a173cedff",
       "packages/computer-runner/src/redaction.d.mts": "59e873f9637ad013884ce724d0e02b99081e19beae6b7fc52abae2e947a7f9f8",
-      "packages/computer-runner/src/navigation-policy.mjs": "e952524ed7c773b04a2d7393f4dedadd5371b6fb23544a4f7692bbb4324c7358",
+      "packages/computer-runner/src/navigation-policy.mjs": "2aa0a3d7804085f74c6459956510ac557a89a04a526b65db4a8fb061bfda61db",
       "packages/computer-runner/src/case-evidence.mjs": "7095e1f0e1292bca01f0a892aabdd611b7db8b3966dc5ceda1c8483ef3320df0",
       "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425",
       "packages/computer-runner/src/browser-target.mjs": "574664071009e526b7c8d08ebe3d7bc724b6007151b2ad03106647c43050589e",
       "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263",
-      "packages/computer-runner/src/clarification-presentation.mjs": "64d8e9cbcf091f23dd9e3fa875379c789992c875f4dbd4247e27656fa0b60360",
-      "packages/computer-runner/src/clarification-presentation.d.mts": "a2344d0e39a93198bd5835f9ffe8371dd2bf0dc8370c5c2a3d44c4910b8cb626"
+      "packages/computer-runner/src/clarification-presentation.mjs": "dd7bdf9a3ccf9fb3ba06093ffec62eea3541c11e70c4fae93be0c5f3811bb79f",
+      "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c"
     },
     "relocation": {
       "originalFiles": {
@@ -779,6 +817,10 @@
       "task": 2316,
       "baseSourceRevision": "835d4c3d0d15ceb44d60f84276acae10bb6c1204",
       "scope": "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain."
+    },
+    "readOnlyClarificationContext": {
+      "issue": 3271,
+      "scope": "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope."
     },
     "providerRetryPolicy": {
       "maxAttempts": 3,

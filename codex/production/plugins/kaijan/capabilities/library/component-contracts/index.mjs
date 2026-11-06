@@ -15536,12 +15536,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -20465,13 +20465,34 @@ var sessionRecordingSchema = external_exports.strictObject({
     expiresAt: external_exports.iso.datetime()
   })
 });
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
 var sessionGrantSchema = external_exports.strictObject({
   recordingId: external_exports.uuid(),
   chunk: sessionChunkDescriptorSchema,
   url: external_exports.url(),
   issuedAt: external_exports.iso.datetime(),
   expiresAt: external_exports.iso.datetime()
-}).refine((grant) => Date.parse(grant.expiresAt) > Date.parse(grant.issuedAt), "Invalid grant interval");
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
 var navigationKindSchema = external_exports.enum([
   "start",
   "route-change",
@@ -20595,6 +20616,173 @@ var sessionReplayManifestSchema = external_exports.strictObject({
   })).max(2e3)
 });
 
+// ../contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest2,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest2,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
 // ../contracts/dist/replay.js
 var recordedEventSchema = external_exports.strictObject({
   type: external_exports.number().int().min(0).max(4),
@@ -20650,6 +20838,47 @@ var commentSchema = commentCreateSchema.extend({
   createdAt: external_exports.iso.datetime()
 });
 
+// ../contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
 // ../contracts/dist/github.js
 var githubCredentialSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-credential/1"),
@@ -20698,9 +20927,9 @@ var workspaceCustomerLimits = {
   fileBytes: 4 * 1024 * 1024,
   publicationBytes: 16 * 1024 * 1024
 };
-var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count = external_exports.number().int().nonnegative();
-var source = external_exports.strictObject({ bytes: count, sha256: digest2 });
+var source = external_exports.strictObject({ bytes: count, sha256: digest3 });
 var identity = { fileId: external_exports.uuid(), source };
 var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
   external_exports.strictObject({
@@ -20715,7 +20944,7 @@ var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
     content: external_exports.strictObject({
       mediaType: external_exports.literal("application/json"),
       bytes: count.max(workspaceCustomerLimits.fileBytes),
-      sha256: digest2
+      sha256: digest3
     })
   }),
   external_exports.strictObject({
@@ -20736,9 +20965,9 @@ var customerWorkspaceManifestSchema = external_exports.strictObject({
   state: external_exports.literal("published"),
   title: external_exports.string(),
   publishedAt: external_exports.iso.datetime(),
-  sourceManifestSha256: digest2,
+  sourceManifestSha256: digest3,
   contextRefs: external_exports.array(resultContextRefSchema),
-  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest2.optional() })),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest3.optional() })),
   relatedSources: external_exports.array(external_exports.strictObject({
     reference: resultContextRefSchema,
     availability: external_exports.enum(["supplied", "unselected", "unavailable"])
@@ -20747,17 +20976,17 @@ var customerWorkspaceManifestSchema = external_exports.strictObject({
   meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
 });
 var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
-  manifestSha256: digest2
+  manifestSha256: digest3
 });
 var customerWorkspaceDownloadSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.workspace-customer-download/1"),
   publicationId: external_exports.uuid(),
   fileId: external_exports.uuid().nullable(),
-  sourceSha256: digest2,
+  sourceSha256: digest3,
   mediaType: external_exports.literal("application/json"),
   encoding: external_exports.literal("base64"),
   bytes: count.max(workspaceCustomerLimits.fileBytes),
-  sha256: digest2,
+  sha256: digest3,
   data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
 });
 var customerWorkspaceListSchema = external_exports.strictObject({
@@ -20834,6 +21063,22 @@ var customerSessionSchema = external_exports.strictObject({
   permissions: external_exports.array(permissionSchema),
   expiresAt: external_exports.iso.datetime(),
   features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
+  })
 });
 var tokenResponseSchema = external_exports.object({
   access_token: opaqueSchema,

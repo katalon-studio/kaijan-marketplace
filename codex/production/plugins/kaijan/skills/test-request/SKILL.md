@@ -46,15 +46,14 @@ unrelated recent PR is not selection. Distinguish external GitHub IDs from Kaija
 Work Item UUIDs. Do not require Core login, a PR, GitHub access or a complete app
 map for operations that do not need them.
 
-Use [context-handoff](../context-handoff/SKILL.md) when retaining the request or
-passing its context between stages. Preserve original content and attribution;
-keep agent interpretation separate. If a chat-only request has no original source
-URI, retain its complete original text with `loki_context_submit`. Its returned
-`sourceUri` identifies that immutable retained record, not an external ticket or
-independently verified origin. Use that actual URI for a planning source; never
-invent a GitHub link, file, revision or source capture time. Reuse the original
-source URI when one exists. Native inputs still follow each consumer's contract;
-a stored context is not automatically compatible with every capability.
+For a chat-only work item, pass its original title and body directly to
+`loki_test_plan`. Omit `url` when no original source URI was supplied. Kaijan
+retains this input internally; no separate context call is needed. Reuse an
+actual source URI when one exists. Preserve original content and attribution,
+and keep agent interpretation separate. Use the supported source packet in
+`plan-tests` for additional sources. Never invent a source, revision or capture
+time. An existing compatible `contextId` can still supply the selected operation;
+storage alone does not make a record compatible with every capability.
 
 When the user asks for linked design or task details, read the relevant authorized
 sources before the first Plan. If a later source changes a saved expectation,
@@ -95,10 +94,10 @@ requirements. Choose only stages useful for the requested outcome:
 - Acquire original selected Issue/PR/body/revision/files through an authorized
   maintained public capture API or host read. Planning reads explicit in-scope
   GitHub links itself. Keep original text/revisions and acquisition limits. Use
-  [find-related-work](../find-related-work/SKILL.md) when related context helps;
+  [find-related-work](../../references/capability-skills/find-related-work/SKILL.md) when related context helps;
   findings inform this request and do not select a different execution target.
 - Normal planning includes work-item risk analysis. Use
-  [assess-change-risk](../assess-change-risk/SKILL.md) for a standalone review or
+  [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md) for a standalone review or
   a requested code-change review. Change Risk needs actual frozen change
   input. Do not fabricate a diff or require code evidence for a requirements-only
   question. Use the original request and attributed source/context evidence. This release does not build or require an application map.
@@ -137,7 +136,7 @@ requirements. Choose only stages useful for the requested outcome:
   performed steps or a verdict.
 
 For tests run outside Kaijan, use
-[assess-test-evidence](../assess-test-evidence/SKILL.md) with the external results.
+[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md) with the external results.
 Narrow requests continue to use their independent owning skills. No Core entity
 or background watcher is needed for this composition.
 

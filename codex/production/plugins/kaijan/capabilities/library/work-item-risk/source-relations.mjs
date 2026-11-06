@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 
 export const RISK_SOURCE_VERSION = "risk-source-relations/1";
+export const RISK_RELATION_GUIDANCE =
+  "Use depends-on only for behavior with a specific prerequisite. When the source explicitly leaves a claim unverified, use evidence-for. Its first operand is the claim to check. Its second operand is the stated evidence gap. Tie the possible consequence and the next check to that same claim.";
 const hash = (text) => createHash("sha256").update(text).digest("hex");
 const exact = (v, keys) =>
   v &&
@@ -21,6 +23,13 @@ const maxExcerptLength = 160;
 const words = new Intl.Segmenter("und", { granularity: "word" });
 const predicates = {
   "depends-on": [2, (a, b) => `Does ${a} depend on ${b}?`],
+  "evidence-for": [
+    2,
+    (claim, gap) => {
+      need(claim !== gap);
+      return `What evidence can confirm ${claim}? The source says ${gap}.`;
+    },
+  ],
   "preserved-under": [2, (a, b) => `Must ${a} remain unchanged when ${b}?`],
   "conflicts-with": [
     2,

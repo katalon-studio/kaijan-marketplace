@@ -20,12 +20,11 @@ Read the chat guidance in the [shared Product MCP instructions](../../references
    help Kaijan. Do not substitute invented linked content.
 2. Check `loki_capabilities_list` for Test Planning readiness. Call
    `loki_test_plan` with `input` containing the
-   original `title`, `body` and a nonempty string `url` source identity. For a
-   local work item, use the actual existing source-file URI and pointer; do not
-   supply null, invent an external link or claim that an absent URI was known.
-   For a chat-only request without a source URI, retain the complete original
-   request through `context-handoff` and use the actual returned `sourceUri`.
-   It names the retained copy; original source metadata remains unknown.
+   original `title` and `body`. Include `url` when the caller supplied a real
+   source URI. For a local work item, use the actual existing source-file URI
+   and pointer when known. Otherwise omit `url`; Kaijan retains the original
+   input internally before planning. Do not call Context Intake only to fill
+   this field. Do not supply null, invent a link or claim an absent URI was known.
    Preserve supplied capture/revision/author
    claims when present; missing provenance stays missing. Do not fetch links or
    invent source merely to fill fields. The producer supports an explicit
@@ -34,18 +33,19 @@ Read the chat guidance in the [shared Product MCP instructions](../../references
    role. A finding is context, not intent authority. Use that producer contract
    without rewriting its algorithms or adding a map requirement.
    Choose one input form; do not mix them. For the simple work-item form,
-   extract the complete original title/body and actual source URI from any caller
+   extract the complete original title/body and any supplied source URI from a caller
    wrapper. Optional original `updated_at`/`revision`, `author`/`user` and
    `captured_at` claims may accompany them. Do not append a wrapper's `sources`
    or `version`: those keys select the explicit versioned-packet contract, which
-   requires its complete native structure. Preserve other original context in a
-   retained record instead of constructing a hybrid packet. For example:
+   requires its complete native structure. Preserve additional source text and
+   attribution through that supported packet instead of constructing a hybrid.
+   For example:
 
    ```js
    const input = {
      title: originalTitle,
      body: originalBody,
-     url: actualSourceUri,
+     ...(actualSourceUri ? { url: actualSourceUri } : {}),
      // Include original provenance claims only when supplied:
      ...(originalRevision ? { updated_at: originalRevision } : {}),
      ...(originalAuthor ? { author: originalAuthor } : {}),
@@ -61,9 +61,10 @@ adds it as context. Do not copy its findings or run risk analysis again.
 Keep the original work item: risk findings do not replace baseline tests.
 A missing or changed reference must be corrected before planning starts.
 
-3. A retained record can supply `nativeInputs.testPlanning` with the exact
-   supported `{input, riskAnswers?, options?}` object, without a requestKey. Submit it through
-   `loki_context_submit`, then call planning with `contextId`. Raw reports and
+3. An existing retained record can supply `nativeInputs.testPlanning` with the exact
+   supported `{input, riskAnswers?, options?}` object, without a requestKey. Call
+   planning with that record's `contextId`. Normal direct input needs no separate
+   context call. Raw reports and
    unresolved artifact references remain retained evidence; they are not parsed
    or silently converted into planning inputs.
 4. Read the original native answer returned by `loki_test_plan`. Distinguish proposed baseline checks, risk-focused checks,
@@ -160,4 +161,7 @@ Validate the advertised input/output contracts and inspect MCP `isError` before 
 
 For Plan, inspect `result.plan`, `result.checks.status`/coverage, and `result.receipt`, or the original `loki.planning-failure/1` receipt. For Supplement, preserve `result.baseline`, `result.supplement`, checks and receipt, or `loki.supplement-failure/1`. `executed:false` remains authoritative; a structurally valid partial proposal is not an observed pass.
 
-For `unsupported-consumption`, preserve `contextId` and `detail`, read `loki_context_get`, and inspect `consumption.testPlanning` or `consumption.testSupplement`. If the exact supported input is available, pass it directly or submit a new Context record with `nativeInputs.testPlanning: {input, options?}` or `nativeInputs.testSupplement: {input, options?}`, without requestKey. For a correction use a new submission key and `supersedes`, preserving the old context ID. Otherwise identify the missing original work item, valid baseline or other required fields. Raw reports do not become planning packets, and a missing baseline must not be invented.
+For `unsupported-consumption`, preserve the original `contextId` and its failure.
+Pass the exact supported original input directly when it is available. Otherwise
+identify the missing work item, valid baseline or other required fields. Raw
+reports do not become planning packets, and a missing baseline must not be invented.

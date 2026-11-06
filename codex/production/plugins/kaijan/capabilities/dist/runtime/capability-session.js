@@ -21135,11 +21135,20 @@ var binding = external_exports.strictObject({
   sourceId: external_exports.string(),
   quote: external_exports.string().min(1).max(512)
 });
-var clarificationPresentationSchema = external_exports.strictObject({
+var ordinaryPresentation = external_exports.strictObject({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
   choices: external_exports.array(binding).max(8)
 });
+var clarificationPresentationSchema = external_exports.union([
+  ordinaryPresentation,
+  external_exports.strictObject({
+    kind: external_exports.literal("read-only-path"),
+    subject: binding,
+    control: binding,
+    choices: external_exports.array(binding).max(0)
+  })
+]);
 
 // ../contracts/dist/runner.js
 var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -21630,6 +21639,14 @@ var customerCleanupFactsSchema = external_exports.object({
 var customerAssessmentQuoteSchema = external_exports.object({
   sourceId: external_exports.string(),
   display: customerSourceDisplaySchema.optional(),
+  // The original quote hash stays exact. This receipt identifies the filtered
+  // display copy; serialized fields alone never grant source proof.
+  projection: external_exports.object({
+    schema: external_exports.literal("kaijan.customer-source-projection/1"),
+    sourceSha256: digest8,
+    sha256: digest8,
+    bytes: external_exports.number().int().nonnegative()
+  }).optional(),
   state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
   attribution: external_exports.enum([
     "application-observation",
@@ -21691,6 +21708,11 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 // ../contracts/dist/report-presentation.js
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
+var reportExpectationAuthoritySchema = external_exports.enum([
+  "requirement",
+  "hypothesis",
+  "unresolved"
+]);
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
   display: true,
@@ -21715,6 +21737,7 @@ var reportTestAssessmentSchema = external_exports.object({
   resultSha256: digest9,
   model: external_exports.string(),
   testId: external_exports.string(),
+  expectationAuthority: reportExpectationAuthoritySchema.optional(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   expected: external_exports.string(),
   actual: external_exports.string().nullable(),
@@ -21744,6 +21767,9 @@ var reportObservedPageSchema = external_exports.object({
   contentState: external_exports.literal("projected-page-content")
 });
 var reportOutcomeNoticeSchema = external_exports.enum([
+  "The test stopped when the app tried to open a website that was not allowed for this test.",
+  "The test stopped because it could not confirm whether the page was allowed for this test.",
+  "The test stopped because it could not reach an allowed website.",
   "Execution did not start because its connection is not configured.",
   "The target application is unavailable.",
   "The connection expired. Reconnect before retrying.",
@@ -21782,6 +21808,7 @@ var testPlanViewSchema = external_exports.object({
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
@@ -21941,16 +21968,28 @@ var reportTraceResultSchema = external_exports.union([
     status: external_exports.literal("unavailable")
   })
 ]);
+var customerTraceArtifacts = artifactsSchema.omit({ launchCommand: true }).extend({
+  files: external_exports.array(external_exports.never()).max(0)
+});
 var customerReportTraceResultSchema = external_exports.union([
   external_exports.strictObject({ ...traceIdentity, status: external_exports.literal("closed") }),
-  external_exports.strictObject({
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  customerTraceArtifacts.extend({
     ...traceIdentity,
     status: external_exports.literal("unavailable"),
-    kind: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false),
-    reason: external_exports.literal("customer-view-unavailable"),
-    message: external_exports.literal("The trace is not available in this report. Saved test steps and observations remain available."),
-    files: external_exports.array(external_exports.never()).max(0)
+    traceAvailable: external_exports.literal(false)
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -21993,12 +22032,25 @@ var reportExportOutputSchema = external_exports.union([
 // ../contracts/dist/report-artifact.js
 var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count5 = external_exports.number().int().nonnegative();
+var captureTime = external_exports.iso.datetime({ offset: true });
+var pageCaptureBindingSchema = external_exports.object({
+  screenshot: external_exports.object({
+    name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
+    sha256: digest10,
+    capturedAt: captureTime
+  }),
+  afterAction: external_exports.number().int().positive().nullable(),
+  startedAt: captureTime,
+  finishedAt: captureTime
+});
 var reportArtifactProjectionSchema = external_exports.object({
   schema: external_exports.literal("loki.report-artifact-projection/1"),
   sourceSha256: digest10,
   sha256: digest10,
   bytes: count5,
-  redactionRevision: count5
+  redactionRevision: count5,
+  // Only the owning manifest reader can supply this checked association.
+  pageCapture: pageCaptureBindingSchema.optional()
 });
 var reportArtifactInputSchema = external_exports.strictObject({
   reportId: digest10,
@@ -22212,6 +22264,9 @@ var caseEvidenceSchema = external_exports.object({
     });
 });
 
+// ../contracts/dist/customer-planning.js
+var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
+
 // ../contracts/dist/customer-risk.js
 var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var source = external_exports.object({
@@ -22256,8 +22311,10 @@ var customerExecutionEvidenceSchema = external_exports.object({
 var progress2 = external_exports.object({
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
   effects: external_exports.enum(["known", "uncertain"]).optional(),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
-  questions: external_exports.array(external_exports.object({ id: external_exports.string() })).optional()
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
 });
 
 // ../contracts/dist/customer-advisory.js
@@ -22434,7 +22491,8 @@ var customerPlanSchema = external_exports.object({
       "legacy-source-excerpts",
       "unverified"
     ]),
-    semantics: external_exports.literal("proposed-only")
+    semantics: external_exports.literal("proposed-only"),
+    detailsAvailable: external_exports.boolean().optional()
   }).optional(),
   status: external_exports.enum(["proposed_plan", "needs_clarification"]),
   objectives: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), refs: refs3 })).optional(),
@@ -22517,12 +22575,15 @@ var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
   attribution: true,
   sha256: true,
   sourceSha256: true,
+  projection: true,
+  notice: true,
   facts: true
 }).extend({ text: external_exports.string() });
 var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
   answerId: true,
   resultSha256: true,
   testId: true,
+  expectationAuthority: true,
   verdict: true,
   expected: true,
   actual: true,
@@ -22621,7 +22682,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     plan: customerPlanSchema.nullable(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
-      "This saved plan is unavailable in the supported view. Other saved results remain available."
+      "This saved plan is unavailable in the supported view. Other saved results remain available.",
+      unavailablePlanDetailsNotice
     ]).optional(),
     coverage: coverage2.optional(),
     evidence: external_exports.array(customerPlanEvidenceSchema).optional()
@@ -22633,15 +22695,18 @@ var customerReportSchema = testPlanViewSchema.pick({
     executionState: true,
     stoppedByUser: true,
     testVerdict: true,
+    traceRetained: true,
     planSourceId: true,
     planResultSha256: true,
     selectedTestIds: true,
     elapsedMs: true,
+    startedAt: true,
     recordedAt: true
   }).extend({
     state: operationState,
     executionState,
     testVerdict,
+    traceRetained: external_exports.boolean().default(false),
     interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
     observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
     // Free-form terminal diagnostics are not an application observation source.
@@ -22716,11 +22781,11 @@ var customerReportCardSchema = panelCard.pick({
       inconclusive: true,
       conflicting: true,
       unavailable: true
-    }),
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset; keep assessed proposed-check results separate in chat summaries."),
     proposedCounts: external_exports.object({
       pass: external_exports.number().int().nonnegative(),
       fail: external_exports.number().int().nonnegative()
-    }).optional(),
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. Subtract each subset for the other passed/failed tests. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
     pullRequest: external_exports.object({
       number: external_exports.number().int().positive(),
       title: external_exports.string(),
@@ -22755,6 +22820,7 @@ var customerReportFailureSchema = external_exports.object({
 var customerReportReadSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-read/1"),
   presentation: external_exports.literal("chat").optional(),
+  assessments: customerReportSchema.shape.assessments,
   reportId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   title: external_exports.string(),
   createdAt: external_exports.string(),
@@ -23795,7 +23861,7 @@ var applicationProfileSchema = external_exports.strictObject({
     });
 });
 var identitySchema = external_exports.strictObject({
-  host: external_exports.enum(["codex", "crew"]),
+  host: external_exports.enum(["codex", "crew", "claude_code"]),
   installationId: external_exports.uuid()
 });
 var snapshotSchema = external_exports.strictObject({
@@ -23983,7 +24049,7 @@ var InstallationMutations = class {
 
 // src/installation.ts
 async function bindInstallation(options) {
-  const host = external_exports.enum(["codex", "crew"]).parse(options.host);
+  const host = external_exports.enum(["codex", "crew", "claude_code"]).parse(options.host);
   const data = resolve2(options.data);
   const runtime = {
     version: "0.1.0",

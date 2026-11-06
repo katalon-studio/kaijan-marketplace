@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
+import { digest } from "./pcf_records.mjs";
 import {
   applicationCatalog,
   planningTextSchema,
@@ -6,11 +8,14 @@ import {
 } from "./source-relations.mjs";
 const clone = (value) => JSON.parse(JSON.stringify(value));
 export const SUPPLEMENT_SOURCE_VERSION = "supplement-source-relations/1";
+// New proposals use complete prose, as baseline planning does. Retained v1
+// candidates still use their exact source spans and fixed renderer below.
+export const GENERATED_SUPPLEMENT_VERSION = "supplement-generated-proposal/1";
 export const supplementSourceHash = (value) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const object = (value) =>
   value !== null && typeof value === "object" && !Array.isArray(value);
-export function generatedSupplementSource(text) {
+function legacyGeneratedSupplementSource(text) {
   if (typeof text !== "string") return false;
   let value;
   try {
@@ -40,12 +45,22 @@ export function generatedSupplementSource(text) {
       ].includes(value.kind))
   );
 }
+export function generatedSupplementSource(text) {
+  if (legacyGeneratedSupplementSource(text)) return true;
+  try {
+    return /^supplement-(?:generated-proposal|source-relations)\//.test(
+      JSON.parse(text)?.schema ?? "",
+    );
+  } catch {
+    return false;
+  }
+}
 /** Only the host-reconstructed original context can supply this catalogue.
  * Risk links remain useful, but risk-generated prose is not an action oracle. */
-export function supplementApplicationCatalog(prepared) {
+export function legacySupplementApplicationCatalog(prepared) {
   const excluded = new Set(
     (prepared.original_context?.sources ?? [])
-      .filter((source) => generatedSupplementSource(source.text))
+      .filter((source) => legacyGeneratedSupplementSource(source.text))
       .map((source) => source.id),
   );
   return applicationCatalog(prepared.evidence_catalog).filter(
@@ -54,6 +69,16 @@ export function supplementApplicationCatalog(prepared) {
       !excluded.has(row.source_id) &&
       !row.source_id.startsWith("kaijan-planning-source-requests") &&
       !String(row.uri).startsWith("kaijan-planning://"),
+  );
+}
+export function supplementApplicationCatalog(prepared) {
+  const excluded = new Set(
+    (prepared.original_context?.sources ?? [])
+      .filter((source) => generatedSupplementSource(source.text))
+      .map((source) => source.id),
+  );
+  return legacySupplementApplicationCatalog(prepared).filter(
+    (row) => !excluded.has(row.source_id),
   );
 }
 export const supplementVerificationKinds = [
@@ -119,10 +144,32 @@ export function mapSupplementText(value, transform) {
 }
 export function supplementGenerationSchema(schema, prepared) {
   const output = clone(schema),
-    text = planningTextSchema(supplementApplicationCatalog(prepared)),
+    text = planningTextSchema(legacySupplementApplicationCatalog(prepared)),
     p = output.properties;
+  const hasReferenceScope = (node) =>
+    node !== null &&
+    typeof node === "object" &&
+    (Object.keys(node).some((key) => key.startsWith("$")) ||
+      Object.values(node).some(hasReferenceScope));
+  let field = text;
+  // Only the wire schema shares definitions. Do not relocate existing scopes or
+  // change native source validation, baseline bytes or retained result proof.
+  if (!hasReferenceScope(schema)) {
+    const span = clone(
+      text.anyOf.find((node) => node.properties.kind.const === "source")
+        .properties.span,
+    );
+    for (const node of text.anyOf) {
+      if (isDeepStrictEqual(node.properties.span, span))
+        node.properties.span = { $ref: "#/$defs/lokiSupplementSpan" };
+      if (isDeepStrictEqual(node.properties.operands?.items, span))
+        node.properties.operands.items = { $ref: "#/$defs/lokiSupplementSpan" };
+    }
+    output.$defs = { lokiSupplementText: text, lokiSupplementSpan: span };
+    field = { $ref: "#/$defs/lokiSupplementText" };
+  }
   const set = (row, key) => {
-    row.properties[key] = clone(text);
+    row.properties[key] = clone(field);
   };
   const test = p.additional_tests.items;
   test.properties.id = { type: "string", pattern: "^A[1-9][0-9]{0,5}$" };
@@ -132,17 +179,17 @@ export function supplementGenerationSchema(schema, prepared) {
   };
   for (const key of ["method", "reason"]) set(test, key);
   for (const key of ["conditions", "prerequisites", "steps", "execution_gaps"])
-    test.properties[key].items = clone(text);
+    test.properties[key].items = clone(field);
   set(test.properties.expected, "text");
   set(test.properties.baseline_relation, "explanation");
   for (const key of ["concern", "question"])
     set(p.baseline_concerns.items, key);
   set(p.unanswered_questions.items, "question");
-  p.limitations.items = clone(text);
+  p.limitations.items = clone(field);
   return output;
 }
 export function renderSupplementCandidate(candidate, prepared) {
-  const catalog = supplementApplicationCatalog(prepared),
+  const catalog = legacySupplementApplicationCatalog(prepared),
     byId = new Map(catalog.map((row) => [row.id, row]));
   if (
     !candidate.additional_tests.every((row) =>
@@ -180,9 +227,72 @@ export function supplementSourceRecord(candidate, prepared) {
   return {
     schema: SUPPLEMENT_SOURCE_VERSION,
     candidate: clone(candidate),
+    catalogSha256: supplementSourceHash(
+      legacySupplementApplicationCatalog(prepared),
+    ),
+  };
+}
+export function generatedSupplementSchema(schema) {
+  const output = clone(schema);
+  output.properties.additional_tests.items.properties.id.pattern =
+    "^A[1-9][0-9]{0,5}$";
+  return output;
+}
+/** Validate source membership, not the meaning or completeness of a proposal.
+ * Risks remain attributed context; they cannot supply application authority. */
+export function validateGeneratedSupplementText(candidate, prepared) {
+  const application = new Map(
+    supplementApplicationCatalog(prepared).map((row) => [row.id, row]),
+  );
+  const catalog = new Map(
+    prepared.evidence_catalog.map((row) => [row.id, row]),
+  );
+  const riskSources = new Map(
+    prepared.risks.map((risk) => [
+      "supplement-risk-" + digest(risk.id),
+      risk.id,
+    ]),
+  );
+  for (const test of candidate.additional_tests) {
+    const contextReference = (id) => {
+      const row = catalog.get(id);
+      return (
+        row?.kind === "context" &&
+        test.risk_ids.includes(riskSources.get(row.source_id))
+      );
+    };
+    const supportedReference = (ref) =>
+      application.has(ref.evidence_id) || contextReference(ref.evidence_id);
+    if (
+      !/^A[1-9][0-9]{0,5}$/.test(test.id) ||
+      !test.source_refs.some((ref) => application.has(ref.evidence_id)) ||
+      !test.source_refs.every(supportedReference) ||
+      !test.expected.refs.every((ref) =>
+        test.expected.authority === "requirement"
+          ? application.get(ref.evidence_id)?.kind === "intent"
+          : supportedReference(ref),
+      )
+    )
+      throw Error("Supplement proposal needs original application sources");
+  }
+  return mapSupplementText(candidate, (value) => {
+    if (typeof value !== "string" || !value.trim() || !value.isWellFormed())
+      throw Error("Supplement proposal needs complete text");
+    return value;
+  });
+}
+export function generatedSupplementRecord(candidate, prepared) {
+  return {
+    schema: GENERATED_SUPPLEMENT_VERSION,
+    semantics: "generated-proposal-only",
+    candidate: clone(candidate),
+    candidateSha256: supplementSourceHash(candidate),
     catalogSha256: supplementSourceHash(supplementApplicationCatalog(prepared)),
   };
 }
+export const generatedSupplementInstructions = `
+Write short, complete proposed test instructions in your own words. Use familiar words and short sentences. Describe unknown behavior as a clear question for the user; keep validation terms out of the proposed instructions. Do not return character offsets, source-span nodes or fixed relation nodes. State the useful application objects, actions and observations together, as a manual QA tester would describe them. Use the supplied original application context for names and facts; keep risk statements attributed and unverified. Source references identify supporting input, not proof that generated prose is a quotation or a requirement. If a procedure or expected behavior is unknown, state the concrete gap or question. Do not fill a missing procedure with a sentence copied into an action template. Keep all additions proposed and not run.
+`;
 export const supplementSourceInstructions = `
 Customer presentation uses typed application source spans and fixed proposed relations. Use the provided source schema for every text field. Exact source spans use evidence_id and UTF-16 start/end offsets into its quote. Do not invent a label, method, reason, option, or explanation. Use only original application/task context, never generated risk packets, baseline wrappers, internal runtime details or accounting. Risk and baseline links stay proposed associations, not semantic proof. Addition IDs must be A1, A2, and so on, distinct from all baseline IDs. verification_kind uses a supported enum; method uses a method node. Each field's operand sources must belong to that field's declared source references. Requirement expectations must use original intent operands listed in expected.refs. Missing context uses an explicit gap, not an invented expected result. Typed relations describe proposed checks only, never observed actions, authorization or verified findings. Keep every distinct useful condition, action, expectation, baseline concern and unresolved question. Do not execute, acquire context, or repair by replaying operations.
 `;

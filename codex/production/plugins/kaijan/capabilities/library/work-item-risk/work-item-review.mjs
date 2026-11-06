@@ -1,8 +1,9 @@
 import {
   riskPresentationSchema,
+  normalizeRiskExcerpts,
   renderRiskPresentation,
+  RISK_RELATION_GUIDANCE,
   riskSourceRecord,
-  riskRelationInstruction,
 } from "./source-relations.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -14,7 +15,6 @@ export const METHOD = "work-item-luna-uncertainties/1";
 export const MODEL = "gpt-6-luna";
 export const LIMITS = Object.freeze({
   questions: 6,
-  outputTokens: 4000,
   calls: 1,
 });
 export const sha256 = (bytes) =>
@@ -227,12 +227,13 @@ export function createWorkItemRisk(dependencies) {
       required: ["assumptions_to_confirm", "limitations"],
     };
     if (dependencies.resolveApplicationSpan)
-      schema.properties.assumptions_to_confirm.items =
-        riskPresentationSchema(catalog);
+      schema.properties.assumptions_to_confirm.items = riskPresentationSchema(
+        catalog,
+        { literalExcerpts: true },
+      );
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },
-      max_output_tokens: LIMITS.outputTokens,
       store: false,
       text: {
         format: {
@@ -248,7 +249,8 @@ export function createWorkItemRisk(dependencies) {
           content:
             INSTRUCTIONS +
             (dependencies.resolveApplicationSpan
-              ? " " + riskRelationInstruction
+              ? " Return only the typed relation fields required by the output schema; earlier free-form content field instructions do not apply. Use the fixed source relation kinds. Each operand must identify one passage and copy a complete phrase of at most 160 characters that occurs exactly once in that passage. Never count character offsets or paste long code blocks. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects, approved requirements or permission to execute. " +
+                RISK_RELATION_GUIDANCE
               : ""),
         },
         {
@@ -313,8 +315,12 @@ export function createWorkItemRisk(dependencies) {
       (question, index) => {
         const at = `/assumptions_to_confirm/${index}`;
         if (dependencies.resolveApplicationSpan) {
-          const row = renderRiskPresentation(
+          const presentation = normalizeRiskExcerpts(
             question,
+            prepared.catalog,
+          );
+          const row = renderRiskPresentation(
+            presentation,
             prepared.catalog,
             dependencies.resolveApplicationSpan,
           );
@@ -329,7 +335,7 @@ export function createWorkItemRisk(dependencies) {
               ...offered.get(id),
               semantic_support: "not_verified",
             })),
-            source_projection: riskSourceRecord(question, prepared.catalog),
+            source_projection: riskSourceRecord(presentation, prepared.catalog),
           };
         }
         responseCheck(
@@ -545,7 +551,6 @@ export function createWorkItemRisk(dependencies) {
         template: {
           model: MODEL,
           reasoning: { effort: "medium" },
-          max_output_tokens: LIMITS.outputTokens,
           instructions: INSTRUCTIONS,
         },
       },

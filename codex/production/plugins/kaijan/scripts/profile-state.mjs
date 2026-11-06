@@ -14,6 +14,9 @@ import { dirname, join, resolve } from "node:path";
 
 // A profile is an environment boundary; a version update is not a new identity.
 export async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
   if (
     !["local", "qa", "production"].includes(build.profile) ||
     typeof build.coreOrigin !== "string" ||
@@ -39,14 +42,17 @@ export async function bindProfileState(build, args, home) {
       if (!selected || selected.startsWith("--"))
         throw new Error("Missing private state directory.");
     } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const host = arg === "--host" ? args[++i] : arg.slice(7);
-      if (host !== "codex")
-        throw new Error("This package belongs to the Codex host.");
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex"
+            ? "This package belongs to the Codex host."
+            : "This package belongs to the Claude Code host.",
+        );
     } else forwarded.push(arg);
   }
   const state = resolve(
-    selected ??
-      join(home, ".local", "share", "loki", "codex", build.profile, key),
+    selected ?? join(home, ".local", "share", "loki", host, build.profile, key),
   );
   await mkdir(state, { recursive: true, mode: 0o700 });
   if (
@@ -120,5 +126,5 @@ export async function bindProfileState(build, args, home) {
   } finally {
     await file.close();
   }
-  return { state, args: [...forwarded, "--host", "codex", "--state", state] };
+  return { state, args: [...forwarded, "--host", host, "--state", state] };
 }

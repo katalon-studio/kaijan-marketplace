@@ -16,7 +16,7 @@ hides those indicators.
 
 ## Presentation
 
-Use ASD-STE100 Simplified Technical English for host narration and final prose.
+Use ASD-STE100 Simplified Technical English when replying to a human.
 Use the host's final rendering as a plain English presentation pass: short active
 sentences and familiar words. Do not reduce analysis quality. Keep original
 structured analysis, evidence and verdicts intact. Preserve facts, numbers, names,

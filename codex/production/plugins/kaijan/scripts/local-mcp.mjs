@@ -1502,37 +1502,37 @@ var require_dataType = __commonJS({
       DataType2[DataType2["Wrong"] = 1] = "Wrong";
     })(DataType || (exports.DataType = DataType = {}));
     function getSchemaTypes(schema) {
-      const types = getJSONTypes(schema.type);
-      const hasNull = types.includes("null");
+      const types2 = getJSONTypes(schema.type);
+      const hasNull = types2.includes("null");
       if (hasNull) {
         if (schema.nullable === false)
           throw new Error("type: null contradicts nullable: false");
       } else {
-        if (!types.length && schema.nullable !== void 0) {
+        if (!types2.length && schema.nullable !== void 0) {
           throw new Error('"nullable" cannot be used without "type"');
         }
         if (schema.nullable === true)
-          types.push("null");
+          types2.push("null");
       }
-      return types;
+      return types2;
     }
     exports.getSchemaTypes = getSchemaTypes;
     function getJSONTypes(ts) {
-      const types = Array.isArray(ts) ? ts : ts ? [ts] : [];
-      if (types.every(rules_1.isJSONType))
-        return types;
-      throw new Error("type must be JSONType or JSONType[]: " + types.join(","));
+      const types2 = Array.isArray(ts) ? ts : ts ? [ts] : [];
+      if (types2.every(rules_1.isJSONType))
+        return types2;
+      throw new Error("type must be JSONType or JSONType[]: " + types2.join(","));
     }
     exports.getJSONTypes = getJSONTypes;
-    function coerceAndCheckDataType(it, types) {
+    function coerceAndCheckDataType(it, types2) {
       const { gen, data, opts } = it;
-      const coerceTo = coerceToTypes(types, opts.coerceTypes);
-      const checkTypes = types.length > 0 && !(coerceTo.length === 0 && types.length === 1 && (0, applicability_1.schemaHasRulesForType)(it, types[0]));
+      const coerceTo = coerceToTypes(types2, opts.coerceTypes);
+      const checkTypes = types2.length > 0 && !(coerceTo.length === 0 && types2.length === 1 && (0, applicability_1.schemaHasRulesForType)(it, types2[0]));
       if (checkTypes) {
-        const wrongType = checkDataTypes(types, data, opts.strictNumbers, DataType.Wrong);
+        const wrongType = checkDataTypes(types2, data, opts.strictNumbers, DataType.Wrong);
         gen.if(wrongType, () => {
           if (coerceTo.length)
-            coerceData(it, types, coerceTo);
+            coerceData(it, types2, coerceTo);
           else
             reportTypeError(it);
         });
@@ -1541,15 +1541,15 @@ var require_dataType = __commonJS({
     }
     exports.coerceAndCheckDataType = coerceAndCheckDataType;
     var COERCIBLE = /* @__PURE__ */ new Set(["string", "number", "integer", "boolean", "null"]);
-    function coerceToTypes(types, coerceTypes) {
-      return coerceTypes ? types.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
+    function coerceToTypes(types2, coerceTypes) {
+      return coerceTypes ? types2.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
     }
-    function coerceData(it, types, coerceTo) {
+    function coerceData(it, types2, coerceTo) {
       const { gen, data, opts } = it;
       const dataType = gen.let("dataType", (0, codegen_1._)`typeof ${data}`);
       const coerced = gen.let("coerced", (0, codegen_1._)`undefined`);
       if (opts.coerceTypes === "array") {
-        gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types, data, opts.strictNumbers), () => gen.assign(coerced, data)));
+        gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types2, data, opts.strictNumbers), () => gen.assign(coerced, data)));
       }
       gen.if((0, codegen_1._)`${coerced} !== undefined`);
       for (const t of coerceTo) {
@@ -1625,19 +1625,19 @@ var require_dataType = __commonJS({
         return checkDataType(dataTypes[0], data, strictNums, correct);
       }
       let cond;
-      const types = (0, util_1.toHash)(dataTypes);
-      if (types.array && types.object) {
+      const types2 = (0, util_1.toHash)(dataTypes);
+      if (types2.array && types2.object) {
         const notObj = (0, codegen_1._)`typeof ${data} != "object"`;
-        cond = types.null ? notObj : (0, codegen_1._)`!${data} || ${notObj}`;
-        delete types.null;
-        delete types.array;
-        delete types.object;
+        cond = types2.null ? notObj : (0, codegen_1._)`!${data} || ${notObj}`;
+        delete types2.null;
+        delete types2.array;
+        delete types2.object;
       } else {
         cond = codegen_1.nil;
       }
-      if (types.number)
-        delete types.integer;
-      for (const t in types)
+      if (types2.number)
+        delete types2.integer;
+      for (const t in types2)
         cond = (0, codegen_1.and)(cond, checkDataType(t, data, strictNums, correct));
       return cond;
     }
@@ -2442,9 +2442,9 @@ var require_validate = __commonJS({
     function typeAndKeywords(it, errsCount) {
       if (it.opts.jtd)
         return schemaKeywords(it, [], false, errsCount);
-      const types = (0, dataType_1.getSchemaTypes)(it.schema);
-      const checkedTypes = (0, dataType_1.coerceAndCheckDataType)(it, types);
-      schemaKeywords(it, types, !checkedTypes, errsCount);
+      const types2 = (0, dataType_1.getSchemaTypes)(it.schema);
+      const checkedTypes = (0, dataType_1.coerceAndCheckDataType)(it, types2);
+      schemaKeywords(it, types2, !checkedTypes, errsCount);
     }
     function checkRefsAndKeywords(it) {
       const { schema, errSchemaPath, opts, self } = it;
@@ -2494,7 +2494,7 @@ var require_validate = __commonJS({
       if (items instanceof codegen_1.Name)
         gen.assign((0, codegen_1._)`${evaluated}.items`, items);
     }
-    function schemaKeywords(it, types, typeErrors, errsCount) {
+    function schemaKeywords(it, types2, typeErrors, errsCount) {
       const { gen, schema, data, allErrors, opts, self } = it;
       const { RULES } = self;
       if (schema.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1.schemaHasRulesButRef)(schema, RULES))) {
@@ -2502,7 +2502,7 @@ var require_validate = __commonJS({
         return;
       }
       if (!opts.jtd)
-        checkStrictTypes(it, types);
+        checkStrictTypes(it, types2);
       gen.block(() => {
         for (const group of RULES.rules)
           groupKeywords(group);
@@ -2514,7 +2514,7 @@ var require_validate = __commonJS({
         if (group.type) {
           gen.if((0, dataType_2.checkDataType)(group.type, data, opts.strictNumbers));
           iterateKeywords(it, group);
-          if (types.length === 1 && types[0] === group.type && typeErrors) {
+          if (types2.length === 1 && types2[0] === group.type && typeErrors) {
             gen.else();
             (0, dataType_2.reportTypeError)(it);
           }
@@ -2538,27 +2538,27 @@ var require_validate = __commonJS({
         }
       });
     }
-    function checkStrictTypes(it, types) {
+    function checkStrictTypes(it, types2) {
       if (it.schemaEnv.meta || !it.opts.strictTypes)
         return;
-      checkContextTypes(it, types);
+      checkContextTypes(it, types2);
       if (!it.opts.allowUnionTypes)
-        checkMultipleTypes(it, types);
+        checkMultipleTypes(it, types2);
       checkKeywordTypes(it, it.dataTypes);
     }
-    function checkContextTypes(it, types) {
-      if (!types.length)
+    function checkContextTypes(it, types2) {
+      if (!types2.length)
         return;
       if (!it.dataTypes.length) {
-        it.dataTypes = types;
+        it.dataTypes = types2;
         return;
       }
-      types.forEach((t) => {
+      types2.forEach((t) => {
         if (!includesType(it.dataTypes, t)) {
           strictTypesError(it, `type "${t}" not allowed by context "${it.dataTypes.join(",")}"`);
         }
       });
-      narrowSchemaTypes(it, types);
+      narrowSchemaTypes(it, types2);
     }
     function checkMultipleTypes(it, ts) {
       if (ts.length > 1 && !(ts.length === 2 && ts.includes("null"))) {
@@ -7315,7 +7315,36 @@ import {
 } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
+
+// apps/codex-plugin/src/host.mjs
+function pluginHost(build) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw Error("Unsupported plugin host");
+  return host;
+}
+function installationPrefix(build) {
+  return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
+}
+function claudeSessionId(environment) {
+  const id6 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id6 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id6))
+    throw Error(
+      "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
+    );
+  return id6;
+}
+function bindHostSession(session, build, environment) {
+  if (pluginHost(build) !== "claude_code") return session;
+  const threadId = claudeSessionId(environment);
+  const forRequest = session.forRequest.bind(session);
+  session.forRequest = (metadata2) => forRequest({ ...metadata2, threadId });
+  return session;
+}
+
+// apps/codex-plugin/src/auth/profile.mjs
 async function brokerProfile(build, home = homedir()) {
+  const prefix = installationPrefix(build);
   if (!["local", "qa", "production"].includes(build.profile))
     throw Error("Invalid profile");
   const origin = new URL(build.coreOrigin);
@@ -7341,7 +7370,7 @@ async function brokerProfile(build, home = homedir()) {
     const temporary = join(directory, `.${randomUUID()}`);
     await writeFile(
       temporary,
-      JSON.stringify({ installationId: `kaijan-codex-plugin-${randomUUID()}` }),
+      JSON.stringify({ installationId: `${prefix}${randomUUID()}` }),
       { mode: 384, flag: "wx" }
     );
     try {
@@ -7356,7 +7385,7 @@ async function brokerProfile(build, home = homedir()) {
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
   const identity4 = JSON.parse(await readFile(identityPath, "utf8"));
-  if (!/^kaijan-codex-plugin-[a-f0-9-]{36}$/.test(identity4.installationId))
+  if (typeof identity4.installationId !== "string" || !identity4.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity4.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
   const state2 = {
@@ -7829,8 +7858,8 @@ function isError(candidate) {
       return isInstanceOf(candidate, Error);
   }
 }
-function isErrorEvent(event) {
-  return isBuiltin(event, "ErrorEvent");
+function isErrorEvent(event2) {
+  return isBuiltin(event2, "ErrorEvent");
 }
 function isEvent(candidate) {
   return "u" > typeof Event && isInstanceOf(candidate, Event);
@@ -9124,7 +9153,7 @@ var PROMISE_FRAME_FILENAME = "node:internal/promise";
 var nodeStackLineParser = (line, platform3) => {
   const lineMatch = line.match(FULL_MATCH);
   if (lineMatch) {
-    let object8;
+    let object9;
     let method;
     let functionName;
     let typeName;
@@ -9134,18 +9163,18 @@ var nodeStackLineParser = (line, platform3) => {
       let methodStart = functionName.lastIndexOf(".");
       if ("." === functionName[methodStart - 1]) methodStart--;
       if (methodStart > 0) {
-        object8 = functionName.slice(0, methodStart);
+        object9 = functionName.slice(0, methodStart);
         method = functionName.slice(methodStart + 1);
-        const objectEnd = object8.indexOf(".Module");
+        const objectEnd = object9.indexOf(".Module");
         if (objectEnd > 0) {
           functionName = functionName.slice(objectEnd + 1);
-          object8 = object8.slice(0, objectEnd);
+          object9 = object9.slice(0, objectEnd);
         }
       }
       typeName = void 0;
     }
     if (method) {
-      typeName = object8;
+      typeName = object9;
       methodName = method;
     }
     if ("<anonymous>" === method) {
@@ -9880,16 +9909,16 @@ var SimpleEventEmitter = class {
     this.events = {};
     this.events = {};
   }
-  on(event, listener) {
-    if (!this.events[event]) this.events[event] = [];
-    this.events[event].push(listener);
+  on(event2, listener) {
+    if (!this.events[event2]) this.events[event2] = [];
+    this.events[event2].push(listener);
     return () => {
-      this.events[event] = this.events[event].filter((x) => x !== listener);
+      this.events[event2] = this.events[event2].filter((x) => x !== listener);
     };
   }
-  emit(event, payload) {
-    for (const listener of this.events[event] || []) listener(payload);
-    for (const listener of this.events["*"] || []) listener(event, payload);
+  emit(event2, payload) {
+    for (const listener of this.events[event2] || []) listener(payload);
+    for (const listener of this.events["*"] || []) listener(event2, payload);
   }
 };
 
@@ -10159,13 +10188,13 @@ var PostHogCoreStateless = class {
       this.setPersistedProperty(types_PostHogPersistedProperty.OptedOut, true);
     });
   }
-  on(event, cb) {
-    return this._events.on(event, cb);
+  on(event2, cb) {
+    return this._events.on(event2, cb);
   }
   debug(enabled = true) {
     this.removeDebugCallback?.();
     if (enabled) {
-      const removeDebugCallback = this.on("*", (event, payload) => this._logger.info(event, payload));
+      const removeDebugCallback = this.on("*", (event2, payload) => this._logger.info(event2, payload));
       this.removeDebugCallback = () => {
         removeDebugCallback();
         this.removeDebugCallback = void 0;
@@ -10223,20 +10252,20 @@ var PostHogCoreStateless = class {
     };
     await this.sendImmediate("identify", payload, options);
   }
-  captureStateless(distinctId, event, properties, options) {
+  captureStateless(distinctId, event2, properties, options) {
     this.wrap(() => {
       const payload = this.buildPayload({
         distinct_id: distinctId,
-        event,
+        event: event2,
         properties
       });
       this.enqueue("capture", payload, options);
     });
   }
-  async captureStatelessImmediate(distinctId, event, properties, options) {
+  async captureStatelessImmediate(distinctId, event2, properties, options) {
     const payload = this.buildPayload({
       distinct_id: distinctId,
-      event,
+      event: event2,
       properties
     });
     await this.sendImmediate("capture", payload, options);
@@ -13033,18 +13062,18 @@ function applySpanLimits(record5, autoKeys, maxAttributes, maxEvents, maxAttribu
   let keptEvents = 0;
   let droppedEvents = 0;
   const events = [];
-  for (const event of record5.events) {
+  for (const event2 of record5.events) {
     if (keptEvents >= maxEvents) {
       droppedEvents++;
       continue;
     }
     keptEvents++;
-    if (event.attributes) {
-      const bounded = boundAttributes(event.attributes, maxAttributesPerEvent, maxAttributeValueLength);
-      event.attributes = bounded.attributes;
-      if (bounded.dropped) event.droppedAttributesCount = nonNegativeCount(event.droppedAttributesCount) + bounded.dropped;
+    if (event2.attributes) {
+      const bounded = boundAttributes(event2.attributes, maxAttributesPerEvent, maxAttributeValueLength);
+      event2.attributes = bounded.attributes;
+      if (bounded.dropped) event2.droppedAttributesCount = nonNegativeCount(event2.droppedAttributesCount) + bounded.dropped;
     }
-    events.push(event);
+    events.push(event2);
   }
   record5.events = events;
   if (droppedEvents) record5.droppedEventsCount = nonNegativeCount(record5.droppedEventsCount) + droppedEvents;
@@ -13311,16 +13340,16 @@ function msToUnixNanoString(ms) {
   }
   return String(whole) + String(fractionalNanos).padStart(6, "0");
 }
-function toOtlpEvent(event, logger) {
+function toOtlpEvent(event2, logger) {
   const encoded = {
-    name: wireString(event.name),
-    timeUnixNano: msToUnixNanoString(event.timestamp)
+    name: wireString(event2.name),
+    timeUnixNano: msToUnixNanoString(event2.timestamp)
   };
-  if (event.attributes) {
-    const attributes = toOtlpKeyValueList(event.attributes, logger);
+  if (event2.attributes) {
+    const attributes = toOtlpKeyValueList(event2.attributes, logger);
     if (attributes.length) encoded.attributes = attributes;
   }
-  const dropped = nonNegativeCount(event.droppedAttributesCount);
+  const dropped = nonNegativeCount(event2.droppedAttributesCount);
   if (dropped) encoded.droppedAttributesCount = dropped;
   return encoded;
 }
@@ -13338,7 +13367,7 @@ function buildOtlpSpan(record5, logger) {
   if (record5.traceState) span.traceState = wireString(record5.traceState);
   const attributes = toOtlpKeyValueList(record5.attributes, logger);
   if (attributes.length) span.attributes = attributes;
-  if (record5.events.length) span.events = record5.events.map((event) => toOtlpEvent(event, logger));
+  if (record5.events.length) span.events = record5.events.map((event2) => toOtlpEvent(event2, logger));
   const droppedAttributes = nonNegativeCount(record5.droppedAttributesCount);
   if (droppedAttributes) span.droppedAttributesCount = droppedAttributes;
   const droppedEvents = nonNegativeCount(record5.droppedEventsCount);
@@ -13408,19 +13437,19 @@ function looksLikeSpan(value) {
 function isSpanRecordShape(record5) {
   return !!record5.attributes && "object" == typeof record5.attributes && !Array.isArray(record5.attributes) && Array.isArray(record5.events) && void 0 !== record5.name && void 0 !== record5.kind && void 0 !== record5.startTime && void 0 !== record5.endTime;
 }
-function restoreField(record5, field, value) {
-  if (record5[field] !== value) record5[field] = value;
+function restoreField(record5, field2, value) {
+  if (record5[field2] !== value) record5[field2] = value;
 }
 function withRestoredIdentity(hooked, original2) {
   try {
     const descriptors = Object.getOwnPropertyDescriptors(hooked);
-    for (const field of [
+    for (const field2 of [
       "traceId",
       "spanId",
       "parentSpanId",
       "traceState"
-    ]) descriptors[field] = {
-      value: original2[field],
+    ]) descriptors[field2] = {
+      value: original2[field2],
       enumerable: true,
       writable: true,
       configurable: true
@@ -13632,7 +13661,7 @@ var PostHogTraces = class {
     const attributes = record5.droppedAttributesCount ?? 0;
     const events = record5.droppedEventsCount ?? 0;
     let eventAttributes = 0;
-    for (const event of record5.events) eventAttributes += event.droppedAttributesCount ?? 0;
+    for (const event2 of record5.events) eventAttributes += event2.droppedAttributesCount ?? 0;
     if (attributes || events || eventAttributes) this._logger.debug(`Span limits discarded data from "${record5.name}": ${attributes} attributes, ${events} events, ${eventAttributes} event attributes`);
   }
   _runBeforeSpanSend(record5, autoKeys) {
@@ -13701,11 +13730,11 @@ var PostHogTraces = class {
       current.startTime = toEpochMs(current.startTime) ?? originalTimes.startTime;
       current.endTime = clampEndTime(toEpochMs(current.endTime) ?? originalTimes.endTime, current.startTime);
       const sanitizedEvents = [];
-      for (const event of current.events) try {
+      for (const event2 of current.events) try {
         sanitizedEvents.push({
-          ...event,
-          name: sanitizeName(event.name, "Span event name", this._config.maxAttributeValueLength, this._logger),
-          timestamp: resolveSuppliedTime(event.timestamp, current.startTime, "event timestamp", this._logger)
+          ...event2,
+          name: sanitizeName(event2.name, "Span event name", this._config.maxAttributeValueLength, this._logger),
+          timestamp: resolveSuppliedTime(event2.timestamp, current.startTime, "event timestamp", this._logger)
         });
       } catch {
         this._logger.debug("beforeSpanSend left an unreadable span event; dropping it");
@@ -14062,118 +14091,118 @@ var BUILT_IN_EVENT_NAME_BY_TYPE = {
   [MCPAnalyticsEventType.mcpToolsCall]: PostHogMCPAnalyticsEvent.ToolCall,
   [MCPAnalyticsEventType.mcpToolsList]: PostHogMCPAnalyticsEvent.ToolsList
 };
-function getDistinctId(event) {
-  return event.identifyActorGivenId || event.sessionId || "anonymous";
+function getDistinctId(event2) {
+  return event2.identifyActorGivenId || event2.sessionId || "anonymous";
 }
-function getTimestamp(event) {
-  return event.timestamp ? event.timestamp.toISOString() : (/* @__PURE__ */ new Date()).toISOString();
+function getTimestamp(event2) {
+  return event2.timestamp ? event2.timestamp.toISOString() : (/* @__PURE__ */ new Date()).toISOString();
 }
-function buildPostHogCaptureEvents(event, options = {}) {
+function buildPostHogCaptureEvents(event2, options = {}) {
   const batch = [
-    buildCaptureEvent(event)
+    buildCaptureEvent(event2)
   ];
-  if (event.isError && event.error && false !== options.enableExceptionAutocapture) batch.push(buildExceptionEvent(event));
+  if (event2.isError && event2.error && false !== options.enableExceptionAutocapture) batch.push(buildExceptionEvent(event2));
   return batch;
 }
-function buildCaptureEvent(event) {
-  const distinctId = getDistinctId(event);
-  const timestamp = getTimestamp(event);
+function buildCaptureEvent(event2) {
+  const distinctId = getDistinctId(event2);
+  const timestamp = getTimestamp(event2);
   const properties = {
     [PostHogMCPAnalyticsProperty.Interface]: "mcp",
     [PostHogMCPAnalyticsProperty.Source]: POSTHOG_MCP_ANALYTICS_SOURCE
   };
-  addSessionIdProperty(event, properties);
-  addConversationIdProperty(event, properties);
-  addPersonProcessingProperty(event, properties);
-  addGroupsProperty(event, properties);
-  addCommonEventProperties(event, properties);
-  addCustomEventProperties(event, properties);
-  addServerBuildProperty(event, properties);
+  addSessionIdProperty(event2, properties);
+  addConversationIdProperty(event2, properties);
+  addPersonProcessingProperty(event2, properties);
+  addGroupsProperty(event2, properties);
+  addCommonEventProperties(event2, properties);
+  addCustomEventProperties(event2, properties);
+  addServerBuildProperty(event2, properties);
   return {
-    event: event.eventName ?? BUILT_IN_EVENT_NAME_BY_TYPE[event.eventType],
+    event: event2.eventName ?? BUILT_IN_EVENT_NAME_BY_TYPE[event2.eventType],
     distinct_id: distinctId,
     properties,
     timestamp,
     type: "capture"
   };
 }
-function addSessionIdProperty(event, properties) {
-  if ("string" == typeof event.sessionId && event.sessionId.length > 0) properties[PostHogMCPAnalyticsProperty.SessionId] = event.sessionId;
+function addSessionIdProperty(event2, properties) {
+  if ("string" == typeof event2.sessionId && event2.sessionId.length > 0) properties[PostHogMCPAnalyticsProperty.SessionId] = event2.sessionId;
 }
-function addConversationIdProperty(event, properties) {
-  if (void 0 !== event.conversationId && "" !== event.conversationId) properties[PostHogMCPAnalyticsProperty.ConversationId] = event.conversationId;
+function addConversationIdProperty(event2, properties) {
+  if (void 0 !== event2.conversationId && "" !== event2.conversationId) properties[PostHogMCPAnalyticsProperty.ConversationId] = event2.conversationId;
 }
-function addGroupsProperty(event, properties) {
-  if (event.groups && Object.keys(event.groups).length > 0) properties.$groups = event.groups;
+function addGroupsProperty(event2, properties) {
+  if (event2.groups && Object.keys(event2.groups).length > 0) properties.$groups = event2.groups;
 }
-function addPersonProcessingProperty(event, properties) {
-  if (!event.identifyActorGivenId) properties.$process_person_profile = false;
+function addPersonProcessingProperty(event2, properties) {
+  if (!event2.identifyActorGivenId) properties.$process_person_profile = false;
 }
-function addCommonEventProperties(event, properties) {
-  if (event.resourceName) {
-    properties[PostHogMCPAnalyticsProperty.ResourceName] = event.resourceName;
-    if (event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event.resourceName;
+function addCommonEventProperties(event2, properties) {
+  if (event2.resourceName) {
+    properties[PostHogMCPAnalyticsProperty.ResourceName] = event2.resourceName;
+    if (event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event2.resourceName;
   }
-  if (event.toolDescription && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event.toolDescription;
-  if (event.toolCategory && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event.toolCategory;
-  if (event.listedToolNames && event.listedToolNames.length > 0 && event.eventType === MCPAnalyticsEventType.mcpToolsList) properties[PostHogMCPAnalyticsProperty.ListedToolNames] = event.listedToolNames;
-  if (void 0 !== event.duration) properties[PostHogMCPAnalyticsProperty.DurationMs] = event.duration;
-  if (event.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event.serverName;
-  if (event.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event.serverVersion;
-  if (event.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event.clientName;
-  if (event.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event.clientVersion;
-  if (event.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event.clientUserAgent;
-  if (event.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event.vendorClient;
-  if (event.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event.protocolVersion;
-  if (event.userIntent) properties[PostHogMCPAnalyticsProperty.Intent] = event.userIntent;
-  if (event.userIntentSource) properties[PostHogMCPAnalyticsProperty.IntentSource] = event.userIntentSource;
-  if (event.llmModel) properties[PostHogMCPAnalyticsProperty.LlmModel] = event.llmModel;
-  if (event.llmModelSource) properties[PostHogMCPAnalyticsProperty.LlmModelSource] = event.llmModelSource;
-  if (void 0 !== event.isError) properties[PostHogMCPAnalyticsProperty.IsError] = event.isError;
-  if (event.isError) {
-    const firstException = event.error?.$exception_list?.[0];
-    const errorType = event.errorType ?? firstException?.type;
+  if (event2.toolDescription && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event2.toolDescription;
+  if (event2.toolCategory && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event2.toolCategory;
+  if (event2.listedToolNames && event2.listedToolNames.length > 0 && event2.eventType === MCPAnalyticsEventType.mcpToolsList) properties[PostHogMCPAnalyticsProperty.ListedToolNames] = event2.listedToolNames;
+  if (void 0 !== event2.duration) properties[PostHogMCPAnalyticsProperty.DurationMs] = event2.duration;
+  if (event2.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event2.serverName;
+  if (event2.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event2.serverVersion;
+  if (event2.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event2.clientName;
+  if (event2.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event2.clientVersion;
+  if (event2.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event2.clientUserAgent;
+  if (event2.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event2.vendorClient;
+  if (event2.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event2.protocolVersion;
+  if (event2.userIntent) properties[PostHogMCPAnalyticsProperty.Intent] = event2.userIntent;
+  if (event2.userIntentSource) properties[PostHogMCPAnalyticsProperty.IntentSource] = event2.userIntentSource;
+  if (event2.llmModel) properties[PostHogMCPAnalyticsProperty.LlmModel] = event2.llmModel;
+  if (event2.llmModelSource) properties[PostHogMCPAnalyticsProperty.LlmModelSource] = event2.llmModelSource;
+  if (void 0 !== event2.isError) properties[PostHogMCPAnalyticsProperty.IsError] = event2.isError;
+  if (event2.isError) {
+    const firstException = event2.error?.$exception_list?.[0];
+    const errorType = event2.errorType ?? firstException?.type;
     if (errorType) properties[PostHogMCPAnalyticsProperty.ErrorType] = errorType;
     if (firstException?.value) properties[PostHogMCPAnalyticsProperty.ErrorMessage] = firstException.value;
   }
-  if (void 0 !== event.parameters) properties[PostHogMCPAnalyticsProperty.Parameters] = event.parameters;
-  if (void 0 !== event.response) properties[PostHogMCPAnalyticsProperty.Response] = event.response;
-  if (event.identifyActorData && Object.keys(event.identifyActorData).length > 0) properties.$set = {
-    ...event.identifyActorData
+  if (void 0 !== event2.parameters) properties[PostHogMCPAnalyticsProperty.Parameters] = event2.parameters;
+  if (void 0 !== event2.response) properties[PostHogMCPAnalyticsProperty.Response] = event2.response;
+  if (event2.identifyActorData && Object.keys(event2.identifyActorData).length > 0) properties.$set = {
+    ...event2.identifyActorData
   };
 }
-function addCustomEventProperties(event, properties) {
-  if (event.properties) for (const [key, value] of Object.entries(event.properties)) properties[key] = value;
+function addCustomEventProperties(event2, properties) {
+  if (event2.properties) for (const [key, value] of Object.entries(event2.properties)) properties[key] = value;
 }
-function addServerBuildProperty(event, properties) {
-  if (event.serverBuild) properties[PostHogMCPAnalyticsProperty.ServerBuild] = event.serverBuild;
+function addServerBuildProperty(event2, properties) {
+  if (event2.serverBuild) properties[PostHogMCPAnalyticsProperty.ServerBuild] = event2.serverBuild;
 }
-function buildExceptionEvent(event) {
-  const distinctId = getDistinctId(event);
-  const timestamp = getTimestamp(event);
+function buildExceptionEvent(event2) {
+  const distinctId = getDistinctId(event2);
+  const timestamp = getTimestamp(event2);
   const properties = {
     [PostHogMCPAnalyticsProperty.Interface]: "mcp"
   };
-  addSessionIdProperty(event, properties);
-  addConversationIdProperty(event, properties);
-  addPersonProcessingProperty(event, properties);
-  addGroupsProperty(event, properties);
-  if (event.error) Object.assign(properties, event.error);
-  if (event.resourceName) {
-    properties[PostHogMCPAnalyticsProperty.ResourceName] = event.resourceName;
-    if (event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event.resourceName;
+  addSessionIdProperty(event2, properties);
+  addConversationIdProperty(event2, properties);
+  addPersonProcessingProperty(event2, properties);
+  addGroupsProperty(event2, properties);
+  if (event2.error) Object.assign(properties, event2.error);
+  if (event2.resourceName) {
+    properties[PostHogMCPAnalyticsProperty.ResourceName] = event2.resourceName;
+    if (event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolName] = event2.resourceName;
   }
-  if (event.toolDescription && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event.toolDescription;
-  if (event.toolCategory && event.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event.toolCategory;
-  if (event.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event.serverName;
-  if (event.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event.serverVersion;
-  if (event.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event.clientName;
-  if (event.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event.clientVersion;
-  if (event.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event.clientUserAgent;
-  if (event.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event.vendorClient;
-  if (event.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event.protocolVersion;
-  addCustomEventProperties(event, properties);
-  addServerBuildProperty(event, properties);
+  if (event2.toolDescription && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolDescription] = event2.toolDescription;
+  if (event2.toolCategory && event2.eventType === MCPAnalyticsEventType.mcpToolsCall) properties[PostHogMCPAnalyticsProperty.ToolCategory] = event2.toolCategory;
+  if (event2.serverName) properties[PostHogMCPAnalyticsProperty.ServerName] = event2.serverName;
+  if (event2.serverVersion) properties[PostHogMCPAnalyticsProperty.ServerVersion] = event2.serverVersion;
+  if (event2.clientName) properties[PostHogMCPAnalyticsProperty.ClientName] = event2.clientName;
+  if (event2.clientVersion) properties[PostHogMCPAnalyticsProperty.ClientVersion] = event2.clientVersion;
+  if (event2.clientUserAgent) properties[PostHogMCPAnalyticsProperty.ClientUserAgent] = event2.clientUserAgent;
+  if (event2.vendorClient) properties[PostHogMCPAnalyticsProperty.VendorClient] = event2.vendorClient;
+  if (event2.protocolVersion) properties[PostHogMCPAnalyticsProperty.ProtocolVersion] = event2.protocolVersion;
+  addCustomEventProperties(event2, properties);
+  addServerBuildProperty(event2, properties);
   return {
     event: PostHogMCPAnalyticsEvent.Exception,
     distinct_id: distinctId,
@@ -14397,16 +14426,16 @@ var REDUCIBLE_FIELDS = [
   "identifyActorData",
   "error"
 ];
-function truncateToSize(event) {
-  if (jsonByteSize(event) <= MAX_EVENT_BYTES) return event;
-  const nesting = Math.max(...REDUCIBLE_FIELDS.map((field) => nestingDepth(event[field])));
+function truncateToSize(event2) {
+  if (jsonByteSize(event2) <= MAX_EVENT_BYTES) return event2;
+  const nesting = Math.max(...REDUCIBLE_FIELDS.map((field2) => nestingDepth(event2[field2])));
   let atDepthOne;
   for (let depth = nesting - 1; depth >= 1; depth--) {
-    const reduced = normalizeReducibleFields(event, depth);
+    const reduced = normalizeReducibleFields(event2, depth);
     if (jsonByteSize(reduced) <= MAX_EVENT_BYTES) return reduced;
     if (1 === depth) atDepthOne = reduced;
   }
-  return truncateLargestFields(atDepthOne ?? normalizeReducibleFields(event, 1), MAX_EVENT_BYTES);
+  return truncateLargestFields(atDepthOne ?? normalizeReducibleFields(event2, 1), MAX_EVENT_BYTES);
 }
 function nestingDepth(value, limit = MAX_DEPTH) {
   if (0 === limit || null === value || "object" != typeof value) return 0;
@@ -14417,16 +14446,16 @@ function nestingDepth(value, limit = MAX_DEPTH) {
   }
   return deepest + 1;
 }
-function normalizeReducibleFields(event, depth) {
+function normalizeReducibleFields(event2, depth) {
   const reduced = {
-    ...event
+    ...event2
   };
-  for (const field of REDUCIBLE_FIELDS) if (null != reduced[field]) reduced[field] = normalize(reduced[field], depth);
+  for (const field2 of REDUCIBLE_FIELDS) if (null != reduced[field2]) reduced[field2] = normalize(reduced[field2], depth);
   return reduced;
 }
-function truncateEvent(event) {
+function truncateEvent(event2) {
   const result2 = {
-    ...event
+    ...event2
   };
   result2.userIntent = truncateString2(result2.userIntent, MAX_USER_INTENT_LENGTH);
   result2.resourceName = truncateString2(result2.resourceName, MAX_RESOURCE_NAME_LENGTH);
@@ -14497,9 +14526,9 @@ function buildCapturedMcpParameters(request3) {
 function isRecord2(value) {
   return !!value && "object" == typeof value && !Array.isArray(value);
 }
-function sanitizeEvent(event) {
+function sanitizeEvent(event2) {
   const result2 = {
-    ...event
+    ...event2
   };
   if (null != result2.response) result2.response = sanitizeResponse(result2.response);
   if (null != result2.parameters) result2.parameters = sanitizeParameters(result2.parameters);
@@ -14567,8 +14596,8 @@ function sanitizeParameters(obj) {
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/sink.mjs
-async function processMcpEvent(event, options, logger = log) {
-  let processed = event;
+async function processMcpEvent(event2, options, logger = log) {
+  let processed = event2;
   try {
     processed = sanitizeEvent(processed);
   } catch (err) {
@@ -14608,8 +14637,8 @@ var McpEventSink = class {
     this.posthog = posthog;
     this.logger = logger;
   }
-  async capture(event, options) {
-    const result2 = await processMcpEvent(event, options, this.logger);
+  async capture(event2, options) {
+    const result2 = await processMcpEvent(event2, options, this.logger);
     if (!result2) return;
     const { event: fullEvent, captures } = result2;
     try {
@@ -14835,16 +14864,16 @@ function resolveClientIdentity({ request: request3, extra, server }) {
   }
   return result2.clientName || result2.clientVersion || result2.protocolVersion ? result2 : void 0;
 }
-function stampClientIdentity(event, request3, extra, server) {
+function stampClientIdentity(event2, request3, extra, server) {
   const info = resolveClientIdentity({
     request: request3,
     extra,
     server
   });
   if (!info) return;
-  if (info.clientName) event.clientName = info.clientName;
-  if (info.clientVersion) event.clientVersion = info.clientVersion;
-  if (info.protocolVersion) event.protocolVersion = info.protocolVersion;
+  if (info.clientName) event2.clientName = info.clientName;
+  if (info.clientVersion) event2.clientVersion = info.clientVersion;
+  if (info.protocolVersion) event2.protocolVersion = info.protocolVersion;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/session-token.mjs
@@ -15630,11 +15659,11 @@ function normalizeModel(model) {
   if (!trimmed || "unknown" === trimmed.toLowerCase()) return;
   return trimmed;
 }
-function setEventModel(event, model, source3 = "self_reported") {
+function setEventModel(event2, model, source3 = "self_reported") {
   const normalizedModel = normalizeModel(model);
   if (!normalizedModel) return;
-  event.llmModel = normalizedModel;
-  event.llmModelSource = source3;
+  event2.llmModel = normalizedModel;
+  event2.llmModelSource = source3;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/conversation-id.mjs
@@ -15727,11 +15756,11 @@ function readTransportIdentity(extra) {
   if (vendorClient) result2.vendorClient = vendorClient;
   return result2.clientUserAgent || result2.vendorClient ? result2 : void 0;
 }
-function stampTransportIdentity(event, extra) {
+function stampTransportIdentity(event2, extra) {
   const identity4 = readTransportIdentity(extra);
   if (!identity4) return;
-  if (identity4.clientUserAgent) event.clientUserAgent = identity4.clientUserAgent;
-  if (identity4.vendorClient) event.vendorClient = identity4.vendorClient;
+  if (identity4.clientUserAgent) event2.clientUserAgent = identity4.clientUserAgent;
+  if (identity4.vendorClient) event2.vendorClient = identity4.vendorClient;
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/exceptions.mjs
@@ -15789,25 +15818,25 @@ async function resolveToolCallIntent(data, request3, canCaptureContext, extra) {
   };
   return await runIntentFallback(data, request3, extra);
 }
-function setEventIntent(event, resolvedIntent) {
+function setEventIntent(event2, resolvedIntent) {
   if (!resolvedIntent) return;
-  event.userIntent = resolvedIntent.intent;
-  event.userIntentSource = resolvedIntent.source;
+  event2.userIntent = resolvedIntent.intent;
+  event2.userIntentSource = resolvedIntent.source;
 }
-function setExplicitContextIntent(event, context2) {
+function setExplicitContextIntent(event2, context2) {
   const intent = normalizeIntent(context2);
   if (!intent) return;
-  event.userIntent = intent;
-  event.userIntentSource = "context_parameter";
+  event2.userIntent = intent;
+  event2.userIntentSource = "context_parameter";
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/tracing-helpers.mjs
 function isToolResultError(result2) {
   return !!result2 && "object" == typeof result2 && "isError" in result2 && true === result2.isError;
 }
-async function applyResolvedMetadata(event, data, request3, extra) {
+async function applyResolvedMetadata(event2, data, request3, extra) {
   const resolvedProperties = await resolveEventProperties(data, request3, extra);
-  if (resolvedProperties) event.properties = resolvedProperties;
+  if (resolvedProperties) event2.properties = resolvedProperties;
 }
 function getContextArgument2(request3) {
   const context2 = request3.params?.arguments?.context;
@@ -15999,7 +16028,7 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
     const sessionId = getSessionId(server, extra, conversation.conversationId);
     const sessionInfo = getSessionInfo(server, data, sessionId);
     const toolName = request3.params?.name;
-    const event = {
+    const event2 = {
       sessionId,
       conversationId: conversation.conversationId,
       resourceName: toolName || "Unknown Tool Name",
@@ -16009,18 +16038,18 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
       toolCategory: toolName ? data.toolCategories.get(toolName) : void 0,
       toolDescription: toolName ? data.toolDescriptions.get(toolName) : void 0
     };
-    stampClientIdentity(event, request3, extra, server);
-    stampTransportIdentity(event, extra);
+    stampClientIdentity(event2, request3, extra, server);
+    stampTransportIdentity(event2, extra);
     const identity4 = await handleIdentify(data, sessionId, request3, extra);
     const requestAttribution = withIdentity(sessionInfo, identity4);
-    await applyResolvedMetadata(event, data, request3, extra);
-    setEventIntent(event, await resolveToolCallIntent(data, request3, canCaptureContextIntent, extra));
+    await applyResolvedMetadata(event2, data, request3, extra);
+    setEventIntent(event2, await resolveToolCallIntent(data, request3, canCaptureContextIntent, extra));
     if (isCaptureModelEnabled(data.options.captureModel)) {
       const resolvedModel = resolveModel(request3, ownership2.read.llmModel);
-      setEventModel(event, resolvedModel?.model, resolvedModel?.source);
+      setEventModel(event2, resolvedModel?.model, resolvedModel?.source);
     }
     return {
-      event,
+      event: event2,
       requestAttribution
     };
   } catch (error63) {
@@ -16028,7 +16057,7 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
     return null;
   }
 }
-function applyConversationInstructions(event, result2, conversation, ownership2) {
+function applyConversationInstructions(event2, result2, conversation, ownership2) {
   const conversationId = conversation.conversationId;
   if (!conversationId) return result2;
   let updated = result2;
@@ -16042,51 +16071,51 @@ function applyConversationInstructions(event, result2, conversation, ownership2)
     updated = injectConversationIdPromptBack(updated, conversationId);
     delivered = true;
   }
-  if (!delivered && conversation.minted && event) event.conversationId = void 0;
+  if (!delivered && conversation.minted && event2) event2.conversationId = void 0;
   return updated;
 }
 function publishSuccessfulToolEvent(server, preparedEvent, result2, startTime, logger, takeCapturedError, resultBeforeInstructions) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
     if (isToolResultError(result2)) {
-      event.isError = true;
+      event2.isError = true;
       const capturedError = takeCapturedError?.();
-      event.error = captureException(capturedError ?? resultBeforeInstructions ?? result2);
-    } else event.isError = false;
-    event.response = result2;
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, logger, requestAttribution);
+      event2.error = captureException(capturedError ?? resultBeforeInstructions ?? result2);
+    } else event2.isError = false;
+    event2.response = result2;
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, logger, requestAttribution);
   } catch (error63) {
     logger(`Warning: PostHog MCP analytics failed to publish tool event - ${error63}`);
   }
 }
 function publishFailedToolEvent(server, preparedEvent, error63, startTime, conversation, logger) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
-    if (conversation.minted) event.conversationId = void 0;
-    event.isError = true;
-    event.error = captureException(error63);
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, logger, requestAttribution);
+    if (conversation.minted) event2.conversationId = void 0;
+    event2.isError = true;
+    event2.error = captureException(error63);
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, logger, requestAttribution);
   } catch (publishError) {
     logger(`Warning: PostHog MCP analytics failed to publish failed tool event - ${publishError}`);
   }
 }
 function publishResourceEvent(server, preparedEvent, startTime, params, outcome3) {
   if (!preparedEvent) return;
-  const { event, requestAttribution } = preparedEvent;
+  const { event: event2, requestAttribution } = preparedEvent;
   try {
     if ("error" in outcome3) {
-      event.isError = true;
-      event.error = captureException(outcome3.error);
+      event2.isError = true;
+      event2.error = captureException(outcome3.error);
     } else {
-      event.isError = false;
-      if (params.eventType === MCPAnalyticsEventType.mcpResourcesList) event.response = outcome3.result;
+      event2.isError = false;
+      if (params.eventType === MCPAnalyticsEventType.mcpResourcesList) event2.response = outcome3.result;
     }
-    event.duration = Date.now() - startTime.getTime();
-    captureEvent(server, event, params.logger, requestAttribution);
+    event2.duration = Date.now() - startTime.getTime();
+    captureEvent(server, event2, params.logger, requestAttribution);
   } catch (error63) {
     params.logger(`Warning: PostHog MCP analytics failed to publish ${params.request.method} analytics - ${error63}`);
   }
@@ -16113,19 +16142,19 @@ async function captureResourceRequest(params) {
   try {
     const sessionId = getSessionId(server, extra);
     const sessionInfo = getSessionInfo(server, data, sessionId);
-    const event = {
+    const event2 = {
       sessionId,
       eventType,
       parameters: buildCapturedMcpParameters(request3),
       resourceName: eventType === MCPAnalyticsEventType.mcpResourcesRead ? request3.params?.uri : void 0,
       timestamp: startTime
     };
-    stampClientIdentity(event, request3, extra, server);
-    stampTransportIdentity(event, extra);
+    stampClientIdentity(event2, request3, extra, server);
+    stampTransportIdentity(event2, extra);
     const identity4 = await handleIdentify(data, sessionId, request3, extra);
-    await applyResolvedMetadata(event, data, request3, extra);
+    await applyResolvedMetadata(event2, data, request3, extra);
     preparedEvent = {
-      event,
+      event: event2,
       requestAttribution: withIdentity(sessionInfo, identity4)
     };
   } catch (error63) {
@@ -16200,18 +16229,18 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
   const startTime = /* @__PURE__ */ new Date();
   const sessionId = getSessionId(server, extra);
   const sessionInfo = getSessionInfo(server, data, sessionId);
-  const event = {
+  const event2 = {
     sessionId,
     parameters: buildCapturedMcpParameters(request3),
     eventType: MCPAnalyticsEventType.mcpToolsList,
     timestamp: startTime
   };
-  stampClientIdentity(event, request3, extra, server);
-  stampTransportIdentity(event, extra);
+  stampClientIdentity(event2, request3, extra, server);
+  stampTransportIdentity(event2, extra);
   const identity4 = data ? await handleIdentify(data, sessionId, request3, extra) : void 0;
   const requestAttribution = withIdentity(sessionInfo, identity4);
-  if (data) await applyResolvedMetadata(event, data, request3, extra);
-  const response = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
+  if (data) await applyResolvedMetadata(event2, data, request3, extra);
+  const response = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
   const tools2 = response.tools;
   if (!data) {
     logger("Warning: PostHog MCP analytics is unable to find server tracking data. Please ensure you have called instrument(server, options) before using tool calls.");
@@ -16219,17 +16248,17 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
   }
   if (0 === tools2.length) {
     data.logger("Warning: No tools found in the original list. This is likely due to the tools not being registered before PostHog MCP analytics.instrument().");
-    event.error = captureException("No tools were sent to MCP client.");
-    event.isError = true;
-    event.duration = Date.now() - startTime.getTime();
-    if (false !== data.options.sendToolsListEvent) captureEvent(server, event, data.logger, requestAttribution);
+    event2.error = captureException("No tools were sent to MCP client.");
+    event2.isError = true;
+    event2.duration = Date.now() - startTime.getTime();
+    if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
     return response;
   }
-  event.response = toolsListEnvelope(response);
-  event.listedToolNames = collectListedToolNames(tools2);
-  event.isError = false;
-  event.duration = Date.now() - startTime.getTime();
-  if (false !== data.options.sendToolsListEvent) captureEvent(server, event, data.logger, requestAttribution);
+  event2.response = toolsListEnvelope(response);
+  event2.listedToolNames = collectListedToolNames(tools2);
+  event2.isError = false;
+  event2.duration = Date.now() - startTime.getTime();
+  if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
   return response;
 }
 function cacheToolAnalyticsParameterOwnership(cache, tools2) {
@@ -16244,7 +16273,7 @@ function toolsListEnvelope(response) {
   const { tools: _tools, ...envelope } = response;
   return Object.keys(envelope).length > 0 ? envelope : void 0;
 }
-async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event, logger, requestAttribution, sendToolsListEvent) {
+async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, sendToolsListEvent) {
   try {
     const data = getServerTrackingData(server);
     const originalResponse = await originalListToolsHandler(request3, extra);
@@ -16253,10 +16282,10 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
     ];
     if (data) {
       cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, tools2);
-      if (event.sessionId) {
-        const sessionSchemas = data.toolInputSchemas.get(event.sessionId) ?? /* @__PURE__ */ new Map();
+      if (event2.sessionId) {
+        const sessionSchemas = data.toolInputSchemas.get(event2.sessionId) ?? /* @__PURE__ */ new Map();
         for (const tool of tools2) if (tool?.name) sessionSchemas.set(tool.name, tool.inputSchema);
-        data.toolInputSchemas.set(event.sessionId, sessionSchemas);
+        data.toolInputSchemas.set(event2.sessionId, sessionSchemas);
       }
     }
     if (data && isContextEnabled(data.options.context)) tools2 = addContextParameterToTools(tools2, getContextDescription(data.options.context), data.logger);
@@ -16303,10 +16332,10 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
     };
   } catch (error63) {
     logger(`Warning: Original list tools handler failed, this suggests an error PostHog MCP analytics did not cause - ${error63}`);
-    event.error = captureException(error63);
-    event.isError = true;
-    event.duration = event.timestamp ? Date.now() - event.timestamp.getTime() : 0;
-    if (sendToolsListEvent) captureEvent(server, event, logger, requestAttribution);
+    event2.error = captureException(error63);
+    event2.isError = true;
+    event2.duration = event2.timestamp ? Date.now() - event2.timestamp.getTime() : 0;
+    if (sendToolsListEvent) captureEvent(server, event2, logger, requestAttribution);
     throw error63;
   }
 }
@@ -16395,24 +16424,24 @@ async function handleInitializeRequest(server, originalInitializeHandler, reques
     clientName: initializeClientInfo?.name ?? sessionInfo.clientName,
     clientVersion: initializeClientInfo?.version ?? sessionInfo.clientVersion
   };
-  const event = {
+  const event2 = {
     sessionId,
     resourceName: request3.params?.name || "Unknown Tool Name",
     eventType: MCPAnalyticsEventType.mcpInitialize,
     parameters: buildCapturedMcpParameters(request3),
     timestamp: /* @__PURE__ */ new Date()
   };
-  stampClientIdentity(event, request3, extra, server);
-  if (initializeClientInfo?.name) event.clientName = initializeClientInfo.name;
-  if (initializeClientInfo?.version) event.clientVersion = initializeClientInfo.version;
-  stampTransportIdentity(event, extra);
+  stampClientIdentity(event2, request3, extra, server);
+  if (initializeClientInfo?.name) event2.clientName = initializeClientInfo.name;
+  if (initializeClientInfo?.version) event2.clientVersion = initializeClientInfo.version;
+  stampTransportIdentity(event2, extra);
   const identity4 = await handleIdentify(data, sessionId, request3, extra);
   const requestAttribution = withIdentity(requestSessionInfo, identity4);
-  await applyResolvedMetadata(event, data, request3, extra);
+  await applyResolvedMetadata(event2, data, request3, extra);
   const result2 = await originalInitializeHandler(request3, extra);
-  event.response = result2;
+  event2.response = result2;
   const negotiatedProtocolVersion = readProtocolVersion(result2, request3);
-  event.protocolVersion = negotiatedProtocolVersion;
+  event2.protocolVersion = negotiatedProtocolVersion;
   if (data.sessionId === sessionId) {
     data.sessionInfo = {
       ...data.sessionInfo,
@@ -16421,7 +16450,7 @@ async function handleInitializeRequest(server, originalInitializeHandler, reques
     setServerTrackingData(server, data);
   }
   if (mintedSessionId) upgradeMintedTokenToNegotiated(server, mintedSessionId, requestSessionInfo, negotiatedProtocolVersion, data.logger);
-  if (false !== data.options.sendInitializeEvent) captureEvent(server, event, data.logger, {
+  if (false !== data.options.sendInitializeEvent) captureEvent(server, event2, data.logger, {
     ...requestAttribution,
     protocolVersion: negotiatedProtocolVersion
   });
@@ -18172,9 +18201,9 @@ function buildV1Event(message) {
     delete properties[property];
   }
   const topLevel = {};
-  for (const { property, field } of TOPLEVEL_SENTINELS) if (property in properties) {
+  for (const { property, field: field2 } of TOPLEVEL_SENTINELS) if (property in properties) {
     const value = properties[property];
-    if ("string" == typeof value) topLevel[field] = value;
+    if ("string" == typeof value) topLevel[field2] = value;
     delete properties[property];
   }
   delete properties.$lib;
@@ -18270,7 +18299,7 @@ var V1CaptureSender = class {
           if (isLastAttempt) return void this.onError(new CaptureV1Error({
             requestId,
             drops,
-            retryExhausted: retryable2.map((event) => event.uuid)
+            retryExhausted: retryable2.map((event2) => event2.uuid)
           }));
           pending = retryable2;
           const retryAfterMs = this.parseRetryAfter(response);
@@ -18364,14 +18393,14 @@ var V1CaptureSender = class {
   classify(pending, parsed, drops) {
     const results = parsed.results ?? {};
     const retryable2 = [];
-    for (const event of pending) {
-      const result2 = results[event.uuid];
+    for (const event2 of pending) {
+      const result2 = results[event2.uuid];
       if (result2) {
         if ("drop" === result2.result) drops.push({
-          uuid: event.uuid,
+          uuid: event2.uuid,
           details: result2.details ?? void 0
         });
-        else if ("retry" === result2.result) retryable2.push(event);
+        else if ("retry" === result2.result) retryable2.push(event2);
       }
     }
     return retryable2;
@@ -18417,7 +18446,7 @@ var V1CaptureSender = class {
     this.onError(new CaptureV1Error({
       requestId,
       drops,
-      retryExhausted: pending.map((event) => event.uuid),
+      retryExhausted: pending.map((event2) => event2.uuid),
       cause
     }));
   }
@@ -18684,8 +18713,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
   }
   async sendAiCaptureBatch(batchMessages, retryOptions) {
     const { batches, dropped } = partitionAiBatch(batchMessages);
-    for (const { event, bytes } of dropped) {
-      const message = `Event ${event} (${bytes} bytes) exceeds the ${AI_MAX_EVENT_BYTES / 1048576}MiB limit for ${AI_CAPTURE_ENDPOINT_PATH}, dropping.`;
+    for (const { event: event2, bytes } of dropped) {
+      const message = `Event ${event2} (${bytes} bytes) exceeds the ${AI_MAX_EVENT_BYTES / 1048576}MiB limit for ${AI_CAPTURE_ENDPOINT_PATH}, dropping.`;
       this._logger.error(message);
       this._events.emit("error", new Error(message));
     }
@@ -18697,9 +18726,9 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     } catch (err) {
       if (!isPostHogFetchContentTooLargeError(err)) throw err;
       if (1 === batch.length) {
-        const [event] = batch;
-        const eventName = "string" == typeof event.event ? event.event : "unknown";
-        const message = `Event ${eventName} (${eventByteSize(event)} bytes) was rejected with 413 by ${AI_CAPTURE_ENDPOINT_PATH} on its own, dropping.`;
+        const [event2] = batch;
+        const eventName = "string" == typeof event2.event ? event2.event : "unknown";
+        const message = `Event ${eventName} (${eventByteSize(event2)} bytes) was rejected with 413 by ${AI_CAPTURE_ENDPOINT_PATH} on its own, dropping.`;
         this._logger.error(message);
         this._events.emit("error", new Error(message));
         return;
@@ -18797,7 +18826,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     if ("$exception" === props.event && !props._originatedFromCaptureException) this._logger.warn(exceptionCaptureWarning);
   }
   _sendPreparedEvent(type, props, immediate, prepareOptions, explicitRoute) {
-    return this.addPendingPromise(this._prepareEventMessage(props, prepareOptions).then(({ distinctId, event, properties, options }) => {
+    return this.addPendingPromise(this._prepareEventMessage(props, prepareOptions).then(({ distinctId, event: event2, properties, options }) => {
       const captureOptions = {
         timestamp: options.timestamp,
         disableGeoip: options.disableGeoip,
@@ -18805,7 +18834,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       };
       const message = {
         distinctId,
-        event,
+        event: event2,
         properties: {
           ...properties,
           ...this.getCommonEventProperties()
@@ -19345,8 +19374,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       quotaLimited
     });
   }
-  _shouldSendMinimalFlagCalledEvent(event, properties) {
-    return "$feature_flag_called" === event && this._minimalFlagCalledEvents && false === properties.$feature_flag_has_experiment;
+  _shouldSendMinimalFlagCalledEvent(event2, properties) {
+    return "$feature_flag_called" === event2 && this._minimalFlagCalledEvents && false === properties.$feature_flag_has_experiment;
   }
   _captureFlagCalledEventIfNeeded(params) {
     const { distinctId, key, response, groups, disableGeoip, properties } = params;
@@ -19623,7 +19652,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     return this._prepareEventMessage(props);
   }
   async _prepareEventMessage(props, options = {}) {
-    const { distinctId, event, properties, groups, flags, sendFeatureFlags, timestamp, disableGeoip, uuid: uuid3 } = props;
+    const { distinctId, event: event2, properties, groups, flags, sendFeatureFlags, timestamp, disableGeoip, uuid: uuid3 } = props;
     const contextData = this.context?.get();
     const includeContextProperties = options.includeContextProperties ?? true;
     let mergedDistinctId = distinctId || contextData?.distinctId;
@@ -19634,16 +19663,16 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     } : {
       ...properties || {}
     };
-    if ("$exception" === event && !("$trace_id" in mergedProperties || "$span_id" in mergedProperties)) Object.assign(mergedProperties, await getActiveTraceProperties());
+    if ("$exception" === event2 && !("$trace_id" in mergedProperties || "$span_id" in mergedProperties)) Object.assign(mergedProperties, await getActiveTraceProperties());
     if (!mergedDistinctId) {
       mergedDistinctId = uuidv7();
       mergedProperties.$process_person_profile = false;
     }
     if (includeContextProperties && contextData?.sessionId && !mergedProperties.$session_id) mergedProperties.$session_id = contextData.sessionId;
-    const finalProperties = this._shouldSendMinimalFlagCalledEvent(event, mergedProperties) ? minimizeFlagCalledEventProperties(mergedProperties) : mergedProperties;
+    const finalProperties = this._shouldSendMinimalFlagCalledEvent(event2, mergedProperties) ? minimizeFlagCalledEventProperties(mergedProperties) : mergedProperties;
     const eventMessage = this._runBeforeSend({
       distinctId: mergedDistinctId,
-      event,
+      event: event2,
       properties: finalProperties,
       groups,
       flags,
@@ -19792,16 +19821,16 @@ var NAME = "posthog-node";
 function createEventProcessor(_posthog, { organization, projectId, prefix, severityAllowList = [
   "error"
 ], sendExceptionsToPostHog = true } = {}) {
-  return (event) => {
-    const shouldProcessLevel = "*" === severityAllowList || severityAllowList.includes(event.level);
-    if (!shouldProcessLevel) return event;
-    if (!event.tags) event.tags = {};
-    const userId = event.tags[PostHogSentryIntegration.POSTHOG_ID_TAG];
-    if (void 0 === userId) return event;
+  return (event2) => {
+    const shouldProcessLevel = "*" === severityAllowList || severityAllowList.includes(event2.level);
+    if (!shouldProcessLevel) return event2;
+    if (!event2.tags) event2.tags = {};
+    const userId = event2.tags[PostHogSentryIntegration.POSTHOG_ID_TAG];
+    if (void 0 === userId) return event2;
     const uiHost = _posthog.options.host ?? "https://us.i.posthog.com";
     const personUrl = new URL(`/project/${_posthog.apiKey}/person/${userId}`, uiHost).toString();
-    event.tags["PostHog Person URL"] = personUrl;
-    const exceptions = event.exception?.values || [];
+    event2.tags["PostHog Person URL"] = personUrl;
+    const exceptions = event2.exception?.values || [];
     const exceptionList = exceptions.map((exception) => ({
       ...exception,
       stacktrace: exception.stacktrace ? {
@@ -19814,25 +19843,25 @@ function createEventProcessor(_posthog, { organization, projectId, prefix, sever
       } : void 0
     }));
     const properties = {
-      $exception_message: exceptions[0]?.value || event.message,
+      $exception_message: exceptions[0]?.value || event2.message,
       $exception_type: exceptions[0]?.type,
-      $exception_level: event.level,
+      $exception_level: event2.level,
       $exception_list: exceptionList,
-      $sentry_event_id: event.event_id,
-      $sentry_exception: event.exception,
-      $sentry_exception_message: exceptions[0]?.value || event.message,
+      $sentry_event_id: event2.event_id,
+      $sentry_exception: event2.exception,
+      $sentry_exception_message: exceptions[0]?.value || event2.message,
       $sentry_exception_type: exceptions[0]?.type,
-      $sentry_tags: event.tags
+      $sentry_tags: event2.tags
     };
     const injectedReleaseId = error_tracking_exports.getInjectedReleaseId();
     if (injectedReleaseId) properties.$release_id = injectedReleaseId;
-    if (organization && projectId) properties["$sentry_url"] = (prefix || "https://sentry.io/organizations/") + organization + "/issues/?project=" + projectId + "&query=" + event.event_id;
+    if (organization && projectId) properties["$sentry_url"] = (prefix || "https://sentry.io/organizations/") + organization + "/issues/?project=" + projectId + "&query=" + event2.event_id;
     if (sendExceptionsToPostHog) _posthog.capture({
       event: "$exception",
       distinctId: userId,
       properties
     });
-    return event;
+    return event2;
   };
 }
 var PostHogSentryIntegration = class {
@@ -19966,14 +19995,14 @@ async function captureCustomEvent(lowLevelServer, eventData) {
   if (!eventData || "string" != typeof eventData.event || 0 === eventData.event.length) throw new Error('`capture` requires an `event` name, e.g. analytics.capture({ event: "feedback_submitted" })');
   const trackingData = getServerTrackingData(lowLevelServer);
   if (!trackingData) return;
-  const event = {
+  const event2 = {
     sessionId: trackingData.sessionId,
     eventType: MCPAnalyticsEventType.custom,
     eventName: eventData.event,
     timestamp: /* @__PURE__ */ new Date(),
     properties: eventData.properties
   };
-  await captureEvent(lowLevelServer, event, trackingData.logger);
+  await captureEvent(lowLevelServer, event2, trackingData.logger);
   trackingData.logger(`Captured event "${eventData.event}" for session ${trackingData.sessionId}`);
 }
 
@@ -20704,9 +20733,9 @@ function floatSafeRemainder(val, step2) {
   return ratio - roundedRatio;
 }
 var EVALUATING = /* @__PURE__ */ Symbol("evaluating");
-function defineLazy(object8, key, getter) {
+function defineLazy(object9, key, getter) {
   let value = void 0;
-  Object.defineProperty(object8, key, {
+  Object.defineProperty(object9, key, {
     get() {
       if (value === EVALUATING) {
         return void 0;
@@ -20718,7 +20747,7 @@ function defineLazy(object8, key, getter) {
       return value;
     },
     set(v) {
-      Object.defineProperty(object8, key, {
+      Object.defineProperty(object9, key, {
         value: v
         // configurable: true,
       });
@@ -21469,12 +21498,12 @@ function $constructor(name, initializer3, proto, params) {
     inst._zod.traits.add(name);
     initializer3(inst, def);
     if (initialized) {
-      const own2 = Object.getPrototypeOf(inst);
+      const own3 = Object.getPrototypeOf(inst);
       const ctorProto = inst._zod.constr.prototype;
-      let up = own2;
+      let up = own3;
       while (up && up !== ctorProto)
         up = Object.getPrototypeOf(up);
-      const target = up ?? own2;
+      const target = up ?? own3;
       if (!initialized.has(target)) {
         initialized.add(target);
         members(target, protoMembers);
@@ -23530,14 +23559,14 @@ var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
     const shape = zod.def.shape;
     const propValues = {};
     for (const key in shape) {
-      const field = shape[key]._zod;
-      if (field.values) {
+      const field2 = shape[key]._zod;
+      if (field2.values) {
         if (!Object.prototype.hasOwnProperty.call(propValues, key)) {
           assignProp(propValues, key, /* @__PURE__ */ new Set());
         }
-        for (const v of field.values)
+        for (const v of field2.values)
           propValues[key].add(v);
-        if (field.optin !== void 0)
+        if (field2.optin !== void 0)
           propValues[key].add(void 0);
       }
     }
@@ -24832,20 +24861,20 @@ function leafPattern(schema) {
     return "(?!)";
   if (minimum !== void 0 || maximum !== void 0)
     return string({ minimum, maximum }).source;
-  const own2 = schema._zod.pattern;
-  return (isInt && own2 === number ? integer : own2)?.source;
+  const own3 = schema._zod.pattern;
+  return (isInt && own3 === number ? integer : own3)?.source;
 }
 function partPattern(schema) {
   const def = schema._zod.def;
-  const own2 = schema._zod.pattern?.source;
+  const own3 = schema._zod.pattern?.source;
   const inner = def.innerType ?? schema._zod.innerType;
   if (inner) {
     const before = inner._zod.pattern?.source;
     const after = partPattern(inner);
-    if (own2 && before && after && after !== before) {
-      return own2.replace(cleanRegex(before), () => cleanRegex(after));
+    if (own3 && before && after && after !== before) {
+      return own3.replace(cleanRegex(before), () => cleanRegex(after));
     }
-    return own2;
+    return own3;
   }
   if (def.options) {
     const sources = def.options.map(partPattern);
@@ -35203,10 +35232,10 @@ function _properties(shape, params) {
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _mime(types, params) {
+function _mime(types2, params) {
   return new $ZodCheckMimeType({
     check: "mime_type",
-    mime: types,
+    mime: types2,
     ...normalizeParams(params)
   });
 }
@@ -35509,12 +35538,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -35793,7 +35822,7 @@ function compactTypeUnion(schema) {
   const options = schema.anyOf;
   if (!Array.isArray(options) || options.length === 0 || schema.type !== void 0)
     return;
-  const types = [];
+  const types2 = [];
   for (const option of options) {
     if (!option || typeof option !== "object")
       return;
@@ -35805,12 +35834,12 @@ function compactTypeUnion(schema) {
     for (const member2 of Array.isArray(type) ? type : [type]) {
       if (typeof member2 !== "string")
         return;
-      if (!types.includes(member2))
-        types.push(member2);
+      if (!types2.includes(member2))
+        types2.push(member2);
     }
   }
   delete schema.anyOf;
-  schema.type = types.length === 1 ? types[0] : types;
+  schema.type = types2.length === 1 ? types2[0] : types2;
 }
 var FOLDABLE_KEYS = /* @__PURE__ */ new Set(["type", "properties", "required", "additionalProperties"]);
 var UNION_KEYS = ["oneOf", "anyOf"];
@@ -35833,8 +35862,8 @@ function foldObjects(members2) {
   }
   const properties = {};
   const required2 = /* @__PURE__ */ new Set();
-  for (const object8 of objects) {
-    for (const key in object8.properties) {
+  for (const object9 of objects) {
+    for (const key in object9.properties) {
       if (Object.prototype.hasOwnProperty.call(properties, key))
         continue;
       const parts = [];
@@ -35848,18 +35877,18 @@ function foldObjects(members2) {
       const merged = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
       assignProp(properties, key, merged);
     }
-    for (const key of object8.required ?? [])
+    for (const key of object9.required ?? [])
       required2.add(key);
   }
   const folded = { type: "object", properties };
   if (required2.size)
     folded.required = [...required2];
-  if (objects.every((object8) => object8.additionalProperties === false)) {
+  if (objects.every((object9) => object9.additionalProperties === false)) {
     folded.additionalProperties = false;
   } else {
     const constraints = [];
-    for (const object8 of objects) {
-      const constraint = undeclaredConstraint(object8);
+    for (const object9 of objects) {
+      const constraint = undeclaredConstraint(object9);
       if (constraint && !constraints.some((seen) => JSON.stringify(seen) === JSON.stringify(constraint)))
         constraints.push(constraint);
     }
@@ -36475,8 +36504,8 @@ var objectProcessor = (schema, ctx, _json, params) => {
   }
   const requiredKeys = [];
   for (const key of Object.keys(shape)) {
-    const field = def.shape[key];
-    if (ctx.io === "input" ? inputOptin(field) === void 0 : field._zod.optout === void 0) {
+    const field2 = def.shape[key];
+    if (ctx.io === "input" ? inputOptin(field2) === void 0 : field2._zod.optout === void 0) {
       requiredKeys.push(key);
     }
   }
@@ -36609,8 +36638,8 @@ function stringifyKeyNames(bySchema, json3, visited) {
     if (mapped.some((branch, i) => branch !== branches[i]))
       json3 = { ...json3, [keyword]: mapped };
   }
-  const types = Array.isArray(json3.type) ? json3.type : [json3.type];
-  const numericType = !types.includes("string") && types.some((t) => t === "number" || t === "integer");
+  const types2 = Array.isArray(json3.type) ? json3.type : [json3.type];
+  const numericType = !types2.includes("string") && types2.some((t) => t === "number" || t === "integer");
   const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json3;
@@ -36623,7 +36652,7 @@ function stringifyKeyNames(bySchema, json3, visited) {
     return rest;
   rest.type = "string";
   if (!values)
-    rest.pattern = (types.includes("number") ? number : integer).source;
+    rest.pattern = (types2.includes("number") ? number : integer).source;
   return rest;
 }
 var pendingRecords = /* @__PURE__ */ new WeakMap();
@@ -38356,7 +38385,7 @@ var ZodFile = /* @__PURE__ */ $constructor("ZodFile", (inst, def) => {
   inst._zod.processJSONSchema = (ctx, json3, params) => fileProcessor(inst, ctx, json3, params);
   inst.min = (size, params) => inst.check(_minSize(size, params));
   inst.max = (size, params) => inst.check(_maxSize(size, params));
-  inst.mime = (types, params) => inst.check(_mime(Array.isArray(types) ? types : [types], params));
+  inst.mime = (types2, params) => inst.check(_mime(Array.isArray(types2) ? types2 : [types2], params));
 });
 function file(params) {
   return _file(ZodFile, params);
@@ -39864,6 +39893,22 @@ var mapFinishedPropertiesSchema = external_exports.strictObject({
   error_code: external_exports.null(),
   error_message: external_exports.null()
 });
+var planningFailureMessages = {
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -39882,7 +39927,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   map_components_total: external_exports.null(),
   cases_without_component: external_exports.null(),
   cases_missing_expected_result: metricCount,
-  groups_count: external_exports.null()
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional()
+}).refine((value) => {
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
 });
 var runStartedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
@@ -39899,15 +39951,26 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
-  outcome: external_exports.enum(["completed", "partial", "stopped", "failed", "interrupted"]),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
   duration_ms: external_exports.number().finite().nonnegative().nullable(),
   cases_passed: metricCount,
   cases_failed: metricCount,
   cases_blocked: metricCount,
-  cases_unverified: external_exports.null(),
-  cases_not_run: external_exports.null(),
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
   results_by_category: external_exports.null(),
-  result_basis: external_exports.literal("product_terminal_checks").nullable(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
   evidence_items_count: metricCount,
@@ -39916,6 +39979,17 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     "Native execution did not return a validated result.",
     "Native execution was blocked."
   ]).nullable()
+}).refine((value) => {
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count9) => count9 !== null) && counts.reduce((sum, count9) => sum + (count9 ?? 0), 0) === value.cases_total;
 });
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
@@ -40113,7 +40187,9 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   cached_input_tokens: nativeTokenCount,
   output_tokens: nativeTokenCount,
   reasoning_tokens: nativeTokenCount,
-  cost_usd: external_exports.null(),
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum(["litellm_response_header", "provider_usage_cost"]).optional(),
   outcome: external_exports.null(),
   latency_ms: external_exports.number().finite().nonnegative(),
   http_status: external_exports.number().int().min(100).max(599).nullable(),
@@ -40131,7 +40207,11 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
     "core_inference_native_usage/1"
   ])
 }).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
+  if (value.cost_basis === "provider_usage_cost" && !native)
+    return false;
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
@@ -40166,6 +40246,7 @@ var coreTelemetryActorSchema = external_exports.strictObject({
 
 // apps/codex-plugin/src/telemetry/collector.mjs
 function createTelemetryCollector(broker, build) {
+  const host = pluginHost(build);
   let lease = null, stopped = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
@@ -40190,25 +40271,25 @@ function createTelemetryCollector(broker, build) {
     });
   }, 1e3);
   timer.unref();
-  const submit = (event, properties, observation3 = {}) => {
+  const submit = (event2, properties, observation2 = {}) => {
     try {
-      const epoch = Object.hasOwn(observation3, "epoch") ? observation3.epoch : lease;
+      const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
       const clientVersion = telemetryVersionSchema.safeParse(
-        observation3.clientVersion
+        observation2.clientVersion
       );
       const capture = localTelemetryCaptureSchema.parse({
         event_uuid: randomUUID2(),
-        client_ts: observation3.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
-        event,
-        event_version: event === "$mcp_tool_call" ? 2 : 1,
+        client_ts: observation2.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
+        event: event2,
+        event_version: event2 === "$mcp_tool_call" ? 2 : 1,
         component: "local_runtime",
         plugin_version: build.pluginVersion,
         release: `loki@${build.pluginVersion}+${build.sourceRevision}`,
         install_channel: build.profile === "local" ? "dev" : build.profile === "qa" ? "qa" : build.profile === "production" ? "early_access" : "unknown",
         cohort: null,
-        // Startup is the fixed installed Codex entrypoint; MCP uses its public handshake.
-        host: event !== "$mcp_tool_call" ? "codex" : /codex/i.test(observation3.clientName ?? "") ? "codex" : observation3.clientName === "claude-code" ? "claude_code" : "unknown",
+        // Lifecycle comes from the fixed entrypoint; MCP uses its public handshake.
+        host: event2 !== "$mcp_tool_call" ? host : /codex/i.test(observation2.clientName ?? "") ? "codex" : observation2.clientName === "claude-code" ? "claude_code" : "unknown",
         host_version: clientVersion.success ? clientVersion.data : null,
         host_surface: "unknown",
         host_thread_id: null,
@@ -40249,19 +40330,19 @@ function createTelemetryCollector(broker, build) {
     bind() {
       const epoch = lease;
       return {
-        emit(event, properties) {
-          submit(event, properties, { epoch });
+        emit(event2, properties) {
+          submit(event2, properties, { epoch });
         }
       };
     },
     /** @template {keyof import('@loki/contracts/telemetry').LocalTelemetryProperties} K
      * @param {K} event
      * @param {import('@loki/contracts/telemetry').LocalTelemetryProperties[K]} properties */
-    emit(event, properties) {
-      submit(event, properties);
+    emit(event2, properties) {
+      submit(event2, properties);
     },
-    captureMcp(properties, observation3) {
-      submit("$mcp_tool_call", properties, observation3);
+    captureMcp(properties, observation2) {
+      submit("$mcp_tool_call", properties, observation2);
     },
     flushLocal,
     async close() {
@@ -40315,10 +40396,10 @@ function createLocalTelemetry(broker, build) {
               request3.params?._meta?.["kaijan/invoked_by"]
             ) ? request3.params._meta["kaijan/invoked_by"] : "unknown"
           }),
-          beforeSend: (event) => {
+          beforeSend: (event2) => {
             try {
-              const properties = event.properties;
-              if (event.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
+              const properties = event2.properties;
+              if (event2.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
                 return null;
               collector.captureMcp(
                 {
@@ -40331,7 +40412,7 @@ function createLocalTelemetry(broker, build) {
                 },
                 {
                   epoch: properties.identity_epoch,
-                  timestamp: new Date(event.timestamp).toISOString(),
+                  timestamp: new Date(event2.timestamp).toISOString(),
                   clientName: properties.$mcp_client_name,
                   clientVersion: properties.$mcp_client_version
                 }
@@ -40363,7 +40444,7 @@ function createLocalTelemetry(broker, build) {
 import { performance } from "node:perf_hooks";
 var identity = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 var count = (value) => Number.isSafeInteger(value) && value >= 0 ? value : null;
-var member = (value, choices) => choices.includes(value) ? value : null;
+var member = (value, choices2) => choices2.includes(value) ? value : null;
 var duration3 = (input3) => input3.durationKnown === true && Number.isFinite(input3.durationMs) && input3.durationMs >= 0 ? input3.durationMs : null;
 var kinds = [
   "button",
@@ -40416,7 +40497,7 @@ function createSetupMapEvents({
     throw new TypeError("Invalid internal lifecycle observer configuration");
   const seen = /* @__PURE__ */ new Map();
   let closed = false, lastClock = -Infinity;
-  function submit(event, input3, properties) {
+  function submit(event2, input3, properties) {
     if (closed) return outcome("dropped", "closed");
     if (!identity(input3.transitionKey))
       return outcome("unsupported", "transition-key-unavailable");
@@ -40425,12 +40506,12 @@ function createSetupMapEvents({
       return outcome("dropped", "clock-unavailable");
     lastClock = now;
     for (const [key2, expires] of seen) if (expires <= now) seen.delete(key2);
-    const key = `${event}:${input3.transitionKey}`;
+    const key = `${event2}:${input3.transitionKey}`;
     if (seen.has(key)) return outcome("ignored", "duplicate-transition");
     if (seen.size >= maxTransitions) return outcome("dropped", "capacity");
     seen.set(key, now + retentionMs);
     if (claim2) {
-      const accepted = claim2({ event, transitionKey: input3.transitionKey });
+      const accepted = claim2({ event: event2, transitionKey: input3.transitionKey });
       if (accepted !== true) {
         Promise.resolve(accepted).catch(() => {
         });
@@ -40438,7 +40519,7 @@ function createSetupMapEvents({
       }
     }
     try {
-      Promise.resolve(emit(event, Object.freeze(properties))).catch(() => {
+      Promise.resolve(emit(event2, Object.freeze(properties))).catch(() => {
       });
       return outcome("submitted", "callback-attempted");
     } catch {
@@ -40605,7 +40686,8 @@ var planCompletion = external_exports.strictObject({
   outcome: external_exports.enum(["proposed_plan", "needs_clarification", "failed"]),
   startedAtMs: milliseconds.nullable(),
   casesTotal: count2.nullable(),
-  casesMissingExpectedResult: count2.nullable()
+  casesMissingExpectedResult: count2.nullable(),
+  errorCode: planningFailureCodeSchema.nullable().optional()
 }).refine(
   (value) => value.outcome === "failed" ? value.casesTotal === null && value.casesMissingExpectedResult === null : value.casesMissingExpectedResult === null || value.casesTotal !== null && value.casesMissingExpectedResult <= value.casesTotal
 );
@@ -40665,7 +40747,24 @@ var runCompletion = external_exports.strictObject({
   resultKind: external_exports.enum(["returned", "native-exception"]).nullable(),
   nativeExecutionState: external_exports.enum(["completed", "incomplete", "cancelled", "blocked", "unknown"]).nullable(),
   checks: terminalChecks.nullable(),
-  checkSummary: checkSummary.nullable().optional()
+  checkSummary: checkSummary.nullable().optional(),
+  assessedSummary: external_exports.strictObject({
+    provenance: external_exports.enum([
+      "saved-report-assessments/1",
+      "selected-test-inventory/1"
+    ]),
+    planId: opaqueId.nullable(),
+    planResultSha256: opaqueId.nullable(),
+    total: count2.positive(),
+    passed: count2,
+    failed: count2,
+    blocked: count2,
+    unverified: count2,
+    notRun: count2
+  }).refine(
+    (value) => value.total === value.passed + value.failed + value.blocked + value.unverified + value.notRun && value.planId === null === (value.planResultSha256 === null) && (value.provenance !== "selected-test-inventory/1" || value.unverified === value.total)
+  ).nullable().optional(),
+  finishedAtMs: milliseconds.optional()
 }).refine(
   (value) => value.operationState === "finished" && value.resultValidated && (value.resultKind === "native-exception" && value.nativeExecutionState === null && value.checks === null && !value.checkSummary || value.resultKind === "returned" && ["completed", "incomplete", "cancelled", "blocked"].includes(
     value.nativeExecutionState
@@ -40719,15 +40818,15 @@ function createCapabilityTelemetryObserver({
       return null;
     }
   }
-  function reserve(event, value, identity4, caseId) {
-    const key = JSON.stringify([event, identity4, caseId ?? null]);
+  function reserve(event2, value, identity4, caseId) {
+    const key = JSON.stringify([event2, identity4, caseId ?? null]);
     if (seen.has(key) || seen.size >= maxTransitions) return false;
     seen.add(key);
     if (!claim2) return true;
     try {
       const selected = claim2(
         Object.freeze({
-          event,
+          event: event2,
           transitionKey: value.transitionKey,
           identity: identity4,
           caseId: caseId ?? null
@@ -40741,9 +40840,9 @@ function createCapabilityTelemetryObserver({
       return false;
     }
   }
-  function send(event, properties) {
+  function send(event2, properties) {
     try {
-      void Promise.resolve(emit(event, Object.freeze(properties))).catch(
+      void Promise.resolve(emit(event2, Object.freeze(properties))).catch(
         () => {
         }
       );
@@ -40783,7 +40882,9 @@ function createCapabilityTelemetryObserver({
           map_components_total: null,
           cases_without_component: null,
           cases_missing_expected_result: value.casesMissingExpectedResult,
-          groups_count: null
+          groups_count: null,
+          error_code: value.outcome === "failed" ? value.errorCode ?? "planning_failed" : null,
+          error_message: value.outcome === "failed" ? planningFailureMessages[value.errorCode ?? "planning_failed"] : null
         });
       });
     },
@@ -40814,6 +40915,9 @@ function createCapabilityTelemetryObserver({
         const start = starts.get(value.runId);
         const checks = value.checks;
         const summary3 = value.checkSummary ?? null;
+        const assessed = value.assessedSummary?.provenance === "saved-report-assessments/1" || !checks && !summary3 ? value.assessedSummary ?? null : null;
+        if (assessed && (!start || assessed.planId !== (start.plan?.answerId ?? null) || assessed.planResultSha256 !== (start.plan?.resultSha256 ?? null) || start.plan && assessed.total !== start.plan.selectedTestsCount || value.resultKind === "native-exception" && (assessed.passed || assessed.failed)))
+          return false;
         if (summary3 && (checks || start && (!start.plan || summary3.planId !== start.plan.answerId || summary3.planResultSha256 !== start.plan.resultSha256 || summary3.total !== start.plan.selectedTestsCount)))
           return false;
         if (summary3 && value.nativeExecutionState !== "completed" && (summary3.passed || summary3.failed))
@@ -40825,7 +40929,10 @@ function createCapabilityTelemetryObserver({
             return false;
         }
         if (!reserve("Test Run Finished", value, value.runId)) return false;
-        const duration4 = elapsed(start?.at ?? null, now());
+        const duration4 = elapsed(
+          start?.at ?? null,
+          value.finishedAtMs ?? now()
+        );
         starts.delete(value.runId);
         for (const item of checks?.cases ?? []) {
           if (!item.caseId || !reserve("Test Case Finished", value, value.runId, item.caseId))
@@ -40854,14 +40961,15 @@ function createCapabilityTelemetryObserver({
           session_id: null,
           outcome: result2,
           duration_ms: duration4,
-          cases_passed: cases ? cases.filter((item) => item.status === "pass").length : summary3?.passed ?? null,
-          cases_failed: cases ? cases.filter((item) => item.status === "fail").length : summary3?.failed ?? null,
-          cases_blocked: cases ? cases.filter((item) => item.status === "blocked").length : summary3?.blocked ?? null,
-          cases_unverified: null,
-          cases_not_run: null,
+          ...assessed ? { cases_total: assessed.total } : {},
+          cases_passed: assessed ? assessed.passed : cases ? cases.filter((item) => item.status === "pass").length : summary3?.passed ?? null,
+          cases_failed: assessed ? assessed.failed : cases ? cases.filter((item) => item.status === "fail").length : summary3?.failed ?? null,
+          cases_blocked: assessed ? assessed.blocked : cases ? cases.filter((item) => item.status === "blocked").length : summary3?.blocked ?? null,
+          cases_unverified: assessed?.unverified ?? null,
+          cases_not_run: assessed?.notRun ?? null,
           results_by_category: null,
-          result_basis: checks || summary3 ? "product_terminal_checks" : null,
-          check_status: checks || summary3 ? "checked" : "unchecked",
+          result_basis: assessed ? assessed.provenance === "saved-report-assessments/1" ? "saved_report_assessments" : "selected_test_inventory" : checks || summary3 ? "product_terminal_checks" : null,
+          check_status: assessed ? assessed.provenance === "saved-report-assessments/1" ? "checked" : "unchecked" : checks || summary3 ? "checked" : "unchecked",
           evidence_items_count: checks?.evidenceCount ?? summary3?.evidenceCount ?? null,
           error_code: code,
           error_message: message
@@ -40874,18 +40982,18 @@ function createCapabilityTelemetryObserver({
 // apps/codex-plugin/src/telemetry/lifecycle.mjs
 function createBoundLifecycle(telemetry) {
   const bound = telemetry?.bind();
-  const emit = (event, properties) => {
+  const emit = (event2, properties) => {
     try {
-      void Promise.resolve(bound?.emit(event, properties)).catch(() => {
+      void Promise.resolve(bound?.emit(event2, properties)).catch(() => {
       });
     } catch {
     }
   };
   const map2 = createSetupMapEvents({ emit });
   const capabilities = createCapabilityTelemetryObserver({ emit });
-  const observe = (event) => {
-    if (!event || typeof event !== "object") return;
-    const { kind, ...value } = event;
+  const observe = (event2) => {
+    if (!event2 || typeof event2 !== "object") return;
+    const { kind, ...value } = event2;
     switch (kind) {
       case "user-input-requested":
         emit("User Input Requested", {
@@ -41732,13 +41840,34 @@ var sessionRecordingSchema = external_exports.strictObject({
     expiresAt: external_exports.iso.datetime()
   })
 });
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
 var sessionGrantSchema = external_exports.strictObject({
   recordingId: external_exports.uuid(),
   chunk: sessionChunkDescriptorSchema,
   url: external_exports.url(),
   issuedAt: external_exports.iso.datetime(),
   expiresAt: external_exports.iso.datetime()
-}).refine((grant) => Date.parse(grant.expiresAt) > Date.parse(grant.issuedAt), "Invalid grant interval");
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
 var navigationKindSchema = external_exports.enum([
   "start",
   "route-change",
@@ -41862,6 +41991,173 @@ var sessionReplayManifestSchema = external_exports.strictObject({
   })).max(2e3)
 });
 
+// packages/contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest2,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest2,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
 // packages/contracts/dist/replay.js
 var recordedEventSchema = external_exports.strictObject({
   type: external_exports.number().int().min(0).max(4),
@@ -41917,6 +42213,47 @@ var commentSchema = commentCreateSchema.extend({
   createdAt: external_exports.iso.datetime()
 });
 
+// packages/contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
 // packages/contracts/dist/github.js
 var githubCredentialSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.github-credential/1"),
@@ -41965,9 +42302,9 @@ var workspaceCustomerLimits = {
   fileBytes: 4 * 1024 * 1024,
   publicationBytes: 16 * 1024 * 1024
 };
-var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count3 = external_exports.number().int().nonnegative();
-var source = external_exports.strictObject({ bytes: count3, sha256: digest2 });
+var source = external_exports.strictObject({ bytes: count3, sha256: digest3 });
 var identity2 = { fileId: external_exports.uuid(), source };
 var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
   external_exports.strictObject({
@@ -41982,7 +42319,7 @@ var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
     content: external_exports.strictObject({
       mediaType: external_exports.literal("application/json"),
       bytes: count3.max(workspaceCustomerLimits.fileBytes),
-      sha256: digest2
+      sha256: digest3
     })
   }),
   external_exports.strictObject({
@@ -42003,9 +42340,9 @@ var customerWorkspaceManifestSchema = external_exports.strictObject({
   state: external_exports.literal("published"),
   title: external_exports.string(),
   publishedAt: external_exports.iso.datetime(),
-  sourceManifestSha256: digest2,
+  sourceManifestSha256: digest3,
   contextRefs: external_exports.array(resultContextRefSchema),
-  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest2.optional() })),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest3.optional() })),
   relatedSources: external_exports.array(external_exports.strictObject({
     reference: resultContextRefSchema,
     availability: external_exports.enum(["supplied", "unselected", "unavailable"])
@@ -42014,17 +42351,17 @@ var customerWorkspaceManifestSchema = external_exports.strictObject({
   meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
 });
 var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
-  manifestSha256: digest2
+  manifestSha256: digest3
 });
 var customerWorkspaceDownloadSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.workspace-customer-download/1"),
   publicationId: external_exports.uuid(),
   fileId: external_exports.uuid().nullable(),
-  sourceSha256: digest2,
+  sourceSha256: digest3,
   mediaType: external_exports.literal("application/json"),
   encoding: external_exports.literal("base64"),
   bytes: count3.max(workspaceCustomerLimits.fileBytes),
-  sha256: digest2,
+  sha256: digest3,
   data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
 });
 var customerWorkspaceListSchema = external_exports.strictObject({
@@ -42101,6 +42438,22 @@ var customerSessionSchema = external_exports.strictObject({
   permissions: external_exports.array(permissionSchema),
   expiresAt: external_exports.iso.datetime(),
   features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
+  })
 });
 var tokenResponseSchema = external_exports.object({
   access_token: opaqueSchema,
@@ -42425,6 +42778,7 @@ async function createInstalledSession(root, build, data, broker, {
   onStartupStage,
   lifecycleFactory
 } = {}) {
+  const host = pluginHost(build);
   const stage2 = (value) => {
     try {
       onStartupStage?.(value);
@@ -42491,7 +42845,7 @@ async function createInstalledSession(root, build, data, broker, {
   ) : void 0;
   const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
   const session = await createCapabilitySession({
-    host: "codex",
+    host,
     data,
     payloadDigest: identity4.digest,
     packageIdentity: JSON.stringify(build),
@@ -42518,10 +42872,11 @@ async function createInstalledSession(root, build, data, broker, {
         );
       }
     } : hostLibrary,
-    // Hai selected direct chat output for this plugin; preserve it in every scope.
+    ...host === "claude_code" ? { uiEnabled: false } : {},
+    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
     uiMode: "panel"
   });
-  session.customerReportPresentation = "panel";
+  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.workspaceResults = workspaceService;
   session.privateParameters = {
     async provision(threadId, input3) {
@@ -44117,7 +44472,7 @@ import { join as join5, resolve } from "node:path";
 // apps/codex-plugin/src/setup/contracts.mjs
 import { createHash as createHash2 } from "node:crypto";
 import { URL as URL2 } from "node:url";
-var digest3 = (value) => createHash2("sha256").update(JSON.stringify(value)).digest("hex");
+var digest4 = (value) => createHash2("sha256").update(JSON.stringify(value)).digest("hex");
 var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var requestKey = external_exports.string().min(8).max(120);
@@ -44549,7 +44904,7 @@ async function openSetupStore(directory) {
       ).run(JSON.stringify(value), scope, key, hash6);
     },
     observe(contextId, value) {
-      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest3(value), JSON.stringify(value));
+      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest4(value), JSON.stringify(value));
     },
     producer(key) {
       const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
@@ -44792,11 +45147,11 @@ async function createSetup({
     durationMs: performance4.now() - telemetryStarts.get(value.contextId)
   });
   const read = (input3) => store.get(input3.applicationId, input3.contextId);
-  async function summarize(receipt, stop = false) {
-    let value = read(receipt);
+  async function summarize(receipt2, stop = false) {
+    let value = read(receipt2);
     if (!stop) {
       await verify(value);
-      value = read(receipt);
+      value = read(receipt2);
     }
     let nextAction3;
     switch (value.state) {
@@ -44827,13 +45182,13 @@ async function createSetup({
     }
     if (!mapper && value.map && active.has(value.state))
       nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
-    if (stop && !receipt.cancellationRequested) {
-      nextAction3 = receipt.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
+    if (stop && !receipt2.cancellationRequested) {
+      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
     }
     if (value.provenance.kind === "controlled-fixture")
       nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
     return {
-      ...receipt,
+      ...receipt2,
       state: value.state,
       missing: [...value.missing],
       nextAction: nextAction3,
@@ -44847,27 +45202,27 @@ async function createSetup({
     return value;
   });
   async function verify(value) {
-    if (digest3(await inspectSource(value.configuration.source)) !== digest3(value.sourceIdentity))
+    if (digest4(await inspectSource(value.configuration.source)) !== digest4(value.sourceIdentity))
       throw new SetupFailure("source_identity_changed");
-    if (mapper && digest3(provenance2) !== digest3(value.provenance))
+    if (mapper && digest4(provenance2) !== digest4(value.provenance))
       throw new SetupFailure("adapter_changed");
   }
   function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
     return store.transaction(() => {
-      const hash6 = digest3(input3), previous = store.command(scope, input3.requestKey, hash6);
+      const hash6 = digest4(input3), previous = store.command(scope, input3.requestKey, hash6);
       if (previous) return { receipt: { ...previous, recovered: true } };
-      const applicationId = digest3({
+      const applicationId = digest4({
         installation: store.installation,
         directory: configuration2.source.directory,
         sourceIdentity
       });
-      const configurationHash = digest3({ configuration: configuration2, provenance: provenance2 });
+      const configurationHash = digest4({ configuration: configuration2, provenance: provenance2 });
       const existing = store.matching(applicationId, configurationHash);
       if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
-        const receipt2 = handle(existing);
-        store.receipt(scope, input3.requestKey, hash6, receipt2);
+        const receipt3 = handle(existing);
+        store.receipt(scope, input3.requestKey, hash6, receipt3);
         return {
-          receipt: { ...receipt2, reused: true },
+          receipt: { ...receipt3, reused: true },
           retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
             transitionKey: existing.contextId,
             setupId: existing.contextId,
@@ -44883,7 +45238,7 @@ async function createSetup({
         schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
         applicationId,
         version: version4,
-        contextId: digest3({ applicationId, version: version4, configurationHash }),
+        contextId: digest4({ applicationId, version: version4, configurationHash }),
         configuration: configuration2,
         configurationHash,
         sourceIdentity,
@@ -44905,9 +45260,9 @@ async function createSetup({
         store.put(previousContext);
       }
       store.put(value);
-      const receipt = handle(value);
-      store.receipt(scope, input3.requestKey, hash6, receipt);
-      return { receipt, value };
+      const receipt2 = handle(value);
+      store.receipt(scope, input3.requestKey, hash6, receipt2);
+      return { receipt: receipt2, value };
     });
   }
   function applyMap(input3, raw) {
@@ -44915,7 +45270,7 @@ async function createSetup({
     store.observe(input3.contextId, result2);
     let firstTerminal = false;
     const accepted = edit(input3, (value) => {
-      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest3(result2.provenance) !== digest3(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
+      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest4(result2.provenance) !== digest4(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
         throw new SetupFailure("map_scope_mismatch");
       if (result2.state === "ready" && (!result2.data || !result2.resultId))
         throw new SetupFailure("invalid_map_result");
@@ -44992,14 +45347,14 @@ async function createSetup({
       if (!parsedAuthorization.success)
         throw new SetupFailure("invalid_source_authorization");
       const authority = parsedAuthorization.data;
-      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest3(value.configuration))
+      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest4(value.configuration))
         throw new SetupFailure("source_authorization_scope_mismatch");
       signal?.throwIfAborted();
       await verify(value);
       if (read(value).state !== "awaiting-authority") return;
       edit(value, (current) => {
         if (current.state !== "awaiting-authority") return;
-        current.authorityRef = digest3({
+        current.authorityRef = digest4({
           contextId: value.contextId,
           owner: owner2,
           authority
@@ -45065,7 +45420,7 @@ async function createSetup({
       signal?.throwIfAborted();
       const input3 = prepareSchema.parse(raw);
       if (input3.configuration.target) {
-        input3.configuration.target.profileRevision ??= digest3({
+        input3.configuration.target.profileRevision ??= digest4({
           url: input3.configuration.target.url,
           profileId: input3.configuration.target.profileId
         });
@@ -45073,7 +45428,7 @@ async function createSetup({
       const previous = store.command(
         "prepare",
         input3.requestKey,
-        digest3(input3)
+        digest4(input3)
       );
       if (previous) return summarize({ ...previous, recovered: true });
       const configuration2 = structuredClone(input3.configuration);
@@ -45196,7 +45551,7 @@ async function createSetup({
       const observer = snapshotObserver();
       const input3 = commandSchema.parse(raw), value = read(input3);
       await verify(value);
-      const previous = store.command("retry", input3.requestKey, digest3(input3));
+      const previous = store.command("retry", input3.requestKey, digest4(input3));
       if (previous) return summarize({ ...previous, recovered: true });
       const reserved = reserve(
         "retry",
@@ -45229,7 +45584,7 @@ async function createSetup({
       const input3 = commandSchema.parse(raw);
       let stoppedBeforeAdmission = false;
       const reserved = store.transaction(() => {
-        const hash6 = digest3(input3), previous = store.command("stop", input3.requestKey, hash6);
+        const hash6 = digest4(input3), previous = store.command("stop", input3.requestKey, hash6);
         if (previous) {
           const value2 = read(input3);
           return {
@@ -45251,13 +45606,13 @@ async function createSetup({
           value.progress = "Stop requested for this original map";
           store.put(value);
         }
-        const receipt = {
+        const receipt2 = {
           ...handle(value),
           runId: value.map?.runId ?? null,
           cancellationRequested: cancel
         };
-        store.receipt("stop", input3.requestKey, hash6, receipt);
-        return { receipt, value, cancel };
+        store.receipt("stop", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, value, cancel };
       });
       if (stoppedBeforeAdmission) finished2(reserved.value, true);
       if (reserved.cancel && mapper) {
@@ -45286,7 +45641,7 @@ async function createSetup({
         return {
           application: {
             schema: "loki.application-context/3",
-            contextId: digest3({
+            contextId: digest4({
               source: source4,
               target: target2,
               workItem,
@@ -45331,7 +45686,7 @@ async function createSetup({
       };
       const application = {
         schema: "loki.application-context/2",
-        contextId: digest3({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
+        contextId: digest4({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
         source: source3,
         target: target ?? null,
         map: map2,
@@ -45360,16 +45715,16 @@ async function createSetup({
         expectedRevision: input3.expectedRevision,
         expectedProfileRevision: input3.expectedProfileRevision
       });
-      const hash6 = digest3(input3);
+      const hash6 = digest4(input3);
       const reserved = store.transaction(() => {
         const previous = store.command("handoff", input3.requestKey, hash6);
         if (previous) return { receipt: previous, recovered: true };
-        const receipt = {
+        const receipt2 = {
           ...payload,
           consumer: { state: "pending", provenance: provenance2 }
         };
-        store.receipt("handoff", input3.requestKey, hash6, receipt);
-        return { receipt, recovered: false };
+        store.receipt("handoff", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, recovered: false };
       });
       if (reserved.receipt.consumer.state !== "pending")
         return { ...reserved.receipt, recovered: true };
@@ -45389,9 +45744,9 @@ async function createSetup({
         const prior = store.command("handoff", input3.requestKey, hash6);
         if (prior.consumer.state !== "pending")
           return { ...prior, recovered: true };
-        const receipt = { ...payload, consumer: result2 };
-        store.complete("handoff", input3.requestKey, hash6, receipt);
-        return receipt;
+        const receipt2 = { ...payload, consumer: result2 };
+        store.complete("handoff", input3.requestKey, hash6, receipt2);
+        return receipt2;
       });
     },
     close() {
@@ -45507,7 +45862,7 @@ var statuses = {
   mapping: "preparing"
 };
 var status2 = (value) => state.parse(statuses[value] ?? value);
-var selection = (value) => configuration.parse({
+var selection2 = (value) => configuration.parse({
   ...value,
   configurationRefs: value.configurationRefs.filter(
     (ref) => ["source", "target"].includes(ref.kind)
@@ -45657,7 +46012,7 @@ function projectCustomerSetup(name, value) {
       )
     ],
     nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
-    ...value.configuration ? { configuration: selection(value.configuration) } : {},
+    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
     ...notice(value)
   });
 }
@@ -45955,6 +46310,9 @@ import {
 import { createHash as createHash3, randomUUID as randomUUID6 } from "node:crypto";
 import { dirname as dirname3, join as join6, resolve as resolve2 } from "node:path";
 async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
   if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
     throw new Error(
       "Missing fixed plugin profile. Reinstall the selected artifact."
@@ -45976,13 +46334,15 @@ async function bindProfileState(build, args, home) {
       if (!selected || selected.startsWith("--"))
         throw new Error("Missing private state directory.");
     } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const host = arg === "--host" ? args[++i] : arg.slice(7);
-      if (host !== "codex")
-        throw new Error("This package belongs to the Codex host.");
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
+        );
     } else forwarded.push(arg);
   }
   const state2 = resolve2(
-    selected ?? join6(home, ".local", "share", "loki", "codex", build.profile, key)
+    selected ?? join6(home, ".local", "share", "loki", host, build.profile, key)
   );
   await mkdir5(state2, { recursive: true, mode: 448 });
   if (await realpath4(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
@@ -46048,14 +46408,65 @@ async function bindProfileState(build, args, home) {
   } finally {
     await file2.close();
   }
-  return { state: state2, args: [...forwarded, "--host", "codex", "--state", state2] };
+  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
+}
+
+// apps/codex-plugin/src/claude-tool-schema.mjs
+var alternatives = /* @__PURE__ */ new Map([
+  [
+    "loki_test_execute",
+    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
+  ],
+  [
+    "loki_report_show",
+    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
+  ]
+]);
+function claudeToolDefinition(tool) {
+  const guidance = tool && alternatives.get(tool.name);
+  if (!guidance || !Array.isArray(tool.inputSchema?.anyOf)) return tool;
+  const { anyOf, ...root } = tool.inputSchema;
+  if (anyOf.length < 2 || anyOf.some(
+    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
+      (key) => ![
+        "type",
+        "properties",
+        "required",
+        "additionalProperties"
+      ].includes(key)
+    )
+  ))
+    throw new Error("Unsupported Claude tool input layout.");
+  const properties = {};
+  for (const branch of anyOf)
+    for (const [name, schema] of Object.entries(branch.properties)) {
+      const previous = properties[name];
+      if (previous === void 0) properties[name] = schema;
+      else if (JSON.stringify(previous) !== JSON.stringify(schema))
+        throw new Error("Conflicting Claude tool input field.");
+    }
+  const required2 = (anyOf[0].required ?? []).filter(
+    (name) => anyOf.every((branch) => branch.required?.includes(name))
+  );
+  return {
+    ...tool,
+    inputSchema: {
+      ...root,
+      type: "object",
+      properties,
+      ...required2.length ? { required: required2 } : {},
+      additionalProperties: false
+    },
+    description: `${tool.description}
+${guidance}`
+  };
 }
 
 // apps/codex-plugin/src/customer-plan-selection.mjs
 import { isDeepStrictEqual } from "node:util";
 
 // packages/contracts/dist/report-evidence.js
-var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
 var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
@@ -46087,7 +46498,7 @@ var reportedTestSchema = external_exports.strictObject({
     revision: nonempty,
     language: nonempty,
     text: nonempty,
-    sha256: digest4
+    sha256: digest5
   }).nullable()
 }).superRefine((test, ctx) => {
   if (new Set(test.steps.map((step2) => step2.id)).size !== test.steps.length)
@@ -46125,7 +46536,7 @@ var reportPullRequestSchema = external_exports.strictObject({
   source: external_exports.strictObject({
     kind: external_exports.literal("supplied-github-read"),
     record: external_exports.json(),
-    sha256: digest4
+    sha256: digest5
   })
 }).superRefine((pr, ctx) => {
   if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
@@ -46140,14 +46551,14 @@ var reportPullRequestSchema = external_exports.strictObject({
     });
 });
 var reportVerificationSchema = external_exports.strictObject({
-  planRef: external_exports.strictObject({ answerId: digest4, resultSha256: digest4 }),
+  planRef: external_exports.strictObject({ answerId: digest5, resultSha256: digest5 }),
   repository,
   sourceRevision: revision2,
   pullRequestUrl: external_exports.url().nullable(),
   recordedAt: external_exports.iso.datetime({ offset: true }),
   provenance: external_exports.literal("product-terminal-checks/1"),
   oracle: nonempty,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest4 })).min(1),
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest5 })).min(1),
   tests: external_exports.array(reportedTestSchema).min(1)
 }).superRefine((run, ctx) => {
   if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
@@ -46163,7 +46574,7 @@ var reportVerificationSchema = external_exports.strictObject({
     });
 });
 var reportExecutionSchema = reportVerificationSchema.safeExtend({
-  runId: digest4
+  runId: digest5
 });
 var reportEvidenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.report-evidence/1"),
@@ -46199,7 +46610,7 @@ var reportSourcesSchema = external_exports.strictObject({
 
 // packages/contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
-var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var terminalChecksSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.terminal-checks/1"),
   repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
@@ -46233,13 +46644,13 @@ var terminalChecksSchema = external_exports.strictObject({
   }
 });
 var checkedPlanReferenceSchema = external_exports.strictObject({
-  answerId: digest5,
-  resultSha256: digest5,
+  answerId: digest6,
+  resultSha256: digest6,
   selectedTestIds: external_exports.array(nonempty2).min(1)
 });
 
 // packages/contracts/dist/report-view.js
-var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var groupSchema = external_exports.object({
   key: external_exports.enum([
     "why",
@@ -46271,9 +46682,9 @@ var reportItemSchema = external_exports.object({
 var sectionBase = external_exports.object({
   title: external_exports.string(),
   kind: external_exports.enum(["plan", "runner", "assessment"]),
-  sourceId: digest6,
+  sourceId: digest7,
   sourceKind: external_exports.enum(["answer", "run"]),
-  resultSha256: digest6.nullable(),
+  resultSha256: digest7.nullable(),
   operationState: external_exports.string(),
   stopRequested: external_exports.boolean().nullable().optional(),
   producerStatus: external_exports.object({
@@ -46293,7 +46704,7 @@ var sectionBase = external_exports.object({
     supplied: external_exports.boolean().optional()
   })),
   items: external_exports.array(reportItemSchema),
-  assessedRunIds: external_exports.array(digest6).optional(),
+  assessedRunIds: external_exports.array(digest7).optional(),
   localArtifacts: external_exports.object({
     kind: external_exports.enum(["browser", "desktop", "unavailable"]),
     message: external_exports.string(),
@@ -46311,15 +46722,15 @@ var reportSectionSchema = external_exports.union([
 ]);
 var reportViewSchema = external_exports.object({
   schema: external_exports.literal("loki.report-view/3"),
-  reportId: digest6,
+  reportId: digest7,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest6.nullable(),
+  mapId: digest7.nullable(),
   sections: external_exports.array(reportSectionSchema),
   displayNotice: external_exports.string().nullable(),
   evidenceContext: external_exports.object({
-    contextId: digest6,
-    recordSha256: digest6,
+    contextId: digest7,
+    recordSha256: digest7,
     readTool: external_exports.literal("loki_context_get"),
     provenance: external_exports.string()
   }).optional(),
@@ -46339,7 +46750,7 @@ var reportReadOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/advisory-read.js
-var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var advisoryReadInputSchema = external_exports.strictObject({
   family: external_exports.enum([
     "uiModeler",
@@ -46350,14 +46761,14 @@ var advisoryReadInputSchema = external_exports.strictObject({
     "testSupplement",
     "suppliedEvidence"
   ]),
-  answerId: digest7,
+  answerId: digest8,
   offset: external_exports.number().int().nonnegative().optional()
 }).meta({ $id: "urn:kaijan:advisory-read-input:1" });
 var advisoryReadSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.advisory-read/1"),
   state: external_exports.literal("complete"),
-  answerId: digest7,
-  resultSha256: digest7,
+  answerId: digest8,
+  resultSha256: digest8,
   resultChunk: external_exports.strictObject({
     encoding: external_exports.literal("JSON text, UTF-16 offsets"),
     offset: external_exports.number().int().nonnegative(),
@@ -46386,7 +46797,7 @@ var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advis
 
 // packages/contracts/dist/advisory.js
 var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
-var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var strings = external_exports.array(external_exports.string());
 var count4 = external_exports.number().int().nonnegative();
@@ -46446,12 +46857,12 @@ var record3 = external_exports.looseObject({
 });
 var assessmentImageReferenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.assessment-image-ref/1"),
-  reportId: digest8,
-  runId: digest8,
-  resultSha256: digest8,
-  manifestSha256: digest8,
-  artifactId: digest8,
-  sha256: digest8,
+  reportId: digest9,
+  runId: digest9,
+  resultSha256: digest9,
+  manifestSha256: digest9,
+  artifactId: digest9,
+  sha256: digest9,
   bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
@@ -46475,7 +46886,7 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
     media_type: external_exports.literal("image/png").optional(),
     reference: jsonObject.nullable(),
     provenance: jsonObject.nullable(),
-    sha256: digest8.optional(),
+    sha256: digest9.optional(),
     artifact_ref: assessmentImageReferenceSchema.optional()
   })),
   target: jsonObject.nullable(),
@@ -46540,7 +46951,7 @@ var evidenceCatalog = external_exports.array(external_exports.looseObject({
   revision: external_exports.string(),
   line: count4,
   quote: external_exports.string(),
-  quote_sha256: digest8
+  quote_sha256: digest9
 }));
 var nativePlanningResultSchema = external_exports.union([
   external_exports.looseObject({
@@ -46554,7 +46965,7 @@ var nativePlanningResultSchema = external_exports.union([
       tests: count4,
       objectives: count4
     }),
-    input_hash: digest8,
+    input_hash: digest9,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog
@@ -46611,7 +47022,7 @@ var nativeSupplementResultSchema = external_exports.union([
       text: external_exports.string(),
       uri: external_exports.string(),
       revision: external_exports.string(),
-      sha256: digest8,
+      sha256: digest9,
       bytes: count4,
       test_ids: strings
     }),
@@ -46620,10 +47031,10 @@ var nativeSupplementResultSchema = external_exports.union([
       status: external_exports.literal("structurally_valid_supplement"),
       executed: external_exports.literal(false),
       semantic_support: external_exports.literal("requires_separate_review"),
-      original_baseline_sha256: digest8,
+      original_baseline_sha256: digest9,
       original_baseline_test_ids: strings
     }),
-    input_hash: digest8,
+    input_hash: digest9,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog,
@@ -46634,8 +47045,8 @@ var nativeSupplementResultSchema = external_exports.union([
 var nativeAssessmentResultSchema = external_exports.looseObject({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  input_sha256: digest8,
-  request_sha256: digest8,
+  input_sha256: digest9,
+  request_sha256: digest9,
   assessment: external_exports.looseObject({
     schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
     original_candidate: jsonObject,
@@ -46665,7 +47076,7 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
   native_artifact_directory: external_exports.string(),
   complete_call_elapsed_seconds: external_exports.number().nonnegative(),
   provider_calls_started: count4,
-  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest8 })),
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest9 })),
   result_persisted: external_exports.boolean(),
   continuation_allowed: external_exports.boolean(),
   limitations: external_exports.string(),
@@ -46673,11 +47084,11 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
 });
 var advisoryIncompleteSchema = external_exports.strictObject({
   state: external_exports.enum(["unknown", "refused", "cancelled"]),
-  answerId: digest8.optional(),
+  answerId: digest9.optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count4,
-    sha256: digest8,
+    sha256: digest9,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional(),
   reason: external_exports.string(),
@@ -46695,7 +47106,7 @@ var advisoryIncompleteSchema = external_exports.strictObject({
 });
 var advisoryContextUnavailableSchema = external_exports.strictObject({
   state: external_exports.literal("unsupported-consumption"),
-  contextId: digest8,
+  contextId: digest9,
   capability: external_exports.string(),
   detail: jsonObject,
   contextRetained: external_exports.literal(true),
@@ -46719,14 +47130,23 @@ var binding = external_exports.strictObject({
   sourceId: external_exports.string(),
   quote: external_exports.string().min(1).max(512)
 });
-var clarificationPresentationSchema = external_exports.strictObject({
+var ordinaryPresentation = external_exports.strictObject({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
   choices: external_exports.array(binding).max(8)
 });
+var clarificationPresentationSchema = external_exports.union([
+  ordinaryPresentation,
+  external_exports.strictObject({
+    kind: external_exports.literal("read-only-path"),
+    subject: binding,
+    control: binding,
+    choices: external_exports.array(binding).max(0)
+  })
+]);
 
 // packages/contracts/dist/runner.js
-var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
 var questions = external_exports.array(external_exports.strictObject({
@@ -46777,7 +47197,7 @@ var runnerClarificationSchema = external_exports.strictObject({
 });
 var originalReference = external_exports.strictObject({
   path: external_exports.string(),
-  sha256: digest9,
+  sha256: digest10,
   bytes: count5
 });
 var checkpointReference = originalReference.extend({
@@ -46862,13 +47282,13 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
       provenance: jsonObject2
     }),
     verification: reportVerificationSchema.optional(),
-    sourceContextId: digest9.nullable().optional()
+    sourceContextId: digest10.nullable().optional()
   })
 ]);
 var runnerNextActionSchema = external_exports.strictObject({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: digest9,
+  runId: digest10,
   clarificationId: external_exports.string().min(1),
   deadlineAt: external_exports.string(),
   questions,
@@ -46876,7 +47296,7 @@ var runnerNextActionSchema = external_exports.strictObject({
 });
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
-  runId: digest9,
+  runId: digest10,
   state: external_exports.enum([
     "accepted",
     "running",
@@ -46897,14 +47317,14 @@ var operationBase = external_exports.strictObject({
   receiptDirectory: external_exports.string().optional(),
   providerCallsStarted: external_exports.literal(0).optional(),
   resultValidated: external_exports.boolean().optional(),
-  resultSha256: digest9.optional(),
+  resultSha256: digest10.optional(),
   resultBytes: count5.optional(),
-  resultRecordSha256: digest9.optional(),
+  resultRecordSha256: digest10.optional(),
   resultRecord: external_exports.json().optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count5,
-    sha256: digest9,
+    sha256: digest10,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional()
 });
@@ -46923,7 +47343,7 @@ var resultChunk = external_exports.strictObject({
 var finished = operationBase.extend({
   state: external_exports.literal("finished"),
   resultValidated: external_exports.literal(true),
-  resultSha256: digest9,
+  resultSha256: digest10,
   resultBytes: external_exports.number().int().positive()
 });
 var runnerOperationSchema = external_exports.union([
@@ -46944,7 +47364,7 @@ var runnerOperationSchema = external_exports.union([
 var runnerErrorSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-error/1"),
   method: external_exports.enum(["execute", "get", "stop"]),
-  runId: digest9.optional(),
+  runId: digest10.optional(),
   error: external_exports.strictObject({
     code: external_exports.enum([
       "invalid_arguments",
@@ -46965,7 +47385,7 @@ var runnerErrorSchema = external_exports.strictObject({
       action: external_exports.string(),
       instruction: external_exports.string(),
       requestKey: external_exports.string().optional(),
-      existingRunId: digest9.optional(),
+      existingRunId: digest10.optional(),
       existingRunScope: external_exports.string().optional()
     })
   })
@@ -46973,7 +47393,7 @@ var runnerErrorSchema = external_exports.strictObject({
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
 // packages/contracts/dist/assessment-preparation.js
-var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
 var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var assessmentReceiptSchema = external_exports.looseObject({
@@ -46985,10 +47405,10 @@ var assessmentPreparationLimits = {
   packetBytes: 2 * 1024 * 1024
 };
 var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
-  reportId: digest10,
-  runId: digest10,
+  reportId: digest11,
+  runId: digest11,
   view: external_exports.literal("inspection").optional(),
-  expectedResultSha256: digest10.optional(),
+  expectedResultSha256: digest11.optional(),
   work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
   requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
   proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
@@ -46997,23 +47417,23 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   preflight: assessmentReceiptSchema.nullable().optional(),
   runtimeComparison: assessmentReceiptSchema.nullable().optional(),
   cleanup: assessmentReceiptSchema.nullable().optional(),
-  selectedArtifactIds: external_exports.array(digest10).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+  selectedArtifactIds: external_exports.array(digest11).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
-var locator = external_exports.strictObject({
+var locator2 = external_exports.strictObject({
   report: external_exports.strictObject({
     tool: external_exports.literal("loki_report_get"),
-    reportId: digest10
+    reportId: digest11
   }),
   operation: external_exports.strictObject({
     tool: external_exports.literal("loki_runner_get"),
-    runId: digest10
+    runId: digest11
   }),
   artifacts: external_exports.strictObject({
     tool: external_exports.literal("loki_report_artifact_read"),
-    reportId: digest10,
-    runId: digest10
+    reportId: digest11,
+    runId: digest11
   }),
-  resultSha256: digest10.nullable()
+  resultSha256: digest11.nullable()
 });
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
@@ -47040,7 +47460,7 @@ var common = {
   nativeVerdict: external_exports.json(),
   accounting: jsonObject3,
   evidenceIndex: external_exports.array(indexEntry),
-  origin: locator
+  origin: locator2
 };
 var fullPreparationOutput = external_exports.union([
   external_exports.strictObject({
@@ -47086,7 +47506,7 @@ var assessmentInspectionLocatorSchema = external_exports.union([
     document: external_exports.literal("full-preparation-packet"),
     pointer: external_exports.string()
   }),
-  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest10 })
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest11 })
 ]);
 var section = external_exports.strictObject({
   total: count6,
@@ -47240,7 +47660,7 @@ function transferAssessmentPresentationProof(source3, target, verifySource) {
       transferAssessmentPresentationProof(source3[key], target[key], verifySource);
   return target;
 }
-var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var customerCleanupFactsSchema = external_exports.object({
   kind: external_exports.literal("browser-cleanup"),
   scope: external_exports.literal("test-browser-resources"),
@@ -47252,6 +47672,14 @@ var customerCleanupFactsSchema = external_exports.object({
 var customerAssessmentQuoteSchema = external_exports.object({
   sourceId: external_exports.string(),
   display: customerSourceDisplaySchema.optional(),
+  // The original quote hash stays exact. This receipt identifies the filtered
+  // display copy; serialized fields alone never grant source proof.
+  projection: external_exports.object({
+    schema: external_exports.literal("kaijan.customer-source-projection/1"),
+    sourceSha256: digest12,
+    sha256: digest12,
+    bytes: external_exports.number().int().nonnegative()
+  }).optional(),
   state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
   attribution: external_exports.enum([
     "application-observation",
@@ -47262,8 +47690,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
     "supplied-source"
   ]).optional(),
   text: external_exports.string().optional(),
-  sha256: digest11.optional(),
-  sourceSha256: digest11.optional(),
+  sha256: digest12.optional(),
+  sourceSha256: digest12.optional(),
   facts: customerCleanupFactsSchema.optional(),
   notice: external_exports.string().optional()
 });
@@ -47291,8 +47719,10 @@ function projectAssessmentQuotes(values = []) {
         state: "literal-source",
         attribution: verified ? quote.attribution ?? "supplied-source" : "supplied-source",
         text: quote.text,
+        ...verified && quote.notice !== void 0 ? { notice: quote.notice } : {},
         ...verified && quote.sha256 !== void 0 ? { sha256: quote.sha256 } : {},
         ...verified && quote.sourceSha256 !== void 0 ? { sourceSha256: quote.sourceSha256 } : {},
+        ...verified && quote.projection && quote.projection?.sourceSha256 === quote.sha256 ? { projection: quote.projection } : {},
         ...verified && quote.display && quote.display.sourceTextSha256 === quote.sha256 ? { display: quote.display } : {}
       });
     return {
@@ -47302,18 +47732,16 @@ function projectAssessmentQuotes(values = []) {
     };
   });
 }
-var observation = (quote) => hasVerifiedAssessmentSource(quote) && quote.state === "literal-source" && ["application-observation", "caller-supplied"].includes(quote.attribution ?? "");
-function presentAssessmentText(verdict, actual, quotes, steps) {
-  const observations = quotes.filter(observation);
+function presentAssessmentText(_verdict, actual, _quotes, steps, reason) {
   return {
-    actual: observations.some((quote) => quote.text === actual) ? actual : observations.length ? "Cited application observations are shown with this result." : null,
-    reason: `The saved assessment reports ${verdict === "pass" ? "a pass" : verdict === "fail" ? "a failure" : "an inconclusive result"}. Review the original expectation and cited evidence; source membership does not independently verify this conclusion.${observations.length ? "" : " No supported application observation is available in this view."}${quotes.some((quote) => quote.state === "unavailable") ? " Some cited sources remain unavailable." : ""}`,
-    descriptions: steps.map((step2, index) => step2.evidenceQuotes?.some((quote) => observation(quote) && quote.text === step2.description) ? step2.description : `Evidence cited for reported step ${index + 1}. This grouping does not establish action order or completion.`)
+    actual,
+    reason,
+    descriptions: steps.map((step2) => step2.description)
   };
 }
 var customerRecordedActionSchema = external_exports.object({
   sourceId: external_exports.string(),
-  sourceSha256: digest11.optional(),
+  sourceSha256: digest12.optional(),
   evidenceId: external_exports.string(),
   index: external_exports.number().int().positive(),
   action: external_exports.object({
@@ -47376,42 +47804,22 @@ function projectAssessmentStepFacts(value) {
     notice: verified ? row.state === "unresolved" ? "No bound action or observation supports this reported step. Keep this gap; do not repeat application actions to replace it." : assessmentActionQualification : "Supplied step references have not been rebound to the retained input. They do not establish performed steps or chronology."
   });
 }
-var assessmentFindingKinds = [
-  "observation_support",
-  "partial_observation_support",
-  "contradictory_observation",
-  "reported_only",
-  "not_exercised",
-  "blocked_or_not_run",
-  "unresolved_evidence",
-  "scope_mismatch",
-  "unclear_contract"
-];
-var findingText = {
-  observation_support: "The assessment reports supporting observations. Compare the expectation and cited sources.",
-  partial_observation_support: "The assessment reports partial observation support. Some of the requirement remains unconfirmed.",
-  contradictory_observation: "The assessment reports a possible contradiction. Compare the expectation and cited observations before treating this as a defect.",
-  reported_only: "The assessment identifies a reported result without independent observation support.",
-  not_exercised: "The assessment marks this requirement as not exercised. This view does not establish whether the action occurred.",
-  blocked_or_not_run: "The assessment marks this check as blocked or not run. Preserve that distinction from a failed application result.",
-  unresolved_evidence: "The assessment identifies unresolved evidence. Missing evidence does not establish success or failure.",
-  scope_mismatch: "The assessment identifies a possible scope mismatch. Review the selected requirement, test and outcome references.",
-  unclear_contract: "The assessment identifies an unclear expectation. Confirm the intended behavior before making an acceptance decision."
-};
-function presentAssessmentFinding(kind, supported) {
-  const selected = external_exports.enum(assessmentFindingKinds).safeParse(kind);
+function presentAssessmentFinding(kind, supported, content) {
   return {
-    kind: selected.success ? selected.data : "unresolved_evidence",
-    support: supported && selected.success ? "requires-review" : "needs-review",
-    claim: supported && selected.success ? findingText[selected.data] : "This finding requires review. Its available sources do not establish a verified defect.",
-    remaining_gap: "Review the cited expectation and observations. Literal source membership does not establish semantic support or complete requirement coverage.",
-    notice: "Finding to review; not a verified defect."
+    ...kind === void 0 ? {} : { kind },
+    support: supported ? "requires-review" : "needs-review",
+    ...content
   };
 }
 
 // packages/contracts/dist/report-presentation.js
-var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
+var reportExpectationAuthoritySchema = external_exports.enum([
+  "requirement",
+  "hypothesis",
+  "unresolved"
+]);
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
   display: true,
@@ -47432,10 +47840,11 @@ var reportTestAssessmentSchema = external_exports.object({
     evidence: external_exports.array(assessmentQuote),
     facts: customerAssessmentStepFactsSchema.optional()
   })).optional(),
-  answerId: digest12,
-  resultSha256: digest12,
+  answerId: digest13,
+  resultSha256: digest13,
   model: external_exports.string(),
   testId: external_exports.string(),
+  expectationAuthority: reportExpectationAuthoritySchema.optional(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   expected: external_exports.string(),
   actual: external_exports.string().nullable(),
@@ -47460,11 +47869,14 @@ var reportObservedPageSchema = external_exports.object({
   id: external_exports.string(),
   text: external_exports.string(),
   accessibilityText: external_exports.string().optional(),
-  sourceSha256: digest12,
-  contentSha256: digest12,
+  sourceSha256: digest13,
+  contentSha256: digest13,
   contentState: external_exports.literal("projected-page-content")
 });
 var reportOutcomeNoticeSchema = external_exports.enum([
+  "The test stopped when the app tried to open a website that was not allowed for this test.",
+  "The test stopped because it could not confirm whether the page was allowed for this test.",
+  "The test stopped because it could not reach an allowed website.",
   "Execution did not start because its connection is not configured.",
   "The target application is unavailable.",
   "The connection expired. Reconnect before retrying.",
@@ -47473,27 +47885,27 @@ var reportOutcomeNoticeSchema = external_exports.enum([
 ]);
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest12,
+  reportId: digest13,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest12.nullable(),
+  mapId: digest13.nullable(),
   assessmentFailures: external_exports.array(external_exports.object({
-    sourceId: digest12,
-    resultSha256: digest12,
+    sourceId: digest13,
+    resultSha256: digest13,
     reason: external_exports.enum(["service-rejected", "unavailable"])
   })).optional(),
   selectedPullRequestUrl: external_exports.string().nullable().optional(),
   assessments: external_exports.array(external_exports.object({
-    assessedRunIds: external_exports.array(digest12).optional(),
-    sourceId: digest12,
+    assessedRunIds: external_exports.array(digest13).optional(),
+    sourceId: digest13,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest12.nullable(),
+    resultSha256: digest13.nullable(),
     state: external_exports.string(),
     result: nativeJson
   })).optional(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest12,
-    resultSha256: digest12.nullable(),
+    sourceId: digest13,
+    resultSha256: digest13.nullable(),
     state: external_exports.string(),
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
@@ -47503,6 +47915,7 @@ var testPlanViewSchema = external_exports.object({
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
@@ -47515,9 +47928,9 @@ var testPlanViewSchema = external_exports.object({
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest12,
+    sourceId: digest13,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest12.nullable(),
+    resultSha256: digest13.nullable(),
     state: external_exports.string(),
     result: nativeJson,
     requestTestIndexes: external_exports.array(count7)
@@ -47528,13 +47941,13 @@ var reportPanelSchema = testPlanViewSchema.extend({
 });
 var reportLinkSchema = external_exports.object({
   schema: external_exports.literal("loki.report-link/1"),
-  reportId: digest12,
+  reportId: digest13,
   presentation: external_exports.literal("browser"),
   previewURL: external_exports.url()
 });
 var summarySchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest12,
+  reportId: digest13,
   title: external_exports.string(),
   counts: external_exports.object({
     pass: count7,
@@ -47554,32 +47967,32 @@ var summarySchema = external_exports.object({
     url: external_exports.url()
   }).nullable(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest12,
+    sourceId: digest13,
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string()
   })),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest12,
-    resultSha256: digest12.nullable(),
+    sourceId: digest13,
+    resultSha256: digest13.nullable(),
     requestTests: count7,
     executedTests: external_exports.boolean().nullable(),
     proposedTests: count7.nullable()
   }))
 });
 var cardBase = external_exports.object({
-  mapId: digest12.nullable().optional(),
+  mapId: digest13.nullable().optional(),
   schema: external_exports.literal("loki.report-card/1"),
-  reportId: digest12,
+  reportId: digest13,
   title: external_exports.string(),
   createdAt: external_exports.string(),
   originalResults: external_exports.array(external_exports.object({
     kind: external_exports.enum(["plan", "runner", "assessment"]),
-    answerId: digest12.nullable(),
-    runId: digest12.nullable(),
-    resultSha256: digest12.nullable()
+    answerId: digest13.nullable(),
+    runId: digest13.nullable(),
+    resultSha256: digest13.nullable()
   })),
-  sourceContextId: digest12.nullable(),
+  sourceContextId: digest13.nullable(),
   testPlanSummary: summarySchema,
   instructions: external_exports.string()
 });
@@ -47634,8 +48047,8 @@ var artifactsSchema = external_exports.object({
 });
 var traceIdentity = {
   schema: external_exports.literal("loki.report-trace/1"),
-  reportId: digest12,
-  runId: digest12
+  reportId: digest13,
+  runId: digest13
 };
 var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
   const url2 = new URL(value);
@@ -47662,16 +48075,28 @@ var reportTraceResultSchema = external_exports.union([
     status: external_exports.literal("unavailable")
   })
 ]);
+var customerTraceArtifacts = artifactsSchema.omit({ launchCommand: true }).extend({
+  files: external_exports.array(external_exports.never()).max(0)
+});
 var customerReportTraceResultSchema = external_exports.union([
   external_exports.strictObject({ ...traceIdentity, status: external_exports.literal("closed") }),
-  external_exports.strictObject({
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  customerTraceArtifacts.extend({
     ...traceIdentity,
     status: external_exports.literal("unavailable"),
-    kind: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false),
-    reason: external_exports.literal("customer-view-unavailable"),
-    message: external_exports.literal("The trace is not available in this report. Saved test steps and observations remain available."),
-    files: external_exports.array(external_exports.never()).max(0)
+    traceAvailable: external_exports.literal(false)
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -47686,8 +48111,8 @@ var selectedKinds = external_exports.array(external_exports.enum(["plan", "runne
 var reportExportPreviewSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest12,
-  previewSha256: digest12,
+  reportId: digest13,
+  previewSha256: digest13,
   html: external_exports.string(),
   omitted: external_exports.array(external_exports.string()),
   redaction: external_exports.string(),
@@ -47696,8 +48121,8 @@ var reportExportPreviewSchema = external_exports.object({
 var reportExportReceiptSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest12,
-  sha256: digest12,
+  reportId: digest13,
+  sha256: digest13,
   path: external_exports.string(),
   delivery: external_exports.literal("local-file-only"),
   uploaded: external_exports.literal(false)
@@ -47712,34 +48137,47 @@ var reportExportOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/report-artifact.js
-var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count8 = external_exports.number().int().nonnegative();
+var captureTime = external_exports.iso.datetime({ offset: true });
+var pageCaptureBindingSchema = external_exports.object({
+  screenshot: external_exports.object({
+    name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
+    sha256: digest14,
+    capturedAt: captureTime
+  }),
+  afterAction: external_exports.number().int().positive().nullable(),
+  startedAt: captureTime,
+  finishedAt: captureTime
+});
 var reportArtifactProjectionSchema = external_exports.object({
   schema: external_exports.literal("loki.report-artifact-projection/1"),
-  sourceSha256: digest13,
-  sha256: digest13,
+  sourceSha256: digest14,
+  sha256: digest14,
   bytes: count8,
-  redactionRevision: count8
+  redactionRevision: count8,
+  // Only the owning manifest reader can supply this checked association.
+  pageCapture: pageCaptureBindingSchema.optional()
 });
 var reportArtifactInputSchema = external_exports.strictObject({
-  reportId: digest13,
-  runId: digest13,
-  artifactId: digest13.optional(),
+  reportId: digest14,
+  runId: digest14,
+  artifactId: digest14.optional(),
   offset: count8.optional()
 });
 var artifact = external_exports.object({
-  artifactId: digest13,
+  artifactId: digest14,
   name: external_exports.string(),
   mediaType: external_exports.enum(["image/png", "application/json"]),
   bytes: count8,
-  sha256: digest13
+  sha256: digest14
 });
 var provenance = {
   schema: external_exports.literal("loki.report-artifact/1"),
-  reportId: digest13,
-  runId: digest13,
-  resultSha256: digest13,
-  manifestSha256: digest13,
+  reportId: digest14,
+  runId: digest14,
+  resultSha256: digest14,
+  manifestSha256: digest14,
   manifestSchema: external_exports.enum([
     "loki.computer-runner.private-evidence/1",
     "loki.mac-computer-runner.private-evidence/1"
@@ -47787,9 +48225,9 @@ var reportArtifactOutputSchema = external_exports.union([
 ]);
 var customerIdentity = {
   schema: external_exports.literal("kaijan.customer-artifact/1"),
-  reportId: digest13,
-  runId: digest13,
-  resultSha256: digest13,
+  reportId: digest14,
+  runId: digest14,
+  resultSha256: digest14,
   createdAt: external_exports.string(),
   semanticAssessment: external_exports.literal("not-performed")
 };
@@ -47822,8 +48260,8 @@ var customerReportArtifactResultSchema = external_exports.union([
         totalCodeUnits: count8,
         projection: external_exports.object({
           schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
-          sourceSha256: digest13,
-          sha256: digest13,
+          sourceSha256: digest14,
+          sha256: digest14,
           bytes: count8
         })
       })
@@ -47833,7 +48271,7 @@ var customerReportArtifactResultSchema = external_exports.union([
 var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
 var customerCaseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-case-evidence/1"),
-  planRef: external_exports.object({ answerId: digest13, resultSha256: digest13 }),
+  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -47842,7 +48280,7 @@ var customerCaseEvidenceSchema = external_exports.object({
     state: external_exports.enum(["recording", "ended", "interrupted"]),
     screenshots: external_exports.array(external_exports.object({
       name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-      sha256: digest13,
+      sha256: digest14,
       capturedAt: external_exports.string()
     }))
   }))
@@ -47870,10 +48308,10 @@ var reportRenderAckSchema = reportRenderMetadataSchema.extend({
 });
 
 // packages/contracts/dist/case-evidence.js
-var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var screenshot = external_exports.object({
   name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest14,
+  sha256: digest15,
   capturedAt: external_exports.string()
 });
 var browserRefresh = external_exports.object({
@@ -47901,7 +48339,7 @@ var action = external_exports.object({
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
   attribution: external_exports.literal("runner-declared-boundaries"),
-  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
+  planRef: external_exports.object({ answerId: digest15, resultSha256: digest15 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -47934,6 +48372,7 @@ var caseEvidenceSchema = external_exports.object({
 });
 
 // packages/contracts/dist/customer-planning.js
+var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
 var proof = /* @__PURE__ */ new WeakMap();
 var json2 = (value) => JSON.stringify(value);
 function retainCustomerPlanningSource(value) {
@@ -47964,7 +48403,7 @@ function customerPlanningId(kind, original2, sha256, allowPublicAlias = false) {
 }
 
 // packages/contracts/dist/customer-risk.js
-var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var source2 = external_exports.object({
   id: external_exports.string(),
   source_id: external_exports.string(),
@@ -47973,7 +48412,7 @@ var source2 = external_exports.object({
   revision: external_exports.string().nullable(),
   line: external_exports.number().int().nonnegative(),
   quote: external_exports.string(),
-  quote_sha256: digest15
+  quote_sha256: digest16
 });
 var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
 var finding = external_exports.object({
@@ -48114,24 +48553,20 @@ function customerExecutionStatus(state2, effects) {
 var progress2 = external_exports.object({
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
   effects: external_exports.enum(["known", "uncertain"]).optional(),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
-  questions: external_exports.array(external_exports.object({ id: external_exports.string() })).optional()
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
 });
 function projectCustomerExecutionProgress(input3) {
   const value = progress2.parse(input3);
   return {
     ...value.status ? { status: value.status } : {},
     ...value.effects ? { effects: value.effects } : {},
-    reason: customerExecutionStatus(value.status, value.effects),
-    completedSteps: [],
-    remainingSteps: value.remainingSteps?.length ? ["Some requested checks were not completed."] : [],
-    questions: value.questions?.length ? [
-      {
-        id: "saved-question",
-        question: "Additional information was requested. Review the original task and selected application.",
-        kind: "information"
-      }
-    ] : []
+    reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
+    completedSteps: value.completedSteps ?? [],
+    remainingSteps: value.remainingSteps ?? [],
+    questions: value.questions ?? []
   };
 }
 function transferVerifiedExecutionEvidence(input3, verifySource) {
@@ -48157,7 +48592,7 @@ function customerAuthoredText(value) {
   return diagnostic.test(projected) ? customerOmittedDetail : projected;
 }
 var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
-var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional2 = (schema) => schema.optional();
 var strings2 = external_exports.array(external_exports.string());
 var citation = external_exports.object({
@@ -48268,14 +48703,14 @@ var assessmentInput = external_exports.object({
     })
   }).nullable()
 });
-function projectCustomerAssessmentText(actual, _reason, descriptions2, verdict = "inconclusive", quotes = [], stepQuotes = []) {
+function projectCustomerAssessmentText(actual, reason, descriptions2, verdict = "inconclusive", quotes = [], stepQuotes = []) {
   return presentAssessmentText(verdict, actual, quotes, descriptions2.map((description, index) => ({
     description,
     evidenceQuotes: stepQuotes[index]
-  })));
+  })), reason);
 }
 function projectCustomerAssessmentResult(value) {
-  const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, field]) => field !== void 0));
+  const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, field2]) => field2 !== void 0));
   const parsed = copyAssessmentPresentationProof(value, customerAssessmentResultSchema.parse(value));
   return omitAbsent({
     ...parsed,
@@ -48289,7 +48724,7 @@ function projectCustomerAssessmentResult(value) {
         evidenceQuotes: projectAssessmentQuotes(step2.evidenceQuotes),
         ...step2.facts ? { facts: projectAssessmentStepFacts(step2.facts) } : {}
       }));
-      const prose = presentAssessmentText(row.verdict, row.actual, evidenceQuotes, steps ?? []);
+      const prose = presentAssessmentText(row.verdict, row.actual, evidenceQuotes, steps ?? [], row.reason);
       return retainVerifiedAssessmentSource(omitAbsent({
         ...row,
         expected: projectAssessmentExpected(row, evidenceQuotes),
@@ -48305,7 +48740,11 @@ function projectCustomerAssessmentResult(value) {
     }),
     findings: parsed.findings?.map((finding2) => omitAbsent({
       ...finding2,
-      ...presentAssessmentFinding(finding2.kind, finding2.support === "requires-review"),
+      ...presentAssessmentFinding(finding2.kind, finding2.support === "requires-review", {
+        ...finding2.claim === void 0 ? {} : { claim: finding2.claim },
+        ...finding2.remaining_gap === void 0 ? {} : { remaining_gap: finding2.remaining_gap },
+        ...finding2.notice === void 0 ? {} : { notice: finding2.notice }
+      }),
       evidenceQuotes: projectAssessmentQuotes(finding2.evidenceQuotes)
     }))
   });
@@ -48376,25 +48815,15 @@ function projectCustomerAssessment(value, sources) {
     }),
     findings: body?.findings.map((row, index) => {
       const content = row.original_finding;
-      const projected = {
-        ...content,
-        claim: content.claim === void 0 ? void 0 : customerAuthoredText(content.claim),
-        kind: content.kind === void 0 ? void 0 : customerAuthoredText(content.kind),
-        remaining_gap: content.remaining_gap === void 0 ? void 0 : customerAuthoredText(content.remaining_gap)
-      };
       const supported = row.status === "bound_model_assessment";
-      return supported ? {
-        ...projected,
+      return {
+        ...content,
         id: row.id,
-        support: "requires-review",
-        evidenceQuotes: safeQuotes(sources?.findings[index])
-      } : {
-        id: row.id,
-        requirement_ids: content.requirement_ids,
-        test_ids: content.test_ids,
-        outcome_ids: content.outcome_ids,
-        support: "needs-review",
-        notice: "This finding lacks validated support. Review the original task and evidence; do not treat it as a verified defect."
+        support: supported ? "requires-review" : "needs-review",
+        evidenceQuotes: safeQuotes(sources?.findings[index]),
+        ...!supported ? {
+          notice: "This finding lacks validated support. Review the original task and evidence; do not treat it as a verified defect."
+        } : {}
       };
     }),
     coverage: body?.coverage,
@@ -48453,7 +48882,8 @@ var customerPlanSchema = external_exports.object({
       "legacy-source-excerpts",
       "unverified"
     ]),
-    semantics: external_exports.literal("proposed-only")
+    semantics: external_exports.literal("proposed-only"),
+    detailsAvailable: external_exports.boolean().optional()
   }).optional(),
   status: external_exports.enum(["proposed_plan", "needs_clarification"]),
   objectives: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), refs: refs3 })).optional(),
@@ -48702,12 +49132,15 @@ var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
   attribution: true,
   sha256: true,
   sourceSha256: true,
+  projection: true,
+  notice: true,
   facts: true
 }).extend({ text: external_exports.string() });
 var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
   answerId: true,
   resultSha256: true,
   testId: true,
+  expectationAuthority: true,
   verdict: true,
   expected: true,
   actual: true,
@@ -48837,7 +49270,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     plan: customerPlanSchema.nullable(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
-      "This saved plan is unavailable in the supported view. Other saved results remain available."
+      "This saved plan is unavailable in the supported view. Other saved results remain available.",
+      unavailablePlanDetailsNotice
     ]).optional(),
     coverage: coverage2.optional(),
     evidence: external_exports.array(customerPlanEvidenceSchema).optional()
@@ -48849,15 +49283,18 @@ var customerReportSchema = testPlanViewSchema.pick({
     executionState: true,
     stoppedByUser: true,
     testVerdict: true,
+    traceRetained: true,
     planSourceId: true,
     planResultSha256: true,
     selectedTestIds: true,
     elapsedMs: true,
+    startedAt: true,
     recordedAt: true
   }).extend({
     state: operationState,
     executionState,
     testVerdict,
+    traceRetained: external_exports.boolean().default(false),
     interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
     observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
     // Free-form terminal diagnostics are not an application observation source.
@@ -48932,11 +49369,11 @@ var customerReportCardSchema = panelCard.pick({
       inconclusive: true,
       conflicting: true,
       unavailable: true
-    }),
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset; keep assessed proposed-check results separate in chat summaries."),
     proposedCounts: external_exports.object({
       pass: external_exports.number().int().nonnegative(),
       fail: external_exports.number().int().nonnegative()
-    }).optional(),
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. Subtract each subset for the other passed/failed tests. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
     pullRequest: external_exports.object({
       number: external_exports.number().int().positive(),
       title: external_exports.string(),
@@ -48971,6 +49408,7 @@ var customerReportFailureSchema = external_exports.object({
 var customerReportReadSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-read/1"),
   presentation: external_exports.literal("chat").optional(),
+  assessments: customerReportSchema.shape.assessments,
   reportId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   title: external_exports.string(),
   createdAt: external_exports.string(),
@@ -49036,6 +49474,8 @@ function projectReportResult(input3, sha256) {
   return {
     ...value,
     plans: value.plans.map((source3) => {
+      const plan2 = source3.plan === null ? null : projectCustomerPlan(source3.plan, source3.evidence, sha256);
+      const unavailable3 = plan2?.presentation?.detailsAvailable === false;
       const evidence2 = projectCustomerSavedPlanEvidence(source3.evidence, sha256)?.map((row) => {
         const id6 = customerPlanningId("E", row.id, sha256, true);
         if (id6 === row.id)
@@ -49051,7 +49491,8 @@ function projectReportResult(input3, sha256) {
           ...source3.coverage,
           unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id6) => customerPlanningId("R", id6, sha256, true))
         } : source3.coverage,
-        plan: source3.plan === null ? null : projectCustomerPlan(source3.plan, evidence2, sha256)
+        plan: unavailable3 ? null : plan2,
+        ...unavailable3 ? { notice: unavailablePlanDetailsNotice } : {}
       };
     }),
     assessments: value.assessments?.map((source3) => ({
@@ -49081,8 +49522,8 @@ function projectReportResult(input3, sha256) {
   };
 }
 function projectCustomerTestPlanView(input3, sha256) {
-  const object8 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
-  const record5 = (value2) => object8(value2) ? value2 : {};
+  const object9 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
+  const record5 = (value2) => object9(value2) ? value2 : {};
   const value = testPlanViewSchema.omit({ plans: true, runs: true, pullRequests: true, assessments: true }).extend({
     presentation: external_exports.literal("panel").optional(),
     plans: external_exports.array(external_exports.unknown()),
@@ -49105,7 +49546,7 @@ function projectCustomerTestPlanView(input3, sha256) {
         plan: null,
         notice: "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan."
       };
-    if (!object8(native) || !object8(native.plan) || native.version !== void 0 && native.version !== "pr-context-plan-result/5" || native.schema !== void 0 || record5(native.checks).version !== void 0 && record5(native.checks).version !== "pr-context-plan-result/5")
+    if (!object9(native) || !object9(native.plan) || native.version !== void 0 && native.version !== "pr-context-plan-result/5" || native.schema !== void 0 || record5(native.checks).version !== void 0 && record5(native.checks).version !== "pr-context-plan-result/5")
       return {
         ...identity4,
         plan: null,
@@ -49682,7 +50123,7 @@ var localLimits = {
   inputLifetimeMs: 30 * 60 * 1e3
 };
 var id3 = external_exports.uuid();
-var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest18 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
   coreOrigin: external_exports.url().refine((value) => {
@@ -49776,7 +50217,7 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
     inputId: id3,
-    inputDigest: digest17,
+    inputDigest: digest18,
     transferAcknowledged: external_exports.literal(true),
     idempotencyKey: id3
   })),
@@ -49812,7 +50253,7 @@ var localInputSchema = external_exports.strictObject({
   inputId: id3,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
-  digest: digest17.nullable(),
+  digest: digest18.nullable(),
   includedFiles: external_exports.number().int().nonnegative(),
   includedBytes: external_exports.number().int().nonnegative(),
   omissionCount: external_exports.number().int().nonnegative(),
@@ -49836,9 +50277,9 @@ var localRunSchema = external_exports.strictObject({
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
   cliVersion: external_exports.literal("2026.10.18-8"),
-  cliDigest: digest17,
+  cliDigest: digest18,
   adapter: external_exports.literal(localAdapter),
-  inputDigest: digest17,
+  inputDigest: digest18,
   sourcePolicy: external_exports.literal("local-source-v1"),
   displayName: external_exports.string().max(255),
   execution: external_exports.literal("local"),
@@ -49855,7 +50296,7 @@ var localRunSchema = external_exports.strictObject({
     artifactId: id3,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
-    sha256: digest17
+    sha256: digest18
   })).max(100)
 });
 var localSetupSchema = external_exports.strictObject({
@@ -49984,7 +50425,7 @@ var localResultSchemas = {
     artifactId: id3,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
-    sha256: digest17,
+    sha256: digest18,
     totalSize: external_exports.number().int().nonnegative(),
     eof: external_exports.boolean()
   }),
@@ -50008,8 +50449,35 @@ var localResponseSchema = external_exports.discriminatedUnion("ok", [
 // apps/codex-plugin/src/customer-output.mjs
 import { createHash as createHash4 } from "node:crypto";
 
+// apps/codex-plugin/src/completed-test-reply.mjs
+function completedTestReply(value) {
+  if (value.kind !== "test" || value.state !== "finished") return value;
+  const reply = { ...value };
+  delete reply.executionEvidence;
+  if (value.assessment) {
+    const withoutQuotes = (row) => {
+      const output2 = { ...row };
+      delete output2.evidenceQuotes;
+      if (row.observed_steps)
+        output2.observed_steps = row.observed_steps.map((step2) => {
+          const summary3 = { ...step2 };
+          delete summary3.evidenceQuotes;
+          delete summary3.facts;
+          return summary3;
+        });
+      return output2;
+    };
+    reply.assessment = { ...value.assessment };
+    if (value.assessment.tests)
+      reply.assessment.tests = value.assessment.tests.map(withoutQuotes);
+    if (value.assessment.findings)
+      reply.assessment.findings = value.assessment.findings.map(withoutQuotes);
+  }
+  return reply;
+}
+
 // apps/codex-plugin/src/customer-cleanup-output.mjs
-var digest18 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest19 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var customerBrowserCleanupSchema = external_exports.strictObject({
   scope: external_exports.literal("this-run-browser"),
   state: external_exports.enum(["complete", "incomplete", "unknown"]),
@@ -50024,8 +50492,8 @@ var unknown2 = () => ({
 });
 var context = external_exports.object({
   state: external_exports.literal("ready"),
-  runId: digest18,
-  resultSha256: digest18,
+  runId: digest19,
+  resultSha256: digest19,
   target: external_exports.object({ app: external_exports.string().min(1).optional() }).optional(),
   cleanupEvidence: external_exports.unknown().optional()
 });
@@ -50038,7 +50506,7 @@ var cleanupEvidence = external_exports.object({
 });
 async function customerBrowserCleanup(execution2, readContext) {
   if (execution2?.state !== "finished") return void 0;
-  if (!digest18.safeParse(execution2.runId).success || !digest18.safeParse(execution2.resultSha256).success || typeof readContext !== "function")
+  if (!digest19.safeParse(execution2.runId).success || !digest19.safeParse(execution2.resultSha256).success || typeof readContext !== "function")
     return unknown2();
   try {
     const value = context.parse(await readContext({ runId: execution2.runId }));
@@ -50071,7 +50539,12 @@ var executionTools = /* @__PURE__ */ new Set([
 ]);
 var customerInstructions = "Follow the caller-authorized task and selected application. Preserve customer tests, source citations, observations, coverage limits and separate execution and assessment results. Planning does not authorize execution. Ask for missing task inputs. Keep implementation details, model and reasoning settings, provider receipts, usage and accounting private, including when diagnostics are requested. Explain actual failures and useful recovery in product terms. Read or Stop the original operation after uncertain effects; never replay it or start replacement work to recover a result. A finished operation is not a passed test.";
 var hasCustomerExecutionOutput = (name) => executionTools.has(name);
-var isCustomerToolAllowed = (name) => name !== "kaijan_ai_models";
+var developmentTools = /* @__PURE__ */ new Set([
+  "kaijan_ai_models",
+  "loki_report_export_preview",
+  "loki_report_export"
+]);
+var isCustomerToolAllowed = (name) => !developmentTools.has(name);
 var hash2 = (value) => createHash4("sha256").update(value).digest("hex");
 var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings6 = external_exports.array(external_exports.string());
@@ -50262,7 +50735,7 @@ var customerExecutionSchema = external_exports.strictObject({
   answerStatus: optional4(external_exports.literal("retained")),
   error: optional4(failure3)
 });
-var projection = external_exports.strictObject({
+var projection2 = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-execution-page/1"),
   runId: id4,
   resultSha256: id4.optional(),
@@ -50287,8 +50760,25 @@ var customerOutputSchema = external_exports.union([
     projectionSha256: id4,
     resultRead: readHint.optional()
   }),
-  projection
+  projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
+function customerExecutionInput(tool) {
+  if (!["loki_runner_execute", "loki_test_execute"].includes(tool.name))
+    return tool.inputSchema;
+  const input3 = structuredClone(tool.inputSchema);
+  const projectRequest = (schema) => {
+    const limits = schema?.properties?.options?.properties?.limits;
+    if (limits?.properties && Object.hasOwn(limits.properties, "calls")) {
+      delete limits.properties.calls;
+      if (Array.isArray(limits.required))
+        limits.required = limits.required.filter((name) => name !== "calls");
+    }
+    for (const key of ["anyOf", "oneOf", "allOf"])
+      if (Array.isArray(schema?.[key])) schema[key].forEach(projectRequest);
+  };
+  projectRequest(input3);
+  return input3;
+}
 function customerToolDefinition(tool) {
   if (!isCustomerToolAllowed(tool.name)) return null;
   if (!executionTools.has(tool.name)) return tool;
@@ -50297,14 +50787,14 @@ function customerToolDefinition(tool) {
     name: tool.name,
     title: tool.title,
     annotations: tool.annotations,
-    description: tool.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    description: tool.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool.name === "loki_test_get" ? "A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
     inputSchema: read ? external_exports.toJSONSchema(
       external_exports.strictObject({
         runId: id4,
         offset: external_exports.number().int().nonnegative().optional(),
         projectionSha256: id4.optional()
       })
-    ) : tool.inputSchema,
+    ) : customerExecutionInput(tool),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -50448,13 +50938,14 @@ function executionView(value) {
     ...value.result ? { result: executionResult(value.result) } : {}
   });
 }
-function assessmentView(value, savedPlan = false, presentation) {
+function assessmentView(value, savedPlan = false, presentation, progressOnly = false) {
   if (value === null || value === void 0) return null;
   const identity4 = {
     state: value.error ? "unavailable" : value.state,
     answerId: value.answerId,
     resultSha256: value.resultSha256
   };
+  if (progressOnly) return assessment.parse(identity4);
   let view2;
   try {
     view2 = presentation ? projectCustomerAssessmentResult(presentation) : value.result && !value.error ? projectCustomerAssessment(value.result) : void 0;
@@ -50508,6 +50999,9 @@ async function readAssessmentPresentation(value, options, invocation) {
     return void 0;
   }
 }
+function combinedStatusRead(name, value) {
+  return name === "loki_test_get" && ["accepted", "running"].includes(value?.state);
+}
 function project(name, value, assessmentPresentation) {
   if (value?.error) return customerFailure(name, value);
   const kind = name.startsWith("loki_test_") ? "test" : name.endsWith("_answer") ? "answer" : "execution";
@@ -50544,7 +51038,8 @@ function project(name, value, assessmentPresentation) {
     assessment: assessmentView(
       value.assessment,
       hasSavedPlanSelection(value.execution?.result),
-      assessmentPresentation
+      assessmentPresentation,
+      combinedStatusRead(name, value)
     ),
     report: value.report,
     nextAction: value.nextAction ? {
@@ -50618,6 +51113,7 @@ var customerPending = external_exports.strictObject({
   bindingState: external_exports.enum(["bound", "unavailable"]),
   reason: external_exports.enum([
     "The test needs the following task or application information.",
+    "The test needs a read-only way to view the requested information.",
     "The saved question lacks a verified task or application reference and cannot be displayed. Its original pending state is retained; do not replay the test."
   ]),
   questions: external_exports.array(customerQuestion)
@@ -50666,6 +51162,17 @@ async function bindPendingQuestions(value, read) {
     } : void 0
   };
 }
+function bindProtectedProgress(projected, execution2, context2) {
+  const selected = context2?.state === "ready" && context2.runId === execution2?.runId && context2.resultSha256 === execution2?.resultSha256 ? progress3.safeParse(context2.protectedExecutionProgress) : { success: false };
+  for (const value of [projected.result, projected.execution?.result]) {
+    const original2 = value?.executionReport;
+    if (original2 === null || original2 === void 0) continue;
+    value.executionReport = selected.success && selected.data.status === original2.status && selected.data.effects === original2.effects ? selected.data : projectCustomerExecutionProgress({
+      status: original2.status,
+      effects: original2.effects
+    });
+  }
+}
 async function invokeCustomerExecution(catalog, name, args = {}, invocation, options = {}) {
   let retainedRunId = args?.runId;
   try {
@@ -50691,7 +51198,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
     const projected = project(
       name,
       await bindPendingQuestions(hydrated, options.readCustomerClarification),
-      await readAssessmentPresentation(hydrated, options, invocation)
+      combinedStatusRead(name, hydrated) ? void 0 : await readAssessmentPresentation(hydrated, options, invocation)
     );
     if (!projected.error && projected.kind !== "answer") {
       const execution2 = projected.kind === "test" ? hydrated.execution : hydrated;
@@ -50703,10 +51210,16 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         execution2,
         readContext
       );
-      if (execution2?.state === "finished") {
+      let context2;
+      try {
+        context2 = retained ? await retained : execution2?.state === "finished" && (projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+      } catch {
+      }
+      bindProtectedProgress(projected, execution2, context2);
+      const includeExecutionEvidence = !combinedStatusRead(name, projected);
+      if (execution2?.state === "finished" && includeExecutionEvidence) {
         let evidence2;
         try {
-          const context2 = retained ? await retained : void 0;
           if (context2?.state === "ready" && context2.runId === execution2.runId && context2.resultSha256 === execution2.resultSha256)
             evidence2 = context2.executionEvidence ? transferVerifiedExecutionEvidence(
               context2.executionEvidence,
@@ -50720,9 +51233,9 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         projected.browserCleanup = browserCleanup;
     }
     const dto = JSON.parse(JSON.stringify(projected));
-    const text4 = JSON.stringify(dto), digest20 = hash2(text4);
+    const text4 = JSON.stringify(dto), digest21 = hash2(text4);
     if (paging) {
-      if (projectionSha256 !== void 0 && projectionSha256 !== digest20 || args.offset >= text4.length || args.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[args.offset]))
+      if (projectionSha256 !== void 0 && projectionSha256 !== digest21 || args.offset >= text4.length || args.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[args.offset]))
         return customerFailureOutput(
           name,
           { code: "customer_read_restart", requestDispatched: false },
@@ -50730,11 +51243,11 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         );
       let end = Math.min(args.offset + 16e3, text4.length);
       if (end < text4.length && /[\uDC00-\uDFFF]/.test(text4[end])) end--;
-      return projection.parse({
+      return projection2.parse({
         schema: "kaijan.customer-execution-page/1",
         runId: dto.runId,
         resultSha256: dto.resultSha256,
-        projectionSha256: digest20,
+        projectionSha256: digest21,
         encoding: "JSON text, UTF-16 offsets",
         offset: args.offset,
         text: text4.slice(args.offset, end),
@@ -50743,16 +51256,17 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         replayAllowed: false
       });
     }
+    const reply = name === "loki_test_get" ? completedTestReply(dto) : dto;
     return customerOutputSchema.parse({
-      ...dto,
-      projectionSha256: digest20,
+      ...reply,
+      projectionSha256: digest21,
       ...dto.runId && dto.kind !== "answer" && !dto.error ? {
         resultRead: {
           tool: dto.kind === "test" ? "loki_test_get" : "loki_runner_get",
           arguments: {
             runId: dto.runId,
             offset: 0,
-            projectionSha256: digest20
+            projectionSha256: digest21
           }
         }
       } : {}
@@ -52707,11 +53221,38 @@ var tools = /* @__PURE__ */ new Set([
   "loki_report_show"
 ]);
 var hasCustomerReportOutput = (name) => tools.has(name);
-var cardInstructions = "Show this saved test summary. Open its exact reportId for details. If the saved card does not open, use Open app in tab once when available, then read the exact saved report as text in its original chat. Proposed tests are not executed results. Do not replay work to recover a report.";
+var cardInstructions = (summary3) => {
+  const base = "Show this saved test summary. Open its exact reportId for details. If the saved card does not open, use Open app in tab once when available, then read the exact saved report as text in its original chat. Unrun proposed tests are not executed results. Do not replay work to recover a report.";
+  const { counts, proposedCounts: proposed } = summary3;
+  if (!proposed || proposed.pass > counts.pass || proposed.fail > counts.fail)
+    return `${base} Keep assessed proposed-check results separate in chat. Read the saved tests' expectation authority before summarizing passes and failures; the proposed-check breakdown is unavailable.`;
+  const results = [
+    [counts.pass - proposed.pass, "passed"],
+    [counts.fail - proposed.fail, "failed"],
+    [
+      proposed.pass,
+      `proposed ${proposed.pass === 1 ? "check" : "checks"} passed`
+    ],
+    [
+      proposed.fail,
+      `proposed ${proposed.fail === 1 ? "check" : "checks"} failed`
+    ],
+    [counts.blocked, "blocked"],
+    [counts.skipped, "skipped"],
+    [counts["not-run"], "not run"],
+    [counts.inconclusive, "could not check"],
+    [counts.conflicting, "with different results"],
+    [
+      counts.unavailable,
+      `${counts.unavailable === 1 ? "result" : "results"} unavailable`
+    ]
+  ].filter(([count9]) => count9 > 0).map(([count9, label3]) => `${count9} ${label3}`).join(" \xB7 ");
+  return `${base} Keep assessed proposed-check results separate in chat. Proposed checks assess hypotheses. ${results ? `Saved result counts: ${results}.` : "There are no saved test results."}`;
+};
 var object6 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var isAssessmentOnly = (value) => value?.schema === "loki.report-view/3" && Array.isArray(value.sections) && value.sections.length > 0 && value.sections.every((section2) => section2?.kind === "assessment");
 function customerReportFailure(code = "report_projection_unavailable") {
-  const selection2 = ["invalid_arguments", "invalid_params"].includes(code);
+  const selection3 = ["invalid_arguments", "invalid_params"].includes(code);
   const unavailable3 = [
     "report_not_found",
     "report_unavailable",
@@ -52723,8 +53264,8 @@ function customerReportFailure(code = "report_projection_unavailable") {
   return customerReportFailureSchema.parse({
     schema: "kaijan.customer-report-error/1",
     error: {
-      code: selection2 ? "report_invalid_selection" : unavailable3 ? "report_unavailable" : "report_projection_unavailable",
-      message: selection2 ? "The report selection is invalid." : unavailable3 ? "This saved report is unavailable in this chat." : "The saved report cannot be shown in the supported customer view.",
+      code: selection3 ? "report_invalid_selection" : unavailable3 ? "report_unavailable" : "report_projection_unavailable",
+      message: selection3 ? "The report selection is invalid." : unavailable3 ? "This saved report is unavailable in this chat." : "The saved report cannot be shown in the supported customer view.",
       requestDispatched: false,
       recovery: {
         action: "read_original_report",
@@ -52791,6 +53332,9 @@ function projectCustomerReport(value) {
     }
     if (value.schema === "loki.report-card/1") {
       if (value.presentation !== "panel") return customerReportFailure();
+      const testPlanSummary = customerReportCardSchema.shape.testPlanSummary.parse(
+        value.testPlanSummary
+      );
       return customerReportCardSchema.parse({
         schema: value.schema,
         presentation: "panel",
@@ -52800,8 +53344,8 @@ function projectCustomerReport(value) {
         mapId: value.mapId,
         originalResults: value.originalResults,
         sourceContextId: value.sourceContextId,
-        testPlanSummary: value.testPlanSummary,
-        instructions: cardInstructions
+        testPlanSummary,
+        instructions: cardInstructions(testPlanSummary)
       });
     }
     if (value.schema !== "loki.test-plan-view/2" || !Array.isArray(value.plans) || !Array.isArray(value.runs))
@@ -52814,23 +53358,23 @@ function projectCustomerReport(value) {
     return customerReportFailure();
   }
 }
-function customerReportToolDefinition(tool) {
+function customerReportToolDefinition(tool, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool.name)) return tool;
-  const resourceUri = "ui://loki/test-plan/card/v38.html";
+  const resourceUri = "ui://loki/test-plan/card/v46.html";
   return {
     name: tool.name,
     title: tool.title,
     annotations: tool.annotations,
     inputSchema: tool.inputSchema,
-    ...tool.name === "loki_report_show" && tool._meta?.ui?.resourceUri === resourceUri ? {
+    ...presentation !== "chat" && tool.name === "loki_report_show" && tool._meta?.ui?.resourceUri === resourceUri ? {
       _meta: { ui: { resourceUri }, "openai/outputTemplate": resourceUri }
-    } : tool.name === "loki_report_open" ? {
+    } : presentation !== "chat" && tool.name === "loki_report_open" ? {
       _meta: {
         ui: { visibility: ["model", "app"] },
         "openai/widgetAccessible": true
       }
     } : {},
-    description: "Read the selected saved customer test report in its original chat. Preserve requirements, proposed tests, observed evidence and separate assessments. This does not run tests. Unsupported saved formats remain unavailable; never replay work to recreate a report.",
+    description: "Read the selected saved customer test report in its original chat. Preserve requirements, proposed tests, observed evidence and separate assessments. Keep assessed proposed-check results distinct from requirement results. This does not run tests. Unsupported saved formats remain unavailable; never replay work to recreate a report.",
     outputSchema: {
       ...external_exports.toJSONSchema(customerReportOutputSchema, { io: "input" }),
       type: "object"
@@ -52860,7 +53404,7 @@ function retainedCustomerEvidenceView(value, options) {
 async function invokeCustomerReportWithMetadata(catalog, name, args, invocation, options = {}) {
   if (!hasCustomerReportOutput(name))
     return { result: customerReportFailure() };
-  if (name === "loki_report_get") {
+  if (name === "loki_report_get" || name === "loki_report_open" && options.presentation === "chat") {
     const selected = external_exports.strictObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).safeParse(args);
     if (!selected.success)
       return { result: customerReportFailure("invalid_arguments") };
@@ -52884,24 +53428,43 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
       return { result: customerReportFailure("report_unavailable") };
     }
   }
-  if (name !== "loki_report_get" && options.presentation !== "panel")
+  if (name !== "loki_report_get" && !["panel", "chat"].includes(options.presentation))
     return { result: customerReportFailure() };
   try {
-    const value = await catalog.invoke(name, args, invocation);
-    catalog.validateOutput?.(name, value);
+    const original2 = await catalog.invoke(name, args, invocation);
+    catalog.validateOutput?.(name, original2);
     let nativeMetadata;
     try {
       if (name !== "loki_report_get")
-        nativeMetadata = catalog.reportViewMetadata?.(value);
+        nativeMetadata = catalog.reportViewMetadata?.(original2);
     } catch {
     }
-    const result2 = projectCustomerReport(
+    let value = original2;
+    if (options.presentation === "chat" && name === "loki_report_show" && typeof original2?.reportId === "string" && typeof options.readReportView === "function") {
+      invocation?.signal?.throwIfAborted();
+      value = await options.readReportView(original2.reportId, invocation);
+      invocation?.signal?.throwIfAborted();
+      if (value?.reportId !== original2.reportId)
+        return { result: customerReportFailure("report_unavailable") };
+    }
+    if (name === "loki_report_show" && isAssessmentOnly(original2) && typeof options.readReportView === "function") {
+      invocation?.signal?.throwIfAborted();
+      value = await options.readReportView(original2.reportId, invocation);
+      invocation?.signal?.throwIfAborted();
+      if (value?.reportId !== original2.reportId || value.schema !== "loki.test-plan-view/2" || value.plans?.length !== 0 || value.runs?.length !== 0 || !value.assessments?.length)
+        return { result: customerReportFailure("report_unavailable") };
+    }
+    const projected = projectCustomerReport(
       retainedCustomerEvidenceView(value, options)
     );
+    const result2 = options.presentation !== "chat" && value !== original2 && !projected.error ? customerReportReadSchema.parse({
+      ...projectCustomerReport(original2),
+      assessments: projected.assessments
+    }) : projected;
     const parsed = reportRenderMetadataSchema.safeParse(nativeMetadata);
     return {
       result: result2,
-      ...!result2.error && parsed.success && parsed.data.report_id === result2.reportId && parsed.data.presentation === "mcp_app" ? {
+      ...options.presentation !== "chat" && !result2.error && parsed.success && parsed.data.report_id === result2.reportId && parsed.data.presentation === "mcp_app" ? {
         metadata: { "loki/report-render": parsed.data }
       } : {}
     };
@@ -52922,16 +53485,16 @@ async function readCustomerProposalSource(family2, native, options) {
     resultSha256: native.resultSha256
   };
   const { read, verify } = options.proposalReaders?.[family2] ?? {};
-  let transfer, field;
+  let transfer, field2;
   if (family2 === "testPlanning") {
     transfer = transferCustomerPlanningSource;
-    field = "plan";
+    field2 = "plan";
   } else if (family2 === "testSupplement") {
     transfer = transferSupplementSourceProof;
-    field = "result";
+    field2 = "result";
   } else if (family2 === "changeRisk" || family2 === "riskFinder") {
     transfer = transferCustomerRiskProof;
-    field = "result";
+    field2 = "result";
   }
   if (!transfer || typeof read !== "function" || typeof verify !== "function")
     return void 0;
@@ -52939,7 +53502,7 @@ async function readCustomerProposalSource(family2, native, options) {
     const original2 = await read(reference2);
     if (original2?.answerId !== reference2.answerId || original2?.resultSha256 !== reference2.resultSha256 || family2 === "testPlanning" && !verify(original2))
       return void 0;
-    return family2 === "testPlanning" ? transfer(original2, structuredClone(original2), verify) : transfer(original2[field], structuredClone(original2[field]), verify);
+    return family2 === "testPlanning" ? transfer(original2, structuredClone(original2), verify) : transfer(original2[field2], structuredClone(original2[field2]), verify);
   } catch {
     return void 0;
   }
@@ -52957,7 +53520,7 @@ async function readCustomerProposalEvidence(evidence2, options) {
     if (!selected || row.kind !== "context" || row.uri !== `kaijan-answer://${selected[1]}/${selected[2]}` || typeof row.quote !== "string" || hash3(row.quote) !== row.quote_sha256 || row.revision !== row.quote_sha256)
       continue;
     try {
-      const projection2 = await readCustomerProposalSource(
+      const projection3 = await readCustomerProposalSource(
         selected[1],
         {
           state: "complete",
@@ -52966,8 +53529,8 @@ async function readCustomerProposalEvidence(evidence2, options) {
         },
         options
       );
-      if (projection2?.family === selected[1])
-        retainCustomerRiskEvidence(row, projection2);
+      if (projection3?.family === selected[1])
+        retainCustomerRiskEvidence(row, projection3);
     } catch {
     }
   }
@@ -52977,14 +53540,96 @@ async function readCustomerProposalEvidence(evidence2, options) {
 // apps/codex-plugin/src/customer-advisory-output.mjs
 import { createHash as createHash7 } from "node:crypto";
 
+// apps/codex-plugin/src/customer-input-corrections.mjs
+var object7 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var own2 = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
+var types = /* @__PURE__ */ new Set([
+  "object",
+  "array",
+  "string",
+  "number",
+  "integer",
+  "boolean",
+  "null"
+]);
+function choices(schema, root, seen = /* @__PURE__ */ new Set()) {
+  if (!object7(schema) || seen.has(schema)) return [];
+  const next = new Set(seen).add(schema);
+  const result2 = [schema];
+  if (typeof schema.$ref === "string" && schema.$ref.startsWith("#/")) {
+    let target = root;
+    for (const key of schema.$ref.slice(2).split("/")) {
+      const decoded = key.replaceAll("~1", "/").replaceAll("~0", "~");
+      target = object7(target) && own2(target, decoded) ? target[decoded] : null;
+    }
+    result2.push(...choices(target, root, next));
+  }
+  for (const key of ["anyOf", "oneOf", "allOf"])
+    for (const child of Array.isArray(schema[key]) ? schema[key] : [])
+      result2.push(...choices(child, root, next));
+  return result2;
+}
+function field(root, path) {
+  let nodes = choices(root, root);
+  const safePath = [];
+  for (const part of path) {
+    const next = [];
+    let publicPart;
+    for (const node2 of nodes) {
+      if (typeof part === "string" && object7(node2.properties) && own2(node2.properties, part)) {
+        publicPart = part;
+        next.push(...choices(node2.properties[part], root));
+      } else if (Number.isSafeInteger(part) && part >= 0 && object7(node2.items)) {
+        publicPart = part;
+        next.push(...choices(node2.items, root));
+      } else if (part === "[key]" && object7(node2.additionalProperties)) {
+        publicPart = "[key]";
+        next.push(...choices(node2.additionalProperties, root));
+      }
+    }
+    if (publicPart === void 0 || !next.length) return null;
+    safePath.push(publicPart);
+    nodes = next;
+  }
+  const expected = [
+    ...new Set(
+      nodes.flatMap(
+        (node2) => (Array.isArray(node2.type) ? node2.type : [node2.type]).filter(
+          (type) => types.has(type)
+        )
+      )
+    )
+  ];
+  return expected.length ? { path: safePath, expected } : null;
+}
+function customerInputCorrections(catalog, name, error63) {
+  if (error63?.code !== "invalid_params" || error63?.requestDispatched !== false || !Array.isArray(error63.issues))
+    return [];
+  const root = catalog.tools?.find((tool) => tool.name === name)?.inputSchema;
+  if (!object7(root)) return [];
+  const result2 = /* @__PURE__ */ new Map();
+  for (const issue3 of error63.issues) {
+    if (!Array.isArray(issue3?.path)) continue;
+    const correction = field(root, issue3.path);
+    if (correction) result2.set(JSON.stringify(correction.path), correction);
+  }
+  return [...result2.values()];
+}
+
 // apps/codex-plugin/src/customer-planning-recovery.mjs
 var temporaryStatuses = /* @__PURE__ */ new Set([502, 503, 504]);
-function temporaryFailure(native) {
-  const receipt = native?.receipt;
-  return native?.schema === "loki.planning-failure/1" && temporaryStatuses.has(receipt?.http_status) && receipt.body_complete === true && receipt.capture_error === null && Number.isSafeInteger(receipt.started_calls) && receipt.started_calls > 0;
+function capturedFailure(native) {
+  const receipt2 = native?.receipt;
+  return native?.schema === "loki.planning-failure/1" && receipt2 && receipt2.body_complete === true && receipt2.capture_error === null && Number.isSafeInteger(receipt2.started_calls) && receipt2.started_calls > 0;
 }
 function planningTemporaryFailureMessage(native) {
-  return temporaryFailure(native) ? "Kaijan could not make a test plan because a service was unavailable. Keep this answer. You can ask for a new plan later." : void 0;
+  if (!capturedFailure(native)) return void 0;
+  const receipt2 = native.receipt;
+  if (temporaryStatuses.has(receipt2.http_status))
+    return "Kaijan could not make a test plan because a service was unavailable. Keep this answer. You can ask for a new plan later.";
+  if (native.reason === "provider_output_limit_no_retry" && receipt2.http_status === 200 && receipt2.status === "output_limit" && receipt2.automatic_retry === false && receipt2.failure_diagnostic?.stage === "response_completion" && receipt2.failure_diagnostic?.reason === "max_output_tokens")
+    return "The planning service reported a response limit before it finished. No test plan was saved. You can ask for a new plan. This does not run any tests.";
+  return void 0;
 }
 function planningTemporaryFailureGuidance(answer) {
   if (answer?.state !== "complete") return void 0;
@@ -53091,7 +53736,25 @@ var baseSchema = external_exports.object({
         "advisory_unavailable"
       ]),
       message: external_exports.string(),
-      requestDispatched: external_exports.boolean().nullable()
+      requestDispatched: external_exports.boolean().nullable(),
+      corrections: external_exports.array(
+        external_exports.object({
+          path: external_exports.array(
+            external_exports.union([external_exports.string(), external_exports.number().int().nonnegative()])
+          ),
+          expected: external_exports.array(
+            external_exports.enum([
+              "object",
+              "array",
+              "string",
+              "number",
+              "integer",
+              "boolean",
+              "null"
+            ])
+          ).min(1)
+        })
+      ).optional()
     })
   )
 });
@@ -53133,7 +53796,7 @@ var descriptions = {
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
   testPlanning: "Propose acceptance and risk-focused tests for the selected work. Read only authorized linked sources; ask for missing source access or text. Planning never executes tests.",
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
-  suppliedEvidence: "Assess supplied test outcomes and evidence against the original requirements. This does not execute tests or make an acceptance decision."
+  suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
 };
 function customerAdvisoryToolDefinition(tool) {
   if (!hasCustomerAdvisoryOutput(tool.name)) return void 0;
@@ -53195,7 +53858,7 @@ function preparationView(value) {
         url: row.url,
         status: row.status,
         ...row.status === "needs_source" ? {
-          request: "Provide the relevant source text or restore access, then request a distinct analysis if needed."
+          request: "Provide the source text or restore access only if the requested tests need it."
         } : {}
       })
     )
@@ -53225,7 +53888,7 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
         executed: false,
         reviewRequired: true,
         preparation: prep,
-        message: planningConnectionGuidance(native)?.message ?? planningTemporaryFailureMessage(native) ?? (native.reason === "risk_analysis_not_complete" ? "Risk review did not complete, so no test plan was produced. Preserve this answer and resolve missing sources; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
+        message: planningConnectionGuidance(native)?.message ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
       });
     if (native.checks?.version !== "pr-context-plan-result/5" || native.checks.executed !== false)
       throw Error("Unknown plan");
@@ -53252,7 +53915,10 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
       coverage: native.checks.coverage.status,
       executed: false,
       reviewRequired: true,
-      preparation: prep
+      preparation: prep,
+      ...native.plan.status === "needs_clarification" && {
+        message: "Answer the plan's clarification before asking for a new plan. Use the related source reads if the clarification needs one of those sources."
+      }
     });
   }
   if (fam === "testSupplement") {
@@ -53266,7 +53932,7 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
   if (fam === "suppliedEvidence") return projectCustomerAssessment(native);
   throw Error("Unknown advisory family");
 }
-function failure4(fam, code = "advisory_unavailable", answerId, dispatched = null) {
+function failure4(fam, code = "advisory_unavailable", answerId, dispatched = null, corrections = []) {
   if (code === "invalid_params") code = "invalid_arguments";
   if (["answer_not_found_in_scope", "answer_not_complete"].includes(code))
     code = "answer_unavailable";
@@ -53277,14 +53943,22 @@ function failure4(fam, code = "advisory_unavailable", answerId, dispatched = nul
     "answer_integrity_failed",
     "customer_read_restart"
   ].includes(code) ? code : "advisory_unavailable";
-  const message = safe === "customer_read_restart" ? "The saved view changed or the page position is invalid. Read it again from offset zero." : safe === "request_key_conflict" ? "This request key belongs to different work. Keep the original key and input to recover that answer. Use a new key only for distinct authorized work; do not replay work with uncertain effects." : safe === "invalid_arguments" ? "The selected input is invalid. Correct the source or selection before requesting distinct work." : "This answer is unavailable. Return to the original chat and preserve the retained answer; do not replay uncertain work.";
+  const correctionText = corrections.map(
+    (item) => `${item.path.join(".") || "request"} (${item.expected.join(" or ")})`
+  ).join("; ");
+  const message = safe === "customer_read_restart" ? "The saved view changed or the page position is invalid. Read it again from offset zero." : safe === "request_key_conflict" ? "This request key belongs to different work. Keep the original key and input to recover that answer. Use a new key only for distinct authorized work; do not replay work with uncertain effects." : safe === "invalid_arguments" ? correctionText ? `Check these input fields: ${correctionText}. Use an allowed input option from the tool schema. The request was not sent.` : "The selected input is invalid. Correct the source or selection before requesting distinct work." : "This answer is unavailable. Return to the original chat and preserve the retained answer; do not replay uncertain work.";
   return baseSchema.parse({
     schema: "kaijan.customer-advisory/1",
     family: fam,
     state: "unavailable",
     ...id5.safeParse(answerId).success ? { answerId } : {},
     replayAllowed: false,
-    error: { code: safe, message, requestDispatched: dispatched },
+    error: {
+      code: safe,
+      message,
+      requestDispatched: dispatched,
+      ...corrections.length ? { corrections } : {}
+    },
     recovery: {
       action: safe === "customer_read_restart" ? "restart-customer-read" : safe === "invalid_arguments" ? "correct-source" : "return-to-original-chat",
       instruction: message
@@ -53353,7 +54027,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
   throw Error("Unknown advisory state");
 }
 async function readOriginal(catalog, fam, answerId, invocation, expected) {
-  let text4 = "", offset = 0, bytes = 0, total, digest20;
+  let text4 = "", offset = 0, bytes = 0, total, digest21;
   for (let pages = 0; pages < 32768; pages++) {
     invocation?.signal?.throwIfAborted();
     const value = await catalog.invoke(
@@ -53369,9 +54043,9 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
     const chunk = value.resultChunk;
     if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id5.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
       throw Error("Invalid saved answer");
-    digest20 ??= value.resultSha256;
+    digest21 ??= value.resultSha256;
     total ??= chunk.totalCharacters;
-    if (digest20 !== value.resultSha256 || total !== chunk.totalCharacters)
+    if (digest21 !== value.resultSha256 || total !== chunk.totalCharacters)
       throw Error("Changed saved answer");
     text4 += chunk.text;
     offset += chunk.text.length;
@@ -53379,14 +54053,14 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
     if (bytes > 20 * 1024 * 1024 || offset > total || chunk.nextOffset !== (offset === total ? null : offset))
       throw Error("Invalid saved answer length");
     if (chunk.nextOffset === null) {
-      if (hash4(text4) !== digest20 || expected !== void 0 && expected !== digest20)
+      if (hash4(text4) !== digest21 || expected !== void 0 && expected !== digest21)
         throw Object.assign(Error("Saved answer integrity failed"), {
           code: "answer_integrity_failed"
         });
       return {
         state: "complete",
         answerId,
-        resultSha256: digest20,
+        resultSha256: digest21,
         result: JSON.parse(text4)
       };
     }
@@ -53514,7 +54188,8 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         fam,
         error63?.code,
         answerId,
-        error63?.requestDispatched === false ? false : null
+        error63?.requestDispatched === false ? false : null,
+        customerInputCorrections(catalog, name, error63)
       )
     );
   }
@@ -53522,9 +54197,9 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
 
 // apps/codex-plugin/src/customer-preparation-output.mjs
 import { createHash as createHash8 } from "node:crypto";
-var digest19 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var hash5 = (value) => createHash8("sha256").update(JSON.stringify(value)).digest("hex");
-var object7 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var clone2 = (value) => JSON.parse(JSON.stringify(value));
 var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
 var hasCustomerPreparationOutput = (name) => names.has(name);
@@ -53544,8 +54219,8 @@ var savedRequestSchema = external_exports.unknown().superRefine((value, context2
 var savedAssessmentSelectorSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.saved-assessment/1"),
   request: savedRequestSchema,
-  resultSha256: digest19,
-  inputSha256: digest19
+  resultSha256: digest20.optional(),
+  inputSha256: digest20.optional()
 });
 var selectorJson = external_exports.toJSONSchema(savedAssessmentSelectorSchema, {
   io: "input"
@@ -53585,7 +54260,7 @@ var callerReceipt = external_exports.object({
   attribution: external_exports.string(),
   content: external_exports.json()
 });
-var observation2 = external_exports.strictObject({
+var observation = external_exports.strictObject({
   role: external_exports.enum([
     "caller-observation",
     "caller-receipt",
@@ -53610,9 +54285,9 @@ var assessmentSummarySchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-assessment-preparation/1"),
   state: external_exports.enum(["prepared", "unresolved", "refused"]),
   compatible: external_exports.boolean(),
-  reportId: digest19,
-  runId: digest19,
-  resultSha256: digest19.nullable(),
+  reportId: digest20,
+  runId: digest20,
+  resultSha256: digest20.nullable(),
   execution: external_exports.strictObject({
     state: external_exports.enum([
       "completed",
@@ -53651,7 +54326,7 @@ var assessmentSummarySchema = external_exports.strictObject({
   ),
   observations: external_exports.array(
     external_exports.union([
-      observation2,
+      observation,
       external_exports.strictObject({
         role: external_exports.literal("saved-application-observation"),
         observation: reportObservedPageSchema.pick({
@@ -53685,11 +54360,11 @@ var reuseSummarySchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-reuse-preparation/1"),
   state: external_exports.enum(["approval-required", "unavailable"]),
   currentTask: external_exports.string(),
-  runIds: external_exports.array(digest19),
-  approvalSha256: digest19,
-  currentRequestSha256: digest19,
+  runIds: external_exports.array(digest20),
+  approvalSha256: digest20,
+  currentRequestSha256: digest20,
   candidates: external_exports.array(candidateSchema),
-  unavailableRunIds: external_exports.array(digest19),
+  unavailableRunIds: external_exports.array(digest20),
   omitted: external_exports.number().int().nonnegative(),
   consent: external_exports.string(),
   replayAllowed: external_exports.literal(false)
@@ -53706,10 +54381,10 @@ function preparationRequest(args) {
   return request3;
 }
 function boundPacket(packet, request3) {
-  return packet?.schema === "loki.assessment-preparation/1" && ["prepared", "unresolved", "refused"].includes(packet.state) && packet.origin?.report?.reportId === request3.reportId && packet.origin?.operation?.runId === request3.runId && (packet.origin.resultSha256 === null || digest19.safeParse(packet.origin.resultSha256).success);
+  return packet?.schema === "loki.assessment-preparation/1" && ["prepared", "unresolved", "refused"].includes(packet.state) && packet.origin?.report?.reportId === request3.reportId && packet.origin?.operation?.runId === request3.runId && (packet.origin.resultSha256 === null || digest20.safeParse(packet.origin.resultSha256).success);
 }
 function preparedInput(packet) {
-  return packet.state !== "refused" && packet.submission?.compatible === true && suppliedEvidenceInputSchema.safeParse(packet.assessmentInput).success && digest19.safeParse(packet.origin.resultSha256).success;
+  return packet.state !== "refused" && packet.submission?.compatible === true && suppliedEvidenceInputSchema.safeParse(packet.assessmentInput).success && digest20.safeParse(packet.origin.resultSha256).success;
 }
 function fixedGaps(packet) {
   const gaps = /* @__PURE__ */ new Map();
@@ -53750,15 +54425,15 @@ function callerObservations(request3) {
     ["cleanup", "caller-cleanup"]
   ]) {
     const receipts = Array.isArray(request3[key]) ? request3[key] : request3[key] ? [request3[key]] : [];
-    for (const receipt of receipts)
-      values.push({ role, receipt: callerReceipt.parse(receipt) });
+    for (const receipt2 of receipts)
+      values.push({ role, receipt: callerReceipt.parse(receipt2) });
   }
   return values;
 }
 function applicationPageObservations(input3, packet) {
   return (input3?.evidence ?? []).flatMap((item) => {
     const provenance2 = item.provenance;
-    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest19.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash8("sha256").update(item.text).digest("hex") !== item.sha256)
+    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash8("sha256").update(item.text).digest("hex") !== item.sha256)
       return [];
     try {
       const page2 = external_exports.object({
@@ -53840,9 +54515,9 @@ function projectCustomerAssessmentPreparation(packet, request3) {
             (text4) => createHash8("sha256").update(text4).digest("hex")
           ),
           ...applicationPageObservations(input3, packet)
-        ].map((observation3) => ({
+        ].map((observation2) => ({
           role: "saved-application-observation",
-          observation: observation3
+          observation: observation2
         }))
       ],
       evidence: {
@@ -53898,7 +54573,7 @@ function projectCustomerReusePreparation(value) {
   }
 }
 function extendCustomerAssessmentInputSchema(inputSchema) {
-  if (!object7(inputSchema?.properties?.input))
+  if (!object8(inputSchema?.properties?.input))
     throw Error("Assessment input schema unavailable");
   return {
     ...inputSchema,
@@ -53912,7 +54587,7 @@ function extendCustomerAssessmentInputSchema(inputSchema) {
 function schemaWithoutProse(value, propertyMap = false) {
   if (Array.isArray(value))
     return value.map((item) => schemaWithoutProse(item));
-  if (!object7(value)) return value;
+  if (!object8(value)) return value;
   return Object.fromEntries(
     Object.entries(value).filter(
       ([key]) => propertyMap || !["description", "title", "examples", "$comment"].includes(key)
@@ -54003,7 +54678,7 @@ async function resolveCustomerAssessmentArguments(catalog, args, invocation) {
     invocation?.signal?.throwIfAborted();
     if (!boundPacket(packet, request3) || !preparedInput(packet))
       return { error: customerPreparationFailure() };
-    if (packet.origin.resultSha256 !== selector.resultSha256 || hash5(packet.assessmentInput) !== selector.inputSha256)
+    if (selector.resultSha256 !== void 0 && packet.origin.resultSha256 !== selector.resultSha256 || selector.inputSha256 !== void 0 && hash5(packet.assessmentInput) !== selector.inputSha256)
       return { error: customerPreparationFailure("preparation_changed") };
     return { arguments: { ...args, input: packet.assessmentInput } };
   } catch {
@@ -54012,13 +54687,23 @@ async function resolveCustomerAssessmentArguments(catalog, args, invocation) {
 }
 
 // apps/codex-plugin/src/capability-mcp.mjs
+var cachedReportCardUris = /* @__PURE__ */ new Set([
+  "ui://loki/test-plan/card/v38.html",
+  "ui://loki/test-plan/card/v39.html",
+  "ui://loki/test-plan/card/v40.html",
+  "ui://loki/test-plan/card/v41.html",
+  "ui://loki/test-plan/card/v42.html",
+  "ui://loki/test-plan/card/v43.html",
+  "ui://loki/test-plan/card/v44.html",
+  "ui://loki/test-plan/card/v45.html"
+]);
 function invalidParams(message, data) {
   const error63 = new McpError(ErrorCode.InvalidParams, message, data);
   error63.message = message;
   return error63;
 }
 function capabilityMcpRegistration(session, setup) {
-  const controls = typeof session.catalog.reportRenderControl === "function" ? [
+  const controls = session.customerReportPresentation !== "chat" && typeof session.catalog.reportRenderControl === "function" ? [
     {
       name: "loki_report_rendered",
       title: "Confirm report render",
@@ -54041,7 +54726,9 @@ function capabilityMcpRegistration(session, setup) {
   ] : [];
   return {
     tools: [...session.catalog.tools, ...setup?.tools ?? [], ...controls].map((tool) => {
-      const definition = customerDiscoveryTool(tool) ?? customerAdvisoryToolDefinition(tool) ?? (hasCustomerPreparationOutput(tool.name) ? customerPreparationToolDefinition(tool) : hasCustomerReportOutput(tool.name) ? customerReportToolDefinition(tool) : customerToolDefinition(tool));
+      const definition = customerDiscoveryTool(tool) ?? customerAdvisoryToolDefinition(tool) ?? (hasCustomerPreparationOutput(tool.name) ? customerPreparationToolDefinition(tool) : hasCustomerReportOutput(tool.name) ? customerReportToolDefinition(tool, {
+        presentation: session.customerReportPresentation
+      }) : customerToolDefinition(tool));
       return tool.name === "loki_test_evidence_assess" && definition ? {
         ...definition,
         inputSchema: extendCustomerAssessmentInputSchema(
@@ -54055,7 +54742,9 @@ function capabilityMcpRegistration(session, setup) {
           ]
         }
       } : definition;
-    }).filter(Boolean),
+    }).filter(Boolean).map(
+      (tool) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool) : tool
+    ),
     observabilityControls: controls.map((tool) => tool.name)
   };
 }
@@ -54064,7 +54753,23 @@ function capabilityMcpDiscovery(tools2, setup) {
     "loki_pr_context_find_related",
     ...setup?.hiddenTools ?? []
   ]);
-  return tools2.filter((tool) => !hidden.has(tool.name));
+  const internalPreparation = /* @__PURE__ */ new Set([
+    "loki_context_submit",
+    "loki_context_get",
+    "loki_assessment_prepare",
+    "loki_context_finder_find_related",
+    "loki_change_risk_analyze",
+    "loki_risk_finder_analyze"
+  ]);
+  return tools2.filter((tool) => !hidden.has(tool.name)).map(
+    (tool) => internalPreparation.has(tool.name) ? {
+      ...tool,
+      _meta: {
+        ...tool._meta,
+        ui: { ...tool._meta?.ui, visibility: ["app"] }
+      }
+    } : tool
+  );
 }
 function createCapabilityMcpServer(session, version4, setup) {
   const { catalog } = session;
@@ -54091,11 +54796,20 @@ function createCapabilityMcpServer(session, version4, setup) {
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [...catalog.resources]
   }));
+  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool) => tool.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
-    if (!catalog.resources.some((item) => item.uri === params.uri))
+    const uri = cachedReportCardUris.has(params.uri) ? reportCardUri ?? params.uri : params.uri;
+    if (!catalog.resources.some((item) => item.uri === uri))
       throw invalidParams("Unknown Kaijan resource.");
     try {
-      return await catalog.readResource(params.uri);
+      const resource = await catalog.readResource(uri);
+      if (uri === params.uri) return resource;
+      return {
+        ...resource,
+        contents: resource.contents.map(
+          (content) => content.uri === uri ? { ...content, uri: params.uri } : content
+        )
+      };
     } catch {
       const message = "The selected Kaijan view could not be read. Reopen the view or read the saved result in chat.";
       const error63 = new McpError(ErrorCode.InternalError, message);
@@ -54352,7 +55066,7 @@ function createCapabilityMcpServer(session, version4, setup) {
             origin: "codex-local-mcp",
             requestId: extra.requestId,
             tool: params.name,
-            argumentsSha256: digest3(params.arguments ?? {}),
+            argumentsSha256: digest4(params.arguments ?? {}),
             scope: selected.scope
           }
         );
@@ -54482,12 +55196,16 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
   const build = JSON.parse(
     await readFile3(join7(root, "loki-build.json"), "utf8")
   );
+  const host = pluginHost(build);
+  if (host === "claude_code") claudeSessionId(process7.env);
   if (process7.env.LOKI_CORE_ORIGIN && process7.env.LOKI_CORE_ORIGIN !== build.coreOrigin)
     throw Error("Profile mismatch");
   if (process7.argv.length !== 2) throw Error("Unexpected launch arguments");
   const selected = await bindProfileState(
     build,
-    localStateArguments(process7.env.LOKI_CODEX_STATE_DIR),
+    localStateArguments(
+      host === "claude_code" ? process7.env.LOKI_CLAUDE_STATE_DIR : process7.env.LOKI_CODEX_STATE_DIR
+    ),
     homedir2()
   );
   const broker = build.authArchitecture === "shared-broker-v1" ? await connectBroker(root, build) : void 0;
@@ -54514,6 +55232,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
         }
       }
     );
+    bindHostSession(session, build, process7.env);
     startupStage = "init_services";
     const setupByScope = /* @__PURE__ */ new Map();
     const setupForScope = (scope) => {

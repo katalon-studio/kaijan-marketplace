@@ -17,7 +17,7 @@ export declare const runnerExecutionReportSchema: z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
         kind: z.ZodString;
-        presentation: z.ZodOptional<z.ZodObject<{
+        presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
             kind: z.ZodEnum<{
                 "missing-value": "missing-value";
                 "app-choice": "app-choice";
@@ -32,7 +32,21 @@ export declare const runnerExecutionReportSchema: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
             }, z.core.$strict>>;
-        }, z.core.$strict>>;
+        }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"read-only-path">;
+            subject: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            control: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            choices: z.ZodArray<z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>>;
+        }, z.core.$strict>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.execution-report/1">;
     status: z.ZodEnum<{
@@ -90,7 +104,7 @@ export declare const runnerClarificationSchema: z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
         kind: z.ZodString;
-        presentation: z.ZodOptional<z.ZodObject<{
+        presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
             kind: z.ZodEnum<{
                 "missing-value": "missing-value";
                 "app-choice": "app-choice";
@@ -105,7 +119,21 @@ export declare const runnerClarificationSchema: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
             }, z.core.$strict>>;
-        }, z.core.$strict>>;
+        }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"read-only-path">;
+            subject: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            control: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            choices: z.ZodArray<z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>>;
+        }, z.core.$strict>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.clarification/1">;
     clarificationId: z.ZodString;
@@ -158,7 +186,7 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -173,7 +201,21 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.execution-report/1">;
         status: z.ZodEnum<{
@@ -302,7 +344,7 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                 id: z.ZodString;
                 question: z.ZodString;
                 kind: z.ZodString;
-                presentation: z.ZodOptional<z.ZodObject<{
+                presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                     kind: z.ZodEnum<{
                         "missing-value": "missing-value";
                         "app-choice": "app-choice";
@@ -317,7 +359,21 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
                     }, z.core.$strict>>;
-                }, z.core.$strict>>;
+                }, z.core.$strict>, z.ZodObject<{
+                    kind: z.ZodLiteral<"read-only-path">;
+                    subject: z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>;
+                    control: z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>;
+                    choices: z.ZodArray<z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>>;
+                }, z.core.$strict>]>>;
             }, z.core.$strict>>;
             schema: z.ZodLiteral<"loki.runner.execution-report/1">;
             status: z.ZodEnum<{
@@ -439,7 +495,7 @@ export declare const runnerNextActionSchema: z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
         kind: z.ZodString;
-        presentation: z.ZodOptional<z.ZodObject<{
+        presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
             kind: z.ZodEnum<{
                 "missing-value": "missing-value";
                 "app-choice": "app-choice";
@@ -454,7 +510,21 @@ export declare const runnerNextActionSchema: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
             }, z.core.$strict>>;
-        }, z.core.$strict>>;
+        }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"read-only-path">;
+            subject: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            control: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            choices: z.ZodArray<z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>>;
+        }, z.core.$strict>]>>;
     }, z.core.$strict>>;
     instruction: z.ZodString;
 }, z.core.$strict>;
@@ -480,7 +550,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -495,7 +565,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -510,7 +594,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -525,7 +609,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -580,7 +678,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -595,7 +693,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -610,7 +722,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -625,7 +737,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -731,7 +857,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     id: z.ZodString;
                     question: z.ZodString;
                     kind: z.ZodString;
-                    presentation: z.ZodOptional<z.ZodObject<{
+                    presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                         kind: z.ZodEnum<{
                             "missing-value": "missing-value";
                             "app-choice": "app-choice";
@@ -746,7 +872,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
                         }, z.core.$strict>>;
-                    }, z.core.$strict>>;
+                    }, z.core.$strict>, z.ZodObject<{
+                        kind: z.ZodLiteral<"read-only-path">;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        control: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
@@ -878,7 +1018,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -893,7 +1033,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -908,7 +1062,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -923,7 +1077,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -977,7 +1145,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -992,7 +1160,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1007,7 +1189,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1022,7 +1204,21 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1113,7 +1309,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1128,7 +1324,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1143,7 +1353,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1158,7 +1368,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1213,7 +1437,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1228,7 +1452,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1243,7 +1481,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1258,7 +1496,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1364,7 +1616,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     id: z.ZodString;
                     question: z.ZodString;
                     kind: z.ZodString;
-                    presentation: z.ZodOptional<z.ZodObject<{
+                    presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                         kind: z.ZodEnum<{
                             "missing-value": "missing-value";
                             "app-choice": "app-choice";
@@ -1379,7 +1631,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                             sourceId: z.ZodString;
                             quote: z.ZodString;
                         }, z.core.$strict>>;
-                    }, z.core.$strict>>;
+                    }, z.core.$strict>, z.ZodObject<{
+                        kind: z.ZodLiteral<"read-only-path">;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        control: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
@@ -1511,7 +1777,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1526,7 +1792,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1541,7 +1821,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1556,7 +1836,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1610,7 +1904,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1625,7 +1919,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1640,7 +1948,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
             id: z.ZodString;
             question: z.ZodString;
             kind: z.ZodString;
-            presentation: z.ZodOptional<z.ZodObject<{
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
                 kind: z.ZodEnum<{
                     "missing-value": "missing-value";
                     "app-choice": "app-choice";
@@ -1655,7 +1963,21 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     sourceId: z.ZodString;
                     quote: z.ZodString;
                 }, z.core.$strict>>;
-            }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;

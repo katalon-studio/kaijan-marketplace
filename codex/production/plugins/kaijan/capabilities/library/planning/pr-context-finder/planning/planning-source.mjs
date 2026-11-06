@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
+import { digest } from "./pcf_records.mjs";
 import {
   applicationCatalog,
   planningTextSchema,
@@ -9,6 +10,8 @@ import {
 } from "./source-relations.mjs";
 export const SOURCE_PLAN_VERSION = "planning-source-relations/1";
 export const EXCERPT_PLAN_VERSION = "planning-source-relations/2";
+// Generated proposal prose is not a literal source quote or an observed result.
+export const GENERATED_PLAN_VERSION = "planning-generated-proposal/1";
 export function renderSourcePlanText(value, catalog, version) {
   need([SOURCE_PLAN_VERSION, EXCERPT_PLAN_VERSION].includes(version));
   return (
@@ -86,9 +89,21 @@ export function sourceGenerationSchema(
   catalog,
   version = SOURCE_PLAN_VERSION,
 ) {
-  need([SOURCE_PLAN_VERSION, EXCERPT_PLAN_VERSION].includes(version));
-  const output = clone(schema),
-    text = (
+  need(
+    [
+      SOURCE_PLAN_VERSION,
+      EXCERPT_PLAN_VERSION,
+      GENERATED_PLAN_VERSION,
+    ].includes(version),
+  );
+  const output = clone(schema);
+  if (version === GENERATED_PLAN_VERSION) {
+    output.properties.tests.items.properties.id.pattern = "^T[1-9][0-9]{0,5}$";
+    output.properties.objectives.items.properties.id.pattern =
+      "^O[1-9][0-9]{0,5}$";
+    return output;
+  }
+  const text = (
       version === EXCERPT_PLAN_VERSION
         ? planningExcerptSchema
         : planningTextSchema
@@ -160,6 +175,39 @@ export function planningSourceRecord(
     catalogSha256: hash(catalog),
   };
 }
+export function generatedProposalRecord(candidate, catalog) {
+  return {
+    schema: GENERATED_PLAN_VERSION,
+    semantics: "generated-proposal-only",
+    candidate: clone(candidate),
+    candidateSha256: digest(candidate),
+    catalogSha256: hash(catalog),
+  };
+}
+export function verifyGeneratedProposalRecord(result, project) {
+  const proof = result.source_projection;
+  need(
+    exact(proof, [
+      "schema",
+      "semantics",
+      "candidate",
+      "candidateSha256",
+      "catalogSha256",
+    ]) &&
+      proof.schema === GENERATED_PLAN_VERSION &&
+      proof.semantics === "generated-proposal-only" &&
+      proof.catalogSha256 === hash(result.evidence) &&
+      proof.candidateSha256 === digest(proof.candidate) &&
+      result.generation_projection?.candidate_sha256 ===
+        proof.candidateSha256 &&
+      result.generation_projection?.plan_sha256 === digest(result.plan),
+  );
+  // Rebuild coverage and Runner selection from the retained full candidate.
+  // The scoped reader binds evidence to the original complete input first.
+  const plan = project(proof.candidate);
+  need(isDeepStrictEqual(plan, result.plan));
+  return plan;
+}
 export function verifyPlanningSourceRecord(result, project) {
   const proof = result.source_projection;
   need(
@@ -214,5 +262,11 @@ export function projectLegacyPlanning(plan, catalog = []) {
   });
   if (omitted)
     output.limitations = [...output.limitations, legacyPlanningNotice];
+  output.presentation = {
+    schema: "kaijan.planning-presentation/1",
+    state: "legacy-source-excerpts",
+    semantics: "proposed-only",
+    detailsAvailable: !omitted,
+  };
   return output;
 }
