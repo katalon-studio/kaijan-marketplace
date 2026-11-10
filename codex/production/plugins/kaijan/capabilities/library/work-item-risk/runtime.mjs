@@ -181,6 +181,7 @@ export async function runWithMethod(
     if (
       (!env.LOKI_AUTH_BROKER_SOCKET && !key) ||
       (selected.mode !== "direct" &&
+        selected.mode !== "work-item" &&
         !env.LOKI_AUTH_BROKER_SOCKET &&
         !(env.LOKI_OPENROUTER_API_KEY ?? env.OPENROUTER_API_KEY))
     )
@@ -233,6 +234,7 @@ export async function runWithMethod(
       // Record the pending completion so cleanup retains its original failure precedence.
       let nativeOperationValue, nativeOperationFailure;
       let nativeOperationFailed = false;
+      let requestDeadline;
       try {
         nativeOperation: {
           try {
@@ -245,6 +247,7 @@ export async function runWithMethod(
                     env,
                   )
                 : providerConnection(BASE_URL + "/responses", key, env);
+            requestDeadline = AbortSignal.timeout(120000);
             const requestOptions = {
               method: "POST",
               redirect: "error",
@@ -254,7 +257,7 @@ export async function runWithMethod(
               },
               body: wire,
               signal: AbortSignal.any([
-                AbortSignal.timeout(120000),
+                requestDeadline,
                 ...(signal ? [signal] : []),
               ]),
             };
@@ -374,12 +377,20 @@ export async function runWithMethod(
             } catch {
               /* Diagnostics cannot replace the original failure. */
             }
+            const timeout =
+              diagnosticStage === "provider_dispatch" &&
+              row.status === "dispatched" &&
+              (requestDeadline?.aborted ||
+                (failure instanceof DOMException &&
+                  failure.name === "TimeoutError"));
             row.error_code =
               failure instanceof RiskError
                 ? failure.code
                 : signal?.aborted
                   ? "cancelled"
-                  : "provider_transport_error";
+                  : timeout
+                    ? "provider_timeout"
+                    : "provider_transport_error";
             if (row.status === "dispatched") row.status = "uncertain";
             diagnosedFailure = new RiskError(row.error_code);
             throw diagnosedFailure;

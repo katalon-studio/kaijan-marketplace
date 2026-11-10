@@ -6,6 +6,7 @@ import {
   RISK_RELATION_GUIDANCE,
   riskSourceRecord,
 } from "./source-relations.mjs";
+import { isDeepStrictEqual } from "node:util";
 import { createHash } from "node:crypto";
 import {
   bindQuestions,
@@ -43,7 +44,13 @@ const only = (value, fields) =>
 export function indexPacket(packet) {
   insist(record(packet) && record(packet.source), "invalid_packet");
   insist(
-    only(packet, ["source", "coverage", "files", "work_item"]),
+    only(packet, [
+      "source",
+      "coverage",
+      "files",
+      "work_item",
+      "context_sources",
+    ]),
     "unexpected_packet_field",
   );
   const snapshot = packet.source.kind === "provided-snapshot";
@@ -74,6 +81,23 @@ export function indexPacket(packet) {
     Array.isArray(packet.files) && packet.files.length > 0,
     "missing_files",
   );
+  if (packet.context_sources !== undefined) {
+    insist(Array.isArray(packet.context_sources), "invalid_context_sources");
+    for (const source of packet.context_sources) {
+      insist(
+        record(source) &&
+          ["intent", "implementation", "context"].includes(source.kind) &&
+          typeof source.text === "string" &&
+          source.text.isWellFormed(),
+        "invalid_context_source",
+      );
+      if (source.id !== undefined)
+        insist(typeof source.id === "string", "invalid_context_source");
+      for (const field of ["uri", "revision"])
+        if (source[field] !== undefined && source[field] !== null)
+          insist(typeof source[field] === "string", "invalid_context_source");
+    }
+  }
   if (packet.work_item !== undefined) {
     insist(
       record(packet.work_item) &&
@@ -514,8 +538,26 @@ export function initialCoverage(mode) {
   };
 }
 
+function requestRiskCatalog(packet, resolveApplicationSpan) {
+  // The schema must not offer a source the accepting resolver rejects. Keep
+  // excluded records in source_packet as context; do not weaken that resolver
+  // or change the full catalog used by retained source proofs.
+  return changeRiskCatalog(packet).filter((row) => {
+    try {
+      return (
+        resolveApplicationSpan(
+          { evidence_id: row.id, start: 0, end: row.quote.length },
+          [row],
+        ) === row.quote
+      );
+    } catch {
+      return false;
+    }
+  });
+}
+
 export function directRequest(packet, template, resolveApplicationSpan) {
-  const request = assumptionsRequest(
+  const request = assumptionsRequestBody(
     packet,
     [],
     template,
@@ -524,10 +566,57 @@ export function directRequest(packet, template, resolveApplicationSpan) {
   request.input[1].content = JSON.stringify({
     source_packet: packet,
     ...(resolveApplicationSpan
-      ? { source_catalog: changeRiskCatalog(packet) }
+      ? { source_catalog: requestRiskCatalog(packet, resolveApplicationSpan) }
       : {}),
   });
-  return request;
+  return sourceReferencesForModel(request);
+}
+
+// Keep original packets and the complete citation catalog outside this view.
+// Only exact duplicates can become references; small requests keep their text.
+function sourceReferencesForModel(request) {
+  const data = JSON.parse(request.input[1].content);
+  if (!data.source_catalog) return request;
+  const packet = structuredClone(data.source_packet);
+  let references = 0;
+  const replace = (target, field, sourceId) => {
+    const value = target?.[field];
+    if (typeof value !== "string" || !value.length) return;
+    const matches = data.source_catalog.filter(
+      (row) => row.source_id === sourceId && row.quote === value,
+    );
+    if (matches.length !== 1) return;
+    target[field] = { source_ref: matches[0].id };
+    references++;
+  };
+  replace(packet.work_item, "content", "work-item");
+  (packet.context_sources ?? []).forEach((source, index) => {
+    replace(source, "text", `context-${index + 1}`);
+  });
+  packet.files.forEach((file, index) => {
+    replace(file, "patch", `file-${index + 1}`);
+    replace(file, "content", `file-${index + 1}`);
+  });
+  if (!references) return request;
+  const candidate = {
+    ...request,
+    input: [
+      {
+        ...request.input[0],
+        content:
+          request.input[0].content +
+          " A source_ref in a source_packet text field refers to the complete, unchanged quote in the named source_catalog entry. Patch fields still describe changes; content fields describe current contents.",
+      },
+      {
+        ...request.input[1],
+        content: JSON.stringify({ ...data, source_packet: packet }),
+      },
+    ],
+  };
+  return Buffer.byteLength(JSON.stringify(candidate)) <
+    Buffer.byteLength(JSON.stringify(request))
+    ? candidate
+    : request;
 }
 
 export function capacityError(budget, actualBytes, limitBytes) {
@@ -575,6 +664,17 @@ export function assumptionsRequest(
   template,
   resolveApplicationSpan,
 ) {
+  return sourceReferencesForModel(
+    assumptionsRequestBody(packet, selected, template, resolveApplicationSpan),
+  );
+}
+
+function assumptionsRequestBody(
+  packet,
+  selected,
+  template,
+  resolveApplicationSpan,
+) {
   const { model, reasoning, max_output_tokens } = template;
   const text = structuredClone(template.text);
   text.format.schema.properties.assumptions_to_confirm.items =
@@ -583,15 +683,18 @@ export function assumptionsRequest(
     );
   if (resolveApplicationSpan)
     text.format.schema.properties.assumptions_to_confirm.items =
-      riskPresentationSchema(changeRiskCatalog(packet), {
-        literalExcerpts: true,
-      });
+      riskPresentationSchema(
+        requestRiskCatalog(packet, resolveApplicationSpan),
+        {
+          literalExcerpts: true,
+        },
+      );
   const instructions =
     template.instructions +
     (resolveApplicationSpan
-      ? " Return only the typed relation fields required by the output schema. Earlier free-form question field instructions do not apply."
-      : " Return the six question content fields without display IDs.") +
-    " The host assigns response-local labels; labels are not semantic or cross-stage identity. Missing package internals limit affected claims only. Review visible source without downloading, installing, importing, building or executing target packages.";
+      ? " The JSON schema controls the output format. Return typed relations."
+      : " Return the required JSON without display IDs.") +
+    " Leave omitted behavior unknown and record affected evidence gaps in limitations.";
   const nonHunk = nonHunkEvidence(packet);
   return {
     model,
@@ -607,11 +710,11 @@ export function assumptionsRequest(
         content:
           instructions +
           (resolveApplicationSpan
-            ? " Use the fixed source relation kinds. Each operand must identify one source and copy a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets or paste long code blocks. Focus on the supplied change and requested behavior. With snapshots alone, do not infer what changed. Omit a question if the supplied source cannot support a coherent relation and state that evidence limit. These are unresolved questions and possible consequences, not observed defects or permission to execute. " +
+            ? " Each operand needs a source ID and a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets. Omit questions the source cannot support as a coherent relation and record the evidence limit. " +
               RISK_RELATION_GUIDANCE
             : "") +
           (nonHunk.length
-            ? " File metadata is evidence at file scope. Reported zero line deltas are not independent proof of equal bytes. Missing text remains unknown. Cite metadata by file/field; do not invent changed lines or hunk IDs. Hunk-only navigation cannot inspect these records."
+            ? " Treat file metadata as file-level evidence. Zero line deltas do not prove equal contents. Cite metadata by file and field, without inferring changed lines or hunks."
             : ""),
       },
       {
@@ -619,7 +722,12 @@ export function assumptionsRequest(
         content: JSON.stringify({
           source_packet: packet,
           ...(resolveApplicationSpan
-            ? { source_catalog: changeRiskCatalog(packet) }
+            ? {
+                source_catalog: requestRiskCatalog(
+                  packet,
+                  resolveApplicationSpan,
+                ),
+              }
             : {}),
           ...(nonHunk.length
             ? { non_hunk_file_evidence: modelFileEvidence(packet) }
@@ -629,6 +737,64 @@ export function assumptionsRequest(
       },
     ],
   };
+}
+
+async function reviewAssumptions(call, stage, request, sources) {
+  const { Agent } = await import("@openai/agents-core");
+  const { createRetainedAgentRunner, RetainedResponseNotAdmitted } =
+    await import("@katalon-experiments/ai-client/agents");
+  const agent = new Agent({
+    name: "Planner",
+    modelSettings: {
+      reasoning: request.reasoning,
+      maxTokens: request.max_output_tokens,
+    },
+    outputType: request.text.format,
+  });
+  // Older patch templates omit store and use the Responses API default.
+  const store = request.store ?? true;
+  let result;
+  const runner = createRetainedAgentRunner({
+    model: request.model,
+    store,
+    dispatch: async (wire) => {
+      insist(
+        isDeepStrictEqual(JSON.parse(JSON.stringify(wire)), {
+          ...request,
+          store,
+          include: [],
+          tools: [],
+          stream: false,
+        }),
+        "change_risk_dispatch_contract",
+      );
+      const body = await call(stage, "responses", request);
+      result = validateAssumptions(body, sources);
+      // The native validator reads text across messages. Keep the original
+      // in the ledger and present the same assembled text to the SDK.
+      return {
+        ...body,
+        output: [
+          {
+            type: "message",
+            role: "assistant",
+            status: "completed",
+            content: [{ type: "output_text", text: responseText(body) }],
+          },
+        ],
+      };
+    },
+  });
+  try {
+    await runner.run(agent, request.input, { maxTurns: 1 });
+  } catch (error) {
+    // This tool-free, single-turn review publishes the native validated record.
+    // Older providers can omit model metadata. Keep that original in the ledger.
+    // The SDK has rejected the reply and cannot use it for another turn.
+    if (!(error instanceof RetainedResponseNotAdmitted) || result === undefined)
+      throw error;
+  }
+  return result;
 }
 
 export async function evaluate(
@@ -666,12 +832,10 @@ export async function evaluate(
   if (mode === "direct") {
     coverage_details.assumptions = "incomplete";
     progress();
-    const output = validateAssumptions(
-      await call(
-        "01-direct-luna-assumptions",
-        "responses",
-        directRequest(packet, template, resolveApplicationSpan),
-      ),
+    const output = await reviewAssumptions(
+      call,
+      "01-direct-luna-assumptions",
+      directRequest(packet, template, resolveApplicationSpan),
       { packet, resolveApplicationSpan },
     );
     coverage_details.assumptions = "complete";
@@ -747,12 +911,10 @@ export async function evaluate(
   if (selected.length) {
     coverage_details.assumptions = "incomplete";
     progress();
-    output = validateAssumptions(
-      await call(
-        "03-luna-assumptions",
-        "responses",
-        assumptionsRequest(packet, selected, template, resolveApplicationSpan),
-      ),
+    output = await reviewAssumptions(
+      call,
+      "03-luna-assumptions",
+      assumptionsRequest(packet, selected, template, resolveApplicationSpan),
       { packet, resolveApplicationSpan },
     );
     coverage_details.assumptions = "complete";

@@ -154,7 +154,7 @@ export async function evaluate(
       receipt.known_cost_usd = cost;
       receipt.unknown_cost_calls = 0;
       receipt.cost_basis =
-        parsed.usage?.cost === undefined
+        parsed.usage?.cost === undefined || parsed.usage?.cost === null
           ? "Luna standard-tier usage estimate, not a billing receipt"
           : "provider_reported_cost";
     }

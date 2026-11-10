@@ -1,3 +1,4 @@
+import { requireManagedBinding } from "@katalon-experiments/ai-client";
 import {
   sourceGenerationSchema,
   mapPlanningText,
@@ -38,12 +39,13 @@ import {
   splitlines,
   zonedDate,
 } from "./semantics.mjs";
-import { SPECIALIZED, METHOD_INSTRUCTIONS } from "./prompts.mjs";
-export {
-  SPECIALIZED,
-  LEDGER_INSTRUCTIONS,
-  METHOD_INSTRUCTIONS,
-} from "./prompts.mjs";
+import {
+  renderPlanningInstructions,
+  MODEL_INPUT_INSTRUCTIONS,
+  RISK_MODEL_INPUT_INSTRUCTIONS,
+} from "./request-instructions.mjs";
+import { planningRiskModelView } from "./risk-model-view.mjs";
+export { LEDGER_INSTRUCTIONS } from "./prompts.mjs";
 export const VERSION = "pr-context-plan/3",
   RELEASE_VERSION = "2026.10.27-3";
 export const generationContract = () => ({
@@ -397,10 +399,6 @@ export function validatePlan(plan, packet) {
               rule: "nonempty_objective_ids",
             },
     );
-    need(test.steps.length, "Missing steps", () => ({
-      path: `/tests/${index}/steps`,
-      rule: "nonempty_steps",
-    }));
     const expectation = test.expected;
     refs(
       expectation.refs,
@@ -753,14 +751,8 @@ export function projectGeneratedPlan(value, packet) {
     .map((test) => test.id);
   return projected;
 }
-const GENERATION_MEMBERSHIP_INSTRUCTIONS =
-  "\nThe host supplies requirement_inventory entries containing complete intent sources. They are a source checklist, not proof of semantic coverage. Consider all supplied intent. First list every distinct functional and change-impact check in test_outline with its ID and purpose. Then write one complete test definition for each outlined ID, with no missing or extra definitions. Do not remove distinct checks to make the lists fit. Each test's requirement_ids names the supplied entries it checks; runner_selection states selected or not_selected. Return one requirement_coverage row per inventory entry, with a reason explaining coverage or the gap. Do not repeat test IDs in coverage or handoff. The host derives their links from these exact definitions in test order. Keep all test content, including tests not selected for Runner. An empty membership is a gap, not permission to invent behavior. Explicit implementation requirements need source checks or a stated gap; visual similarity cannot prove source ownership. Do not invent thresholds or expected behavior. Use concise wording while preserving distinct conditions, prerequisites, actions, observable expectations, source authority and missing inputs.";
-
-const MODEL_INPUT_INSTRUCTIONS =
-  "\nFor model_input_version planning-source-text/1, a source's text_from_evidence_id points to its complete text in that evidence_catalog entry's quote. Read that entire quote as the source text. Source identity, attribution and authority remain on the source; the reference does not change them. All citation IDs, line numbers and quote spans refer to the unchanged evidence catalog.";
-
 /** Only the model view changes. Original input and retained proof stay complete. */
-export function planningModelInput(prepared) {
+function planningSourceTextModelInput(prepared) {
   if (
     Object.hasOwn(prepared, "model_input_version") ||
     prepared.sources.some((source) =>
@@ -807,27 +799,118 @@ export function planningModelInput(prepared) {
     : prepared;
 }
 
+export function planningModelInput(
+  prepared,
+  version = "planning-source-text/2",
+) {
+  const original = planningSourceTextModelInput(prepared);
+  if (version === "planning-source-text/1") return original;
+  if (version !== "planning-source-text/2")
+    throw Error("Unsupported planning model-input version");
+  const projected = planningRiskModelView(prepared, original);
+  if (projected === original) return original;
+  const priorInstructions =
+    original === prepared ? "" : MODEL_INPUT_INSTRUCTIONS;
+  // Compare the complete encoded input and its complete version guidance.
+  return utf8(encodedJson(encodedJson(projected))).length +
+    utf8(encodedJson(RISK_MODEL_INPUT_INSTRUCTIONS)).length <
+    utf8(encodedJson(encodedJson(original))).length +
+      utf8(encodedJson(priorInstructions)).length
+    ? projected
+    : original;
+}
+
+/** Omit only an exact duplicate; retained requirement proof stays complete. */
+export function planningRequirementModelInput(prepared, modelInput) {
+  if (
+    Object.hasOwn(prepared, "model_input_version") ||
+    Object.hasOwn(prepared, "requirement_input_version") ||
+    Object.hasOwn(modelInput, "requirement_input_version") ||
+    ![undefined, "planning-source-text/1", "planning-source-text/2"].includes(
+      modelInput.model_input_version,
+    ) ||
+    !equal(prepared.requirement_inventory, literalRequirements(prepared)) ||
+    !equal(modelInput.requirement_inventory, prepared.requirement_inventory)
+  )
+    return modelInput;
+  const view = copy(modelInput);
+  let changed = false;
+  for (const requirement of view.requirement_inventory) {
+    const originals = prepared.sources.filter(
+      (source) => source.id === requirement.source_id,
+    );
+    const sources = view.sources.filter(
+      (source) => source.id === requirement.source_id,
+    );
+    if (originals.length !== 1 || sources.length !== 1) continue;
+    const original = originals[0],
+      source = copy(sources[0]);
+    if (
+      original.kind !== "intent" ||
+      requirement.quote !== original.text ||
+      Object.hasOwn(original, "text_from_evidence_id") ||
+      Object.hasOwn(original, "context_from_evidence_id")
+    )
+      continue;
+    if (Object.hasOwn(source, "text_from_evidence_id")) {
+      const rows = view.evidence_catalog.filter(
+        (row) => row.id === source.text_from_evidence_id,
+      );
+      if (
+        rows.length !== 1 ||
+        rows[0].source_id !== original.id ||
+        rows[0].kind !== original.kind ||
+        rows[0].uri !== original.uri ||
+        rows[0].revision !== original.revision ||
+        rows[0].line !== 1 ||
+        rows[0].quote !== original.text ||
+        rows[0].quote_sha256 !==
+          createHash("sha256").update(utf8(original.text)).digest("hex")
+      )
+        continue;
+      source.text = rows[0].quote;
+      delete source.text_from_evidence_id;
+    }
+    if (!equal(source, original)) continue;
+    delete requirement.quote;
+    changed = true;
+  }
+  if (!changed) return modelInput;
+  view.requirement_input_version = "source-reference/1";
+  const instructions = (input) =>
+    renderPlanningInstructions(
+      input.model_input_version ?? null,
+      input.requirement_input_version ?? null,
+    );
+  const size = (input) =>
+    utf8(encodedJson(encodedJson(input))).length +
+    utf8(encodedJson(instructions(input))).length;
+  return size(view) < size(modelInput) ? view : modelInput;
+}
+
 export function requestFor(
   packet,
   model = MODEL,
   max_output_tokens,
   reasoning = REASONING_EFFORT,
+  modelInputVersion = "planning-source-text/2",
 ) {
   modelSettings({ model, reasoning });
   const prepared = prepare(packet);
-  const modelInput = planningModelInput(prepared);
+  const modelInput = planningRequirementModelInput(
+    prepared,
+    planningModelInput(prepared, modelInputVersion),
+  );
   return [
     prepared,
     {
       model,
       reasoning: { effort: reasoning },
       store: false,
-      instructions:
-        SPECIALIZED +
-        METHOD_INSTRUCTIONS +
-        GENERATION_MEMBERSHIP_INSTRUCTIONS +
-        "\nWrite useful generated QA prose in plain English. Give complete steps with clear actions, application objects and observable results. Do not reduce a procedure to source fragments or fixed action templates. This prose is a proposed interpretation, not a literal quote or an executed result. Preserve exact evidence references, requirement authority, priorities and test membership. Use all supplied source and risk context. Cite intent only for requirement expectations; mark inferred expected behavior as hypothesis. Retain unclear procedures and missing inputs as execution gaps, and leave affected tests out of Runner selection until the gaps are resolved. Runner selection is a proposed handoff, never permission or readiness proof. Retain supplied target, test-data and permission details in prerequisites or runner_handoff.required_inputs. Resolve prerequisites against the complete caller task and Setup before asking for input. Do not claim a supplied target or data is missing. Method describes the proposed verification approach. Use T1, T2, ... test IDs and O1, O2, ... objective IDs; preserve their links." +
-        (modelInput === prepared ? "" : MODEL_INPUT_INSTRUCTIONS),
+      instructions: renderPlanningInstructions(
+        modelInput.model_input_version ?? null,
+        modelInput.requirement_input_version ?? null,
+      ),
       input: encodedJson(modelInput),
       ...(max_output_tokens === undefined ? {} : { max_output_tokens }),
       text: {
@@ -849,6 +932,12 @@ export async function plan(packet, output_dir, model, options = {}) {
     options.max_output_tokens,
     settings.reasoning,
   );
+  // The Planner will assess Runner's recap against this plan. Retaining the
+  // planning turn lets it do that without sending its sources a second time.
+  if (options.retainPlannerConversation === true) {
+    requireManagedBinding(options.env ?? process.env);
+    request.store = true;
+  }
   let projected, projection, sourceProjection;
   const result = await generate(
     prepared,

@@ -1,19 +1,11 @@
 import { createHash } from "node:crypto";
-import { join } from "node:path";
-import { encodedJson, utf8 } from "../related/json.mjs";
+import { utf8 } from "../related/json.mjs";
 import {
   digest,
-  save,
   validationFailure,
   pointer,
   referenceDiagnostic,
 } from "./pcf_records.mjs";
-import {
-  generate,
-  MODEL,
-  REASONING_EFFORT,
-  modelSettings,
-} from "./pcf_provider.mjs";
 import {
   object,
   strip,
@@ -24,21 +16,10 @@ import {
   splitlines,
   zonedDate,
 } from "./semantics.mjs";
-import { SPECIALIZED, METHOD_INSTRUCTIONS } from "./prompts.mjs";
-export {
-  SPECIALIZED,
-  LEDGER_INSTRUCTIONS,
-  METHOD_INSTRUCTIONS,
-} from "./prompts.mjs";
+// Shared source and saved-plan validation helpers. Fresh generation belongs to
+// the selected planner; do not retain another executable prompt here.
 export const VERSION = "pr-context-plan/3",
   RELEASE_VERSION = "2026.10.27-3";
-export const generationContract = () => ({
-  model: MODEL,
-  reasoning_effort: REASONING_EFFORT,
-  model_configurable: true,
-  reasoning_configurable: true,
-  maximum_output_tokens: null,
-});
 const REF = {
   type: "object",
   properties: { evidence_id: { type: "string" } },
@@ -645,72 +626,4 @@ export function projectGeneratedPlan(value, packet) {
     .filter((test) => test.runner_selection === "selected")
     .map((test) => test.id);
   return projected;
-}
-const GENERATION_MEMBERSHIP_INSTRUCTIONS =
-  "\nThe host supplies requirement_inventory entries containing complete intent sources. They are a source checklist, not proof of semantic coverage. Consider all supplied intent. First list every distinct functional and change-impact check in test_outline with its ID and purpose. Then write one complete test definition for each outlined ID, with no missing or extra definitions. Do not remove distinct checks to make the lists fit. Each test's requirement_ids names the supplied entries it checks; runner_selection states selected or not_selected. Return one requirement_coverage row per inventory entry, with a reason explaining coverage or the gap. Do not repeat test IDs in coverage or handoff. The host derives their links from these exact definitions in test order. Keep all test content, including tests not selected for Runner. An empty membership is a gap, not permission to invent behavior. Explicit implementation requirements need source checks or a stated gap; visual similarity cannot prove source ownership. Do not invent thresholds or expected behavior. Use concise wording while preserving distinct conditions, prerequisites, actions, observable expectations, source authority and missing inputs.";
-
-export function requestFor(
-  packet,
-  model = MODEL,
-  max_output_tokens,
-  reasoning = REASONING_EFFORT,
-) {
-  modelSettings({ model, reasoning });
-  const prepared = prepare(packet);
-  return [
-    prepared,
-    {
-      model,
-      reasoning: { effort: reasoning },
-      store: false,
-      instructions:
-        SPECIALIZED + METHOD_INSTRUCTIONS + GENERATION_MEMBERSHIP_INSTRUCTIONS,
-      input: encodedJson(prepared),
-      ...(max_output_tokens === undefined ? {} : { max_output_tokens }),
-      text: {
-        format: {
-          type: "json_schema",
-          name: "pr_context_plan",
-          strict: true,
-          schema: generationSchemaFor(prepared),
-        },
-      },
-    },
-  ];
-}
-export async function plan(packet, output_dir, model, options = {}) {
-  const settings = modelSettings(options.modelSettings);
-  const [prepared, request] = requestFor(
-    packet,
-    model ?? settings.model,
-    options.max_output_tokens,
-    settings.reasoning,
-  );
-  let projected, projection;
-  const result = await generate(
-    prepared,
-    request,
-    output_dir,
-    (value) => {
-      projected = projectGeneratedPlan(value, prepared);
-      const checks = validatePlan(projected, prepared);
-      projection = {
-        version: "test-membership/1",
-        candidate_sha256: digest(value),
-        plan_sha256: digest(projected),
-        links: "derived_from_model_test_membership_in_test_order",
-        order_origin: "derived_from_model_test_order",
-      };
-      save(join(output_dir, "projected-plan.json"), projected);
-      save(join(output_dir, "generation-projection.json"), projection);
-      return checks;
-    },
-    options,
-  );
-  result.plan = projected;
-  result.generation_projection = projection;
-  result.evidence = prepared.evidence_catalog;
-  if (Object.hasOwn(prepared, "input_projection"))
-    result.input_projection = prepared.input_projection;
-  return result;
 }

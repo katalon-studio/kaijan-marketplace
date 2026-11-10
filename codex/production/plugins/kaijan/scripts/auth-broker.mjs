@@ -7,7 +7,7 @@ var __export = (target, all) => {
 
 // apps/codex-plugin/src/auth/broker-entry.mjs
 import { readFile as readFile2 } from "node:fs/promises";
-import { randomUUID as randomUUID4 } from "node:crypto";
+import { randomUUID as randomUUID6 } from "node:crypto";
 import { join as join4, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -80,8 +80,8 @@ async function brokerProfile(build, home = homedir()) {
   const identityInfo = await lstat(identityPath);
   if (!identityInfo.isFile() || identityInfo.isSymbolicLink() || identityInfo.uid !== process.getuid() || identityInfo.mode & 63)
     throw Error("Unsafe installation identity");
-  const identity = JSON.parse(await readFile(identityPath, "utf8"));
-  if (typeof identity.installationId !== "string" || !identity.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity.installationId.slice(prefix.length)))
+  const identity2 = JSON.parse(await readFile(identityPath, "utf8"));
+  if (typeof identity2.installationId !== "string" || !identity2.installationId.startsWith(prefix) || !/^[a-f0-9-]{36}$/.test(identity2.installationId.slice(prefix.length)))
     throw Error("Invalid installation identity");
   const blockedPath = join(directory, "blocked.json");
   const state = {
@@ -106,7 +106,7 @@ async function brokerProfile(build, home = homedir()) {
     directory,
     account,
     state,
-    ...identity,
+    ...identity2,
     socketPath: join(directory, "broker.sock")
   };
 }
@@ -122,6 +122,15 @@ var ConnectionRequiredError = class extends Error {
   constructor() {
     super("connection_required");
     this.name = "ConnectionRequiredError";
+  }
+};
+var AIConnectionChangedError = class extends Error {
+  constructor() {
+    super(
+      "The connection changed before this request. Keep the saved result and create a new plan on the selected connection."
+    );
+    this.name = "AIConnectionChangedError";
+    this.code = "ai_connection_changed";
   }
 };
 var KeychainUnavailableError = class extends Error {
@@ -223,7 +232,7 @@ function fileCredentialStore(directory) {
 
 // apps/codex-plugin/src/auth/oauth.mjs
 import { createServer } from "node:http";
-import { randomBytes as randomBytes2 } from "node:crypto";
+import { randomBytes as randomBytes2, randomUUID as randomUUID3 } from "node:crypto";
 
 // node_modules/.pnpm/pkce-challenge@5.0.1/node_modules/pkce-challenge/dist/index.node.js
 var crypto;
@@ -238,8 +247,8 @@ async function random(size) {
   const evenDistCutoff = Math.pow(2, 8) - Math.pow(2, 8) % mask.length;
   let result = "";
   while (result.length < size) {
-    const randomBytes3 = await getRandomValues(size - result.length);
-    for (const randomByte of randomBytes3) {
+    const randomBytes4 = await getRandomValues(size - result.length);
+    for (const randomByte of randomBytes4) {
       if (randomByte < evenDistCutoff) {
         result += mask[randomByte % mask.length];
       }
@@ -974,13 +983,13 @@ var Cached = class {
 function cached(getter) {
   return new Cached(getter);
 }
-function nullish(input2) {
-  return input2 === null || input2 === void 0;
+function nullish(input3) {
+  return input3 === null || input3 === void 0;
 }
-function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
-  const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+function cleanRegex(source2) {
+  const start = source2.startsWith("^") ? 1 : 0;
+  const end = source2.endsWith("$") ? source2.length - 1 : source2.length;
+  return source2.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -1048,28 +1057,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source, keys, wrap) {
-  const raw = sourceShape(source);
+function mirrorShape(target, source2, keys, wrap) {
+  const raw = sourceShape(source2);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source._zod.def.shape[key];
+        const value = source2._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    const desc = Object.getOwnPropertyDescriptor(source, key);
+function mirrorProps(target, source2) {
+  for (const key of Reflect.ownKeys(source2)) {
+    const desc = Object.getOwnPropertyDescriptor(source2, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source[key]);
+      deferProp(target, key, () => source2[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -1112,8 +1121,8 @@ function randomString(length = 10) {
 function esc(str) {
   return JSON.stringify(str);
 }
-function slugify(input2) {
-  return input2.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
+function slugify(input3) {
+  return input3.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
 }
 var captureStackTrace = "captureStackTrace" in Error ? Error.captureStackTrace : (..._args) => {
 };
@@ -1481,12 +1490,12 @@ function finalizeIssue(iss, ctx, config2) {
   }
   return full;
 }
-function getSizableOrigin(input2) {
-  if (input2 instanceof Set)
+function getSizableOrigin(input3) {
+  if (input3 instanceof Set)
     return "set";
-  if (input2 instanceof Map)
+  if (input3 instanceof Map)
     return "map";
-  if (input2 instanceof File)
+  if (input3 instanceof File)
     return "file";
   return "unknown";
 }
@@ -1495,19 +1504,19 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count = units;
+  let count2 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count--;
+      count2--;
       i++;
     }
   }
-  return count;
+  return count2;
 }
-function getLengthableOrigin(input2) {
-  if (Array.isArray(input2))
+function getLengthableOrigin(input3) {
+  if (Array.isArray(input3))
     return "array";
-  if (typeof input2 === "string")
+  if (typeof input3 === "string")
     return "string";
   return "unknown";
 }
@@ -1533,12 +1542,12 @@ function parsedType(data) {
   return t;
 }
 function issue(...args) {
-  const [iss, input2, inst] = args;
+  const [iss, input3, inst] = args;
   if (typeof iss === "string") {
     return {
       message: iss,
       code: "custom",
-      input: input2,
+      input: input3,
       inst
     };
   }
@@ -2294,8 +2303,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source) {
-  return new RegExp(`^${source}$`);
+function anchor(source2) {
+  return new RegExp(`^${source2}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -2434,23 +2443,23 @@ var $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat"
   const origin = isInt ? "int" : "number";
   const [minimum, maximum] = NUMBER_FORMAT_RANGES[def.format];
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
+    const input3 = payload.value;
     if (isInt) {
-      if (!Number.isInteger(input2)) {
+      if (!Number.isInteger(input3)) {
         payload.issues.push({
           expected: origin,
           format: def.format,
           code: "invalid_type",
           continue: false,
-          input: input2,
+          input: input3,
           inst
         });
         return;
       }
-      if (!Number.isSafeInteger(input2)) {
-        if (input2 > 0) {
+      if (!Number.isSafeInteger(input3)) {
+        if (input3 > 0) {
           payload.issues.push({
-            input: input2,
+            input: input3,
             code: "too_big",
             maximum: Number.MAX_SAFE_INTEGER,
             note: "Integers must be within the safe integer range.",
@@ -2461,7 +2470,7 @@ var $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat"
           });
         } else {
           payload.issues.push({
-            input: input2,
+            input: input3,
             code: "too_small",
             minimum: Number.MIN_SAFE_INTEGER,
             note: "Integers must be within the safe integer range.",
@@ -2474,10 +2483,10 @@ var $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat"
         return;
       }
     }
-    if (input2 < minimum) {
+    if (input3 < minimum) {
       payload.issues.push({
         origin: "number",
-        input: input2,
+        input: input3,
         code: "too_small",
         minimum,
         inclusive: true,
@@ -2485,10 +2494,10 @@ var $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat"
         continue: !def.abort
       });
     }
-    if (input2 > maximum) {
+    if (input3 > maximum) {
       payload.issues.push({
         origin: "number",
-        input: input2,
+        input: input3,
         code: "too_big",
         maximum,
         inclusive: true,
@@ -2502,11 +2511,11 @@ var $ZodCheckBigIntFormat = /* @__PURE__ */ $constructor("$ZodCheckBigIntFormat"
   $ZodCheck.init(inst, def);
   const [minimum, maximum] = BIGINT_FORMAT_RANGES[def.format];
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    if (input2 < minimum) {
+    const input3 = payload.value;
+    if (input3 < minimum) {
       payload.issues.push({
         origin: "bigint",
-        input: input2,
+        input: input3,
         code: "too_small",
         minimum,
         inclusive: true,
@@ -2514,10 +2523,10 @@ var $ZodCheckBigIntFormat = /* @__PURE__ */ $constructor("$ZodCheckBigIntFormat"
         continue: !def.abort
       });
     }
-    if (input2 > maximum) {
+    if (input3 > maximum) {
       payload.issues.push({
         origin: "bigint",
-        input: input2,
+        input: input3,
         code: "too_big",
         maximum,
         inclusive: true,
@@ -2532,16 +2541,16 @@ var $ZodCheckMaxSize = /* @__PURE__ */ $constructor("$ZodCheckMaxSize", (inst, d
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasSize);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const size = input2.size;
+    const input3 = payload.value;
+    const size = input3.size;
     if (size <= def.maximum)
       return;
     payload.issues.push({
-      origin: getSizableOrigin(input2),
+      origin: getSizableOrigin(input3),
       code: "too_big",
       maximum: def.maximum,
       inclusive: true,
-      input: input2,
+      input: input3,
       inst,
       continue: !def.abort
     });
@@ -2552,16 +2561,16 @@ var $ZodCheckMinSize = /* @__PURE__ */ $constructor("$ZodCheckMinSize", (inst, d
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasSize);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const size = input2.size;
+    const input3 = payload.value;
+    const size = input3.size;
     if (size >= def.minimum)
       return;
     payload.issues.push({
-      origin: getSizableOrigin(input2),
+      origin: getSizableOrigin(input3),
       code: "too_small",
       minimum: def.minimum,
       inclusive: true,
-      input: input2,
+      input: input3,
       inst,
       continue: !def.abort
     });
@@ -2572,13 +2581,13 @@ var $ZodCheckSizeEquals = /* @__PURE__ */ $constructor("$ZodCheckSizeEquals", (i
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasSize);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const size = input2.size;
+    const input3 = payload.value;
+    const size = input3.size;
     if (size === def.size)
       return;
     const tooBig = size > def.size;
     payload.issues.push({
-      origin: getSizableOrigin(input2),
+      origin: getSizableOrigin(input3),
       ...tooBig ? { code: "too_big", maximum: def.size } : { code: "too_small", minimum: def.size },
       inclusive: true,
       exact: true,
@@ -2593,18 +2602,18 @@ var $ZodCheckMaxLength = /* @__PURE__ */ $constructor("$ZodCheckMaxLength", (ins
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasLength);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const units = input2.length;
-    const length = typeof input2 === "string" && units > def.maximum ? codePointLength(input2) : units;
+    const input3 = payload.value;
+    const units = input3.length;
+    const length = typeof input3 === "string" && units > def.maximum ? codePointLength(input3) : units;
     if (length <= def.maximum)
       return;
-    const origin = getLengthableOrigin(input2);
+    const origin = getLengthableOrigin(input3);
     payload.issues.push({
       origin,
       code: "too_big",
       maximum: def.maximum,
       inclusive: true,
-      input: input2,
+      input: input3,
       inst,
       continue: !def.abort
     });
@@ -2615,18 +2624,18 @@ var $ZodCheckMinLength = /* @__PURE__ */ $constructor("$ZodCheckMinLength", (ins
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasLength);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const units = input2.length;
-    const length = typeof input2 === "string" && units >= def.minimum && units < def.minimum * 2 ? codePointLength(input2) : units;
+    const input3 = payload.value;
+    const units = input3.length;
+    const length = typeof input3 === "string" && units >= def.minimum && units < def.minimum * 2 ? codePointLength(input3) : units;
     if (length >= def.minimum)
       return;
-    const origin = getLengthableOrigin(input2);
+    const origin = getLengthableOrigin(input3);
     payload.issues.push({
       origin,
       code: "too_small",
       minimum: def.minimum,
       inclusive: true,
-      input: input2,
+      input: input3,
       inst,
       continue: !def.abort
     });
@@ -2637,12 +2646,12 @@ var $ZodCheckLengthEquals = /* @__PURE__ */ $constructor("$ZodCheckLengthEquals"
   $ZodCheck.init(inst, def);
   (_a3 = inst._zod.def).when ?? (_a3.when = _whenHasLength);
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const units = input2.length;
-    const length = typeof input2 === "string" && units >= def.length && units <= def.length * 2 ? codePointLength(input2) : units;
+    const input3 = payload.value;
+    const units = input3.length;
+    const length = typeof input3 === "string" && units >= def.length && units <= def.length * 2 ? codePointLength(input3) : units;
     if (length === def.length)
       return;
-    const origin = getLengthableOrigin(input2);
+    const origin = getLengthableOrigin(input3);
     const tooBig = length > def.length;
     payload.issues.push({
       origin,
@@ -2788,10 +2797,10 @@ var $ZodCheckProperties = /* @__PURE__ */ $constructor("$ZodCheckProperties", (i
       return void 0;
     }
     entries ?? (entries = Reflect.ownKeys(def.shape).map((key) => [key, def.shape[key]]));
-    const input2 = payload.value;
+    const input3 = payload.value;
     let proms;
     for (const [key, schema] of entries) {
-      const result = schema._zod.run({ value: input2[key], issues: [] }, {});
+      const result = schema._zod.run({ value: input3[key], issues: [] }, {});
       if (result instanceof Promise) {
         proms ?? (proms = []);
         proms.push(result.then((result2) => handleCheckPropertyResult(result2, payload, key)));
@@ -3059,11 +3068,11 @@ var $ZodEmail = /* @__PURE__ */ $constructor("$ZodEmail", (inst, def) => {
 });
 var URL_BAD_FORMAT = 1;
 var URL_UNPARSEABLE = 2;
-function canParseURL(input2) {
+function canParseURL(input3) {
   try {
     if (typeof URL !== "undefined" && typeof URL.canParse === "function")
-      return URL.canParse(input2);
-    new URL(input2);
+      return URL.canParse(input3);
+    new URL(input3);
     return true;
   } catch {
     return false;
@@ -3345,10 +3354,10 @@ function isLuhnAlgo(digits) {
   }
   return sum % 10 === 0;
 }
-function isValidCreditCard(input2) {
-  if (!creditCard.test(input2))
+function isValidCreditCard(input3) {
+  if (!creditCard.test(input3))
     return false;
-  return isLuhnAlgo(input2.replace(CC_SANITIZE, ""));
+  return isLuhnAlgo(input3.replace(CC_SANITIZE, ""));
 }
 var $ZodCreditCard = /* @__PURE__ */ $constructor("$ZodCreditCard", (inst, def) => {
   def.pattern ?? (def.pattern = creditCard);
@@ -3378,10 +3387,10 @@ function isIso7064Mod97(iban3) {
   }
   return remainder === 1;
 }
-function isValidIBAN(input2) {
-  if (!iban.test(input2))
+function isValidIBAN(input3) {
+  if (!iban.test(input3))
     return false;
-  return isIso7064Mod97(input2);
+  return isIso7064Mod97(input3);
 }
 var $ZodIBAN = /* @__PURE__ */ $constructor("$ZodIBAN", (inst, def) => {
   def.pattern ?? (def.pattern = iban);
@@ -3455,15 +3464,15 @@ var $ZodNumber = /* @__PURE__ */ $constructor("$ZodNumber", (inst, def) => {
         payload.value = Number(payload.value);
       } catch (_) {
       }
-    const input2 = payload.value;
-    if (typeof input2 === "number" && !Number.isNaN(input2) && Number.isFinite(input2)) {
+    const input3 = payload.value;
+    if (typeof input3 === "number" && !Number.isNaN(input3) && Number.isFinite(input3)) {
       return payload;
     }
-    const received = typeof input2 === "number" ? Number.isNaN(input2) ? "NaN" : !Number.isFinite(input2) ? String(input2) : void 0 : void 0;
+    const received = typeof input3 === "number" ? Number.isNaN(input3) ? "NaN" : !Number.isFinite(input3) ? String(input3) : void 0 : void 0;
     payload.issues.push({
       expected: "number",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst,
       ...received ? { received } : {}
     });
@@ -3483,13 +3492,13 @@ var $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def) => {
         payload.value = Boolean(payload.value);
       } catch (_) {
       }
-    const input2 = payload.value;
-    if (typeof input2 === "boolean")
+    const input3 = payload.value;
+    if (typeof input3 === "boolean")
       return payload;
     payload.issues.push({
       expected: "boolean",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -3522,13 +3531,13 @@ var $ZodBigIntFormat = /* @__PURE__ */ $constructor("$ZodBigIntFormat", (inst, d
 var $ZodSymbol = /* @__PURE__ */ $constructor("$ZodSymbol", (inst, def) => {
   $ZodType.init(inst, def);
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (typeof input2 === "symbol")
+    const input3 = payload.value;
+    if (typeof input3 === "symbol")
       return payload;
     payload.issues.push({
       expected: "symbol",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -3539,13 +3548,13 @@ var $ZodUndefined = /* @__PURE__ */ $constructor("$ZodUndefined", (inst, def) =>
   inst._zod.pattern = _undefined;
   inst._zod.values = /* @__PURE__ */ new Set([void 0]);
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (typeof input2 === "undefined")
+    const input3 = payload.value;
+    if (typeof input3 === "undefined")
       return payload;
     payload.issues.push({
       expected: "undefined",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -3556,13 +3565,13 @@ var $ZodNull = /* @__PURE__ */ $constructor("$ZodNull", (inst, def) => {
   inst._zod.pattern = _null;
   inst._zod.values = /* @__PURE__ */ new Set([null]);
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (input2 === null)
+    const input3 = payload.value;
+    if (input3 === null)
       return payload;
     payload.issues.push({
       expected: "null",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -3591,13 +3600,13 @@ var $ZodNever = /* @__PURE__ */ $constructor("$ZodNever", (inst, def) => {
 var $ZodVoid = /* @__PURE__ */ $constructor("$ZodVoid", (inst, def) => {
   $ZodType.init(inst, def);
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (typeof input2 === "undefined")
+    const input3 = payload.value;
+    if (typeof input3 === "undefined")
       return payload;
     payload.issues.push({
       expected: "void",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -3612,15 +3621,15 @@ var $ZodDate = /* @__PURE__ */ $constructor("$ZodDate", (inst, def) => {
       } catch (_err) {
       }
     }
-    const input2 = payload.value;
-    const isDate = input2 instanceof Date;
-    const isValidDate = isDate && !Number.isNaN(input2.getTime());
+    const input3 = payload.value;
+    const isDate = input3 instanceof Date;
+    const isValidDate = isDate && !Number.isNaN(input3.getTime());
     if (isValidDate)
       return payload;
     payload.issues.push({
       expected: "date",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       ...isDate ? { received: "Invalid Date" } : {},
       inst
     });
@@ -3649,9 +3658,9 @@ function capSize(inst, size) {
     return parse3(payload, ctx);
   };
 }
-var arraySize = (input2) => Array.isArray(input2) ? input2.length : -1;
-var mapSize = (input2) => input2 instanceof Map ? input2.size : -1;
-var setSize = (input2) => input2 instanceof Set ? input2.size : -1;
+var arraySize = (input3) => Array.isArray(input3) ? input3.length : -1;
+var mapSize = (input3) => input3 instanceof Map ? input3.size : -1;
+var setSize = (input3) => input3 instanceof Set ? input3.size : -1;
 function handleArrayResult(result, final, index) {
   if (result.issues.length) {
     final.issues.push(...prefixIssues(index, result.issues));
@@ -3663,21 +3672,21 @@ var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
   const memo2 = globalConfig.memoizer;
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!Array.isArray(input2)) {
+    const input3 = payload.value;
+    if (!Array.isArray(input3)) {
       payload.issues.push({
         expected: "array",
         code: "invalid_type",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
     }
-    payload.value = memo2 ? memo2.alloc(inst, payload, Array(input2.length), ctx) : Array(input2.length);
+    payload.value = memo2 ? memo2.alloc(inst, payload, Array(input3.length), ctx) : Array(input3.length);
     const proms = [];
     const abortEarly = ctx?.abortEarly;
-    for (let i = 0; i < input2.length; i++) {
-      const item = input2[i];
+    for (let i = 0; i < input3.length; i++) {
+      const item = input3[i];
       const result = def.element._zod.run({
         value: item,
         issues: []
@@ -3697,8 +3706,8 @@ var $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
   };
   capSize(inst, arraySize);
 });
-function handlePropertyResult(result, final, key, input2, optin, optout) {
-  const isPresent = key in input2;
+function handlePropertyResult(result, final, key, input3, optin, optout) {
+  const isPresent = key in input3;
   const isOptionalOut = optout === "optional";
   if (!isPresent && isOptionalOut && optin === "optional") {
     return;
@@ -3750,7 +3759,7 @@ function normalizeDef(def) {
     optionalKeys: new Set(okeys)
   };
 }
-function handleCatchall(proms, input2, payload, ctx, def, inst, abortEarly) {
+function handleCatchall(proms, input3, payload, ctx, def, inst, abortEarly) {
   const unrecognized = [];
   const keySet = def.keySet;
   const _catchall = def.catchall._zod;
@@ -3758,7 +3767,7 @@ function handleCatchall(proms, input2, payload, ctx, def, inst, abortEarly) {
   const optin = _catchall.optin;
   const optout = _catchall.optout;
   let seen = 0;
-  for (const key in input2) {
+  for (const key in input3) {
     if (abortEarly && payload.issues.length !== seen) {
       if (aborted(payload, seen))
         break;
@@ -3775,18 +3784,18 @@ function handleCatchall(proms, input2, payload, ctx, def, inst, abortEarly) {
       unrecognized.push(key);
       continue;
     }
-    const r = _catchall.run({ value: input2[key], issues: [] }, ctx);
+    const r = _catchall.run({ value: input3[key], issues: [] }, ctx);
     if (r instanceof Promise) {
-      proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input2, optin, optout)));
+      proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input3, optin, optout)));
     } else {
-      handlePropertyResult(r, payload, key, input2, optin, optout);
+      handlePropertyResult(r, payload, key, input3, optin, optout);
     }
   }
   if (unrecognized.length) {
     payload.issues.push({
       code: "unrecognized_keys",
       keys: unrecognized,
-      input: input2,
+      input: input3,
       inst,
       // Describes the shape of the input, not the validity of the parsed value, so it never aborts. The parse still fails; the schema's own checks just get to run first, and an enclosing intersection can reconcile the key against a sibling operand.
       continue: true
@@ -3837,12 +3846,12 @@ var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
     value ?? (value = _normalized.value);
-    const input2 = payload.value;
-    if (!isObject2(input2)) {
+    const input3 = payload.value;
+    if (!isObject2(input3)) {
       payload.issues.push({
         expected: "object",
         code: "invalid_type",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
@@ -3863,17 +3872,17 @@ var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
       const el = shape[key];
       const optin = el._zod.optin;
       const optout = el._zod.optout;
-      const r = el._zod.run({ value: input2[key], issues: [] }, ctx);
+      const r = el._zod.run({ value: input3[key], issues: [] }, ctx);
       if (r instanceof Promise) {
-        proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input2, optin, optout)));
+        proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input3, optin, optout)));
       } else {
-        handlePropertyResult(r, payload, key, input2, optin, optout);
+        handlePropertyResult(r, payload, key, input3, optin, optout);
       }
     }
     if (!catchall) {
       return proms.length ? Promise.all(proms).then(() => payload) : payload;
     }
-    return handleCatchall(proms, input2, payload, ctx, _normalized.value, inst, abortEarly === true);
+    return handleCatchall(proms, input3, payload, ctx, _normalized.value, inst, abortEarly === true);
   };
 });
 var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) => {
@@ -3886,56 +3895,56 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id, k) => `
-          let ${id}_ab = false;
-          for (let i = 0; i < ${id}.issues.length; i++) {
-            const iss = ${id}.issues[i];
+    const prefixStr = (id2, k) => `
+          let ${id2}_ab = false;
+          for (let i = 0; i < ${id2}.issues.length; i++) {
+            const iss = ${id2}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id}_ab = true;
+            if (iss.continue !== true) ${id2}_ab = true;
           }
-          if (${id}_ab && ctx && ctx.abortEarly) {
+          if (${id2}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
     doc.write(`const input = payload.value;`);
-    const ids = /* @__PURE__ */ Object.create(null);
+    const ids2 = /* @__PURE__ */ Object.create(null);
     let counter = 0;
     for (const key of normalized.allKeys) {
-      ids[key] = `key_${counter++}`;
+      ids2[key] = `key_${counter++}`;
     }
     doc.write(memo2 ? `const newResult = memo.alloc(inst, payload, {}, ctx);` : `const newResult = {};`);
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id = ids[key];
+      const id2 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id} = ${parseStr(k)};`);
+      doc.write(`const ${id2} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id}_present` : `${id}.value !== undefined || ${id}_present`;
+        const assign = optin === "optional" ? `${id2}_present` : `${id2}.value !== undefined || ${id2}_present`;
         doc.write(`
-        const ${id}_present = ${isPresent};
-        if (!${id}.issues.length || ${id}_present) {
-          if (${id}.issues.length) {${prefixStr(id, k)}
+        const ${id2}_present = ${isPresent};
+        if (!${id2}.issues.length || ${id2}_present) {
+          if (${id2}.issues.length) {${prefixStr(id2, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id}.value;
+            newResult[${k}] = ${id2}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id}_present = ${isPresent};
-        if (${id}.issues.length) {${prefixStr(id, k)}
+        const ${id2}_present = ${isPresent};
+        if (${id2}.issues.length) {${prefixStr(id2, k)}
         }
-        if (!${id}_present && !${id}.issues.length) {
+        if (!${id2}_present && !${id2}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -3948,22 +3957,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id}_present) {
-          newResult[${k}] = ${id}.value;
+        if (${id2}_present) {
+          newResult[${k}] = ${id2}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id}.issues.length) {${prefixStr(id, k)}
+        if (${id2}.issues.length) {${prefixStr(id2, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id}.value;`);
+          doc.write(`newResult[${k}] = ${id2}.value;`);
         } else {
           doc.write(`
-        if (${id}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id}.value;
+        if (${id2}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id2}.value;
         }
       `);
         }
@@ -3982,12 +3991,12 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
   let value;
   inst._zod.parse = (payload, ctx) => {
     value ?? (value = _normalized.value);
-    const input2 = payload.value;
-    if (!isObject2(input2)) {
+    const input3 = payload.value;
+    if (!isObject2(input3)) {
       payload.issues.push({
         expected: "object",
         code: "invalid_type",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
@@ -3998,7 +4007,7 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
       payload = fastpass(payload, ctx);
       if (!catchall)
         return payload;
-      return handleCatchall([], input2, payload, ctx, value, inst, ctx?.abortEarly === true);
+      return handleCatchall([], input3, payload, ctx, value, inst, ctx?.abortEarly === true);
     }
     return superParse(payload, ctx);
   };
@@ -4190,17 +4199,17 @@ var $ZodDiscriminatedUnion = /* @__PURE__ */ $constructor("$ZodDiscriminatedUnio
   });
   const disc = cached(() => discriminatorMap(def));
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!isObject(input2)) {
+    const input3 = payload.value;
+    if (!isObject(input3)) {
       payload.issues.push({
         code: "invalid_type",
         expected: "object",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
     }
-    const value = input2?.[def.discriminator];
+    const value = input3?.[def.discriminator];
     const opt = disc.value.get(value);
     if (opt && (value !== void 0 || ctx.direction !== "backward")) {
       return opt._zod.run(payload, ctx);
@@ -4214,7 +4223,7 @@ var $ZodDiscriminatedUnion = /* @__PURE__ */ $constructor("$ZodDiscriminatedUnio
       note: "No matching discriminator",
       discriminator: def.discriminator,
       options: Array.from(disc.value.keys()).filter((value2) => disc.value.get(value2) !== null),
-      input: input2,
+      input: input3,
       path: [def.discriminator],
       inst
     });
@@ -4224,9 +4233,9 @@ var $ZodDiscriminatedUnion = /* @__PURE__ */ $constructor("$ZodDiscriminatedUnio
 var $ZodIntersection = /* @__PURE__ */ $constructor("$ZodIntersection", (inst, def) => {
   $ZodType.init(inst, def);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    const left = def.left._zod.run({ value: input2, issues: [] }, ctx);
-    const right = def.right._zod.run({ value: input2, issues: [] }, ctx);
+    const input3 = payload.value;
+    const left = def.left._zod.run({ value: input3, issues: [] }, ctx);
+    const right = def.right._zod.run({ value: input3, issues: [] }, ctx);
     const async = left instanceof Promise || right instanceof Promise;
     if (async) {
       return Promise.all([left, right]).then(([left2, right2]) => {
@@ -4341,10 +4350,10 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
   const memo2 = globalConfig.memoizer;
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!Array.isArray(input2)) {
+    const input3 = payload.value;
+    if (!Array.isArray(input3)) {
       payload.issues.push({
-        input: input2,
+        input: input3,
         inst,
         expected: "tuple",
         code: "invalid_type"
@@ -4356,23 +4365,23 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
     const optinStart = getTupleOptStart(items, "optin");
     const optoutStart = getTupleOptStart(items, "optout");
     if (!def.rest) {
-      if (input2.length < optinStart) {
+      if (input3.length < optinStart) {
         payload.issues.push({
           code: "too_small",
           minimum: optinStart,
           inclusive: true,
-          input: input2,
+          input: input3,
           inst,
           origin: "array"
         });
         return payload;
       }
-      if (input2.length > items.length) {
+      if (input3.length > items.length) {
         payload.issues.push({
           code: "too_big",
           maximum: items.length,
           inclusive: true,
-          input: input2,
+          input: input3,
           inst,
           origin: "array"
         });
@@ -4382,7 +4391,7 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
     const abortEarly = def.rest ? ctx?.abortEarly : void 0;
     let itemAborted = false;
     for (let i = 0; i < items.length; i++) {
-      const r = items[i]._zod.run({ value: input2[i], issues: [] }, ctx);
+      const r = items[i]._zod.run({ value: input3[i], issues: [] }, ctx);
       if (r instanceof Promise) {
         proms.push(r.then((rr) => {
           itemResults[i] = rr;
@@ -4395,7 +4404,7 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
     }
     if (def.rest && !itemAborted) {
       let i = items.length - 1;
-      const rest = input2.slice(items.length);
+      const rest = input3.slice(items.length);
       let seen = payload.issues.length;
       for (const el of rest) {
         if (abortEarly && payload.issues.length !== seen) {
@@ -4413,9 +4422,9 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
       }
     }
     if (proms.length) {
-      return Promise.all(proms).then(() => handleTupleResults(itemResults, payload, items, input2, optoutStart));
+      return Promise.all(proms).then(() => handleTupleResults(itemResults, payload, items, input3, optoutStart));
     }
-    return handleTupleResults(itemResults, payload, items, input2, optoutStart);
+    return handleTupleResults(itemResults, payload, items, input3, optoutStart);
   };
 });
 function getTupleOptStart(items, key) {
@@ -4432,10 +4441,10 @@ function handleTupleResult(result, final, index) {
   }
   final.value[index] = result.value;
 }
-function handleTupleResults(itemResults, final, items, input2, optoutStart) {
+function handleTupleResults(itemResults, final, items, input3, optoutStart) {
   for (let i = 0; i < items.length; i++) {
     const r = itemResults[i];
-    const isPresent = i < input2.length;
+    const isPresent = i < input3.length;
     if (!isPresent && i >= optoutStart && items[i]._zod.optin === "optional") {
       final.value.length = i;
       break;
@@ -4449,7 +4458,7 @@ function handleTupleResults(itemResults, final, items, input2, optoutStart) {
     }
     final.value[i] = r.value;
   }
-  for (let i = final.value.length - 1; i >= input2.length; i--) {
+  for (let i = final.value.length - 1; i >= input3.length; i--) {
     if (items[i]._zod.optout === "optional" && final.value[i] === void 0) {
       final.value.length = i;
     } else {
@@ -4463,12 +4472,12 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
   const memo2 = globalConfig.memoizer;
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!isPlainObject(input2)) {
+    const input3 = payload.value;
+    if (!isPlainObject(input3)) {
       payload.issues.push({
         expected: "record",
         code: "invalid_type",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
@@ -4501,7 +4510,7 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
           const outKey = keyResult.value;
           if (outKey === "__proto__")
             continue;
-          const result = def.valueType._zod.run({ value: input2[key], issues: [] }, ctx);
+          const result = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
           if (result instanceof Promise) {
             proms.push(result.then((result2) => {
               if (result2.issues.length) {
@@ -4518,12 +4527,12 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
         }
       }
       let unrecognized;
-      for (const key in input2) {
+      for (const key in input3) {
         if (!recordKeys.has(key)) {
           if (def.mode === "loose") {
             if (key === "__proto__")
               continue;
-            payload.value[key] = input2[key];
+            payload.value[key] = input3[key];
           } else {
             unrecognized = unrecognized ?? [];
             unrecognized.push(key);
@@ -4533,7 +4542,7 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
       if (unrecognized && unrecognized.length > 0) {
         payload.issues.push({
           code: "unrecognized_keys",
-          input: input2,
+          input: input3,
           inst,
           keys: unrecognized,
           continue: true
@@ -4542,10 +4551,10 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
     } else {
       payload.value = memo2 ? memo2.alloc(inst, payload, {}, ctx) : {};
       let unrecognized;
-      for (const key of Reflect.ownKeys(input2)) {
+      for (const key of Reflect.ownKeys(input3)) {
         if (key === "__proto__")
           continue;
-        if (!Object.prototype.propertyIsEnumerable.call(input2, key))
+        if (!Object.prototype.propertyIsEnumerable.call(input3, key))
           continue;
         let keyResult = def.keyType._zod.run({ value: key, issues: [] }, ctx);
         if (keyResult instanceof Promise) {
@@ -4563,7 +4572,7 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
         }
         if (keyResult.issues.length) {
           if (def.mode === "loose") {
-            payload.value[key] = input2[key];
+            payload.value[key] = input3[key];
           } else if (values) {
             unrecognized = unrecognized ?? [];
             unrecognized.push(key);
@@ -4582,7 +4591,7 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
         const outKey = keyResult.value;
         if (outKey === "__proto__")
           continue;
-        const result = def.valueType._zod.run({ value: input2[key], issues: [] }, ctx);
+        const result = def.valueType._zod.run({ value: input3[key], issues: [] }, ctx);
         if (result instanceof Promise) {
           proms.push(result.then((result2) => {
             if (result2.issues.length) {
@@ -4600,7 +4609,7 @@ var $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def) => {
       if (unrecognized && unrecognized.length > 0) {
         payload.issues.push({
           code: "unrecognized_keys",
-          input: input2,
+          input: input3,
           inst,
           keys: unrecognized,
           continue: true
@@ -4618,12 +4627,12 @@ var $ZodMap = /* @__PURE__ */ $constructor("$ZodMap", (inst, def) => {
   const memo2 = globalConfig.memoizer;
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!(input2 instanceof Map)) {
+    const input3 = payload.value;
+    if (!(input3 instanceof Map)) {
       payload.issues.push({
         expected: "map",
         code: "invalid_type",
-        input: input2,
+        input: input3,
         inst
       });
       return payload;
@@ -4632,7 +4641,7 @@ var $ZodMap = /* @__PURE__ */ $constructor("$ZodMap", (inst, def) => {
     payload.value = memo2 ? memo2.alloc(inst, payload, /* @__PURE__ */ new Map(), ctx) : /* @__PURE__ */ new Map();
     const abortEarly = ctx?.abortEarly;
     let seen = payload.issues.length;
-    for (const [key, value] of input2) {
+    for (const [key, value] of input3) {
       if (abortEarly && payload.issues.length !== seen) {
         if (aborted(payload, seen))
           break;
@@ -4642,10 +4651,10 @@ var $ZodMap = /* @__PURE__ */ $constructor("$ZodMap", (inst, def) => {
       const valueResult = def.valueType._zod.run({ value, issues: [] }, ctx);
       if (keyResult instanceof Promise || valueResult instanceof Promise) {
         proms.push(Promise.all([keyResult, valueResult]).then(([keyResult2, valueResult2]) => {
-          handleMapResult(keyResult2, valueResult2, payload, key, input2, inst, ctx);
+          handleMapResult(keyResult2, valueResult2, payload, key, input3, inst, ctx);
         }));
       } else {
-        handleMapResult(keyResult, valueResult, payload, key, input2, inst, ctx);
+        handleMapResult(keyResult, valueResult, payload, key, input3, inst, ctx);
       }
     }
     if (proms.length)
@@ -4654,7 +4663,7 @@ var $ZodMap = /* @__PURE__ */ $constructor("$ZodMap", (inst, def) => {
   };
   capSize(inst, mapSize);
 });
-function handleMapResult(keyResult, valueResult, final, key, input2, inst, ctx) {
+function handleMapResult(keyResult, valueResult, final, key, input3, inst, ctx) {
   if (keyResult.issues.length) {
     if (propertyKeyTypes.has(typeof key)) {
       final.issues.push(...prefixIssues(key, keyResult.issues));
@@ -4662,7 +4671,7 @@ function handleMapResult(keyResult, valueResult, final, key, input2, inst, ctx) 
       final.issues.push({
         code: "invalid_key",
         origin: "map",
-        input: input2,
+        input: input3,
         inst,
         issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config()))
       });
@@ -4675,7 +4684,7 @@ function handleMapResult(keyResult, valueResult, final, key, input2, inst, ctx) 
       final.issues.push({
         origin: "map",
         code: "invalid_element",
-        input: input2,
+        input: input3,
         inst,
         key,
         issues: valueResult.issues.map((iss) => finalizeIssue(iss, ctx, config()))
@@ -4689,10 +4698,10 @@ var $ZodSet = /* @__PURE__ */ $constructor("$ZodSet", (inst, def) => {
   const memo2 = globalConfig.memoizer;
   memo2?.attach(inst);
   inst._zod.parse = (payload, ctx) => {
-    const input2 = payload.value;
-    if (!(input2 instanceof Set)) {
+    const input3 = payload.value;
+    if (!(input3 instanceof Set)) {
       payload.issues.push({
-        input: input2,
+        input: input3,
         inst,
         expected: "set",
         code: "invalid_type"
@@ -4703,7 +4712,7 @@ var $ZodSet = /* @__PURE__ */ $constructor("$ZodSet", (inst, def) => {
     payload.value = memo2 ? memo2.alloc(inst, payload, /* @__PURE__ */ new Set(), ctx) : /* @__PURE__ */ new Set();
     const abortEarly = ctx?.abortEarly;
     let seen = payload.issues.length;
-    for (const item of input2) {
+    for (const item of input3) {
       if (abortEarly && payload.issues.length !== seen) {
         if (aborted(payload, seen))
           break;
@@ -4737,14 +4746,14 @@ var $ZodEnum = /* @__PURE__ */ $constructor("$ZodEnum", (inst, def) => {
     return new RegExp(patternValues.length ? `^(${patternValues.map((o) => escapeRegex(o.toString())).join("|")})$` : "^[^\\s\\S]$");
   });
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (valuesSet.has(input2)) {
+    const input3 = payload.value;
+    if (valuesSet.has(input3)) {
       return payload;
     }
     payload.issues.push({
       code: "invalid_value",
       values,
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -4759,14 +4768,14 @@ var $ZodLiteral = /* @__PURE__ */ $constructor("$ZodLiteral", (inst, def) => {
     return new RegExp(vals.length ? `^(${vals.map((o) => typeof o === "string" ? escapeRegex(o) : o ? escapeRegex(o.toString()) : String(o)).join("|")})$` : "^[^\\s\\S]$");
   });
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (values.has(input2)) {
+    const input3 = payload.value;
+    if (values.has(input3)) {
       return payload;
     }
     payload.issues.push({
       code: "invalid_value",
       values: def.values,
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -4775,13 +4784,13 @@ var $ZodLiteral = /* @__PURE__ */ $constructor("$ZodLiteral", (inst, def) => {
 var $ZodFile = /* @__PURE__ */ $constructor("$ZodFile", (inst, def) => {
   $ZodType.init(inst, def);
   inst._zod.parse = (payload, _ctx) => {
-    const input2 = payload.value;
-    if (input2 instanceof File)
+    const input3 = payload.value;
+    if (input3 instanceof File)
       return payload;
     payload.issues.push({
       expected: "file",
       code: "invalid_type",
-      input: input2,
+      input: input3,
       inst
     });
     return payload;
@@ -5146,11 +5155,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source = partPattern(part);
-      if (!source) {
+      const source2 = partPattern(part);
+      if (!source2) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source));
+      regexParts.push(cleanRegex(source2));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -5289,20 +5298,20 @@ var $ZodCustom = /* @__PURE__ */ $constructor("$ZodCustom", (inst, def) => {
     return payload;
   };
   inst._zod.check = (payload) => {
-    const input2 = payload.value;
-    const r = def.fn(input2);
+    const input3 = payload.value;
+    const r = def.fn(input3);
     if (r instanceof Promise) {
-      return r.then((r2) => handleRefineResult(r2, payload, input2, inst));
+      return r.then((r2) => handleRefineResult(r2, payload, input3, inst));
     }
-    handleRefineResult(r, payload, input2, inst);
+    handleRefineResult(r, payload, input3, inst);
     return;
   };
 });
-function handleRefineResult(result, payload, input2, inst) {
+function handleRefineResult(result, payload, input3, inst) {
   if (!result) {
     const _iss = {
       code: "custom",
-      input: input2,
+      input: input3,
       inst,
       // incorporates params.error into issue reporting
       path: [...inst._zod.def.path ?? []],
@@ -5534,8 +5543,8 @@ var memo = {
           else
             rechecked = true;
         }
-        const input2 = payload.value;
-        if (!isRef(input2))
+        const input3 = payload.value;
+        if (!isRef(input3))
           return base(payload, ctx);
         let state = ctx[STATE];
         if (!state) {
@@ -5550,7 +5559,7 @@ var memo = {
           lastCtx = ctx;
           lastBucket = bucket;
         }
-        const hit = bucket.get(input2);
+        const hit = bucket.get(input3);
         if (hit) {
           payload.value = hit.value;
           if (hit.issues) {
@@ -5885,8 +5894,8 @@ function az_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getBelarusianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -7056,9 +7065,9 @@ var error12 = () => {
     nan: "NaN"
     // All other type names omitted - they fall back to raw values via ?? operator
   };
-  function getTypeName(type, input2) {
-    if (type === "number" && typeof input2 === "number" && !Number.isFinite(input2)) {
-      return String(input2);
+  function getTypeName(type, input3) {
+    if (type === "number" && typeof input3 === "number" && !Number.isFinite(input3)) {
+      return String(input3);
     }
     return TypeDictionary[type] ?? type;
   }
@@ -8533,8 +8542,8 @@ function hu_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count, one, many) {
-  return Math.abs(count) === 1 ? one : many;
+function getArmenianPlural(count2, one, many) {
+  return Math.abs(count2) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -9618,8 +9627,8 @@ function ko_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/lt.js
-var capitalizeFirstCharacter = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+var capitalizeFirstCharacter = (text4) => {
+  return text4.charAt(0).toUpperCase() + text4.slice(1);
 };
 function getUnitTypeFromNumber(number4) {
   const abs = Math.abs(number4);
@@ -11272,8 +11281,8 @@ function ro_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count, one, few, many) {
-  const absCount = Math.abs(count);
+function getRussianPlural(count2, one, few, many) {
+  const absCount = Math.abs(count2);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -13276,9 +13285,9 @@ function withParser(schema, parser) {
     installCompiledUserMethods(clone2, schema, parser);
   return clone2;
 }
-function installCompiledUserMethods(target, source, parser) {
+function installCompiledUserMethods(target, source2, parser) {
   const targetAny = target;
-  const sourceAny = source;
+  const sourceAny = source2;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -13489,9 +13498,9 @@ function codePointLengthVar(doc, ctx, accessor, inDoubt) {
   doc.write(`const ${v} = typeof ${accessor} === "string" && ${inDoubt} ? ${cpLen}(${accessor}) : ${accessor}.length;`);
   return v;
 }
-function numericOperand(value, label) {
+function numericOperand(value, label2) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    throw new ZodCompileUnsupportedError(`${label} bound of type ${typeof value}`);
+    throw new ZodCompileUnsupportedError(`${label2} bound of type ${typeof value}`);
   }
   return `${value}`;
 }
@@ -15506,23 +15515,23 @@ function _overwrite(tx) {
 }
 // @__NO_SIDE_EFFECTS__
 function _normalize(form) {
-  return /* @__PURE__ */ _overwrite((input2) => input2.normalize(form));
+  return /* @__PURE__ */ _overwrite((input3) => input3.normalize(form));
 }
 // @__NO_SIDE_EFFECTS__
 function _trim() {
-  return /* @__PURE__ */ _overwrite((input2) => input2.trim());
+  return /* @__PURE__ */ _overwrite((input3) => input3.trim());
 }
 // @__NO_SIDE_EFFECTS__
 function _toLowerCase() {
-  return /* @__PURE__ */ _overwrite((input2) => input2.toLowerCase());
+  return /* @__PURE__ */ _overwrite((input3) => input3.toLowerCase());
 }
 // @__NO_SIDE_EFFECTS__
 function _toUpperCase() {
-  return /* @__PURE__ */ _overwrite((input2) => input2.toUpperCase());
+  return /* @__PURE__ */ _overwrite((input3) => input3.toUpperCase());
 }
 // @__NO_SIDE_EFFECTS__
 function _slugify() {
-  return /* @__PURE__ */ _overwrite((input2) => slugify(input2));
+  return /* @__PURE__ */ _overwrite((input3) => slugify(input3));
 }
 // @__NO_SIDE_EFFECTS__
 function _array(Class2, element, params) {
@@ -15796,12 +15805,12 @@ function describe(description) {
   return ch;
 }
 // @__NO_SIDE_EFFECTS__
-function meta(metadata) {
+function meta(metadata2) {
   const ch = new $ZodCheck({ check: "meta" });
   ch._zod.onattach = [
     (inst) => {
       const existing = globalRegistry.get(inst) ?? {};
-      globalRegistry.add(inst, { ...existing, ...metadata });
+      globalRegistry.add(inst, { ...existing, ...metadata2 });
     }
   ];
   ch._zod.check = () => {
@@ -15828,8 +15837,8 @@ function _stringbool(Classes, _params) {
     type: "pipe",
     in: stringSchema,
     out: booleanSchema,
-    transform: ((input2, payload) => {
-      let data = input2;
+    transform: ((input3, payload) => {
+      let data = input3;
       if (params.case !== "sensitive")
         data = data.toLowerCase();
       if (truthySet.has(data)) {
@@ -15848,8 +15857,8 @@ function _stringbool(Classes, _params) {
         return {};
       }
     }),
-    reverseTransform: ((input2, _payload) => {
-      if (input2 === true) {
+    reverseTransform: ((input3, _payload) => {
+      if (input3 === true) {
         return truthyArray[0] || "true";
       } else {
         return falsyArray[0] || "false";
@@ -15881,10 +15890,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source of sources) {
-    for (const key of Reflect.ownKeys(source)) {
-      if (Object.prototype.propertyIsEnumerable.call(source, key)) {
-        assignProp(target, key, source[key]);
+  for (const source2 of sources) {
+    for (const key of Reflect.ownKeys(source2)) {
+      if (Object.prototype.propertyIsEnumerable.call(source2, key)) {
+        assignProp(target, key, source2[key]);
       }
     }
   }
@@ -15991,26 +16000,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id) {
-      const existing = idToSchema.get(id);
+    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id2) {
+      const existing = idToSchema.get(id2);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id2}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id, entry[0]);
+      idToSchema.set(id2, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id2) => id2);
+      const uriGenerator = ctx.external.uri ?? ((id3) => id3);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id;
-      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id)}` };
+      const id2 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id2;
+      return { defId: id2, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id2)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -16058,8 +16067,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id) {
+    const id2 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id2) {
       extractToDef(entry);
       continue;
     }
@@ -16292,10 +16301,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id = ctx.external.registry.get(schema)?.id;
-    if (!id)
+    const id2 = ctx.external.registry.get(schema)?.id;
+    if (!id2)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id);
+    result.$id = ctx.external.uri(id2);
   }
   assignProps(result, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -16901,7 +16910,7 @@ function stringifyKeyNames(bySchema, json2, visited) {
   const values = json2.enum ?? (json2.const !== void 0 ? [json2.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json2;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id, ...rest } = json2;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id2, ...rest } = json2;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -16921,8 +16930,8 @@ function rewriteKeyNames(ctx) {
       bySchema.set(entry.schema, entry);
   }
   const rewrites = /* @__PURE__ */ new Map();
-  for (const record2 of pendingRecords.get(ctx) ?? []) {
-    const seen = ctx.seen.get(record2);
+  for (const record3 of pendingRecords.get(ctx) ?? []) {
+    const seen = ctx.seen.get(record3);
     const names = (seen?.def ?? seen?.schema)?.propertyNames;
     if (!names || names === true || rewrites.has(names))
       continue;
@@ -17122,9 +17131,9 @@ var allProcessors = {
   optional: optionalProcessor,
   lazy: lazyProcessor
 };
-function toJSONSchema(input2, params) {
-  if ("_idmap" in input2) {
-    const registry2 = input2;
+function toJSONSchema(input3, params) {
+  if ("_idmap" in input3) {
+    const registry2 = input3;
     const ctx2 = initializeContext({ ...params, processors: allProcessors });
     const defs = {};
     for (const entry of registry2._idmap.entries()) {
@@ -17152,9 +17161,9 @@ function toJSONSchema(input2, params) {
     return { schemas };
   }
   const ctx = initializeContext({ ...params, processors: allProcessors });
-  processSchema(input2, ctx);
-  extractDefs(ctx, input2);
-  return finalize(ctx, input2);
+  processSchema(input3, ctx);
+  extractDefs(ctx, input3);
+  return finalize(ctx, input3);
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-generator.js
@@ -21853,16 +21862,16 @@ function applyPostAuth(clientId, clientSecret, params) {
 function applyPublicAuth(clientId, params) {
   params.set("client_id", clientId);
 }
-async function parseErrorResponse(input2) {
-  const statusCode = input2 instanceof Response ? input2.status : void 0;
-  const body = input2 instanceof Response ? await input2.text() : input2;
+async function parseErrorResponse(input3) {
+  const statusCode = input3 instanceof Response ? input3.status : void 0;
+  const body = input3 instanceof Response ? await input3.text() : input3;
   try {
     const result = OAuthErrorResponseSchema.parse(JSON.parse(body));
     const { error: error62, error_description, error_uri } = result;
     const errorClass = OAUTH_ERRORS[error62] || ServerError;
     return new errorClass(error_description || "", error_uri);
   } catch (error62) {
-    const redirect = input2 instanceof Response ? unfollowedRedirect(input2, input2.url) : void 0;
+    const redirect = input3 instanceof Response ? unfollowedRedirect(input3, input3.url) : void 0;
     const errorMessage = `${statusCode ? `HTTP ${statusCode}: ` : ""}${redirect ?? `Invalid OAuth error response: ${error62}. Raw body: ${body}`}`;
     return new ServerError(errorMessage);
   }
@@ -21905,7 +21914,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
   const cachedState = await provider.discoveryState?.();
   let resourceMetadata;
   let authorizationServerUrl;
-  let metadata;
+  let metadata2;
   let effectiveResourceMetadataUrl = resourceMetadataUrl;
   if (!effectiveResourceMetadataUrl && cachedState?.resourceMetadataUrl) {
     effectiveResourceMetadataUrl = new URL(cachedState.resourceMetadataUrl);
@@ -21913,31 +21922,31 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
   if (cachedState?.authorizationServerUrl) {
     authorizationServerUrl = cachedState.authorizationServerUrl;
     resourceMetadata = cachedState.resourceMetadata;
-    metadata = cachedState.authorizationServerMetadata ?? await discoverAuthorizationServerMetadata(authorizationServerUrl, { fetchFn });
+    metadata2 = cachedState.authorizationServerMetadata ?? await discoverAuthorizationServerMetadata(authorizationServerUrl, { fetchFn });
     if (!resourceMetadata) {
       try {
         resourceMetadata = await discoverOAuthProtectedResourceMetadata(serverUrl, { resourceMetadataUrl: effectiveResourceMetadataUrl }, fetchFn);
       } catch {
       }
     }
-    if (metadata !== cachedState.authorizationServerMetadata || resourceMetadata !== cachedState.resourceMetadata) {
+    if (metadata2 !== cachedState.authorizationServerMetadata || resourceMetadata !== cachedState.resourceMetadata) {
       await provider.saveDiscoveryState?.({
         authorizationServerUrl: String(authorizationServerUrl),
         resourceMetadataUrl: effectiveResourceMetadataUrl?.toString(),
         resourceMetadata,
-        authorizationServerMetadata: metadata
+        authorizationServerMetadata: metadata2
       });
     }
   } else {
     const serverInfo = await discoverOAuthServerInfo(serverUrl, { resourceMetadataUrl: effectiveResourceMetadataUrl, fetchFn });
     authorizationServerUrl = serverInfo.authorizationServerUrl;
-    metadata = serverInfo.authorizationServerMetadata;
+    metadata2 = serverInfo.authorizationServerMetadata;
     resourceMetadata = serverInfo.resourceMetadata;
     await provider.saveDiscoveryState?.({
       authorizationServerUrl: String(authorizationServerUrl),
       resourceMetadataUrl: effectiveResourceMetadataUrl?.toString(),
       resourceMetadata,
-      authorizationServerMetadata: metadata
+      authorizationServerMetadata: metadata2
     });
   }
   const issuer = String(authorizationServerUrl);
@@ -21962,7 +21971,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
     if (authorizationCode !== void 0) {
       throw new Error("Existing OAuth client information is required when exchanging an authorization code");
     }
-    const supportsUrlBasedClientId = metadata?.client_id_metadata_document_supported === true;
+    const supportsUrlBasedClientId = metadata2?.client_id_metadata_document_supported === true;
     const clientMetadataUrl = provider.clientMetadataUrl;
     if (clientMetadataUrl && !isHttpsUrl(clientMetadataUrl)) {
       throw new InvalidClientMetadataError(`clientMetadataUrl must be a valid HTTPS URL with a non-root pathname, got: ${clientMetadataUrl}`);
@@ -21976,7 +21985,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
         throw new Error("OAuth client information must be saveable for dynamic registration");
       }
       const fullInformation = await registerClient(authorizationServerUrl, {
-        metadata,
+        metadata: metadata2,
         clientMetadata: provider.clientMetadata,
         scope: resolvedScope,
         fetchFn
@@ -21988,7 +21997,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
   const nonInteractiveFlow = !provider.redirectUrl;
   if (authorizationCode !== void 0 || nonInteractiveFlow) {
     const tokens2 = await fetchToken(provider, authorizationServerUrl, {
-      metadata,
+      metadata: metadata2,
       resource,
       authorizationCode,
       fetchFn
@@ -22004,7 +22013,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
   if (tokens?.refresh_token) {
     try {
       const newTokens = await refreshAuthorization(authorizationServerUrl, {
-        metadata,
+        metadata: metadata2,
         clientInformation,
         refreshToken: tokens.refresh_token,
         resource,
@@ -22023,7 +22032,7 @@ async function authInternal(provider, { serverUrl, authorizationCode, scope, res
   }
   const state = provider.state ? await provider.state() : void 0;
   const { authorizationUrl, codeVerifier } = await startAuthorization(authorizationServerUrl, {
-    metadata,
+    metadata: metadata2,
     clientInformation,
     state,
     redirectUrl: provider.redirectUrl,
@@ -22201,14 +22210,14 @@ async function discoverOAuthServerInfo(serverUrl, opts) {
 function resourceIndicatorToString(resource) {
   return typeof resource === "string" ? resource : resource.href;
 }
-async function startAuthorization(authorizationServerUrl, { metadata, clientInformation, redirectUrl, scope, state, resource }) {
+async function startAuthorization(authorizationServerUrl, { metadata: metadata2, clientInformation, redirectUrl, scope, state, resource }) {
   let authorizationUrl;
-  if (metadata) {
-    authorizationUrl = new URL(metadata.authorization_endpoint);
-    if (!metadata.response_types_supported.includes(AUTHORIZATION_CODE_RESPONSE_TYPE)) {
+  if (metadata2) {
+    authorizationUrl = new URL(metadata2.authorization_endpoint);
+    if (!metadata2.response_types_supported.includes(AUTHORIZATION_CODE_RESPONSE_TYPE)) {
       throw new Error(`Incompatible auth server: does not support response type ${AUTHORIZATION_CODE_RESPONSE_TYPE}`);
     }
-    if (metadata.code_challenge_methods_supported && !metadata.code_challenge_methods_supported.includes(AUTHORIZATION_CODE_CHALLENGE_METHOD)) {
+    if (metadata2.code_challenge_methods_supported && !metadata2.code_challenge_methods_supported.includes(AUTHORIZATION_CODE_CHALLENGE_METHOD)) {
       throw new Error(`Incompatible auth server: does not support code challenge method ${AUTHORIZATION_CODE_CHALLENGE_METHOD}`);
     }
   } else {
@@ -22244,8 +22253,8 @@ function prepareAuthorizationCodeRequest(authorizationCode, codeVerifier, redire
     redirect_uri: String(redirectUri)
   });
 }
-async function executeTokenRequest(authorizationServerUrl, { metadata, tokenRequestParams, clientInformation, addClientAuthentication, resource, fetchFn }) {
-  const tokenUrl = metadata?.token_endpoint ? new URL(metadata.token_endpoint) : new URL("/token", authorizationServerUrl);
+async function executeTokenRequest(authorizationServerUrl, { metadata: metadata2, tokenRequestParams, clientInformation, addClientAuthentication, resource, fetchFn }) {
+  const tokenUrl = metadata2?.token_endpoint ? new URL(metadata2.token_endpoint) : new URL("/token", authorizationServerUrl);
   const headers = new Headers({
     "Content-Type": "application/x-www-form-urlencoded",
     Accept: "application/json"
@@ -22254,9 +22263,9 @@ async function executeTokenRequest(authorizationServerUrl, { metadata, tokenRequ
     tokenRequestParams.set("resource", resourceIndicatorToString(resource));
   }
   if (addClientAuthentication) {
-    await addClientAuthentication(headers, tokenRequestParams, tokenUrl, metadata);
+    await addClientAuthentication(headers, tokenRequestParams, tokenUrl, metadata2);
   } else if (clientInformation) {
-    const supportedMethods = metadata?.token_endpoint_auth_methods_supported ?? [];
+    const supportedMethods = metadata2?.token_endpoint_auth_methods_supported ?? [];
     const authMethod = selectClientAuthMethod(clientInformation, supportedMethods);
     applyClientAuthentication(authMethod, clientInformation, headers, tokenRequestParams);
   }
@@ -22270,13 +22279,13 @@ async function executeTokenRequest(authorizationServerUrl, { metadata, tokenRequ
   }
   return TokenResponseSchema.parse(await response.json());
 }
-async function refreshAuthorization(authorizationServerUrl, { metadata, clientInformation, refreshToken, resource, addClientAuthentication, fetchFn }) {
+async function refreshAuthorization(authorizationServerUrl, { metadata: metadata2, clientInformation, refreshToken, resource, addClientAuthentication, fetchFn }) {
   const tokenRequestParams = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken
   });
   const tokens = await executeTokenRequest(authorizationServerUrl, {
-    metadata,
+    metadata: metadata2,
     tokenRequestParams,
     clientInformation,
     addClientAuthentication,
@@ -22285,7 +22294,7 @@ async function refreshAuthorization(authorizationServerUrl, { metadata, clientIn
   });
   return { refresh_token: refreshToken, ...tokens };
 }
-async function fetchToken(provider, authorizationServerUrl, { metadata, resource, authorizationCode, fetchFn } = {}) {
+async function fetchToken(provider, authorizationServerUrl, { metadata: metadata2, resource, authorizationCode, fetchFn } = {}) {
   const readClientInformation = async () => {
     const storedClientInformation = await provider.clientInformation();
     const checked = discardIfIssuerMismatch(storedClientInformation, String(authorizationServerUrl));
@@ -22312,7 +22321,7 @@ async function fetchToken(provider, authorizationServerUrl, { metadata, resource
   }
   clientInformation ?? (clientInformation = await readClientInformation());
   return executeTokenRequest(authorizationServerUrl, {
-    metadata,
+    metadata: metadata2,
     tokenRequestParams,
     clientInformation,
     addClientAuthentication: provider.addClientAuthentication,
@@ -22320,13 +22329,13 @@ async function fetchToken(provider, authorizationServerUrl, { metadata, resource
     fetchFn
   });
 }
-async function registerClient(authorizationServerUrl, { metadata, clientMetadata, scope, fetchFn }) {
+async function registerClient(authorizationServerUrl, { metadata: metadata2, clientMetadata, scope, fetchFn }) {
   let registrationUrl;
-  if (metadata) {
-    if (!metadata.registration_endpoint) {
+  if (metadata2) {
+    if (!metadata2.registration_endpoint) {
       throw new Error("Incompatible auth server: does not support dynamic client registration");
     }
-    registrationUrl = new URL(metadata.registration_endpoint);
+    registrationUrl = new URL(metadata2.registration_endpoint);
   } else {
     registrationUrl = new URL("/register", authorizationServerUrl);
   }
@@ -22393,6 +22402,7 @@ var allowedScopes = /* @__PURE__ */ new Set([
   "maps:write",
   "github:credential"
 ]);
+var bindingId = (value) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 var BrokerAuthorization = class {
   constructor({
     origin,
@@ -22402,6 +22412,7 @@ var BrokerAuthorization = class {
     state,
     telemetryIdentity,
     onCredentialsLoaded,
+    onboarding,
     scopes = defaultScope.split(" "),
     host = "codex"
   }) {
@@ -22418,7 +22429,8 @@ var BrokerAuthorization = class {
       openBrowser,
       state,
       telemetryIdentity,
-      onCredentialsLoaded
+      onCredentialsLoaded,
+      onboarding
     });
     this.resource = `${origin}/api/v1`;
     this.ready = this.load();
@@ -22439,6 +22451,7 @@ var BrokerAuthorization = class {
       throw Error("keychain_profile_mismatch");
     this.onCredentialsLoaded?.(saved);
     this.saved = saved;
+    if (saved) this.authenticatedBefore = true;
     this.credentialsLoaded = true;
     this.credentialError = null;
   }
@@ -22483,9 +22496,9 @@ var BrokerAuthorization = class {
   async authorize(interactive = false) {
     let redirected = false;
     const scope = this.scope;
-    let verifier;
+    let verifier, onboardingTicket;
     let accept, reject;
-    let callbackAccepted = false;
+    let callbackAccepted = false, observedStateMismatch = false;
     const callback = new Promise((resolve2, fail) => {
       accept = resolve2;
       reject = fail;
@@ -22499,7 +22512,15 @@ var BrokerAuthorization = class {
     };
     const server = createServer((req, res) => {
       const url2 = new URL(req.url, redirectUrl);
-      if (callbackAccepted || req.method !== "GET" || req.headers.host !== new URL(redirectUrl).host || req.headers.origin || url2.pathname !== "/oauth/loki/callback" || url2.searchParams.getAll("state").length !== 1 || url2.searchParams.get("state") !== callbackState) {
+      if (callbackAccepted || req.method !== "GET" || req.headers.host !== new URL(redirectUrl).host || req.headers.origin || url2.pathname !== "/oauth/loki/callback") {
+        res.writeHead(400).end("Invalid callback");
+        return;
+      }
+      if (url2.searchParams.getAll("state").length !== 1 || url2.searchParams.get("state") !== callbackState) {
+        if (onboardingTicket && !observedStateMismatch) {
+          observedStateMismatch = true;
+          this.onboarding?.failure("state_mismatch");
+        }
         res.writeHead(400).end("Invalid callback");
         return;
       }
@@ -22536,21 +22557,7 @@ var BrokerAuthorization = class {
         issuer: this.origin
       }),
       tokens: () => this.githubReconnectRequired ? void 0 : this.saved?.tokens,
-      saveTokens: async (tokens) => {
-        if (tokens.issuer !== this.origin || !scope.split(" ").every((p) => tokens.scope?.split(" ").includes(p)))
-          throw new ConnectionRequiredError();
-        const saved = {
-          origin: this.origin,
-          tokens,
-          expiresAt: Date.now() + tokens.expires_in * 1e3,
-          telemetryEpoch: this.telemetryIdentity?.({ newIdentity: redirected })
-        };
-        await this.store.write(saved, { interactive });
-        this.saved = saved;
-        this.githubReconnectRequired = false;
-        this.blocked = false;
-        await this.state.write(false);
-      },
+      saveTokens: (tokens) => this.saveTokens(tokens, { interactive, newIdentity: redirected }),
       state: () => callbackState,
       saveCodeVerifier: (value) => {
         verifier = value;
@@ -22561,6 +22568,23 @@ var BrokerAuthorization = class {
         if (url2.origin !== this.origin || url2.pathname !== "/oauth/mcp/authorize")
           throw Error("invalid_authorization_server");
         redirected = true;
+        if (this.onboarding && verifier) {
+          let knownPrevious = Boolean(this.saved || this.authenticatedBefore);
+          try {
+            knownPrevious ||= this.onboarding.authenticatedBefore?.() === true;
+          } catch {
+          }
+          onboardingTicket = await this.onboarding.ticket(
+            verifier,
+            callbackState,
+            {
+              is_reconnect: knownPrevious ? true : null,
+              reconnect_reason: this.reconnectReason ?? (this.saved?.expiresAt <= Date.now() ? "token_expired" : "unknown")
+            }
+          );
+          if (onboardingTicket)
+            url2.searchParams.set("onboarding_ticket", onboardingTicket);
+        }
         await this.openBrowser(url2.href);
       },
       validateResourceURL: async (serverUrl, resource) => {
@@ -22570,6 +22594,10 @@ var BrokerAuthorization = class {
       },
       invalidateCredentials: async (kind) => {
         if (["all", "tokens"].includes(kind)) {
+          if (kind === "tokens" && this.saved && !callbackAccepted) {
+            this.authenticatedBefore = true;
+            this.reconnectReason = "refresh_failed";
+          }
           await this.store.delete({ interactive });
           this.saved = null;
         }
@@ -22581,11 +22609,21 @@ var BrokerAuthorization = class {
       resourceMetadataUrl: new URL(
         `${this.origin}/.well-known/oauth-protected-resource/api/v1`
       ),
-      fetchFn: (input2, init) => {
-        if (new URL(input2 instanceof Request ? input2.url : input2).origin !== this.origin)
+      fetchFn: (input3, init) => {
+        if (new URL(input3 instanceof Request ? input3.url : input3).origin !== this.origin)
           throw Error("invalid_authorization_server");
-        return fetch(input2, {
+        const url2 = new URL(input3 instanceof Request ? input3.url : input3);
+        let body = init?.body;
+        if (onboardingTicket && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
+          const params = new URLSearchParams(body);
+          if (params.get("grant_type") === "authorization_code") {
+            params.set("onboarding_ticket", onboardingTicket);
+            body = params;
+          }
+        }
+        return fetch(input3, {
           ...init,
+          body,
           redirect: "error",
           signal: AbortSignal.timeout(2e4)
         });
@@ -22604,6 +22642,8 @@ var BrokerAuthorization = class {
         if (cancelled) reject(new ConnectionRequiredError());
         else accept();
       } catch (error62) {
+        if (onboardingTicket && error62 instanceof KeychainUnavailableError)
+          this.onboarding?.failure("keychain_unavailable");
         await sendCompletion(response, "failed", this.host);
         reject(error62);
       }
@@ -22620,14 +22660,74 @@ var BrokerAuthorization = class {
       verifier = void 0;
     }
   }
-  async request(path, options) {
+  async saveTokens(tokens, { interactive = false, newIdentity = false } = {}) {
+    if (tokens.issuer !== this.origin || !this.scope.split(" ").every((p) => tokens.scope?.split(" ").includes(p)))
+      throw new ConnectionRequiredError();
+    const saved = {
+      origin: this.origin,
+      tokens,
+      expiresAt: Date.now() + tokens.expires_in * 1e3,
+      aiConnectionId: newIdentity ? randomUUID3() : this.currentAIConnectionId() ?? randomUUID3(),
+      telemetryEpoch: this.telemetryIdentity?.({ newIdentity })
+    };
+    await this.store.write(saved, { interactive });
+    this.saved = saved;
+    this.authenticatedBefore = true;
+    this.reconnectReason = void 0;
+    this.githubReconnectRequired = false;
+    this.blocked = false;
+    await this.state.write(false);
+  }
+  currentAIConnectionId() {
+    if (bindingId(this.saved?.aiConnectionId)) return this.saved.aiConnectionId;
+    if (bindingId(this.saved?.telemetryEpoch)) return this.saved.telemetryEpoch;
+    return void 0;
+  }
+  async connectionBinding(signal) {
+    signal?.throwIfAborted();
     await this.ensure();
+    signal?.throwIfAborted();
+    if (this.pending) {
+      await this.pending;
+      signal?.throwIfAborted();
+      if (!this.currentAIConnectionId() || this.blocked || this.loggingOut)
+        throw new AIConnectionChangedError();
+      return this.currentAIConnectionId();
+    }
+    if (this.currentAIConnectionId()) return this.currentAIConnectionId();
+    const original = this.saved;
+    this.pending = Promise.resolve().then(async () => {
+      if (this.saved !== original || this.blocked || this.loggingOut)
+        throw new AIConnectionChangedError();
+      const saved = { ...original, aiConnectionId: randomUUID3() };
+      await this.store.write(saved, { interactive: false });
+      if (this.saved !== original || this.blocked || this.loggingOut)
+        throw new AIConnectionChangedError();
+      this.saved = saved;
+    }).finally(() => {
+      this.pending = null;
+    });
+    await this.pending;
+    return this.currentAIConnectionId();
+  }
+  async requestBound(path, options, expectedConnection) {
+    if (!bindingId(expectedConnection)) throw new AIConnectionChangedError();
+    await this.connectionBinding(options.signal);
+    return this.request(path, options, expectedConnection);
+  }
+  async request(path, options, expectedConnection) {
+    options.signal?.throwIfAborted();
+    await this.ensure();
+    if (expectedConnection !== void 0 && (expectedConnection !== this.currentAIConnectionId() || this.blocked || this.loggingOut || this.pending))
+      throw new AIConnectionChangedError();
+    options.signal?.throwIfAborted();
+    const token = this.saved.tokens.access_token;
     const response = await fetch(`${this.origin}${path}`, {
       ...options,
       redirect: "error",
       headers: {
         ...options.headers,
-        authorization: `Bearer ${this.saved.tokens.access_token}`
+        authorization: `Bearer ${token}`
       }
     });
     const providerRejected = path === "/api/v1/github/credential" && response.status === 403 && ["github_reconnect", "github_credential_denied"].includes(
@@ -22688,6 +22788,7 @@ var BrokerAuthorization = class {
         })
       });
       if (!result.ok) throw Error("revocation_pending");
+      this.reconnectReason = "revoked";
     }
     await this.store.delete();
     this.saved = null;
@@ -22737,6 +22838,1911 @@ function brokerIdentity(build) {
   };
 }
 
+// packages/contracts/dist/recording.js
+var recordingProtocol = "rrweb-v1";
+var recordingPrivacy = "rrweb-native-v1";
+var recordingOwnerSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+});
+var recordingCreateSchema = external_exports.strictObject({
+  clientId: external_exports.uuid(),
+  workItemId: external_exports.uuid(),
+  protocol: external_exports.literal(recordingProtocol),
+  privacy: external_exports.literal(recordingPrivacy),
+  recorderVersion: external_exports.literal("2.1.7"),
+  extensionVersion: external_exports.literal("0.2.0"),
+  siteOrigin: external_exports.url()
+});
+var recordingSessionSchema = external_exports.strictObject({
+  id: external_exports.uuid(),
+  clientId: external_exports.uuid(),
+  owner: recordingOwnerSchema,
+  protocol: external_exports.literal(recordingProtocol),
+  privacy: external_exports.literal(recordingPrivacy),
+  limits: external_exports.strictObject({
+    maxChunkBytes: external_exports.number().int().min(65536).max(1048576),
+    maxRecordingBytes: external_exports.number().int().min(65536).max(104857600),
+    expiresAt: external_exports.iso.datetime()
+  })
+});
+var chunkDescriptorSchema = external_exports.strictObject({
+  streamId: external_exports.uuid(),
+  sequence: external_exports.number().int().nonnegative(),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  byteLength: external_exports.number().int().positive().max(1048576),
+  encoding: external_exports.literal("gzip"),
+  mediaType: external_exports.literal("application/vnd.loki.rrweb+json")
+});
+var uploadGrantSchema = external_exports.strictObject({
+  recordingId: external_exports.uuid(),
+  chunk: chunkDescriptorSchema,
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+});
+var chunkReceiptSchema = external_exports.strictObject({
+  recordingId: external_exports.uuid(),
+  chunk: chunkDescriptorSchema,
+  verified: external_exports.literal(true)
+});
+var recordingInventorySchema = external_exports.strictObject({
+  chunks: external_exports.array(chunkDescriptorSchema).max(2e3),
+  gaps: external_exports.array(external_exports.enum([
+    "navigation",
+    "browser-restart",
+    "unsupported-frame",
+    "capture-failure",
+    "quota",
+    "site-left",
+    "tab-closed"
+  ])).max(2e3),
+  endedAt: external_exports.iso.datetime()
+});
+var recordingStatusSchema = external_exports.discriminatedUnion("phase", [
+  external_exports.strictObject({ phase: external_exports.literal("pending"), recordingId: external_exports.uuid() }),
+  external_exports.strictObject({ phase: external_exports.literal("incomplete"), recordingId: external_exports.uuid() }),
+  external_exports.strictObject({
+    phase: external_exports.literal("published"),
+    recordingId: external_exports.uuid(),
+    evidence: external_exports.strictObject({
+      id: external_exports.uuid(),
+      workItemId: external_exports.uuid(),
+      reviewUrl: external_exports.url()
+    })
+  })
+]);
+
+// packages/contracts/dist/work-items.js
+var namespace = external_exports.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
+var httpsUrl = external_exports.url().max(2048).refine((value) => {
+  try {
+    const url2 = new URL(value);
+    return url2.protocol === "https:" && !url2.username && !url2.password;
+  } catch {
+    return false;
+  }
+}, "Use an HTTPS URL without credentials.");
+var externalReferenceInputSchema = external_exports.strictObject({
+  provider: namespace,
+  resourceType: namespace,
+  url: httpsUrl,
+  externalId: external_exports.string().trim().min(1).max(255).optional(),
+  containerId: external_exports.string().trim().min(1).max(255).optional(),
+  label: external_exports.string().trim().min(1).max(200).optional()
+});
+var externalReferenceSchema = externalReferenceInputSchema.extend({
+  id: external_exports.uuid(),
+  verification: external_exports.literal("unverified"),
+  createdAt: external_exports.iso.datetime()
+});
+var workItemCreateSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  title: external_exports.string().trim().min(1).max(300),
+  references: external_exports.array(externalReferenceInputSchema).max(20).default([])
+});
+var referenceAddSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  reference: externalReferenceInputSchema
+});
+var workItemDetailSchema = external_exports.object({
+  id: external_exports.uuid(),
+  title: external_exports.string(),
+  status: external_exports.enum(["in_progress", "done"]),
+  references: external_exports.array(externalReferenceSchema)
+});
+
+// packages/contracts/dist/source.js
+var sourceIdSchema = external_exports.uuid().transform((value) => value.toLowerCase());
+var sourceLimits = {
+  maxEntries: 1e4,
+  maxBlobBytes: 8388608,
+  maxSourceBytes: 134217728,
+  maxBundleBytes: 167772160,
+  maxGitBytes: 201326592,
+  maxTarBytes: 188743680,
+  maxManifestBytes: 3145728
+};
+var sourceProtocol = "github-source-v1";
+var sourcePolicy = "git-tree-v1";
+var gitShaSchema = external_exports.string().regex(/^[0-9a-f]{40}$/);
+var digestSchema = external_exports.string().regex(/^[0-9a-f]{64}$/);
+var githubIdSchema = external_exports.string().regex(/^[1-9][0-9]{0,19}$/);
+var repositoryNameSchema = external_exports.string().regex(/^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/).refine((name) => !name.split("/").some((part) => part === "." || part === ".."));
+var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({ kind: external_exports.literal("commit"), sha: gitShaSchema }),
+  external_exports.strictObject({
+    kind: external_exports.literal("branch"),
+    name: external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")))
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("pull_request"),
+    number: external_exports.number().int().positive().max(2147483647)
+  })
+]);
+var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
+  external_exports.strictObject({
+    protocol: external_exports.literal(sourceProtocol),
+    capability: external_exports.literal("github-source"),
+    version: external_exports.literal("1"),
+    requestId: sourceIdSchema,
+    input: external_exports.literal("github"),
+    repositoryId: sourceIdSchema,
+    reference: sourceReferenceSchema
+  }),
+  external_exports.strictObject({
+    protocol: external_exports.literal(sourceProtocol),
+    capability: external_exports.literal("github-source"),
+    version: external_exports.literal("1"),
+    requestId: sourceIdSchema,
+    input: external_exports.literal("snapshot"),
+    snapshotId: sourceIdSchema
+  })
+]);
+var repositoryConnectSchema = external_exports.strictObject({
+  installationId: githubIdSchema,
+  repositoryId: githubIdSchema,
+  shareWithWorkspace: external_exports.literal(true)
+});
+var repositoryBindingSchema = external_exports.strictObject({
+  id: sourceIdSchema,
+  host: external_exports.literal("github.com"),
+  githubId: githubIdSchema,
+  fullName: repositoryNameSchema,
+  installationId: githubIdSchema
+});
+var sourceEntrySchema = external_exports.strictObject({
+  path: external_exports.string().min(1).max(1024),
+  mode: external_exports.enum(["100644", "100755", "120000", "160000"]),
+  kind: external_exports.enum(["file", "symlink", "submodule", "lfs_pointer"]),
+  objectId: gitShaSchema,
+  size: external_exports.number().int().min(0).max(8388608),
+  sha256: digestSchema.nullable(),
+  target: external_exports.string().max(4096).nullable()
+});
+var sourceManifestSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sourceProtocol),
+  policy: external_exports.literal(sourcePolicy),
+  collectorVersion: external_exports.literal("1"),
+  workspaceId: sourceIdSchema,
+  snapshotId: sourceIdSchema,
+  attemptId: sourceIdSchema,
+  repositoryId: githubIdSchema,
+  host: external_exports.literal("github.com"),
+  commit: gitShaSchema,
+  tree: gitShaSchema,
+  commitObject: external_exports.string().max(87384),
+  entries: external_exports.array(sourceEntrySchema).max(1e4),
+  totalBytes: external_exports.number().int().min(0).max(sourceLimits.maxSourceBytes),
+  coverage: external_exports.literal("git-tree-with-recorded-pointers"),
+  bundle: external_exports.strictObject({
+    format: external_exports.literal("tar.gz"),
+    sha256: digestSchema,
+    size: external_exports.number().int().positive().max(sourceLimits.maxBundleBytes)
+  })
+});
+var sourceRunSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sourceProtocol),
+  id: sourceIdSchema,
+  request: sourceRunRequestSchema,
+  repositoryName: repositoryNameSchema.nullable(),
+  phase: external_exports.enum([
+    "accepted",
+    "resolving",
+    "preparing_source",
+    "complete",
+    "failed",
+    "cancelled"
+  ]),
+  repositoryId: sourceIdSchema.nullable(),
+  snapshotId: sourceIdSchema.nullable(),
+  commit: gitShaSchema.nullable(),
+  attemptId: sourceIdSchema.nullable(),
+  waitReason: external_exports.string().max(100).nullable(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  failure: external_exports.string().max(100).nullable(),
+  statusUrl: external_exports.string(),
+  createdAt: external_exports.iso.datetime()
+});
+var sourceSnapshotSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sourceProtocol),
+  id: sourceIdSchema,
+  status: external_exports.enum(["preparing", "ready", "failed"]),
+  repositoryId: githubIdSchema,
+  fullName: repositoryNameSchema,
+  commit: gitShaSchema,
+  policy: external_exports.literal(sourcePolicy),
+  attemptId: sourceIdSchema.nullable(),
+  manifestDigest: digestSchema.nullable(),
+  manifest: sourceManifestSchema.nullable()
+});
+var sourceJobInputSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sourceProtocol),
+  attemptId: sourceIdSchema,
+  snapshotId: sourceIdSchema,
+  workspaceId: sourceIdSchema,
+  repositoryId: githubIdSchema,
+  fullName: repositoryNameSchema,
+  commit: gitShaSchema,
+  gitUrl: external_exports.url(),
+  userToken: external_exports.string().min(1).max(2048),
+  leaseSeconds: external_exports.number().int().positive()
+});
+var sourceJobClaimSchema = external_exports.strictObject({
+  instance: sourceIdSchema
+});
+var sourceJobCompleteSchema = external_exports.strictObject({
+  instance: sourceIdSchema,
+  manifest: sourceManifestSchema
+});
+
+// packages/contracts/dist/map-review.js
+var text = external_exports.string().max(32768);
+var record2 = external_exports.record(external_exports.string(), external_exports.json());
+var coverage = external_exports.enum([
+  "reviewed",
+  "unreviewed",
+  "missing",
+  "failed",
+  "invalid"
+]);
+var ids = external_exports.array(text).max(1e5);
+var mapReviewSchema = external_exports.strictObject({
+  schema_version: external_exports.literal("ui-modeler-map-reviews/1.0.0"),
+  processing_status: external_exports.enum(["unreviewed", "partial", "complete"]),
+  identity: record2,
+  coverage: record2,
+  page_claim_population: external_exports.enum(["recorded", "not_recorded"]).optional(),
+  page_coverage: external_exports.array(external_exports.strictObject({
+    page_id: text,
+    coverage,
+    reason: text
+  })).max(1e4),
+  problems: external_exports.array(record2).max(1e5),
+  evidence: record2,
+  limitations: external_exports.array(text).max(1e4),
+  findings: external_exports.array(external_exports.strictObject({
+    id: text,
+    stage: external_exports.enum(["page_identity", "visible_elements"]),
+    kind: text,
+    claim_id: text,
+    targets: external_exports.object({ page_ids: ids, element_ids: ids, navigation_ids: ids }).catchall(external_exports.json()),
+    coverage,
+    claim: record2,
+    judgment: record2.nullable(),
+    verdict: external_exports.enum(["supported", "contradicted", "unverifiable"]).nullable(),
+    source_evidence: external_exports.array(external_exports.object({
+      line_id: text,
+      ref: text,
+      path: text,
+      text
+    }).catchall(external_exports.json())).max(1e5),
+    identity: record2,
+    evidence_documents: ids,
+    error: text.nullable()
+  })).max(1e5)
+});
+
+// packages/contracts/dist/analysis.js
+var uiModelerPin = {
+  capability: "ui-modeler/2026.10.18-8",
+  release: "ui-modeler/v2026.10.18-8",
+  version: "2026.10.18-8",
+  sha256: "4f6aa67e437143d33ee54e9a1b072f5493db27f8744d7a8836fff5fcb378d741",
+  adapter: "loki-ui-modeler-v1",
+  models: ["typesafe-ai/jev", "gpt-6-luna/medium"],
+  sourceBudget: 64e4
+};
+var analysisLimits = {
+  maxBundleBytes: 64 * 1024 * 1024,
+  maxOutputBytes: 64 * 1024 * 1024,
+  maxFileBytes: 32 * 1024 * 1024,
+  maxMapBytes: 8 * 1024 * 1024,
+  maxReportBytes: 4 * 1024 * 1024,
+  maxFiles: 1e4,
+  maxDurationSeconds: 3600
+};
+var requestFields = {
+  protocol: external_exports.literal("ui-modeler-v1"),
+  capability: external_exports.literal(uiModelerPin.capability),
+  requestId: external_exports.uuid()
+};
+var analysisRequestSchema = external_exports.discriminatedUnion("input", [
+  external_exports.strictObject({
+    ...requestFields,
+    input: external_exports.literal("github"),
+    repositoryId: external_exports.uuid(),
+    reference: sourceReferenceSchema
+  }),
+  external_exports.strictObject({
+    ...requestFields,
+    input: external_exports.literal("snapshot"),
+    snapshotId: external_exports.uuid()
+  })
+]);
+var analysisPhaseSchema = external_exports.enum([
+  "accepted",
+  "resolving",
+  "preparing_source",
+  "queued_analysis",
+  "running",
+  "complete",
+  "partial",
+  "failed",
+  "cancelled"
+]);
+var analysisSourceSchema = external_exports.strictObject({
+  snapshotId: external_exports.uuid(),
+  repositoryId: external_exports.string().regex(/^[1-9][0-9]*$/),
+  fullName: external_exports.string().max(201),
+  commit: gitShaSchema,
+  manifestDigest: digestSchema,
+  bundleDigest: digestSchema
+});
+var analysisRunSchema = external_exports.strictObject({
+  protocol: external_exports.literal("ui-modeler-v1"),
+  id: external_exports.uuid(),
+  request: analysisRequestSchema,
+  phase: analysisPhaseSchema,
+  sourceRunId: external_exports.uuid().nullable(),
+  source: analysisSourceSchema.nullable(),
+  sourceProgress: sourceRunSchema.nullable(),
+  attemptId: external_exports.uuid().nullable(),
+  fingerprint: digestSchema.nullable(),
+  waitReason: external_exports.string().max(100).nullable(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  failure: external_exports.string().max(100).nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string().max(200),
+  resultUrl: external_exports.string().max(200).nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var text2 = external_exports.string().max(32768);
+var id = external_exports.string().min(1).max(2048);
+var refs = external_exports.array(text2).max(1e4);
+var pageSchema = external_exports.object({
+  id,
+  label: text2,
+  extraction_status: external_exports.enum([
+    "processed",
+    "incomplete",
+    "unsupported",
+    "failed",
+    "missing"
+  ])
+}).passthrough();
+var uiModelerMapSchema = external_exports.strictObject({
+  schema_version: external_exports.literal("2.0.0"),
+  kind: external_exports.literal("source_inferred_visible_ui_map"),
+  source: external_exports.record(external_exports.string(), external_exports.unknown()),
+  provenance: external_exports.record(external_exports.string(), external_exports.unknown()),
+  status: external_exports.enum(["processed", "incomplete"]),
+  pages: external_exports.array(pageSchema).max(1e4),
+  elements: external_exports.array(external_exports.strictObject({
+    id,
+    model_id: text2,
+    page_id: id,
+    parent_element_id: id.nullable(),
+    label: text2,
+    kind: text2,
+    display_condition: text2,
+    clickable: external_exports.boolean(),
+    navigation_status: external_exports.enum([
+      "not_applicable",
+      "no_page_navigation",
+      "unknown",
+      "known"
+    ]),
+    source_refs: refs
+  })).max(1e5),
+  click_navigation: external_exports.array(external_exports.strictObject({
+    id,
+    element_id: id,
+    from_page_id: id,
+    to_page_id: id.nullable(),
+    route_or_url: text2.nullable(),
+    condition: text2,
+    source_refs: refs
+  })).max(1e5),
+  issues: external_exports.array(external_exports.record(external_exports.string(), external_exports.unknown())).max(1e5),
+  limitations: external_exports.array(text2).max(1e4),
+  summary: external_exports.record(external_exports.string(), external_exports.number().int().nonnegative()),
+  review: mapReviewSchema.optional()
+});
+var analysisFileSchema = external_exports.strictObject({
+  path: external_exports.string().min(1).max(1024),
+  sha256: digestSchema,
+  size: external_exports.number().int().nonnegative().max(analysisLimits.maxFileBytes)
+});
+var analysisReportSchema = external_exports.strictObject({
+  protocol: external_exports.literal("ui-modeler-output-v1"),
+  workspaceId: external_exports.uuid(),
+  runId: external_exports.uuid(),
+  attemptId: external_exports.uuid(),
+  capability: external_exports.literal(uiModelerPin.capability),
+  cliDigest: external_exports.literal(uiModelerPin.sha256),
+  adapter: external_exports.literal(uiModelerPin.adapter),
+  runtime: external_exports.string().min(1).max(300),
+  execution: external_exports.enum(["released-cli", "controlled-output-fixture"]),
+  fingerprint: digestSchema,
+  source: analysisSourceSchema,
+  status: external_exports.enum(["complete", "partial", "failed"]),
+  exitCode: external_exports.union([external_exports.literal(0), external_exports.literal(1), external_exports.literal(2), external_exports.null()]),
+  failure: external_exports.enum([
+    "cli_failed",
+    "execution_interrupted",
+    "output_limit_exceeded",
+    "invalid_cli_output",
+    "provider_outcome_unknown"
+  ]).nullable(),
+  mapPath: external_exports.literal("map.json").nullable(),
+  usage: external_exports.literal("unknown"),
+  accounting: external_exports.array(external_exports.strictObject({
+    path: external_exports.string().max(1024),
+    kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+    action: external_exports.enum(["materialized", "not_hydrated"])
+  })).max(1e4),
+  files: external_exports.array(analysisFileSchema).max(analysisLimits.maxFiles),
+  bundle: external_exports.strictObject({
+    size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
+    sha256: digestSchema
+  })
+});
+var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
+var analysisCompletionSchema = external_exports.strictObject({
+  instance: external_exports.uuid(),
+  report: analysisReportSchema
+});
+var analysisSourceIndexSchema = external_exports.array(external_exports.strictObject({
+  id: external_exports.string().regex(/^f[0-9]{1,5}$/),
+  path: external_exports.string().max(1024),
+  sha256: digestSchema,
+  utf16Length: external_exports.number().int().nonnegative()
+})).max(1e4);
+var analysisResultSchema = external_exports.strictObject({
+  run: analysisRunSchema,
+  report: analysisReportSchema,
+  map: uiModelerMapSchema.nullable(),
+  sourceIndex: analysisSourceIndexSchema
+});
+var analysisJobInputSchema = external_exports.strictObject({
+  protocol: external_exports.literal("ui-modeler-job-v1"),
+  workspaceId: external_exports.uuid(),
+  runId: external_exports.uuid(),
+  attemptId: external_exports.uuid(),
+  source: analysisSourceSchema,
+  fingerprint: digestSchema,
+  runtime: external_exports.string().min(1).max(300),
+  leaseSeconds: external_exports.literal(90)
+});
+
+// packages/contracts/dist/analysis-customer.js
+var customerAnalysisSourceSchema = analysisSourceSchema.pick({ snapshotId: true, repositoryId: true, fullName: true, commit: true }).extend({ fullName: external_exports.string().regex(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/) });
+var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
+  sourceReferenceSchema.options[0].pick({ kind: true, sha: true }).strip(),
+  sourceReferenceSchema.options[1].pick({ kind: true, name: true }).strip(),
+  sourceReferenceSchema.options[2].pick({ kind: true, number: true }).strip()
+]);
+var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
+  analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+]);
+var customerAnalysisRunSchema = external_exports.object({
+  id: external_exports.uuid(),
+  request: customerAnalysisRequestSchema,
+  phase: analysisPhaseSchema,
+  source: customerAnalysisSourceSchema.nullable(),
+  sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
+  message: external_exports.string(),
+  retryAt: external_exports.iso.datetime().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  statusUrl: external_exports.string(),
+  resultUrl: external_exports.string().nullable(),
+  mapAvailable: external_exports.boolean(),
+  cancelRequested: external_exports.boolean()
+});
+var pageSchema2 = uiModelerMapSchema.shape.pages.element.pick({
+  id: true,
+  label: true,
+  extraction_status: true
+}).strip();
+var elementSchema = uiModelerMapSchema.shape.elements.element.pick({
+  id: true,
+  page_id: true,
+  parent_element_id: true,
+  label: true,
+  kind: true,
+  display_condition: true,
+  clickable: true,
+  navigation_status: true,
+  source_refs: true
+}).strip();
+var navigationSchema = uiModelerMapSchema.shape.click_navigation.element.pick({
+  id: true,
+  element_id: true,
+  from_page_id: true,
+  to_page_id: true,
+  route_or_url: true,
+  condition: true,
+  source_refs: true
+}).strip();
+var issueSchema = external_exports.object({
+  pageId: external_exports.string().nullable(),
+  message: external_exports.string()
+});
+var customerMapSchema = external_exports.object({
+  status: uiModelerMapSchema.shape.status,
+  pages: external_exports.array(pageSchema2),
+  elements: external_exports.array(elementSchema),
+  click_navigation: external_exports.array(navigationSchema),
+  issues: external_exports.array(issueSchema),
+  limitations: external_exports.array(external_exports.string())
+});
+var customerAnalysisResultSchema = external_exports.object({
+  run: customerAnalysisRunSchema,
+  report: external_exports.object({
+    status: external_exports.enum(["complete", "partial", "failed"]),
+    fixture: external_exports.boolean(),
+    accounting: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
+      action: external_exports.enum(["materialized", "not_hydrated"])
+    }))
+  }),
+  map: customerMapSchema.nullable(),
+  sourceIndex: external_exports.array(analysisSourceIndexSchema.element.pick({
+    id: true,
+    path: true,
+    sha256: true,
+    utf16Length: true
+  }).strip())
+});
+
+// packages/contracts/dist/workspace-results.js
+var resultLimits = {
+  manifestBytes: 1024 * 1024,
+  files: 256,
+  contextRefs: 100,
+  relationships: 128,
+  pageSize: 100
+};
+var text3 = (max) => external_exports.string().max(max).refine((value) => Boolean(value.trim()), "Nonempty text required.");
+var digest = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var label = text3(200).refine((value) => !Array.from(value).some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127));
+var namespace2 = external_exports.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
+var stableUrl = external_exports.url().max(2048).refine((value) => {
+  let url2;
+  try {
+    url2 = new URL(value);
+  } catch {
+    return false;
+  }
+  return url2.protocol === "https:" && !url2.username && !url2.password && ![...url2.searchParams.keys()].some((key) => /^(?:access_token|id_token|refresh_token|token|client_secret|x-amz-signature|x-amz-credential)$/i.test(key));
+}, "Supply a stable HTTPS reference without credentials or signed access parameters.");
+var resultContextRefSchema = external_exports.strictObject({
+  provider: namespace2,
+  kind: namespace2,
+  id: text3(512).optional(),
+  url: stableUrl.optional(),
+  label: label.optional()
+}).refine((value) => value.id !== void 0 || value.url !== void 0, "Supply a reference ID or URL.");
+var selectedResultFileSchema = external_exports.strictObject({
+  key: external_exports.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/),
+  name: label.refine((value) => !/[\\/]/.test(value) && value !== "." && value !== "..", "Supply a display filename, not a path."),
+  role: text3(80),
+  bytes: external_exports.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+  sha256: digest
+});
+var lineage = external_exports.strictObject({
+  relation: text3(80),
+  target: external_exports.discriminatedUnion("kind", [
+    external_exports.strictObject({
+      kind: external_exports.literal("result"),
+      publicationId: external_exports.uuid(),
+      sha256: digest.optional()
+    }),
+    external_exports.strictObject({ kind: external_exports.literal("file"), fileKey: text3(128) }),
+    external_exports.strictObject({
+      kind: external_exports.literal("reference"),
+      reference: resultContextRefSchema,
+      availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+    })
+  ])
+});
+var input2 = external_exports.strictObject({
+  requestKey: text3(200),
+  producer: external_exports.strictObject({
+    name: text3(200),
+    release: text3(300).nullable(),
+    nativeContract: text3(300),
+    implementationSha256: digest.optional()
+  }),
+  title: label,
+  nativeResultId: text3(512).optional(),
+  nativeOutcome: text3(300).nullable().optional(),
+  provenance: external_exports.strictObject({
+    description: text3(16e3),
+    capturedAt: external_exports.iso.datetime().optional(),
+    inputSha256: digest.optional()
+  }),
+  files: external_exports.array(selectedResultFileSchema).min(1).max(resultLimits.files),
+  contextRefs: external_exports.array(resultContextRefSchema).max(resultLimits.contextRefs).default([]),
+  relationships: external_exports.array(lineage).max(resultLimits.relationships).default([])
+});
+var resultPublicationInputSchema = external_exports.discriminatedUnion("kind", [
+  input2.extend({ kind: external_exports.literal("native-result") }),
+  input2.extend({
+    kind: external_exports.literal("application-map"),
+    expectedGeneration: external_exports.uuid().nullable(),
+    sourceCoverage: external_exports.strictObject({
+      kind: external_exports.enum(["complete", "fragment", "unknown"]),
+      description: text3(16e3),
+      sourceRefs: external_exports.array(resultContextRefSchema).max(resultLimits.contextRefs).default([])
+    })
+  })
+]).superRefine((value, context) => {
+  if (["ui-modeler/retained-bundle", "loki/map-projection/1"].includes(value.producer.nativeContract) && value.kind !== "application-map")
+    context.addIssue({
+      code: "custom",
+      path: ["kind"],
+      message: "Known full-map artifacts use the latest-map contract."
+    });
+  if (value.producer.nativeContract === "ui-modeler/retained-bundle")
+    context.addIssue({
+      code: "custom",
+      path: ["producer"],
+      message: "Retained bundles include source corpus; select map files or an existing projection explicitly."
+    });
+  const keys = new Set(value.files.map((file2) => file2.key));
+  if (keys.size !== value.files.length)
+    context.addIssue({
+      code: "custom",
+      path: ["files"],
+      message: "Selected file keys must be distinct."
+    });
+  if (value.kind === "native-result" && value.files.some((file2) => ["application-map", "map-bundle"].includes(file2.role)))
+    context.addIssue({
+      code: "custom",
+      path: ["files"],
+      message: "Full app maps use the latest-map contract."
+    });
+  if (value.kind === "application-map" && value.files.filter((file2) => file2.role === "application-map").length !== 1)
+    context.addIssue({
+      code: "custom",
+      path: ["files"],
+      message: "Select one app-map file and any permitted companion files."
+    });
+  for (const [index, edge] of value.relationships.entries())
+    if (edge.target.kind === "file" && !keys.has(edge.target.fileKey))
+      context.addIssue({
+        code: "custom",
+        path: ["relationships", index],
+        message: "Relationship points to an unselected file; use an unresolved reference instead."
+      });
+});
+var resultListQuerySchema = external_exports.strictObject({
+  after: external_exports.coerce.number().int().min(0).max(Number.MAX_SAFE_INTEGER).default(0),
+  watermark: external_exports.coerce.number().int().min(0).max(Number.MAX_SAFE_INTEGER).optional(),
+  limit: external_exports.coerce.number().int().min(1).max(resultLimits.pageSize).default(25),
+  refProvider: namespace2.optional(),
+  refKind: namespace2.optional(),
+  refId: text3(512).optional(),
+  refUrl: stableUrl.optional()
+});
+
+// packages/contracts/dist/recording-session.js
+var sessionProtocol = "rrweb-session-v2";
+var sessionOffsetSchema = external_exports.number().int().min(0).max(864e5);
+var sessionChunkDescriptorSchema = chunkDescriptorSchema.omit({ streamId: true }).extend({ sequence: external_exports.number().int().min(0).max(1999) });
+var anyChunkDescriptorSchema = external_exports.union([
+  chunkDescriptorSchema,
+  sessionChunkDescriptorSchema
+]);
+var sessionCreateSchema = recordingCreateSchema.extend({
+  protocol: external_exports.literal(sessionProtocol)
+});
+var anyRecordingCreateSchema = external_exports.union([
+  recordingCreateSchema,
+  sessionCreateSchema
+]);
+var sessionRecordingSchema = external_exports.strictObject({
+  id: external_exports.uuid(),
+  clientId: external_exports.uuid(),
+  owner: recordingOwnerSchema,
+  protocol: external_exports.literal(sessionProtocol),
+  privacy: external_exports.literal(recordingPrivacy),
+  limits: external_exports.strictObject({
+    maxChunkBytes: external_exports.literal(1048576),
+    maxRecordingBytes: external_exports.literal(104857600),
+    expiresAt: external_exports.iso.datetime()
+  })
+});
+var admissionBase = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.recording-admission/1"),
+  id: external_exports.uuid(),
+  captureId: external_exports.uuid(),
+  owner: recordingOwnerSchema
+});
+var customerRecordingAdmissionSchema = external_exports.discriminatedUnion("format", [
+  admissionBase.extend({
+    format: external_exports.literal("stream-v1"),
+    limits: recordingSessionSchema.shape.limits
+  }),
+  admissionBase.extend({
+    format: external_exports.literal("session-v2"),
+    limits: sessionRecordingSchema.shape.limits
+  })
+]);
+var admissionResponseSchema = external_exports.union([
+  recordingSessionSchema,
+  sessionRecordingSchema,
+  customerRecordingAdmissionSchema
+]);
+var sessionGrantSchema = external_exports.strictObject({
+  recordingId: external_exports.uuid(),
+  chunk: sessionChunkDescriptorSchema,
+  url: external_exports.url(),
+  issuedAt: external_exports.iso.datetime(),
+  expiresAt: external_exports.iso.datetime()
+}).refine((grant2) => Date.parse(grant2.expiresAt) > Date.parse(grant2.issuedAt), "Invalid grant interval");
+var navigationKindSchema = external_exports.enum([
+  "start",
+  "route-change",
+  "page-load",
+  "reload",
+  "history",
+  "navigation"
+]);
+var eventSchema = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.unknown().optional()
+});
+var position = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var sessionObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("rrweb"),
+    documentId: external_exports.uuid(),
+    ...position,
+    event: eventSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: external_exports.enum([
+      "browser-restart",
+      "unsupported-frame",
+      "capture-failure",
+      "quota",
+      "site-left",
+      "site-access",
+      "tab-closed",
+      "transition-tail"
+    ])
+  })
+]);
+var sessionRecordedChunkSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sessionProtocol),
+  privacy: external_exports.literal(recordingPrivacy),
+  sequence: external_exports.number().int().min(0).max(1999),
+  producer: external_exports.strictObject({
+    documentId: external_exports.uuid(),
+    batchSequence: external_exports.number().int().min(0).max(1999)
+  }),
+  observations: external_exports.array(sessionObservationSchema).min(1).max(1e3)
+});
+var sessionInventorySchema = external_exports.strictObject({
+  protocol: external_exports.literal(sessionProtocol),
+  chunks: external_exports.array(sessionChunkDescriptorSchema).min(1).max(2e3),
+  endedAt: external_exports.iso.datetime(),
+  durationMs: sessionOffsetSchema
+});
+var sessionLocatorSchema = external_exports.strictObject({
+  sequence: external_exports.number().int().min(0).max(1999),
+  eventIndex: external_exports.number().int().min(0).max(999)
+});
+var sessionAnchorSchema = sessionLocatorSchema.extend({
+  version: external_exports.literal("session-v2"),
+  offsetMs: sessionOffsetSchema,
+  documentId: external_exports.uuid().nullable()
+});
+var indexedPosition = sessionLocatorSchema.extend({
+  offsetMs: sessionOffsetSchema
+});
+var sessionReplayManifestSchema = external_exports.strictObject({
+  protocol: external_exports.literal(sessionProtocol),
+  privacy: external_exports.literal(recordingPrivacy),
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid(),
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(sessionChunkDescriptorSchema).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence: external_exports.number().int().min(0).max(1999),
+    decodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(indexedPosition.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(indexedPosition.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: external_exports.number().int().min(0).max(1999),
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(indexedPosition.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(indexedPosition.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: external_exports.string().max(40),
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+
+// packages/contracts/dist/customer-replay.js
+var replayPayloadLimits = {
+  // Original native limits remain unchanged. Only the fixed customer envelope
+  // and its selection fields get bounded transport overhead.
+  chunk: 1048576 + 4096,
+  manifest: 2097152 + 4096
+};
+var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var storedChunkSourceSchema = external_exports.strictObject({
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(1048576)
+});
+var selection = {
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid()
+};
+var metadata = {
+  ...selection,
+  // This is the human who captured the recording, not a library identity.
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  policy: external_exports.literal("input-and-marked-content-v1")
+};
+var locator = sessionLocatorSchema.extend({ offsetMs: sessionOffsetSchema });
+var gapReason = external_exports.enum([
+  "navigation",
+  "browser-restart",
+  "unsupported-frame",
+  "capture-failure",
+  "quota",
+  "site-left",
+  "site-access",
+  "tab-closed",
+  "transition-tail"
+]);
+var event = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.json().optional()
+});
+var position2 = {
+  offsetMs: sessionOffsetSchema,
+  observedAt: external_exports.number().nonnegative().finite().max(864e13)
+};
+var customerReplayObservationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("document"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("navigation"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    navigation: navigationKindSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("event"),
+    documentId: external_exports.uuid(),
+    ...position2,
+    event
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("gap"),
+    ...position2,
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason
+  })
+]);
+var sequence = external_exports.number().int().min(0).max(1999);
+var customerSessionReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("session-v2"),
+  ...metadata,
+  durationMs: sessionOffsetSchema,
+  chunks: external_exports.array(external_exports.strictObject({ sequence, source: storedChunkSourceSchema })).min(1).max(2e3),
+  chunkRanges: external_exports.array(external_exports.strictObject({
+    sequence,
+    // This describes the retained native decoded representation, not the
+    // projected payload. The chunk envelope measures the latter independently.
+    sourceDecodedByteLength: external_exports.number().int().min(1).max(1048576),
+    startMs: sessionOffsetSchema,
+    endMs: sessionOffsetSchema
+  })).min(1).max(2e3),
+  documents: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).min(1).max(2e3),
+  checkpoints: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    endMs: sessionOffsetSchema,
+    endSequence: sequence,
+    viewport: external_exports.strictObject({
+      width: external_exports.number().int().min(1).max(16384),
+      height: external_exports.number().int().min(1).max(16384)
+    }).nullable()
+  })).min(1).max(2e3),
+  navigation: external_exports.array(locator.extend({
+    documentId: external_exports.uuid(),
+    navigation: navigationKindSchema
+  })).max(2e3),
+  gaps: external_exports.array(locator.extend({
+    startMs: sessionOffsetSchema.nullable(),
+    endMs: sessionOffsetSchema.nullable(),
+    reason: gapReason,
+    lastObserved: sessionAnchorSchema.nullable()
+  })).max(2e3)
+});
+var customerStreamReplaySchema = external_exports.strictObject({
+  layout: external_exports.literal("stream-v1"),
+  ...metadata,
+  gaps: external_exports.array(gapReason).max(2e3),
+  streams: external_exports.array(external_exports.strictObject({
+    id: external_exports.uuid(),
+    startTimestamp: external_exports.number().nonnegative().finite(),
+    endTimestamp: external_exports.number().nonnegative().finite(),
+    eventCount: external_exports.number().int().positive(),
+    chunks: external_exports.array(external_exports.strictObject({
+      streamId: external_exports.uuid(),
+      sequence,
+      source: storedChunkSourceSchema
+    })).min(1).max(2e3)
+  })).min(1).max(2e3)
+});
+var projection = (maximum) => external_exports.strictObject({
+  // SHA-256 and UTF-8 length of JSON.stringify(payload) as received, before
+  // schema normalization. These do not authenticate the original recording.
+  sha256: digest2,
+  byteLength: external_exports.number().int().min(1).max(maximum)
+});
+var customerReplayManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-manifest/1"),
+  source: external_exports.strictObject({
+    sha256: digest2,
+    byteLength: external_exports.number().int().min(1).max(2097152)
+  }),
+  projection: projection(replayPayloadLimits.manifest),
+  payload: external_exports.discriminatedUnion("layout", [
+    customerSessionReplaySchema,
+    customerStreamReplaySchema
+  ])
+});
+var customerReplayChunkSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.replay-chunk/1"),
+  manifestSourceSha256: digest2,
+  source: storedChunkSourceSchema,
+  projection: projection(replayPayloadLimits.chunk),
+  payload: external_exports.discriminatedUnion("layout", [
+    external_exports.strictObject({
+      layout: external_exports.literal("session-v2"),
+      ...selection,
+      sequence,
+      observations: external_exports.array(customerReplayObservationSchema).min(1).max(1e3)
+    }),
+    external_exports.strictObject({
+      layout: external_exports.literal("stream-v1"),
+      ...selection,
+      streamId: external_exports.uuid(),
+      sequence,
+      events: external_exports.array(event).min(1).max(1e3)
+    })
+  ])
+});
+
+// packages/contracts/dist/replay.js
+var recordedEventSchema = external_exports.strictObject({
+  type: external_exports.number().int().min(0).max(4),
+  timestamp: external_exports.number().nonnegative().finite(),
+  data: external_exports.unknown().optional()
+});
+var recordedChunkSchema = external_exports.strictObject({
+  protocol: external_exports.literal("rrweb-v1"),
+  privacy: external_exports.literal("rrweb-native-v1"),
+  streamId: external_exports.uuid(),
+  sequence: external_exports.number().int().nonnegative(),
+  events: external_exports.array(recordedEventSchema).min(1).max(1e3)
+});
+var replayStreamSchema = external_exports.strictObject({
+  id: external_exports.uuid(),
+  startTimestamp: external_exports.number().nonnegative(),
+  endTimestamp: external_exports.number().nonnegative(),
+  eventCount: external_exports.number().int().positive(),
+  chunks: external_exports.array(chunkDescriptorSchema).min(1).max(2e3)
+});
+var replayManifestSchema = external_exports.strictObject({
+  protocol: external_exports.literal("rrweb-v1"),
+  privacy: external_exports.literal("rrweb-native-v1"),
+  evidenceId: external_exports.uuid(),
+  recordingId: external_exports.uuid(),
+  workItemId: external_exports.uuid(),
+  producerId: external_exports.uuid(),
+  capturedAt: external_exports.iso.datetime(),
+  submittedAt: external_exports.iso.datetime(),
+  gaps: external_exports.array(external_exports.string()).max(2e3),
+  streams: external_exports.array(replayStreamSchema).min(1).max(2e3)
+});
+var feedbackAnchorSchema = external_exports.strictObject({
+  streamId: external_exports.uuid(),
+  timeMs: external_exports.number().int().nonnegative().max(864e5)
+});
+var anyReplayManifestSchema = external_exports.union([
+  replayManifestSchema,
+  sessionReplayManifestSchema
+]);
+var anyFeedbackAnchorSchema = external_exports.union([
+  feedbackAnchorSchema,
+  sessionAnchorSchema
+]);
+var commentCreateSchema = external_exports.strictObject({
+  text: external_exports.string().trim().min(1).max(4e3),
+  anchor: anyFeedbackAnchorSchema
+});
+var commentSchema = commentCreateSchema.extend({
+  id: external_exports.uuid(),
+  evidenceId: external_exports.uuid(),
+  principal: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  createdAt: external_exports.iso.datetime()
+});
+
+// packages/contracts/dist/recording-upload.js
+var descriptorFields = {
+  sequence: true,
+  sha256: true,
+  byteLength: true,
+  encoding: true
+};
+var streamChunk = chunkDescriptorSchema.pick({
+  ...descriptorFields,
+  streamId: true
+});
+var sessionChunk = sessionChunkDescriptorSchema.pick(descriptorFields);
+var grant = {
+  schema: external_exports.literal("kaijan.recording-upload-grant/1"),
+  recordingId: external_exports.uuid(),
+  url: external_exports.url(),
+  expiresAt: external_exports.iso.datetime()
+};
+var customerStreamUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: streamChunk
+});
+var customerSessionUploadGrantSchema = external_exports.strictObject({
+  ...grant,
+  chunk: sessionChunk,
+  issuedAt: external_exports.iso.datetime()
+}).refine((value) => Date.parse(value.expiresAt) > Date.parse(value.issuedAt), "Invalid grant interval");
+var receipt = {
+  schema: external_exports.literal("kaijan.recording-upload-receipt/1"),
+  recordingId: external_exports.uuid(),
+  verified: external_exports.boolean()
+};
+var customerStreamUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: streamChunk
+});
+var customerSessionUploadReceiptSchema = external_exports.strictObject({
+  ...receipt,
+  chunk: sessionChunk
+});
+
+// packages/contracts/dist/github.js
+var githubCredentialSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.github-credential/1"),
+  accessToken: external_exports.string().min(1).max(2048),
+  tokenType: external_exports.literal("Bearer"),
+  expiresAt: external_exports.number().nullable(),
+  githubUserId: external_exports.string().min(1),
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  authority: external_exports.literal("github-app-user-intersection")
+});
+var githubRejectionSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.github-rejection/1"),
+  credentialSha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var githubRejectionResultSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.github-rejection/1"),
+  reconnectRequired: external_exports.boolean()
+});
+
+// packages/contracts/dist/product-feedback.js
+var productFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  kind: external_exports.enum(["bug", "suggestion", "feedback"]),
+  title: external_exports.string().trim().min(1).max(200),
+  // Bound report text stored in Core.
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  diagnostics: external_exports.strictObject({
+    capability: external_exports.string().trim().min(1).max(100).optional(),
+    errorCode: external_exports.string().regex(/^[A-Za-z0-9_.:-]{1,100}$/).optional(),
+    operationId: external_exports.string().regex(/^[A-Za-z0-9_-]{1,128}$/).optional(),
+    pluginVersion: external_exports.string().regex(/^[A-Za-z0-9.+-]{1,80}$/).optional(),
+    os: external_exports.enum(["darwin", "linux", "win32", "unknown"]).optional()
+  }).optional()
+});
+var productFeedbackSchema = productFeedbackInputSchema.extend({
+  id: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved")
+});
+
+// packages/contracts/dist/product-issue.js
+var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
+var issueImageLimits = Object.freeze({
+  files: 5,
+  fileBytes: 5 * 1024 * 1024,
+  totalBytes: 20 * 1024 * 1024
+});
+var issueImageSchema = external_exports.strictObject({
+  id: external_exports.uuid().toLowerCase(),
+  name: external_exports.string().min(1).max(120).regex(/^[^\\/\x00-\x1f\x7f]+$/),
+  mediaType: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+  bytes: external_exports.number().int().positive().max(issueImageLimits.fileBytes),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var productIssueInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid().toLowerCase(),
+  title: external_exports.string().trim().min(1).max(200),
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
+}).superRefine((input3, context) => {
+  if (new Set(input3.images.map((image) => image.id)).size !== input3.images.length)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "Select each image once."
+    });
+  if (input3.images.reduce((sum, image) => sum + image.bytes, 0) > issueImageLimits.totalBytes)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "The selected images exceed the total upload limit."
+    });
+});
+var productIssueReceiptSchema = external_exports.strictObject({
+  repository: external_exports.literal(kaijanIssueRepository),
+  number: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  url: external_exports.string().regex(/^https:\/\/github\.com\/katalon-studio\/kaijan-marketplace\/issues\/[1-9]\d*$/)
+}).superRefine((receipt2, context) => {
+  if (receipt2.url !== `https://github.com/${kaijanIssueRepository}/issues/${receipt2.number}`)
+    context.addIssue({
+      code: "custom",
+      path: ["url"],
+      message: "The issue link must match its issue number."
+    });
+});
+var productIssueStatusSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  submissionId: external_exports.uuid(),
+  inputSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  repository: external_exports.literal(kaijanIssueRepository),
+  state: external_exports.enum(["awaiting_images", "unconfirmed", "published"]),
+  receipt: productIssueReceiptSchema.optional()
+}).superRefine((value, context) => {
+  if (value.state === "published" !== Boolean(value.receipt))
+    context.addIssue({
+      code: "custom",
+      path: ["receipt"],
+      message: "Only a confirmed publication has an issue receipt."
+    });
+});
+var productIssueUploadSchema = external_exports.strictObject({
+  imageId: external_exports.uuid(),
+  url: external_exports.url().max(8192),
+  expiresAt: external_exports.iso.datetime(),
+  headers: external_exports.strictObject({
+    "content-type": external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    "content-length": external_exports.string().regex(/^[1-9]\d*$/),
+    "if-none-match": external_exports.literal("*"),
+    "x-amz-checksum-sha256": external_exports.string().regex(/^[A-Za-z0-9+/]{43}=$/)
+  })
+});
+var productIssuePreparationSchema = external_exports.strictObject({
+  ...productIssueStatusSchema.shape,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+}).superRefine((value, context) => {
+  const { uploads, ...status } = value;
+  if (!productIssueStatusSchema.safeParse(status).success)
+    context.addIssue({
+      code: "custom",
+      message: "The preparation must carry its matching publication status."
+    });
+  if (new Set(uploads.map((upload) => upload.imageId)).size !== uploads.length || value.state !== "awaiting_images" && uploads.length !== 0)
+    context.addIssue({
+      code: "custom",
+      path: ["uploads"],
+      message: "Only the selected images can receive upload grants."
+    });
+});
+
+// packages/contracts/dist/workspace-customer.js
+var workspaceCustomerLimits = {
+  fileBytes: 4 * 1024 * 1024,
+  publicationBytes: 16 * 1024 * 1024
+};
+var digest3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count = external_exports.number().int().nonnegative();
+var source = external_exports.strictObject({ bytes: count, sha256: digest3 });
+var identity = { fileId: external_exports.uuid(), source };
+var customerWorkspaceFileSchema = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("available"),
+    kind: external_exports.enum(["test-report", "risk-review", "evidence-assessment"]),
+    name: external_exports.enum([
+      "test-report.json",
+      "risk-review.json",
+      "evidence-assessment.json"
+    ]),
+    content: external_exports.strictObject({
+      mediaType: external_exports.literal("application/json"),
+      bytes: count.max(workspaceCustomerLimits.fileBytes),
+      sha256: digest3
+    })
+  }),
+  external_exports.strictObject({
+    ...identity,
+    state: external_exports.literal("unavailable"),
+    reason: external_exports.enum([
+      "unsupported-content",
+      "invalid-content",
+      "content-limit",
+      "source-unavailable"
+    ])
+  })
+]);
+var customerWorkspaceManifestSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-result/1"),
+  publicationId: external_exports.uuid(),
+  kind: external_exports.literal("native-result"),
+  state: external_exports.literal("published"),
+  title: external_exports.string(),
+  publishedAt: external_exports.iso.datetime(),
+  sourceManifestSha256: digest3,
+  contextRefs: external_exports.array(resultContextRefSchema),
+  relatedResults: external_exports.array(external_exports.strictObject({ publicationId: external_exports.uuid(), sha256: digest3.optional() })),
+  relatedSources: external_exports.array(external_exports.strictObject({
+    reference: resultContextRefSchema,
+    availability: external_exports.enum(["supplied", "unselected", "unavailable"])
+  })),
+  files: external_exports.array(customerWorkspaceFileSchema).max(256),
+  meaning: external_exports.literal("Shared application results. Publication and file integrity do not establish a test pass or complete coverage.")
+});
+var customerWorkspaceResultSchema = customerWorkspaceManifestSchema.extend({
+  manifestSha256: digest3
+});
+var customerWorkspaceDownloadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-download/1"),
+  publicationId: external_exports.uuid(),
+  fileId: external_exports.uuid().nullable(),
+  sourceSha256: digest3,
+  mediaType: external_exports.literal("application/json"),
+  encoding: external_exports.literal("base64"),
+  bytes: count.max(workspaceCustomerLimits.fileBytes),
+  sha256: digest3,
+  data: external_exports.string().max(Math.ceil(workspaceCustomerLimits.fileBytes / 3) * 4)
+});
+var customerWorkspaceListSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.workspace-customer-list/1"),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  observedAt: external_exports.iso.datetime(),
+  watermark: count,
+  nextAfter: count.nullable(),
+  results: external_exports.array(external_exports.strictObject({
+    publicationId: external_exports.uuid(),
+    kind: external_exports.literal("native-result"),
+    state: external_exports.literal("published"),
+    publishedAt: external_exports.iso.datetime(),
+    sequence: count,
+    title: external_exports.string(),
+    fileCount: count,
+    contextRefCount: count,
+    bytes: count
+  }))
+});
+
+// packages/contracts/dist/index.js
+var apiVersion = "1";
+var providerSchema = external_exports.enum(["google", "github"]);
+var permissionSchema = external_exports.enum([
+  "session:read",
+  "work-items:read",
+  "work-items:write",
+  "recordings:write",
+  "evidence:read",
+  "feedback:write",
+  "source:read",
+  "source:import",
+  "analysis:read",
+  "analysis:run",
+  "ai:invoke",
+  "results:read",
+  "results:write",
+  "maps:read",
+  "maps:write",
+  "github:credential"
+]);
+var permissions = permissionSchema.options;
+var opaqueSchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var verifierSchema = external_exports.string().regex(/^[A-Za-z0-9._~-]{43,128}$/);
+var sessionContextSchema = external_exports.object({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.object({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.object({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.object({ id: external_exports.uuid(), name: external_exports.string() }),
+  client: external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum([
+      "web",
+      "extension",
+      "desktop",
+      "crew",
+      "codex",
+      "claude",
+      "runtime"
+    ])
+  }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  capabilities: external_exports.object({
+    recordingProtocolVersions: external_exports.array(external_exports.string())
+  })
+});
+var customerSessionSchema = external_exports.strictObject({
+  apiVersion: external_exports.literal(apiVersion),
+  user: external_exports.strictObject({ id: external_exports.uuid(), kind: external_exports.literal("human") }),
+  organization: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  workspace: external_exports.strictObject({ id: external_exports.uuid(), name: external_exports.string() }),
+  permissions: external_exports.array(permissionSchema),
+  expiresAt: external_exports.iso.datetime(),
+  features: external_exports.strictObject({ recordingAvailable: external_exports.boolean() })
+});
+var clientRecordingFormatSchema = external_exports.enum(["stream-v1", "session-v2"]);
+var clientRecordingFormatsSchema = external_exports.array(clientRecordingFormatSchema).max(2).refine((values) => new Set(values).size === values.length);
+var clientSessionSchema = customerSessionSchema.omit({ features: true }).extend({
+  schema: external_exports.literal("kaijan.client-session/1"),
+  client: external_exports.strictObject({
+    id: external_exports.string().min(1).max(100),
+    kind: external_exports.enum(["extension", "desktop"])
+  }),
+  recording: external_exports.strictObject({ formats: clientRecordingFormatsSchema })
+});
+var recordingSessionViewSchema = customerSessionSchema.extend({
+  features: external_exports.strictObject({
+    recordingAvailable: external_exports.boolean(),
+    recordingFormats: clientRecordingFormatsSchema
+  })
+});
+var tokenResponseSchema = external_exports.object({
+  access_token: opaqueSchema,
+  token_type: external_exports.literal("Bearer"),
+  expires_in: external_exports.number().int().positive(),
+  refresh_token: opaqueSchema,
+  scope: external_exports.string()
+});
+var onboardingTicketSchema = external_exports.string().min(32).max(768).regex(/^[A-Za-z0-9_-]+$/);
+var authorizeSchema = external_exports.strictObject({
+  provider: providerSchema,
+  response_type: external_exports.literal("code"),
+  client_id: external_exports.string().min(1).max(100),
+  redirect_uri: external_exports.url(),
+  code_challenge: opaqueSchema,
+  code_challenge_method: external_exports.literal("S256"),
+  state: external_exports.string().min(16).max(512),
+  resource: external_exports.url(),
+  scope: external_exports.string().min(1).max(200),
+  onboarding_ticket: onboardingTicketSchema.optional()
+});
+var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
+  external_exports.strictObject({
+    grant_type: external_exports.literal("authorization_code"),
+    client_id: external_exports.string().max(100),
+    redirect_uri: external_exports.url(),
+    resource: external_exports.url(),
+    code: opaqueSchema,
+    code_verifier: verifierSchema,
+    onboarding_ticket: onboardingTicketSchema.optional()
+  }),
+  external_exports.strictObject({
+    grant_type: external_exports.literal("refresh_token"),
+    client_id: external_exports.string().max(100),
+    resource: external_exports.url(),
+    refresh_token: opaqueSchema,
+    scope: external_exports.string().min(1).max(200).optional()
+  })
+]);
+var workItemSchema = external_exports.object({
+  id: external_exports.uuid(),
+  title: external_exports.string(),
+  status: external_exports.enum(["in_progress", "done"])
+});
+var workItemListSchema = external_exports.object({
+  items: external_exports.array(workItemSchema),
+  nextCursor: external_exports.uuid().nullable()
+});
+var apiErrorSchema = external_exports.object({
+  error: external_exports.string(),
+  message: external_exports.string(),
+  requestId: external_exports.string()
+});
+
+// packages/contracts/dist/core-mcp.js
+var coreToolInputSchemas = {
+  loki_connection_status: external_exports.strictObject({}),
+  loki_read_work_item: external_exports.strictObject({ workItemId: external_exports.uuid() }),
+  loki_disconnect: external_exports.strictObject({}),
+  kaijan_connect: external_exports.strictObject({}),
+  kaijan_submit_feedback: productFeedbackInputSchema,
+  kaijan_get_feedback: external_exports.strictObject({ feedbackId: external_exports.uuid() })
+};
+var coreToolErrorSchema = external_exports.strictObject({
+  error: external_exports.string().min(1),
+  message: external_exports.string().min(1),
+  attemptedWorkItemId: external_exports.uuid().optional(),
+  localState: external_exports.literal("signed_out").optional(),
+  category: external_exports.enum(["connection", "http", "transport", "upstream"]).optional(),
+  httpStatus: external_exports.number().int().min(100).max(599).optional()
+});
+var coreConnectionSchema = external_exports.strictObject({
+  state: external_exports.literal("connected"),
+  context: sessionContextSchema.pick({
+    apiVersion: true,
+    user: true,
+    organization: true,
+    workspace: true,
+    permissions: true,
+    expiresAt: true
+  }).strict(),
+  origin: external_exports.url(),
+  observedAt: external_exports.iso.datetime()
+});
+var coreWorkItemSchema = external_exports.strictObject({
+  item: workItemDetailSchema,
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  workspaceName: external_exports.string(),
+  readAt: external_exports.iso.datetime(),
+  canonicalUrl: external_exports.url()
+});
+var coreDisconnectSchema = external_exports.strictObject({
+  state: external_exports.literal("signed_out")
+});
+var coreConnectSchema = external_exports.strictObject({
+  state: external_exports.literal("connected")
+});
+var coreToolSuccessSchemas = {
+  loki_connection_status: coreConnectionSchema,
+  loki_read_work_item: coreWorkItemSchema,
+  loki_disconnect: coreDisconnectSchema,
+  kaijan_connect: coreConnectSchema,
+  kaijan_submit_feedback: external_exports.strictObject({ feedback: productFeedbackSchema }),
+  kaijan_get_feedback: external_exports.strictObject({ feedback: productFeedbackSchema })
+};
+var coreConnectReceiptSchema = coreConnectSchema.extend({
+  installationId: external_exports.string().min(1)
+});
+var coreDisconnectReceiptSchema = coreDisconnectSchema.extend({
+  message: external_exports.string().min(1).optional()
+});
+var coreLegacyToolSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: coreConnectionSchema.extend({
+    context: sessionContextSchema
+  }),
+  loki_read_work_item: coreWorkItemSchema.extend({ clientId: external_exports.string() }),
+  kaijan_connect: coreConnectReceiptSchema,
+  loki_disconnect: coreDisconnectReceiptSchema
+};
+var coreToolUpstreamSuccessSchemas = {
+  ...coreToolSuccessSchemas,
+  loki_connection_status: external_exports.union([
+    coreConnectionSchema,
+    coreLegacyToolSuccessSchemas.loki_connection_status
+  ]),
+  loki_read_work_item: external_exports.union([
+    coreWorkItemSchema,
+    coreLegacyToolSuccessSchemas.loki_read_work_item
+  ]),
+  kaijan_connect: external_exports.union([coreConnectSchema, coreConnectReceiptSchema]),
+  loki_disconnect: coreDisconnectReceiptSchema
+};
+var aiModelsSchema = external_exports.looseObject({
+  error: external_exports.never().optional(),
+  data: external_exports.array(external_exports.looseObject({ id: external_exports.string().min(1) }))
+});
+
+// apps/codex-plugin/src/auth/feedback-binding.mjs
+var boundInput = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  request: external_exports.strictObject({
+    jsonrpc: external_exports.literal("2.0"),
+    id: external_exports.literal(1),
+    method: external_exports.literal("tools/call"),
+    params: external_exports.strictObject({
+      name: external_exports.literal("kaijan_submit_feedback"),
+      arguments: coreToolInputSchemas.kaijan_submit_feedback
+    })
+  })
+});
+var failure2 = (status, error62, message) => Response.json({ error: error62, message }, { status });
+async function forwardBoundFeedback(authorization, value, signal, request = fetch) {
+  const parsed = boundInput.safeParse(value);
+  if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data.request)) > 16384)
+    return failure2(
+      400,
+      "invalid_feedback_request",
+      "Use the complete advertised feedback request."
+    );
+  if (signal?.aborted)
+    return failure2(
+      409,
+      "feedback_cancelled",
+      "The send was cancelled. Your selected feedback is preserved."
+    );
+  await authorization.ensure();
+  const saved = authorization.saved;
+  const token = saved?.tokens?.access_token;
+  if (!token || authorization.blocked || authorization.loggingOut)
+    return failure2(
+      401,
+      "connection_required",
+      "Connect Kaijan before sending feedback."
+    );
+  const path = "/api/v1/runtime/mcp";
+  const headers = {
+    "content-type": "application/json",
+    accept: "application/json, text/event-stream",
+    "mcp-protocol-version": "2025-03-26"
+  };
+  const status = await authorization.request(path, {
+    method: "POST",
+    signal,
+    headers,
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: { name: "loki_connection_status", arguments: {} }
+    })
+  });
+  if (!status.ok) {
+    await status.body?.cancel();
+    return failure2(
+      status.status === 401 || status.status === 403 ? status.status : 503,
+      "feedback_connection_unavailable",
+      "Kaijan could not confirm this feedback connection."
+    );
+  }
+  let connection;
+  try {
+    const body = external_exports.object({
+      jsonrpc: external_exports.literal("2.0"),
+      id: external_exports.literal(1),
+      result: external_exports.object({
+        isError: external_exports.boolean().optional(),
+        structuredContent: external_exports.unknown().optional(),
+        content: external_exports.array(external_exports.unknown()).optional()
+      })
+    }).parse(await status.json());
+    if (body.result.isError) throw Error("Connection unavailable");
+    let selected = body.result.structuredContent;
+    const content = body.result.content;
+    if (selected === void 0 && content?.length === 1) {
+      const text4 = external_exports.object({ type: external_exports.literal("text"), text: external_exports.string() }).parse(content[0]);
+      selected = JSON.parse(text4.text);
+    }
+    connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(selected);
+  } catch {
+    return failure2(
+      503,
+      "feedback_connection_unavailable",
+      "Kaijan could not confirm this feedback connection."
+    );
+  }
+  if (connection.origin !== authorization.origin || connection.context.user.id !== parsed.data.userId || connection.context.workspace.id !== parsed.data.workspaceId)
+    return failure2(
+      409,
+      "feedback_owner_mismatch",
+      "The connected account or workspace changed. Keep the original feedback and return to its connection before sending."
+    );
+  if (authorization.saved !== saved || saved.tokens.access_token !== token || authorization.blocked || authorization.loggingOut || authorization.pending)
+    return failure2(
+      409,
+      "feedback_connection_changed",
+      "The connection changed. Keep the selected feedback and check the connection before retrying."
+    );
+  if (signal?.aborted)
+    return failure2(
+      409,
+      "feedback_cancelled",
+      "The send was cancelled. Your selected feedback is preserved."
+    );
+  try {
+    return await request(`${authorization.origin}${path}`, {
+      method: "POST",
+      redirect: "error",
+      signal,
+      headers: { ...headers, authorization: `Bearer ${token}` },
+      body: JSON.stringify(parsed.data.request)
+    });
+  } catch {
+    return failure2(
+      503,
+      "feedback_transport_unavailable",
+      "Core did not confirm the send result. Keep the original request and feedback."
+    );
+  }
+}
+
+// apps/codex-plugin/src/auth/issue-binding.mjs
+var owner = { userId: external_exports.uuid(), workspaceId: external_exports.uuid() };
+var boundIssueInput = external_exports.discriminatedUnion("operation", [
+  external_exports.strictObject({
+    ...owner,
+    operation: external_exports.literal("prepare"),
+    input: productIssueInputSchema
+  }),
+  external_exports.strictObject({
+    ...owner,
+    operation: external_exports.literal("read"),
+    requestId: external_exports.uuid().toLowerCase()
+  }),
+  external_exports.strictObject({
+    ...owner,
+    operation: external_exports.literal("publish"),
+    requestId: external_exports.uuid().toLowerCase()
+  })
+]);
+var failure3 = (status, error62, message) => Response.json({ error: error62, message }, { status });
+async function forwardBoundIssue(authorization, value, signal, request = fetch) {
+  const parsed = boundIssueInput.safeParse(value);
+  if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data)) > 128 * 1024)
+    return failure3(
+      400,
+      "invalid_issue_request",
+      "Use the original complete issue request."
+    );
+  if (signal?.aborted)
+    return failure3(
+      409,
+      "issue_cancelled",
+      "The action was cancelled. Your selected issue is kept."
+    );
+  await authorization.ensure();
+  const saved = authorization.saved, token = saved?.tokens?.access_token;
+  if (!token || authorization.blocked || authorization.loggingOut)
+    return failure3(
+      401,
+      "connection_required",
+      "Connect Kaijan before reporting an issue."
+    );
+  const status = await authorization.request("/api/v1/runtime/mcp", {
+    method: "POST",
+    signal,
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json, text/event-stream",
+      "mcp-protocol-version": "2025-03-26"
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: { name: "loki_connection_status", arguments: {} }
+    })
+  });
+  if (!status.ok) {
+    await status.body?.cancel();
+    return failure3(
+      [401, 403].includes(status.status) ? status.status : 503,
+      "issue_connection_unavailable",
+      "Kaijan could not confirm the issue connection."
+    );
+  }
+  let connection;
+  try {
+    const body = external_exports.object({
+      jsonrpc: external_exports.literal("2.0"),
+      id: external_exports.literal(1),
+      result: external_exports.object({
+        isError: external_exports.boolean().optional(),
+        structuredContent: external_exports.unknown().optional(),
+        content: external_exports.array(external_exports.unknown()).optional()
+      })
+    }).parse(await status.json());
+    if (body.result.isError) throw Error("Connection unavailable");
+    let selected = body.result.structuredContent;
+    if (selected === void 0 && body.result.content?.length === 1) {
+      const text4 = external_exports.object({ type: external_exports.literal("text"), text: external_exports.string() }).parse(body.result.content[0]);
+      selected = JSON.parse(text4.text);
+    }
+    connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(selected);
+  } catch {
+    return failure3(
+      503,
+      "issue_connection_unavailable",
+      "Kaijan could not confirm the issue connection."
+    );
+  }
+  if (connection.origin !== authorization.origin || connection.context.user.id !== parsed.data.userId || connection.context.workspace.id !== parsed.data.workspaceId)
+    return failure3(
+      409,
+      "issue_owner_mismatch",
+      "The connected account or workspace changed. Keep this issue and return to its original connection."
+    );
+  if (authorization.saved !== saved || saved.tokens.access_token !== token || authorization.blocked || authorization.loggingOut || authorization.pending)
+    return failure3(
+      409,
+      "issue_connection_changed",
+      "The connection changed. Keep the selected issue and check the connection."
+    );
+  if (signal?.aborted)
+    return failure3(
+      409,
+      "issue_cancelled",
+      "The action was cancelled. Your selected issue is kept."
+    );
+  const input3 = parsed.data, base = "/api/v1/runtime/product-issues";
+  const path = input3.operation === "prepare" ? base + "/prepare" : base + "/" + input3.requestId + (input3.operation === "publish" ? "/publish" : "");
+  try {
+    return await request(authorization.origin + path, {
+      method: input3.operation === "read" ? "GET" : "POST",
+      redirect: "error",
+      signal,
+      headers: {
+        ...input3.operation === "prepare" ? { "content-type": "application/json" } : {},
+        accept: "application/json",
+        authorization: "Bearer " + token
+      },
+      ...input3.operation === "prepare" ? { body: JSON.stringify(input3.input) } : {}
+    });
+  } catch {
+    return failure3(
+      503,
+      "issue_transport_unavailable",
+      "Core did not confirm the issue result. Keep the original selected content and request."
+    );
+  }
+}
+
+// apps/codex-plugin/src/auth/ai-binding.mjs
+var aiConnectionHeader = "x-kaijan-ai-connection";
+var aiConnectionId = external_exports.uuid();
+var failure4 = () => Response.json(
+  { error: "ai_connection_binding_unavailable" },
+  { status: 412 }
+);
+async function captureAIConnection(authorization, signal) {
+  if (typeof authorization.connectionBinding !== "function" || typeof authorization.requestBound !== "function")
+    return failure4();
+  const binding = aiConnectionId.parse(
+    await authorization.connectionBinding(signal)
+  );
+  const response = await authorization.requestBound(
+    "/api/v1/runtime/mcp",
+    {
+      method: "POST",
+      signal,
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json, text/event-stream",
+        "mcp-protocol-version": "2025-03-26"
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "tools/call",
+        params: { name: "loki_connection_status", arguments: {} }
+      })
+    },
+    binding
+  );
+  if (!response.ok) {
+    await response.body?.cancel();
+    return failure4();
+  }
+  try {
+    const envelope = external_exports.object({
+      jsonrpc: external_exports.literal("2.0"),
+      id: external_exports.literal(1),
+      result: external_exports.object({
+        isError: external_exports.boolean().optional(),
+        structuredContent: external_exports.unknown().optional(),
+        content: external_exports.array(external_exports.unknown()).optional()
+      })
+    }).parse(await response.json());
+    if (envelope.result.isError) return failure4();
+    let value = envelope.result.structuredContent;
+    if (value === void 0 && envelope.result.content?.length === 1)
+      value = JSON.parse(
+        external_exports.object({ type: external_exports.literal("text"), text: external_exports.string() }).parse(envelope.result.content[0]).text
+      );
+    const connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(value);
+    if (connection.origin !== authorization.origin || !connection.context.permissions.includes("ai:invoke"))
+      return failure4();
+    signal?.throwIfAborted();
+    return Response.json({
+      schema: "kaijan.ai-connection/1",
+      binding,
+      connection
+    });
+  } catch {
+    return failure4();
+  }
+}
+
 // apps/codex-plugin/src/auth/server.mjs
 var ai = /* @__PURE__ */ new Map([
   ["/ai/v1/models", "GET"],
@@ -22744,6 +24750,10 @@ var ai = /* @__PURE__ */ new Map([
   ["/ai/openrouter/v1/systemone", "POST"],
   ["/ai/openai_passthrough/v1/models/gpt-6-luna", "GET"],
   ["/ai/openrouter/v1/models/typesafe/jev-1.13/endpoints", "GET"]
+]);
+var boundAI = new Map([
+  ...ai,
+  ["/ai/openai_passthrough/v1/responses/input_tokens", "POST"]
 ]);
 var uuid3 = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 function workspaceOperation(raw, method) {
@@ -22792,10 +24802,11 @@ async function startBroker({
   authorization,
   installationId,
   telemetry,
+  onboarding,
   build,
   onClose
 }) {
-  const identity = build ? brokerIdentity(build) : {};
+  const identity2 = build ? brokerIdentity(build) : {};
   const active = /* @__PURE__ */ new Set();
   let closing = false;
   const server = createServer2(async (req, res) => {
@@ -22816,7 +24827,7 @@ async function startBroker({
       if (closing || req.headers.origin || req.headers.authorization)
         return json2(403, { error: "local_channel_only" });
       if (req.url === "/health" && req.method === "GET")
-        return json2(200, { state: "ready", installationId, ...identity });
+        return json2(200, { state: "ready", installationId, ...identity2 });
       if (req.url === "/upgrade" && req.method === "POST") {
         let body = "";
         for await (const chunk of req) {
@@ -22827,7 +24838,7 @@ async function startBroker({
         let wanted;
         try {
           wanted = JSON.parse(body);
-          if (!build || wanted.protocol !== identity.protocol || compareVersions(wanted.pluginVersion, identity.pluginVersion) <= 0)
+          if (!build || wanted.protocol !== identity2.protocol || compareVersions(wanted.pluginVersion, identity2.pluginVersion) <= 0)
             return json2(409, { error: "upgrade_not_newer" });
         } catch {
           return json2(400, { error: "invalid_upgrade" });
@@ -22858,13 +24869,15 @@ async function startBroker({
           chunks2.push(chunk);
         }
         try {
-          const input2 = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
+          const input3 = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
           const currentLease = telemetry?.lease({
             unsettled: Boolean(
               authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut
             )
           });
-          const accepted = currentLease && input2.epoch === currentLease ? telemetry.enqueue(input2.event, input2.epoch) : false;
+          const accepted = currentLease && input3.epoch === currentLease ? Boolean(
+            authorization.credentialsLoaded && !authorization.saved && !authorization.loggingOut && onboarding?.capture(input3.event)
+          ) || telemetry.enqueue(input3.event, input3.epoch) : false;
           return json2(200, { accepted });
         } catch {
           return json2(400, { error: "invalid_telemetry" });
@@ -22890,11 +24903,100 @@ async function startBroker({
         await authorization.logout();
         return json2(200, { state: "signed_out" });
       }
+      if (req.url === "/ai/connection" && req.method === "GET") {
+        if (!authorization.scope?.split(" ").includes("ai:invoke"))
+          return json2(403, { error: "operation_not_authorized" });
+        const response2 = await captureAIConnection(
+          authorization,
+          AbortSignal.any([controller.signal, AbortSignal.timeout(35e3)])
+        );
+        res.writeHead(response2.status, {
+          "content-type": "application/json",
+          "cache-control": "no-store"
+        });
+        if (response2.body) await pipeline(Readable.fromWeb(response2.body), res);
+        else res.end();
+        return;
+      }
+      if (req.url === "/feedback" && req.method === "POST") {
+        const chunks2 = [];
+        let size2 = 0;
+        for await (const chunk of req) {
+          size2 += chunk.length;
+          if (size2 > 17408) return json2(413, { error: "request_too_large" });
+          chunks2.push(chunk);
+        }
+        let value;
+        try {
+          value = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
+        } catch {
+          return json2(400, { error: "invalid_feedback_request" });
+        }
+        const response2 = await forwardBoundFeedback(
+          authorization,
+          value,
+          AbortSignal.any([controller.signal, AbortSignal.timeout(6e4)])
+        );
+        res.writeHead(response2.status, {
+          "content-type": response2.headers.get("content-type") ?? "application/json",
+          "cache-control": "no-store"
+        });
+        if (response2.body) await pipeline(Readable.fromWeb(response2.body), res);
+        else res.end();
+        return;
+      }
+      if (req.url === "/product-issues" && req.method === "POST") {
+        const chunks2 = [];
+        let size2 = 0;
+        for await (const chunk of req) {
+          size2 += chunk.length;
+          if (size2 > 128 * 1024)
+            return json2(413, { error: "request_too_large" });
+          chunks2.push(chunk);
+        }
+        let value;
+        try {
+          value = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
+        } catch {
+          return json2(400, { error: "invalid_issue_request" });
+        }
+        const response2 = await forwardBoundIssue(
+          authorization,
+          value,
+          AbortSignal.any([controller.signal, AbortSignal.timeout(6e4)])
+        );
+        res.writeHead(response2.status, {
+          "content-type": response2.headers.get("content-type") ?? "application/json",
+          "cache-control": "no-store"
+        });
+        if (response2.body) await pipeline(Readable.fromWeb(response2.body), res);
+        else res.end();
+        return;
+      }
       const mcp = req.url === "/mcp" && req.method === "POST";
       const workspace = workspaceOperation(req.url, req.method);
+      const bound = req.url?.startsWith("/ai-bound/");
+      const aiPath = bound ? "/ai" + req.url.slice("/ai-bound".length) : req.url;
+      let expectedConnection;
+      if (bound) {
+        if (boundAI.get(aiPath) !== req.method)
+          return json2(404, { error: "unsupported_operation" });
+        if (!authorization.scope?.split(" ").includes("ai:invoke"))
+          return json2(403, { error: "operation_not_authorized" });
+        const parsed = aiConnectionId.safeParse(
+          req.headers[aiConnectionHeader]
+        );
+        if (!parsed.success)
+          return json2(400, { error: "invalid_ai_connection_binding" });
+        if (typeof authorization.requestBound !== "function")
+          return json2(412, { error: "ai_connection_binding_unavailable" });
+        expectedConnection = parsed.data;
+      } else if (req.headers[aiConnectionHeader] !== void 0) {
+        return json2(400, { error: "ai_connection_binding_wrong_operation" });
+      }
       if (workspace && !authorization.scope?.split(" ").includes(workspace))
         return json2(403, { error: "operation_not_authorized" });
-      if (!mcp && !workspace && ai.get(req.url) !== req.method)
+      if (!bound && !mcp && !workspace && ai.get(req.url) !== req.method)
         return json2(404, { error: "unsupported_operation" });
       const chunks = [];
       let size = 0;
@@ -22917,8 +25019,9 @@ async function startBroker({
           if (typeof req.headers[name] === "string" && /^[a-f0-9]{64}$/.test(req.headers[name]))
             headers[name] = req.headers[name];
       }
-      const response = await authorization.request(
-        mcp ? "/api/v1/runtime/mcp" : `/api/v1${req.url}`,
+      const request = bound ? authorization.requestBound.bind(authorization) : authorization.request.bind(authorization);
+      const response = await request(
+        mcp ? "/api/v1/runtime/mcp" : `/api/v1${aiPath}`,
         {
           method: req.method,
           headers,
@@ -22927,16 +25030,27 @@ async function startBroker({
             controller.signal,
             AbortSignal.timeout(62e4)
           ])
-        }
+        },
+        expectedConnection
       );
-      res.writeHead(response.status, {
+      const responseHeaders = {
         "content-type": response.headers.get("content-type") ?? "application/json",
         "cache-control": "no-store"
-      });
+      };
+      if (!mcp && !workspace && aiPath === "/ai/v1/responses" && !response.ok) {
+        const status = response.headers.get("x-kaijan-provider-http-status");
+        if (status && /^[1-5][0-9]{2}$/.test(status))
+          responseHeaders["x-kaijan-provider-http-status"] = status;
+        if (status === "429" && response.headers.get("x-kaijan-provider-failure-code") === "provider_quota_exhausted")
+          responseHeaders["x-kaijan-provider-failure-code"] = "provider_quota_exhausted";
+      }
+      res.writeHead(response.status, responseHeaders);
       if (response.body) await pipeline(Readable.fromWeb(response.body), res);
       else res.end();
     } catch (error62) {
-      if (!res.headersSent && error62 instanceof CredentialStorageUnavailableError)
+      if (!res.headersSent && error62 instanceof AIConnectionChangedError)
+        json2(412, { error: error62.code, message: error62.message });
+      else if (!res.headersSent && error62 instanceof CredentialStorageUnavailableError)
         json2(503, {
           error: error62.code,
           reason: "local_credential_storage",
@@ -22974,11 +25088,8 @@ async function startBroker({
   return { close };
 }
 
-// apps/codex-plugin/src/telemetry/outbox.mjs
-import { DatabaseSync } from "node:sqlite";
-import { constants as constants2, openSync, fstatSync, closeSync } from "node:fs";
-import { randomUUID as randomUUID3 } from "node:crypto";
-import { join as join3 } from "node:path";
+// apps/codex-plugin/src/telemetry/onboarding.mjs
+import { createHash as createHash2, randomUUID as randomUUID4 } from "node:crypto";
 
 // packages/contracts/dist/telemetry.js
 var telemetryLimits = {
@@ -22992,6 +25103,38 @@ var telemetryLimits = {
 };
 var telemetryVersionSchema = external_exports.string().max(128).regex(/^\d+(?:\.\d+){0,3}(?:[-+][a-zA-Z0-9.-]+)?$/);
 var telemetryIdentityEpochSchema = external_exports.uuidv4();
+var toolFailureMessages = {
+  invalid_arguments: "The tool arguments did not pass validation.",
+  request_key_conflict: "The request key already belongs to another request.",
+  answer_unavailable: "The saved answer is unavailable.",
+  answer_integrity_failed: "The saved answer could not be verified.",
+  customer_read_restart: "The saved result could not be read in this session.",
+  advisory_unavailable: "The advisory operation is unavailable.",
+  operation_cancelled: "The tool call was cancelled.",
+  mcp_protocol_error: "The tool call failed at the MCP boundary.",
+  analysis_refused: "Kaijan could not accept the change risk analysis.",
+  analysis_partial: "The change risk analysis did not complete.",
+  tool_failed: "The tool call failed."
+};
+var toolFailureCodeSchema = external_exports.enum(Object.keys(toolFailureMessages));
+var mcpErrorResponseSchema = external_exports.object({
+  structuredContent: external_exports.object({
+    code: external_exports.unknown().optional(),
+    error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
+  }).optional()
+});
+var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
+var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
+  analysis_id: external_exports.uuidv4(),
+  outcome: external_exports.enum(["completed", "failed"]),
+  duration_ms: external_exports.number().finite().nonnegative(),
+  files_changed_count: changeRiskCount.nullable(),
+  findings_count: changeRiskCount.nullable(),
+  findings_by_severity: external_exports.partialRecord(external_exports.enum(["critical", "high", "medium", "low", "info"]), changeRiskCount).nullable(),
+  questions_count: changeRiskCount.nullable(),
+  error_code: toolFailureCodeSchema.nullable(),
+  error_message: external_exports.string().max(128).nullable()
+}).refine((value) => value.outcome === "completed" ? value.error_code === null && value.error_message === null : value.error_code !== null && value.error_message === toolFailureMessages[value.error_code]);
 var localMcpMetricsSchema = external_exports.strictObject({
   $mcp_tool_name: external_exports.union([
     external_exports.literal("unknown"),
@@ -23001,8 +25144,11 @@ var localMcpMetricsSchema = external_exports.strictObject({
   $mcp_duration_ms: external_exports.number().finite().nonnegative(),
   $mcp_server_name: external_exports.literal("kaijan-local"),
   $mcp_server_version: telemetryVersionSchema,
-  invoked_by: external_exports.enum(["user_request", "codex_initiated", "unknown"])
-});
+  invoked_by: external_exports.enum(["user_request", "codex_initiated", "unknown"]),
+  // Optional additions. Core saves both events from the same accepted receipt.
+  error_code: toolFailureCodeSchema.optional(),
+  change_risk: changeRiskAnalyzedPropertiesSchema.optional()
+}).refine((value) => (value.error_code === void 0 || value.$mcp_is_error && value.$mcp_tool_name.startsWith("loki_")) && (value.change_risk === void 0 || value.$mcp_tool_name === "loki_change_risk_analyze" && value.change_risk.duration_ms === value.$mcp_duration_ms && (!value.$mcp_is_error || value.change_risk.error_code === value.error_code)));
 var runtimeStartedPropertiesSchema = external_exports.strictObject({
   is_first_run: external_exports.boolean().nullable(),
   installed_at: external_exports.iso.datetime().nullable(),
@@ -23124,7 +25270,54 @@ var mapFinishedPropertiesSchema = external_exports.strictObject({
   error_code: external_exports.null(),
   error_message: external_exports.null()
 });
+var providerFailureMessages = {
+  provider_auth_failed: "The AI provider rejected its credentials.",
+  provider_quota_exhausted: "The AI provider quota is exhausted.",
+  provider_rate_limited: "The AI provider is rate limiting requests.",
+  provider_unavailable: "The AI provider is unavailable.",
+  provider_request_rejected: "The AI provider rejected the request."
+};
+var providerHttpStatusSchema = external_exports.number().int().min(100).max(599);
+function providerFailureCode(status, quotaExhausted = false) {
+  if (status === 401 || status === 403)
+    return "provider_auth_failed";
+  if (status === 402 || status === 429 && quotaExhausted)
+    return "provider_quota_exhausted";
+  if (status === 429)
+    return "provider_rate_limited";
+  if (status >= 500 && status <= 599)
+    return "provider_unavailable";
+  return "provider_request_rejected";
+}
+var inferenceFailureMessages = {
+  ...providerFailureMessages,
+  provider_connection_failed: "Kaijan could not connect to the AI provider.",
+  provider_response_interrupted: "The AI provider response ended before it was complete.",
+  provider_response_missing: "The AI provider returned no response body.",
+  provider_response_failed: "The AI provider reported that the request failed.",
+  provider_response_incomplete: "The AI provider could not finish the response.",
+  provider_output_limit: "The AI provider reached its output limit.",
+  inference_cancelled: "The AI request was cancelled before completion.",
+  inference_outcome_unknown: "Kaijan could not determine the AI request outcome."
+};
+var inferenceNativeOutcomeSchema = external_exports.enum([
+  "completed",
+  "failed",
+  "incomplete",
+  "output_limit",
+  "unknown"
+]);
+function inferenceFailureDetails(outcome, httpStatus, quotaExhausted = false, nativeOutcome) {
+  const errorCode = outcome === "upstream_rejected" && httpStatus !== null ? providerFailureCode(httpStatus, quotaExhausted) : outcome === "transport_error" ? "provider_connection_failed" : outcome === "stream_error" ? "provider_response_interrupted" : outcome === "body_absent" ? "provider_response_missing" : outcome === "cancelled" ? "inference_cancelled" : outcome === "unknown" ? "inference_outcome_unknown" : outcome === "body_complete" && nativeOutcome === "failed" ? "provider_response_failed" : outcome === "body_complete" && nativeOutcome === "incomplete" ? "provider_response_incomplete" : outcome === "body_complete" && nativeOutcome === "output_limit" ? "provider_output_limit" : outcome === "body_complete" && nativeOutcome === "unknown" ? "inference_outcome_unknown" : void 0;
+  return errorCode ? {
+    error_code: errorCode,
+    error_message: inferenceFailureMessages[errorCode],
+    ...outcome === "upstream_rejected" && httpStatus !== null ? { provider_http_status: httpStatus } : {}
+  } : void 0;
+}
 var planningFailureMessages = {
+  ...providerFailureMessages,
+  inference_request_rejected: "Kaijan could not send the request to the AI provider.",
   provider_output_limit_no_retry: "The provider reached its output limit.",
   transport_failure_no_retry: "The provider request did not complete.",
   incomplete_capture_no_retry: "The provider response was incomplete.",
@@ -23161,8 +25354,11 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   groups_count: external_exports.null(),
   // Optional v1 additions preserve intake of published clients.
   error_code: planningFailureCodeSchema.nullable().optional(),
-  error_message: external_exports.string().max(128).nullable().optional()
+  error_message: external_exports.string().max(128).nullable().optional(),
+  provider_http_status: providerHttpStatusSchema.optional()
 }).refine((value) => {
+  if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
+    return false;
   if (value.error_code === null || value.error_code === void 0)
     return value.error_message === null || value.error_message === void 0;
   return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
@@ -23179,6 +25375,8 @@ var runStartedPropertiesSchema = external_exports.strictObject({
   prior_run_id: external_exports.null(),
   target_host: external_exports.enum(["browser-ui", "desktop-ui"])
 });
+var runServiceRejectionCode = "native_execution_service_rejected";
+var runServiceRejectionMessage = "The test service rejected a request.";
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
@@ -23204,13 +25402,27 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
   ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
+  unverified_reason: external_exports.enum([
+    "no_saved_assessment",
+    "no_validated_checks",
+    "missing_or_conflicting_evidence"
+  ]).optional(),
+  blocked_reason: external_exports.enum(["initial_navigation_blocked", "native_blocked"]).optional(),
   evidence_items_count: metricCount,
-  error_code: external_exports.enum(["native_execution_failed", "native_execution_blocked"]).nullable(),
+  recap_failure: external_exports.literal("service_rejected").optional(),
+  error_code: external_exports.enum([
+    "native_execution_failed",
+    "native_execution_blocked",
+    runServiceRejectionCode
+  ]).nullable(),
   error_message: external_exports.enum([
     "Native execution did not return a validated result.",
-    "Native execution was blocked."
+    "Native execution was blocked.",
+    runServiceRejectionMessage
   ]).nullable()
-}).refine((value) => {
+}).refine((value) => value.error_code === runServiceRejectionCode ? ["partial", "interrupted"].includes(value.outcome) && value.error_message === runServiceRejectionMessage : value.error_message !== runServiceRejectionMessage).refine((value) => !value.recap_failure || ["completed", "partial"].includes(value.outcome) && value.error_code === null && value.error_message === null).refine((value) => {
+  if (value.blocked_reason === "native_blocked" && value.error_code !== "native_execution_blocked" || value.blocked_reason === "initial_navigation_blocked" && value.outcome !== "partial" || value.unverified_reason === "missing_or_conflicting_evidence" && (value.result_basis !== "saved_report_assessments" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_saved_assessment" && (value.result_basis !== "selected_test_inventory" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_validated_checks" && (value.check_status !== "unchecked" || value.result_basis !== null))
+    return false;
   if (value.cases_total === void 0 || value.cases_total === null)
     return true;
   const counts = [
@@ -23220,8 +25432,23 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     value.cases_unverified,
     value.cases_not_run
   ];
-  return counts.every((count) => count !== null) && counts.reduce((sum, count) => sum + (count ?? 0), 0) === value.cases_total;
+  return counts.every((count2) => count2 !== null) && counts.reduce((sum, count2) => sum + (count2 ?? 0), 0) === value.cases_total;
 });
+var assessmentFinishedPropertiesSchema = external_exports.discriminatedUnion("outcome", [
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("completed"),
+    error_code: external_exports.null()
+  }),
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("failed"),
+    error_code: external_exports.enum([
+      "assessment_service_rejected",
+      "assessment_result_unavailable"
+    ])
+  })
+]);
 var reportOpenedPropertiesSchema = external_exports.strictObject({
   report_id: telemetryOperationId,
   session_id: external_exports.null(),
@@ -23317,6 +25544,11 @@ var runFinishedCapture = localEnvelope.extend({
   event_version: external_exports.literal(1),
   properties: runFinishedPropertiesSchema
 });
+var assessmentFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Assessment Finished"),
+  event_version: external_exports.literal(1),
+  properties: assessmentFinishedPropertiesSchema
+});
 var reportOpenedCapture = localEnvelope.extend({
   event: external_exports.literal("Report Opened"),
   event_version: external_exports.literal(1),
@@ -23345,13 +25577,15 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   runFinishedCapture,
   reportOpenedCapture,
   userInputRequestedCapture,
-  userInputReceivedCapture
+  userInputReceivedCapture,
+  assessmentFinishedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
   identity_epoch: telemetryIdentityEpochSchema,
   seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
 };
+var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
 var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   mcpCapture.extend(ownership),
   startedCapture.extend(ownership),
@@ -23365,16 +25599,64 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   runFinishedCapture.extend(ownership),
   reportOpenedCapture.extend(ownership),
   userInputRequestedCapture.extend(ownership),
-  userInputReceivedCapture.extend(ownership)
+  userInputReceivedCapture.extend(ownership),
+  assessmentFinishedEventSchema
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
+}).refine((batch) => batch.events.every((event2) => event2.event !== "$mcp_tool_call" || event2.properties.change_risk?.analysis_id.toLowerCase() !== event2.event_uuid.toLowerCase()), {
+  path: ["events"],
+  message: "A change risk event needs a distinct event ID."
 });
 var telemetryReceiptSchema = external_exports.strictObject({
   accepted: external_exports.array(external_exports.strictObject({
     event_uuid: external_exports.uuidv4(),
     received_at: external_exports.iso.datetime()
   })).min(1).max(telemetryLimits.batchEvents)
+});
+var anonymousOnboardingKeySchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var anonymousOnboardingIdSchema = external_exports.string().regex(/^core-anon-v1-[a-f0-9]{64}$/);
+var onboardingFailureMessages = {
+  github_callback_error: "GitHub sign-in did not complete.",
+  state_mismatch: "The sign-in callback did not match the current request.",
+  token_exchange_failed: "Kaijan could not issue a sign-in token.",
+  account_not_allowed: "This account could not sign in to Kaijan.",
+  keychain_unavailable: "Kaijan could not save the sign-in credentials."
+};
+var onboardingFailureCodeSchema = external_exports.enum(Object.keys(onboardingFailureMessages));
+var anonymousOnboardingRequestSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("ticket"),
+    key: anonymousOnboardingKeySchema,
+    challenge: anonymousOnboardingKeySchema,
+    state: anonymousOnboardingKeySchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("lifecycle"),
+    key: anonymousOnboardingKeySchema,
+    event: external_exports.enum(["Runtime Started", "Setup Started"]),
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    plugin_version: telemetryVersionSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("failure"),
+    key: anonymousOnboardingKeySchema,
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    error_code: external_exports.enum(["state_mismatch", "keychain_unavailable"])
+  })
+]);
+var oauthReconnectReasonSchema = external_exports.enum([
+  "token_expired",
+  "refresh_failed",
+  "revoked",
+  "new_install",
+  "unknown"
+]);
+var oauthReconnectContextSchema = external_exports.object({
+  is_reconnect: external_exports.boolean().nullable(),
+  reconnect_reason: oauthReconnectReasonSchema
 });
 var coreOAuthStepPropertiesSchema = external_exports.strictObject({
   oauth_step: external_exports.enum([
@@ -23391,7 +25673,9 @@ var coreOAuthStepPropertiesSchema = external_exports.strictObject({
   client_kind: external_exports.enum(["codex", "claude", "runtime"]),
   identity_provider: external_exports.enum(["google", "github"]).nullable(),
   is_reconnect: external_exports.boolean().nullable(),
-  ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable()
+  ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable(),
+  // Optional v1 addition. An absent legacy observation stays unknown.
+  reconnect_reason: oauthReconnectReasonSchema.optional()
 });
 var coreOAuthTelemetryCaptureSchema = external_exports.strictObject({
   event_uuid: external_exports.uuidv4(),
@@ -23420,10 +25704,19 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   reasoning_tokens: nativeTokenCount,
   cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
   // Additive v1 provenance. Older captures keep their explicit unknown cost.
-  cost_basis: external_exports.enum(["litellm_response_header", "provider_usage_cost"]).optional(),
+  cost_basis: external_exports.enum([
+    "litellm_response_header",
+    "provider_usage_cost",
+    "model_pricing_estimate"
+  ]).optional(),
   outcome: external_exports.null(),
   latency_ms: external_exports.number().finite().nonnegative(),
-  http_status: external_exports.number().int().min(100).max(599).nullable(),
+  http_status: providerHttpStatusSchema.nullable(),
+  // Optional v1 additions. Older producers retain the legacy transport state.
+  native_response_outcome: inferenceNativeOutcomeSchema.optional(),
+  provider_http_status: providerHttpStatusSchema.optional(),
+  error_code: external_exports.enum(Object.keys(inferenceFailureMessages)).optional(),
+  error_message: external_exports.string().max(128).optional(),
   transport_outcome: external_exports.enum([
     "body_complete",
     "body_absent",
@@ -23440,8 +25733,13 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
 }).refine((value) => {
   if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
     return false;
+  const failure5 = inferenceFailureDetails(value.transport_outcome, value.http_status, value.error_code === "provider_quota_exhausted", value.native_response_outcome);
+  if (value.native_response_outcome !== void 0 && value.transport_outcome !== "body_complete")
+    return false;
+  if ((value.error_code !== void 0 || value.error_message !== void 0 || value.provider_http_status !== void 0) && (!failure5 || value.provider_http_status !== failure5.provider_http_status || value.error_code !== failure5.error_code || value.error_message !== failure5.error_message))
+    return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
-  if (value.cost_basis === "provider_usage_cost" && !native)
+  if ((value.cost_basis === "provider_usage_cost" || value.cost_basis === "model_pricing_estimate") && !native)
     return false;
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
@@ -23475,7 +25773,77 @@ var coreTelemetryActorSchema = external_exports.strictObject({
   workspace_id: external_exports.uuid()
 });
 
+// apps/codex-plugin/src/telemetry/onboarding.mjs
+var onboardingRequestTimeoutMs = 2500;
+function createAnonymousOnboarding(origin, outbox) {
+  let pending = 0;
+  const send = async (value, reconnect) => {
+    if (pending >= 4) return void 0;
+    pending++;
+    try {
+      const key = outbox.onboardingKey();
+      if (!key) return void 0;
+      const response = await fetch(`${origin}/api/v1/telemetry/onboarding`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          ...reconnect ? { "x-kaijan-oauth-context": JSON.stringify(reconnect) } : {}
+        },
+        body: JSON.stringify({ ...value, key }),
+        redirect: "error",
+        signal: AbortSignal.timeout(onboardingRequestTimeoutMs)
+      });
+      return response.ok ? await response.json() : void 0;
+    } catch {
+      return void 0;
+    } finally {
+      pending--;
+    }
+  };
+  return {
+    authenticatedBefore: () => outbox.authenticatedBefore?.() === true,
+    async ticket(verifier, state, context) {
+      const reconnect = oauthReconnectContextSchema.safeParse(context).data;
+      const value = await send(
+        {
+          kind: "ticket",
+          challenge: createHash2("sha256").update(verifier).digest("base64url"),
+          state
+        },
+        reconnect
+      );
+      const ticket = value?.ticket;
+      return typeof ticket === "string" && /^[A-Za-z0-9_-]{32,768}$/.test(ticket) ? ticket : void 0;
+    },
+    capture(input3) {
+      const event2 = localTelemetryCaptureSchema.safeParse(input3).data;
+      if (event2?.event !== "Runtime Started" && event2?.event !== "Setup Started")
+        return false;
+      void send({
+        kind: "lifecycle",
+        event: event2.event,
+        event_uuid: event2.event_uuid,
+        client_ts: event2.client_ts,
+        plugin_version: event2.plugin_version
+      });
+      return true;
+    },
+    failure(code) {
+      void send({
+        kind: "failure",
+        event_uuid: randomUUID4(),
+        client_ts: (/* @__PURE__ */ new Date()).toISOString(),
+        error_code: code
+      });
+    }
+  };
+}
+
 // apps/codex-plugin/src/telemetry/outbox.mjs
+import { DatabaseSync } from "node:sqlite";
+import { constants as constants2, openSync, fstatSync, closeSync } from "node:fs";
+import { randomBytes as randomBytes3, randomUUID as randomUUID5 } from "node:crypto";
+import { join as join3 } from "node:path";
 function openTelemetryOutbox({ directory, installationId }) {
   const path = join3(directory, "telemetry.sqlite");
   const fd = openSync(
@@ -23497,10 +25865,10 @@ function openTelemetryOutbox({ directory, installationId }) {
     INSERT OR IGNORE INTO metadata VALUES('seq','0'),('dropped','0');`);
   const read = (key) => db.prepare("SELECT value FROM metadata WHERE key=?").get(key)?.value;
   const write = (key, value) => db.prepare("INSERT OR REPLACE INTO metadata VALUES(?,?)").run(key, String(value));
-  if (!read("epoch")) write("epoch", randomUUID3());
+  if (!read("epoch")) write("epoch", randomUUID5());
   let disabled = false, sending = false, stopped = false, attempt = 0, nextAt = 0;
   let controller;
-  const drop = (count) => write("dropped", Number(read("dropped")) + count);
+  const drop = (count2) => write("dropped", Number(read("dropped")) + count2);
   const transaction = (run) => {
     db.exec("BEGIN IMMEDIATE");
     try {
@@ -23528,28 +25896,29 @@ function openTelemetryOutbox({ directory, installationId }) {
   };
   maintain();
   const epoch = () => disabled ? null : read("epoch");
-  const rotate = (selected = randomUUID3()) => {
+  const rotate = (selected = randomUUID5()) => {
     const checked = telemetryIdentityEpochSchema.safeParse(selected);
-    const next = checked.success ? checked.data : randomUUID3();
+    const next = checked.success ? checked.data : randomUUID5();
     controller?.abort();
     try {
       transaction(() => {
         drop(Number(db.prepare("SELECT count(*) AS n FROM events").get().n));
         db.exec("DELETE FROM events");
         write("epoch", next);
+        db.prepare("DELETE FROM metadata WHERE key=?").run("onboarding_key");
       });
       attempt = 0;
       nextAt = 0;
       return next;
     } catch {
       disabled = true;
-      return randomUUID3();
+      return randomUUID5();
     }
   };
-  const enqueue = (input2, lease) => {
+  const enqueue = (input3, lease) => {
     if (disabled || stopped) return false;
-    const event = localTelemetryCaptureSchema.parse(input2);
-    if (Buffer.byteLength(JSON.stringify(event)) > telemetryLimits.eventBytes)
+    const event2 = localTelemetryCaptureSchema.parse(input3);
+    if (Buffer.byteLength(JSON.stringify(event2)) > telemetryLimits.eventBytes)
       return false;
     return transaction(() => {
       pruneExpired();
@@ -23565,16 +25934,16 @@ function openTelemetryOutbox({ directory, installationId }) {
       }
       const previousVersion = read("runtime_version");
       const checkedVersion = telemetryVersionSchema.safeParse(previousVersion);
-      const observed = event.event === "Runtime Started" ? {
-        ...event,
+      const observed = event2.event === "Runtime Started" ? {
+        ...event2,
         properties: {
-          ...event.properties,
+          ...event2.properties,
           is_first_run: previousVersion === void 0 ? true : checkedVersion.success ? false : null,
           previous_plugin_version: checkedVersion.success ? checkedVersion.data : null,
           installed_at: null,
           ms_since_installed: null
         }
-      } : event;
+      } : event2;
       const payload = telemetryEventSchema.parse({
         ...observed,
         install_id: installationId.replace(
@@ -23584,9 +25953,9 @@ function openTelemetryOutbox({ directory, installationId }) {
         identity_epoch: lease,
         seq
       });
-      const result = db.prepare("INSERT OR IGNORE INTO events VALUES(?,?,?,?)").run(event.event_uuid, lease, Date.now(), JSON.stringify(payload));
-      if (result.changes === 1 && event.event === "Runtime Started")
-        write("runtime_version", event.plugin_version);
+      const result = db.prepare("INSERT OR IGNORE INTO events VALUES(?,?,?,?)").run(event2.event_uuid, lease, Date.now(), JSON.stringify(payload));
+      if (result.changes === 1 && event2.event === "Runtime Started")
+        write("runtime_version", event2.plugin_version);
       return result.changes === 1;
     });
   };
@@ -23610,7 +25979,7 @@ function openTelemetryOutbox({ directory, installationId }) {
           events: rows.map((row) => JSON.parse(row.payload))
         });
         if (batch.events.some(
-          (event, index) => event.event_uuid !== rows[index].uuid || event.identity_epoch !== selected || event.install_id !== installationId.replace(/^kaijan-(?:codex|claude)-plugin-/, "")
+          (event2, index) => event2.event_uuid !== rows[index].uuid || event2.identity_epoch !== selected || event2.install_id !== installationId.replace(/^kaijan-(?:codex|claude)-plugin-/, "")
         ))
           throw Error("invalid_telemetry_journal");
       } catch {
@@ -23637,9 +26006,9 @@ function openTelemetryOutbox({ directory, installationId }) {
         await response.body?.cancel();
         throw Error("telemetry_unavailable");
       }
-      const receipt = telemetryReceiptSchema.parse(await response.json());
+      const receipt2 = telemetryReceiptSchema.parse(await response.json());
       const expected = new Set(rows.map((row) => row.uuid));
-      if (receipt.accepted.length !== expected.size || receipt.accepted.some((entry) => !expected.delete(entry.event_uuid)))
+      if (receipt2.accepted.length !== expected.size || receipt2.accepted.some((entry) => !expected.delete(entry.event_uuid)))
         throw Error("invalid_telemetry_receipt");
       transaction(() => {
         for (const row of rows)
@@ -23660,6 +26029,23 @@ function openTelemetryOutbox({ directory, installationId }) {
   };
   return {
     epoch,
+    authenticatedBefore() {
+      return !disabled && !stopped && read("has_identity") === "1";
+    },
+    clearOnboardingKey() {
+      if (!disabled && !stopped)
+        db.prepare("DELETE FROM metadata WHERE key=?").run("onboarding_key");
+    },
+    onboardingKey() {
+      if (disabled || stopped) return null;
+      return transaction(() => {
+        const saved = read("onboarding_key");
+        if (saved) return saved;
+        const key = randomBytes3(32).toString("base64url");
+        write("onboarding_key", key);
+        return key;
+      });
+    },
     lease({ unsettled }) {
       try {
         if (unsettled && read("has_identity")) return null;
@@ -23692,7 +26078,7 @@ function openTelemetryOutbox({ directory, installationId }) {
         return telemetryIdentityEpochSchema.safeParse(selected).success ? selected : rotate();
       } catch {
         disabled = true;
-        return randomUUID3();
+        return randomUUID5();
       }
     },
     start(authorization) {
@@ -23732,7 +26118,15 @@ async function main() {
     telemetry = openTelemetryOutbox(profile);
   } catch {
   }
+  const onboarding = telemetry && pluginHost(build) === "codex" && process.env.KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS === "1" ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
+  if (!onboarding) {
+    try {
+      telemetry?.clearOnboardingKey();
+    } catch {
+    }
+  }
   const authorization = new BrokerAuthorization({
+    onboarding,
     origin: build.coreOrigin,
     host: pluginHost(build),
     clientId: build.runtimeClientId,
@@ -23741,7 +26135,7 @@ async function main() {
     state: profile.state,
     // A grant still carries a fresh fence when its journal is unavailable. On
     // restart, recovered old bytes cannot adopt this new account's grant.
-    telemetryIdentity: (change) => telemetry?.identity(change) ?? randomUUID4(),
+    telemetryIdentity: (change) => telemetry?.identity(change) ?? randomUUID6(),
     onCredentialsLoaded: (saved) => telemetry?.resume({
       authenticated: Boolean(saved),
       epoch: saved?.telemetryEpoch
@@ -23755,6 +26149,7 @@ async function main() {
     ...profile,
     authorization,
     telemetry,
+    onboarding,
     build,
     onClose: async () => {
       stopTelemetry?.();

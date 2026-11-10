@@ -33,6 +33,7 @@ import {
 import {
   nominateIssues,
   parentRequest,
+  parentModelRequest,
   selectParents,
   PARENT_LIMITS,
 } from "./followthrough.mjs";
@@ -1098,7 +1099,7 @@ export async function capture(
       );
       if (prepared.body)
         selection = selectParents(
-          await semanticParent(prepared.body),
+          await semanticParent(parentModelRequest(prepared)),
           prepared,
         );
       else selection.status = "no_bounded_parent_input";

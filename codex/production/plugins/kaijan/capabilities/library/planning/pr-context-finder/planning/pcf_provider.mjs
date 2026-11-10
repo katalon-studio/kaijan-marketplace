@@ -1,3 +1,5 @@
+import { Agent } from "@openai/agents-core";
+import { createRetainedAgentRunner } from "@katalon-experiments/ai-client/agents";
 import {
   providerConnection,
   responsesUsageEstimate,
@@ -5,6 +7,7 @@ import {
 import { truth, finiteNonnegativeCost } from "./semantics.mjs";
 import fs from "node:fs";
 import path from "node:path";
+import { isDeepStrictEqual } from "node:util";
 import { createHash } from "node:crypto";
 import {
   encodedJson,
@@ -30,6 +33,40 @@ import {
   failureType,
   callTransport,
 } from "./pcf_native.mjs";
+function providerFailure(response, broker, raw) {
+  const upstream = broker && header(response, "x-kaijan-provider-http-status");
+  if (
+    broker &&
+    !(typeof upstream === "string" && /^[1-5][0-9]{2}$/.test(upstream))
+  ) {
+    // Older Core maps several native HTTP statuses to the same public error.
+    // Keep that status in receipt.http_status without claiming it was upstream.
+    return [undefined, "inference_request_rejected"];
+  }
+  const status = broker ? Number(upstream) : response.status;
+  if (status === 401 || status === 403) return [status, "provider_auth_failed"];
+  if (status === 402) return [status, "provider_quota_exhausted"];
+  if (status === 429) {
+    if (
+      broker &&
+      upstream === "429" &&
+      header(response, "x-kaijan-provider-failure-code") ===
+        "provider_quota_exhausted"
+    )
+      return [status, "provider_quota_exhausted"];
+    if (
+      !broker &&
+      (["insufficient_quota", "organization_spend_limit_exceeded"].includes(
+        raw?.error?.code,
+      ) ||
+        raw?.error?.type === "insufficient_quota")
+    )
+      return [status, "provider_quota_exhausted"];
+    return [status, "provider_rate_limited"];
+  }
+  if (status >= 500 && status <= 599) return [status, "provider_unavailable"];
+  return [status, "provider_request_rejected"];
+}
 export const MODEL = "gpt-6-luna",
   REASONING_EFFORT = "medium";
 export function modelSettings(
@@ -163,7 +200,77 @@ export async function capture(response, file, maximum) {
     captured_sha256: hash(readBytes(file, maximum)),
   };
 }
-export async function generate(
+function outputLimit(body, max_output_tokens_limit) {
+  // No application output ceiling by default. Honor an explicit caller budget;
+  // the provider owns its model/context limits. Do not truncate test coverage.
+  const requested = body.max_output_tokens;
+  const ceiling = requested ?? max_output_tokens_limit;
+  if (
+    (Object.hasOwn(body, "max_output_tokens") &&
+      (!Number.isSafeInteger(requested) ||
+        !isJsonInteger(body, "max_output_tokens") ||
+        requested < 1)) ||
+    (max_output_tokens_limit !== undefined &&
+      (!Number.isSafeInteger(max_output_tokens_limit) ||
+        max_output_tokens_limit < 1 ||
+        ceiling > max_output_tokens_limit))
+  )
+    throw Error("Invalid explicit output token limit");
+  return ceiling;
+}
+
+// The SDK owns this Planner turn. Dispatch and validation retain their native
+// records; SDK finalOutput is never substituted for the verified saved plan.
+export async function generate(packet, body, root, validate, options = {}) {
+  const ceiling = outputLimit(body, options.max_output_tokens_limit);
+  const agent = new Agent({
+    name: "Planner",
+    instructions: body.instructions,
+    modelSettings: {
+      reasoning: body.reasoning,
+      ...(ceiling === undefined ? {} : { maxTokens: ceiling }),
+    },
+    outputType: body.text.format,
+  });
+  let retained;
+  const runner = createRetainedAgentRunner({
+    model: body.model,
+    store: body.store,
+    dispatch: async (request) => {
+      // The SDK represents string input as a user message and supplies
+      // empty tool defaults. Verify that conversion before using the original
+      // serialization for size admission, transport and the saved receipt.
+      const expected = {
+        ...body,
+        input: [{ role: "user", content: body.input }],
+        include: [],
+        tools: [],
+        stream: false,
+        ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
+      };
+      if (!isDeepStrictEqual(JSON.parse(JSON.stringify(request)), expected))
+        throw new Error(
+          "Planner SDK request differs from the prepared request",
+        );
+      const completed = await dispatchPlan(
+        packet,
+        body,
+        root,
+        validate,
+        options,
+      );
+      retained = completed.result;
+      return completed.response;
+    },
+  });
+  // The native dispatch owner saves the caller's Stop receipt, including
+  // when Stop arrives before the first transport call.
+  await runner.run(agent, body.input, { maxTurns: 1 });
+  if (!retained) throw new Error("Planner finished without a retained plan");
+  return retained;
+}
+
+async function dispatchPlan(
   packet,
   body,
   root,
@@ -183,21 +290,7 @@ export async function generate(
     deadline_ms > 2147483647
   )
     throw Error("Invalid absolute request deadline");
-  // No application output ceiling by default. Honor an explicit caller budget;
-  // the provider owns its model/context limits. Do not truncate test coverage.
-  const requested = body.max_output_tokens;
-  const ceiling = requested ?? max_output_tokens_limit;
-  if (
-    (Object.hasOwn(body, "max_output_tokens") &&
-      (!Number.isSafeInteger(requested) ||
-        !isJsonInteger(body, "max_output_tokens") ||
-        requested < 1)) ||
-    (max_output_tokens_limit !== undefined &&
-      (!Number.isSafeInteger(max_output_tokens_limit) ||
-        max_output_tokens_limit < 1 ||
-        ceiling > max_output_tokens_limit))
-  )
-    throw Error("Invalid explicit output token limit");
+  const ceiling = outputLimit(body, max_output_tokens_limit);
   const wire = utf8(
     encodedJson({
       ...body,
@@ -273,6 +366,7 @@ export async function generate(
       abort_source: null,
     };
   let response,
+    completedResponse,
     requestPhaseEnded = false;
   const recordAbort = () => {
     if (requestSignal.aborted) {
@@ -341,6 +435,16 @@ export async function generate(
             receipt,
           );
         }
+        const httpFailure = (raw) => {
+          const [status, reason] = providerFailure(
+            response,
+            Boolean(connection.socketPath),
+            raw,
+          );
+          if (status !== undefined) receipt.provider_http_status = status;
+          receipt.status = "provider_http_failure";
+          return new PlanningFailure(reason, root, receipt);
+        };
         let raw;
         try {
           raw = parseJson(
@@ -379,6 +483,7 @@ export async function generate(
           });
         } catch (error) {
           if (error?.uncaught) throw error;
+          if (response.status !== 200) throw httpFailure(raw);
           receipt.status = "invalid_outer_response";
           throw new PlanningFailure(
             "invalid_outer_response_no_retry",
@@ -387,6 +492,7 @@ export async function generate(
           );
         }
         save(path.join(root, "usage-receipt.json"), receipt);
+        if (response.status !== 200) throw httpFailure(raw);
         if (
           receipt.http_status === 200 &&
           raw.model === body.model &&
@@ -407,7 +513,6 @@ export async function generate(
           );
         }
         if (
-          receipt.http_status !== 200 ||
           raw.status !== "completed" ||
           truth(raw.error) ||
           raw.model !== body.model
@@ -419,10 +524,10 @@ export async function generate(
             receipt,
           );
         }
-        let candidate, checks;
+        let candidate, checks, text;
         let failureStage = "response_parsing";
         try {
-          const text = (raw.output ?? [])
+          text = (raw.output ?? [])
             .filter((o) => o.type === "message")
             .flatMap((o) =>
               (o.content ?? [])
@@ -462,6 +567,23 @@ export async function generate(
             receipt,
           );
         }
+        // Give the SDK the exact text accepted by the native reader. The
+        // retained response can split it across messages or omit message metadata.
+        completedResponse = {
+          ...JSON.parse(
+            readBytes(path.join(root, "response.bin")).toString("utf8"),
+          ),
+          // Native validation treats empty error containers as no error.
+          error: null,
+          output: [
+            {
+              type: "message",
+              role: "assistant",
+              status: "completed",
+              content: [{ type: "output_text", text }],
+            },
+          ],
+        };
         const validity =
           checks.coverage?.status === "partial"
             ? "valid_partial_plan"
@@ -517,5 +639,5 @@ export async function generate(
     }
   }
   if (nativeOperationFailed) throw nativeOperationFailure;
-  return nativeOperationValue;
+  return { result: nativeOperationValue, response: completedResponse };
 }

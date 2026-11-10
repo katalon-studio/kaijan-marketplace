@@ -18,6 +18,8 @@ Kaijan for Codex — Production. The root catalog lists only Production and poin
 to the same package as `codex/production`; it does not copy the runtime.
 There is no marketplace catalog at `codex/`.
 
+For terminal use, follow the [Codex CLI quickstart](codex/README.md#codex-cli).
+
 Workspace admin: Import marketplace from https://github.com/katalon-studio/kaijan-marketplace,
 Path `codex/qa` for QA or `codex/production` for Production, ref `main`.
 Each path lists only its own environment. Set workspace access policies after import.

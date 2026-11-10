@@ -34,7 +34,7 @@ export async function modelSettingsCommand(root, state, args) {
       reasoning: values[1],
     });
   } else if (command === "reset" && values.length === 0) {
-    await library.setRunnerSettings(state, library.defaultRunnerSettings);
+    await library.resetRunnerSettings(state);
     await library.setAnalysisSettings(state, library.defaultAnalysisSettings);
   } else if (command !== "show" || values.length) {
     throw Error(

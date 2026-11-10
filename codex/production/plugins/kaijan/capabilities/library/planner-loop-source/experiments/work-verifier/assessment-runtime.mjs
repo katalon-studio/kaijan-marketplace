@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { LIMITS, SUPPLIED_ASSESSMENT } from "./assessment-contract.mjs";
-import { generate } from "../context-finder/planning/pcf_provider.mjs";
+import { generateWithAgent } from "../context-finder/planning/agent-generation.mjs";
 import { native } from "../context-finder/planning/pcf_native.mjs";
 import { save } from "../context-finder/planning/pcf_records.mjs";
 import { sourceScreen } from "../context-finder/related/source-screen.mjs";
@@ -24,6 +24,7 @@ export async function assessPreparedSuppliedEvidence(
     transport,
     shouldStop = () => false,
     deadline_ms = LIMITS.deadlineMs,
+    agentName = "Runner",
   } = {},
   projectAssessment,
 ) {
@@ -104,7 +105,8 @@ export async function assessPreparedSuppliedEvidence(
   };
   const started = performance.now();
   try {
-    result = await generate(
+    result = await generateWithAgent(
+      agentName,
       prepared.input,
       prepared.request,
       nativeRoot,

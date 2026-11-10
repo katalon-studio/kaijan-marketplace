@@ -90,6 +90,11 @@
       "version": "1.6.0"
     },
     {
+      "path": "node_modules/@katalon-experiments/ai-client",
+      "name": "@katalon-experiments/ai-client",
+      "version": "0.1.0"
+    },
+    {
       "path": "node_modules/@katalon-loki/computer-runner",
       "name": "@katalon-loki/computer-runner",
       "version": "0.1.1"

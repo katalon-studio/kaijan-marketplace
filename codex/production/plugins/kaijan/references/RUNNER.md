@@ -59,11 +59,9 @@ username/password. Caller-authorized local targets such as
 incidental HTTPS-only target restriction; it does not change provider HTTPS,
 browser certificate verification or target/action authorization.
 
-Host provisioning requires Node 22.13+ (the plugin bundles Node 24)
-and `OPENAI_API_KEY` in the MCP host environment. The Runner calls OpenAI native
-Responses directly; the Planner OpenRouter/LiteLLM profile is not a substitute.
-Compatible Chromium is downloaded on first execution, then reused from
-Playwright's versioned user cache. It is not included in the plugin archive and
+The plugin bundles its Node runtime. Compatible Chromium is downloaded on first
+execution, then reused from Playwright's versioned user cache. It is not included
+in the plugin archive and
 does not require an installed Google Chrome. Browser preparation respects Stop
 and the execution time limit; download failure returns before browser launch or
 provider calls. Imports, tool discovery and analysis do not download browsers.
@@ -130,11 +128,8 @@ model-authored and unverified; returned actions do not prove steps. Independentl
 observe the application outcome. `testVerdict` remains `unverified`, and Product
 terminal checks cannot pass an incomplete run.
 
-For observation-only work, completion records what was observed; it does not
-invent a persistence requirement or establish an accepted defect. Keep caller
-hypotheses, attempted actions, observations and unresolved selections distinct.
-An icon or arrangement change alone cannot prove a requested theme/layout state.
-See the [caller preparation and result guidance](../capability-skills/run-test/SKILL.md#execute-an-explicit-ui-scenario).
+For task intent, observations and result wording, follow the
+[caller preparation and result guidance](../skills/run-test/SKILL.md#execute-an-explicit-ui-scenario).
 
 Desktop remains unchanged: its native executionState is `completed`, `cancelled`,
 `blocked` or `unknown` and it does not support this clarification or recovery contract.
@@ -239,8 +234,7 @@ fresh task. Call `loki_runner_execute` with the identical `current` fields plus
 `reuse: { runIds: preview.runIds, approvalSha256: preview.approvalSha256 }`.
 The host checks the binding again, then makes an advisory selection. Current
 params, target and authorization stay fresh; historical text is untrusted.
-Callers do not construct directories, projections or provider callbacks. The
-native browser Runner uses OpenAI direct Responses and Luna low.
+Callers do not construct directories, projections or provider callbacks.
 
 Use `loki_runner_get` to read the original operation and `loki_runner_stop` to
 request Stop during selection or native execution. NONE, unavailable or stale
@@ -263,8 +257,7 @@ or unavailable required protection inputs withhold public content rather than
 fall back to raw bytes, including for selector-bearing native-null refusals.
 
 Node callers can use the same flow with `ComputerRunner.prepareReuse`, `start`,
-`get`, `stop` and live clarification `answer` from `@loki/capabilities/runner`; see the complete example in
-the [capabilities README](../../../packages/capabilities/README.md#reuse-a-retained-browser-execution).
+`get`, `stop` and live clarification `answer` from `@loki/capabilities/runner`.
 This bounded library and catalog integration adds no UI, index, global history or
 new store and does not establish installed-plugin acceptance.
 
@@ -369,27 +362,19 @@ the official Playwright MCP entry point. Source pins identify the accepted packa
 bytes; the dependency manifest and normal lockfile identify installed versions.
 Building does not install globally, restart the host or upgrade an existing cache.
 
-## Configure the separate analysis provider
+## Kaijan connection
 
-`OPENAI_API_KEY` configures native Runner and the fixed Luna planning, supplement
-and supplied-evidence producers. Their native OpenAI route cannot use an
-OpenRouter credential. The existing OpenRouter profile is for native JEV; its
-complete process environment requires `LOKI_MODEL_PROVIDER=openrouter`,
-`LOKI_OPENROUTER_BASE_URL=https://openrouter.ai/api/v1`, and the existing secret
-`LOKI_OPENROUTER_API_KEY`. Forwarding only key/base variables does not select the
-provider. An already authorized LiteLLM profile retains its own declared settings.
+Managed Runner, planning, and evidence assessment use the Kaijan connection.
+Follow the installed [managed sign-in guide](../skills/setup/references/provider-setup.md#managed-sign-in)
+to check the account, workspace, and AI access before running the requested work.
 
-The host supplies the approved provider environment or provisions its existing
-private Product profile through the packaged host command. Read `skills/setup/references/provider-setup.md` and run the bundled Node with `scripts/provider-settings.mjs show` or `configure --from-file /absolute/path/to/approved.env`. The command prints no keys and needs no source checkout. For an explicitly authorized
-operator with the complete configured environment, the public library exposes
-`adoptProviderEnvironment(privateProductDataRoot)`. This stores only the private
-provider profile and starts no analysis. Do not use a Research data-root flag or
-an analysis CLI. A new Product profile needs its own authorized configuration.
+## Planning input
 
-Simple planning input requires `title`, `body` and a nonempty string `url` source
-identity. A real local source-file URI/pointer is valid for a local work item;
-null or an empty identity is rejected before dispatch. Do not fabricate a GitHub
-URL or claim that a missing external source was supplied.
+For the public planning tool, supply the original `title` and `body`. Include
+`url` only when you have a real source URL or local file URI. If you omit it,
+Kaijan can retain the original input and use its saved source URI internally.
+The native planning producer requires a nonempty source identity. Follow the
+advertised tool input and do not invent a URL.
 
 ## Worker lifecycle and local trace viewer
 
@@ -445,21 +430,26 @@ in [local-capabilities.md](local-capabilities.md).
 
 ## Passive Runner readiness
 
-Inspect `loki_capabilities_list.computerRunner` before authorized execution.
-The `loki.computer-runner-readiness/1` response separates packaged native pins,
-missing/invalid/configured effective configuration, credential presence, fixed
-Luna/low model and unknown validation. `configured` is not a readiness guarantee.
-Discovery makes no inference call, browser input or browser download. A broker
-binding leaves upstream/credential validity unknown. Unchecked target/browser and
-permission prerequisites remain explicit; local Runner does not need Core login.
+Call `loki_capabilities_list` with `{}` before authorized execution. The normal
+`kaijan.customer-capabilities/1` reply gives `testExecution.state` and its recovery
+`message`, alongside the other Kaijan actions. The action states are
+`available`, `setup-required` and `unavailable`. Read the separate
+`connection.state` and `connection.message`; a `not-checked` connection is not a
+verified sign-in or current-package check. Follow the returned setup/reconnect
+guidance and the installed Setup guide for the selected package.
 
-Installed Codex discovery additionally exposes `runtime` with the loaded artifact,
-installation, connection and scope identities. It never substitutes the current
-checkout for the running package. Changed installation metadata reports stale;
-matching metadata still leaves host-selection freshness unknown. Compare against
-an exact selected artifact, then use supported host reconnect when needed. Read and
-reconcile admitted work first, preserve host-thread scope/originals, and never
-redispatch unknown effects. Connection-only scope cannot recover after restart.
+The reply's `validation` is `Not checked by this request.` Availability does not
+verify inference, application access, browser availability or desktop permissions.
+The normal reply omits private `computerRunner` and `runtime` diagnostics,
+including model, credential presence, native pins and loaded-artifact identities. Do not
+use it to identify the responding build. Discovery makes no inference call,
+browser input or browser download. Managed Runner needs the Kaijan connection
+before it can execute an AI-assisted test; direct-development setup remains
+specific to its confirmed package.
+
+Read and reconcile admitted work before supported host reconnect. Preserve
+host-thread scope and original run references, and never redispatch unknown
+effects. Connection-only scope cannot recover after restart.
 
 Use the approved private host environment/profile mechanism for configuration
 repair. Allowed inherited fields override saved fields. Unsafe/malformed profiles
@@ -566,7 +556,3 @@ branch; malformed arguments remain -32602. Never poll an error as an operation o
 replace an uncertain execution. `finished` means the original payload was retained
 and validated, not that the user task passed. Preserve its native result and
 exact paging bytes; Stop is requested, not confirmed, by `stopRequested`.
-
-## Runtime settings
-
-See [Runner model settings](MODELS.md) for the host command, environment precedence and supported limits. The supported analysis families have a separate setting. Other native stages keep their packaged pins.

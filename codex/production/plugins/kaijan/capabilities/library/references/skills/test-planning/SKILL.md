@@ -23,6 +23,10 @@ description: Propose baseline acceptance and risk-focused tests for a supplied i
    retain each original source identity/text and its intent/implementation/context
    role. A finding is context, not intent authority. Use that producer contract
    without rewriting its algorithms or adding a map requirement.
+   Put the caller's instructions for carrying out testing in `taskInstructions`,
+   separate from application behavior in `input`. Kaijan retains these
+   instructions with the Plan and carries them into a selected-test Run.
+   Preserve supplied source documents unchanged.
 3. A retained record can supply `nativeInputs.testPlanning` with the exact
    supported `{input, options?}` object, without a requestKey. Submit it through
    `loki_context_submit`, then call planning with `contextId`. Raw reports and
