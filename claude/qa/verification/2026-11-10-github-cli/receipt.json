@@ -1,0 +1,44 @@
+{
+  "purpose": "One simple actual GitHub-installed QA test; not full plugin/Production acceptance",
+  "testedPublicCommit": "b198c04e1179aed4ca5ea332bda4247b703db598",
+  "marketplaceSource": "katalon-studio/kaijan-marketplace#codex/4416-claude-preview",
+  "installedPlugin": "kaijan-qa@kaijan-claude-preview",
+  "pluginVersion": "0.0.0-dev.g2d35cf6a9efa2fb9.beebe01c25928425e906dfc53d6e6822b",
+  "host": "Claude Code CLI2.1.318",
+  "account": "existing normal signed-in account; no credential copy or sign-out",
+  "exactOriginalFilesAndExecuteFlags": 3749,
+  "caller": "Use Kaijan to test TodoMVC at http://127.0.0.1:49944/examples/vue/dist/. Add Preview install check, mark it complete, and verify it appears under Completed and not Active.",
+  "runId": "2ebc13dfc3c9ced14d733b567302819640c44b77daaecc6b4e92957700829220",
+  "reportId": "4bc8d896e130cbbc0ce1dead81d152fe775498c4a5d4b3ddc52413e245f6ef38",
+  "executionState": "completed",
+  "nativeTestVerdict": "unverified",
+  "assessmentVerdict": "pass",
+  "savedCoverage": {
+    "status": "partial",
+    "unassessed_requirement_ids": [
+      "work_item"
+    ],
+    "meaning": "Record coverage only; not proof that all requirements were tested or passed."
+  },
+  "browserCleanup": {
+    "scope": "this-run-browser",
+    "state": "complete",
+    "deadlineExceeded": false,
+    "message": "The test browser was confirmed closed."
+  },
+  "runsStarted": 1,
+  "retriesOrReplacements": 0,
+  "independentImageReview": {
+    "completed.png": "Completed is selected and shows one checked, struck-through Preview install check item.",
+    "active.png": "Active is selected and the list is empty."
+  },
+  "imagesSha256": {
+    "completed.png": "09228b51598f88dde82918f84688c2575f32484f398c7093085e22e4f3c2467c",
+    "active.png": "3636d56117036f13ecb92e6ff8983e5b1ccfa917beb73c85719058d5bcc15c89"
+  },
+  "limits": [
+    "No linked Work Item; retain the original partial work-item coverage.",
+    "The host final compared text captures and qualified the missing title; the independent image review above sees the literal title in the original screenshot.",
+    "Production bundle was audited only; no Production inference or deployment."
+  ]
+}

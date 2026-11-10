@@ -1,0 +1,7 @@
+JSON parser compatibility
+
+The JSON scanner and diagnostic grammar in json.mjs follow CPython3.9.6's Modules/_json.c and Lib/json/decoder.py, and json.loads string BOM handling from Lib/json/__init__.py.
+Original sources: https://github.com/python/cpython/tree/v3.9.6
+Copyright Python Software Foundation and contributors.
+The PSF license and historical notices are reproduced in PYTHON-LICENSE.txt.
+The Node translation retains this package's existing source_invalid_JSON failure code and adds a versioned diagnostic payload. It is not a runtime Python dependency.

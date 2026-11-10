@@ -1,0 +1,19 @@
+{
+  "schema": "rook.claude-preview-query-security/1",
+  "public_head": "67c5135853f3fb278a64a5fa0e6d677e2f1eaedb",
+  "checks": [
+    "Missing receipt returns null",
+    "Caller-controlled key content becomes a digest within the configured directory",
+    "Exclusive receipt claim cannot overwrite the original",
+    "Normal atomic save and read work",
+    "Receipt symlink is refused",
+    "Receipt with multiple hard links is refused",
+    "Group/world-accessible receipt is refused",
+    "Group/world-accessible store directory is refused",
+    "Every store kind at the actual service call sites is a fixed literal"
+  ],
+  "passed": 9,
+  "producer_calls": 0,
+  "first_setup_failure": "The initial directory comparison used /var instead of the store canonical /private/var path on macOS; corrected the control to compare realpath. Product bytes were unchanged.",
+  "limits": "Direct packaged QueryStore controls and literal-callsite inspection, not an exhaustive security audit."
+}

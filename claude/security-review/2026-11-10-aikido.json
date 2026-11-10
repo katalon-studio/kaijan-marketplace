@@ -1,0 +1,1062 @@
+{
+  "schema": "rook.claude-preview-secret-finding-audit/1",
+  "public_head": "67c5135853f3fb278a64a5fa0e6d677e2f1eaedb",
+  "comments_inspected": 80,
+  "secret_comments": 71,
+  "verified_content_hashes": 71,
+  "results": [
+    {
+      "comment_id": 4520261564,
+      "path": "claude/production/plugins/kaijan/capabilities/library/application-context-package.json",
+      "line": 126,
+      "field": "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/api.js",
+      "expected_sha256": "03ae6016abc9585e3f3481d6b8d775a95ae4ee65badbde73ca1ed953ff14c0e7",
+      "matching_payload_paths": [
+        "node_modules/zod/v4/core/api.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520261687,
+      "path": "claude/production/plugins/kaijan/capabilities/library/build-inputs.json",
+      "line": 126,
+      "field": "packages/context-finder/related/source-sanitizer-api.mjs",
+      "expected_sha256": "1e0b010918167911210a8eb5555dc93d5001aa68d23d5c3465387c665747e035",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": true,
+      "source_revision": "4099e7c364dff858f48011611da930a3a0bceeb0",
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520261811,
+      "path": "claude/production/plugins/kaijan/capabilities/library/build-inputs.json",
+      "line": 136,
+      "field": "packages/capabilities/research/planner-loop-api.mjs",
+      "expected_sha256": "3be70bf9dc153d56209bce2ebd4de7e94a229bce83e130341051c52233a83a69",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": true,
+      "source_revision": "4099e7c364dff858f48011611da930a3a0bceeb0",
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520261931,
+      "path": "claude/production/plugins/kaijan/capabilities/library/build-inputs.json",
+      "line": 289,
+      "field": "packages/capabilities/src/api.ts",
+      "expected_sha256": "be801a396d27f67cab854eb9b17df26f3422c64d736f67c841a5575ea2955fc9",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": true,
+      "source_revision": "4099e7c364dff858f48011611da930a3a0bceeb0",
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520262762,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 8,
+      "field": "api.mjs",
+      "expected_sha256": "9eba5438ca886676f117833dccee345309a376487d84d37e25dff8e048138fbf",
+      "matching_payload_paths": [
+        "api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520262922,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 95,
+      "field": "node_modules/@appium/base-driver/build/lib/protocol/routes/extensions/storage-access.js",
+      "expected_sha256": "fa0b74b1481630a512145816013676d97daad40fe11daa0c92ff947a65563373",
+      "matching_payload_paths": [
+        "node_modules/@appium/base-driver/build/lib/protocol/routes/extensions/storage-access.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263037,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 96,
+      "field": "node_modules/@appium/base-driver/build/lib/protocol/routes/extensions/webauthn.js",
+      "expected_sha256": "4dda8b34e4c7e071690d74103c4e5767f4509c41919ac45e59b7f46001f32993",
+      "matching_payload_paths": [
+        "node_modules/@appium/base-driver/build/lib/protocol/routes/extensions/webauthn.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263171,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 252,
+      "field": "node_modules/@modelcontextprotocol/core/dist/auth-CV4m0LEJ.cjs",
+      "expected_sha256": "14fe8799005e3d47268917ac12b7dfe50e7d17c5b745bb5397600ac9d550d8f6",
+      "matching_payload_paths": [
+        "node_modules/@modelcontextprotocol/core/dist/auth-CV4m0LEJ.cjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263280,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 253,
+      "field": "node_modules/@modelcontextprotocol/core/dist/auth-UMQCo-ad.mjs",
+      "expected_sha256": "6ea7a63dfceca17fd7ab5325947bcd4d4602b5c40f2736d406de69d906559db8",
+      "matching_payload_paths": [
+        "node_modules/@modelcontextprotocol/core/dist/auth-UMQCo-ad.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263432,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 456,
+      "field": "node_modules/@openai/agents-core/dist/sandbox/runtime/agentKeys.js",
+      "expected_sha256": "f5a0076b61bd21a577af16ed13c21ce8e3ed1c28f9bde741aa291f1f24a580a1",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-core/dist/sandbox/runtime/agentKeys.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263555,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 457,
+      "field": "node_modules/@openai/agents-core/dist/sandbox/runtime/agentKeys.mjs",
+      "expected_sha256": "c942628078e2dabebd97ecb1212c0dcdbbe29c5a0aed0d81cb249c2560d3ec45",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-core/dist/sandbox/runtime/agentKeys.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263698,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 488,
+      "field": "node_modules/@openai/agents-core/dist/sandbox/shared/credentials.js",
+      "expected_sha256": "993f56539f924cb23bc9a939899c307c865ec372f5f75f5344792eb1619a78f7",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-core/dist/sandbox/shared/credentials.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263809,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 489,
+      "field": "node_modules/@openai/agents-core/dist/sandbox/shared/credentials.mjs",
+      "expected_sha256": "95be7c56431e2cfd965d162f79245bb810432a176e29f65121f7629cb4e0ab00",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-core/dist/sandbox/shared/credentials.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520263942,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 617,
+      "field": "node_modules/@openai/agents-openai/dist/memory/openaiSessionApi.js",
+      "expected_sha256": "6f93970712c016cadd99b9aa578181ec142205e3d42a6c63da024cf212aeea21",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-openai/dist/memory/openaiSessionApi.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264065,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 618,
+      "field": "node_modules/@openai/agents-openai/dist/memory/openaiSessionApi.mjs",
+      "expected_sha256": "5a42d8b1ddcfe176abc1c46b6e62d10a5a9eb88f54c35f04b5a6c9f5d9ab41b1",
+      "matching_payload_paths": [
+        "node_modules/@openai/agents-openai/dist/memory/openaiSessionApi.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264200,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 923,
+      "field": "node_modules/appium-mac2-driver/node_modules/axios/lib/cancel/CancelToken.js",
+      "expected_sha256": "933b19cc36e0c4a29d85f0e65b23d386ead41423be081016bf8011cd3431eec7",
+      "matching_payload_paths": [
+        "node_modules/appium-mac2-driver/node_modules/axios/lib/cancel/CancelToken.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264361,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 93,
+      "field": "github-capture/authored_eligibility.mjs",
+      "expected_sha256": "d06340eb38575279a85497c8d1f9c77b379459b512b48d5f3412e553b3f9fca6",
+      "matching_payload_paths": [
+        "pr-context/github-capture/authored_eligibility.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264505,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 131,
+      "field": "pr-context-finder/related/api.d.mts",
+      "expected_sha256": "ebda8762c3a0e7467b666c5bc44a06b8fbeafac6272d7debd3317b4267089eca",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/api.d.mts"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264637,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 132,
+      "field": "pr-context-finder/related/api.mjs",
+      "expected_sha256": "c218ec9682b74f6a5bbe3524462efe267f0a87f9bb9e7698dc0dd56a29c61ce4",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264759,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 159,
+      "field": "pr-context-finder/related/source-sanitizer-api.mjs",
+      "expected_sha256": "1e0b010918167911210a8eb5555dc93d5001aa68d23d5c3465387c665747e035",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-sanitizer-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264859,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 160,
+      "field": "pr-context-finder/related/source-page-api.mjs",
+      "expected_sha256": "085b60c845a49c046b3f76458adc4ffd7df4ee30c0d604a97e6e18291255f2b8",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-page-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520264975,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 161,
+      "field": "pr-context-finder/related/reference-api.mjs",
+      "expected_sha256": "2ca06bcab6fe9fbf76cdc13579574c70c6b86c3af661aa2088d639ce88a0ad1a",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/reference-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265092,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 163,
+      "field": "pr-context-finder/related/source-sanitizer-api.d.mts",
+      "expected_sha256": "7d7b9eb5fd7987b68d924da70d52c5a1e69df00b6cac790656a788569513a84d",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-sanitizer-api.d.mts"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265180,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 232,
+      "field": "pr-context-finder/related/api.d.mts",
+      "expected_sha256": "fb5280aa7869c612f042a9328bf27db4954199d7124e0e0a698eed27b636b074",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [
+        {
+          "git_blob": "eb989dacb618b58eae26b1e410ca69a687425fde",
+          "path": "packages/context-finder/selected/related/pr-context-finder/related/api.d.mts",
+          "sha256": "fb5280aa7869c612f042a9328bf27db4954199d7124e0e0a698eed27b636b074"
+        }
+      ],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265304,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 233,
+      "field": "pr-context-finder/related/api.mjs",
+      "expected_sha256": "4fd16438da429706b1725e1c07185ec1762ad246e6844f0d6d7d654c1b3a960c",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [
+        {
+          "git_blob": "69f22274190990ab1fd05f62745937886937c425",
+          "path": "packages/context-finder/selected/related/pr-context-finder/related/api.mjs",
+          "sha256": "4fd16438da429706b1725e1c07185ec1762ad246e6844f0d6d7d654c1b3a960c"
+        }
+      ],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265415,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 372,
+      "field": "pr-context-finder/related/api.d.mts",
+      "expected_sha256": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [
+        {
+          "git_blob": "704ac9044d24eee334dbe1c7d3467baeac964632",
+          "path": "experiments/context-finder/related/api.d.mts",
+          "manifest_field": "pr-context-finder/related/api.d.mts",
+          "source_revision": "1852e6676718c6b73a108f86c42384e13db0a548",
+          "sha256": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08"
+        }
+      ],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265519,
+      "path": "claude/production/plugins/kaijan/capabilities/library/native-selection.json",
+      "line": 373,
+      "field": "pr-context-finder/related/api.mjs",
+      "expected_sha256": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee",
+      "matching_payload_paths": [],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [
+        {
+          "git_blob": "c3118337ce7758aa1a707549dc72be05372c6fab",
+          "path": "experiments/context-finder/related/api.mjs",
+          "manifest_field": "pr-context-finder/related/api.mjs",
+          "source_revision": "1852e6676718c6b73a108f86c42384e13db0a548",
+          "sha256": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee"
+        }
+      ],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265668,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 1803,
+      "field": "node_modules/jose/dist/webapi/key/generate_secret.js",
+      "expected_sha256": "b6984ddbed52cff9179a1b681076ad6d1529ff50fabc58bb32b9b71752cf9523",
+      "matching_payload_paths": [
+        "node_modules/jose/dist/webapi/key/generate_secret.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265854,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 1816,
+      "field": "node_modules/jose/dist/webapi/lib/key_algorithm.js",
+      "expected_sha256": "4ef0b80292076659b054313f70eeef81cd7df01e2ec9988c24552206bc42cc07",
+      "matching_payload_paths": [
+        "node_modules/jose/dist/webapi/lib/key_algorithm.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520265991,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 1817,
+      "field": "node_modules/jose/dist/webapi/lib/key_descriptor.js",
+      "expected_sha256": "80ae05a1fc41271a29dbd5ab717255a1255ee0ac43b6820853d2f338d9e74b46",
+      "matching_payload_paths": [
+        "node_modules/jose/dist/webapi/lib/key_descriptor.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520266145,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 1818,
+      "field": "node_modules/jose/dist/webapi/lib/key_management.js",
+      "expected_sha256": "c65e89877bda7df0f5bf08686334a1ab8fe291b4bcdc5599edf901cd7b5cecaf",
+      "matching_payload_paths": [
+        "node_modules/jose/dist/webapi/lib/key_management.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520367856,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 1819,
+      "field": "node_modules/jose/dist/webapi/lib/key.js",
+      "expected_sha256": "e150a72056a69a980a19c23334f5c16e4b9aedfbde9af2702070c5bf93fc075d",
+      "matching_payload_paths": [
+        "node_modules/jose/dist/webapi/lib/key.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520367997,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2057,
+      "field": "node_modules/openai/auth/workload-identity-auth.js",
+      "expected_sha256": "ac2c2497d226c2e1b8896f5810a0f3c624bca33a491680fb09fde7ce26a42d46",
+      "matching_payload_paths": [
+        "node_modules/openai/auth/workload-identity-auth.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368128,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2058,
+      "field": "node_modules/openai/auth/workload-identity-auth.mjs",
+      "expected_sha256": "e4fbd0928109a20eb4318efabd31b2db0218b30a5806fa7b8b8f80b0a6e15600",
+      "matching_payload_paths": [
+        "node_modules/openai/auth/workload-identity-auth.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368312,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2065,
+      "field": "node_modules/openai/core/api-promise.js",
+      "expected_sha256": "dc5ff1461d3b0beb8f18a0b8902ad87c4053815f5e221d64e3f3cbc9b270f818",
+      "matching_payload_paths": [
+        "node_modules/openai/core/api-promise.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368436,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2066,
+      "field": "node_modules/openai/core/api-promise.mjs",
+      "expected_sha256": "edb8be5b07bc29b303f6ca13f35c97a21a014f8ff16be02ce38466d38a65c559",
+      "matching_payload_paths": [
+        "node_modules/openai/core/api-promise.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368571,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2089,
+      "field": "node_modules/openai/internal/auth/x509-api-origin.js",
+      "expected_sha256": "b274c8bf0630a3ddb587c0330258f293e3c85d147f60dbd84ed9e7bc3af26c05",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-api-origin.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368709,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2090,
+      "field": "node_modules/openai/internal/auth/x509-api-origin.mjs",
+      "expected_sha256": "e1e04b9ed6da0dc6738c78ff5002814f61173a3d2eb7c1ce39383f35b88c37ee",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-api-origin.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368844,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2091,
+      "field": "node_modules/openai/internal/auth/x509-credential-options.js",
+      "expected_sha256": "e7847c6e4a3f819d681041f07f6179cd5bb985b27e24878af8cb8ae2afaafa76",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-credential-options.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520368939,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2092,
+      "field": "node_modules/openai/internal/auth/x509-credential-options.mjs",
+      "expected_sha256": "2487bf6825d67a8945cc2c3c9cd30525a7ff1a80b21a5993335dcc58700634be",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-credential-options.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369033,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2098,
+      "field": "node_modules/openai/internal/auth/x509-workload-identity-auth.js",
+      "expected_sha256": "6913a3ba9849c151b537154548ab03e6abb1711682d3b58f9ecc5629d117213a",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-workload-identity-auth.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369180,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2099,
+      "field": "node_modules/openai/internal/auth/x509-workload-identity-auth.mjs",
+      "expected_sha256": "dd6a5237cd767c67632c1e17b72978458b7729981a2a6d3f15a4b9afda3aea07",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/auth/x509-workload-identity-auth.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369319,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2126,
+      "field": "node_modules/openai/internal/realtime-credentials.js",
+      "expected_sha256": "904b9f8a67e8de2bed3bf27b8fe68f7585c330b2d3b6209d50fe2405f51f1333",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/realtime-credentials.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369410,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2127,
+      "field": "node_modules/openai/internal/realtime-credentials.mjs",
+      "expected_sha256": "82bc84c7d4a53dd14e025b395a0a53af785c5abc962ae39957d8de8d73fa3cd8",
+      "matching_payload_paths": [
+        "node_modules/openai/internal/realtime-credentials.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369503,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2253,
+      "field": "node_modules/openai/resources/admin/organization/admin-api-keys.js",
+      "expected_sha256": "03df452f95dd26e7a757971a2945ab17d4a9fdca8255423375b0faab4acde76c",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/admin-api-keys.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369593,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2254,
+      "field": "node_modules/openai/resources/admin/organization/admin-api-keys.mjs",
+      "expected_sha256": "48fc110c8bfd4eb5d0c7f68dfcc4bb22b9ecf41d702354b94f2dbbd22f5ac992",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/admin-api-keys.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369714,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2273,
+      "field": "node_modules/openai/resources/admin/organization/projects/api-keys.js",
+      "expected_sha256": "534be53348bfe6920e11950c50bd4b88222853debaf200749b8a2315317d2d47",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/projects/api-keys.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369808,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2274,
+      "field": "node_modules/openai/resources/admin/organization/projects/api-keys.mjs",
+      "expected_sha256": "545b1d60f7d34d25c79b18c8558d0902c0fa1c9b64aaa7936761a8291fdb6cd2",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/projects/api-keys.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520369900,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2293,
+      "field": "node_modules/openai/resources/admin/organization/projects/service-accounts/api-keys.js",
+      "expected_sha256": "875b22d81a38e180a83d9219e0044686d295c507cdb0451fb23ae11151eebd93",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/projects/service-accounts/api-keys.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370046,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2294,
+      "field": "node_modules/openai/resources/admin/organization/projects/service-accounts/api-keys.mjs",
+      "expected_sha256": "1d14c74c0841db8e58614e9c7771824e5bf5a0611f52d2f32de3b331d972d19d",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/admin/organization/projects/service-accounts/api-keys.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370214,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2365,
+      "field": "node_modules/openai/resources/beta/agents/vaults/credentials.js",
+      "expected_sha256": "579584d9c74d3ba9c5e79d79719bed2e2a5b129e0249ca8445c824eb5c0b348a",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/beta/agents/vaults/credentials.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370347,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2366,
+      "field": "node_modules/openai/resources/beta/agents/vaults/credentials.mjs",
+      "expected_sha256": "b047776ab7a552c511062fb7af79823953fd2ccf7a4d7bdbce09d9a5b8a309bd",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/beta/agents/vaults/credentials.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370491,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2387,
+      "field": "node_modules/openai/resources/beta/responses/input-tokens.js",
+      "expected_sha256": "c8abbcf9d866b6d801f0eeb19d8ff273096a1826ba9a6117b0170d4ef377c43f",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/beta/responses/input-tokens.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370589,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2388,
+      "field": "node_modules/openai/resources/beta/responses/input-tokens.mjs",
+      "expected_sha256": "2da63c45cc424ee0d681bee4a008d448a6395a59b3e33df8a6dcb61bc7d775f6",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/beta/responses/input-tokens.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370708,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2473,
+      "field": "node_modules/openai/resources/realtime/client-secrets.js",
+      "expected_sha256": "facda824599abf3409d0beff5b5c620a95ca55a57a498d35ce24b11df4db6387",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/realtime/client-secrets.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370832,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2474,
+      "field": "node_modules/openai/resources/realtime/client-secrets.mjs",
+      "expected_sha256": "54b138bd2402c3976718690cd67879169fba1f069bff75ae33cdea8c9e69cc74",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/realtime/client-secrets.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520370962,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2477,
+      "field": "node_modules/openai/resources/realtime/translations/client-secrets.js",
+      "expected_sha256": "c92f3f04ddcbf3d94f2c4906593b06f6878cc7baf7c3e74e31e55ec9d8e23795",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/realtime/translations/client-secrets.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371074,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2478,
+      "field": "node_modules/openai/resources/realtime/translations/client-secrets.mjs",
+      "expected_sha256": "7d4e90d837e068cd576ae142103009dbc37f1fac9b70d3b29079fd24c8f6f479",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/realtime/translations/client-secrets.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371196,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2483,
+      "field": "node_modules/openai/resources/responses/input-tokens.js",
+      "expected_sha256": "7be11b6ff86df1b40c7050619a7bf1885b8a71540d9209b7f0cd61efc41f2162",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/responses/input-tokens.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371327,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2484,
+      "field": "node_modules/openai/resources/responses/input-tokens.mjs",
+      "expected_sha256": "2b51a727d2795afdd64738c847e4e044069de480199c831311e37d369ffd1e97",
+      "matching_payload_paths": [
+        "node_modules/openai/resources/responses/input-tokens.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371400,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 2698,
+      "field": "node_modules/postcss/lib/tokenize.js",
+      "expected_sha256": "ddfcaaa01f5eac9e4e8652044df1401ce6cc70295fd3f9fbb214ca66fb2bec72",
+      "matching_payload_paths": [
+        "node_modules/postcss/lib/tokenize.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371491,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3272,
+      "field": "node_modules/yaml/dist/public-api.js",
+      "expected_sha256": "9b318ac7b3a3751127c74f59dd1dd209230a70ca116000348b82faae189f72f0",
+      "matching_payload_paths": [
+        "node_modules/yaml/dist/public-api.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371567,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3362,
+      "field": "node_modules/zod/v4/core/api.cjs",
+      "expected_sha256": "1aef5cd4ed0cca874b02bf8081a67db4908cd7858ff0c61c593ce58c74e619dd",
+      "matching_payload_paths": [
+        "node_modules/zod/v4/core/api.cjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371721,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3363,
+      "field": "node_modules/zod/v4/core/api.js",
+      "expected_sha256": "03ae6016abc9585e3f3481d6b8d775a95ae4ee65badbde73ca1ed953ff14c0e7",
+      "matching_payload_paths": [
+        "node_modules/zod/v4/core/api.js"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371822,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3587,
+      "field": "pr-context/github-capture/authored_eligibility.mjs",
+      "expected_sha256": "d06340eb38575279a85497c8d1f9c77b379459b512b48d5f3412e553b3f9fca6",
+      "matching_payload_paths": [
+        "pr-context/github-capture/authored_eligibility.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520371929,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3624,
+      "field": "pr-context/pr-context-finder/related/api.d.mts",
+      "expected_sha256": "ebda8762c3a0e7467b666c5bc44a06b8fbeafac6272d7debd3317b4267089eca",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/api.d.mts"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520372017,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3625,
+      "field": "pr-context/pr-context-finder/related/api.mjs",
+      "expected_sha256": "c218ec9682b74f6a5bbe3524462efe267f0a87f9bb9e7698dc0dd56a29c61ce4",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520372107,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3648,
+      "field": "pr-context/pr-context-finder/related/reference-api.mjs",
+      "expected_sha256": "2ca06bcab6fe9fbf76cdc13579574c70c6b86c3af661aa2088d639ce88a0ad1a",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/reference-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520372235,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3653,
+      "field": "pr-context/pr-context-finder/related/source-page-api.mjs",
+      "expected_sha256": "085b60c845a49c046b3f76458adc4ffd7df4ee30c0d604a97e6e18291255f2b8",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-page-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520372359,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3654,
+      "field": "pr-context/pr-context-finder/related/source-sanitizer-api.d.mts",
+      "expected_sha256": "7d7b9eb5fd7987b68d924da70d52c5a1e69df00b6cac790656a788569513a84d",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-sanitizer-api.d.mts"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    },
+    {
+      "comment_id": 4520372449,
+      "path": "claude/production/plugins/kaijan/capabilities/library/library-manifest.json",
+      "line": 3655,
+      "field": "pr-context/pr-context-finder/related/source-sanitizer-api.mjs",
+      "expected_sha256": "1e0b010918167911210a8eb5555dc93d5001aa68d23d5c3465387c665747e035",
+      "matching_payload_paths": [
+        "pr-context/pr-context-finder/related/source-sanitizer-api.mjs"
+      ],
+      "original_source_hash_matches": false,
+      "source_revision": null,
+      "historical_source_blob_matches": [],
+      "verified_content_hash": true
+    }
+  ],
+  "limits": "Only returned inline comments; not a disposition of omitted scanner findings or dynamic file operations.",
+  "aikido_reported_high_findings": 91,
+  "inline_file_operation_findings": 9,
+  "reported_findings_without_inline_detail": 11,
+  "ignore_request": {
+    "comment_id": 4520430019,
+    "finding_comment_id": 4520262762,
+    "state": "submitted, not acknowledged"
+  },
+  "scope": "Only Production paths were present in the returned inline comments. Neither profile payload was modified.",
+  "file_operation_review": [
+    {
+      "file": "application-context-query/index.mjs",
+      "line": 24,
+      "finding": "module-relative readFile",
+      "review": "Only five fixed relative paths from a literal list are read for implementation identity; no caller/model filename input."
+    },
+    {
+      "file": "application-context-query/runner-context.mjs",
+      "line": 282,
+      "finding": "module-relative readFile",
+      "review": "The same five literal module-relative identity files are read, independently of model input."
+    },
+    {
+      "file": "application-context-query/store.mjs",
+      "lines": [
+        44,
+        71,
+        83,
+        89,
+        99
+      ],
+      "finding": "store open/read/write/sync operations",
+      "review": "Service callers pass fixed literal kinds, key data is hashed before filenames, and store root comes from host-private artifact configuration. Read uses O_NOFOLLOW/O_NONBLOCK plus owner/mode/file-type/link-count checks. Claims and temporary saves use exclusive creation with mode 0600. See paired packaged storage controls; this is not an exhaustive filesystem audit."
+    },
+    {
+      "file": "change-risk/runtime.mjs",
+      "lines": [
+        143,
+        333
+      ],
+      "finding": "reported as read inclusion; both sinks are writeFile",
+      "review": "The shipped risk method supplies fixed stage labels and save filenames. Work-item review creates a new host-selected absolute archive and transport directory at 0700; writes use 0600 and exclusive creation except fixed ledger replacement. No model-supplied filename was found in the inspected path; this does not audit arbitrary host extensions."
+    }
+  ]
+}

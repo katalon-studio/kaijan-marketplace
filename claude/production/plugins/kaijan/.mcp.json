@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "kaijan_core": {
+      "type": "stdio",
+      "command": "${CLAUDE_PLUGIN_ROOT}/capabilities/runtime/node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/core-mcp.mjs"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "",
+        "LOKI_OPENROUTER_API_KEY": "",
+        "LOKI_OPENROUTER_BASE_URL": "",
+        "LOKI_MODEL_PROVIDER": "",
+        "NODE_OPTIONS": "",
+        "NODE_PATH": ""
+      }
+    },
+    "kaijan_local": {
+      "type": "stdio",
+      "command": "${CLAUDE_PLUGIN_ROOT}/capabilities/runtime/node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/local-mcp.mjs"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "",
+        "LOKI_OPENROUTER_API_KEY": "",
+        "LOKI_OPENROUTER_BASE_URL": "",
+        "LOKI_MODEL_PROVIDER": "",
+        "NODE_OPTIONS": "",
+        "NODE_PATH": ""
+      }
+    }
+  }
+}

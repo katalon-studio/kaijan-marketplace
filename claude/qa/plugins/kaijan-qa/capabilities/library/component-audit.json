@@ -1,0 +1,524 @@
+{
+  "schema": "loki.product-mcp-component-audit/1",
+  "issue": 2173,
+  "baseline": "88fe131f00a7de6bdfab70dddfa0127745d6d46f",
+  "scope": "Product MCP capability methods, receiving APIs, hosts and actual package selection. Not a new model-quality evaluation.",
+  "nativeAndReceivingFilesInventoried": 327,
+  "report": "../../docs/product-design/product-mcp-component-audit-20261031.md",
+  "components": [
+    {
+      "component": "Context Finder",
+      "selected": "Four accepted query modes and optional origin/parent/followthrough/connected readers",
+      "removed": "Old core retrieval/ranking, offline packet registry and standalone CLI/NDJSON frontends"
+    },
+    {
+      "component": "Test Planning / Supplement",
+      "selected": "Canonical planning and immutable additive supplement",
+      "removed": "No extra inference method found; historical convenience provider moved"
+    },
+    {
+      "component": "Risk Finder",
+      "selected": "Direct/guided change review and work-item risk",
+      "removed": "Standalone capturePr acquisition moved"
+    },
+    {
+      "component": "Work Verifier",
+      "selected": "Default supplied-evidence preparation/assessment/projection and shared binding",
+      "removed": "No additional evaluator found; stale representation type narrowed"
+    },
+    {
+      "component": "UI Modeler",
+      "selected": "Focused live-folder generation, current framework source handling, current map read/export/provenance",
+      "removed": "Event pilot, event retrieval, old page/control generation, archive/revision/CLI capture, independent compiler/review helpers and old graph validator moved"
+    },
+    {
+      "component": "Browser Runner",
+      "selected": "Native computer-use/official observations, preparation/traces/lifecycle",
+      "removed": "No old JEV/memory/replay method present"
+    },
+    {
+      "component": "macOS Runner",
+      "selected": "Native desktop/AX/Appium path",
+      "removed": "Unused initializer removed; execution algorithm unchanged"
+    },
+    {
+      "component": "Context Intake / source adapters / contracts",
+      "selected": "Original retained input, explicit adapters, provenance and Unicode-safe continuation",
+      "removed": "Only unused root byte writers/comparator moved; supported standalone filter retained"
+    },
+    {
+      "component": "Provider transport",
+      "selected": "Serialized direct OpenAI Luna and OpenRouter JEV/catalog requests",
+      "removed": "Gateway flags/convenience/embeddings APIs and old fixture moved"
+    },
+    {
+      "component": "Local MCP / Setup / reports / Map Reader",
+      "selected": "Current catalog, real Setup, current native and retained read/report contracts",
+      "removed": "Context-only server, controlled Flow/standalone Setup, old CLI generator skill/package selection and obsolete provider harness moved"
+    },
+    {
+      "component": "Core MCP",
+      "selected": "Authorized connection status, exact Work Item read and disconnect",
+      "removed": "No experimental capability engine found in this MCP route"
+    },
+    {
+      "component": "Capability runtime / package",
+      "selected": "Current installation/session and installed-payload verification; concrete Desktop/Crew APIs remain shared",
+      "removed": "Current payload bundle omits legacy cache materialization exports; native library staging drops removed sources"
+    }
+  ],
+  "sourceSelectionChanges": [
+    {
+      "table": "files",
+      "destination": "change-risk/runtime.mjs",
+      "source": "packages/risk-finder/runtime.mjs",
+      "before": "f27c0dc59748b44f6b532e07b90e91737174131df3e9db40b675dc1c0f847462",
+      "after": "614577ea4a9f381cbd1c4e8e5d51063991b840c9c270117ffeab05ae51a5c2e5"
+    },
+    {
+      "table": "files",
+      "destination": "change-risk/node_modules/@katalon-experiments/ai-client/index.mjs",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "files",
+      "destination": "change-risk/node_modules/@katalon-experiments/ai-client/index.d.mts",
+      "source": "packages/provider-transport/index.d.mts",
+      "before": "36c006d06236fb4d7b3f1fc6a046468d64e8965dfa35b517ee9fbe7315b2d127",
+      "after": "5df8fb7567ffa38b233a8ece0381c98d3e61330dccc209ddffb7537ceec70ad0"
+    },
+    {
+      "table": "files",
+      "destination": "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "files",
+      "destination": "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts",
+      "source": "packages/provider-transport/litellm-route.d.mts",
+      "before": "3a0ff8564c4a1d4442f0ef763622e7adf79b0e97f27e16d13d96a11755bd019c",
+      "after": "dd51759644efad1b26265a7ab07161dfa9cf4d2ddab7c002b79625a5c2d0297d"
+    },
+    {
+      "table": "files",
+      "destination": "change-risk/node_modules/@katalon-experiments/ai-client/README.md",
+      "source": "packages/provider-transport/README.md",
+      "before": "6b44e91a8dd86668679732906fe1c59de222c3b4ebe3686b865c4f0e94c72144",
+      "after": "0c95c8c290748bccf031dd124bb1b7cec77bf33e07036b94c8cd1b465df8dcf3"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/runtime.mjs",
+      "source": "packages/risk-finder/runtime.mjs",
+      "before": "f27c0dc59748b44f6b532e07b90e91737174131df3e9db40b675dc1c0f847462",
+      "after": "614577ea4a9f381cbd1c4e8e5d51063991b840c9c270117ffeab05ae51a5c2e5"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/node_modules/@katalon-experiments/ai-client/index.mjs",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/node_modules/@katalon-experiments/ai-client/index.d.mts",
+      "source": "packages/provider-transport/index.d.mts",
+      "before": "36c006d06236fb4d7b3f1fc6a046468d64e8965dfa35b517ee9fbe7315b2d127",
+      "after": "5df8fb7567ffa38b233a8ece0381c98d3e61330dccc209ddffb7537ceec70ad0"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts",
+      "source": "packages/provider-transport/litellm-route.d.mts",
+      "before": "3a0ff8564c4a1d4442f0ef763622e7adf79b0e97f27e16d13d96a11755bd019c",
+      "after": "dd51759644efad1b26265a7ab07161dfa9cf4d2ddab7c002b79625a5c2d0297d"
+    },
+    {
+      "table": "files",
+      "destination": "work-item-risk/node_modules/@katalon-experiments/ai-client/README.md",
+      "source": "packages/provider-transport/README.md",
+      "before": "6b44e91a8dd86668679732906fe1c59de222c3b4ebe3686b865c4f0e94c72144",
+      "after": "0c95c8c290748bccf031dd124bb1b7cec77bf33e07036b94c8cd1b465df8dcf3"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/github-capture/file_bytes.mjs",
+      "source": "packages/context-finder/selected/related/github-capture/file_bytes.mjs",
+      "before": "5b5defc5efea3b25d35ab666977259cf2c1373eb400ebb328c52ab20af2e5c02",
+      "after": null
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/github-capture/github_references.mjs",
+      "source": "packages/context-finder/selected/related/github-capture/github_references.mjs",
+      "before": "62a6e2339563895ed8eb71297a5e2186765fa9e7d1d54c9fa9c70f47f9fba7b4",
+      "after": "9ca02939a31554602844f0aaf2adafa0e8bfe1cef1f0af442c22457c668f95c8"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/github-capture/packet_reader.mjs",
+      "source": "packages/context-finder/selected/related/github-capture/packet_reader.mjs",
+      "before": "de00fe3492e6ec37900143b8c3ad8c62aaafad1949cea6c271409b2f8aec2559",
+      "after": null
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/github-capture/unicode_properties.mjs",
+      "source": "packages/context-finder/selected/related/github-capture/unicode_properties.mjs",
+      "before": "ff1316534ed7db61e52b08d1526b6ede2935bc88d6393771050761807bb2080a",
+      "after": "7cbd7c76e2e6c03925b7f0c48dd7ec6ea19ea7f86b332cef444a7201de7f2d7e"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/node_modules/@katalon-experiments/ai-client/README.md",
+      "source": "packages/provider-transport/README.md",
+      "before": "6b44e91a8dd86668679732906fe1c59de222c3b4ebe3686b865c4f0e94c72144",
+      "after": "0c95c8c290748bccf031dd124bb1b7cec77bf33e07036b94c8cd1b465df8dcf3"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/node_modules/@katalon-experiments/ai-client/index.d.mts",
+      "source": "packages/provider-transport/index.d.mts",
+      "before": "36c006d06236fb4d7b3f1fc6a046468d64e8965dfa35b517ee9fbe7315b2d127",
+      "after": "5df8fb7567ffa38b233a8ece0381c98d3e61330dccc209ddffb7537ceec70ad0"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/node_modules/@katalon-experiments/ai-client/index.mjs",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts",
+      "source": "packages/provider-transport/litellm-route.d.mts",
+      "before": "3a0ff8564c4a1d4442f0ef763622e7adf79b0e97f27e16d13d96a11755bd019c",
+      "after": "dd51759644efad1b26265a7ab07161dfa9cf4d2ddab7c002b79625a5c2d0297d"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/node_modules/@katalon-experiments/ai-client/litellm-route.mjs",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/core.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/core.mjs",
+      "before": "6d0c9f860dc589ce1ccf0322952e691262d9ec6f01d932677fdf35313ae19b09",
+      "after": "5116743c941ef50ab6749121f3f4b6ce4a1a62b38e7ec391bbd826262fd4c43a"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/arguments.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/arguments.mjs",
+      "before": "a429890290c9be244291148a4d7646d66e7695a8c89e3ffa6d0586f47d5dc513",
+      "after": null
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/pcf_comment_filter.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/pcf_comment_filter.mjs",
+      "before": "626b21f3c662daed12f3e4248c1ff24da2c6fe319cc455d9a5f3e4bcb3bb3bc3",
+      "after": "075501d47accc0c955bef26b0b5bce2f0a8a274e3385d678ecf55a03ec194c79"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/pcf_comment_origin.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/pcf_comment_origin.mjs",
+      "before": "b819a9b2ee82cf6bdd148916f24ae7b54a21c01f0ce053af6fbf669e4bb7653c",
+      "after": "0f35c964e0892441d7d028ac12a7a17f5bae29f247eddb9fb6a21f3d693391dc"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/pcf_parent_select.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/pcf_parent_select.mjs",
+      "before": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35",
+      "after": "700c8623abae802b776a79f207ca9fdac01d57b19d5787fbd804634a93ed2cdd"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/shared.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/shared.mjs",
+      "before": "dea513f51db6f7363e5edb543d9cdd4bc4b1a8f8aaa648d24d174b2a6ab69935",
+      "after": "d1c4ffb05f85ccc2c19b87ab4195919f7967c95f196731664b00704b2eaaf231"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/planning/standalone-syntax.json",
+      "source": "packages/context-finder/selected/related/pr-context-finder/planning/standalone-syntax.json",
+      "before": "8c6ee3f5a9cd1bd5461a3789beb91e41dc03396f6c12cc22d80b151437695c2c",
+      "after": null
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/related/api.d.mts",
+      "source": "packages/context-finder/selected/related/pr-context-finder/related/api.d.mts",
+      "before": "661b511ff0b1af29e2105d3e3454d9802f23c9116eaca24b3f83651c6668b8cf",
+      "after": "ebda8762c3a0e7467b666c5bc44a06b8fbeafac6272d7debd3317b4267089eca"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/related/api.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/related/api.mjs",
+      "before": "473f31262ff969d6bb83d55ad91efcd9e62bfb89a8e304fc654e5e5bdbe391a3",
+      "after": "bdc2ba74b1110201253eed89c4c53354bd86b0cf44d73fce7350d79cd3743ec4"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/related/connected-transport.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/related/connected-transport.mjs",
+      "before": "ec01c8b10b99f2149ce45adfdfe5d1484883cabc7de072a45b2f012a466ad799",
+      "after": "46ee1ec059e8a3941a68a0200df88f873a4f665f4afb8ca3620f3932c96f2985"
+    },
+    {
+      "table": "files",
+      "destination": "pr-context/pr-context-finder/related/source-control.mjs",
+      "source": "packages/context-finder/selected/related/pr-context-finder/related/source-control.mjs",
+      "before": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6",
+      "after": null
+    },
+    {
+      "table": "files",
+      "destination": "planning/node_modules/@katalon-experiments/ai-client/index.mjs",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "files",
+      "destination": "planning/node_modules/@katalon-experiments/ai-client/index.d.mts",
+      "source": "packages/provider-transport/index.d.mts",
+      "before": "36c006d06236fb4d7b3f1fc6a046468d64e8965dfa35b517ee9fbe7315b2d127",
+      "after": "5df8fb7567ffa38b233a8ece0381c98d3e61330dccc209ddffb7537ceec70ad0"
+    },
+    {
+      "table": "files",
+      "destination": "planning/node_modules/@katalon-experiments/ai-client/litellm-route.mjs",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "files",
+      "destination": "planning/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts",
+      "source": "packages/provider-transport/litellm-route.d.mts",
+      "before": "3a0ff8564c4a1d4442f0ef763622e7adf79b0e97f27e16d13d96a11755bd019c",
+      "after": "dd51759644efad1b26265a7ab07161dfa9cf4d2ddab7c002b79625a5c2d0297d"
+    },
+    {
+      "table": "files",
+      "destination": "planning/node_modules/@katalon-experiments/ai-client/README.md",
+      "source": "packages/provider-transport/README.md",
+      "before": "6b44e91a8dd86668679732906fe1c59de222c3b4ebe3686b865c4f0e94c72144",
+      "after": "0c95c8c290748bccf031dd124bb1b7cec77bf33e07036b94c8cd1b465df8dcf3"
+    },
+    {
+      "table": "files",
+      "destination": "planner-loop-source/experiments/provider-transport/index.mjs",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "files",
+      "destination": "planner-loop-source/experiments/provider-transport/litellm-route.mjs",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/provider-transport/index.mjs",
+      "before": "8b964f4a9db379fbece8525cc2f00053b60ad322e3dbf2d027ff2e978a829bfe",
+      "after": "84363b6e98929006f6e4fba2414af8444f77e316e919b556959ead008c8f5cd2"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/provider-transport/litellm-route.mjs",
+      "before": "c38f0da7e62c0bd1e06d500af469734a0724a29e7399b1bd52ed93bbfdf48539",
+      "after": "4f0575d66aed0a295609b72d6ab90e5ce2b70e393a077d101edb0d8d2e693a69"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/lib/captured-source-composition.mjs",
+      "before": "c16b7f1733de490c1497dac3d34807d14eccdd24f30c6f6c6fc21e450c30a01d",
+      "after": "f63cb6cd073e860020df4af471349f676ae499e2bff491fb16994690be05133d"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/lib/events-budget.mjs",
+      "before": "809a0d8cf23da6c91387916af4f8771b9219786727c86be9feda466645c9a955",
+      "after": "02071c485566afdcec8296513558b829d1659b46227bed3b57ddf01a45b078ca"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/lib/folder-workflow.mjs",
+      "before": "4d904dfca0ba66666fe8236ba79bcc322567dce34951281b4ec2bd859f322804",
+      "after": "ff94e703832393a1d99f9f051bb9156ba40a71d57d105f096a0024183e754b4d"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/lib/python-data-semantics.mjs",
+      "before": "02eb25eb2acdd14b0523093de89254aa7dbc3a5006a4cb7bad12d556546e766b",
+      "after": "b3e8664d5c3d14ae65d75488c808e15c5d0e576a8a1fded7ed6e7edd43a6d6f4"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/lib/tar-members.mjs",
+      "before": "b9124f39adeca14129c5249afe1804ced60b1dd100114c513058cb5922350260",
+      "after": null
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/license-derivation.json",
+      "before": "25a7b4100c88e250288cd44e4ab9e6f28b525ba2e0f93a2d37acf492afb42d65",
+      "after": null
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/package.json",
+      "before": "0dd4a68a321f7a1580d1a76a1473b8c1564ca13af97da94a94a8d9484a2eb43d",
+      "after": "6f6e987cc1c3db4c1549c2fc36068e4a7ffbb176e8b9a2f247ac4657baaf4c16"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/README.md",
+      "before": "8ab3b28ea30dc61135918f4465460ba891e0bdd773d4c1c8abb808a6d1666dee",
+      "after": "db2523c8b7d23e5b7da90def5d32adb5d2c22d96efa47863da20faef3b8582ca"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_binding_read_lines.mjs",
+      "before": "2df4999965b24d56166e816e6d3e6b321e7fc1f0fa0dfdf6aa58cd905bd7f39d",
+      "after": "ac5a8f4126a7567c60d064701fd0a75ffe0f23353c24ec1dbb7b667b47c01579"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_binding_retrieval.mjs",
+      "before": "529f3b46fe6dbae90c49a81bb3a899a3a1e959271839660a4b7c6762b4135e4d",
+      "after": "f2287101b46a098435b9b470d5a4f99cf2df4cc7c95d09e86c4e6b3f74a196ab"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_compiler_imports.mjs",
+      "before": "429e6c41ac1e666971c26f68a900d6c73fdf2fd41134275f6e13c7cc712ab33d",
+      "after": "6fa711f652e01d011bfb9f85374a2e5084557b476b197f9028cd6c4a32d954ef"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_folder_inventory.mjs",
+      "before": "d2e4f76bae23ff834d99a39ef19161f79cd0ecda12ca571d7090177064c8d31b",
+      "after": "38036169a28b8d694b45643a6b57d88792cf1860148cb9a960a299a4bea3380f"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_jev_context.mjs",
+      "before": "dbef0bb9d715f47b3d0464e1e9d757431ccf486985ae59851aeafba388801fb3",
+      "after": "8947b823b0ca508778ae06f03d9c165cd10eb03f69a3f352b741c5716033dad5"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_page_binding_expressions.mjs",
+      "before": "c5fcc964cbffa4892176fc94b84d5a23a0efe0a7122782ca275114387e2f9dcd",
+      "after": "8b6b9999a0bbb4cdfd4d887b21f8addb58c0685ed083e318064238c00aead831"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_page_bindings.mjs",
+      "before": "5c9195fb5115d350ecef9ba5367a23f84bb499defe00208f1d4dd0acc538b2a3",
+      "after": "e045b699c424b01881e37042e62a13096e048de7c09debb3eb4028709e387e40"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_page_map_core.mjs",
+      "before": "de5df524b73916aabd262e1e8935d17ace48b6841495560b6105667873337bea",
+      "after": "724fe3870c5cc994f0f0b1ab6a2a9e50b823e4d23e1c3001507d72ee42f747d7"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_page_seed_context.mjs",
+      "before": "52f3a6b0cb7e4de508d933f854a692e8343fa5342ac8a032f7149729a75b7c45",
+      "after": "65dbda333bd7568d740ee60942609ef76826d4c6ee1ee193310dbd8620bded97"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_repo_core.mjs",
+      "before": "25bd817f60316ce483d20e247b80bf449082474230aa381285a3760b40e0a6a9",
+      "after": "2cd7da1af7579aea487aa18abe84c899566e39debefe02106cde19e1da87242f"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_repo_inventory.mjs",
+      "before": "3136307e2c96ac970faec4b1caeb90662012455eccb219786c027b9648db3e19",
+      "after": "4286952b02bbfce422baaa03e9905147343d9f49f7699908e8f3e4edd10d1e07"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/scripts/ui_source_retrieval.mjs",
+      "before": "240a45829e3d3d216e76d762e0dd2e74f96648e05663b553b1d6d67662c8d896",
+      "after": "6061fbffc506ed74f1d743ab3c40a56b9783499f725e558ceabba183f2b9f50a"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/shared.mjs",
+      "before": "b780ac27836a277a26aea969ed7326ce36344b0a6fd3d70b85fc784c7cc0deff",
+      "after": "c41c3a575a7c226805dcb97e50be87e92916a951e83ae5091554d0e89a882d62"
+    },
+    {
+      "table": "bundledSources",
+      "source": "packages/ui-modeler/extraction-v2.json",
+      "before": null,
+      "after": "1c030d64177bed5d84cb3755ae1b49e91dbc19a219b0fff360c5ed4f7ace01af"
+    }
+  ],
+  "retainedImportUpdates": [
+    {
+      "path": "experiments/2173-capability-cli-support/context-finder/selected/related/pr-context-finder/planning/pcf_mechanical.mjs",
+      "before": "7ce77aaf8c7d8c15c714652d42cf9da641e7c5e2f75822027a316dd9a1597c7c",
+      "after": "e30f46636751352bc82e6f40f4aeb735591e0deaa7aad115f2dba55a2791e2d5"
+    },
+    {
+      "path": "experiments/2173-capability-cli-support/context-finder/selected/related/pr-context-finder/related/cli.mjs",
+      "before": "74eb2a907acb9779904194500cae77493e722ca709e3bc0fc3ecac7ae6922000",
+      "after": "b7a6bf9dc0d60febf2bfcdc30305eb1bfb9c397f4d20b6c87b9d8f45685ecbaf"
+    },
+    {
+      "path": "experiments/2173-capability-cli-support/context-finder/selected/related/pr-context-finder/related/source-page.mjs",
+      "before": "954f63d1be3317f7a91c8dd363f2c7331ff943340134504924ee7da333685754",
+      "after": "ded27214831ad6e28e2571f274288f8953f8ad280294121b91e707bc7b5b727f"
+    },
+    {
+      "path": "experiments/2173-capability-cli-support/context-finder/selected/related/pr-context-finder/related/source-sanitizer.mjs",
+      "before": "835a0f05b023bd4f54a6db2583ab3dc70c5a637d8f5581ee219234615f1aa8f5",
+      "after": "105cd3d56e07317afb5cfab1e0bcc7ac5d78e4c1acb073ad9df95379c4df5411"
+    }
+  ],
+  "records": [
+    "../ui-modeler/extraction-v2.json",
+    "../../experiments/2173-reasoning-support/relocation.json",
+    "../../experiments/github-capture/support-relocation.json",
+    "../../experiments/2173-plugin-prototypes/relocation.json"
+  ],
+  "preserved": [
+    "Selected models/prompts/algorithms and complete native outcomes",
+    "Concrete supported optional/read/provenance and Desktop/Crew/shared APIs",
+    "Original pins, original source hashes and distinct historical derivatives",
+    "No provider/AUT execution or new inference-quality claim"
+  ],
+  "validation": "Source-equivalence and caller checks are reported on #2173; assembled package and delivery receipts remain external, bound to their actual commit/artifact."
+}

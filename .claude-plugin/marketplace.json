@@ -1,0 +1,21 @@
+{
+  "name": "kaijan-claude-preview",
+  "owner": {
+    "name": "Katalon"
+  },
+  "plugins": [
+    {
+      "name": "kaijan-qa",
+      "source": "./claude/qa/plugins/kaijan-qa",
+      "version": "0.0.0-dev.g2d35cf6a9efa2fb9.beebe01c25928425e906dfc53d6e6822b",
+      "description": "Plan functional and change-impact tests, run authorized scenarios, and review saved results in Claude Code."
+    },
+    {
+      "name": "kaijan",
+      "source": "./claude/production/plugins/kaijan",
+      "version": "0.0.0-dev.g04e91c7d3310fde2.b2d91dc6d359e45d289b782108ffdbf67",
+      "description": "Plan functional and change-impact tests, run authorized scenarios, and review saved results in Claude Code."
+    }
+  ],
+  "description": "Kaijan QA and Production previews for Claude Code CLI and local Desktop Code"
+}
