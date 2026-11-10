@@ -1,3 +1,5 @@
+import { runRelatedWorkPlanner } from "./related-work-planner.mjs";
+import { selectQueryWithPlanner } from "./query-agent.mjs";
 import { sourceScreen } from "./source-screen.mjs";
 import {
   DEFAULT_BUDGETS,
@@ -25,7 +27,7 @@ import {
 import { capture, githubReader } from "./capture.mjs";
 import { connectedReader } from "./connected-transport.mjs";
 import {
-  requestFor,
+  buildRelatedWorkRankingRequest,
   outputText,
   validateJudgments,
   judgmentCoverage,
@@ -466,48 +468,55 @@ async function runEngine(
                   controller.signal,
                   globalThis.AbortSignal.timeout(selector.limits.timeout_ms),
                 ]);
-                const response = await evaluateModel(
+                return await selectQueryWithPlanner({
                   request,
-                  config,
-                  queryStore,
-                  querySignal,
-                  queryReceipt,
-                );
-                check(
-                  queryReceipt.calls === 1 &&
-                    !queryReceipt.unknown_cost_calls &&
-                    !queryReceipt.unknown_usage_calls,
-                  "query_accounting_unknown",
-                );
-                if (available)
-                  return availableRetrieval({
-                    seed,
-                    request,
-                    response,
-                    receipt: queryReceipt,
-                    expectedHash: expectedRequestHash,
-                    signal: querySignal,
-                    policy: args.queryFallback ?? "none",
-                    repositories: args.repositories,
-                    store: queryStore,
-                    state: result.query_selection,
-                  });
-                let candidate;
-                try {
-                  candidate = JSON.parse(outputText(response));
-                } catch {
-                  check(false, "query_output_invalid");
-                }
-                queryStore.write("candidate.json", candidate);
-                const profile = selector.profile(candidate, seed);
-                result.query_selection.status = profile.status;
-                result.query_selection.profile = profile;
-                queryStore.write("profile.json", profile);
-                check(
-                  profile.status === "selected",
-                  "query_selection_uncertain",
-                );
-                return profile;
+                  method: selector.method,
+                  evaluate: () =>
+                    evaluateModel(
+                      request,
+                      config,
+                      queryStore,
+                      querySignal,
+                      queryReceipt,
+                    ),
+                  select(response) {
+                    check(
+                      queryReceipt.calls === 1 &&
+                        !queryReceipt.unknown_cost_calls &&
+                        !queryReceipt.unknown_usage_calls,
+                      "query_accounting_unknown",
+                    );
+                    if (available)
+                      return availableRetrieval({
+                        seed,
+                        request,
+                        response,
+                        receipt: queryReceipt,
+                        expectedHash: expectedRequestHash,
+                        signal: querySignal,
+                        policy: args.queryFallback ?? "none",
+                        repositories: args.repositories,
+                        store: queryStore,
+                        state: result.query_selection,
+                      });
+                    let candidate;
+                    try {
+                      candidate = JSON.parse(outputText(response));
+                    } catch {
+                      check(false, "query_output_invalid");
+                    }
+                    queryStore.write("candidate.json", candidate);
+                    const profile = selector.profile(candidate, seed);
+                    result.query_selection.status = profile.status;
+                    result.query_selection.profile = profile;
+                    queryStore.write("profile.json", profile);
+                    check(
+                      profile.status === "selected",
+                      "query_selection_uncertain",
+                    );
+                    return profile;
+                  },
+                });
               } catch (error) {
                 if (
                   result.query_selection.status !== "uncertain" &&
@@ -627,7 +636,7 @@ async function runEngine(
         ),
         "intake_unknown_no_continuation",
       );
-      const rankingRequest = requestFor(snapshot);
+      const rankingRequest = buildRelatedWorkRankingRequest(snapshot);
       const capacity = requestCapacity(
         rankingRequest,
         "ranking",
@@ -640,25 +649,32 @@ async function runEngine(
       const rankingRequestHash = available
         ? hash(JSON.stringify(rankingRequest))
         : null;
-      const response = await evaluateModel(
-        rankingRequest,
-        config,
-        store,
-        controller.signal,
-        receipt,
-      );
-      controller.signal.throwIfAborted();
-      if (available)
-        result.ranking_identity = modelIdentity(
-          rankingRequest,
-          response,
-          receipt,
-          rankingRequestHash,
-          controller.signal,
-        );
-      const candidate = JSON.parse(outputText(response));
-      store.write("candidate.json", candidate);
-      validateJudgments(candidate, snapshot);
+      const candidate = await runRelatedWorkPlanner({
+        request: rankingRequest,
+        requestChangedCode: "ranking_sdk_request_changed",
+        evaluate: () =>
+          evaluateModel(
+            rankingRequest,
+            config,
+            store,
+            controller.signal,
+            receipt,
+          ),
+        accept(response) {
+          controller.signal.throwIfAborted();
+          if (available)
+            result.ranking_identity = modelIdentity(
+              rankingRequest,
+              response,
+              receipt,
+              rankingRequestHash,
+              controller.signal,
+            );
+          const judgments = JSON.parse(outputText(response));
+          store.write("candidate.json", judgments);
+          return validateJudgments(judgments, snapshot);
+        },
+      });
       const coverage = judgmentCoverage(snapshot, candidate.judgments);
       result.ranking.coverage = coverage;
       const items = new Map(result.candidates.map((item) => [item.id, item]));

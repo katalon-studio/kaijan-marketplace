@@ -3,7 +3,11 @@ import { lstatSync } from "node:fs";
 import { dirname } from "node:path";
 import http from "node:http";
 import https from "node:https";
-export { AiClientError, providerConnection } from "./litellm-route.mjs";
+export {
+  AiClientError,
+  providerConnection,
+  requireManagedBinding,
+} from "./litellm-route.mjs";
 
 function headersFor(connection, supplied = {}) {
   // Replace inherited authorization with the key for this exact native provider.
@@ -15,9 +19,12 @@ function headersFor(connection, supplied = {}) {
       : { ...supplied };
   for (const name of Object.keys(headers))
     if (
-      ["authorization", "x-loki-plan-id", "x-loki-run-id"].includes(
-        name.toLowerCase(),
-      )
+      [
+        "authorization",
+        "x-loki-plan-id",
+        "x-loki-run-id",
+        "x-kaijan-ai-connection",
+      ].includes(name.toLowerCase())
     )
       delete headers[name];
   return { ...headers, ...connection.headers };
@@ -26,6 +33,13 @@ function headersFor(connection, supplied = {}) {
 // Return the native stream untouched. The caller keeps its existing bounded
 // reader, schema checks, usage parser, persistence, deadline and Stop contract.
 export function sendFetch(connection, options, transport = globalThis.fetch) {
+  if (
+    !connection.socketPath &&
+    Object.keys(connection.headers ?? {}).some(
+      (name) => name.toLowerCase() === "x-kaijan-ai-connection",
+    )
+  )
+    throw Error("connection_binding_requires_broker");
   if (connection.socketPath)
     return channelFetch(
       connection.socketPath,
@@ -40,6 +54,13 @@ export function sendFetch(connection, options, transport = globalThis.fetch) {
 }
 
 export function requestHttp(connection, options, callback, transport) {
+  if (
+    !connection.socketPath &&
+    Object.keys(connection.headers ?? {}).some(
+      (name) => name.toLowerCase() === "x-kaijan-ai-connection",
+    )
+  )
+    throw Error("connection_binding_requires_broker");
   if (connection.socketPath) {
     const directory = lstatSync(dirname(connection.socketPath)),
       socket = lstatSync(connection.socketPath);

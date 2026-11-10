@@ -1,53 +1,43 @@
 ---
 name: setup
-description: Set up Kaijan and save the selected application context. Use for onboarding, setup and connection readiness. Introduce this as Kaijan setup with a friendly English welcome.
+description: Set up Kaijan and save the selected application context. Use for onboarding, setup and connection readiness. Start with a friendly English welcome.
 ---
 
 # Set up Kaijan
 
-Read the [shared Product MCP guidance](../../references/local-capabilities.md). Use simple English. Start with a short welcome such as “Welcome to Kaijan! Let's get your application ready so you can start testing.” Adapt it to the known application and goal. Do not repeat it on resume or narrate internal skills and tools.
+Follow the [shared Product MCP guidance](../../references/local-capabilities.md).
+On first Setup, welcome the user briefly in English. Use the selected project,
+local directory and saved context. If needed, use the host project inventory.
+Ask a native Question only when a consequential selection is missing or
+ambiguous. A suggestion or unanswered Question does not select a project.
 
-## Select the application and goal
+Use the profile in the installed `loki-build.json` and follow
+`application-setup` in this conversation to save the selected source, original
+goal and optional target. Setup returns saved configuration without a map.
+Continue the user's explicit task when its own prerequisites are met.
 
-Reuse the current project, explicit selection and saved context. When needed, use the host's supported `list_projects` inventory. Match the actual project label and local directory. Ask which application only when the selection is missing or ambiguous. Do not scan the machine or choose by recency. If the host inventory is unavailable, use an explicit directory or ask for it; do not claim a search occurred.
+## Check the connection for the selected action
 
-Use a native Question for consequential missing input. A highlighted or unanswered choice authorizes nothing. Never change approval mode to show a Question. If the original request already selects a complete test/report goal, continue through `test-request` when its inputs suffice; do not add a phase choice.
+Check the chat's actual tool inventory and `loki_capabilities_list` when
+available. Distinguish installation, current-chat tool availability and
+readiness for the selected operation.
 
-## Save application context without a map
+- With `shared-broker-v1`, Core and Local share the Kaijan sign-in. Managed
+  AI work needs its grant. Source-only Setup, retained context and saved
+  reads can work without AI access when Local tools are available. If the
+  user cancels sign-in and wants source-only Setup, continue on that basis.
+  Use [AI access and sign-in recovery](references/provider-setup.md) for
+  managed sign-in or confirmed direct-development provider setup.
+- Check target login and private GitHub access separately. Follow
+  [GitHub setup and recovery](references/github-setup.md) for GitHub work.
+  Use `work-item` for an existing Kaijan Work Item.
+- If tools are missing after an update or the responding build is uncertain,
+  follow [update recovery](references/update-recovery.md). Check callable tools
+  and action readiness before new paid work. If the task requires a specific
+  build, verify that it responds in this chat. Preserve admitted Runs and saved
+  results.
 
-Resolve the installed plugin root two directories above this skill. Read its `loki-build.json` and use that profile's installed tools and skills. For application configuration, follow `application-setup` in this same conversation. Save the source selection, original goal and optional target, then read the original result.
-
-This release does not build maps. Do not call a map tool, ask for mapping credentials, require map readiness, wait for generation or fabricate a ready map. Fresh Setup returns the saved source, work item and optional target. Check the advertised customer result; do not require private map or authorization fields. Saved context is not browser observation or proof that a feature works.
-
-For a new source selection, default to latest main and honor an explicit branch, PR ref or exact commit. Keep the frozen SHA and original requestKey for readback/recovery. Setup does not include dirty files in that committed-source selection. Keep the caller's actual dirty-source evidence separate when the selected test task needs it. Ask for a target/browser only when execution needs one.
-
-Use the advertised input/output schema, `isError` and `structuredContent`. Preserve actual safe failures, missing input and unknown historical effects. Old mapping contexts remain old records and are never automatically restarted. A saved application context does not grant provider, browser or write authority.
-
-## Connections and prerequisites
-
-Read `authArchitecture` in the installed `loki-build.json`. With `shared-broker-v1`, Core and Local use the same Kaijan sign-in. Managed analysis, planning, Runner and evidence assessment need the shared grant for AI. Source-only Setup, context retention and saved-result reads do not need AI access when Local tools are available. An explicit direct-development build uses its local provider settings for AI.
-
-If the user cancels the initial sign-in and wants to save a local source,
-continue with `application-setup` when the Local tools are available. Do not
-start sign-in again for this source-only task. Tell the user what Setup saved
-and explain any connection required for their next selected action. Private
-GitHub source reads still need their own connection check.
-
-Inspect the actual chat tool inventory and `loki_capabilities_list` when exposed. Distinguish installed/enabled, discovery, current-chat availability and selected-operation readiness. Report the exact missing boundary. Use a supported reconnect control only when needed and verify afterward. Do not infer that Core login will fix missing local tools.
-
-After an update, or when the installed instructions require tools that this chat
-does not have, read [update recovery](references/update-recovery.md). Check the
-responding package before new paid work. Preserve active work and saved results;
-do not repeat a test to repair its connection or report.
-
-Check the prerequisites for the action the user selected. Application login is separate from Kaijan sign-in. Use the installed `work-item` skill when the user needs a Kaijan Work Item. Keep Work Item creation outside onboarding. For GitHub work, read [GitHub setup and recovery](references/github-setup.md).
-
-When a selected action needs AI, follow [AI access and sign-in recovery](references/provider-setup.md) for the installed mode. For managed builds, check the Kaijan connection and use the supported sign-in flow if access is missing. Use key setup only for a confirmed direct-development build. A Codex subscription does not establish Kaijan AI access.
-
-## Finish and continue
-
-Verify the saved configuration or blocker through `application-setup` in this conversation. State it once and continue the user's explicit task when its inputs and authority suffice. Risk analysis, functional/change-impact planning and Runner do not require a map or a Setup handoff.
-
-If the next action is open, read [next-action discovery](references/next-actions.md) and show a small set of relevant capability actions with their reason, expected result and actual requirements through a native Question. Do not substitute a fixed menu, generic chat navigation or “I'll wait” for that choice. A plan-only or no-execution request still allows useful suggestions. An explicit request to stop or skip suggestions takes precedence. Preserve the accepted selection instead of asking again.
-
-Keep configuration, proposed tests, actual execution and separate evidence assessment distinct. Do not claim a pass from a handle, finished call, source inference or missing evidence. No watcher, extra daemon, idle-chat wake or cloud orchestration is introduced.
+State the saved configuration or concrete blocker. If the next action is
+open, use [next-action discovery](references/next-actions.md) to offer a
+small set of relevant actions through a native Question. Keep any selection
+already made and respect a request to stop or skip suggestions.

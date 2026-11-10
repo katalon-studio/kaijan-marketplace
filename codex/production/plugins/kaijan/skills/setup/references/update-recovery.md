@@ -5,17 +5,21 @@ Kaijan connection. Installed files do not prove which version answers this chat.
 
 ## Check before new work
 
-1. Read `loki-build.json` from the installed package that supplies this skill.
-   Keep its version, build identity and source revision as the expected package.
-2. Inspect this chat's callable tools. If `loki_capabilities_list` is available,
-   read its runtime identity and the requirements for the selected action.
-   Compare the returned identity with the expected package. A missing identity
-   is unknown, not a match.
-3. Check that the tools required by the installed owning skill are callable in
+1. Check that the tools required by the installed owning skill are callable in
    this chat. For normal test execution, these include `loki_test_execute`,
    `loki_test_get` and `loki_test_stop`. Do not run a paid test to probe availability.
+2. If `loki_capabilities_list` is available, use its normal
+   `kaijan.customer-capabilities/1` reply. Read the selected action's state and
+   message, and the separate connection guidance. This request does not test
+   application access or inference.
 
-If the identities differ or required tools are absent, explain the exact problem
+The normal readiness reply does not identify the responding package. If trusted
+host diagnostics provide that identity, compare it with the installed package.
+Otherwise leave it unknown; missing private diagnostics alone do not prevent
+authorized work with the available tools. If the selected work requires a
+specific build, verify that it responds before starting.
+
+If diagnostics confirm a version mismatch or required tools are absent, explain the exact problem
 once. For a confirmed older version: “This chat still uses the earlier Kaijan
 version. Keep this chat while we check its connection.” If no tool responds:
 “Kaijan is installed, but its tools are not available in this chat. Keep this
@@ -50,18 +54,18 @@ tools in the same chat. Use this route when the host exposes the switch:
 2. Open **Settings > Plugins**. Find the installed Kaijan profile, such as
    **Kaijan — QA**. Turn its enable switch off and wait for the disabled state.
 3. Turn the same switch on and wait for the enabled state. Keep the same chat.
-4. On the next turn, check the callable tools and responding package identity.
+4. On the next turn, check the callable tools and selected action's readiness.
    Read the original saved configuration, run and report before continuing.
 
 An enabled switch alone does not prove recovery. If tools remain unavailable or
-the identity differs, keep the original chat and records. Do not repeat the
+available diagnostics confirm a version mismatch, keep the original chat and records. Do not repeat the
 switch cycle or send the user between old and new chats. Continue with the
 restart check below.
 
 Use a reconnect or refresh control only if the active host exposes it for this
 connection. Name the actual control; do not invent a slash command or claim that
 a marketplace refresh also replaces this chat's running connection. Afterward,
-repeat the identity, tool and original-record checks above.
+repeat the tool, readiness and original-record checks above.
 
 ## Check restart recovery
 
@@ -71,7 +75,7 @@ check active operations first. Use the host's supported restart flow with the
 required human control. Do not edit host databases or force-kill the host.
 
 After restart, return to the **original chat and project**. Check its callable
-tools and selected runtime identity. Read the original Setup, test and report by
+tools and selected action's readiness. Read the original Setup, test and report by
 their saved IDs, then open the native report. Compare the original result hashes
 and statuses, including stopped work, incomplete execution and unknown charges.
 A responding tool or rendered new report alone does not prove recovery.
@@ -92,8 +96,8 @@ and report links; do not change scope identifiers, copy private stores or repeat
 completed actions to recreate the report.
 
 The user can select **New chat** in the same project and Kaijan profile. Create a
-chat only when authorized. Check its actual tool inventory and responding
-runtime identity before analysis or execution. If a supplied report cannot be
+chat only when authorized. Check its actual tool inventory and readiness for
+the selected action before analysis or execution. If a supplied report cannot be
 read here, state that limit once and keep its recovery in the original chat.
 Do not treat a new record with the same title as retained work.
 
@@ -115,7 +119,7 @@ chat used the selected package, but could not read the old chat's report. The ol
 native card failed to display. Desktop restart remains untested there. This is
 a separate host result; it does not erase the successful checks above.
 
-Record the host, expected and responding package identities, retained record IDs,
+Record the host, available package identities, retained record IDs,
 control used and readback result for each new check. Do not claim acceptance from
 this guide alone.
 

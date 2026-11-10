@@ -83,7 +83,33 @@
         }
       }
     },
-    "files": {}
+    "files": {},
+    "context_sources": {
+      "type": "array",
+      "description": "Optional attributed source items. Text is preserved as its own citable source; source roles and supplied metadata remain distinct. Original record IDs are metadata; review citations use the native source catalog.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "text"],
+        "properties": {
+          "kind": {
+            "enum": ["intent", "implementation", "context"]
+          },
+          "text": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "uri": {
+            "type": ["string", "null"]
+          },
+          "revision": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
   },
   "allOf": [
     {

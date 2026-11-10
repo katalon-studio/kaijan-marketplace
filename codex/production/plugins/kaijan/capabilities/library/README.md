@@ -2,6 +2,8 @@
 
 Managed hosts bind the existing private broker with `bindManagedProvider`. `GitHubData`, `loki_github_read` and `loki_github_source_read` use its explicitly consented GitHub user token internally and return only source data/provenance. Related Work automatically uses its dynamic connected transport. See [GitHub local access](../../docs/product-design/github-local-access.md) for inputs, partial coverage, credential ownership, recovery and environment prerequisites.
 
+The single-file reader keeps the Contents route for small files. When GitHub returns a valid empty `encoding: none` representation, it reads the already selected Git tree blob through the same authorized transport. It verifies the byte count, blob SHA-1 and SHA-256, keeps binary files as Base64, and retains both response receipts. The existing 16 MiB response limit remains. Size, access, format and identity failures return source-read guidance. Connection failures keep the existing connection or supplied-text recovery; this read starts no analysis or test. See the documented [Contents representation](https://docs.github.com/en/rest/repos/contents#get-repository-content) and [blob read](https://docs.github.com/en/rest/git/blobs#get-a-blob).
+
 This package provides the current local capability services as a public Node
 library. Product owns the MCP adapter, installation, runtime and private-root
 selection. Importing the library connects no transport and installs no signal
@@ -20,6 +22,12 @@ await catalog.close();
 For a normal authorized UI test, `loki_test_execute` runs the complete scenario,
 assesses its retained evidence, and saves a combined report. Read the same flow
 with `loki_test_get` until it ends; browser completion is an intermediate stage.
+Use optional `waitMs: 30000` for an active Run to avoid repeated status calls.
+The read returns early for completion, a Stop request or a pending question.
+Timeout or cancellation ends only the read; use `loki_test_stop` to stop work.
+After each delay, an elapsed deadline returns the last saved state before another
+scoped read. This does not cancel storage reads already in flight.
+Omitting `waitMs` preserves immediate reads. Explicit offsets never wait.
 The default reply contains test results, performed steps, costs and the report.
 Use `originalResult` and explicit offsets only for the complete evidence records.
 Use `savedTests` with an exact Plan reference and selected test IDs to load the

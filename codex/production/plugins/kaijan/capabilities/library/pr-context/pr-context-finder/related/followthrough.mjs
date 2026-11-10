@@ -74,6 +74,17 @@ export function parentRequest(seed, nominees) {
   }
   return { body: inputs.length ? body : null, inputs, omitted };
 }
+
+// Keep the complete prepared body for selectParents and saved source bindings.
+// Only the request sent to the model omits integrity digests.
+export function parentModelRequest(prepared) {
+  if (!prepared.body) return null;
+  const body = structuredClone(prepared.body);
+  delete body.state.caller_work.sha256;
+  for (const source of Object.values(body.state.issues)) delete source.sha256;
+  return body;
+}
+
 export function selectParents(raw, prepared) {
   check(
     raw &&

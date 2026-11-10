@@ -116,23 +116,29 @@ selected original operations. Reopen the immutable reportId without producers.
 
 ## Read Runner readiness without execution
 
-`loki_capabilities_list.computerRunner` uses `loki.computer-runner-readiness/1`.
-`state=blocked` distinguishes `configuration.state=missing` from `invalid`;
-`state=configured` means effective prerequisites were parsed, not validated.
-Implementation pins identify packaged native bytes when available; absent pins are
-unknown. Provider transport, fixed Luna/low model, credential presence and unknown
-validation are separate. Managed-broker upstream identity and credentials remain
-unknown until supported execution provides evidence. Browser availability, target
-access and desktop permissions are not checked by discovery. No model request,
-browser action or download occurs.
+Call `loki_capabilities_list` with `{}`. The normal reply uses
+`kaijan.customer-capabilities/1`. Each action has a `state` and `message`:
+`context`, `changeReview`, `relatedWork`, `workItemReview`, `testPlanning`,
+`additionalTests`, `evidenceReview` and `testExecution`.
 
-Installed discovery also returns `runtime`: the responding plugin version/build,
-source revision/dirty flag, verified-at-startup capability digest, installation,
-connection and scope identities, and process version/platform. These describe the
-loaded process, not the current checkout. Changed fixed installation metadata is
-reported as stale; missing/unreadable metadata is unknown. A match does not prove
-host selection, latest version or continued payload integrity. Compare to the exact
-artifact selected for the task. The host exposes no universal current-package check.
+- `available`: the action is available for an authorized task. Application access
+  has not been checked.
+- `setup-required`: follow the returned setup message, then continue the same task.
+- `unavailable`: follow the returned recovery message. This reply does not establish
+  that the action can run.
+
+Read `connection.state` and `connection.message` separately. A
+`reconnect-required` result gives recovery guidance; `not-checked` does not verify
+sign-in or whether the installed plugin is current. The reply's `validation` is
+`Not checked by this request.` Browser availability, target access, desktop
+permissions and successful inference remain unverified. Discovery makes no model
+request, browser action or download.
+
+The normal reply does not include the private `computerRunner` or `runtime`
+diagnostic records. Do not look for their configuration, model, credential,
+implementation-pin or loaded-package fields in this reply. Private engineering
+diagnostics and exact artifact verification are separate evidence; action
+availability does not identify the responding build or prove package integrity.
 
 Use the installed Setup guide at `skills/setup/references/provider-setup.md`
 for the responding package. Managed Runner uses the Kaijan grant. If it is

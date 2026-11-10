@@ -1,6 +1,6 @@
 {
   "name": "kaijan",
-  "version": "0.5.0-build.42171679272.1",
+  "version": "0.5.0",
   "description": "Understand your application, plan tests and review results with Kaijan.",
   "author": {
     "name": "Kaijan"

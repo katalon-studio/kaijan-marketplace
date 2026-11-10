@@ -66,10 +66,10 @@ const resolutions = {
 };
 export function riskPresentationSchema(
   catalog,
-  { literalExcerpts = false } = {},
+  { literalExcerpts = false, definitions } = {},
 ) {
   const ids = catalog.map((row) => row.id);
-  const span = obj({
+  const evidenceSpan = obj({
     evidence_id: { type: "string", ...(ids.length ? { enum: ids } : {}) },
     ...(literalExcerpts
       ? { text: { type: "string" } }
@@ -78,6 +78,11 @@ export function riskPresentationSchema(
           end: { type: "integer", minimum: 1 },
         }),
   });
+  // The caller can share this span across relations in its root JSON Schema.
+  if (definitions) definitions.riskEvidenceSpan = evidenceSpan;
+  const span = definitions
+    ? { $ref: "#/$defs/riskEvidenceSpan" }
+    : evidenceSpan;
   const relation = (table) => ({
     anyOf: Object.entries(table).map(([kind, [arity]]) =>
       obj({
@@ -118,15 +123,17 @@ export function normalizeRiskExcerpts(value, catalog) {
   const literal = (excerpt) => {
     need(exact(excerpt, ["evidence_id", "text"]));
     const source = catalog.find((row) => row.id === excerpt.evidence_id);
-    const text = excerpt.text;
+    const raw = excerpt.text;
     need(
       source &&
-        typeof text === "string" &&
-        text.length > 0 &&
-        text.length <= maxExcerptLength &&
-        text === text.trim() &&
-        text.isWellFormed(),
+        typeof raw === "string" &&
+        raw.length <= maxExcerptLength &&
+        raw.isWellFormed(),
     );
+    const text = raw.trim();
+    // Keep the padding only as proof of an exact source excerpt. The retained
+    // offsets must still select one unambiguous whole-word slice.
+    need(text.length > 0 && (text === raw || source.quote.includes(raw)));
     const start = source.quote.indexOf(text);
     need(start >= 0 && source.quote.indexOf(text, start + 1) < 0);
     const end = start + text.length;
@@ -237,6 +244,17 @@ export function changeRiskCatalog(packet) {
     packet.work_item?.source_url,
     null,
   );
+  // Keep original source items separate. Serializing their text into one JSON
+  // quote creates duplicate passages and artificial escaped-newline boundaries.
+  for (const [index, source] of (packet.context_sources ?? []).entries()) {
+    add(
+      `context-${index + 1}`,
+      source.kind,
+      source.text,
+      source.uri,
+      source.revision,
+    );
+  }
   for (const [index, file] of (packet.files ?? []).entries()) {
     const revision = packet.source?.head_sha ?? file.sha256;
     add(

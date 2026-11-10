@@ -104,19 +104,20 @@ export function retrievalQueryPlan(profile, repositories) {
   const queries = [];
   let omitted = 0;
   if (profile.groups.length && scopes.length) {
-    const count = Math.max(scopes.length, profile.groups.length);
-    for (let n = 0; n < count; n++) {
-      const selected = [];
-      for (const term of profile.groups[n % profile.groups.length]) {
-        const quoted = JSON.stringify(term);
-        // Local finite query budget, including escaping, quotes and OR syntax.
-        if ([...`(${[...selected, quoted].join(" OR ")})`].length <= 240)
-          selected.push(quoted);
-        else omitted++;
+    for (const group of profile.groups) {
+      for (const scope of scopes) {
+        const selected = [];
+        for (const term of group) {
+          const quoted = JSON.stringify(term);
+          // Local finite query budget, including escaping, quotes and OR syntax.
+          if ([...`(${[...selected, quoted].join(" OR ")})`].length <= 240)
+            selected.push(quoted);
+          else omitted++;
+        }
+        if (!selected.length) continue;
+        const query = `(${scope.map((r) => `repo:${r}`).join(" OR ")}) in:title,body (${selected.join(" OR ")})`;
+        queries.push(query + " is:issue", query + " is:pull-request");
       }
-      if (!selected.length) continue;
-      const query = `(${scopes[n % scopes.length].map((r) => `repo:${r}`).join(" OR ")}) in:title,body (${selected.join(" OR ")})`;
-      queries.push(query + " is:issue", query + " is:pull-request");
     }
   }
   return {

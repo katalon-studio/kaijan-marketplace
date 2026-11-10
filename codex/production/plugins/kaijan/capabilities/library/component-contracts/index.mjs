@@ -20922,6 +20922,97 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// ../contracts/dist/product-issue.js
+var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
+var issueImageLimits = Object.freeze({
+  files: 5,
+  fileBytes: 5 * 1024 * 1024,
+  totalBytes: 20 * 1024 * 1024
+});
+var issueImageSchema = external_exports.strictObject({
+  id: external_exports.uuid().toLowerCase(),
+  name: external_exports.string().min(1).max(120).regex(/^[^\\/\x00-\x1f\x7f]+$/),
+  mediaType: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+  bytes: external_exports.number().int().positive().max(issueImageLimits.fileBytes),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var productIssueInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid().toLowerCase(),
+  title: external_exports.string().trim().min(1).max(200),
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
+}).superRefine((input3, context) => {
+  if (new Set(input3.images.map((image) => image.id)).size !== input3.images.length)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "Select each image once."
+    });
+  if (input3.images.reduce((sum, image) => sum + image.bytes, 0) > issueImageLimits.totalBytes)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "The selected images exceed the total upload limit."
+    });
+});
+var productIssueReceiptSchema = external_exports.strictObject({
+  repository: external_exports.literal(kaijanIssueRepository),
+  number: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  url: external_exports.string().regex(/^https:\/\/github\.com\/katalon-studio\/kaijan-marketplace\/issues\/[1-9]\d*$/)
+}).superRefine((receipt2, context) => {
+  if (receipt2.url !== `https://github.com/${kaijanIssueRepository}/issues/${receipt2.number}`)
+    context.addIssue({
+      code: "custom",
+      path: ["url"],
+      message: "The issue link must match its issue number."
+    });
+});
+var productIssueStatusSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  submissionId: external_exports.uuid(),
+  inputSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  repository: external_exports.literal(kaijanIssueRepository),
+  state: external_exports.enum(["awaiting_images", "unconfirmed", "published"]),
+  receipt: productIssueReceiptSchema.optional()
+}).superRefine((value, context) => {
+  if (value.state === "published" !== Boolean(value.receipt))
+    context.addIssue({
+      code: "custom",
+      path: ["receipt"],
+      message: "Only a confirmed publication has an issue receipt."
+    });
+});
+var productIssueUploadSchema = external_exports.strictObject({
+  imageId: external_exports.uuid(),
+  url: external_exports.url().max(8192),
+  expiresAt: external_exports.iso.datetime(),
+  headers: external_exports.strictObject({
+    "content-type": external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    "content-length": external_exports.string().regex(/^[1-9]\d*$/),
+    "if-none-match": external_exports.literal("*"),
+    "x-amz-checksum-sha256": external_exports.string().regex(/^[A-Za-z0-9+/]{43}=$/)
+  })
+});
+var productIssuePreparationSchema = external_exports.strictObject({
+  ...productIssueStatusSchema.shape,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+}).superRefine((value, context) => {
+  const { uploads, ...status } = value;
+  if (!productIssueStatusSchema.safeParse(status).success)
+    context.addIssue({
+      code: "custom",
+      message: "The preparation must carry its matching publication status."
+    });
+  if (new Set(uploads.map((upload) => upload.imageId)).size !== uploads.length || value.state !== "awaiting_images" && uploads.length !== 0)
+    context.addIssue({
+      code: "custom",
+      path: ["uploads"],
+      message: "Only the selected images can receive upload grants."
+    });
+});
+
 // ../contracts/dist/workspace-customer.js
 var workspaceCustomerLimits = {
   fileBytes: 4 * 1024 * 1024,
@@ -21087,6 +21178,7 @@ var tokenResponseSchema = external_exports.object({
   refresh_token: opaqueSchema,
   scope: external_exports.string()
 });
+var onboardingTicketSchema = external_exports.string().min(32).max(768).regex(/^[A-Za-z0-9_-]+$/);
 var authorizeSchema = external_exports.strictObject({
   provider: providerSchema,
   response_type: external_exports.literal("code"),
@@ -21096,7 +21188,8 @@ var authorizeSchema = external_exports.strictObject({
   code_challenge_method: external_exports.literal("S256"),
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
-  scope: external_exports.string().min(1).max(200)
+  scope: external_exports.string().min(1).max(200),
+  onboarding_ticket: onboardingTicketSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -21105,7 +21198,8 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     redirect_uri: external_exports.url(),
     resource: external_exports.url(),
     code: opaqueSchema,
-    code_verifier: verifierSchema
+    code_verifier: verifierSchema,
+    onboarding_ticket: onboardingTicketSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),

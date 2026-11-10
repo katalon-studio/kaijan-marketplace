@@ -14,10 +14,12 @@ Do not scan unrelated files or run another model/browser task to fill a template
 If a direct analysis input already fits and retention is unnecessary, use the
 analysis tool directly.
 
-Inspect `loki_capabilities_list` as `loki.capability-discovery/1`. Use typed
-per-service state fields: package readiness, provider configuration, provider
-validation, map selection and Context input compatibility are separate. Matching
-runtime metadata does not prove freshness or payload validity. Call `loki_context_submit` with one requestKey,
+Check `context.state` and `context.message` in the `kaijan.customer-capabilities/1`
+reply from `loki_capabilities_list`. Follow any setup or recovery guidance for
+that action. Read connection guidance separately. Context availability does not
+verify the connection, validate the input or establish analysis readiness.
+
+Call `loki_context_submit` with one requestKey,
 a descriptive kind and original content as raw text or JSON. Partial context is
 valid. Include known subject, origin/author, revision, environment or artifact
 references; omit unknown metadata or retain explicit null. Never invent source

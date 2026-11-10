@@ -20419,7 +20419,7 @@ var progress = {
   evidence: external_exports.array(external_exports.string()),
   questions
 };
-var runnerExecutionReportSchema = external_exports.strictObject({
+var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
@@ -20428,6 +20428,12 @@ var runnerExecutionReportSchema = external_exports.strictObject({
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
+var runnerExecutionReportSchema = external_exports.union([
+  legacyRunnerExecutionReportSchema,
+  legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
+    schema: external_exports.literal("loki.runner.execution-report/2")
+  })
+]);
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -20938,7 +20944,9 @@ var customerRecordedActionSchema = external_exports.object({
     text: external_exports.string().optional(),
     keys: external_exports.array(external_exports.string()).optional(),
     button: external_exports.enum(["left", "right", "middle", "back", "forward"]).optional(),
-    path: external_exports.array(external_exports.tuple([external_exports.number(), external_exports.number()])).optional()
+    // Homogeneous pairs keep the same coordinate validation without emitting
+    // prefixItems/items:false, which older MCP JSON Schema validators reject.
+    path: external_exports.array(external_exports.array(external_exports.number()).length(2)).optional()
   }),
   status: external_exports.enum(["invoked", "returned", "error"]),
   startedAt: external_exports.iso.datetime({ offset: true }),
@@ -20958,6 +20966,10 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 });
 
 // ../contracts/dist/report-presentation.js
+var reportExecutionRecapSchema = external_exports.object({
+  steps: external_exports.array(external_exports.string().min(1)).min(1).max(40),
+  detailsOmitted: external_exports.literal(true).optional()
+});
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
 var reportExpectationAuthoritySchema = external_exports.enum([
@@ -20989,6 +21001,8 @@ var reportTestAssessmentSchema = external_exports.object({
   resultSha256: digest9,
   model: external_exports.string(),
   testId: external_exports.string(),
+  additionalCheck: external_exports.literal(true).optional(),
+  scenarioTitle: external_exports.string().optional(),
   expectationAuthority: reportExpectationAuthoritySchema.optional(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   expected: external_exports.string(),
@@ -21018,6 +21032,12 @@ var reportObservedPageSchema = external_exports.object({
   contentSha256: digest9,
   contentState: external_exports.literal("projected-page-content")
 });
+var reportExecutionRejectionNoticeSchema = external_exports.enum([
+  "The run stopped without using the app controls. The test service rejected a request. Open View run trace to review the saved page.",
+  "The run stopped because the test service rejected a request. Open View run trace to review the saved actions.",
+  "The run stopped without using the app controls. The test service rejected a request. Ask Kaijan to read this saved result in chat.",
+  "The run stopped because the test service rejected a request. Ask Kaijan to read this saved result in chat."
+]);
 var reportOutcomeNoticeSchema = external_exports.enum([
   "The test stopped when the app tried to open a website that was not allowed for this test.",
   "The test stopped because it could not confirm whether the page was allowed for this test.",
@@ -21026,6 +21046,7 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The target application is unavailable.",
   "The connection expired. Reconnect before retrying.",
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
+  ...reportExecutionRejectionNoticeSchema.options,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 var testPlanViewSchema = external_exports.object({
@@ -21065,6 +21086,7 @@ var testPlanViewSchema = external_exports.object({
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     executionReport: runnerExecutionReportSchema.nullable().optional(),
+    executionRecap: reportExecutionRecapSchema.optional(),
     traceRetained: external_exports.boolean(),
     recordedAt: external_exports.string().nullable().optional(),
     assessments: external_exports.array(reportTestAssessmentSchema).optional(),
@@ -21090,6 +21112,7 @@ var reportLinkSchema = external_exports.object({
   presentation: external_exports.literal("browser"),
   previewURL: external_exports.url()
 });
+var reportCardFailedTitleLimit = 5;
 var summarySchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
   reportId: digest9,
@@ -21106,6 +21129,8 @@ var summarySchema = external_exports.object({
   }),
   proposedCounts: external_exports.object({ pass: count4, fail: count4 }).optional(),
   assessmentResults: count4.optional(),
+  observation: external_exports.string().min(1).max(240).optional(),
+  failedTestTitles: external_exports.array(external_exports.string().min(1)).min(1).max(reportCardFailedTitleLimit).optional(),
   pullRequest: external_exports.object({
     number: external_exports.number().int().positive(),
     title: external_exports.string(),
@@ -21517,6 +21542,38 @@ var caseEvidenceSchema = external_exports.object({
 });
 
 // ../contracts/dist/customer-planning.js
+var capturedPlanningReceipt = external_exports.object({
+  body_complete: external_exports.literal(true),
+  capture_error: external_exports.null(),
+  started_calls: external_exports.number().int().positive()
+});
+var capturedPlanningFailure = external_exports.object({
+  schema: external_exports.literal("loki.planning-failure/1"),
+  receipt: capturedPlanningReceipt
+});
+var planningRejection = capturedPlanningFailure.extend({
+  reason: external_exports.literal("invalid_first_response_no_retry"),
+  receipt: capturedPlanningReceipt.extend({
+    status: external_exports.literal("http_identity_or_completion_failure"),
+    http_status: external_exports.literal(429),
+    automatic_retry: external_exports.literal(false)
+  })
+});
+var classifiedPlanningRejection = capturedPlanningFailure.extend({
+  reason: external_exports.enum([
+    "provider_auth_failed",
+    "provider_quota_exhausted",
+    "provider_rate_limited",
+    "provider_request_rejected",
+    "inference_request_rejected"
+  ]),
+  receipt: capturedPlanningReceipt.extend({
+    status: external_exports.literal("provider_http_failure"),
+    http_status: external_exports.number().int().min(100).max(599),
+    provider_http_status: external_exports.number().int().min(400).max(499).optional(),
+    automatic_retry: external_exports.literal(false)
+  })
+}).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
 
 // ../contracts/dist/customer-risk.js
@@ -21573,7 +21630,20 @@ var progress2 = external_exports.object({
 var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
 var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
 var internalCleanupExplanation = /(^|[.!?]\s+)The Runner['’]s cleanup record concerns its browser, not the host-started server\.(?=\s|$)/gi;
+function isInternalRecap(text5) {
+  if (!text5.trimStart().startsWith("{"))
+    return false;
+  try {
+    const value = JSON.parse(text5);
+    const parsed = external_exports.object({ schema: external_exports.string() }).safeParse(value);
+    return parsed.success && parsed.data.schema.startsWith("loki.runner.execution-recap/");
+  } catch {
+    return false;
+  }
+}
 function customerAuthoredText(value) {
+  if (isInternalRecap(value))
+    return customerOmittedDetail;
   const projected = value.replace(internalCleanupExplanation, "$1The supplied cleanup record does not confirm that the application server was stopped.");
   return diagnostic.test(projected) ? customerOmittedDetail : projected;
 }
@@ -21592,6 +21662,7 @@ var boundQuote = customerAssessmentQuoteSchema;
 var bindings = external_exports.array(external_exports.unknown());
 var assessmentTest = external_exports.object({
   test_id: external_exports.string().nullable(),
+  title: external_exports.string().optional(),
   outcome_ids: strings2,
   expected: external_exports.string().nullable(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
@@ -21656,6 +21727,7 @@ var assessmentInput = external_exports.object({
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
   assessment: external_exports.object({
     test_results: external_exports.array(assessmentTest.extend({
+      additional_check: external_exports.literal(true).optional(),
       literal_bindings: bindings.optional(),
       observed_steps: external_exports.array(external_exports.object({
         description: external_exports.string(),
@@ -21819,6 +21891,11 @@ var customerPlanEvidenceSchema = external_exports.union([
     notice: external_exports.literal("This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation.")
   })
 ]);
+var savedExecutionLimitReasons = {
+  requests: "The test stopped after reaching its execution limit.",
+  "browser-actions": "The test stopped after reaching its browser action limit.",
+  time: "The test stopped after reaching its time limit."
+};
 var nativeRun = testPlanViewSchema.shape.runs.element;
 var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
   sourceId: true,
@@ -21835,6 +21912,8 @@ var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
   answerId: true,
   resultSha256: true,
   testId: true,
+  additionalCheck: true,
+  scenarioTitle: true,
   expectationAuthority: true,
   verdict: true,
   expected: true,
@@ -21853,7 +21932,7 @@ var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
 var executionReport = external_exports.object({
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
-  completedSteps: strings3,
+  completedSteps: strings3.optional(),
   remainingSteps: strings3,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
   effects: external_exports.enum(["known", "uncertain"])
@@ -21932,6 +22011,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   }).extend({
     state: operationState,
     plan: customerPlanSchema.nullable(),
+    planningFailure: external_exports.literal("service-rejected").optional(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
       "This saved plan is unavailable in the supported view. Other saved results remain available.",
@@ -21960,14 +22040,17 @@ var customerReportSchema = testPlanViewSchema.pick({
     testVerdict,
     traceRetained: external_exports.boolean().default(false),
     interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
+    executionLimitNotice: external_exports.enum(Object.values(savedExecutionLimitReasons)).optional(),
     observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
     // Free-form terminal diagnostics are not an application observation source.
     assessments: external_exports.array(customerAssessment).optional(),
     executionReport: executionReport.nullable().optional(),
+    executionRecap: reportExecutionRecapSchema.optional(),
     executionEvidence: customerExecutionEvidenceSchema.optional(),
     assertions: assertions.nullable().optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
-    outcomeNotice: reportOutcomeNoticeSchema.optional()
+    outcomeNotice: reportOutcomeNoticeSchema.optional(),
+    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
@@ -22022,7 +22105,9 @@ var customerReportCardSchema = panelCard.pick({
     schema: true,
     reportId: true,
     title: true,
-    assessmentResults: true
+    assessmentResults: true,
+    observation: true,
+    failedTestTitles: true
   }).extend({
     counts: summary.shape.counts.pick({
       pass: true,
@@ -22033,11 +22118,11 @@ var customerReportCardSchema = panelCard.pick({
       inconclusive: true,
       conflicting: true,
       unavailable: true
-    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset; keep assessed proposed-check results separate in chat summaries."),
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
     proposedCounts: external_exports.object({
       pass: external_exports.number().int().nonnegative(),
       fail: external_exports.number().int().nonnegative()
-    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. Subtract each subset for the other passed/failed tests. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
     pullRequest: external_exports.object({
       number: external_exports.number().int().positive(),
       title: external_exports.string(),
@@ -23867,6 +23952,97 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// ../contracts/dist/product-issue.js
+var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
+var issueImageLimits = Object.freeze({
+  files: 5,
+  fileBytes: 5 * 1024 * 1024,
+  totalBytes: 20 * 1024 * 1024
+});
+var issueImageSchema = external_exports.strictObject({
+  id: external_exports.uuid().toLowerCase(),
+  name: external_exports.string().min(1).max(120).regex(/^[^\\/\x00-\x1f\x7f]+$/),
+  mediaType: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+  bytes: external_exports.number().int().positive().max(issueImageLimits.fileBytes),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var productIssueInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid().toLowerCase(),
+  title: external_exports.string().trim().min(1).max(200),
+  description: external_exports.string().trim().min(1).max(5e3),
+  expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
+  steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
+  images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
+}).superRefine((input3, context) => {
+  if (new Set(input3.images.map((image) => image.id)).size !== input3.images.length)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "Select each image once."
+    });
+  if (input3.images.reduce((sum, image) => sum + image.bytes, 0) > issueImageLimits.totalBytes)
+    context.addIssue({
+      code: "custom",
+      path: ["images"],
+      message: "The selected images exceed the total upload limit."
+    });
+});
+var productIssueReceiptSchema = external_exports.strictObject({
+  repository: external_exports.literal(kaijanIssueRepository),
+  number: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  url: external_exports.string().regex(/^https:\/\/github\.com\/katalon-studio\/kaijan-marketplace\/issues\/[1-9]\d*$/)
+}).superRefine((receipt3, context) => {
+  if (receipt3.url !== `https://github.com/${kaijanIssueRepository}/issues/${receipt3.number}`)
+    context.addIssue({
+      code: "custom",
+      path: ["url"],
+      message: "The issue link must match its issue number."
+    });
+});
+var productIssueStatusSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  submissionId: external_exports.uuid(),
+  inputSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  repository: external_exports.literal(kaijanIssueRepository),
+  state: external_exports.enum(["awaiting_images", "unconfirmed", "published"]),
+  receipt: productIssueReceiptSchema.optional()
+}).superRefine((value, context) => {
+  if (value.state === "published" !== Boolean(value.receipt))
+    context.addIssue({
+      code: "custom",
+      path: ["receipt"],
+      message: "Only a confirmed publication has an issue receipt."
+    });
+});
+var productIssueUploadSchema = external_exports.strictObject({
+  imageId: external_exports.uuid(),
+  url: external_exports.url().max(8192),
+  expiresAt: external_exports.iso.datetime(),
+  headers: external_exports.strictObject({
+    "content-type": external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    "content-length": external_exports.string().regex(/^[1-9]\d*$/),
+    "if-none-match": external_exports.literal("*"),
+    "x-amz-checksum-sha256": external_exports.string().regex(/^[A-Za-z0-9+/]{43}=$/)
+  })
+});
+var productIssuePreparationSchema = external_exports.strictObject({
+  ...productIssueStatusSchema.shape,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+}).superRefine((value, context) => {
+  const { uploads, ...status } = value;
+  if (!productIssueStatusSchema.safeParse(status).success)
+    context.addIssue({
+      code: "custom",
+      message: "The preparation must carry its matching publication status."
+    });
+  if (new Set(uploads.map((upload) => upload.imageId)).size !== uploads.length || value.state !== "awaiting_images" && uploads.length !== 0)
+    context.addIssue({
+      code: "custom",
+      path: ["uploads"],
+      message: "Only the selected images can receive upload grants."
+    });
+});
+
 // ../contracts/dist/workspace-customer.js
 var workspaceCustomerLimits = {
   fileBytes: 4 * 1024 * 1024,
@@ -24032,6 +24208,7 @@ var tokenResponseSchema = external_exports.object({
   refresh_token: opaqueSchema,
   scope: external_exports.string()
 });
+var onboardingTicketSchema = external_exports.string().min(32).max(768).regex(/^[A-Za-z0-9_-]+$/);
 var authorizeSchema = external_exports.strictObject({
   provider: providerSchema,
   response_type: external_exports.literal("code"),
@@ -24041,7 +24218,8 @@ var authorizeSchema = external_exports.strictObject({
   code_challenge_method: external_exports.literal("S256"),
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
-  scope: external_exports.string().min(1).max(200)
+  scope: external_exports.string().min(1).max(200),
+  onboarding_ticket: onboardingTicketSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -24050,7 +24228,8 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     redirect_uri: external_exports.url(),
     resource: external_exports.url(),
     code: opaqueSchema,
-    code_verifier: verifierSchema
+    code_verifier: verifierSchema,
+    onboarding_ticket: onboardingTicketSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),
@@ -24305,6 +24484,11 @@ var AiClientError = class extends Error {
     this.code = code;
   }
 };
+var validBinding = (value) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+function requireManagedBinding(env = {}) {
+  if (env.LOKI_AUTH_BROKER_SOCKET && !validBinding(env.LOKI_AI_CONNECTION_BINDING))
+    throw new AiClientError("managed_connection_binding_required");
+}
 function providerConnection(nativeUrl, key, env = {}) {
   let native;
   try {
@@ -24314,28 +24498,40 @@ function providerConnection(nativeUrl, key, env = {}) {
   }
   if (native.username || native.password || native.search || native.hash)
     throw new AiClientError("unsupported_native_route");
-  const openai = native.origin === "https://api.openai.com" && ["/v1/responses", "/v1/models/gpt-6-luna"].includes(native.pathname);
+  const count7 = native.origin === "https://api.openai.com" && native.pathname === "/v1/responses/input_tokens";
+  if (count7 && (!env.LOKI_AUTH_BROKER_SOCKET || !validBinding(env.LOKI_AI_CONNECTION_BINDING)))
+    throw new AiClientError("managed_count_binding_required");
+  const openai = native.origin === "https://api.openai.com" && [
+    "/v1/responses",
+    "/v1/responses/input_tokens",
+    "/v1/models/gpt-6-luna"
+  ].includes(native.pathname);
   const jev = native.origin === "https://openrouter.ai" && (native.pathname === "/api/v1/systemone" || /^\/api\/v1\/models\/typesafe\/jev[^?#]*\/endpoints$/.test(
     native.pathname
   ));
   if (!openai && !jev) throw new AiClientError("unsupported_native_route");
   if (env.LOKI_AUTH_BROKER_SOCKET) {
+    if (env.LOKI_AI_CONNECTION_BINDING !== void 0)
+      requireManagedBinding(env);
     if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
       throw new AiClientError("invalid_broker_channel");
     const path = native.pathname === "/v1/responses" ? "/v1/responses" : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
     return {
-      url: `http://localhost/ai${path}`,
+      url: `http://localhost/${env.LOKI_AI_CONNECTION_BINDING ? "ai-bound" : "ai"}${path}`,
       headers: Object.fromEntries(
         [
           ["x-loki-plan-id", env.LOKI_TELEMETRY_PLAN_ID],
-          ["x-loki-run-id", env.LOKI_TELEMETRY_RUN_ID]
+          ["x-loki-run-id", env.LOKI_TELEMETRY_RUN_ID],
+          ["x-kaijan-ai-connection", env.LOKI_AI_CONNECTION_BINDING]
         ].filter(
-          ([, value]) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
+          ([name, value]) => name === "x-kaijan-ai-connection" ? validBinding(value) : typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
         )
       ),
       socketPath: env.LOKI_AUTH_BROKER_SOCKET
     };
   }
+  if (env.LOKI_AI_CONNECTION_BINDING !== void 0)
+    throw new AiClientError("connection_binding_requires_broker");
   if (typeof key !== "string" || !key.trim())
     throw new AiClientError("provider_key_required");
   return { url: native.href, headers: { Authorization: `Bearer ${key}` } };
@@ -24347,13 +24543,20 @@ function headersFor(connection, supplied = {}) {
     supplied instanceof Headers ? supplied.entries() : supplied
   ) : { ...supplied };
   for (const name of Object.keys(headers))
-    if (["authorization", "x-loki-plan-id", "x-loki-run-id"].includes(
-      name.toLowerCase()
-    ))
+    if ([
+      "authorization",
+      "x-loki-plan-id",
+      "x-loki-run-id",
+      "x-kaijan-ai-connection"
+    ].includes(name.toLowerCase()))
       delete headers[name];
   return { ...headers, ...connection.headers };
 }
 function sendFetch(connection, options, transport = globalThis.fetch) {
+  if (!connection.socketPath && Object.keys(connection.headers ?? {}).some(
+    (name) => name.toLowerCase() === "x-kaijan-ai-connection"
+  ))
+    throw Error("connection_binding_requires_broker");
   if (connection.socketPath)
     return channelFetch(
       connection.socketPath,
@@ -24446,6 +24649,10 @@ var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
 var defaultRunnerSettings = Object.freeze({
   model: "gpt-6.1-terra",
   reasoning: "low"
+});
+var defaultBrowserRunnerSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
 });
 var analysisSettingsSchema = external_exports.strictObject({
   model: external_exports.enum(["gpt-6-luna", "gpt-6.1-terra"]),
@@ -25418,7 +25625,7 @@ async function sourceAt(directory, signal) {
   };
 }
 var selectorPolicies = Object.freeze({
-  description: "source-specific-projection/1",
+  description: "source-specific-projection/2",
   instruction: "procedural-relevance/2"
 });
 var maxResponseBytes2 = 8 * 1024 * 1024;
@@ -25439,6 +25646,12 @@ async function verifyExecutionSource(binding2, { signal } = {}) {
 
 // src/computer-runner-worker.ts
 var controller = new AbortController();
+var reportController = new AbortController();
+controller.signal.addEventListener("abort", () => {
+  const reason = controller.signal.reason;
+  if (typeof reason !== "object" || reason === null || !("code" in reason) || reason.code !== "loki.runner.deadline/1")
+    reportController.abort(reason);
+});
 var started = false;
 var applicationContext;
 var applicationContextProtocolFailure = false;
@@ -25457,6 +25670,7 @@ var send = (message) => new Promise((resolve) => {
 });
 process.on("disconnect", () => {
   controller.abort();
+  reportController.abort();
   if (!started) process.exit(0);
 });
 process.on("message", (message) => {
@@ -25487,6 +25701,7 @@ process.on("message", (message) => {
     return;
   }
   if (frame.type === "stop") {
+    if (frame.reason !== "deadline") reportController.abort();
     controller.abort(
       frame.reason === "deadline" ? Object.assign(Error("Time limit"), { code: "loki.runner.deadline/1" }) : frame.reason === "clarification-failure" ? Object.assign(Error("Clarification IPC failure"), {
         code: "loki.runner.clarification-failure/1"
@@ -25582,12 +25797,14 @@ process.on("message", (message) => {
       );
       const runOptions = {
         ...nativeOptions,
+        managedCore: managed && !controlled,
         ...clarification ? { requestClarification: clarification.requestClarification } : {},
         ...applicationContext ? { applicationContext: applicationContext.tool } : {},
         ...validation ? {
           requestAI: (body, signal) => validation.send(body, signal)
         } : managed ? { requestAI: selectedSender } : { apiKey: options.apiKey },
         signal: controller.signal,
+        ...input3.executionMethod === "desktop-ui" ? {} : { reportSignal: reportController.signal },
         onEvent: (event2) => {
           void send({ type: "event", event: event2 });
         }

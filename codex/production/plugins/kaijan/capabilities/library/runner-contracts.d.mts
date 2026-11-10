@@ -1,7 +1,5 @@
 import { z } from "zod";
-/** Additive #2334 boundary. These are model-authored claims, not observations;
- * declaring their type neither enables clarification nor resumes a worker. */
-export declare const runnerExecutionReportSchema: z.ZodObject<{
+export declare const runnerExecutionReportSchema: z.ZodUnion<readonly [z.ZodObject<{
     effects: z.ZodEnum<{
         known: "known";
         uncertain: "uncertain";
@@ -52,10 +50,63 @@ export declare const runnerExecutionReportSchema: z.ZodObject<{
     status: z.ZodEnum<{
         complete: "complete";
         blocked: "blocked";
-        stuck: "stuck";
         needs_input: "needs_input";
+        stuck: "stuck";
     }>;
-}, z.core.$strict>;
+}, z.core.$strict>, z.ZodObject<{
+    reason: z.ZodString;
+    status: z.ZodEnum<{
+        complete: "complete";
+        blocked: "blocked";
+        needs_input: "needs_input";
+        stuck: "stuck";
+    }>;
+    evidence: z.ZodArray<z.ZodString>;
+    basis: z.ZodLiteral<"model-authored-unverified">;
+    effects: z.ZodEnum<{
+        known: "known";
+        uncertain: "uncertain";
+    }>;
+    responseId: z.ZodString;
+    callId: z.ZodString;
+    remainingSteps: z.ZodArray<z.ZodString>;
+    questions: z.ZodArray<z.ZodObject<{
+        id: z.ZodString;
+        question: z.ZodString;
+        kind: z.ZodString;
+        presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
+            kind: z.ZodEnum<{
+                "missing-value": "missing-value";
+                "app-choice": "app-choice";
+                permission: "permission";
+                "task-scope": "task-scope";
+            }>;
+            subject: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            choices: z.ZodArray<z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>>;
+        }, z.core.$strict>, z.ZodObject<{
+            kind: z.ZodLiteral<"read-only-path">;
+            subject: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            control: z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>;
+            choices: z.ZodArray<z.ZodObject<{
+                sourceId: z.ZodString;
+                quote: z.ZodString;
+            }, z.core.$strict>>;
+        }, z.core.$strict>]>>;
+    }, z.core.$strict>>;
+    schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+}, z.core.$strict>]>;
 export declare const runnerRecoverySchema: z.ZodObject<{
     enabled: z.ZodOptional<z.ZodBoolean>;
     used: z.ZodBoolean;
@@ -170,7 +221,7 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
             providerCall: z.ZodNumber;
         }, z.core.$strict>>>;
     }, z.core.$loose>;
-    executionReport: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+    executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
         effects: z.ZodEnum<{
             known: "known";
             uncertain: "uncertain";
@@ -221,10 +272,63 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
         status: z.ZodEnum<{
             complete: "complete";
             blocked: "blocked";
-            stuck: "stuck";
             needs_input: "needs_input";
+            stuck: "stuck";
         }>;
-    }, z.core.$strict>>>;
+    }, z.core.$strict>, z.ZodObject<{
+        reason: z.ZodString;
+        status: z.ZodEnum<{
+            complete: "complete";
+            blocked: "blocked";
+            needs_input: "needs_input";
+            stuck: "stuck";
+        }>;
+        evidence: z.ZodArray<z.ZodString>;
+        basis: z.ZodLiteral<"model-authored-unverified">;
+        effects: z.ZodEnum<{
+            known: "known";
+            uncertain: "uncertain";
+        }>;
+        responseId: z.ZodString;
+        callId: z.ZodString;
+        remainingSteps: z.ZodArray<z.ZodString>;
+        questions: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            question: z.ZodString;
+            kind: z.ZodString;
+            presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
+                kind: z.ZodEnum<{
+                    "missing-value": "missing-value";
+                    "app-choice": "app-choice";
+                    permission: "permission";
+                    "task-scope": "task-scope";
+                }>;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>, z.ZodObject<{
+                kind: z.ZodLiteral<"read-only-path">;
+                subject: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                control: z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>;
+                choices: z.ZodArray<z.ZodObject<{
+                    sourceId: z.ZodString;
+                    quote: z.ZodString;
+                }, z.core.$strict>>;
+            }, z.core.$strict>]>>;
+        }, z.core.$strict>>;
+        schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+    }, z.core.$strict>]>>>;
     recovery: z.ZodOptional<z.ZodObject<{
         enabled: z.ZodOptional<z.ZodBoolean>;
         used: z.ZodBoolean;
@@ -328,7 +432,7 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                 providerCall: z.ZodNumber;
             }, z.core.$strict>>>;
         }, z.core.$loose>;
-        executionReport: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
             effects: z.ZodEnum<{
                 known: "known";
                 uncertain: "uncertain";
@@ -379,10 +483,63 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
             status: z.ZodEnum<{
                 complete: "complete";
                 blocked: "blocked";
-                stuck: "stuck";
                 needs_input: "needs_input";
+                stuck: "stuck";
             }>;
-        }, z.core.$strict>>>;
+        }, z.core.$strict>, z.ZodObject<{
+            reason: z.ZodString;
+            status: z.ZodEnum<{
+                complete: "complete";
+                blocked: "blocked";
+                needs_input: "needs_input";
+                stuck: "stuck";
+            }>;
+            evidence: z.ZodArray<z.ZodString>;
+            basis: z.ZodLiteral<"model-authored-unverified">;
+            effects: z.ZodEnum<{
+                known: "known";
+                uncertain: "uncertain";
+            }>;
+            responseId: z.ZodString;
+            callId: z.ZodString;
+            remainingSteps: z.ZodArray<z.ZodString>;
+            questions: z.ZodArray<z.ZodObject<{
+                id: z.ZodString;
+                question: z.ZodString;
+                kind: z.ZodString;
+                presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
+                    kind: z.ZodEnum<{
+                        "missing-value": "missing-value";
+                        "app-choice": "app-choice";
+                        permission: "permission";
+                        "task-scope": "task-scope";
+                    }>;
+                    subject: z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>;
+                    choices: z.ZodArray<z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>>;
+                }, z.core.$strict>, z.ZodObject<{
+                    kind: z.ZodLiteral<"read-only-path">;
+                    subject: z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>;
+                    control: z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>;
+                    choices: z.ZodArray<z.ZodObject<{
+                        sourceId: z.ZodString;
+                        quote: z.ZodString;
+                    }, z.core.$strict>>;
+                }, z.core.$strict>]>>;
+            }, z.core.$strict>>;
+            schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+        }, z.core.$strict>]>>>;
         recovery: z.ZodOptional<z.ZodObject<{
             enabled: z.ZodOptional<z.ZodBoolean>;
             used: z.ZodBoolean;
@@ -841,7 +998,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     providerCall: z.ZodNumber;
                 }, z.core.$strict>>>;
             }, z.core.$loose>;
-            executionReport: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+            executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
                 effects: z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
@@ -892,10 +1049,63 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 status: z.ZodEnum<{
                     complete: "complete";
                     blocked: "blocked";
-                    stuck: "stuck";
                     needs_input: "needs_input";
+                    stuck: "stuck";
                 }>;
-            }, z.core.$strict>>>;
+            }, z.core.$strict>, z.ZodObject<{
+                reason: z.ZodString;
+                status: z.ZodEnum<{
+                    complete: "complete";
+                    blocked: "blocked";
+                    needs_input: "needs_input";
+                    stuck: "stuck";
+                }>;
+                evidence: z.ZodArray<z.ZodString>;
+                basis: z.ZodLiteral<"model-authored-unverified">;
+                effects: z.ZodEnum<{
+                    known: "known";
+                    uncertain: "uncertain";
+                }>;
+                responseId: z.ZodString;
+                callId: z.ZodString;
+                remainingSteps: z.ZodArray<z.ZodString>;
+                questions: z.ZodArray<z.ZodObject<{
+                    id: z.ZodString;
+                    question: z.ZodString;
+                    kind: z.ZodString;
+                    presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
+                        kind: z.ZodEnum<{
+                            "missing-value": "missing-value";
+                            "app-choice": "app-choice";
+                            permission: "permission";
+                            "task-scope": "task-scope";
+                        }>;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>, z.ZodObject<{
+                        kind: z.ZodLiteral<"read-only-path">;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        control: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>]>>;
+                }, z.core.$strict>>;
+                schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+            }, z.core.$strict>]>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;
                 used: z.ZodBoolean;
@@ -1600,7 +1810,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     providerCall: z.ZodNumber;
                 }, z.core.$strict>>>;
             }, z.core.$loose>;
-            executionReport: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+            executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
                 effects: z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
@@ -1651,10 +1861,63 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 status: z.ZodEnum<{
                     complete: "complete";
                     blocked: "blocked";
-                    stuck: "stuck";
                     needs_input: "needs_input";
+                    stuck: "stuck";
                 }>;
-            }, z.core.$strict>>>;
+            }, z.core.$strict>, z.ZodObject<{
+                reason: z.ZodString;
+                status: z.ZodEnum<{
+                    complete: "complete";
+                    blocked: "blocked";
+                    needs_input: "needs_input";
+                    stuck: "stuck";
+                }>;
+                evidence: z.ZodArray<z.ZodString>;
+                basis: z.ZodLiteral<"model-authored-unverified">;
+                effects: z.ZodEnum<{
+                    known: "known";
+                    uncertain: "uncertain";
+                }>;
+                responseId: z.ZodString;
+                callId: z.ZodString;
+                remainingSteps: z.ZodArray<z.ZodString>;
+                questions: z.ZodArray<z.ZodObject<{
+                    id: z.ZodString;
+                    question: z.ZodString;
+                    kind: z.ZodString;
+                    presentation: z.ZodOptional<z.ZodUnion<readonly [z.ZodObject<{
+                        kind: z.ZodEnum<{
+                            "missing-value": "missing-value";
+                            "app-choice": "app-choice";
+                            permission: "permission";
+                            "task-scope": "task-scope";
+                        }>;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>, z.ZodObject<{
+                        kind: z.ZodLiteral<"read-only-path">;
+                        subject: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        control: z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>;
+                        choices: z.ZodArray<z.ZodObject<{
+                            sourceId: z.ZodString;
+                            quote: z.ZodString;
+                        }, z.core.$strict>>;
+                    }, z.core.$strict>]>>;
+                }, z.core.$strict>>;
+                schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+            }, z.core.$strict>]>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;
                 used: z.ZodBoolean;
