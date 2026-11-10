@@ -1,0 +1,17 @@
+{
+  "profile": "qa",
+  "plugin": "kaijan-qa",
+  "version": "0.0.0-dev.g2d35cf6a9efa2fb9.beebe01c25928425e906dfc53d6e6822b",
+  "sourceRevision": "4099e7c364dff858f48011611da930a3a0bceeb0",
+  "sourceDirty": false,
+  "buildId": "50da87a5-dbf5-497f-a315-26ad5ab5d596",
+  "builtAt": "2026-11-10T00:24:03.128Z",
+  "platform": "darwin-arm64",
+  "minimumClaudeVersion": "2.1.318",
+  "originalBuildRun": "42727539095.1",
+  "archive": "kaijan-qa-0.0.0-dev.g2d35cf6a9efa2fb9.beebe01c25928425e906dfc53d6e6822b-darwin-arm64-plugin.zip",
+  "archiveSha256": "65adea17bbd7f135f128b3471ea8c73c852c53f4e3c73be2e2cff03d6435249d",
+  "files": 3749,
+  "coreOrigin": "https://loki-app.qa.katalon.com",
+  "purpose": "Testing preview; not supported-release or Production inference acceptance"
+}

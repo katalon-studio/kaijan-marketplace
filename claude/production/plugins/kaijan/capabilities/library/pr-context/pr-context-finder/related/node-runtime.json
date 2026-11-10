@@ -1,0 +1,6 @@
+{
+  "schema": "pcf-node-runtime/1",
+  "minimum": 24,
+  "in_process": true,
+  "external_interpreter": false
+}

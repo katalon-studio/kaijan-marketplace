@@ -1,0 +1,1623 @@
+{
+  "package": "@katalon-loki/computer-runner",
+  "additionalRoots": [
+    {
+      "name": "content-tag",
+      "version": "4.2.1"
+    },
+    {
+      "name": "@vue/compiler-sfc",
+      "version": "3.5.44"
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3"
+    },
+    {
+      "name": "@katalon-loki/mac-computer-runner",
+      "version": "0.1.0"
+    }
+  ],
+  "packages": [
+    {
+      "path": "node_modules/@appium/base-driver",
+      "name": "@appium/base-driver",
+      "version": "10.8.2"
+    },
+    {
+      "path": "node_modules/@appium/logger",
+      "name": "@appium/logger",
+      "version": "2.0.12"
+    },
+    {
+      "path": "node_modules/@appium/schema",
+      "name": "@appium/schema",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/@appium/strongbox",
+      "name": "@appium/strongbox",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/@appium/support",
+      "name": "@appium/support",
+      "version": "7.2.9"
+    },
+    {
+      "path": "node_modules/@appium/support/node_modules/which",
+      "name": "which",
+      "version": "6.0.1"
+    },
+    {
+      "path": "node_modules/@appium/support/node_modules/which/node_modules/isexe",
+      "name": "isexe",
+      "version": "4.0.0"
+    },
+    {
+      "path": "node_modules/@appium/types",
+      "name": "@appium/types",
+      "version": "1.7.2"
+    },
+    {
+      "path": "node_modules/@babel/parser",
+      "name": "@babel/parser",
+      "version": "7.29.9"
+    },
+    {
+      "path": "node_modules/@dabh/diagnostics",
+      "name": "@dabh/diagnostics",
+      "version": "2.0.9"
+    },
+    {
+      "path": "node_modules/@img/colour",
+      "name": "@img/colour",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/@img/sharp-darwin-arm64",
+      "name": "@img/sharp-darwin-arm64",
+      "version": "0.35.5"
+    },
+    {
+      "path": "node_modules/@img/sharp-libvips-darwin-arm64",
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "version": "1.3.4"
+    },
+    {
+      "path": "node_modules/@jridgewell/sourcemap-codec",
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.6.0"
+    },
+    {
+      "path": "node_modules/@katalon-experiments/ai-client",
+      "name": "@katalon-experiments/ai-client",
+      "version": "0.1.0"
+    },
+    {
+      "path": "node_modules/@katalon-loki/computer-runner",
+      "name": "@katalon-loki/computer-runner",
+      "version": "0.1.1"
+    },
+    {
+      "path": "node_modules/@katalon-loki/mac-computer-runner",
+      "name": "@katalon-loki/mac-computer-runner",
+      "version": "0.1.0"
+    },
+    {
+      "path": "node_modules/@modelcontextprotocol/client",
+      "name": "@modelcontextprotocol/client",
+      "version": "2.4.0"
+    },
+    {
+      "path": "node_modules/@modelcontextprotocol/core",
+      "name": "@modelcontextprotocol/core",
+      "version": "2.4.0"
+    },
+    {
+      "path": "node_modules/@openai/agents",
+      "name": "@openai/agents",
+      "version": "0.21.0"
+    },
+    {
+      "path": "node_modules/@openai/agents-core",
+      "name": "@openai/agents-core",
+      "version": "0.21.0"
+    },
+    {
+      "path": "node_modules/@openai/agents-openai",
+      "name": "@openai/agents-openai",
+      "version": "0.21.0"
+    },
+    {
+      "path": "node_modules/@openai/agents-realtime",
+      "name": "@openai/agents-realtime",
+      "version": "0.21.0"
+    },
+    {
+      "path": "node_modules/@sidvind/better-ajv-errors",
+      "name": "@sidvind/better-ajv-errors",
+      "version": "5.0.0"
+    },
+    {
+      "path": "node_modules/@so-ric/colorspace",
+      "name": "@so-ric/colorspace",
+      "version": "1.1.6"
+    },
+    {
+      "path": "node_modules/@vue/compiler-core",
+      "name": "@vue/compiler-core",
+      "version": "3.5.44"
+    },
+    {
+      "path": "node_modules/@vue/compiler-dom",
+      "name": "@vue/compiler-dom",
+      "version": "3.5.44"
+    },
+    {
+      "path": "node_modules/@vue/compiler-sfc",
+      "name": "@vue/compiler-sfc",
+      "version": "3.5.44"
+    },
+    {
+      "path": "node_modules/@vue/compiler-ssr",
+      "name": "@vue/compiler-ssr",
+      "version": "3.5.44"
+    },
+    {
+      "path": "node_modules/@vue/shared",
+      "name": "@vue/shared",
+      "version": "3.5.44"
+    },
+    {
+      "path": "node_modules/@xmldom/xmldom",
+      "name": "@xmldom/xmldom",
+      "version": "0.9.12"
+    },
+    {
+      "path": "node_modules/abort-controller",
+      "name": "abort-controller",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/accepts",
+      "name": "accepts",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/accepts/node_modules/mime-types",
+      "name": "mime-types",
+      "version": "3.0.2"
+    },
+    {
+      "path": "node_modules/accepts/node_modules/mime-types/node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.54.0"
+    },
+    {
+      "path": "node_modules/agent-base",
+      "name": "agent-base",
+      "version": "6.0.2"
+    },
+    {
+      "path": "node_modules/ajv",
+      "name": "ajv",
+      "version": "8.20.0"
+    },
+    {
+      "path": "node_modules/ajv-formats",
+      "name": "ajv-formats",
+      "version": "3.0.1"
+    },
+    {
+      "path": "node_modules/appium",
+      "name": "appium",
+      "version": "3.9.0"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver",
+      "name": "appium-mac2-driver",
+      "version": "4.5.1"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/asyncbox",
+      "name": "asyncbox",
+      "version": "6.5.0"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/asyncbox/node_modules/p-limit",
+      "name": "p-limit",
+      "version": "7.3.3"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/asyncbox/node_modules/p-limit/node_modules/yocto-queue",
+      "name": "yocto-queue",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios",
+      "name": "axios",
+      "version": "1.21.0"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/follow-redirects",
+      "name": "follow-redirects",
+      "version": "1.16.2"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/form-data",
+      "name": "form-data",
+      "version": "4.0.6"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent",
+      "name": "https-proxy-agent",
+      "version": "5.0.1"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base",
+      "name": "agent-base",
+      "version": "6.0.2"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base/node_modules/debug",
+      "name": "debug",
+      "version": "4.4.3"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent/node_modules/agent-base/node_modules/debug/node_modules/ms",
+      "name": "ms",
+      "version": "2.1.3"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent/node_modules/debug",
+      "name": "debug",
+      "version": "4.4.3"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/https-proxy-agent/node_modules/debug/node_modules/ms",
+      "name": "ms",
+      "version": "2.1.3"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/axios/node_modules/proxy-from-env",
+      "name": "proxy-from-env",
+      "version": "2.1.0"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/teen_process",
+      "name": "teen_process",
+      "version": "4.2.1"
+    },
+    {
+      "path": "node_modules/appium-mac2-driver/node_modules/teen_process/node_modules/shell-quote",
+      "name": "shell-quote",
+      "version": "1.12.0"
+    },
+    {
+      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/asyncbox/node_modules/p-limit",
+      "name": "p-limit",
+      "version": "7.3.3"
+    },
+    {
+      "path": "node_modules/appium-xcode/node_modules/@appium/support/node_modules/asyncbox/node_modules/p-limit/node_modules/yocto-queue",
+      "name": "yocto-queue",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/appium-xcode/node_modules/asyncbox/node_modules/p-limit",
+      "name": "p-limit",
+      "version": "7.3.3"
+    },
+    {
+      "path": "node_modules/appium-xcode/node_modules/asyncbox/node_modules/p-limit/node_modules/yocto-queue",
+      "name": "yocto-queue",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/archiver",
+      "name": "archiver",
+      "version": "8.0.0"
+    },
+    {
+      "path": "node_modules/archiver/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "4.8.0"
+    },
+    {
+      "path": "node_modules/archiver/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/archiver/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/argparse",
+      "name": "argparse",
+      "version": "3.0.3"
+    },
+    {
+      "path": "node_modules/async",
+      "name": "async",
+      "version": "3.2.6"
+    },
+    {
+      "path": "node_modules/async-lock",
+      "name": "async-lock",
+      "version": "1.4.1"
+    },
+    {
+      "path": "node_modules/asyncbox",
+      "name": "asyncbox",
+      "version": "6.5.0"
+    },
+    {
+      "path": "node_modules/axios",
+      "name": "axios",
+      "version": "1.20.0"
+    },
+    {
+      "path": "node_modules/b4a",
+      "name": "b4a",
+      "version": "1.9.0"
+    },
+    {
+      "path": "node_modules/balanced-match",
+      "name": "balanced-match",
+      "version": "4.0.4"
+    },
+    {
+      "path": "node_modules/bare-events",
+      "name": "bare-events",
+      "version": "2.9.2"
+    },
+    {
+      "path": "node_modules/basic-auth",
+      "name": "basic-auth",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/bl",
+      "name": "bl",
+      "version": "4.1.0"
+    },
+    {
+      "path": "node_modules/bl/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "3.6.2"
+    },
+    {
+      "path": "node_modules/bl/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/bluebird",
+      "name": "bluebird",
+      "version": "3.7.2"
+    },
+    {
+      "path": "node_modules/body-parser",
+      "name": "body-parser",
+      "version": "2.4.0"
+    },
+    {
+      "path": "node_modules/bplist-creator",
+      "name": "bplist-creator",
+      "version": "0.3.0"
+    },
+    {
+      "path": "node_modules/bplist-parser",
+      "name": "bplist-parser",
+      "version": "0.5.0"
+    },
+    {
+      "path": "node_modules/brace-expansion",
+      "name": "brace-expansion",
+      "version": "5.0.12"
+    },
+    {
+      "path": "node_modules/buffer-crc32",
+      "name": "buffer-crc32",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/bytes",
+      "name": "bytes",
+      "version": "3.1.2"
+    },
+    {
+      "path": "node_modules/call-bind-apply-helpers",
+      "name": "call-bind-apply-helpers",
+      "version": "1.0.2"
+    },
+    {
+      "path": "node_modules/call-bound",
+      "name": "call-bound",
+      "version": "1.0.4"
+    },
+    {
+      "path": "node_modules/chalk",
+      "name": "chalk",
+      "version": "4.1.2"
+    },
+    {
+      "path": "node_modules/chalk/node_modules/ansi-styles",
+      "name": "ansi-styles",
+      "version": "4.3.0"
+    },
+    {
+      "path": "node_modules/cli-cursor",
+      "name": "cli-cursor",
+      "version": "3.1.0"
+    },
+    {
+      "path": "node_modules/cli-spinners",
+      "name": "cli-spinners",
+      "version": "2.9.2"
+    },
+    {
+      "path": "node_modules/clone",
+      "name": "clone",
+      "version": "1.0.4"
+    },
+    {
+      "path": "node_modules/color-convert",
+      "name": "color-convert",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/color-name",
+      "name": "color-name",
+      "version": "1.1.4"
+    },
+    {
+      "path": "node_modules/compress-commons",
+      "name": "compress-commons",
+      "version": "7.0.1"
+    },
+    {
+      "path": "node_modules/compress-commons/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "4.8.0"
+    },
+    {
+      "path": "node_modules/compress-commons/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/compress-commons/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/content-disposition",
+      "name": "content-disposition",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/content-tag",
+      "name": "content-tag",
+      "version": "4.2.1"
+    },
+    {
+      "path": "node_modules/content-type",
+      "name": "content-type",
+      "version": "2.1.0"
+    },
+    {
+      "path": "node_modules/cookie",
+      "name": "cookie",
+      "version": "0.7.2"
+    },
+    {
+      "path": "node_modules/cookie-signature",
+      "name": "cookie-signature",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/core-util-is",
+      "name": "core-util-is",
+      "version": "1.0.3"
+    },
+    {
+      "path": "node_modules/crc-32",
+      "name": "crc-32",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/crc32-stream",
+      "name": "crc32-stream",
+      "version": "7.0.1"
+    },
+    {
+      "path": "node_modules/crc32-stream/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "4.8.0"
+    },
+    {
+      "path": "node_modules/crc32-stream/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/crc32-stream/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/cross-spawn",
+      "name": "cross-spawn",
+      "version": "7.0.6"
+    },
+    {
+      "path": "node_modules/debug",
+      "name": "debug",
+      "version": "4.4.3"
+    },
+    {
+      "path": "node_modules/defaults",
+      "name": "defaults",
+      "version": "1.0.4"
+    },
+    {
+      "path": "node_modules/depd",
+      "name": "depd",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/detect-libc",
+      "name": "detect-libc",
+      "version": "2.1.2"
+    },
+    {
+      "path": "node_modules/detect-node",
+      "name": "detect-node",
+      "version": "2.1.0"
+    },
+    {
+      "path": "node_modules/dunder-proto",
+      "name": "dunder-proto",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/duplexer",
+      "name": "duplexer",
+      "version": "0.1.2"
+    },
+    {
+      "path": "node_modules/ee-first",
+      "name": "ee-first",
+      "version": "1.1.1"
+    },
+    {
+      "path": "node_modules/enabled",
+      "name": "enabled",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/encodeurl",
+      "name": "encodeurl",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/entities",
+      "name": "entities",
+      "version": "7.0.1"
+    },
+    {
+      "path": "node_modules/env-paths",
+      "name": "env-paths",
+      "version": "4.0.0"
+    },
+    {
+      "path": "node_modules/es-define-property",
+      "name": "es-define-property",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/es-errors",
+      "name": "es-errors",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/es-object-atoms",
+      "name": "es-object-atoms",
+      "version": "1.1.2"
+    },
+    {
+      "path": "node_modules/escape-html",
+      "name": "escape-html",
+      "version": "1.0.3"
+    },
+    {
+      "path": "node_modules/estree-walker",
+      "name": "estree-walker",
+      "version": "2.0.2"
+    },
+    {
+      "path": "node_modules/etag",
+      "name": "etag",
+      "version": "1.8.1"
+    },
+    {
+      "path": "node_modules/event-target-shim",
+      "name": "event-target-shim",
+      "version": "5.0.1"
+    },
+    {
+      "path": "node_modules/events-universal",
+      "name": "events-universal",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/eventsource",
+      "name": "eventsource",
+      "version": "3.0.7"
+    },
+    {
+      "path": "node_modules/eventsource-parser",
+      "name": "eventsource-parser",
+      "version": "3.1.1"
+    },
+    {
+      "path": "node_modules/express",
+      "name": "express",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/express/node_modules/content-type",
+      "name": "content-type",
+      "version": "1.0.5"
+    },
+    {
+      "path": "node_modules/express/node_modules/mime-types",
+      "name": "mime-types",
+      "version": "3.0.2"
+    },
+    {
+      "path": "node_modules/express/node_modules/mime-types/node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.54.0"
+    },
+    {
+      "path": "node_modules/fast-deep-equal",
+      "name": "fast-deep-equal",
+      "version": "3.1.3"
+    },
+    {
+      "path": "node_modules/fast-fifo",
+      "name": "fast-fifo",
+      "version": "1.3.2"
+    },
+    {
+      "path": "node_modules/fast-uri",
+      "name": "fast-uri",
+      "version": "3.1.9"
+    },
+    {
+      "path": "node_modules/fastest-levenshtein",
+      "name": "fastest-levenshtein",
+      "version": "1.0.16"
+    },
+    {
+      "path": "node_modules/fecha",
+      "name": "fecha",
+      "version": "4.2.3"
+    },
+    {
+      "path": "node_modules/finalhandler",
+      "name": "finalhandler",
+      "version": "2.1.1"
+    },
+    {
+      "path": "node_modules/fn.name",
+      "name": "fn.name",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/follow-redirects",
+      "name": "follow-redirects",
+      "version": "1.16.2"
+    },
+    {
+      "path": "node_modules/form-data",
+      "name": "form-data",
+      "version": "4.0.6"
+    },
+    {
+      "path": "node_modules/forwarded",
+      "name": "forwarded",
+      "version": "0.2.0"
+    },
+    {
+      "path": "node_modules/fresh",
+      "name": "fresh",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/ftp-response-parser",
+      "name": "ftp-response-parser",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/ftp-response-parser/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "1.1.14"
+    },
+    {
+      "path": "node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/isarray",
+      "name": "isarray",
+      "version": "0.0.1"
+    },
+    {
+      "path": "node_modules/ftp-response-parser/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "0.10.31"
+    },
+    {
+      "path": "node_modules/function-bind",
+      "name": "function-bind",
+      "version": "1.1.2"
+    },
+    {
+      "path": "node_modules/get-intrinsic",
+      "name": "get-intrinsic",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/get-proto",
+      "name": "get-proto",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/glob",
+      "name": "glob",
+      "version": "13.0.6"
+    },
+    {
+      "path": "node_modules/gopd",
+      "name": "gopd",
+      "version": "1.2.0"
+    },
+    {
+      "path": "node_modules/handle-thing",
+      "name": "handle-thing",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/has-flag",
+      "name": "has-flag",
+      "version": "4.0.0"
+    },
+    {
+      "path": "node_modules/has-symbols",
+      "name": "has-symbols",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/hasown",
+      "name": "hasown",
+      "version": "2.0.4"
+    },
+    {
+      "path": "node_modules/hosted-git-info",
+      "name": "hosted-git-info",
+      "version": "9.0.3"
+    },
+    {
+      "path": "node_modules/hpack.js",
+      "name": "hpack.js",
+      "version": "2.1.6"
+    },
+    {
+      "path": "node_modules/http-deceiver",
+      "name": "http-deceiver",
+      "version": "1.2.7"
+    },
+    {
+      "path": "node_modules/http-errors",
+      "name": "http-errors",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/http-status-codes",
+      "name": "http-status-codes",
+      "version": "2.3.0"
+    },
+    {
+      "path": "node_modules/https-proxy-agent",
+      "name": "https-proxy-agent",
+      "version": "5.0.1"
+    },
+    {
+      "path": "node_modules/iconv-lite",
+      "name": "iconv-lite",
+      "version": "0.7.3"
+    },
+    {
+      "path": "node_modules/inherits",
+      "name": "inherits",
+      "version": "2.0.4"
+    },
+    {
+      "path": "node_modules/ipaddr.js",
+      "name": "ipaddr.js",
+      "version": "1.9.1"
+    },
+    {
+      "path": "node_modules/is-interactive",
+      "name": "is-interactive",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/is-number-like",
+      "name": "is-number-like",
+      "version": "1.0.8"
+    },
+    {
+      "path": "node_modules/is-promise",
+      "name": "is-promise",
+      "version": "4.0.0"
+    },
+    {
+      "path": "node_modules/is-safe-filename",
+      "name": "is-safe-filename",
+      "version": "0.1.1"
+    },
+    {
+      "path": "node_modules/is-stream",
+      "name": "is-stream",
+      "version": "4.0.1"
+    },
+    {
+      "path": "node_modules/is-unicode-supported",
+      "name": "is-unicode-supported",
+      "version": "0.1.0"
+    },
+    {
+      "path": "node_modules/isarray",
+      "name": "isarray",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/isexe",
+      "name": "isexe",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/jose",
+      "name": "jose",
+      "version": "6.2.12"
+    },
+    {
+      "path": "node_modules/jsftp",
+      "name": "jsftp",
+      "version": "2.1.3"
+    },
+    {
+      "path": "node_modules/jsftp/node_modules/debug",
+      "name": "debug",
+      "version": "3.2.7"
+    },
+    {
+      "path": "node_modules/json-schema-traverse",
+      "name": "json-schema-traverse",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/klaw",
+      "name": "klaw",
+      "version": "4.1.0"
+    },
+    {
+      "path": "node_modules/kleur",
+      "name": "kleur",
+      "version": "4.1.5"
+    },
+    {
+      "path": "node_modules/kuler",
+      "name": "kuler",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/lazystream",
+      "name": "lazystream",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/lilconfig",
+      "name": "lilconfig",
+      "version": "3.1.4"
+    },
+    {
+      "path": "node_modules/lockfile",
+      "name": "lockfile",
+      "version": "1.0.4"
+    },
+    {
+      "path": "node_modules/lodash",
+      "name": "lodash",
+      "version": "4.18.1"
+    },
+    {
+      "path": "node_modules/lodash.isfinite",
+      "name": "lodash.isfinite",
+      "version": "3.3.2"
+    },
+    {
+      "path": "node_modules/log-symbols",
+      "name": "log-symbols",
+      "version": "4.1.0"
+    },
+    {
+      "path": "node_modules/logform",
+      "name": "logform",
+      "version": "2.7.0"
+    },
+    {
+      "path": "node_modules/logform/node_modules/@colors/colors",
+      "name": "@colors/colors",
+      "version": "1.6.0"
+    },
+    {
+      "path": "node_modules/lru-cache",
+      "name": "lru-cache",
+      "version": "11.5.3"
+    },
+    {
+      "path": "node_modules/magic-string",
+      "name": "magic-string",
+      "version": "0.30.21"
+    },
+    {
+      "path": "node_modules/math-intrinsics",
+      "name": "math-intrinsics",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/media-typer",
+      "name": "media-typer",
+      "version": "1.1.1"
+    },
+    {
+      "path": "node_modules/merge-descriptors",
+      "name": "merge-descriptors",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/method-override",
+      "name": "method-override",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/method-override/node_modules/debug",
+      "name": "debug",
+      "version": "3.1.0"
+    },
+    {
+      "path": "node_modules/method-override/node_modules/debug/node_modules/ms",
+      "name": "ms",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/methods",
+      "name": "methods",
+      "version": "1.1.2"
+    },
+    {
+      "path": "node_modules/mimic-fn",
+      "name": "mimic-fn",
+      "version": "2.1.0"
+    },
+    {
+      "path": "node_modules/minimalistic-assert",
+      "name": "minimalistic-assert",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/minimatch",
+      "name": "minimatch",
+      "version": "10.2.6"
+    },
+    {
+      "path": "node_modules/morgan",
+      "name": "morgan",
+      "version": "1.12.1"
+    },
+    {
+      "path": "node_modules/morgan/node_modules/debug",
+      "name": "debug",
+      "version": "2.6.9"
+    },
+    {
+      "path": "node_modules/morgan/node_modules/debug/node_modules/ms",
+      "name": "ms",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/ms",
+      "name": "ms",
+      "version": "2.1.3"
+    },
+    {
+      "path": "node_modules/nanoid",
+      "name": "nanoid",
+      "version": "3.3.20"
+    },
+    {
+      "path": "node_modules/negotiator",
+      "name": "negotiator",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/normalize-package-data",
+      "name": "normalize-package-data",
+      "version": "8.0.0"
+    },
+    {
+      "path": "node_modules/normalize-path",
+      "name": "normalize-path",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/object-inspect",
+      "name": "object-inspect",
+      "version": "1.13.4"
+    },
+    {
+      "path": "node_modules/obuf",
+      "name": "obuf",
+      "version": "1.1.2"
+    },
+    {
+      "path": "node_modules/on-finished",
+      "name": "on-finished",
+      "version": "2.4.1"
+    },
+    {
+      "path": "node_modules/on-headers",
+      "name": "on-headers",
+      "version": "1.1.0"
+    },
+    {
+      "path": "node_modules/once",
+      "name": "once",
+      "version": "1.4.0"
+    },
+    {
+      "path": "node_modules/one-time",
+      "name": "one-time",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/onetime",
+      "name": "onetime",
+      "version": "5.1.2"
+    },
+    {
+      "path": "node_modules/openai",
+      "name": "openai",
+      "version": "7.45.0"
+    },
+    {
+      "path": "node_modules/ora",
+      "name": "ora",
+      "version": "5.4.1"
+    },
+    {
+      "path": "node_modules/ora/node_modules/strip-ansi",
+      "name": "strip-ansi",
+      "version": "6.0.1"
+    },
+    {
+      "path": "node_modules/ora/node_modules/strip-ansi/node_modules/ansi-regex",
+      "name": "ansi-regex",
+      "version": "5.0.1"
+    },
+    {
+      "path": "node_modules/p-limit",
+      "name": "p-limit",
+      "version": "7.3.3"
+    },
+    {
+      "path": "node_modules/parse-listing",
+      "name": "parse-listing",
+      "version": "1.1.3"
+    },
+    {
+      "path": "node_modules/parseurl",
+      "name": "parseurl",
+      "version": "1.3.3"
+    },
+    {
+      "path": "node_modules/path-key",
+      "name": "path-key",
+      "version": "3.1.1"
+    },
+    {
+      "path": "node_modules/path-to-regexp",
+      "name": "path-to-regexp",
+      "version": "8.4.2"
+    },
+    {
+      "path": "node_modules/pend",
+      "name": "pend",
+      "version": "1.2.0"
+    },
+    {
+      "path": "node_modules/picocolors",
+      "name": "picocolors",
+      "version": "1.1.1"
+    },
+    {
+      "path": "node_modules/pkce-challenge",
+      "name": "pkce-challenge",
+      "version": "5.0.1"
+    },
+    {
+      "path": "node_modules/playwright-core",
+      "name": "playwright-core",
+      "version": "1.65.0-alpha-2026-10-26"
+    },
+    {
+      "path": "node_modules/plist",
+      "name": "plist",
+      "version": "4.0.0"
+    },
+    {
+      "path": "node_modules/pluralize",
+      "name": "pluralize",
+      "version": "8.0.0"
+    },
+    {
+      "path": "node_modules/portscanner",
+      "name": "portscanner",
+      "version": "2.2.0"
+    },
+    {
+      "path": "node_modules/portscanner/node_modules/async",
+      "name": "async",
+      "version": "2.6.4"
+    },
+    {
+      "path": "node_modules/postcss",
+      "name": "postcss",
+      "version": "8.5.30"
+    },
+    {
+      "path": "node_modules/process",
+      "name": "process",
+      "version": "0.11.10"
+    },
+    {
+      "path": "node_modules/process-nextick-args",
+      "name": "process-nextick-args",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/proxy-addr",
+      "name": "proxy-addr",
+      "version": "2.0.8"
+    },
+    {
+      "path": "node_modules/qs",
+      "name": "qs",
+      "version": "6.16.1"
+    },
+    {
+      "path": "node_modules/range-parser",
+      "name": "range-parser",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/raw-body",
+      "name": "raw-body",
+      "version": "3.0.2"
+    },
+    {
+      "path": "node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "2.3.8"
+    },
+    {
+      "path": "node_modules/readdir-glob",
+      "name": "readdir-glob",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/restore-cursor",
+      "name": "restore-cursor",
+      "version": "3.1.0"
+    },
+    {
+      "path": "node_modules/router",
+      "name": "router",
+      "version": "2.2.0"
+    },
+    {
+      "path": "node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.1.2"
+    },
+    {
+      "path": "node_modules/safe-stable-stringify",
+      "name": "safe-stable-stringify",
+      "version": "2.5.0"
+    },
+    {
+      "path": "node_modules/safer-buffer",
+      "name": "safer-buffer",
+      "version": "2.1.2"
+    },
+    {
+      "path": "node_modules/sanitize-filename",
+      "name": "sanitize-filename",
+      "version": "1.6.4"
+    },
+    {
+      "path": "node_modules/select-hose",
+      "name": "select-hose",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/semver",
+      "name": "semver",
+      "version": "7.8.5"
+    },
+    {
+      "path": "node_modules/send",
+      "name": "send",
+      "version": "1.2.1"
+    },
+    {
+      "path": "node_modules/send/node_modules/mime-types",
+      "name": "mime-types",
+      "version": "3.0.2"
+    },
+    {
+      "path": "node_modules/send/node_modules/mime-types/node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.54.0"
+    },
+    {
+      "path": "node_modules/serve-favicon",
+      "name": "serve-favicon",
+      "version": "2.5.1"
+    },
+    {
+      "path": "node_modules/serve-favicon/node_modules/fresh",
+      "name": "fresh",
+      "version": "0.5.2"
+    },
+    {
+      "path": "node_modules/serve-favicon/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/serve-static",
+      "name": "serve-static",
+      "version": "2.2.1"
+    },
+    {
+      "path": "node_modules/setprototypeof",
+      "name": "setprototypeof",
+      "version": "1.2.0"
+    },
+    {
+      "path": "node_modules/sharp",
+      "name": "sharp",
+      "version": "0.35.5"
+    },
+    {
+      "path": "node_modules/shebang-command",
+      "name": "shebang-command",
+      "version": "2.0.0"
+    },
+    {
+      "path": "node_modules/shebang-regex",
+      "name": "shebang-regex",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/shell-quote",
+      "name": "shell-quote",
+      "version": "1.12.0"
+    },
+    {
+      "path": "node_modules/side-channel",
+      "name": "side-channel",
+      "version": "1.1.1"
+    },
+    {
+      "path": "node_modules/side-channel-list",
+      "name": "side-channel-list",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/side-channel-map",
+      "name": "side-channel-map",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/side-channel-weakmap",
+      "name": "side-channel-weakmap",
+      "version": "1.0.2"
+    },
+    {
+      "path": "node_modules/signal-exit",
+      "name": "signal-exit",
+      "version": "3.0.7"
+    },
+    {
+      "path": "node_modules/source-map-js",
+      "name": "source-map-js",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/spdx-correct",
+      "name": "spdx-correct",
+      "version": "3.2.0"
+    },
+    {
+      "path": "node_modules/spdx-expression-parse",
+      "name": "spdx-expression-parse",
+      "version": "3.0.1"
+    },
+    {
+      "path": "node_modules/spdy",
+      "name": "spdy",
+      "version": "4.0.2"
+    },
+    {
+      "path": "node_modules/spdy-transport",
+      "name": "spdy-transport",
+      "version": "3.0.0"
+    },
+    {
+      "path": "node_modules/spdy-transport/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "3.6.2"
+    },
+    {
+      "path": "node_modules/spdy-transport/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/spdy-transport/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/stack-trace",
+      "name": "stack-trace",
+      "version": "0.0.10"
+    },
+    {
+      "path": "node_modules/statuses",
+      "name": "statuses",
+      "version": "2.0.2"
+    },
+    {
+      "path": "node_modules/stream-buffers",
+      "name": "stream-buffers",
+      "version": "3.0.3"
+    },
+    {
+      "path": "node_modules/stream-combiner",
+      "name": "stream-combiner",
+      "version": "0.2.2"
+    },
+    {
+      "path": "node_modules/streamx",
+      "name": "streamx",
+      "version": "2.28.1"
+    },
+    {
+      "path": "node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.1.1"
+    },
+    {
+      "path": "node_modules/supports-color",
+      "name": "supports-color",
+      "version": "7.2.0"
+    },
+    {
+      "path": "node_modules/tar-stream",
+      "name": "tar-stream",
+      "version": "3.2.2"
+    },
+    {
+      "path": "node_modules/teen_process",
+      "name": "teen_process",
+      "version": "4.2.1"
+    },
+    {
+      "path": "node_modules/text-decoder",
+      "name": "text-decoder",
+      "version": "1.2.7"
+    },
+    {
+      "path": "node_modules/through",
+      "name": "through",
+      "version": "2.3.8"
+    },
+    {
+      "path": "node_modules/toidentifier",
+      "name": "toidentifier",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/triple-beam",
+      "name": "triple-beam",
+      "version": "1.4.1"
+    },
+    {
+      "path": "node_modules/truncate-utf8-bytes",
+      "name": "truncate-utf8-bytes",
+      "version": "1.0.2"
+    },
+    {
+      "path": "node_modules/type-is",
+      "name": "type-is",
+      "version": "2.1.0"
+    },
+    {
+      "path": "node_modules/type-is/node_modules/mime-types",
+      "name": "mime-types",
+      "version": "3.0.2"
+    },
+    {
+      "path": "node_modules/type-is/node_modules/mime-types/node_modules/mime-db",
+      "name": "mime-db",
+      "version": "1.54.0"
+    },
+    {
+      "path": "node_modules/typescript",
+      "name": "typescript",
+      "version": "5.9.3"
+    },
+    {
+      "path": "node_modules/unorm",
+      "name": "unorm",
+      "version": "1.6.0"
+    },
+    {
+      "path": "node_modules/unpipe",
+      "name": "unpipe",
+      "version": "1.0.0"
+    },
+    {
+      "path": "node_modules/util-deprecate",
+      "name": "util-deprecate",
+      "version": "1.0.2"
+    },
+    {
+      "path": "node_modules/uuid",
+      "name": "uuid",
+      "version": "14.0.3"
+    },
+    {
+      "path": "node_modules/validate-npm-package-license",
+      "name": "validate-npm-package-license",
+      "version": "3.0.4"
+    },
+    {
+      "path": "node_modules/vary",
+      "name": "vary",
+      "version": "1.1.2"
+    },
+    {
+      "path": "node_modules/wbuf",
+      "name": "wbuf",
+      "version": "1.7.3"
+    },
+    {
+      "path": "node_modules/wcwidth",
+      "name": "wcwidth",
+      "version": "1.0.1"
+    },
+    {
+      "path": "node_modules/which",
+      "name": "which",
+      "version": "2.0.2"
+    },
+    {
+      "path": "node_modules/winston",
+      "name": "winston",
+      "version": "3.19.0"
+    },
+    {
+      "path": "node_modules/winston-transport",
+      "name": "winston-transport",
+      "version": "4.9.0"
+    },
+    {
+      "path": "node_modules/winston-transport/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "3.6.2"
+    },
+    {
+      "path": "node_modules/winston-transport/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/winston-transport/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/winston/node_modules/is-stream",
+      "name": "is-stream",
+      "version": "2.0.1"
+    },
+    {
+      "path": "node_modules/winston/node_modules/readable-stream",
+      "name": "readable-stream",
+      "version": "3.6.2"
+    },
+    {
+      "path": "node_modules/winston/node_modules/readable-stream/node_modules/string_decoder",
+      "name": "string_decoder",
+      "version": "1.3.0"
+    },
+    {
+      "path": "node_modules/winston/node_modules/readable-stream/node_modules/string_decoder/node_modules/safe-buffer",
+      "name": "safe-buffer",
+      "version": "5.2.1"
+    },
+    {
+      "path": "node_modules/wrappy",
+      "name": "wrappy",
+      "version": "1.0.2"
+    },
+    {
+      "path": "node_modules/ws",
+      "name": "ws",
+      "version": "8.22.0"
+    },
+    {
+      "path": "node_modules/xmlbuilder",
+      "name": "xmlbuilder",
+      "version": "15.1.1"
+    },
+    {
+      "path": "node_modules/yaml",
+      "name": "yaml",
+      "version": "2.9.1"
+    },
+    {
+      "path": "node_modules/yauzl",
+      "name": "yauzl",
+      "version": "3.4.0"
+    },
+    {
+      "path": "node_modules/yocto-queue",
+      "name": "yocto-queue",
+      "version": "1.2.2"
+    },
+    {
+      "path": "node_modules/zip-stream",
+      "name": "zip-stream",
+      "version": "7.0.5"
+    },
+    {
+      "path": "node_modules/zod",
+      "name": "zod",
+      "version": "4.6.7"
+    }
+  ]
+}
