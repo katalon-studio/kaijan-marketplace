@@ -1,21 +1,18 @@
 {
-  "name": "kaijan-claude-preview",
+  "name": "kaijan-claude",
   "owner": {
     "name": "Katalon"
   },
+  "description": "Kaijan for Claude CLI and local Desktop Code. One package; select KAIJAN_PROFILE at startup.",
   "plugins": [
     {
-      "name": "kaijan-qa",
-      "source": "./claude/qa/plugins/kaijan-qa",
-      "version": "0.0.0-dev.g2d35cf6a9efa2fb9.beebe01c25928425e906dfc53d6e6822b",
-      "description": "Plan functional and change-impact tests, run authorized scenarios, and review saved results in Claude Code."
-    },
-    {
       "name": "kaijan",
-      "source": "./claude/production/plugins/kaijan",
-      "version": "0.0.0-dev.g04e91c7d3310fde2.b2d91dc6d359e45d289b782108ffdbf67",
-      "description": "Plan functional and change-impact tests, run authorized scenarios, and review saved results in Claude Code."
+      "version": "0.5.0-claude.42966705718.1",
+      "source": {
+        "source": "archive",
+        "url": "https://github.com/katalon-studio/kaijan-marketplace/releases/download/claude-v0.5.0-claude.42966705718.1/kaijan-0.5.0-claude.42966705718.1-darwin-arm64-plugin.zip",
+        "sha256": "5d6cab3db4da3494d39c4431e33c57895a916e87967bebead0a91c2392fd02ec"
+      }
     }
-  ],
-  "description": "Kaijan QA and Production previews for Claude Code CLI and local Desktop Code"
+  ]
 }
