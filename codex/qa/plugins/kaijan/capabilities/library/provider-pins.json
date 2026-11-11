@@ -765,7 +765,7 @@
       "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a",
       "packages/computer-runner/src/request-instructions.mjs": "8d50022fc7c5e94503f258d88ed6dcad59e696cbb69e289e281012a458bebce6",
       "packages/computer-runner/src/browser-agent.mjs": "bd6c2296954aa7cd643ba8bc591e051a105d39fb32d4a3eb392b256509744ffa",
-      "packages/computer-runner/src/browser-recap.mjs": "03f5a0a816c9283a4b8683c4a8b88bd076af22957237e866daafefd656a65f1f",
+      "packages/computer-runner/src/browser-recap.mjs": "9bd8ebb3461d7b846d4f5c117e18653f12969c4d174b1f9d9f61734c1ed1681f",
       "packages/provider-transport/responses-session.mjs": "8cefcc395aad4fed689e0ea2f5a24f96fa6fb179dbd37381caf9f087f5254c05",
       "packages/provider-transport/responses-session.d.mts": "269fc88a0fb5a7e681498c0a751aa42af82a4927a944788883cd9721a8486137",
       "packages/provider-transport/package.json": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
