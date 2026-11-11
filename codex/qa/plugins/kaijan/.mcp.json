@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "kaijan_core": {
+      "type": "stdio",
+      "command": "./capabilities/runtime/node",
+      "args": [
+        "./scripts/core-mcp.mjs"
+      ],
+      "cwd": ".",
+      "env_vars": [
+        "KAIJAN_PROFILE"
+      ],
+      "tool_timeout_sec": 240
+    },
+    "kaijan_local": {
+      "type": "stdio",
+      "command": "./capabilities/runtime/node",
+      "args": [
+        "./scripts/local-mcp.mjs"
+      ],
+      "cwd": ".",
+      "startup_timeout_sec": 90,
+      "tool_timeout_sec": 5520,
+      "env_vars": [
+        "KAIJAN_PROFILE"
+      ]
+    }
+  }
+}

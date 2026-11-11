@@ -1,0 +1,3 @@
+interface:
+  display_name: "Kaijan feedback and issues"
+  short_description: "Send private feedback or draft a Kaijan issue"
