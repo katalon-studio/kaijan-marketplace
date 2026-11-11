@@ -932,11 +932,12 @@ export async function plan(packet, output_dir, model, options = {}) {
     options.max_output_tokens,
     settings.reasoning,
   );
-  // The Planner will assess Runner's recap against this plan. Retaining the
-  // planning turn lets it do that without sending its sources a second time.
+  // The Planner assesses Runner's recap against the privately retained original
+  // context. Encrypted reasoning can be replayed without provider-side storage.
   if (options.retainPlannerConversation === true) {
     requireManagedBinding(options.env ?? process.env);
-    request.store = true;
+    request.store = false;
+    request.include = ["reasoning.encrypted_content"];
   }
   let projected, projection, sourceProjection;
   const result = await generate(

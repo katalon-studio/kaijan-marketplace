@@ -228,6 +228,7 @@ export async function generate(packet, body, root, validate, options = {}) {
     instructions: body.instructions,
     modelSettings: {
       reasoning: body.reasoning,
+      ...(body.include ? { providerData: { include: body.include } } : {}),
       ...(ceiling === undefined ? {} : { maxTokens: ceiling }),
     },
     outputType: body.text.format,
@@ -243,7 +244,7 @@ export async function generate(packet, body, root, validate, options = {}) {
       const expected = {
         ...body,
         input: [{ role: "user", content: body.input }],
-        include: [],
+        include: body.include ?? [],
         tools: [],
         stream: false,
         ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),

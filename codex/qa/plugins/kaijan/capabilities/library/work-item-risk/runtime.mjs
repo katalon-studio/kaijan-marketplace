@@ -3,6 +3,7 @@ import {
   responsesUsageEstimate,
   providerConnection,
   sendFetch,
+  zdrRequest,
 } from "@katalon-experiments/ai-client";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -197,6 +198,10 @@ export async function runWithMethod(
       retries: 0,
     });
     const call = async (stage, route, request) => {
+      request = zdrRequest(
+        request,
+        route === "systemone" ? "openrouter" : "openai",
+      );
       if (
         route === "responses" &&
         (!["gpt-6-luna", "gpt-6.1-terra"].includes(request.model) ||

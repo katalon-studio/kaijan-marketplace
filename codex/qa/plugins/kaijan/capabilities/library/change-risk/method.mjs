@@ -697,9 +697,7 @@ function assumptionsRequestBody(
     model,
     reasoning,
     max_output_tokens,
-    ...(packet.source.kind === "provided-snapshot" || template.store === false
-      ? { store: false }
-      : {}),
+    store: false,
     text,
     input: [
       {
@@ -748,8 +746,8 @@ async function reviewAssumptions(call, stage, request, sources) {
     },
     outputType: request.text.format,
   });
-  // Older patch templates omit store and use the Responses API default.
-  const store = request.store ?? true;
+  // Current calls explicitly disable provider storage, including old templates.
+  const store = false;
   let result;
   const runner = createRetainedAgentRunner({
     model: request.model,

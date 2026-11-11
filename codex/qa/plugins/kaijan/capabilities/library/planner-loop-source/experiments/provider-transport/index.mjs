@@ -1,3 +1,4 @@
+export { zdrRequest } from "./retention.mjs";
 import { channelFetch } from "./broker-channel.mjs";
 import { lstatSync } from "node:fs";
 import { dirname } from "node:path";
