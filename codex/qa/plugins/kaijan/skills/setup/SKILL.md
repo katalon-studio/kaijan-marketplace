@@ -11,7 +11,7 @@ local directory and saved context. If needed, use the host project inventory.
 Ask a native Question only when a consequential selection is missing or
 ambiguous. A suggestion or unanswered Question does not select a project.
 
-Use the profile in the installed `loki-build.json` and follow
+Use the Kaijan connection available to this chat. Follow
 `application-setup` in this conversation to save the selected source, original
 goal and optional target. Setup returns saved configuration without a map.
 Continue the user's explicit task when its own prerequisites are met.
