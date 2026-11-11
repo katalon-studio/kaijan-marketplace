@@ -564,7 +564,7 @@
         "experiments/context-finder/planning/supplement-instructions.mjs": "47ed86cf2964ffd2a0ace67de11a7088c1fa4c24611545f8824b1c7eaabda6f3",
         "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
         "experiments/context-finder/planning/agent-generation.mjs": "e53d786d15d67210d023e3efb959e35066f740ab6e64795a37efccc4a321d69d",
-        "experiments/work-verifier/planner-recap.mjs": "030f3a3d40b989d3e099556a20c5f74e53bc5fb9c871bb78f932cb5a9ec310c3"
+        "experiments/work-verifier/planner-recap.mjs": "4ece8aedb01e249aba451c84fe4420de8b20c5e44ff5479e57c82a1414bdd41e"
       },
       "assets": {
         "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
@@ -2085,7 +2085,7 @@
     },
     "planner-loop-source/experiments/work-verifier/planner-recap.mjs": {
       "source": "packages/work-verifier/planner-recap.mjs",
-      "sha256": "030f3a3d40b989d3e099556a20c5f74e53bc5fb9c871bb78f932cb5a9ec310c3",
+      "sha256": "4ece8aedb01e249aba451c84fe4420de8b20c5e44ff5479e57c82a1414bdd41e",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     }
   },
@@ -2517,7 +2517,7 @@
       "derivation": "Explicit model-returned finding record/citation pairs for assessment representation 13; strict binding and original candidates preserved (#3893)."
     },
     "packages/work-verifier/planner-recap.mjs": {
-      "sha256": "030f3a3d40b989d3e099556a20c5f74e53bc5fb9c871bb78f932cb5a9ec310c3",
+      "sha256": "4ece8aedb01e249aba451c84fe4420de8b20c5e44ff5479e57c82a1414bdd41e",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     }
   },

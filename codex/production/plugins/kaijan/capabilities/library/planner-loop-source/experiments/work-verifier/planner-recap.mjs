@@ -62,9 +62,8 @@ export function preparePlannerRecap(input) {
   );
   assert(new Set(tests.map((test) => test.id)).size === ids.length);
   const steps = request.recap.steps;
-  assert(Array.isArray(steps) && steps.length > 0 && steps.length <= 40);
+  assert(Array.isArray(steps) && steps.length > 0);
   assert(steps.every((step) => typeof step === "string" && step.trim()));
-  assert(Buffer.byteLength(JSON.stringify(steps)) <= 8192);
   const stepNumbers = list({
     type: "integer",
     minimum: 1,
@@ -185,10 +184,6 @@ export function projectPlannerRecap(prepared, candidate) {
     "Duplicate test result",
   );
   const citations = (numbers) => {
-    assert(
-      new Set(numbers).size === numbers.length,
-      "Duplicate recap citation",
-    );
     return numbers.map((number) => ({
       source_id: request.recap.evidenceId,
       from_line: number,

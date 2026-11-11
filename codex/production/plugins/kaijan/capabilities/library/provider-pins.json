@@ -611,7 +611,7 @@
       "experiments/context-finder/planning/supplement-instructions.mjs": "47ed86cf2964ffd2a0ace67de11a7088c1fa4c24611545f8824b1c7eaabda6f3",
       "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
       "experiments/context-finder/planning/agent-generation.mjs": "e53d786d15d67210d023e3efb959e35066f740ab6e64795a37efccc4a321d69d",
-      "experiments/work-verifier/planner-recap.mjs": "030f3a3d40b989d3e099556a20c5f74e53bc5fb9c871bb78f932cb5a9ec310c3"
+      "experiments/work-verifier/planner-recap.mjs": "4ece8aedb01e249aba451c84fe4420de8b20c5e44ff5479e57c82a1414bdd41e"
     },
     "assets": {
       "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
@@ -711,7 +711,7 @@
       "packages/computer-runner/package.json": "018d168754eba3cbee9f0f8f22911928c8a2d9d81562f8538f18f653f5719580",
       "packages/computer-runner/src/runner.mjs": "81049632ba50e4b3de5c784f4565deb62306418cdb10a1fc267efa02bd9136e8",
       "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73",
-      "packages/computer-runner/README.md": "61f9495d40c68e66cc9c914403bef9c897bfa9ed3e498c0d676031d009014f76",
+      "packages/computer-runner/README.md": "3668b9fa07ad825cd7560cd850a5a558fb2ae2e11ed52467e94911b01ae331e5",
       "packages/computer-runner/flow.md": "4adeb84998ebbfb2248515bc2989579374a69962736afe7c72401b503062dd92",
       "packages/computer-runner/src/runner.d.mts": "2398fbe401a6094312270daf1406ee4fd575ca5c31083bb2d5e6eceb2838c8da",
       "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
@@ -730,9 +730,9 @@
       "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c",
       "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8",
       "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a",
-      "packages/computer-runner/src/request-instructions.mjs": "5cc32758b777d28832f73fd2473967058f843c0ecd77de3c5104aacc6b0ca38e",
+      "packages/computer-runner/src/request-instructions.mjs": "1d68c0d95c92eac61dbc9d636359456804d56c701a19d3ee34fc90a2c585af7e",
       "packages/computer-runner/src/browser-agent.mjs": "bd6c2296954aa7cd643ba8bc591e051a105d39fb32d4a3eb392b256509744ffa",
-      "packages/computer-runner/src/browser-recap.mjs": "52bb1a4d5be00debfde25f56b1c37f073ee108d9c640a1a65024fa92a2e8bf79"
+      "packages/computer-runner/src/browser-recap.mjs": "2e907f010fabcf49c007cf18d8e2bbb56ec0a294e4f7a89bac3a38a81f5a206d"
     },
     "relocation": {
       "originalFiles": {
