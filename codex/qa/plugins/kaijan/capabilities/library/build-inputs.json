@@ -161,7 +161,7 @@
     "packages/capabilities/src/report-protection.ts": "652733aa8c221e49a2a5a1f89773b01c26246368c9aa36d6daf01e2abf18b079",
     "packages/capabilities/src/runner-assessment-context.ts": "fc77edb7d3622a03f324422aaa0e93435fad26b473a4036b7975ed32e027f291",
     "packages/capabilities/src/runner-outcome-projection.ts": "5ff8e1f199bb0a1b2da66ec596e16b8ec8427ab85c37e371c98f834e90c27fe7",
-    "packages/capabilities/src/report-assessment.ts": "aa904c130d431b9d3ffee4ad988253dfa057f9b877fe84e68a10029df3c6167b",
+    "packages/capabilities/src/report-assessment.ts": "07dfc68a72b971fdf1ff393e5b185bcdf3613eb4e28c62e7718cd25fc4cacdcf",
     "packages/capabilities/src/report-risk.ts": "b2c8db8673328fad3d78bf8c92d13f8c67d9cf0fae05371adc14f058368c1151",
     "packages/capabilities/src/report-artifact.ts": "270b5d627637d970a84b74efdf4d30b6216400ebcb1f12f8d86dfb2818ba4ac4",
     "packages/capabilities/src/execution-note-protection.ts": "37f92f2ca11f2a83480841e0be0d1f10854e6a400fd5b9d004edc50149aea2af",
