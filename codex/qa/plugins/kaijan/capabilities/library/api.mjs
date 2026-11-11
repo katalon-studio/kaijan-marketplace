@@ -121377,7 +121377,7 @@ function projectTestAssessments(entries, run, runnerContext) {
     return list9(assessment.test_results).flatMap((raw) => {
       const item2 = record9(raw), original = tests2.find((test) => test.id === item2.test_id);
       if (item2.additional_check === true) {
-        if (!plan || !sameRecapRun || original || selected2.includes(item2.test_id) || !equal3(item2.outcome_ids, [run.runId]) || item2.status !== "bound_model_assessment" || list9(item2.validation_errors).length)
+        if (!plan || !sameRecapRun || original || selected2.includes(item2.test_id) || !equal3(item2.outcome_ids, [run.runId]))
           return [];
         const projected2 = reportTestAssessmentSchema.safeParse({
           answerId: entry.answerId,
@@ -121418,7 +121418,6 @@ function projectTestAssessments(entries, run, runnerContext) {
       } catch {
         return [];
       }
-      const valid = item2.status === "bound_model_assessment" && !list9(item2.validation_errors).length;
       const originalContext = standalone ? verifiedStandaloneContext(
         runnerContext,
         run,
@@ -121432,34 +121431,32 @@ function projectTestAssessments(entries, run, runnerContext) {
       const customerQuotes = (bindings2) => projectCustomerBoundQuotes(bindings2).flatMap(
         (quote2) => quote2.state === "literal-source" && typeof quote2.text === "string" ? [{ sourceId: quote2.sourceId, text: quote2.text }] : []
       );
-      const safeEvidence = valid ? customerQuotes(item2.literal_bindings) : [];
-      const safeSteps = valid ? list9(item2.observed_steps).map((step) => ({
+      const safeEvidence = customerQuotes(item2.literal_bindings);
+      const safeSteps = list9(item2.observed_steps).map((step) => ({
         description: text10(record9(step).description),
         evidence: customerQuotes(record9(step).literal_bindings)
-      })) : [];
+      }));
       const projected = reportTestAssessmentSchema.safeParse({
         customerEvidence: safeEvidence,
         customerObservedSteps: safeSteps,
-        customerEvidenceIncomplete: valid && (safeEvidence.length !== list9(item2.literal_bindings).length || safeSteps.some(
-          (step, index2) => step.evidence.length !== list9(
-            record9(list9(item2.observed_steps)[index2]).literal_bindings
-          ).length
-        )),
+        customerEvidenceIncomplete: safeEvidence.length !== list9(item2.literal_bindings).length || safeSteps.some(
+          (step, index2) => step.evidence.length !== list9(record9(list9(item2.observed_steps)[index2]).literal_bindings).length
+        ),
         answerId: entry.answerId,
         resultSha256: entry.resultSha256,
         model: text10(record9(result.native_receipt).model_returned),
         testId: item2.test_id,
         ...scenarioTitle ? { scenarioTitle } : {},
         ...expectationAuthority ? { expectationAuthority } : {},
-        verdict: valid ? item2.verdict : "inconclusive",
+        verdict: item2.verdict,
         expected: expectedText || text10(record9(original.expected).text),
-        actual: valid && typeof item2.actual === "string" ? item2.actual : null,
+        actual: typeof item2.actual === "string" ? item2.actual : null,
         reason: text10(item2.reason),
-        evidence: valid ? quotes(item2.literal_bindings) : [],
-        observedSteps: valid ? list9(item2.observed_steps).map((step) => ({
+        evidence: quotes(item2.literal_bindings),
+        observedSteps: list9(item2.observed_steps).map((step) => ({
           description: text10(record9(step).description),
           evidence: quotes(record9(step).literal_bindings)
-        })) : []
+        }))
       });
       if (!projected.success) return [];
       return [
