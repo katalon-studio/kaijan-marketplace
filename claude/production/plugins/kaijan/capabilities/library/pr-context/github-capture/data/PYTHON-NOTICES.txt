@@ -1,7 +1,0 @@
-cli_arguments.mjs retains usage wrapping and choice-diagnostic behavior derived
-from CPython 3.12.14 Lib/argparse.py, distributed under the Python Software
-Foundation license. See PYTHON-LICENSE.txt and
-https://github.com/python/cpython/blob/v3.12.14/Lib/argparse.py.
-The Node argparse 2.0.1 package is an external declared dependency and supplies
-its own copyright/license notices. The compatibility adapter does not invoke
-Python or modify that dependency.
