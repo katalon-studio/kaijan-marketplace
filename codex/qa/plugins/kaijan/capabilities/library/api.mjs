@@ -100669,6 +100669,23 @@ var toolFailureMessages = {
   mcp_protocol_error: "The tool call failed at the MCP boundary.",
   analysis_refused: "Kaijan could not accept the change risk analysis.",
   analysis_partial: "The change risk analysis did not complete.",
+  report_unavailable: "The saved report is unavailable in this chat.",
+  report_invalid_selection: "The report selection is invalid.",
+  report_projection_unavailable: "The saved report view is unavailable.",
+  report_trace_unavailable: "The saved trace is unavailable in this chat.",
+  operation_not_found_in_scope: "The saved operation is unavailable in this chat.",
+  operation_unavailable: "The operation or its saved result is unavailable.",
+  answer_conflict: "The answer key belongs to a different answer.",
+  clarification_unavailable: "The test question is no longer available.",
+  invalid_answers: "The answer does not match the pending questions.",
+  answer_effect_unestablished: "Delivery of the saved answer is not confirmed.",
+  setup_scope_unavailable: "Setup is unavailable in this chat.",
+  private_parameter_invalid: "The private login input is invalid.",
+  private_parameter_unavailable: "The saved private login is unavailable.",
+  private_parameter_scope_mismatch: "The saved private login belongs to another chat.",
+  private_parameter_target_mismatch: "The saved private login does not allow these websites.",
+  private_parameter_collision: "A private login input name is used more than once.",
+  private_parameter_revoked: "The saved private login was revoked.",
   tool_failed: "The tool call failed."
 };
 var toolFailureCodeSchema = external_exports.enum(Object.keys(toolFailureMessages));

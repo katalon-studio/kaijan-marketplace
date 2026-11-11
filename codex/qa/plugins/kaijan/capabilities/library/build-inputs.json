@@ -98,7 +98,7 @@
     "packages/capabilities/src/planning-procedure-context.ts": "4a79c7b51db41c92b99e7049701c18aead1777a78c0ace64023ff684d6e0c54d",
     "packages/contracts/dist/core-mcp.js": "89a666c99f1f08472cabc3dab790287fa70f4ecfd661d39e90af1e22c606cb01",
     "packages/capabilities/src/planning-conversation.ts": "92a045216e6268bd82c94967ebcea25ae0a35e537dc94885e3444f9f49e552ca",
-    "packages/contracts/dist/telemetry.js": "a4f944c09fba5427976fe2ebecde106fe0b0b2b09e5b8603bc90abe15bac355f",
+    "packages/contracts/dist/telemetry.js": "945b791e77699fa6d221beba93289a3443f988f1b272c4391429c36e91b27644",
     "packages/capabilities/src/planning-risk-context.ts": "15852e2d5c369eabd432809cc801620724ebe8103a031f1cb2ba958d426d29e5",
     "packages/capabilities/src/planning-change-preparation.ts": "1689f9c26041b010c960c5c453b09e636152e97f5a8a3df2ded2611f4e9bae98",
     "packages/capabilities/src/planning-preparation.ts": "6bb7a9c078b2c271ecc1f2ab4b3c2010ef4bb3e7fd274d849c5dc3da65fa5fc8",
