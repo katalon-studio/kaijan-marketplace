@@ -20212,7 +20212,7 @@ var assessmentImageReferenceSchema = external_exports.strictObject({
   manifestSha256: digest5,
   artifactId: digest5,
   sha256: digest5,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+  bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
   schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),

@@ -50847,7 +50847,7 @@ var assessmentImageReferenceSchema = external_exports.strictObject({
   manifestSha256: digest9,
   artifactId: digest9,
   sha256: digest9,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+  bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
   schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),

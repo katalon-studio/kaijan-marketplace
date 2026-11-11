@@ -79,14 +79,12 @@ returns `assessment_image_unavailable` with `requestDispatched: false`, includin
 when an earlier answer is cached. No path or URL can select an image. Direct
 caller-supplied image bytes remain supported. The full native input stays in
 private assessment artifacts. Inspection itself is not submission input.
-The 2 MiB preparation limit applies to the compact packet, including all text
-and metadata. It does not count the base64 copies of retained PNGs. Each PNG
-still has a 2 MiB limit, and assessment accepts at most 256 images. Preparation
-validates the complete native input before returning a compatible packet.
-The complete serialized provider request also has a 32 MiB limit. These are
-local assessment bounds, not provider capacity claims. They allow normal
-Runner sequences beyond 32 screenshots without sending unbounded payloads.
-Preparation does not resize, sample or discard images to meet these limits.
+Preparation, selected-artifact reads and assessment construction retain complete
+input without the former local packet, request, image-count or PNG-size caps.
+Retained-image references stay compact; the assessor resolves their original
+bytes. It does not resize, sample or discard images. Actual provider errors stay
+in their original records. Application/privacy projections, source selection
+and existing malformed-input handling are unchanged by this size cleanup.
 
 Preparation performs no inference, dispatch, new persistence or automatic
 acceptance. It preserves original requirements rather than deriving them from
@@ -107,14 +105,9 @@ For an explicit override, the full packet lists other report-readable PNGs in
 exact artifact selectors. Case capture links keep their original Runner
 attribution. These descriptors do not supply omitted pixels. Normal automatic
 preparation includes the complete supported public artifact sequence. Protected
-pixels and private manifest members stay unavailable. Assessment accepts at
-most 256 PNGs, including original embedded images, and retains packet and provider
-limits. Larger inputs return an explicit incompatibility without sampling or
-dropping evidence. Do not replay the browser to resolve this limit. A smaller
-explicit selection is a separate scoped assessment with explicit omissions;
-complete assessment of arbitrary long Runs is not supported.
-Missing facts and reference/citation failures remain unresolved. Oversized
-packets are explicitly refused rather than truncated; original results remain
+pixels and private manifest members stay unavailable. This size cleanup does not
+claim provider acceptance or complete scenario coverage. Missing facts and
+reference/citation failures remain explicit; original results remain
 available through the returned existing readers. Plugin/runtime identity and
 application identity remain distinct.
 

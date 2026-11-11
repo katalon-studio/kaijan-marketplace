@@ -179,17 +179,6 @@ function prepareForFormat(input, options, format) {
       },
     ];
   const wire = utf8(encodedJson(request));
-  if (wire.length > LIMITS.requestBytes) {
-    const error = new Error(
-      "Complete assessment request exceeds its byte limit; no evidence was removed.",
-    );
-    Object.assign(error, {
-      code: "assessment_request_limit_exceeded",
-      actualBytes: wire.length,
-      maximumBytes: LIMITS.requestBytes,
-    });
-    throw error;
-  }
   const prepared = {
     ...captured,
     schema: SUPPLIED_TEST_EVIDENCE,
