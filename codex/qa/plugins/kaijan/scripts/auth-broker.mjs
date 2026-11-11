@@ -25851,6 +25851,8 @@ async function startBroker({
         for (const name of ["x-loki-plan-id", "x-loki-run-id"])
           if (typeof req.headers[name] === "string" && /^[a-f0-9]{64}$/.test(req.headers[name]))
             headers[name] = req.headers[name];
+        if (req.headers["x-kaijan-ai-content"] === "omit")
+          headers["x-kaijan-ai-content"] = "omit";
       }
       const request = bound ? authorization.requestBound.bind(authorization) : authorization.request.bind(authorization);
       const response = await request(

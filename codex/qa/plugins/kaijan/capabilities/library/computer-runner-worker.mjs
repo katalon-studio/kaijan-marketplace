@@ -26481,6 +26481,7 @@ process.on("message", (message) => {
       }).safeParse(options.ownerTransition);
       const runId = registration.success ? registration.data.runId : "";
       const planId = typeof options.telemetryPlanId === "string" ? options.telemetryPlanId : "";
+      let privateContent = Array.isArray(options.secretParameterNames) && options.secretParameterNames.length > 0;
       const selectedSender = (body, signal) => {
         if (controlled)
           throw Error("Controlled provider cannot dispatch upstream");
@@ -26498,7 +26499,10 @@ process.on("message", (message) => {
             method: "POST",
             body: JSON.stringify(body),
             signal,
-            headers: { "content-type": "application/json" }
+            headers: {
+              "content-type": "application/json",
+              ...managed && privateContent ? { "x-kaijan-ai-content": "omit" } : {}
+            }
           }
         );
       };
@@ -26535,10 +26539,17 @@ process.on("message", (message) => {
         selectedSender,
         { headless: nativeOptions.headless }
       );
+      const requestClarification = clarification?.requestClarification;
       const runOptions = {
         ...nativeOptions,
         managedCore: managed && !controlled,
-        ...clarification ? { requestClarification: clarification.requestClarification } : {},
+        ...requestClarification ? {
+          requestClarification: async (...args) => {
+            const answer = await requestClarification(...args);
+            if (answer.sensitiveQuestionIds?.length) privateContent = true;
+            return answer;
+          }
+        } : {},
         ...applicationContext ? { applicationContext: applicationContext.tool } : {},
         ...validation ? {
           requestAI: (body, signal) => validation.send(body, signal)
