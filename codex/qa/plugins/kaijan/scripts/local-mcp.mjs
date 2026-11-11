@@ -28103,7 +28103,8 @@ var coreOAuthStepPropertiesSchema = external_exports.strictObject({
   is_reconnect: external_exports.boolean().nullable(),
   ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable(),
   // Optional v1 addition. An absent legacy observation stays unknown.
-  reconnect_reason: oauthReconnectReasonSchema.optional()
+  reconnect_reason: oauthReconnectReasonSchema.optional(),
+  grant_type: external_exports.enum(["authorization_code", "refresh_token"]).optional()
 });
 var coreOAuthTelemetryCaptureSchema = external_exports.strictObject({
   event_uuid: external_exports.uuidv4(),
@@ -42927,7 +42928,9 @@ var authorizeSchema = external_exports.strictObject({
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
   scope: external_exports.string().min(1).max(200),
-  onboarding_ticket: onboardingTicketSchema.optional()
+  onboarding_ticket: onboardingTicketSchema.optional(),
+  is_reconnect: external_exports.enum(["true", "false"]).optional(),
+  reconnect_reason: oauthReconnectReasonSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -42937,7 +42940,9 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     resource: external_exports.url(),
     code: opaqueSchema,
     code_verifier: verifierSchema,
-    onboarding_ticket: onboardingTicketSchema.optional()
+    onboarding_ticket: onboardingTicketSchema.optional(),
+    is_reconnect: external_exports.enum(["true", "false"]).optional(),
+    reconnect_reason: oauthReconnectReasonSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),

@@ -27165,6 +27165,741 @@ function date4(params) {
   return _coercedDate(ZodDate, params);
 }
 
+// packages/contracts/dist/telemetry.js
+var telemetryLimits = {
+  eventBytes: 4096,
+  batchBytes: 128 * 1024,
+  batchEvents: 25,
+  localEvents: 1024,
+  retentionMs: 7 * 24 * 60 * 60 * 1e3,
+  textCharacters: 1e3,
+  arrayEntries: 50
+};
+var telemetryVersionSchema = external_exports.string().max(128).regex(/^\d+(?:\.\d+){0,3}(?:[-+][a-zA-Z0-9.-]+)?$/);
+var telemetryIdentityEpochSchema = external_exports.uuidv4();
+var toolFailureMessages = {
+  invalid_arguments: "The tool arguments did not pass validation.",
+  request_key_conflict: "The request key already belongs to another request.",
+  answer_unavailable: "The saved answer is unavailable.",
+  answer_integrity_failed: "The saved answer could not be verified.",
+  customer_read_restart: "The saved result could not be read in this session.",
+  advisory_unavailable: "The advisory operation is unavailable.",
+  operation_cancelled: "The tool call was cancelled.",
+  mcp_protocol_error: "The tool call failed at the MCP boundary.",
+  analysis_refused: "Kaijan could not accept the change risk analysis.",
+  analysis_partial: "The change risk analysis did not complete.",
+  report_unavailable: "The saved report is unavailable in this chat.",
+  report_invalid_selection: "The report selection is invalid.",
+  report_projection_unavailable: "The saved report view is unavailable.",
+  report_trace_unavailable: "The saved trace is unavailable in this chat.",
+  operation_not_found_in_scope: "The saved operation is unavailable in this chat.",
+  operation_unavailable: "The operation or its saved result is unavailable.",
+  answer_conflict: "The answer key belongs to a different answer.",
+  clarification_unavailable: "The test question is no longer available.",
+  invalid_answers: "The answer does not match the pending questions.",
+  answer_effect_unestablished: "Delivery of the saved answer is not confirmed.",
+  setup_scope_unavailable: "Setup is unavailable in this chat.",
+  private_parameter_invalid: "The private login input is invalid.",
+  private_parameter_unavailable: "The saved private login is unavailable.",
+  private_parameter_scope_mismatch: "The saved private login belongs to another chat.",
+  private_parameter_target_mismatch: "The saved private login does not allow these websites.",
+  private_parameter_collision: "A private login input name is used more than once.",
+  private_parameter_revoked: "The saved private login was revoked.",
+  tool_failed: "The tool call failed."
+};
+var toolFailureCodeSchema = external_exports.enum(Object.keys(toolFailureMessages));
+var mcpErrorResponseSchema = external_exports.object({
+  structuredContent: external_exports.object({
+    code: external_exports.unknown().optional(),
+    error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
+  }).optional()
+});
+var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
+var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
+  analysis_id: external_exports.uuidv4(),
+  outcome: external_exports.enum(["completed", "failed"]),
+  duration_ms: external_exports.number().finite().nonnegative(),
+  files_changed_count: changeRiskCount.nullable(),
+  findings_count: changeRiskCount.nullable(),
+  findings_by_severity: external_exports.partialRecord(external_exports.enum(["critical", "high", "medium", "low", "info"]), changeRiskCount).nullable(),
+  questions_count: changeRiskCount.nullable(),
+  error_code: toolFailureCodeSchema.nullable(),
+  error_message: external_exports.string().max(128).nullable()
+}).refine((value) => value.outcome === "completed" ? value.error_code === null && value.error_message === null : value.error_code !== null && value.error_message === toolFailureMessages[value.error_code]);
+var localMcpMetricsSchema = external_exports.strictObject({
+  $mcp_tool_name: external_exports.union([
+    external_exports.literal("unknown"),
+    external_exports.string().max(80).regex(/^(?:loki|kaijan)_[a-z_]+$/)
+  ]),
+  $mcp_is_error: external_exports.boolean(),
+  $mcp_duration_ms: external_exports.number().finite().nonnegative(),
+  $mcp_server_name: external_exports.literal("kaijan-local"),
+  $mcp_server_version: telemetryVersionSchema,
+  invoked_by: external_exports.enum(["user_request", "codex_initiated", "unknown"]),
+  // Optional additions. Core saves both events from the same accepted receipt.
+  error_code: toolFailureCodeSchema.optional(),
+  change_risk: changeRiskAnalyzedPropertiesSchema.optional()
+}).refine((value) => (value.error_code === void 0 || value.$mcp_is_error && value.$mcp_tool_name.startsWith("loki_")) && (value.change_risk === void 0 || value.$mcp_tool_name === "loki_change_risk_analyze" && value.change_risk.duration_ms === value.$mcp_duration_ms && (!value.$mcp_is_error || value.change_risk.error_code === value.error_code)));
+var runtimeStartedPropertiesSchema = external_exports.strictObject({
+  is_first_run: external_exports.boolean().nullable(),
+  installed_at: external_exports.iso.datetime().nullable(),
+  ms_since_installed: external_exports.number().finite().nonnegative().nullable(),
+  startup_ms: external_exports.number().finite().nonnegative(),
+  tools_registered_count: external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  previous_plugin_version: telemetryVersionSchema.nullable()
+});
+var runtimeStartFailedPropertiesSchema = external_exports.discriminatedUnion("stage", [
+  external_exports.strictObject({
+    stage: external_exports.literal("verify_payload"),
+    error_code: external_exports.literal("payload_verification_failed"),
+    error_message: external_exports.literal("Payload verification failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("import_library"),
+    error_code: external_exports.literal("library_import_failed"),
+    error_message: external_exports.literal("Library import failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("init_services"),
+    error_code: external_exports.literal("service_initialization_failed"),
+    error_message: external_exports.literal("Service initialization failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("register_tools"),
+    error_code: external_exports.literal("tool_registration_failed"),
+    error_message: external_exports.literal("Tool registration failed.")
+  })
+]);
+var telemetryOperationId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var setupStartedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId,
+  entry: external_exports.enum(["onboarding_offer", "manual_setup", "from_task"]).nullable(),
+  source_kind: external_exports.enum(["local_folder", "github_repo", "pr_link"]).nullable(),
+  repo_full_name: external_exports.null(),
+  source_ref_kind: external_exports.null(),
+  ref_name: external_exports.null(),
+  commit_sha: external_exports.null(),
+  has_target_url: external_exports.boolean().nullable(),
+  target_host: external_exports.null(),
+  user_goal_text: external_exports.null()
+});
+var setupFinishedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId,
+  outcome: external_exports.enum([
+    "ready",
+    "ready_partial",
+    "needs_input",
+    "failed",
+    "stopped"
+  ]),
+  missing_prerequisites: external_exports.array(external_exports.enum([
+    "admitted-map-producer",
+    "work-item-or-mapping-question",
+    "model-provider",
+    "source-authorization",
+    "admitted-application-consumer",
+    "source_identity_changed",
+    "adapter_changed",
+    "invalid_map_readiness",
+    "invalid_source_authorization",
+    "source_authorization_scope_mismatch",
+    "setup_interrupted",
+    "git_unavailable",
+    "invalid_source",
+    "unknown"
+  ])).max(30).nullable(),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  permissions_requested_count: external_exports.null(),
+  user_inputs_count: external_exports.null(),
+  user_wait_ms: external_exports.null(),
+  machine_ms: external_exports.null()
+});
+var metricCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var generatedMapStartedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId.nullable(),
+  map_id: external_exports.null(),
+  mode: external_exports.literal("generate"),
+  repo_full_name: external_exports.null(),
+  commit_sha: external_exports.null(),
+  source_files_count: metricCount,
+  repo_size_bucket: external_exports.enum(["<1k", "1k-10k", ">10k files"]).nullable()
+});
+var mapStartedPropertiesSchema = external_exports.discriminatedUnion("mode", [
+  generatedMapStartedPropertiesSchema,
+  generatedMapStartedPropertiesSchema.extend({
+    mode: external_exports.literal("reuse_retained"),
+    map_id: telemetryOperationId
+  })
+]);
+var elementKindCounts = external_exports.strictObject({
+  button: metricCount.optional(),
+  link: metricCount.optional(),
+  input: metricCount.optional(),
+  select: metricCount.optional(),
+  tab: metricCount.optional(),
+  table: metricCount.optional(),
+  list: metricCount.optional(),
+  text: metricCount.optional(),
+  image: metricCount.optional(),
+  menu: metricCount.optional(),
+  dialog: metricCount.optional(),
+  section: metricCount.optional(),
+  other: metricCount.optional()
+}).nullable();
+var mapFinishedPropertiesSchema = external_exports.strictObject({
+  map_id: telemetryOperationId.nullable(),
+  outcome: external_exports.enum(["completed", "partial", "failed", "stopped"]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  pages_count: metricCount,
+  elements_count: metricCount,
+  navigation_edges_count: metricCount,
+  element_kinds: elementKindCounts,
+  pages: external_exports.null(),
+  issues_count: metricCount,
+  unavailable_citation_count: metricCount,
+  source_test_clues_count: external_exports.null(),
+  error_code: external_exports.null(),
+  error_message: external_exports.null()
+});
+var providerFailureMessages = {
+  provider_auth_failed: "The AI provider rejected its credentials.",
+  provider_quota_exhausted: "The AI provider quota is exhausted.",
+  provider_rate_limited: "The AI provider is rate limiting requests.",
+  provider_unavailable: "The AI provider is unavailable.",
+  provider_request_rejected: "The AI provider rejected the request."
+};
+var providerHttpStatusSchema = external_exports.number().int().min(100).max(599);
+function providerFailureCode(status, quotaExhausted = false) {
+  if (status === 401 || status === 403)
+    return "provider_auth_failed";
+  if (status === 402 || status === 429 && quotaExhausted)
+    return "provider_quota_exhausted";
+  if (status === 429)
+    return "provider_rate_limited";
+  if (status >= 500 && status <= 599)
+    return "provider_unavailable";
+  return "provider_request_rejected";
+}
+var inferenceFailureMessages = {
+  ...providerFailureMessages,
+  provider_connection_failed: "Kaijan could not connect to the AI provider.",
+  provider_response_interrupted: "The AI provider response ended before it was complete.",
+  provider_response_missing: "The AI provider returned no response body.",
+  provider_response_failed: "The AI provider reported that the request failed.",
+  provider_response_incomplete: "The AI provider could not finish the response.",
+  provider_output_limit: "The AI provider reached its output limit.",
+  inference_cancelled: "The AI request was cancelled before completion.",
+  inference_outcome_unknown: "Kaijan could not determine the AI request outcome."
+};
+var inferenceNativeOutcomeSchema = external_exports.enum([
+  "completed",
+  "failed",
+  "incomplete",
+  "output_limit",
+  "unknown"
+]);
+function inferenceFailureDetails(outcome, httpStatus, quotaExhausted = false, nativeOutcome) {
+  const errorCode = outcome === "upstream_rejected" && httpStatus !== null ? providerFailureCode(httpStatus, quotaExhausted) : outcome === "transport_error" ? "provider_connection_failed" : outcome === "stream_error" ? "provider_response_interrupted" : outcome === "body_absent" ? "provider_response_missing" : outcome === "cancelled" ? "inference_cancelled" : outcome === "unknown" ? "inference_outcome_unknown" : outcome === "body_complete" && nativeOutcome === "failed" ? "provider_response_failed" : outcome === "body_complete" && nativeOutcome === "incomplete" ? "provider_response_incomplete" : outcome === "body_complete" && nativeOutcome === "output_limit" ? "provider_output_limit" : outcome === "body_complete" && nativeOutcome === "unknown" ? "inference_outcome_unknown" : void 0;
+  return errorCode ? {
+    error_code: errorCode,
+    error_message: inferenceFailureMessages[errorCode],
+    ...outcome === "upstream_rejected" && httpStatus !== null ? { provider_http_status: httpStatus } : {}
+  } : void 0;
+}
+var planningFailureMessages = {
+  ...providerFailureMessages,
+  inference_request_rejected: "Kaijan could not send the request to the AI provider.",
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
+var planningFailureStageSchema = external_exports.enum([
+  "provider_request",
+  "transport",
+  "response_capture",
+  "response_parsing",
+  "response_completion",
+  "plan_validation",
+  "persistence"
+]);
+var planningValidationRuleSchema = external_exports.enum([
+  "source_relation",
+  "source_relation_shape",
+  "source_relation_kind",
+  "source_span_bound",
+  "source_relation_arity",
+  "planning_identity",
+  "output_type",
+  "output_enum",
+  "output_keys",
+  "nonempty_string",
+  "unique_ids",
+  "known_ids",
+  "nonempty_evidence",
+  "known_evidence_id",
+  "intent_authority",
+  "empty_intentions_require_clarification",
+  "nonempty_objective_ids",
+  "nonempty_steps",
+  "coverage_status_membership",
+  "complete_test_definitions"
+]);
+var planGeneratedPropertiesSchema = external_exports.strictObject({
+  session_id: external_exports.null(),
+  plan_id: telemetryOperationId,
+  plan_version: external_exports.null(),
+  is_revision: external_exports.null(),
+  outcome: external_exports.enum(["proposed_plan", "needs_clarification", "failed"]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  cases_total: metricCount,
+  cases_functional: external_exports.null(),
+  cases_change_impact: external_exports.null(),
+  cases_existing_repo: external_exports.null(),
+  existing_tests_found: external_exports.null(),
+  existing_tests_selected: external_exports.null(),
+  components_covered_count: external_exports.null(),
+  components_covered: external_exports.null(),
+  map_components_total: external_exports.null(),
+  cases_without_component: external_exports.null(),
+  cases_missing_expected_result: metricCount,
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional(),
+  provider_http_status: providerHttpStatusSchema.optional(),
+  failure_stage: planningFailureStageSchema.optional(),
+  validation_rule: planningValidationRuleSchema.optional()
+}).refine((value) => {
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0) && value.outcome !== "failed")
+    return false;
+  if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
+    return false;
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
+});
+var runStartedPropertiesSchema = external_exports.strictObject({
+  session_id: external_exports.null(),
+  run_id: telemetryOperationId,
+  plan_id: telemetryOperationId.nullable(),
+  execution_mode: external_exports.literal("kaijan_runner"),
+  trigger: external_exports.null(),
+  cases_total: metricCount,
+  cases_by_category: external_exports.null(),
+  is_retest: external_exports.null(),
+  prior_run_id: external_exports.null(),
+  target_host: external_exports.enum(["browser-ui", "desktop-ui"])
+});
+var runServiceRejectionCode = "native_execution_service_rejected";
+var runServiceRejectionMessage = "The test service rejected a request.";
+var runFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  session_id: external_exports.null(),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  cases_passed: metricCount,
+  cases_failed: metricCount,
+  cases_blocked: metricCount,
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
+  results_by_category: external_exports.null(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
+  // Additive v1 field. Absence on older captures means coverage is unknown.
+  check_status: external_exports.enum(["checked", "unchecked"]).optional(),
+  unverified_reason: external_exports.enum([
+    "no_saved_assessment",
+    "no_validated_checks",
+    "missing_or_conflicting_evidence"
+  ]).optional(),
+  blocked_reason: external_exports.enum(["initial_navigation_blocked", "native_blocked"]).optional(),
+  evidence_items_count: metricCount,
+  recap_failure: external_exports.literal("service_rejected").optional(),
+  error_code: external_exports.enum([
+    "native_execution_failed",
+    "native_execution_blocked",
+    runServiceRejectionCode
+  ]).nullable(),
+  error_message: external_exports.enum([
+    "Native execution did not return a validated result.",
+    "Native execution was blocked.",
+    runServiceRejectionMessage
+  ]).nullable()
+}).refine((value) => value.error_code === runServiceRejectionCode ? ["partial", "interrupted"].includes(value.outcome) && value.error_message === runServiceRejectionMessage : value.error_message !== runServiceRejectionMessage).refine((value) => !value.recap_failure || ["completed", "partial"].includes(value.outcome) && value.error_code === null && value.error_message === null).refine((value) => {
+  if (value.blocked_reason === "native_blocked" && value.error_code !== "native_execution_blocked" || value.blocked_reason === "initial_navigation_blocked" && value.outcome !== "partial" || value.unverified_reason === "missing_or_conflicting_evidence" && (value.result_basis !== "saved_report_assessments" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_saved_assessment" && (value.result_basis !== "selected_test_inventory" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_validated_checks" && (value.check_status !== "unchecked" || value.result_basis !== null))
+    return false;
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count2) => count2 !== null) && counts.reduce((sum, count2) => sum + (count2 ?? 0), 0) === value.cases_total;
+});
+var assessmentFinishedPropertiesSchema = external_exports.discriminatedUnion("outcome", [
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("completed"),
+    error_code: external_exports.null()
+  }),
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("failed"),
+    error_code: external_exports.enum([
+      "assessment_service_rejected",
+      "assessment_result_unavailable"
+    ])
+  })
+]);
+var reportOpenedPropertiesSchema = external_exports.strictObject({
+  report_id: telemetryOperationId,
+  session_id: external_exports.null(),
+  source: external_exports.null(),
+  view_duration_ms: external_exports.null(),
+  has_plan: external_exports.boolean().nullable(),
+  has_results: external_exports.boolean().nullable(),
+  has_map: external_exports.boolean().nullable(),
+  view_kind: external_exports.enum(["full_report", "test_plan_details"]),
+  presentation: external_exports.enum(["mcp_app", "loopback_url"]),
+  surface: external_exports.enum(["mcp_app", "browser_panel", "loopback_url"]).nullable(),
+  observation_basis: external_exports.literal("owned_visible_render/1")
+});
+var userInputRequestedPropertiesSchema = external_exports.strictObject({
+  input_kind: external_exports.literal("clarification"),
+  request_key: telemetryOperationId,
+  question_text: external_exports.null(),
+  options: external_exports.null(),
+  observation_basis: external_exports.literal("server_live_clarification_request/1")
+});
+var userInputReceivedPropertiesSchema = external_exports.strictObject({
+  input_kind: external_exports.literal("clarification"),
+  request_key: telemetryOperationId,
+  answer: external_exports.null(),
+  wait_ms: external_exports.number().finite().nonnegative().nullable(),
+  observation_basis: external_exports.literal("server_live_answer_delivery/1")
+});
+var localEnvelope = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  component: external_exports.literal("local_runtime"),
+  plugin_version: telemetryVersionSchema,
+  release: external_exports.string().max(256).regex(/^loki@[a-zA-Z0-9.+_-]+$/),
+  install_channel: external_exports.enum(["dev", "qa", "early_access", "unknown"]),
+  cohort: external_exports.null(),
+  host: external_exports.enum(["codex", "claude_code", "unknown"]),
+  host_version: telemetryVersionSchema.nullable(),
+  host_surface: external_exports.literal("unknown"),
+  host_thread_id: external_exports.null(),
+  session_id: external_exports.null(),
+  step: external_exports.null(),
+  os: external_exports.enum(["darwin", "linux", "win32", "unknown"]),
+  os_version: telemetryVersionSchema,
+  arch: external_exports.enum(["arm64", "x64", "unknown"])
+});
+var mcpCapture = localEnvelope.extend({
+  event: external_exports.literal("$mcp_tool_call"),
+  event_version: external_exports.literal(2),
+  properties: localMcpMetricsSchema
+});
+var startedCapture = localEnvelope.extend({
+  event: external_exports.literal("Runtime Started"),
+  event_version: external_exports.literal(1),
+  properties: runtimeStartedPropertiesSchema
+});
+var failedCapture = localEnvelope.extend({
+  event: external_exports.literal("Runtime Start Failed"),
+  event_version: external_exports.literal(1),
+  properties: runtimeStartFailedPropertiesSchema
+});
+var setupStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Setup Started"),
+  event_version: external_exports.literal(1),
+  properties: setupStartedPropertiesSchema
+});
+var setupFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Setup Finished"),
+  event_version: external_exports.literal(1),
+  properties: setupFinishedPropertiesSchema
+});
+var mapStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Map Build Started"),
+  event_version: external_exports.literal(1),
+  properties: mapStartedPropertiesSchema
+});
+var mapFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Map Build Finished"),
+  event_version: external_exports.literal(1),
+  properties: mapFinishedPropertiesSchema
+});
+var planGeneratedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Plan Generated"),
+  event_version: external_exports.literal(1),
+  properties: planGeneratedPropertiesSchema
+});
+var runStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Run Started"),
+  event_version: external_exports.literal(1),
+  properties: runStartedPropertiesSchema
+});
+var runFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: runFinishedPropertiesSchema
+});
+var assessmentFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Assessment Finished"),
+  event_version: external_exports.literal(1),
+  properties: assessmentFinishedPropertiesSchema
+});
+var reportOpenedCapture = localEnvelope.extend({
+  event: external_exports.literal("Report Opened"),
+  event_version: external_exports.literal(1),
+  properties: reportOpenedPropertiesSchema
+});
+var userInputRequestedCapture = localEnvelope.extend({
+  event: external_exports.literal("User Input Requested"),
+  event_version: external_exports.literal(1),
+  properties: userInputRequestedPropertiesSchema
+});
+var userInputReceivedCapture = localEnvelope.extend({
+  event: external_exports.literal("User Input Received"),
+  event_version: external_exports.literal(1),
+  properties: userInputReceivedPropertiesSchema
+});
+var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
+  mcpCapture,
+  startedCapture,
+  failedCapture,
+  setupStartedCapture,
+  setupFinishedCapture,
+  mapStartedCapture,
+  mapFinishedCapture,
+  planGeneratedCapture,
+  runStartedCapture,
+  runFinishedCapture,
+  reportOpenedCapture,
+  userInputRequestedCapture,
+  userInputReceivedCapture,
+  assessmentFinishedCapture
+]);
+var ownership = {
+  install_id: external_exports.uuidv4(),
+  identity_epoch: telemetryIdentityEpochSchema,
+  seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
+};
+var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var telemetryEventSchema = external_exports.discriminatedUnion("event", [
+  mcpCapture.extend(ownership),
+  startedCapture.extend(ownership),
+  failedCapture.extend(ownership),
+  setupStartedCapture.extend(ownership),
+  setupFinishedCapture.extend(ownership),
+  mapStartedCapture.extend(ownership),
+  mapFinishedCapture.extend(ownership),
+  planGeneratedCapture.extend(ownership),
+  runStartedCapture.extend(ownership),
+  runFinishedCapture.extend(ownership),
+  reportOpenedCapture.extend(ownership),
+  userInputRequestedCapture.extend(ownership),
+  userInputReceivedCapture.extend(ownership),
+  assessmentFinishedEventSchema
+]);
+var telemetryBatchSchema = external_exports.strictObject({
+  events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
+}).refine((batch) => batch.events.every((event2) => event2.event !== "$mcp_tool_call" || event2.properties.change_risk?.analysis_id.toLowerCase() !== event2.event_uuid.toLowerCase()), {
+  path: ["events"],
+  message: "A change risk event needs a distinct event ID."
+});
+var telemetryReceiptSchema = external_exports.strictObject({
+  accepted: external_exports.array(external_exports.strictObject({
+    event_uuid: external_exports.uuidv4(),
+    received_at: external_exports.iso.datetime()
+  })).min(1).max(telemetryLimits.batchEvents)
+});
+var anonymousOnboardingKeySchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var anonymousOnboardingIdSchema = external_exports.string().regex(/^core-anon-v1-[a-f0-9]{64}$/);
+var onboardingFailureMessages = {
+  github_callback_error: "GitHub sign-in did not complete.",
+  state_mismatch: "The sign-in callback did not match the current request.",
+  token_exchange_failed: "Kaijan could not issue a sign-in token.",
+  account_not_allowed: "This account could not sign in to Kaijan.",
+  keychain_unavailable: "Kaijan could not save the sign-in credentials."
+};
+var onboardingFailureCodeSchema = external_exports.enum(Object.keys(onboardingFailureMessages));
+var anonymousOnboardingRequestSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("ticket"),
+    key: anonymousOnboardingKeySchema,
+    challenge: anonymousOnboardingKeySchema,
+    state: anonymousOnboardingKeySchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("lifecycle"),
+    key: anonymousOnboardingKeySchema,
+    event: external_exports.enum(["Runtime Started", "Setup Started"]),
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    plugin_version: telemetryVersionSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("failure"),
+    key: anonymousOnboardingKeySchema,
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    error_code: external_exports.enum(["state_mismatch", "keychain_unavailable"])
+  })
+]);
+var oauthReconnectReasonSchema = external_exports.enum([
+  "token_expired",
+  "refresh_failed",
+  "revoked",
+  "new_install",
+  "unknown"
+]);
+var oauthReconnectContextSchema = external_exports.object({
+  is_reconnect: external_exports.boolean().nullable(),
+  reconnect_reason: oauthReconnectReasonSchema
+});
+var coreOAuthStepPropertiesSchema = external_exports.strictObject({
+  oauth_step: external_exports.enum([
+    "authorize_requested",
+    "sign_in_started",
+    "sign_in_completed",
+    "consent_shown",
+    "consent_granted",
+    "consent_denied",
+    "token_issued",
+    "refresh_failed",
+    "revoked"
+  ]),
+  client_kind: external_exports.enum(["codex", "claude", "runtime"]),
+  identity_provider: external_exports.enum(["google", "github"]).nullable(),
+  is_reconnect: external_exports.boolean().nullable(),
+  ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable(),
+  // Optional v1 addition. An absent legacy observation stays unknown.
+  reconnect_reason: oauthReconnectReasonSchema.optional(),
+  grant_type: external_exports.enum(["authorization_code", "refresh_token"]).optional()
+});
+var coreOAuthTelemetryCaptureSchema = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  event: external_exports.literal("Core OAuth Step"),
+  event_version: external_exports.literal(1),
+  properties: coreOAuthStepPropertiesSchema
+});
+var inferenceUsageModelSchema = external_exports.enum([
+  "gpt-6-luna",
+  "gpt-6.1-terra",
+  "gpt-6-astra",
+  "typesafe/jev-1.13-20260917"
+]);
+var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var coreInferencePropertiesSchema = external_exports.strictObject({
+  operation_id: telemetryOperationId.nullable(),
+  capability: external_exports.enum(["plan", "run"]).nullable(),
+  plan_id: telemetryOperationId.nullable().optional(),
+  run_id: telemetryOperationId.nullable().optional(),
+  model: inferenceUsageModelSchema.nullable(),
+  provider_route: external_exports.literal("litellm"),
+  input_tokens: nativeTokenCount,
+  cached_input_tokens: nativeTokenCount,
+  output_tokens: nativeTokenCount,
+  reasoning_tokens: nativeTokenCount,
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum([
+    "litellm_response_header",
+    "provider_usage_cost",
+    "model_pricing_estimate"
+  ]).optional(),
+  outcome: external_exports.null(),
+  latency_ms: external_exports.number().finite().nonnegative(),
+  http_status: providerHttpStatusSchema.nullable(),
+  // Optional v1 additions. Older producers retain the legacy transport state.
+  native_response_outcome: inferenceNativeOutcomeSchema.optional(),
+  provider_http_status: providerHttpStatusSchema.optional(),
+  error_code: external_exports.enum(Object.keys(inferenceFailureMessages)).optional(),
+  error_message: external_exports.string().max(128).optional(),
+  transport_outcome: external_exports.enum([
+    "body_complete",
+    "body_absent",
+    "upstream_rejected",
+    "transport_error",
+    "stream_error",
+    "cancelled",
+    "unknown"
+  ]),
+  observation_basis: external_exports.enum([
+    "core_inference_transport/1",
+    "core_inference_native_usage/1"
+  ])
+}).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
+  const failure3 = inferenceFailureDetails(value.transport_outcome, value.http_status, value.error_code === "provider_quota_exhausted", value.native_response_outcome);
+  if (value.native_response_outcome !== void 0 && value.transport_outcome !== "body_complete")
+    return false;
+  if ((value.error_code !== void 0 || value.error_message !== void 0 || value.provider_http_status !== void 0) && (!failure3 || value.provider_http_status !== failure3.provider_http_status || value.error_code !== failure3.error_code || value.error_message !== failure3.error_message))
+    return false;
+  const native = value.observation_basis === "core_inference_native_usage/1";
+  if ((value.cost_basis === "provider_usage_cost" || value.cost_basis === "model_pricing_estimate") && !native)
+    return false;
+  const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
+  if (native !== hasUsage)
+    return false;
+  if (native && (value.transport_outcome !== "body_complete" || value.http_status === null || value.http_status < 200 || value.http_status >= 300))
+    return false;
+  if (!native && [
+    value.model,
+    value.input_tokens,
+    value.output_tokens,
+    value.cached_input_tokens,
+    value.reasoning_tokens
+  ].some((item) => item !== null))
+    return false;
+  if (value.cached_input_tokens !== null && value.cached_input_tokens > (value.input_tokens ?? -1))
+    return false;
+  if (value.reasoning_tokens !== null && value.reasoning_tokens > (value.output_tokens ?? -1))
+    return false;
+  const plan = value.plan_id ?? null, run = value.run_id ?? null;
+  return value.operation_id === (run ?? plan) && value.capability === (run ? "run" : plan ? "plan" : null);
+}, "Native usage and operation attribution must be coherent.");
+var coreInferenceTelemetryCaptureSchema = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  event: external_exports.literal("AI Usage Recorded"),
+  event_version: external_exports.literal(1),
+  properties: coreInferencePropertiesSchema
+});
+var coreTelemetryActorSchema = external_exports.strictObject({
+  user_id: external_exports.uuid(),
+  workspace_id: external_exports.uuid()
+});
+
 // packages/contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
 var recordingPrivacy = "rrweb-native-v1";
@@ -28629,7 +29364,9 @@ var authorizeSchema = external_exports.strictObject({
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
   scope: external_exports.string().min(1).max(200),
-  onboarding_ticket: onboardingTicketSchema.optional()
+  onboarding_ticket: onboardingTicketSchema.optional(),
+  is_reconnect: external_exports.enum(["true", "false"]).optional(),
+  reconnect_reason: oauthReconnectReasonSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -28639,7 +29376,9 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     resource: external_exports.url(),
     code: opaqueSchema,
     code_verifier: verifierSchema,
-    onboarding_ticket: onboardingTicketSchema.optional()
+    onboarding_ticket: onboardingTicketSchema.optional(),
+    is_reconnect: external_exports.enum(["true", "false"]).optional(),
+    reconnect_reason: oauthReconnectReasonSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),

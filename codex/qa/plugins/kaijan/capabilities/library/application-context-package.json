@@ -3,7 +3,7 @@
   "contract": "engineering.bound-documents/1-draft1",
   "representation": "engineering-bound-documents-contract/1-draft1",
   "sourceImplementationSha256": "0f9f14e15e861884981fb66756d933369a27d476ce1cc46abb4423ca82e297de",
-  "packagedImplementationSha256": "acb4254ef6ee452a3c0d3ffbf19aa5b7463aa4f134fa9a71b0a0beac60e3c5ee",
+  "packagedImplementationSha256": "c37ebca8cf0003eb99baef49734e5ece9ab932dc0501ca5182e67f3f6efc119c",
   "implementationIdentityFiles": [
     "index.mjs",
     "store.mjs",
@@ -45,7 +45,7 @@
       ],
       "transformation": "esbuild ESM/node24 bundle with named re-exports and tree shaking; maintained implementations, no source rewrite; source-adapters shares staged component-contracts",
       "sourceSha256": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf",
-      "packagedSha256": "b320fa5cf7260fe48f1da6816ace273049c34a60ca2b59427e3745cd44256bf3",
+      "packagedSha256": "bb5d2f07e4142924aeaf38ce7bd04df1867e59b653d2c53afa8c0d2080e6d46a",
       "inputs": {
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js": "bb08133b11b478c8e715038fff26ebea204d7fd5443fba31fe138b142d202efb",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js": "c7ce485c97263e42568d16b11bb4a90133221c7e807498a9273d70f41ba16ef6",
@@ -142,6 +142,7 @@
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/coerce.js": "fb2efe3b6eacc475c77cbb571b5fb8650d92a10f316dc869e49b722973d83c3c",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/external.js": "c6b584ae70ba4e7132b2cd78c23ea4ecedc9828abf999edee312372e1fb453d6",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/index.js": "32e7efd49a94a765f6d10a1a0a3c02c50c246def17c80c6f0225f85525d98505",
+        "packages/contracts/dist/telemetry.js": "8d4c15bfc1ea8b17823ba200c7d559d7d23517dd90d899a3dbfd87bfd301e5df",
         "packages/contracts/dist/recording.js": "a84199595edeeeccd78dca485f097d1d493b391f660314a8327eb66dc0639480",
         "packages/contracts/dist/work-items.js": "4c69340cb5d3fee434dc8e00aa88c205163393a2c943143c85849ac74fd66c22",
         "packages/contracts/dist/source.js": "f4b9a54f454a3705f20f016b0d26b58d9b1193a747a0a87ac7d4cf9a491f0b57",
@@ -159,7 +160,7 @@
         "packages/contracts/dist/product-feedback.js": "5a1fdaa5178d7839dd92947bfcb9eda6e5d9890e664dead8f5fab3d93519fb73",
         "packages/contracts/dist/product-issue.js": "2421a483b5ce6714871f28e33e989cd7f3f79ce8e8e421164939630858e53dd1",
         "packages/contracts/dist/workspace-customer.js": "6dfbc5f0e18fe2b80dbb2b194cc0ddfc1d5d1334cb2e32c8530a8f873e3d7614",
-        "packages/contracts/dist/index.js": "679197f055b6ecb415eac8449fd6d042b460b384a9350db39814d54a0bdb229b",
+        "packages/contracts/dist/index.js": "86786aad2cbb674aacf586188b3e0226ec12fe9c4e58a819ec80ec4b290aa185",
         "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf"
       }
     }
@@ -171,6 +172,6 @@
     "application-context-query/runner-context.mjs": "b68149483091e6f44c3d56fee9530128c4e77889a387d45c280e5cf74a08b990",
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "source-adapters/index.mjs": "eb0494c7d6f2c77cb848045617ca0ff5dd687802068c24fee610158c6646aa4d",
-    "component-contracts/index.mjs": "b320fa5cf7260fe48f1da6816ace273049c34a60ca2b59427e3745cd44256bf3"
+    "component-contracts/index.mjs": "bb5d2f07e4142924aeaf38ce7bd04df1867e59b653d2c53afa8c0d2080e6d46a"
   }
 }
