@@ -91,7 +91,7 @@ var init_define_LOKI_MAC_RUNNER_PINS = __esm({
 var define_LOKI_PLANNER_LOOP_PINS_default;
 var init_define_LOKI_PLANNER_LOOP_PINS = __esm({
   "<define:LOKI_PLANNER_LOOP_PINS>"() {
-    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93", "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/work-verifier/supplied-evidence.mjs": "1573fb5e2c04b71b9a719dff2d825a6bee883c2ba65b8ab6bdef9f77a75f9680", "experiments/provider-transport/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1", "experiments/provider-transport/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa", "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f", "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b", "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8", "experiments/work-verifier/request-instructions.mjs": "bbd0b95689d20ed6c74d9d5c571ef739a277b0f6be085a01dd408a25ebd4cbe3", "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12", "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4", "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a", "experiments/work-verifier/planner-recap.mjs": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51", "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", scenarioOutcomeResultSlots: { issue: 2530, scope: "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks." }, declaredLinkCitation: { issue: 3109, previousSha256: "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1", sha256: "88bda6bf9c25137f3a137fee76332d535eb46c302449510038c08f436ddd27e9", scope: "New shared-run responses explicitly return the exact full inventory citation in a required schema field. Preserve proposal, outcome and evidence guards, original candidates, one-call execution and historical request digests." }, reportAssessment: { issue: 4305, representation: 15, source: "packages/work-verifier/assessment.mjs", sha256: "fcbaac0526ed9ea7d93fa2f58e938706925f1aa26c2a515fe8daddddfe7fc4a2", scope: "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1\u201314 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged." } };
+    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93", "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/work-verifier/supplied-evidence.mjs": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607", "experiments/provider-transport/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1", "experiments/provider-transport/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a", "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f", "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b", "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8", "experiments/work-verifier/request-instructions.mjs": "bbd0b95689d20ed6c74d9d5c571ef739a277b0f6be085a01dd408a25ebd4cbe3", "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12", "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4", "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a", "experiments/work-verifier/planner-recap.mjs": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51", "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", scenarioOutcomeResultSlots: { issue: 2530, scope: "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks." }, declaredLinkCitation: { issue: 3109, previousSha256: "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1", sha256: "88bda6bf9c25137f3a137fee76332d535eb46c302449510038c08f436ddd27e9", scope: "New shared-run responses explicitly return the exact full inventory citation in a required schema field. Preserve proposal, outcome and evidence guards, original candidates, one-call execution and historical request digests." }, reportAssessment: { issue: 4305, representation: 15, source: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871", scope: "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1\u201314 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged." }, assessmentInputSizeCleanup: { sourceCommit: "3bfd2314a9a5d6ee2675420232faea5604002915", scope: "Remove implicit preparation/request/image/artifact/manifest/original-read size and count admission cutoffs; complete original inputs and actual errors remain. Historical baseline and originalPins remain unchanged; the listed hashes identify the maintained sources. No replacement numeric budget or model/prompt change.", files: [{ path: "packages/capabilities/src/assessment-preparation.ts", sha256: "6cf9d9bed84c47738427420078c19c270b2aad64cba80389cecb64034b84ecac" }, { path: "packages/capabilities/src/planner-loop.ts", sha256: "9e750673f604665ad8093b502b013861edf4982cb7673aa194b6f0baa952e777" }, { path: "packages/capabilities/src/report-artifact.ts", sha256: "9950f4cb4306e9b362b16f1ced8bfb1bff4dde955e917207f15f0a2169000540" }, { path: "packages/capabilities/research/planner-loop-api.d.mts", sha256: "b05ffc7965c5258b6cac6d139fc5ae4472ee01c13a95a22c9143e5ee85639420" }, { path: "packages/contracts/src/advisory.ts", sha256: "04d442d6eab45e6d07b3b7951ea7a416e8f437b7dd89823d9834e5c38205cc34" }, { path: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871" }, { path: "packages/work-verifier/assessment-contract.mjs", sha256: "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a" }, { path: "packages/work-verifier/supplied-evidence.mjs", sha256: "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607" }] } };
   }
 });
 
@@ -91609,7 +91609,7 @@ var assessmentImageReferenceSchema = external_exports.strictObject({
   manifestSha256: digest8,
   artifactId: digest8,
   sha256: digest8,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+  bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
   schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
@@ -114485,10 +114485,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var SUPPLIED_TEST_EVIDENCE = "work-verifier/supplied-test-evidence/1";
 var SUPPLIED_ASSESSMENT = "work-verifier/supplied-test-assessment/1";
 var LIMITS = Object.freeze({
-  // Keep full normal Runner sequences (80 calls / 150 inputs), including
-  // explicit captures. This is a local bound, below provider image limits.
-  images: 256,
-  requestBytes: 32 * 1024 * 1024,
   // Reasoning and the cited per-test response share this allowance. Real
   // three-test packets exhausted 12k before the structured result was complete.
   outputTokens: 24e3,
@@ -115740,10 +115736,7 @@ var pngSize = (bytes2) => {
     "PNG image required"
   );
   const width = bytes2.readUInt32BE(16), height = bytes2.readUInt32BE(20);
-  assert4(
-    width > 0 && height > 0 && width * height <= 4e7 && bytes2.length <= 2 * 1024 * 1024,
-    "Bounded PNG image required"
-  );
+  assert4(width > 0 && height > 0, "PNG dimensions required");
   return { width, height };
 };
 var recordArray = (values, label4) => {
@@ -116443,10 +116436,6 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
     if (record16.bytes_base64 !== null) {
       bytes2 = Buffer.from(record16.bytes_base64, "base64");
       if (record16.media_type === "image/png") {
-        assert4(
-          images.length < LIMITS.images,
-          `At most ${LIMITS.images} selected assessment images`
-        );
         const descriptor = {
           evidence_id: record16.id,
           media_type: "image/png",
@@ -116775,15 +116764,6 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
       }
     ];
   const wire = utf8(encodedJson(request3));
-  if (wire.length > LIMITS.requestBytes) {
-    const error62 = new Error(
-      "Complete assessment request exceeds its byte limit; no evidence was removed."
-    );
-    error62.code = "assessment_request_limit_exceeded";
-    error62.actualBytes = wire.length;
-    error62.maximumBytes = LIMITS.requestBytes;
-    throw error62;
-  }
   return {
     schema: SUPPLIED_TEST_EVIDENCE,
     ...recordVersion >= 2 ? { assessment_instructions_version: recordVersion } : {},
@@ -117301,17 +117281,6 @@ function prepareForFormat(input3, options2, format3) {
       }
     ];
   const wire = utf8(encodedJson(request3));
-  if (wire.length > LIMITS.requestBytes) {
-    const error62 = new Error(
-      "Complete assessment request exceeds its byte limit; no evidence was removed."
-    );
-    Object.assign(error62, {
-      code: "assessment_request_limit_exceeded",
-      actualBytes: wire.length,
-      maximumBytes: LIMITS.requestBytes
-    });
-    throw error62;
-  }
   const prepared = {
     ...captured,
     schema: SUPPLIED_TEST_EVIDENCE,
@@ -121717,7 +121686,7 @@ var manifestSchema = external_exports.object({
       bytes: external_exports.number().int().nonnegative(),
       sha256: digest39
     })
-  ).max(1e4)
+  )
 });
 function mediaType(name) {
   if (/^(?:screen-(?:initial|[0-9]+|action-[0-9]+)|terminal)\.png$/.test(name))
@@ -121749,10 +121718,7 @@ async function readRunnerManifest(data2, runId, result) {
     throw Error("Artifact directory changed.");
   if (nativeResult.traceManifest.path !== join24(directory3, "manifest.json"))
     throw Error("Manifest is outside this operation.");
-  const bytes2 = await privateFile(
-    join24(directory3, "manifest.json"),
-    4 * 1024 * 1024
-  );
+  const bytes2 = await privateFile(join24(directory3, "manifest.json"));
   if (sha2562(bytes2) !== nativeResult.traceManifest.sha256)
     throw Error("Manifest changed.");
   const manifest = manifestSchema.parse(
@@ -121805,7 +121771,7 @@ async function hasInitialNavigationBlock(data2, runId, result) {
     const readDiagnostic = async (name) => {
       const file3 = manifest.files.find(({ path: path22 }) => path22 === name);
       if (!file3) throw Error("Navigation diagnostic is missing.");
-      const bytes2 = await privateFile(join24(directory3, name), 1024 * 1024);
+      const bytes2 = await privateFile(join24(directory3, name));
       if (bytes2.byteLength !== file3.bytes || sha2562(bytes2) !== file3.sha256)
         throw Error("Navigation diagnostic changed.");
       return JSON.parse(
@@ -121914,10 +121880,7 @@ async function readArtifact(data2, reportId, entry, artifactId, offset2 = 0, cus
   if (!artifact2) throw Error("Evidence is not selected in this manifest.");
   const sourceName = artifactSources.get(artifact2.artifactId);
   if (!sourceName) throw Error("Evidence source is unavailable.");
-  const content4 = await privateFile(
-    join24(directory3, sourceName),
-    (artifact2.mediaType === "image/png" ? 4 : 16) * 1024 * 1024
-  );
+  const content4 = await privateFile(join24(directory3, sourceName));
   if (content4.length !== artifact2.bytes || sha2562(content4) !== artifact2.sha256)
     throw Error("Evidence changed.");
   if (artifact2.mediaType === "image/png") {
@@ -125068,22 +125031,8 @@ async function prepareFullAssessment(reader, raw, selected2) {
     evidenceIndex,
     origin: origin2
   };
-  const refuse = (code, requiredBytes2) => {
+  const refuse = (code) => {
     const header2 = { ...common2, evidenceIndex: [] };
-    const headerBytes = Buffer.byteLength(JSON.stringify(header2));
-    if (headerBytes > assessmentPreparationLimits.packetBytes) {
-      code = "oversize";
-      requiredBytes2 = Math.max(requiredBytes2 ?? 0, headerBytes);
-      header2.executionState = null;
-      header2.nativeVerdict = null;
-      header2.accounting = {
-        preparation: common2.accounting.preparation,
-        original: {
-          reference: origin2.report,
-          interpretation: "Original summary withheld with oversized packet; read the full original."
-        }
-      };
-    }
     return assessmentPrepareOutputSchema.parse({
       ...header2,
       evidenceIndex: [],
@@ -125095,13 +125044,7 @@ async function prepareFullAssessment(reader, raw, selected2) {
       },
       assessmentInput: null,
       replayAllowed: false,
-      refusal: {
-        code,
-        ...requiredBytes2 === void 0 ? {} : {
-          requiredBytes: requiredBytes2,
-          maxBytes: assessmentPreparationLimits.packetBytes
-        }
-      }
+      refusal: { code }
     });
   };
   try {
@@ -125629,8 +125572,6 @@ async function prepareFullAssessment(reader, raw, selected2) {
           };
           if (artifact2.mediaType === "image/png") {
             let imageData;
-            if (artifact2.bytes > assessmentPreparationLimits.packetBytes)
-              return refuse("oversize", artifact2.bytes);
             try {
               const read5 = reportArtifactResultSchema.parse(
                 await reader.artifact({
@@ -125684,8 +125625,6 @@ async function prepareFullAssessment(reader, raw, selected2) {
             });
             continue;
           }
-          if (artifact2.bytes > assessmentPreparationLimits.packetBytes)
-            return refuse("oversize", artifact2.bytes);
           try {
             let text16 = "", offset2 = 0;
             let projection2;
@@ -125707,8 +125646,6 @@ async function prepareFullAssessment(reader, raw, selected2) {
               if (read5.content.nextOffset !== (text16.length === read5.content.totalCodeUnits ? null : text16.length) || read5.content.nextOffset !== null && read5.content.nextOffset <= offset2)
                 return refuse("artifact_refused");
               offset2 = read5.content.nextOffset;
-              if (Buffer.byteLength(text16) > assessmentPreparationLimits.packetBytes)
-                return refuse("oversize", Buffer.byteLength(text16));
             } while (offset2 !== null);
             if (Buffer.byteLength(text16) !== (projection2?.bytes ?? artifact2.bytes) || hash30(text16) !== (projection2?.sha256 ?? artifact2.sha256))
               return refuse("artifact_refused");
@@ -125878,17 +125815,6 @@ async function prepareFullAssessment(reader, raw, selected2) {
       interpretation: "Caller receipts and observations retain caller attribution and are not independently authenticated. Evaluate concrete supplied check results as evidence for their stated scope; this attribution does not by itself invalidate their contents. Distinguish direct checks from repeated claims, intended checks and unresolved references. Plugin/runtime identity is not application identity, and runtime equality alone does not establish preflight timing. Original citation/reference failures are not repaired. Selected original operation/native facts are separately attributed evidence; full originals remain at exact report pointers, not independently verified by preparation."
     }
   };
-  const originalTextBytes = Buffer.byteLength(
-    JSON.stringify({
-      ...originalCandidate,
-      evidence: originalCandidate.evidence.map((item2) => ({
-        ...object33(item2),
-        bytes_base64: null
-      }))
-    })
-  );
-  if (originalTextBytes > assessmentPreparationLimits.packetBytes)
-    return refuse("oversize", originalTextBytes);
   let originalCompatible = true;
   try {
     validateSuppliedEvidence(originalCandidate);
@@ -125993,45 +125919,14 @@ async function prepareFullAssessment(reader, raw, selected2) {
     interpretation: recap2 ? "The Run recap is model-authored. This input includes original artifacts only when selected. This preparation does not establish a verdict." : selectedArtifacts.some((artifact2) => artifact2.mediaType === "image/png") ? "Read-only mechanical packet. Prepared means structurally assembled, never semantic completeness, authenticated execution, a new verdict or acceptance. Selected Run PNGs also select the original action record, case evidence and matching UI JSON when available. Unselected PNG descriptors do not supply their pixels. No replay." : "Read-only mechanical packet. Prepared means structurally assembled, never semantic completeness, authenticated execution, a new verdict or acceptance. Original Run artifacts are included only when explicitly selected. No replay.",
     replayAllowed: false
   });
-  let output2 = compactAssessmentImages(
-    buildOutput(),
-    input3
-  );
-  let requiredBytes = Buffer.byteLength(JSON.stringify(output2));
-  if (requiredBytes > assessmentPreparationLimits.packetBytes)
-    return refuse("oversize", requiredBytes);
-  const imageCount = candidate.evidence.filter(
-    (item2) => object33(item2).media_type === "image/png" && typeof object33(item2).bytes_base64 === "string"
-  ).length;
-  const tooManyImages = imageCount > LIMITS.images;
-  if (tooManyImages) {
-    compatible = false;
-    missingFacts.push({
-      code: "assessment_image_limit_exceeded",
-      location: "assessmentInput/evidence",
-      actualCount: imageCount,
-      maximumCount: LIMITS.images,
-      detail: `${imageCount} images selected; assessment accepts at most ${LIMITS.images}. This complete input cannot be assessed within the image limit. No evidence was removed or sampled. Do not start a new browser run to resolve this limit. An explicit smaller selection is a separate scoped assessment and must keep omitted evidence and gaps explicit. No assessment was started.`
-    });
-  }
   if (compatible) {
     try {
       prepareSuppliedEvidence2(candidate);
-    } catch (error62) {
+    } catch {
       compatible = false;
-      const failure2 = object33(error62);
-      if (failure2.code === "assessment_request_limit_exceeded" && typeof failure2.actualBytes === "number" && typeof failure2.maximumBytes === "number") {
-        missingFacts.push({
-          code: "assessment_request_limit_exceeded",
-          location: "assessmentInput",
-          detail: `The complete provider request requires ${failure2.actualBytes} bytes; the limit is ${failure2.maximumBytes}. No evidence was removed or sampled and no assessment was started. Keep the original run; do not replay it to resolve this limit.`
-        });
-      }
     }
   }
-  if (!compatible && !tooManyImages && !missingFacts.some(
-    (item2) => item2.code === "assessment_request_limit_exceeded"
-  ) && input3.work_item !== null)
+  if (!compatible && input3.work_item !== null)
     missingFacts.push({
       code: "incompatible_original_fragment",
       location: "assessmentInput",
@@ -126041,13 +125936,10 @@ async function prepareFullAssessment(reader, raw, selected2) {
     for (const item2 of evidenceIndex) delete item2.pointer;
     for (const item2 of selectedArtifacts) delete item2.pointer;
   }
-  output2 = compactAssessmentImages(
+  const output2 = compactAssessmentImages(
     buildOutput(),
     input3
   );
-  requiredBytes = Buffer.byteLength(JSON.stringify(output2));
-  if (requiredBytes > assessmentPreparationLimits.packetBytes)
-    return refuse("oversize", requiredBytes);
   assessmentPrepareOutputSchema.parse(output2);
   return output2;
 }
@@ -127424,18 +127316,7 @@ var PlannerLoop = class {
       {
         inlineBytes: 24 * 1024,
         chunkCharacters: 8e3,
-        // Supplement admission has no whole-input cap. Its selected original
-        // read must not add a smaller historical baseline recovery limit.
-        ...mode === "supplement" ? { originalInputBytes: null } : {},
-        // Assessment requests already allow a 32 MiB prepared wire. Retain a
-        // separate read budget for its original input plus 1 MiB for the host
-        // request envelope (selection metadata and retained context reference).
-        // This bounded recovery read does not change producer admission.
-        // The wire cap does not bound opaque raw input: records above this
-        // recovery budget remain unavailable rather than being truncated.
-        ...mode === "assessment" ? {
-          originalInputBytes: LIMITS.requestBytes + 1024 * 1024
-        } : {}
+        originalInputBytes: null
       },
       {
         resultContract: {

@@ -65,13 +65,7 @@ const pngSize = (bytes) => {
   );
   const width = bytes.readUInt32BE(16),
     height = bytes.readUInt32BE(20);
-  assert(
-    width > 0 &&
-      height > 0 &&
-      width * height <= 40000000 &&
-      bytes.length <= 2 * 1024 * 1024,
-    "Bounded PNG image required",
-  );
+  assert(width > 0 && height > 0, "PNG dimensions required");
   return { width, height };
 };
 const recordArray = (values, label) => {
@@ -970,10 +964,6 @@ function prepareEvidence(
     if (record.bytes_base64 !== null) {
       bytes = Buffer.from(record.bytes_base64, "base64");
       if (record.media_type === "image/png") {
-        assert(
-          images.length < LIMITS.images,
-          `At most ${LIMITS.images} selected assessment images`,
-        );
         const descriptor = {
           evidence_id: record.id,
           media_type: "image/png",
@@ -1361,15 +1351,6 @@ function prepareEvidence(
       },
     ];
   const wire = utf8(encodedJson(request));
-  if (wire.length > LIMITS.requestBytes) {
-    const error = new Error(
-      "Complete assessment request exceeds its byte limit; no evidence was removed.",
-    );
-    error.code = "assessment_request_limit_exceeded";
-    error.actualBytes = wire.length;
-    error.maximumBytes = LIMITS.requestBytes;
-    throw error;
-  }
   return {
     schema: SUPPLIED_TEST_EVIDENCE,
     ...(recordVersion >= 2
