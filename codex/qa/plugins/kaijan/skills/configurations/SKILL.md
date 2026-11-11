@@ -1,17 +1,14 @@
 ---
 name: configurations
-description: Open or manage personal Kaijan Configurations for reusable application URLs, accounts and other key–value settings. Use when the person asks to configure Kaijan, open their configurations or save test settings. Enter secrets in the private form.
+description: Manage personal Kaijan Configurations through MCP for reusable application URLs and other key–value settings. Use when the person asks to find, save, select or remove test settings.
 ---
 
 # Personal Configurations
 
-Use `kaijan_configuration_open` to open the person's private
-editor in this chat. The same editor opens from **Configurations** beside
-**Show details**. The person enters their own keys and values, then selects
-**Save**. To open settings for a website, pass the website the person gave as
-`application`. The editor shows its origin and opens the saved set for it.
-Use an exact saved ID when the person asks to edit that set. If several sets
-match, ask which one. Opening or saving settings never starts a test.
+Use `kaijan_configuration` to list, read, save, select or delete settings. Pass
+the website the person gave as `application` to find its saved set. Use an
+exact saved ID when the person asks to edit that set. If several sets match,
+ask which one. Saving settings never starts a test.
 
 Configurations belong to the local person and selected Kaijan environment.
 They remain available across chats and restarts on this device. They are not
@@ -25,11 +22,10 @@ normal test flow. Use `operation: "list"` before asking the person to repeat
 settings that may already be saved.
 Supply the known application URL to find its configurations. Read an exact ID
 when needed. Ordinary entries contain their typed values. A secret entry
-contains availability and a reference, never its value. Do not ask the person
-to paste a password or key in chat or call a tool with its raw value. Open the
-private editor when the person wants to change saved secrets. Do not require
-Configuration or Save for a test; keep the existing private-parameter or manual
-login path when they do not want to store settings.
+contains availability and a reference. Keep raw secrets out of chat and tool
+arguments. Use the [private login path](../../references/private-parameters.md)
+or manual login for a new or changed secret needed for a Run. Configuration
+remains optional.
 
 The person can save any key names. Do not require a fixed URL, username or
 password schema. Keep their existing names and types. For agent edits, `save`
@@ -46,15 +42,11 @@ application. Use `operation: "select", automatic: true` to return to automatic
 matching. Keep the selected target and account clear.
 
 The existing Run tools use one matching application configuration automatically.
-An explicit chat selection or requested temporary edit takes precedence. Runs
+An explicit chat selection takes precedence. Runs
 without an appropriate configuration keep their normal path. Configuration adds no report content or schema.
 An explicit `configurationId` selects one configuration for that Run; `null`
 uses none. Ordinary `params` and existing scoped `privateParams` references
-can override saved defaults for one Run without changing them. For a secret
-override that the person explicitly requests for one Run, use `kaijan_configuration_open`
-with the saved ID and `forNextRun: true`. That private view has one **Apply** action and leaves
-saved defaults unchanged. The normal Configuration editor has **Save**, without
-a separate temporary-use choice. A configuration does not authorize Run.
+can override saved defaults for one Run. A configuration does not authorize Run.
 Follow [Run](../run-test/SKILL.md) for the person's execution scope.
 
 Keep the original request key and input after an uncertain reply. The original

@@ -35859,18 +35859,18 @@ async function handleFeedback(report, options = {}, logger = log) {
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/mcp-sdk-compat.mjs
-function getToolFunction(tool) {
-  if ("handler" in tool && "function" == typeof tool.handler) return tool.handler;
-  if ("callback" in tool && "function" == typeof tool.callback) return tool.callback;
+function getToolFunction(tool2) {
+  if ("handler" in tool2 && "function" == typeof tool2.handler) return tool2.handler;
+  if ("callback" in tool2 && "function" == typeof tool2.callback) return tool2.callback;
   throw new Error("Tool has neither callback nor handler property");
 }
-function getToolFunctionKey(tool) {
-  if ("handler" in tool && "function" == typeof tool.handler) return "handler";
+function getToolFunctionKey(tool2) {
+  if ("handler" in tool2 && "function" == typeof tool2.handler) return "handler";
   return "callback";
 }
-function hasToolFunction(tool) {
-  if (!tool || "object" != typeof tool) return false;
-  const t = tool;
+function hasToolFunction(tool2) {
+  if (!tool2 || "object" != typeof tool2) return false;
+  const t = tool2;
   return "handler" in t && "function" == typeof t.handler || "callback" in t && "function" == typeof t.callback;
 }
 function createWrappedTool(originalTool, wrappedFunction) {
@@ -35974,17 +35974,17 @@ function isSchemaObjectLike(value) {
   if (looksLikeJsonSchema(candidate)) return false;
   return Object.values(candidate).some(isZodLike);
 }
-function addInstructionsToOutputSchema(tool, logger = log) {
-  const toolName = tool.name || "unknown";
-  const original2 = tool.outputSchema;
-  if (!original2 || "object" != typeof original2) return tool;
+function addInstructionsToOutputSchema(tool2, logger = log) {
+  const toolName = tool2.name || "unknown";
+  const original2 = tool2.outputSchema;
+  if (!original2 || "object" != typeof original2) return tool2;
   if (!canDeclareOutputInstructions(original2)) {
     const schema = original2;
     logger(schema.properties && Object.prototype.hasOwnProperty.call(schema.properties, MCP_INSTRUCTIONS_KEY) ? `WARN: Tool "${toolName}" already declares '${MCP_INSTRUCTIONS_KEY}' in its output schema. Leaving it alone.` : `WARN: Tool "${toolName}" has a complex output schema (oneOf/allOf/anyOf/$ref). Skipping '${MCP_INSTRUCTIONS_KEY}' declaration; its session handle stays content-only.`);
-    return tool;
+    return tool2;
   }
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
   const outputSchema2 = JSON.parse(JSON.stringify(original2));
   if (!outputSchema2.properties) outputSchema2.properties = {};
@@ -36002,7 +36002,7 @@ function addInstructionsToOutputSchema(tool, logger = log) {
   return modifiedTool;
 }
 function addInstructionsToOutputSchemas(tools2, logger = log) {
-  return tools2.map((tool) => addInstructionsToOutputSchema(tool, logger));
+  return tools2.map((tool2) => addInstructionsToOutputSchema(tool2, logger));
 }
 function buildConversationInstructions(conversationId) {
   return {
@@ -36042,11 +36042,11 @@ function hasAnalyticsParameter(schema, parameterName) {
 function canInjectAnalyticsParameter(schema, parameterName) {
   return !hasAnalyticsParameter(schema, parameterName) && !schema?.$ref && !schema?.oneOf && !schema?.allOf && !schema?.anyOf;
 }
-function addAnalyticsParameterToTool(tool, parameterName, description, injectionLabel, logger = log) {
+function addAnalyticsParameterToTool(tool2, parameterName, description, injectionLabel, logger = log) {
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
-  const toolName = tool.name || "unknown";
+  const toolName = tool2.name || "unknown";
   const schema = modifiedTool.inputSchema;
   if (!canInjectAnalyticsParameter(schema, parameterName)) {
     logger(hasAnalyticsParameter(schema, parameterName) ? `WARN: Tool "${toolName}" already has '${parameterName}' parameter. Skipping ${injectionLabel} injection.` : `WARN: Tool "${toolName}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping ${injectionLabel} injection.`);
@@ -36163,11 +36163,11 @@ function isContextEnabled(context2) {
 function getContextDescription(context2) {
   return "object" == typeof context2 ? context2.description : void 0;
 }
-function addContextParameterToTool(tool, contextDescriptionOverride, logger = log) {
-  return addAnalyticsParameterToTool(tool, "context", contextDescriptionOverride || DEFAULT_CONTEXT_PARAMETER_DESCRIPTION, "context", logger);
+function addContextParameterToTool(tool2, contextDescriptionOverride, logger = log) {
+  return addAnalyticsParameterToTool(tool2, "context", contextDescriptionOverride || DEFAULT_CONTEXT_PARAMETER_DESCRIPTION, "context", logger);
 }
 function addContextParameterToTools(tools2, contextDescriptionOverride, logger = log) {
-  return tools2.map((tool) => addContextParameterToTool(tool, contextDescriptionOverride, logger));
+  return tools2.map((tool2) => addContextParameterToTool(tool2, contextDescriptionOverride, logger));
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/model-parameters.mjs
@@ -36177,11 +36177,11 @@ function isCaptureModelEnabled(captureModel) {
 function getModelDescription(captureModel) {
   return "object" == typeof captureModel && null !== captureModel ? captureModel.description : void 0;
 }
-function addModelParameterToTool(tool, modelDescriptionOverride, logger = log) {
-  return addAnalyticsParameterToTool(tool, "llm_model", modelDescriptionOverride || DEFAULT_MODEL_PARAMETER_DESCRIPTION, "model", logger);
+function addModelParameterToTool(tool2, modelDescriptionOverride, logger = log) {
+  return addAnalyticsParameterToTool(tool2, "llm_model", modelDescriptionOverride || DEFAULT_MODEL_PARAMETER_DESCRIPTION, "model", logger);
 }
 function addModelParameterToTools(tools2, modelDescriptionOverride, logger = log) {
-  return tools2.map((tool) => addModelParameterToTool(tool, modelDescriptionOverride, logger));
+  return tools2.map((tool2) => addModelParameterToTool(tool2, modelDescriptionOverride, logger));
 }
 function getModelArgument(request3) {
   return normalizeModel(request3.params?.arguments?.llm_model);
@@ -36222,11 +36222,11 @@ function setEventModel(event2, model, source3 = "self_reported") {
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/conversation-id.mjs
 var CONVERSATION_ID_PARAM_NAME = "conversation_id";
-function addConversationIdToTool(tool, logger = log) {
+function addConversationIdToTool(tool2, logger = log) {
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
-  const toolName = tool.name || "unknown";
+  const toolName = tool2.name || "unknown";
   const schema = modifiedTool.inputSchema;
   if (!canInjectAnalyticsParameter(schema, CONVERSATION_ID_PARAM_NAME)) {
     logger(hasAnalyticsParameter(schema, CONVERSATION_ID_PARAM_NAME) ? `WARN: Tool "${toolName}" already has '${CONVERSATION_ID_PARAM_NAME}' parameter. Skipping conversation_id injection.` : `WARN: Tool "${toolName}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping conversation_id injection.`);
@@ -36248,7 +36248,7 @@ function addConversationIdToTool(tool, logger = log) {
   return modifiedTool;
 }
 function addConversationIdToTools(tools2, logger = log) {
-  return tools2.map((tool) => addConversationIdToTool(tool, logger));
+  return tools2.map((tool2) => addConversationIdToTool(tool2, logger));
 }
 var MINTED_CONVERSATION_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function resolveConversationId(enabled, args) {
@@ -36772,7 +36772,7 @@ async function isToolAdvertised(server, toolName, extra, logger) {
       params: {}
     }, extra);
     if (!response2 || !Array.isArray(response2.tools)) return;
-    return response2.tools.some((tool) => tool?.name === toolName);
+    return response2.tools.some((tool2) => tool2?.name === toolName);
   } catch (error63) {
     logger(`Warning: PostHog MCP analytics could not determine whether "${toolName}" is advertised; delegating to the server - ${error63}`);
     return;
@@ -36816,16 +36816,16 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
   return response2;
 }
 function cacheToolAnalyticsParameterOwnership(cache, tools2) {
-  for (const tool of tools2) if (tool?.name) cache.set(tool.name, getAnalyticsParameterOwnership(tool.inputSchema, tool.outputSchema));
+  for (const tool2 of tools2) if (tool2?.name) cache.set(tool2.name, getAnalyticsParameterOwnership(tool2.inputSchema, tool2.outputSchema));
 }
 function collectListedToolNames(tools2) {
   if (!tools2 || 0 === tools2.length) return;
-  const names2 = tools2.map((tool) => tool?.name).filter((name) => "string" == typeof name);
+  const names2 = tools2.map((tool2) => tool2?.name).filter((name) => "string" == typeof name);
   return names2.length > 0 ? names2 : void 0;
 }
 function toolsListEnvelope(response2) {
-  const { tools: _tools, ...envelope2 } = response2;
-  return Object.keys(envelope2).length > 0 ? envelope2 : void 0;
+  const { tools: _tools, ...envelope } = response2;
+  return Object.keys(envelope).length > 0 ? envelope : void 0;
 }
 async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, sendToolsListEvent) {
   try {
@@ -36838,7 +36838,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, tools2);
       if (event2.sessionId) {
         const sessionSchemas = data.toolInputSchemas.get(event2.sessionId) ?? /* @__PURE__ */ new Map();
-        for (const tool of tools2) if (tool?.name) sessionSchemas.set(tool.name, tool.inputSchema);
+        for (const tool2 of tools2) if (tool2?.name) sessionSchemas.set(tool2.name, tool2.inputSchema);
         data.toolInputSchemas.set(event2.sessionId, sessionSchemas);
       }
     }
@@ -36847,7 +36847,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       const isFirstPage = request3.params?.cursor == null;
       const missingToolName = resolveMissingCapabilityToolName(data.options);
       if (data.options.reportMissing) {
-        const alreadyPresent = tools2.some((tool) => tool?.name === missingToolName);
+        const alreadyPresent = tools2.some((tool2) => tool2?.name === missingToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject missing-capability tool "${missingToolName}" because a real tool already uses that name. The real tool will not be intercepted. To keep missing-capability reports, rename the SDK's tool with the missingCapabilityToolName option.`);
         else if (isFirstPage) {
           const virtualTool = getReportMissingToolDescriptor(missingToolName);
@@ -36860,7 +36860,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       const feedbackOptions = resolveCollectFeedbackOptions(data.options.collectFeedback);
       if (feedbackOptions) {
         const feedbackToolName = feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME;
-        const alreadyPresent = tools2.some((tool) => tool?.name === feedbackToolName);
+        const alreadyPresent = tools2.some((tool2) => tool2?.name === feedbackToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject agent-feedback tool "${feedbackToolName}" because a real tool already uses that name. The real tool will not be intercepted. To collect feedback alongside it, rename the SDK's tool with collectFeedback: { toolName: "..." }.`);
         else if (isFirstPage) {
           const virtualTool = getFeedbackToolDescriptor(feedbackOptions);
@@ -36895,7 +36895,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
 }
 function cacheToolDescriptions(cache, tools2) {
   if (!tools2) return;
-  for (const tool of tools2) if (tool?.name && "string" == typeof tool.description) cache.set(tool.name, tool.description);
+  for (const tool2 of tools2) if (tool2?.name && "string" == typeof tool2.description) cache.set(tool2.name, tool2.description);
 }
 function readToolMetaCategory(meta3) {
   const category = meta3?.category;
@@ -36903,9 +36903,9 @@ function readToolMetaCategory(meta3) {
 }
 function cacheToolCategories(cache, tools2) {
   if (!tools2) return;
-  for (const tool of tools2) {
-    const category = tool?.name ? readToolMetaCategory(tool._meta) : void 0;
-    if (category) cache.set(tool.name, category);
+  for (const tool2 of tools2) {
+    const category = tool2?.name ? readToolMetaCategory(tool2._meta) : void 0;
+    if (category) cache.set(tool2.name, category);
   }
 }
 function mintStatelessSessionOnInitialize(server, data, request3, extra) {
@@ -37112,9 +37112,9 @@ function isCallbackUpdate(value) {
   return !!value && "object" == typeof value && "callback" in value && "function" == typeof value.callback;
 }
 function addTracingToToolRegistry(tools2, server, logger) {
-  return Object.fromEntries(Object.entries(tools2).map(([name, tool]) => [
+  return Object.fromEntries(Object.entries(tools2).map(([name, tool2]) => [
     name,
-    addTracingToToolCallbackInternal(tool, name, server, () => tool.inputSchema, logger)
+    addTracingToToolCallbackInternal(tool2, name, server, () => tool2.inputSchema, logger)
   ]));
 }
 function setupListenerToRegisteredTools(server, logger) {
@@ -37176,16 +37176,16 @@ function setupListenerToRegisteredTools(server, logger) {
     logger(`Warning: Failed to setup listener for registered tools - ${error63}`);
   }
 }
-function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInputSchema, logger) {
-  const originalCallback = getToolFunction(tool);
+function addTracingToToolCallbackInternal(tool2, toolName, server, getCurrentInputSchema, logger) {
+  const originalCallback = getToolFunction(tool2);
   const options = getServerTrackingData(server.server)?.options;
   if (wrappedCallbacks.has(originalCallback)) {
     logger(`Tool ${toolName} callback already wrapped, skipping re-wrap`);
-    return tool;
+    return tool2;
   }
-  if (tool[MCP_ANALYTICS_PROCESSED]) {
+  if (tool2[MCP_ANALYTICS_PROCESSED]) {
     logger(`Tool ${toolName} already processed, skipping re-wrap`);
-    return tool;
+    return tool2;
   }
   const wrappedCallback = async (...params) => {
     let args;
@@ -37217,7 +37217,7 @@ function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInpu
   };
   wrappedCallbacks.set(originalCallback, true);
   wrappedCallbacks.set(wrappedCallback, true);
-  const wrappedTool = createWrappedTool(tool, wrappedCallback);
+  const wrappedTool = createWrappedTool(tool2, wrappedCallback);
   wrappedTool[MCP_ANALYTICS_PROCESSED] = true;
   return wrappedTool;
 }
@@ -37301,11 +37301,11 @@ function instrumentHighLevelServer(server, logger) {
   }
 }
 function seedToolDescriptionsFromRegistry(cache, tools2) {
-  for (const [name, tool] of Object.entries(tools2)) if ("string" == typeof tool?.description) cache.set(name, tool.description);
+  for (const [name, tool2] of Object.entries(tools2)) if ("string" == typeof tool2?.description) cache.set(name, tool2.description);
 }
 function seedToolCategoriesFromRegistry(cache, tools2) {
-  for (const [name, tool] of Object.entries(tools2)) {
-    const category = readToolMetaCategory(tool?._meta);
+  for (const [name, tool2] of Object.entries(tools2)) {
+    const category = readToolMetaCategory(tool2?._meta);
     if (category) cache.set(name, category);
   }
 }
@@ -40702,7 +40702,7 @@ function createLocalTelemetry(broker, build) {
     ...collector,
     instrument(server, tools2, { observabilityControls = [] } = {}) {
       let initializing = true, failed = false;
-      const known = new Set(tools2.map((tool) => tool.name));
+      const known = new Set(tools2.map((tool2) => tool2.name));
       const controls = new Set(
         observabilityControls.filter((name) => known.has(name))
       );
@@ -46678,12 +46678,12 @@ async function forwardCore(broker, name, args, signal) {
       ) ? protocolError.data.error.code : ErrorCode.InternalError,
       "Core rejected this request. Check the advertised input and connection. Preserve the original request and result; do not replay work with uncertain effects."
     );
-  const envelope2 = external_exports.strictObject({
+  const envelope = external_exports.strictObject({
     jsonrpc: external_exports.literal("2.0"),
     id: external_exports.literal(1),
     result: CallToolResultSchema
   }).safeParse(body);
-  if (!envelope2.success)
+  if (!envelope.success)
     return failure2(
       name,
       args,
@@ -46691,7 +46691,7 @@ async function forwardCore(broker, name, args, signal) {
       invalidResponseGuidance(name, args),
       { category: "upstream" }
     );
-  const upstream = envelope2.data.result;
+  const upstream = envelope.data.result;
   let value = upstream.structuredContent;
   if (value === void 0) {
     if (upstream.content.length === 1 && upstream.content[0].type === "text") {
@@ -47002,22 +47002,12 @@ function createFeedbackSurface({
 }
 
 // apps/codex-plugin/src/configurations.mjs
-import {
-  randomBytes as randomBytes2,
-  generateKeyPairSync,
-  privateDecrypt,
-  createDecipheriv,
-  createHash as createHash2
-} from "node:crypto";
-var configurationFormUri = "ui://kaijan/configurations/form/v2.html";
-var cachedFormUri = "ui://kaijan/configurations/form/v1.html";
-var viewKey2 = "kaijan/configuration-view";
+import { createHash as createHash2 } from "node:crypto";
+var cachedFormUris = /* @__PURE__ */ new Set([
+  "ui://kaijan/configurations/form/v1.html",
+  "ui://kaijan/configurations/form/v2.html"
+]);
 var id2 = external_exports.uuid();
-var envelope = external_exports.strictObject({
-  key: external_exports.string(),
-  iv: external_exports.string(),
-  body: external_exports.string()
-});
 var inputSchema = external_exports.strictObject({
   operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
   id: id2.nullable().optional(),
@@ -47027,56 +47017,33 @@ var inputSchema = external_exports.strictObject({
   name: external_exports.string().optional(),
   automatic: external_exports.literal(true).optional()
 });
-var openSchema = external_exports.strictObject({
-  id: id2.nullable().optional(),
-  application: external_exports.string().min(1).optional(),
-  forNextRun: external_exports.literal(true).optional()
-});
-var actionSchema = external_exports.strictObject({
-  operation: external_exports.enum(["read", "save", "use_once", "delete", "select", "close"]),
-  viewToken: external_exports.string().regex(/^[a-f0-9]{64}$/),
-  id: id2.nullable().optional(),
-  revision: external_exports.number().int().nonnegative().optional(),
-  sealed: envelope.optional(),
-  actionId: external_exports.uuid().optional(),
-  automatic: external_exports.literal(true).optional()
-});
-function defaultConfigurationId(application) {
-  const hex3 = createHash2("sha256").update("kaijan-configuration-default/1").update(application ?? "").digest("hex");
-  return [
-    hex3.slice(0, 8),
-    hex3.slice(8, 12),
-    "8" + hex3.slice(13, 16),
-    "a" + hex3.slice(17, 20),
-    hex3.slice(20, 32)
-  ].join("-");
-}
-function configurationTarget(configuration2, application = "") {
-  const url2 = configuration2?.application ?? application;
-  return {
-    id: configuration2?.id,
-    application: url2,
-    hostname: url2 ? new URL(url2).hostname : void 0,
-    allowedHosts: [...configuration2?.allowedHosts ?? []]
-  };
-}
-function matchesConfigurationFormTarget(target, id8, revision3, edit) {
-  if ((target.id ? target.id !== id8 : revision3 !== 0) || edit?.application !== target.application || !Array.isArray(edit.allowedHosts))
-    return false;
-  const additionalHosts = (hosts) => hosts.filter((host) => host !== target.hostname);
-  return JSON.stringify(additionalHosts(edit.allowedHosts)) === JSON.stringify(additionalHosts(target.allowedHosts));
-}
-function response(value, view2) {
+var allowedFields = {
+  list: ["application"],
+  read: ["id"],
+  save: ["id", "revision", "name", "application", "values"],
+  delete: ["id", "revision"],
+  select: ["id", "automatic"]
+};
+var tool = {
+  name: "kaijan_configuration",
+  title: "Read or update Configurations",
+  description: "List, read, save, delete or select personal key\u2013value configurations. Save accepts ordinary values only. Keep existing secrets as references and use the private login path for a missing or changed secret. A saved configuration is optional and never starts a test.",
+  inputSchema: external_exports.toJSONSchema(inputSchema),
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: true,
+    openWorldHint: false
+  }
+};
+function response(value) {
   return {
     ...value.error ? { isError: true } : {},
     structuredContent: value,
-    content: [{ type: "text", text: JSON.stringify(value) }],
-    ...view2 ? { _meta: { [viewKey2]: view2 } } : {}
+    content: [{ type: "text", text: JSON.stringify(value) }]
   };
 }
 function createConfigurationSurface({ session, library, data }) {
-  let storePromise, keys, stopped = false;
-  const grants = /* @__PURE__ */ new Map();
+  let storePromise, stopped = false;
   const store = () => {
     if (!storePromise) {
       const opening = library.ConfigurationStore.open(data);
@@ -47087,48 +47054,6 @@ function createConfigurationSurface({ session, library, data }) {
     }
     return storePromise;
   };
-  const resource = {
-    uri: configurationFormUri,
-    name: "Configurations",
-    mimeType: "text/html;profile=mcp-app"
-  };
-  const tools2 = [
-    {
-      name: "kaijan_configuration",
-      title: "Read or update Configurations",
-      description: "List/read personal settings, select a configuration for this chat, or edit ordinary values without opening a form. Secret references never contain credentials. Configuration is optional. Reuse an appropriate saved application configuration automatically; ask which one when several match. A chat selection can override automatic matching. Save updates only supplied ordinary values; it never replaces secrets. Select id=null to use no configuration. Changes apply to future Runs. Use kaijan_configuration_open only when the person requests the editor or a needed secret edit. Delete requires the saved revision and the person's request.",
-      inputSchema: external_exports.toJSONSchema(inputSchema),
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        openWorldHint: false
-      }
-    },
-    {
-      name: "kaijan_configuration_open",
-      title: "Open Configurations",
-      description: "Open the person's private Configuration editor in this chat when requested. It is the same editor as the Configurations card action. Opening or saving settings never starts a test. Saved secrets stay masked. Open the saved key\u2013value set. Pass application when the person specifies a website. The editor shows that website before saving. An explicit saved id opens that existing set. Use forNextRun=true only for a temporary secret edit that the person explicitly requests; that view has one Apply action and cannot save defaults. Normal editing has Save and Cancel. Background reads use kaijan_configuration and do not open a form.",
-      inputSchema: external_exports.toJSONSchema(openSchema),
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        openWorldHint: false
-      },
-      _meta: { ui: { resourceUri: resource.uri } }
-    },
-    {
-      name: "kaijan_configuration_form_action",
-      title: "Edit Configurations",
-      description: "Private application-only Configuration editor action. Secret input is encrypted for this view before the host tool call.",
-      inputSchema: external_exports.toJSONSchema(actionSchema),
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        openWorldHint: false
-      },
-      _meta: { ui: { resourceUri: resource.uri, visibility: ["app"] } }
-    }
-  ];
   const safeError = (error63) => {
     const known = [
       library.ConfigurationError,
@@ -47136,76 +47061,9 @@ function createConfigurationSurface({ session, library, data }) {
     ].some((type) => typeof type === "function" && error63 instanceof type);
     return {
       error: known ? error63.code : "configuration_unavailable",
-      message: known ? error63.message : "Could not save or read Configurations. Keep your edit and reopen Configurations in this chat."
+      message: known ? error63.message : "Could not save or read Configurations. Read the current settings before trying again."
     };
   };
-  const targetError = () => new library.ConfigurationError(
-    "configuration_target",
-    "Open Configurations for the website that will use these settings."
-  );
-  function formView(viewToken, { purpose, target }) {
-    const application = target.application ? new URL(target.application).origin : void 0;
-    return {
-      viewToken,
-      purpose,
-      application,
-      draftId: defaultConfigurationId(application),
-      publicKey: keys.publicKey.export({ format: "jwk" })
-    };
-  }
-  function grant2(scope, purpose, target) {
-    keys ??= generateKeyPairSync("rsa", { modulusLength: 2048 });
-    const viewToken = randomBytes2(32).toString("hex");
-    const current = { scope, purpose, target };
-    grants.set(viewToken, current);
-    return formView(viewToken, current);
-  }
-  function readFormEdit(args, current) {
-    const edit = decrypt(args);
-    if (!matchesConfigurationFormTarget(
-      current.target,
-      args.id,
-      args.revision,
-      edit
-    ))
-      throw targetError();
-    return edit;
-  }
-  function decrypt(args) {
-    const value = args.sealed;
-    const key = privateDecrypt(
-      { key: keys.privateKey, oaepHash: "sha256" },
-      Buffer.from(value.key, "base64")
-    );
-    try {
-      if (key.length !== 32) throw Error("invalid_key");
-      const bytes = Buffer.from(value.body, "base64"), iv = Buffer.from(value.iv, "base64");
-      if (iv.length !== 12 || bytes.length < 16)
-        throw Error("invalid_ciphertext");
-      const cipher = createDecipheriv("aes-256-gcm", key, iv);
-      cipher.setAAD(
-        Buffer.from(
-          JSON.stringify([
-            "kaijan.configuration-form/1",
-            args.viewToken,
-            args.operation,
-            args.id,
-            args.revision,
-            args.actionId
-          ])
-        )
-      );
-      cipher.setAuthTag(bytes.subarray(-16));
-      return JSON.parse(
-        Buffer.concat([
-          cipher.update(bytes.subarray(0, -16)),
-          cipher.final()
-        ]).toString("utf8")
-      );
-    } finally {
-      key.fill(0);
-    }
-  }
   async function scopeFor(metadata2) {
     if (stopped || typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
       throw Error("chat_required");
@@ -47215,213 +47073,108 @@ function createConfigurationSurface({ session, library, data }) {
     return scope;
   }
   return {
-    tools: tools2,
-    resources: [resource],
-    hasTool: (name) => tools2.some((tool) => tool.name === name),
-    hasResource: (uri) => uri === resource.uri || uri === cachedFormUri,
+    tools: [tool],
+    hasTool: (name) => name === tool.name,
+    // Historical cards can read their resource, but this host opens no editor.
+    hasResource: (uri) => cachedFormUris.has(uri),
     readResource: (uri) => library.readConfigurationForm(uri),
     async invoke(name, raw, metadata2) {
       try {
-        const app = name === "kaijan_configuration_form_action";
-        const args = app ? actionSchema.parse(raw) : name === "kaijan_configuration_open" ? { ...openSchema.parse(raw), operation: "open" } : inputSchema.parse(raw);
-        const allowedFields = app ? {
-          read: [],
-          close: [],
-          save: ["id", "revision", "sealed", "actionId"],
-          use_once: ["id", "revision", "sealed", "actionId"],
-          delete: ["id", "revision"],
-          select: ["id", "automatic"]
-        } : {
-          open: ["id", "application", "forNextRun"],
-          list: ["application"],
-          read: ["id"],
-          save: ["id", "revision", "name", "application", "values"],
-          delete: ["id", "revision"],
-          select: ["id", "automatic"]
-        };
+        if (name !== tool.name) throw Error("invalid_arguments");
+        const args = inputSchema.parse(raw);
         if (Object.keys(args).some(
-          (key) => ![
-            "operation",
-            ...app ? ["viewToken"] : [],
-            ...allowedFields[args.operation]
-          ].includes(key)
+          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
         ))
           throw Error("invalid_arguments");
         const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
-        let view2, currentGrant;
-        if (app) {
-          currentGrant = grants.get(args.viewToken);
-          if (!currentGrant || currentGrant.scope !== scopeId)
-            return response({
-              error: "configuration_view_expired",
-              message: "This form expired. Copy any unsaved values before reopening Configurations in this chat."
-            });
-          view2 = formView(args.viewToken, currentGrant);
-          if (view2.purpose === "one_run" && !["read", "use_once", "close"].includes(args.operation))
-            throw new library.ConfigurationError(
-              "configuration_view_purpose",
-              "This form applies settings to the next Run only. Open Configurations to change saved defaults."
-            );
-        }
         if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
           throw Error("invalid_arguments");
         if (args.operation === "select" && args.id === null) {
           await library.configurationPreference(scope.data, scopeId, false);
-          let configurations2 = [];
+          let configurations = [];
           try {
             const saved2 = await store();
             saved2.select(scopeId, null);
-            configurations2 = saved2.list();
+            configurations = saved2.list();
           } catch {
           }
-          return response(
-            {
-              configurations: configurations2,
-              selectedId: null,
-              selectionMode: "none",
-              nextRunConfiguration: null,
-              message: "No configuration selected for this chat."
-            },
-            view2
-          );
+          return response({
+            configurations,
+            selectedId: null,
+            selectionMode: "none",
+            nextRunConfiguration: null,
+            message: "No configuration selected for this chat."
+          });
         }
         const saved = await store();
         let configuration2;
-        if (args.operation === "open" && args.id)
+        let message = "";
+        if (args.operation === "read") {
+          if (!args.id) throw Error("invalid_arguments");
           configuration2 = saved.read(args.id);
-        if (args.operation === "open" && args.forNextRun && !args.id)
-          throw new library.ConfigurationError(
-            "configuration_choice_required",
-            "Choose the saved configuration for this Run."
-          );
-        if (!app && args.operation === "read" && !args.id)
-          throw Error("invalid_arguments");
-        if (args.operation === "use_once") {
-          if (view2?.purpose !== "one_run") throw Error("invalid_view_purpose");
-          if (!app || !args.sealed || !args.id || !args.revision || !args.actionId)
-            throw Error("invalid_arguments");
-          const edit = readFormEdit(args, currentGrant);
-          if (await library.configurationPreference(scope.data, scopeId) === false)
-            saved.select(scopeId, null);
-          configuration2 = saved.useOnce(
-            scopeId,
-            args.id,
-            args.revision,
-            edit,
-            args.actionId
-          );
-          if (saved.pending(scopeId))
-            await library.configurationPreference(scope.data, scopeId, true);
         } else if (args.operation === "save") {
-          if (app) {
-            if (view2?.purpose !== "defaults")
-              throw Error("invalid_view_purpose");
-            if (!args.sealed || !args.id || args.revision === void 0 || !args.actionId)
-              throw Error("invalid_arguments");
-            const edit = readFormEdit(args, currentGrant);
-            configuration2 = saved.save(edit, args.id, args.revision);
-            currentGrant.target = configurationTarget(configuration2);
-            view2 = formView(args.viewToken, currentGrant);
-          } else {
-            if (!args.id || args.revision === void 0 || !args.values)
-              throw Error("invalid_arguments");
-            const old = args.revision ? saved.read(args.id) : {
-              name: args.name,
-              application: args.application ?? "",
-              allowedHosts: [],
-              entries: []
-            };
-            if (args.application !== void 0 && args.application !== old.application && old.entries.some((entry) => entry.secret))
-              throw targetError();
-            if (Object.keys(args.values).some(
-              (key) => old.entries.some((entry) => entry.key === key && entry.secret)
-            ))
-              throw Error("secret_requires_form");
-            const entries = old.entries.map((entry) => ({
-              key: entry.key,
-              secret: entry.secret,
-              ...entry.secret ? {} : {
-                value: Object.hasOwn(args.values, entry.key) ? args.values[entry.key] : entry.value
-              }
-            }));
-            for (const [key, value] of Object.entries(args.values))
-              if (!entries.some((entry) => entry.key === key))
-                entries.push({ key, value, secret: false });
-            configuration2 = saved.save(
-              {
-                name: args.name ?? old.name,
-                application: args.application ?? old.application,
-                allowedHosts: old.allowedHosts,
-                entries
-              },
-              args.id,
-              args.revision
+          if (!args.id || args.revision === void 0 || !args.values)
+            throw Error("invalid_arguments");
+          const old = args.revision ? saved.read(args.id) : {
+            name: args.name,
+            application: args.application ?? "",
+            allowedHosts: [],
+            entries: []
+          };
+          const existingSecrets = old.entries.filter((entry) => entry.secret);
+          if (args.application !== void 0 && args.application !== old.application && existingSecrets.length)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "A configuration with a saved secret must keep its website."
             );
-          }
+          if (existingSecrets.some(({ key }) => Object.hasOwn(args.values, key)))
+            throw new library.ConfigurationError(
+              "configuration_secret_editor",
+              "Saved secrets cannot be replaced through Configuration. Use the private login path for this Run."
+            );
+          const entries = old.entries.map((entry) => ({
+            key: entry.key,
+            secret: entry.secret,
+            ...entry.secret ? {} : {
+              value: Object.hasOwn(args.values, entry.key) ? args.values[entry.key] : entry.value
+            }
+          }));
+          for (const [key, value] of Object.entries(args.values))
+            if (!entries.some((entry) => entry.key === key))
+              entries.push({ key, value, secret: false });
+          configuration2 = saved.save(
+            {
+              name: args.name ?? old.name,
+              application: args.application ?? old.application,
+              allowedHosts: old.allowedHosts,
+              entries
+            },
+            args.id,
+            args.revision
+          );
+          message = "Configuration saved.";
         } else if (args.operation === "delete") {
           if (!args.id || !args.revision) throw Error("invalid_arguments");
           saved.delete(args.id, args.revision);
+          message = "Configuration deleted. Existing Runs keep their saved settings.";
         } else if (args.operation === "select") {
-          if (args.id === void 0 !== (args.automatic === true))
-            throw Error("invalid_arguments");
           configuration2 = saved.select(scopeId, args.id);
           await library.configurationPreference(scope.data, scopeId, true);
-        } else if (args.operation === "read" && (args.id ?? currentGrant?.target.id))
-          configuration2 = saved.read(args.id ?? currentGrant.target.id);
-        else if (args.operation === "close") grants.delete(args.viewToken);
-        else if (!["open", "read", "list"].includes(args.operation))
-          throw Error("invalid_arguments");
-        let application;
-        if (args.operation === "open" && args.application !== void 0) {
-          let url2;
-          try {
-            url2 = new URL(args.application);
-          } catch {
-          }
-          if (!url2 || !["http:", "https:"].includes(url2.protocol) || url2.username || url2.password || args.id || args.forNextRun)
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "Open Configurations with the website URL or the saved configuration ID."
-            );
-          application = url2.origin;
+          message = args.automatic ? "Automatic configuration matching selected." : `Configuration selected: ${configuration2.name}.`;
         }
         const enabled = await library.configurationPreference(
           scope.data,
           scopeId
         );
         const selected = enabled !== false ? saved.selected(scopeId) : null;
-        const configurations = saved.list(
-          application ?? view2?.application ?? args.application
-        );
-        if (args.operation === "open" && !configuration2) {
-          const selectedSet = configurations.find(
-            (value) => value.id === selected
-          );
-          const matching = application ? configurations : configurations.filter((value) => !value.application);
-          if (!selectedSet && matching.length > 1)
-            throw new library.ConfigurationError(
-              "configuration_choice_required",
-              "Several saved sets match. Choose the one to edit in chat."
-            );
-          configuration2 = selectedSet ?? matching[0] ?? (configurations.length === 1 ? configurations[0] : void 0);
-        }
-        if (args.operation === "open")
-          view2 = grant2(
-            scopeId,
-            args.forNextRun ? "one_run" : "defaults",
-            configurationTarget(configuration2, application)
-          );
-        return response(
-          {
-            configurations,
-            nextRunConfiguration: saved.pendingView(scopeId),
-            selectedId: selected && selected !== "automatic" ? selected : null,
-            selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
-            ...configuration2 ? { configuration: configuration2 } : {},
-            message: args.operation === "use_once" ? saved.pending(scopeId)?.token === args.actionId ? "Settings prepared for the next Run only. Saved defaults are unchanged." : "This one-Run edit was already acknowledged. Check the original Run or prepare a new edit." : args.operation === "save" ? "Configuration saved." : args.operation === "select" ? args.automatic ? "Automatic configuration matching selected." : configuration2 ? `Configuration selected: ${configuration2.name}.` : "No configuration selected for this chat." : args.operation === "delete" ? "Configuration deleted. Existing Runs keep their saved settings." : args.operation === "close" ? "Configurations closed." : ""
-          },
-          view2
-        );
+        return response({
+          configurations: saved.list(args.application),
+          nextRunConfiguration: saved.pendingView(scopeId),
+          selectedId: selected && selected !== "automatic" ? selected : null,
+          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
+          ...configuration2 ? { configuration: configuration2 } : {},
+          message
+        });
       } catch (error63) {
         return response(safeError(error63));
       }
@@ -47527,7 +47280,7 @@ function createConfigurationSurface({ session, library, data }) {
           ))
             throw new library.ConfigurationError(
               "configuration_secret_editor",
-              "Use the private login path for this Run, or edit the saved secret in Configuration."
+              "Use the private login path for this Run to override a saved secret."
             );
           if (Object.keys(callerPrivate).length)
             await library.resolveRunnerParameters(scope.data, scope.scope.id, {
@@ -47624,14 +47377,13 @@ function createConfigurationSurface({ session, library, data }) {
     async close() {
       if (stopped) return;
       stopped = true;
-      grants.clear();
       if (storePromise) (await storePromise.catch(() => null))?.close();
     }
   };
 }
 
 // apps/codex-plugin/src/issues.mjs
-import { randomBytes as randomBytes3 } from "node:crypto";
+import { randomBytes as randomBytes2 } from "node:crypto";
 import { lstat as lstat5 } from "node:fs/promises";
 import { join as join4 } from "node:path";
 
@@ -47923,7 +47675,7 @@ function scopedIssueTransport({
 }
 
 // apps/codex-plugin/src/issues.mjs
-var viewKey3 = "kaijan/issue-view";
+var viewKey2 = "kaijan/issue-view";
 var selectionKey = "kaijan/issue-selections";
 var unavailable = () => ({
   error: "issue_unavailable",
@@ -48082,8 +47834,8 @@ function createIssueSurface({
     const cleanup = temporary ? [...cleanupViews].find(
       ([, value2]) => value2.scope === scope.scope.id && value2.draftId === draftId
     ) : void 0;
-    const viewToken = randomBytes3(32).toString("hex");
-    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes3(32).toString("hex") : void 0;
+    const viewToken = randomBytes2(32).toString("hex");
+    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes2(32).toString("hex") : void 0;
     const value = {
       scope: scope.scope.id,
       ...owner2,
@@ -48108,7 +47860,7 @@ function createIssueSurface({
           )
         }
       ],
-      ...view2 ? { _meta: { [viewKey3]: view2, [selectionKey]: selections } } : {}
+      ...view2 ? { _meta: { [viewKey2]: view2, [selectionKey]: selections } } : {}
     };
   }
   async function existingStore(data) {
@@ -48538,7 +48290,7 @@ async function createInstalledSession(root, build, data, broker, {
             ...catalog2,
             tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
             async invoke(name, input3, invocation) {
-              if (workspaceResults?.tools.some((tool) => tool.name === name))
+              if (workspaceResults?.tools.some((tool2) => tool2.name === name))
                 return workspaceResults.invoke(
                   name,
                   input3,
@@ -50634,30 +50386,30 @@ var sourceAlternatives = /* @__PURE__ */ new Map([
   ["loki_test_supplement", ["input", "contextId"]],
   ["loki_test_evidence_assess", ["input", "contextId"]]
 ]);
-function sourceDefinition(tool, fields, host = "Claude") {
-  const { oneOf, ...root } = tool.inputSchema;
+function sourceDefinition(tool2, fields, host = "Claude") {
+  const { oneOf, ...root } = tool2.inputSchema;
   if (root.type !== "object" || !root.properties || root.additionalProperties !== false || root.anyOf !== void 0 || root.allOf !== void 0 || !Array.isArray(oneOf) || oneOf.length !== fields.length || oneOf.some(
     (branch, index) => !branch || Object.keys(branch).length !== 1 || !Array.isArray(branch.required) || branch.required.length !== 1 || branch.required[0] !== fields[index] || !Object.hasOwn(root.properties, fields[index])
   ))
     throw new Error(`Unsupported ${host} advisory source layout.`);
   return {
-    ...tool,
+    ...tool2,
     inputSchema: root,
-    description: `${tool.description}
+    description: `${tool2.description}
 Supply exactly one source: ${fields.join(", ")}. Do not combine source forms. The receiver validates the selected source before starting work.`
   };
 }
-function codexToolDefinition(tool) {
-  const sources = tool && sourceAlternatives.get(tool.name);
-  return sources && tool.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool, sources, "Codex") : tool;
+function codexToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  return sources && tool2.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool2, sources, "Codex") : tool2;
 }
-function claudeToolDefinition(tool) {
-  const sources = tool && sourceAlternatives.get(tool.name);
-  if (sources && tool.inputSchema?.oneOf !== void 0)
-    return sourceDefinition(tool, sources);
-  const guidance = tool && alternatives.get(tool.name);
-  if (!guidance || !Array.isArray(tool.inputSchema?.anyOf)) return tool;
-  const { anyOf, ...root } = tool.inputSchema;
+function claudeToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  if (sources && tool2.inputSchema?.oneOf !== void 0)
+    return sourceDefinition(tool2, sources);
+  const guidance = tool2 && alternatives.get(tool2.name);
+  if (!guidance || !Array.isArray(tool2.inputSchema?.anyOf)) return tool2;
+  const { anyOf, ...root } = tool2.inputSchema;
   if (anyOf.length < 2 || anyOf.some(
     (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
       (key) => ![
@@ -50681,7 +50433,7 @@ function claudeToolDefinition(tool) {
     (name) => anyOf.every((branch) => branch.required?.includes(name))
   );
   return {
-    ...tool,
+    ...tool2,
     inputSchema: {
       ...root,
       type: "object",
@@ -50689,7 +50441,7 @@ function claudeToolDefinition(tool) {
       ...required2.length ? { required: required2 } : {},
       additionalProperties: false
     },
-    description: `${tool.description}
+    description: `${tool2.description}
 ${guidance}`
   };
 }
@@ -55020,7 +54772,7 @@ function field(root, path) {
 function customerInputCorrections(catalog, name, error63) {
   if (error63?.code !== "invalid_params" || error63?.requestDispatched !== false || !Array.isArray(error63.issues))
     return [];
-  const root = catalog.tools?.find((tool) => tool.name === name)?.inputSchema;
+  const root = catalog.tools?.find((tool2) => tool2.name === name)?.inputSchema;
   if (!object5(root)) return [];
   const result2 = /* @__PURE__ */ new Map();
   for (const issue3 of error63.issues) {
@@ -55211,24 +54963,24 @@ var descriptions = {
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
   suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
 };
-function customerAdvisoryToolDefinition(tool) {
-  if (!hasCustomerAdvisoryOutput(tool.name)) return void 0;
+function customerAdvisoryToolDefinition(tool2) {
+  if (!hasCustomerAdvisoryOutput(tool2.name)) return void 0;
   return {
-    name: tool.name,
-    title: tool.title,
-    description: tool.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool.name]],
-    inputSchema: tool.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool),
+    name: tool2.name,
+    title: tool2.title,
+    description: tool2.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool2.name]],
+    inputSchema: tool2.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool2),
     outputSchema: {
       ...external_exports.toJSONSchema(customerAdvisoryOutputSchema, { io: "input" }),
       type: "object"
     },
-    annotations: tool.annotations
+    annotations: tool2.annotations
   };
 }
-function customerAdvisoryInput(tool) {
-  if (advisoryFamilies[tool.name] !== "prContext") return tool.inputSchema;
-  const original2 = tool.inputSchema.properties?.options;
-  if (!original2?.properties) return tool.inputSchema;
+function customerAdvisoryInput(tool2) {
+  if (advisoryFamilies[tool2.name] !== "prContext") return tool2.inputSchema;
+  const original2 = tool2.inputSchema.properties?.options;
+  if (!original2?.properties) return tool2.inputSchema;
   const keys = [
     "repositories",
     "timeout",
@@ -55240,9 +54992,9 @@ function customerAdvisoryInput(tool) {
     "sourcePrivacy"
   ];
   return {
-    ...tool.inputSchema,
+    ...tool2.inputSchema,
     properties: {
-      ...tool.inputSchema.properties,
+      ...tool2.inputSchema.properties,
       options: {
         type: "object",
         additionalProperties: false,
@@ -55936,10 +55688,10 @@ var customerOutputSchema = external_exports.union([
   }),
   projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
-function customerExecutionInput(tool, configurations) {
-  if (!["loki_runner_execute", "loki_test_execute"].includes(tool.name))
-    return tool.inputSchema;
-  const input3 = structuredClone(tool.inputSchema);
+function customerExecutionInput(tool2, configurations) {
+  if (!["loki_runner_execute", "loki_test_execute"].includes(tool2.name))
+    return tool2.inputSchema;
+  const input3 = structuredClone(tool2.inputSchema);
   const projectRequest = (schema) => {
     if (schema?.properties?.target) {
       delete schema.properties.configurationUsed;
@@ -55961,24 +55713,24 @@ function customerExecutionInput(tool, configurations) {
   projectRequest(input3);
   return input3;
 }
-function customerToolDefinition(tool, { configurations = false } = {}) {
-  if (!isCustomerToolAllowed(tool.name)) return null;
-  if (!executionTools.has(tool.name)) return tool;
-  const read = tool.name.endsWith("_get");
+function customerToolDefinition(tool2, { configurations = false } = {}) {
+  if (!isCustomerToolAllowed(tool2.name)) return null;
+  if (!executionTools.has(tool2.name)) return tool2;
+  const read = tool2.name.endsWith("_get");
   return {
-    name: tool.name,
-    title: tool.title,
-    annotations: tool.annotations,
-    description: tool.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    name: tool2.name,
+    title: tool2.title,
+    annotations: tool2.annotations,
+    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
     inputSchema: read ? external_exports.toJSONSchema(
       external_exports.strictObject({
         runId: id7,
         offset: external_exports.number().int().nonnegative().optional(),
         projectionSha256: id7.optional(),
-        ...tool.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
+        ...tool2.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
-    ) : customerExecutionInput(tool, configurations),
+    ) : customerExecutionInput(tool2, configurations),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -56268,13 +56020,13 @@ function project(name, value, assessmentPresentation) {
     ...value.execution?.error ? { error: customerFailure(name, value.execution).error } : {}
   });
 }
-async function original(catalog, tool, first, invocation) {
+async function original(catalog, tool2, first, invocation) {
   const runId = id7.parse(first.runId), expected = id7.parse(first.resultSha256);
   let offset = 0, text4 = "", total;
   for (let pages = 0; pages < 4096; pages++) {
     invocation?.signal?.throwIfAborted();
-    const page2 = await catalog.invoke(tool, { runId, offset }, invocation);
-    catalog.validateOutput?.(tool, page2);
+    const page2 = await catalog.invoke(tool2, { runId, offset }, invocation);
+    catalog.validateOutput?.(tool2, page2);
     const chunk = page2.resultChunk;
     if (page2.runId !== runId || page2.resultSha256 !== expected || !chunk || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 60 * 1024 * 1024 || total !== void 0 && total !== chunk.totalCharacters)
       throw Error("Invalid retained page");
@@ -56430,7 +56182,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       delete input3.offset;
       if (name === "loki_test_get") delete input3.waitMs;
     }
-    if (name === "loki_runner_answer" && (!catalog.tools?.some((tool) => tool.name === name) || typeof options.answerCustomerClarification !== "function"))
+    if (name === "loki_runner_answer" && (!catalog.tools?.some((tool2) => tool2.name === name) || typeof options.answerCustomerClarification !== "function"))
       return customerFailureOutput(
         name,
         { code: "clarification_unavailable", requestDispatched: false },
@@ -56627,10 +56379,10 @@ function service(value, setupRequired, unavailable3) {
     return value.providerConfigured === true ? configured() : value.providerConfigured === false ? setupRequired : unavailable3;
   return value?.state === "unconfigured" ? setupRequired : unavailable3;
 }
-function customerDiscoveryTool(tool) {
-  if (tool.name !== "loki_capabilities_list") return null;
+function customerDiscoveryTool(tool2) {
+  if (tool2.name !== "loki_capabilities_list") return null;
   return {
-    name: tool.name,
+    name: tool2.name,
     title: "Check Kaijan readiness",
     description: "Check available Kaijan actions and connection readiness. This does not perform analysis, run a test, verify application access or prove that an existing result passed. Keep original requests after uncertain effects; do not repeat work to recover a result.",
     inputSchema: external_exports.toJSONSchema(customerDiscoveryInputSchema),
@@ -56841,18 +56593,18 @@ function projectCustomerReport(value) {
     return customerReportFailure();
   }
 }
-function customerReportToolDefinition(tool, { presentation } = {}) {
-  if (!hasCustomerReportOutput(tool.name)) return tool;
-  const resourceUri = "ui://loki/test-plan/card/v80.html";
-  const description = tool.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
+function customerReportToolDefinition(tool2, { presentation } = {}) {
+  if (!hasCustomerReportOutput(tool2.name)) return tool2;
+  const resourceUri = "ui://loki/test-plan/card/v81.html";
+  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
-    name: tool.name,
-    title: tool.title,
-    annotations: tool.annotations,
-    inputSchema: tool.inputSchema,
-    ...presentation !== "chat" && tool.name === "loki_report_show" && tool._meta?.ui?.resourceUri === resourceUri ? {
+    name: tool2.name,
+    title: tool2.title,
+    annotations: tool2.annotations,
+    inputSchema: tool2.inputSchema,
+    ...presentation !== "chat" && tool2.name === "loki_report_show" && tool2._meta?.ui?.resourceUri === resourceUri ? {
       _meta: { ui: { resourceUri }, "openai/outputTemplate": resourceUri }
-    } : presentation !== "chat" && tool.name === "loki_report_open" ? {
+    } : presentation !== "chat" && tool2.name === "loki_report_open" ? {
       _meta: {
         ui: { visibility: ["app"] },
         "openai/widgetAccessible": true
@@ -57419,10 +57171,10 @@ function schemaWithoutProse(value, propertyMap = false) {
     ])
   );
 }
-function preparationInputSchema(tool) {
-  if (tool.name === "loki_assessment_prepare")
+function preparationInputSchema(tool2) {
+  if (tool2.name === "loki_assessment_prepare")
     return external_exports.toJSONSchema(assessmentPrepareInputSchema, { io: "input" });
-  const schema = schemaWithoutProse(tool.inputSchema);
+  const schema = schemaWithoutProse(tool2.inputSchema);
   const limits = schema?.properties?.current?.properties?.options?.properties?.limits;
   if (limits?.properties) {
     limits.properties = Object.fromEntries(
@@ -57431,22 +57183,22 @@ function preparationInputSchema(tool) {
   }
   return schema;
 }
-function customerPreparationToolDefinition(tool) {
-  if (!hasCustomerPreparationOutput(tool.name)) return tool;
+function customerPreparationToolDefinition(tool2) {
+  if (!hasCustomerPreparationOutput(tool2.name)) return tool2;
   return {
-    name: tool.name,
-    title: tool.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
+    name: tool2.name,
+    title: tool2.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
       openWorldHint: false
     },
-    inputSchema: preparationInputSchema(tool),
+    inputSchema: preparationInputSchema(tool2),
     outputSchema: {
       ...external_exports.toJSONSchema(customerPreparationOutputSchema),
       type: "object"
     },
-    description: tool.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
+    description: tool2.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
   };
 }
 async function invokeCustomerPreparation(catalog, name, args, invocation) {
@@ -57537,6 +57289,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v76.html",
   "ui://loki/test-plan/card/v77.html",
   "ui://loki/test-plan/card/v78.html",
+  "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
 ]);
 function invalidParams(message, data) {
@@ -57574,13 +57327,13 @@ function capabilityMcpRegistration(session, setup) {
       ...session.issues?.tools ?? [],
       ...session.configurations?.tools ?? [],
       ...controls
-    ].map((tool) => {
-      const definition = customerDiscoveryTool(tool) ?? customerAdvisoryToolDefinition(tool) ?? (hasCustomerPreparationOutput(tool.name) ? customerPreparationToolDefinition(tool) : hasCustomerReportOutput(tool.name) ? customerReportToolDefinition(tool, {
+    ].map((tool2) => {
+      const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
-      }) : customerToolDefinition(tool, {
+      }) : customerToolDefinition(tool2, {
         configurations: Boolean(session.configurations)
       }));
-      return tool.name === "loki_test_evidence_assess" && definition ? {
+      return tool2.name === "loki_test_evidence_assess" && definition ? {
         ...definition,
         inputSchema: extendCustomerAssessmentInputSchema(
           definition.inputSchema
@@ -57594,15 +57347,15 @@ function capabilityMcpRegistration(session, setup) {
         }
       } : definition;
     }).filter(Boolean).map(
-      (tool) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool) : session.identity?.host === "codex" ? codexToolDefinition(tool) : tool
+      (tool2) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool2) : session.identity?.host === "codex" ? codexToolDefinition(tool2) : tool2
     ),
     // Draft activity stays local. Core's existing completed-feedback event is
     // the feedback record; do not upload autosave/progress metrics from forms.
     observabilityControls: [
-      ...controls.map((tool) => tool.name),
-      ...session.feedback?.tools.map((tool) => tool.name) ?? [],
-      ...session.issues?.tools.map((tool) => tool.name) ?? [],
-      ...session.configurations?.tools.map((tool) => tool.name) ?? []
+      ...controls.map((tool2) => tool2.name),
+      ...session.feedback?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.issues?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.configurations?.tools.map((tool2) => tool2.name) ?? []
     ]
   };
 }
@@ -57619,20 +57372,20 @@ function capabilityMcpDiscovery(tools2, setup) {
     "loki_change_risk_analyze",
     "loki_risk_finder_analyze"
   ]);
-  return tools2.filter((tool) => !hidden.has(tool.name)).map(
-    (tool) => internalPreparation.has(tool.name) ? {
-      ...tool,
+  return tools2.filter((tool2) => !hidden.has(tool2.name)).map(
+    (tool2) => internalPreparation.has(tool2.name) ? {
+      ...tool2,
       _meta: {
-        ...tool._meta,
-        ui: { ...tool._meta?.ui, visibility: ["app"] }
+        ...tool2._meta,
+        ui: { ...tool2._meta?.ui, visibility: ["app"] }
       }
-    } : tool
+    } : tool2
   );
 }
 function createCapabilityMcpServer(session, version4, setup) {
   const { catalog } = session;
   const { tools: tools2 } = capabilityMcpRegistration(session, setup);
-  if (new Set(tools2.map((tool) => tool.name)).size !== tools2.length)
+  if (new Set(tools2.map((tool2) => tool2.name)).size !== tools2.length)
     throw new Error("Duplicate local tool registration");
   const lifetime = new AbortController();
   const pendingSetup = /* @__PURE__ */ new Set();
@@ -57656,11 +57409,10 @@ function createCapabilityMcpServer(session, version4, setup) {
       ...catalog.resources,
       ...setup?.resources ?? [],
       ...session.feedback?.resources ?? [],
-      ...session.issues?.resources ?? [],
-      ...session.configurations?.resources ?? []
+      ...session.issues?.resources ?? []
     ]
   }));
-  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool) => tool.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
+  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool2) => tool2.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
     const setupResource = setup?.resources?.find(
       (resource) => resource.uri === params.uri || params.uri === "ui://kaijan/setup/card/v1.html" && resource.uri === "ui://kaijan/setup/card/v2.html"
@@ -57686,7 +57438,9 @@ function createCapabilityMcpServer(session, version4, setup) {
       try {
         return await session.configurations.readResource(uri);
       } catch {
-        throw invalidParams("Reopen Configurations in this chat.");
+        throw invalidParams(
+          "Ask Kaijan in this chat to view or update your saved configurations."
+        );
       }
     }
     if (session.feedback?.hasResource?.(uri) || session.feedback?.resources.some((resource) => resource.uri === uri)) {
@@ -57726,7 +57480,7 @@ function createCapabilityMcpServer(session, version4, setup) {
     }
   });
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
-    if (!isCustomerToolAllowed(params.name) || !tools2.some((tool) => tool.name === params.name))
+    if (!isCustomerToolAllowed(params.name) || !tools2.some((tool2) => tool2.name === params.name))
       throw invalidParams(
         "Unknown local Kaijan tool. Use tools/list to discover supported tool names."
       );
@@ -57856,7 +57610,7 @@ function createCapabilityMcpServer(session, version4, setup) {
       };
     }
     if (hasCustomerReportOutput(params.name)) {
-      const envelope2 = await invokeCustomerReportWithMetadata(
+      const envelope = await invokeCustomerReportWithMetadata(
         scopedCatalog,
         params.name,
         params.arguments ?? {},
@@ -57876,10 +57630,10 @@ function createCapabilityMcpServer(session, version4, setup) {
           ) : void 0
         }
       );
-      const result2 = JSON.parse(JSON.stringify(envelope2.result));
+      const result2 = JSON.parse(JSON.stringify(envelope.result));
       return {
         ...result2.error ? { isError: true } : {},
-        ...envelope2.metadata ? { _meta: envelope2.metadata } : {},
+        ...envelope.metadata ? { _meta: envelope.metadata } : {},
         structuredContent: result2,
         content: [{ type: "text", text: JSON.stringify(result2) }]
       };
@@ -58000,12 +57754,12 @@ function createCapabilityMcpServer(session, version4, setup) {
     };
     let scopedSetup;
     try {
-      scopedSetup = setup?.tools.some((tool) => tool.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
+      scopedSetup = setup?.tools.some((tool2) => tool2.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
     } catch {
       return setupFailure();
     }
     if (scopedSetup) setupInstances.add(scopedSetup);
-    if (scopedSetup?.tools.some((tool) => tool.name === params.name)) {
+    if (scopedSetup?.tools.some((tool2) => tool2.name === params.name)) {
       let pending;
       try {
         pending = scopedSetup.invoke(
