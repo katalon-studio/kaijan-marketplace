@@ -47004,7 +47004,8 @@ import {
   createDecipheriv,
   createHash as createHash2
 } from "node:crypto";
-var configurationFormUri = "ui://kaijan/configurations/form/v1.html";
+var configurationFormUri = "ui://kaijan/configurations/form/v2.html";
+var cachedFormUri = "ui://kaijan/configurations/form/v1.html";
 var viewKey2 = "kaijan/configuration-view";
 var id2 = external_exports.uuid();
 var envelope = external_exports.strictObject({
@@ -47023,6 +47024,7 @@ var inputSchema = external_exports.strictObject({
 });
 var openSchema = external_exports.strictObject({
   id: id2.nullable().optional(),
+  application: external_exports.string().min(1).optional(),
   forNextRun: external_exports.literal(true).optional()
 });
 var actionSchema = external_exports.strictObject({
@@ -47034,6 +47036,31 @@ var actionSchema = external_exports.strictObject({
   actionId: external_exports.uuid().optional(),
   automatic: external_exports.literal(true).optional()
 });
+function defaultConfigurationId(application) {
+  const hex3 = createHash2("sha256").update("kaijan-configuration-default/1").update(application ?? "").digest("hex");
+  return [
+    hex3.slice(0, 8),
+    hex3.slice(8, 12),
+    "8" + hex3.slice(13, 16),
+    "a" + hex3.slice(17, 20),
+    hex3.slice(20, 32)
+  ].join("-");
+}
+function configurationTarget(configuration2, application = "") {
+  const url2 = configuration2?.application ?? application;
+  return {
+    id: configuration2?.id,
+    application: url2,
+    hostname: url2 ? new URL(url2).hostname : void 0,
+    allowedHosts: [...configuration2?.allowedHosts ?? []]
+  };
+}
+function matchesConfigurationFormTarget(target, id8, revision3, edit) {
+  if ((target.id ? target.id !== id8 : revision3 !== 0) || edit?.application !== target.application || !Array.isArray(edit.allowedHosts))
+    return false;
+  const additionalHosts = (hosts) => hosts.filter((host) => host !== target.hostname);
+  return JSON.stringify(additionalHosts(edit.allowedHosts)) === JSON.stringify(additionalHosts(target.allowedHosts));
+}
 function response(value, view2) {
   return {
     ...value.error ? { isError: true } : {},
@@ -47075,7 +47102,7 @@ function createConfigurationSurface({ session, library, data }) {
     {
       name: "kaijan_configuration_open",
       title: "Open Configurations",
-      description: "Open the person's private Configuration editor in this chat when requested. It is the same editor as the Configurations card action. Opening or saving settings never starts a test. Saved secrets stay masked. Supply an id to edit that configuration. Use forNextRun=true only for a temporary secret edit that the person explicitly requests; that view has one Apply action and cannot save defaults. Normal editing has Save and Cancel. Background reads use kaijan_configuration and do not open a form.",
+      description: "Open the person's private Configuration editor in this chat when requested. It is the same editor as the Configurations card action. Opening or saving settings never starts a test. Saved secrets stay masked. Open the saved key\u2013value set. Pass application when the person specifies a website. The editor shows that website before saving. An explicit saved id opens that existing set. Use forNextRun=true only for a temporary secret edit that the person explicitly requests; that view has one Apply action and cannot save defaults. Normal editing has Save and Cancel. Background reads use kaijan_configuration and do not open a form.",
       inputSchema: external_exports.toJSONSchema(openSchema),
       annotations: {
         readOnlyHint: false,
@@ -47107,15 +47134,37 @@ function createConfigurationSurface({ session, library, data }) {
       message: known ? error63.message : "Could not save or read Configurations. Keep your edit and reopen Configurations in this chat."
     };
   };
-  function grant2(scope, purpose = "defaults") {
-    keys ??= generateKeyPairSync("rsa", { modulusLength: 2048 });
-    const viewToken = randomBytes2(32).toString("hex");
-    grants.set(viewToken, { scope, purpose });
+  const targetError = () => new library.ConfigurationError(
+    "configuration_target",
+    "Open Configurations for the website that will use these settings."
+  );
+  function formView(viewToken, { purpose, target }) {
+    const application = target.application ? new URL(target.application).origin : void 0;
     return {
       viewToken,
       purpose,
+      application,
+      draftId: defaultConfigurationId(application),
       publicKey: keys.publicKey.export({ format: "jwk" })
     };
+  }
+  function grant2(scope, purpose, target) {
+    keys ??= generateKeyPairSync("rsa", { modulusLength: 2048 });
+    const viewToken = randomBytes2(32).toString("hex");
+    const current = { scope, purpose, target };
+    grants.set(viewToken, current);
+    return formView(viewToken, current);
+  }
+  function readFormEdit(args, current) {
+    const edit = decrypt(args);
+    if (!matchesConfigurationFormTarget(
+      current.target,
+      args.id,
+      args.revision,
+      edit
+    ))
+      throw targetError();
+    return edit;
   }
   function decrypt(args) {
     const value = args.sealed;
@@ -47164,8 +47213,8 @@ function createConfigurationSurface({ session, library, data }) {
     tools: tools2,
     resources: [resource],
     hasTool: (name) => tools2.some((tool) => tool.name === name),
-    hasResource: (uri) => uri === resource.uri,
-    readResource: () => library.readConfigurationForm(),
+    hasResource: (uri) => uri === resource.uri || uri === cachedFormUri,
+    readResource: (uri) => library.readConfigurationForm(uri),
     async invoke(name, raw, metadata2) {
       try {
         const app = name === "kaijan_configuration_form_action";
@@ -47178,7 +47227,7 @@ function createConfigurationSurface({ session, library, data }) {
           delete: ["id", "revision"],
           select: ["id", "automatic"]
         } : {
-          open: ["id", "forNextRun"],
+          open: ["id", "application", "forNextRun"],
           list: ["application"],
           read: ["id"],
           save: ["id", "revision", "name", "application", "values"],
@@ -47194,19 +47243,15 @@ function createConfigurationSurface({ session, library, data }) {
         ))
           throw Error("invalid_arguments");
         const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
-        let view2;
+        let view2, currentGrant;
         if (app) {
-          const current = grants.get(args.viewToken);
-          if (!current || current.scope !== scopeId)
+          currentGrant = grants.get(args.viewToken);
+          if (!currentGrant || currentGrant.scope !== scopeId)
             return response({
               error: "configuration_view_expired",
               message: "This form expired. Copy any unsaved values before reopening Configurations in this chat."
             });
-          view2 = {
-            viewToken: args.viewToken,
-            purpose: current.purpose,
-            publicKey: keys.publicKey.export({ format: "jwk" })
-          };
+          view2 = formView(args.viewToken, currentGrant);
           if (view2.purpose === "one_run" && !["read", "use_once", "close"].includes(args.operation))
             throw new library.ConfigurationError(
               "configuration_view_purpose",
@@ -47217,16 +47262,16 @@ function createConfigurationSurface({ session, library, data }) {
           throw Error("invalid_arguments");
         if (args.operation === "select" && args.id === null) {
           await library.configurationPreference(scope.data, scopeId, false);
-          let configurations = [];
+          let configurations2 = [];
           try {
             const saved2 = await store();
             saved2.select(scopeId, null);
-            configurations = saved2.list();
+            configurations2 = saved2.list();
           } catch {
           }
           return response(
             {
-              configurations,
+              configurations: configurations2,
               selectedId: null,
               selectionMode: "none",
               nextRunConfiguration: null,
@@ -47250,13 +47295,14 @@ function createConfigurationSurface({ session, library, data }) {
           if (view2?.purpose !== "one_run") throw Error("invalid_view_purpose");
           if (!app || !args.sealed || !args.id || !args.revision || !args.actionId)
             throw Error("invalid_arguments");
+          const edit = readFormEdit(args, currentGrant);
           if (await library.configurationPreference(scope.data, scopeId) === false)
             saved.select(scopeId, null);
           configuration2 = saved.useOnce(
             scopeId,
             args.id,
             args.revision,
-            decrypt(args),
+            edit,
             args.actionId
           );
           if (saved.pending(scopeId))
@@ -47267,7 +47313,10 @@ function createConfigurationSurface({ session, library, data }) {
               throw Error("invalid_view_purpose");
             if (!args.sealed || !args.id || args.revision === void 0 || !args.actionId)
               throw Error("invalid_arguments");
-            configuration2 = saved.save(decrypt(args), args.id, args.revision);
+            const edit = readFormEdit(args, currentGrant);
+            configuration2 = saved.save(edit, args.id, args.revision);
+            currentGrant.target = configurationTarget(configuration2);
+            view2 = formView(args.viewToken, currentGrant);
           } else {
             if (!args.id || args.revision === void 0 || !args.values)
               throw Error("invalid_arguments");
@@ -47277,6 +47326,8 @@ function createConfigurationSurface({ session, library, data }) {
               allowedHosts: [],
               entries: []
             };
+            if (args.application !== void 0 && args.application !== old.application && old.entries.some((entry) => entry.secret))
+              throw targetError();
             if (Object.keys(args.values).some(
               (key) => old.entries.some((entry) => entry.key === key && entry.secret)
             ))
@@ -47310,26 +47361,59 @@ function createConfigurationSurface({ session, library, data }) {
             throw Error("invalid_arguments");
           configuration2 = saved.select(scopeId, args.id);
           await library.configurationPreference(scope.data, scopeId, true);
-        } else if (args.operation === "read" && args.id)
-          configuration2 = saved.read(args.id);
+        } else if (args.operation === "read" && (args.id ?? currentGrant?.target.id))
+          configuration2 = saved.read(args.id ?? currentGrant.target.id);
         else if (args.operation === "close") grants.delete(args.viewToken);
         else if (!["open", "read", "list"].includes(args.operation))
           throw Error("invalid_arguments");
-        if (args.operation === "open")
-          view2 = grant2(scopeId, args.forNextRun ? "one_run" : "defaults");
+        let application;
+        if (args.operation === "open" && args.application !== void 0) {
+          let url2;
+          try {
+            url2 = new URL(args.application);
+          } catch {
+          }
+          if (!url2 || !["http:", "https:"].includes(url2.protocol) || url2.username || url2.password || args.id || args.forNextRun)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "Open Configurations with the website URL or the saved configuration ID."
+            );
+          application = url2.origin;
+        }
         const enabled = await library.configurationPreference(
           scope.data,
           scopeId
         );
         const selected = enabled !== false ? saved.selected(scopeId) : null;
+        const configurations = saved.list(
+          application ?? view2?.application ?? args.application
+        );
+        if (args.operation === "open" && !configuration2) {
+          const selectedSet = configurations.find(
+            (value) => value.id === selected
+          );
+          const matching = application ? configurations : configurations.filter((value) => !value.application);
+          if (!selectedSet && matching.length > 1)
+            throw new library.ConfigurationError(
+              "configuration_choice_required",
+              "Several saved sets match. Choose the one to edit in chat."
+            );
+          configuration2 = selectedSet ?? matching[0] ?? (configurations.length === 1 ? configurations[0] : void 0);
+        }
+        if (args.operation === "open")
+          view2 = grant2(
+            scopeId,
+            args.forNextRun ? "one_run" : "defaults",
+            configurationTarget(configuration2, application)
+          );
         return response(
           {
-            configurations: saved.list(args.application),
+            configurations,
             nextRunConfiguration: saved.pendingView(scopeId),
             selectedId: selected && selected !== "automatic" ? selected : null,
             selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
             ...configuration2 ? { configuration: configuration2 } : {},
-            message: args.operation === "use_once" ? saved.pending(scopeId)?.token === args.actionId ? "Settings prepared for the next Run only. Saved defaults are unchanged." : "This one-Run edit was already acknowledged. Check the original Run or prepare a new edit." : args.operation === "save" ? "Configuration saved." : args.operation === "select" ? args.automatic ? "Automatic configuration matching selected." : configuration2 ? `Configuration selected: ${configuration2.name}.` : "No configuration selected for this chat." : args.operation === "delete" ? "Configuration deleted. Existing Runs keep their saved settings." : args.operation === "close" ? "Configurations closed." : "Choose a configuration or create one."
+            message: args.operation === "use_once" ? saved.pending(scopeId)?.token === args.actionId ? "Settings prepared for the next Run only. Saved defaults are unchanged." : "This one-Run edit was already acknowledged. Check the original Run or prepare a new edit." : args.operation === "save" ? "Configuration saved." : args.operation === "select" ? args.automatic ? "Automatic configuration matching selected." : configuration2 ? `Configuration selected: ${configuration2.name}.` : "No configuration selected for this chat." : args.operation === "delete" ? "Configuration deleted. Existing Runs keep their saved settings." : args.operation === "close" ? "Configurations closed." : ""
           },
           view2
         );
@@ -56754,7 +56838,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool.name)) return tool;
-  const resourceUri = "ui://loki/test-plan/card/v79.html";
+  const resourceUri = "ui://loki/test-plan/card/v80.html";
   const description = tool.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool.name,
@@ -57447,7 +57531,8 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v75.html",
   "ui://loki/test-plan/card/v76.html",
   "ui://loki/test-plan/card/v77.html",
-  "ui://loki/test-plan/card/v78.html"
+  "ui://loki/test-plan/card/v78.html",
+  "ui://loki/test-plan/card/v79.html"
 ]);
 function invalidParams(message, data) {
   const error63 = new McpError(ErrorCode.InvalidParams, message, data);

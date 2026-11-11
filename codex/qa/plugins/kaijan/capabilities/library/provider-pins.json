@@ -753,7 +753,7 @@
       "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c",
       "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8",
       "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a",
-      "packages/computer-runner/src/request-instructions.mjs": "fc7ab99a8b86c6129dfdd34f0a2dad69904e4cb283e28b12af1df73e2951a6f7",
+      "packages/computer-runner/src/request-instructions.mjs": "9c8f6d347f187ab2310785b56557466f0b0407ab0d24ff9881f185ca6b169320",
       "packages/computer-runner/src/browser-agent.mjs": "bd6c2296954aa7cd643ba8bc591e051a105d39fb32d4a3eb392b256509744ffa",
       "packages/computer-runner/src/browser-recap.mjs": "03f5a0a816c9283a4b8683c4a8b88bd076af22957237e866daafefd656a65f1f"
     },

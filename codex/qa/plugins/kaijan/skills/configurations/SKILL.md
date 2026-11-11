@@ -7,7 +7,11 @@ description: Open or manage personal Kaijan Configurations for reusable applicat
 
 Use `kaijan_configuration_open` to open the person's private
 editor in this chat. The same editor opens from **Configurations** beside
-**Show details**. Opening or saving settings never starts a test.
+**Show details**. The person enters their own keys and values, then selects
+**Save**. To open settings for a website, pass the website the person gave as
+`application`. The editor shows its origin and opens the saved set for it.
+Use an exact saved ID when the person asks to edit that set. If several sets
+match, ask which one. Opening or saving settings never starts a test.
 
 Configurations belong to the local person and selected Kaijan environment.
 They remain available across chats and restarts on this device. They are not
