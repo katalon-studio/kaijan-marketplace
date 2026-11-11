@@ -5,7 +5,7 @@ export declare const runnerAnswer: z.ZodObject<{
     answerKey: z.ZodString;
     answers: z.ZodRecord<z.ZodString, z.ZodString>;
     sensitiveQuestionIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
-}, z.core.$strict>;
+}, z.core.$loose>;
 export declare const runnerAnswerReceipt: z.ZodObject<{
     schema: z.ZodLiteral<"loki.runner.clarification-answer/1">;
     runId: z.ZodString;

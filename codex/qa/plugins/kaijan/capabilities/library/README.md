@@ -277,6 +277,36 @@ skill migration. Historical transport tests/docs were deleted under [#2200](http
 Runner IPC, result-reader and Unicode checks remain under `test/` for the
 parent's focused final validation. No new live acceptance is implied by a move.
 
+### Per-question clarification failures
+
+The parent and Product worker return a correlated private clarification error
+when a live callback fails. They do not turn that one question into an operator
+Stop, abort native work or discard a result the worker returned. An unusable
+reply rejects only its matching pending question. Foreign, duplicate and late
+frames cannot answer another question or cancel its work. Failed callbacks are
+not repeated. Actual Stop, the original deadline and lost-channel outcomes keep
+their separate paths.
+
+Original callback errors and invalid requests are retained in the Run's private
+`runner-clarification-errors.json`; invalid reply frames are retained in
+`runner-clarification-reply-errors.json`. These files use private permissions and
+are not model answers. Diagnostic write failure cannot become a new continuation
+gate. The worker receipt reports whether parent diagnostics were stored.
+
+The private `runner-clarification-error` frame requires the parent, worker and
+clarification bridge from the same package. Notify integration consumers before
+replacing this pair: an older worker cannot handle the per-question error frame.
+This changes no public MCP schema, card identity or automatic retry behavior.
+The next #4529 source increment accepts partial and extended string answers
+through the public answer contract, manager, alias adapter, worker and saved
+protection/assessment readers. Unknown answer labels remain context; missing
+answers are explicit in the native continuation. Extra callback context is
+preserved without forwarding host Run/receipt identifiers. Existing marked
+values remain protected, including unmatched answers. An older consumer can
+still reject or hide these records, so compose these consumers together. No
+new card/resource identity or automatic callback retry is introduced. The
+transition-dependent parse path and remaining full audit are still open.
+
 ## Awaited advisory queries
 
 The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Use a fresh requestKey for a distinct read-only attempt after a failure; retain original receipts and unknown charges. A conflict reports request_key_conflict, no dispatch, and a fresh suggested key. Same-key retries recover only their original attempt. Browser/desktop effects retain their independent no-replay boundary. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Live related-work queries reacquire GitHub data by default; an explicit correlation key reads the original receipt, never fresh data. Normal public tools expose only these queries and the completed-answer reader. Direct library start/get/stop APIs remain private compatibility entrypoints. Cancellation of the final coalesced caller aborts native work and waits for settlement; another active caller retains ownership. A process loss preserves a fence for that advisory request identity, with no automatic takeover. A distinct correlation or changed provider configuration can start a separate read-only attempt; it does not rewrite or resolve the original charge. Old input-wide fences are retained as historical artifacts, not global bans on future analysis.

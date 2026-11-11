@@ -55497,7 +55497,7 @@ var customerQuestion = external_exports.strictObject({
 });
 var clarification = progress3.extend({
   questions: external_exports.array(customerQuestion),
-  bindingState: external_exports.enum(["bound", "unavailable"]),
+  bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
   clarificationId: id7,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"])
@@ -56104,7 +56104,7 @@ var customerPending = external_exports.strictObject({
   clarificationId: id7,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"]),
-  bindingState: external_exports.enum(["bound", "unavailable"]),
+  bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
   reason: external_exports.enum([
     "The test needs the following task or application information.",
     "The test needs a read-only way to view the requested information.",
@@ -56146,7 +56146,7 @@ async function bindPendingQuestions(value, read) {
   return {
     ...value,
     pendingClarification: safe,
-    nextAction: safe.state === "live" && safe.bindingState === "bound" && safe.questions.length ? {
+    nextAction: safe.state === "live" && safe.bindingState !== "unavailable" && safe.questions.length ? {
       kind: "input-required",
       tool: "loki_runner_answer",
       runId: value.runId,

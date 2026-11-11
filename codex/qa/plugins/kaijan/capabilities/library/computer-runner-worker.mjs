@@ -5072,7 +5072,7 @@ var recursive = /* @__PURE__ */ new WeakMap();
 var NONE = 0;
 var ASSUMED = 1;
 var PROVEN = 2;
-function isRecursive(inst, stack, resolve) {
+function isRecursive(inst, stack, resolve2) {
   const cached2 = recursive.get(inst);
   if (cached2 !== void 0)
     return cached2 ? PROVEN : NONE;
@@ -5082,7 +5082,7 @@ function isRecursive(inst, stack, resolve) {
   let result = NONE;
   const check2 = (child) => {
     if (result !== PROVEN && child?._zod) {
-      const answer = isRecursive(child, stack, resolve);
+      const answer = isRecursive(child, stack, resolve2);
       if (answer > result)
         result = answer;
     }
@@ -5093,7 +5093,7 @@ function isRecursive(inst, stack, resolve) {
       const desc = Object.getOwnPropertyDescriptor(sh, key);
       if (spread && !desc.enumerable)
         continue;
-      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve) : NONE;
+      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve2) : NONE;
       if (child > answer)
         answer = child;
     }
@@ -5157,7 +5157,7 @@ function isRecursive(inst, stack, resolve) {
       break;
     // `$ZodLazy` caches its inner on the def, so a resolved edge is followed exactly
     case "lazy": {
-      const inner = def._cachedInner ?? (resolve ? inst._zod.innerType : void 0);
+      const inner = def._cachedInner ?? (resolve2 ? inst._zod.innerType : void 0);
       merge2(inner ? isRecursive(inner, stack, false) : ASSUMED);
       break;
     }
@@ -19722,6 +19722,98 @@ function date4(params) {
   return _coercedDate(ZodDate, params);
 }
 
+// src/computer-runner-worker.ts
+import { dirname as dirname5 } from "node:path";
+
+// src/storage.ts
+import { constants } from "node:fs";
+import { mkdir, open as open2, lstat, realpath, rename, unlink } from "node:fs/promises";
+import { randomUUID, createHash } from "node:crypto";
+import { dirname, join, resolve } from "node:path";
+async function privateDirectory(path) {
+  await mkdir(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The plugin data directory is unsafe.");
+}
+async function regularFile(path, maximum, privateRecord = false) {
+  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
+    throw new Error("The selected file read limit is invalid.");
+  const file2 = await open2(
+    path,
+    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
+  );
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
+      throw new Error("The selected file is not a bounded regular file.");
+    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
+      throw new Error("The private file is unsafe.");
+    if (maximum === void 0) return await file2.readFile();
+    const chunks = [];
+    let length = 0;
+    while (length <= maximum) {
+      const bytes2 = Buffer.allocUnsafeSlow(
+        Math.min(64 * 1024, maximum + 1 - length)
+      );
+      const result = await file2.read(bytes2, 0, bytes2.length, null);
+      if (!result.bytesRead) break;
+      length += result.bytesRead;
+      if (length > maximum)
+        throw new Error("The selected file exceeds its limit.");
+      chunks.push(bytes2.subarray(0, result.bytesRead));
+    }
+    const bytes = Buffer.allocUnsafeSlow(length);
+    let offset = 0;
+    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
+    return bytes;
+  } finally {
+    await file2.close();
+  }
+}
+function boundedFile(path, maximum) {
+  return regularFile(path, maximum);
+}
+async function atomicFile(directory, name, bytes) {
+  await privateDirectory(directory);
+  try {
+    const current = await lstat(join(directory, name));
+    if (!current.isFile() || current.uid !== process.getuid?.() || current.mode & 63)
+      throw new Error("The saved data file is unsafe; it has been preserved.");
+  } catch (error62) {
+    if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
+      throw error62;
+  }
+  const temporary = join(directory, `.pending-${randomUUID()}`);
+  try {
+    const file2 = await open2(temporary, "wx", 384);
+    try {
+      await file2.writeFile(bytes);
+      await file2.sync();
+    } finally {
+      await file2.close();
+    }
+    await rename(temporary, join(directory, name));
+    const parent = await open2(
+      directory,
+      constants.O_RDONLY | constants.O_NOFOLLOW
+    );
+    try {
+      await parent.sync();
+    } finally {
+      await parent.close();
+    }
+  } finally {
+    await unlink(temporary).catch((error62) => {
+      if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
+        throw error62;
+    });
+  }
+}
+
 // ../contracts/dist/report-evidence.js
 var digest = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
@@ -22755,6 +22847,7 @@ import {
   parseClarificationSourceId,
   renderClarificationPresentation
 } from "@katalon-loki/computer-runner/clarification-presentation";
+import { redactor } from "@katalon-loki/computer-runner/redaction";
 
 // ../contracts/dist/telemetry.js
 var telemetryLimits = {
@@ -25173,17 +25266,17 @@ var families = Object.freeze({
 // ../provider-transport/broker-channel.mjs
 import { request as request2 } from "node:http";
 import { Readable } from "node:stream";
-import { lstat } from "node:fs/promises";
-import { dirname } from "node:path";
+import { lstat as lstat2 } from "node:fs/promises";
+import { dirname as dirname2 } from "node:path";
 async function checkChannel(socketPath) {
-  const directory = await lstat(dirname(socketPath));
-  const socket = await lstat(socketPath);
+  const directory = await lstat2(dirname2(socketPath));
+  const socket = await lstat2(socketPath);
   if (!directory.isDirectory() || directory.isSymbolicLink() || directory.mode & 63 || directory.uid !== process.getuid() || !socket.isSocket() || socket.mode & 63 || socket.uid !== process.getuid())
     throw Error("unsafe_broker_channel");
 }
 async function channelFetch(socketPath, path, options = {}) {
   await checkChannel(socketPath);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve2, reject) => {
     const req = request2(
       {
         socketPath,
@@ -25203,7 +25296,7 @@ async function channelFetch(socketPath, path, options = {}) {
           if (typeof res.headers[name] === "string")
             headers.set(name, res.headers[name]);
         }
-        resolve(
+        resolve2(
           new Response(
             [204, 205, 304].includes(res.statusCode) ? null : Readable.toWeb(res),
             { status: res.statusCode, headers }
@@ -25310,57 +25403,6 @@ function sendFetch(connection, options, transport = globalThis.fetch) {
   });
 }
 
-// src/storage.ts
-import { constants } from "node:fs";
-import { mkdir, open as open2, lstat as lstat2, realpath, rename, unlink } from "node:fs/promises";
-async function privateDirectory(path) {
-  await mkdir(path, { recursive: true, mode: 448 });
-  await checkPrivateDirectory(path);
-}
-async function checkPrivateDirectory(path) {
-  const info = await lstat2(path);
-  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
-    throw new Error("The plugin data directory is unsafe.");
-}
-async function regularFile(path, maximum, privateRecord = false) {
-  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
-    throw new Error("The selected file read limit is invalid.");
-  const file2 = await open2(
-    path,
-    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
-  );
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
-      throw new Error("The selected file is not a bounded regular file.");
-    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
-      throw new Error("The private file is unsafe.");
-    if (maximum === void 0) return await file2.readFile();
-    const chunks = [];
-    let length = 0;
-    while (length <= maximum) {
-      const bytes2 = Buffer.allocUnsafeSlow(
-        Math.min(64 * 1024, maximum + 1 - length)
-      );
-      const result = await file2.read(bytes2, 0, bytes2.length, null);
-      if (!result.bytesRead) break;
-      length += result.bytesRead;
-      if (length > maximum)
-        throw new Error("The selected file exceeds its limit.");
-      chunks.push(bytes2.subarray(0, result.bytesRead));
-    }
-    const bytes = Buffer.allocUnsafeSlow(length);
-    let offset = 0;
-    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
-    return bytes;
-  } finally {
-    await file2.close();
-  }
-}
-function boundedFile(path, maximum) {
-  return regularFile(path, maximum);
-}
-
 // src/provider.ts
 var keySchema = external_exports.string().min(1).max(8192);
 var providerSchema2 = external_exports.strictObject({
@@ -25424,9 +25466,9 @@ var object2 = external_exports.record(external_exports.string(), external_export
 var maxResponseBytes = 16 * 1024 * 1024;
 
 // src/query.ts
-import { createHash, createHmac, randomBytes, randomUUID } from "node:crypto";
+import { createHash as createHash2, createHmac, randomBytes, randomUUID as randomUUID2 } from "node:crypto";
 import { fileURLToPath } from "node:url";
-var digest18 = (value) => createHash("sha256").update(value).digest("hex");
+var digest18 = (value) => createHash2("sha256").update(value).digest("hex");
 var integrationIdentity = boundedFile(fileURLToPath(import.meta.url)).then(
   digest18
 );
@@ -25441,20 +25483,20 @@ function canonicalJson(value) {
 
 // src/runner-clarification.ts
 import {
-  redactor,
+  redactor as redactor2,
   projectClarification,
   RunnerProjectionError
 } from "@katalon-loki/computer-runner/redaction";
-import { createHash as createHash2 } from "node:crypto";
+import { createHash as createHash3 } from "node:crypto";
 
 // src/runner-answer-contracts.ts
 var nonempty5 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var runnerAnswer = external_exports.strictObject({
+var runnerAnswer = external_exports.looseObject({
   runId: hashId,
   clarificationId: hashId,
   answerKey: nonempty5,
-  answers: external_exports.record(external_exports.string(), nonempty5),
+  answers: external_exports.record(external_exports.string(), external_exports.string()),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
 var runnerAnswerReceipt = external_exports.strictObject({
@@ -25499,10 +25541,10 @@ var clarificationRequestSchema = external_exports.strictObject({
   clarificationId: hashId2,
   providerResponseId: nonempty6,
   callId: nonempty6,
-  reason: nonempty6,
-  completedSteps: external_exports.array(nonempty6),
-  remainingSteps: external_exports.array(nonempty6),
-  evidence: external_exports.array(nonempty6),
+  reason: external_exports.string(),
+  completedSteps: external_exports.array(external_exports.string()),
+  remainingSteps: external_exports.array(external_exports.string()),
+  evidence: external_exports.array(external_exports.string()),
   questions: external_exports.array(question).min(1),
   provenance: external_exports.literal("model-authored-unverified")
 }).superRefine((v, ctx) => {
@@ -25512,18 +25554,21 @@ var clarificationRequestSchema = external_exports.strictObject({
       message: "Invalid clarification correlation or duplicate questions"
     });
 });
-var digest19 = (text5) => createHash2("sha256").update(text5).digest("hex");
+var digest19 = (text5) => createHash3("sha256").update(text5).digest("hex");
 
 // src/runner-clarification-worker.ts
-var answerFrame = external_exports.strictObject({
+var answerFrame = external_exports.looseObject({
   type: external_exports.literal("runner-clarification-answer"),
   clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
-  answers: external_exports.record(
-    external_exports.string(),
-    external_exports.string().refine((v) => Boolean(v.trim()))
-  )
+  answers: external_exports.record(external_exports.string(), external_exports.string())
 });
+var failureFrame = external_exports.strictObject({
+  type: external_exports.literal("runner-clarification-error"),
+  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  code: external_exports.literal("clarification_failed")
+});
+var replyFrame = external_exports.discriminatedUnion("type", [answerFrame, failureFrame]);
 function createWorkerClarification(send2, operationSignal) {
   const seen = /* @__PURE__ */ new Set();
   const pending = /* @__PURE__ */ new Map();
@@ -25544,10 +25589,9 @@ function createWorkerClarification(send2, operationSignal) {
     const combined = AbortSignal.any([operationSignal, signal]);
     let abort = () => {
     };
-    const response = new Promise((resolve, reject) => {
+    const response = new Promise((resolve2, reject) => {
       pending.set(request3.clarificationId, {
-        ids: request3.questions.map((q) => q.id),
-        resolve,
+        resolve: resolve2,
         reject
       });
       abort = () => {
@@ -25573,19 +25617,35 @@ function createWorkerClarification(send2, operationSignal) {
   return {
     requestClarification,
     receive(raw) {
-      const frame = answerFrame.parse(raw);
+      const frame = replyFrame.parse(raw);
       const p = pending.get(frame.clarificationId);
-      if (closed || operationSignal.aborted || !p || Object.keys(frame.answers).length !== p.ids.length || p.ids.some((id4) => !Object.hasOwn(frame.answers, id4)))
+      if (closed || operationSignal.aborted || !p)
         throw Error("Late or mismatched clarification answer");
-      if (frame.sensitiveQuestionIds && (new Set(frame.sensitiveQuestionIds).size !== frame.sensitiveQuestionIds.length || frame.sensitiveQuestionIds.some(
-        (id4) => !Object.hasOwn(frame.answers, id4)
-      )))
-        throw Error("Invalid sensitive question IDs");
+      if (frame.type === "runner-clarification-error") {
+        pending.delete(frame.clarificationId);
+        p.reject(Error("Caller clarification failed; no answer was delivered"));
+        return;
+      }
       pending.delete(frame.clarificationId);
+      const answer = Object.fromEntries(
+        Object.entries(frame).filter(
+          ([key]) => !["type", "clarificationId", "sensitiveQuestionIds"].includes(key)
+        )
+      );
       p.resolve({
+        ...answer,
         answers: frame.answers,
         ...frame.sensitiveQuestionIds === void 0 ? {} : { sensitiveQuestionIds: frame.sensitiveQuestionIds }
       });
+    },
+    reject(raw) {
+      const identity2 = external_exports.object({ clarificationId: external_exports.string() }).safeParse(raw);
+      if (!identity2.success) return false;
+      const p = pending.get(identity2.data.clarificationId);
+      if (!p) return false;
+      pending.delete(identity2.data.clarificationId);
+      p.reject(Error("Clarification reply could not be used"));
+      return true;
     },
     close() {
       closed = true;
@@ -25676,8 +25736,8 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
       ]);
       let abort = () => {
       };
-      const response = new Promise((resolve, reject) => {
-        pending.set(frame.invocationId, { resolve, reject });
+      const response = new Promise((resolve2, reject) => {
+        pending.set(frame.invocationId, { resolve: resolve2, reject });
         abort = () => {
           pending.delete(frame.invocationId);
           reject(Error("Application-context wait interrupted; do not replay"));
@@ -25718,10 +25778,10 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
 }
 
 // src/runner-validation.ts
-import { createHash as createHash3 } from "node:crypto";
+import { createHash as createHash4 } from "node:crypto";
 import { appendFile } from "node:fs/promises";
-import { dirname as dirname2, join } from "node:path";
-var digest20 = (value) => createHash3("sha256").update(value).digest("hex");
+import { dirname as dirname3, join as join2 } from "node:path";
+var digest20 = (value) => createHash4("sha256").update(value).digest("hex");
 var sha = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var selector = external_exports.union([
   external_exports.strictObject({ call: external_exports.number().int().min(1).max(80) }),
@@ -25813,13 +25873,13 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
     throw Error("Controlled worker route mismatch; no dispatch");
   if (plan.requestKey !== input3.requestId || plan.nativeInputSha256 !== digest20(canonicalJson(input3)) || plan.route !== route || plan.headless !== headless)
     throw Error("Validation worker binding mismatch; no dispatch");
-  const directory = dirname2(artifacts);
+  const directory = dirname3(artifacts);
   await privateDirectory(directory);
   let writes = Promise.resolve();
   const record5 = (event2) => {
     writes = writes.then(
       () => appendFile(
-        join(directory, "runner-validation.jsonl"),
+        join2(directory, "runner-validation.jsonl"),
         JSON.stringify({
           schema: "loki.runner-validation-event/1",
           at: (/* @__PURE__ */ new Date()).toISOString(),
@@ -25844,7 +25904,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
   async function readRows(name, schema) {
     try {
       return schema.parse(
-        JSON.parse((await boundedFile(join(artifacts, name))).toString("utf8"))
+        JSON.parse((await boundedFile(join2(artifacts, name))).toString("utf8"))
       );
     } catch (error62) {
       if (error62 instanceof Error && "code" in error62 && error62.code === "ENOENT")
@@ -25884,7 +25944,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         output: external_exports.array(external_exports.object({ call_id: external_exports.string().optional() }))
       }).parse(
         JSON.parse(
-          (await boundedFile(join(artifacts, `response-${call}.json`))).toString("utf8")
+          (await boundedFile(join2(artifacts, `response-${call}.json`))).toString("utf8")
         )
       );
       const order = new Map(
@@ -26091,7 +26151,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
 
 // src/runner-worker-failure.ts
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname as dirname3, join as join2 } from "node:path";
+import { dirname as dirname4, join as join3 } from "node:path";
 import { inspect } from "node:util";
 function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2) {
   let failed = false;
@@ -26118,10 +26178,10 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
         maxArrayLength: 50,
         maxStringLength: 4096
       });
-      const directory = dirname3(artifactDirectory);
+      const directory = dirname4(artifactDirectory);
       mkdirSync(directory, { recursive: true, mode: 448 });
       writeFileSync(
-        join2(directory, "runner-worker-failure.json"),
+        join3(directory, "runner-worker-failure.json"),
         JSON.stringify({
           schema: "loki.runner.worker-failure/1",
           event: "unhandledRejection",
@@ -26169,12 +26229,12 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
 // research/execution-reuse.mjs
 import { Buffer as Buffer2 } from "node:buffer";
 import { TextDecoder as TextDecoder2 } from "node:util";
-import { createHash as createHash4 } from "node:crypto";
+import { createHash as createHash5 } from "node:crypto";
 import { constants as constants2 } from "node:fs";
 import { open as open3, realpath as realpath2 } from "node:fs/promises";
-import { isAbsolute, join as join3 } from "node:path";
+import { isAbsolute, join as join4 } from "node:path";
 var evidenceSchema = "loki.computer-runner.private-evidence/1";
-var hash2 = (bytes) => createHash4("sha256").update(bytes).digest("hex");
+var hash2 = (bytes) => createHash5("sha256").update(bytes).digest("hex");
 var record4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var text4 = (value) => typeof value === "string" && value.trim().length > 0;
 var ReuseError = class extends Error {
@@ -26258,7 +26318,7 @@ async function regularRead(path, signal, { metadata: metadata2 = false } = {}) {
     const stat = await handle.stat();
     insist(stat.isFile(), "nonregular-source-member");
     insist(!metadata2 || stat.size <= maxMetadataBytes, "source-capacity");
-    const digest21 = createHash4("sha256");
+    const digest21 = createHash5("sha256");
     const buffer = Buffer2.alloc(readChunkBytes);
     const chunks = [];
     let size = 0;
@@ -26294,7 +26354,7 @@ async function regularBytes(path, signal) {
 async function sourceAt(directory, signal) {
   const canonicalDirectory = await realpath2(directory);
   const manifestBytes = await regularBytes(
-    join3(canonicalDirectory, "manifest.json"),
+    join4(canonicalDirectory, "manifest.json"),
     signal
   );
   const manifestSha256 = hash2(manifestBytes);
@@ -26312,7 +26372,7 @@ async function sourceAt(directory, signal) {
     );
     names.add(member.path);
     const memberRead = await regularRead(
-      join3(canonicalDirectory, member.path),
+      join4(canonicalDirectory, member.path),
       signal
     );
     insist(
@@ -26327,7 +26387,7 @@ async function sourceAt(directory, signal) {
   }
   insist(names.has("protocol.json"), "source-material-unavailable");
   const resultBytes = await regularBytes(
-    join3(canonicalDirectory, "result.json"),
+    join4(canonicalDirectory, "result.json"),
     signal
   );
   const result = json3(resultBytes);
@@ -26337,7 +26397,7 @@ async function sourceAt(directory, signal) {
   );
   insist(
     hash2(
-      await regularBytes(join3(canonicalDirectory, "manifest.json"), signal)
+      await regularBytes(join4(canonicalDirectory, "manifest.json"), signal)
     ) === manifestSha256,
     "source-drift"
   );
@@ -26396,16 +26456,32 @@ var started = false;
 var applicationContext;
 var applicationContextProtocolFailure = false;
 var clarification;
-var clarificationProtocolFailure = false;
-var send = (message) => new Promise((resolve) => {
+var clarificationDirectory;
+var clarificationReplyErrors = [];
+var clarificationReplyWrites = Promise.resolve();
+var retainClarificationReplyError = (frame, error62) => {
+  clarificationReplyErrors.push({ frame, error: String(error62) });
+  if (clarificationDirectory) {
+    const directory = clarificationDirectory;
+    clarificationReplyWrites = clarificationReplyWrites.then(
+      () => atomicFile(
+        directory,
+        "runner-clarification-reply-errors.json",
+        Buffer.from(JSON.stringify({ errors: clarificationReplyErrors }))
+      )
+    ).catch(() => {
+    });
+  }
+};
+var send = (message) => new Promise((resolve2) => {
   if (!process.connected || !process.send) {
-    resolve();
+    resolve2();
     return;
   }
   try {
-    process.send(message, () => resolve());
+    process.send(message, () => resolve2());
   } catch {
-    resolve();
+    resolve2();
   }
 });
 process.on("disconnect", () => {
@@ -26416,17 +26492,13 @@ process.on("disconnect", () => {
 process.on("message", (message) => {
   if (!message || typeof message !== "object" || !("type" in message)) return;
   const frame = message;
-  if (frame.type === "runner-clarification-answer") {
+  if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error") {
     try {
       if (!clarification) throw Error("Unregistered clarification reply");
       clarification.receive(frame);
-    } catch {
-      clarificationProtocolFailure = true;
-      controller.abort(
-        Object.assign(Error("Clarification IPC failure"), {
-          code: "loki.runner.clarification-failure/1"
-        })
-      );
+    } catch (error62) {
+      retainClarificationReplyError(frame, error62);
+      clarification?.reject(frame);
     }
     return;
   }
@@ -26443,9 +26515,7 @@ process.on("message", (message) => {
   if (frame.type === "stop") {
     if (frame.reason !== "deadline") reportController.abort();
     controller.abort(
-      frame.reason === "deadline" ? Object.assign(Error("Time limit"), { code: "loki.runner.deadline/1" }) : frame.reason === "clarification-failure" ? Object.assign(Error("Clarification IPC failure"), {
-        code: "loki.runner.clarification-failure/1"
-      }) : void 0
+      frame.reason === "deadline" ? Object.assign(Error("Time limit"), { code: "loki.runner.deadline/1" }) : void 0
     );
     return;
   }
@@ -26456,6 +26526,8 @@ process.on("message", (message) => {
     let nativeDispatched = false;
     try {
       const options = frame.options;
+      if (typeof options.artifactDirectory === "string")
+        clarificationDirectory = dirname5(options.artifactDirectory);
       const input3 = frame.input;
       const limits = options.limits;
       if (input3.executionMethod !== "desktop-ui")
@@ -26578,12 +26650,11 @@ process.on("message", (message) => {
         throw Error(
           "Background worker failure; effects unknown, do not replay"
         );
-      if (clarificationProtocolFailure)
-        throw Error("Clarification IPC failed; effects unknown, do not replay");
       if (applicationContextProtocolFailure)
         throw Error(
           "Application-context IPC failed; effects are unknown, do not replay"
         );
+      await clarificationReplyWrites;
       await send({ type: "result", result });
       if (failures?.failed)
         throw Error("Background worker failure during result handoff");
@@ -26593,6 +26664,7 @@ process.on("message", (message) => {
     } catch (error62) {
       clarification?.close();
       applicationContext?.close();
+      await clarificationReplyWrites;
       await send({
         type: "error",
         nativeDispatched,
