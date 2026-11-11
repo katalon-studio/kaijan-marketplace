@@ -128641,7 +128641,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath10 } from "node:url";
-var testPlanCardUri = "ui://loki/test-plan/card/v80.html";
+var testPlanCardUri = "ui://loki/test-plan/card/v81.html";
 var testPlanCardMetadata = {
   ui: { resourceUri: testPlanCardUri },
   "openai/outputTemplate": testPlanCardUri
