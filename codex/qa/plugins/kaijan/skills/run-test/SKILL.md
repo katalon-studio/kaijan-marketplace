@@ -20,13 +20,17 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-When `kaijan_configuration` is available, read matching Configurations before
-asking for application settings again. Name the selected configuration before
-Run. If the person wants to save a missing or changed value, open the private
-Configuration editor. Otherwise keep the existing private-parameter or manual
-login path. Do not require saving settings to complete a test. Keep raw secrets
-out of chat and tool arguments. A one-Run change must not update saved
-defaults. Configuration selection never authorizes execution. Explicit private references for this Run take precedence over saved defaults.
+When `kaijan_configuration` is available, check for a matching Configuration
+before asking the person to repeat settings. Reuse a single match automatically.
+Ask which set to use when several match. Name the selected set before Run.
+Ask only for the value that is missing, changed or rejected.
+
+Save an ordinary value through `kaijan_configuration` only if the person asks to
+save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
+or manual login. Keep raw secrets out of chat and tool arguments. For one Run,
+use `params` for ordinary overrides and `privateParams` for scoped secret references.
+These overrides leave saved settings unchanged. The person can run without
+saving settings. Configuration selection never authorizes execution.
 
 Use `loki_test_execute` for the normal combined run, assessment and report.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
