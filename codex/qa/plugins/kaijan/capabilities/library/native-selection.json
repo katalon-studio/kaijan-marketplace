@@ -8,24 +8,25 @@
       "schemaVersion": "change-risk-finder/result/4",
       "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
       "files": {
-        "runtime.mjs": "955be528dc9c9acb6ccb8dc03b89c0582002e0de419af0237bddd669dbdfaf6a",
-        "method.mjs": "70db9462d4872d204047634e7f684ebd4c2acc794ee25a9cefbd6ec51cf98797",
+        "runtime.mjs": "b441e4a0ebd74f163b1eb8139c3351a762841bd5793b3c0b579e95e10966cb8d",
+        "method.mjs": "db020956e5bc813541a497a857028e1f817d7d9469b800c3f2d19a7be806dd2b",
         "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9",
         "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
         "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
         "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5",
         "output.schema.json": "e1dc4387724432f70bfff6c950928b9b12c8050d6901df935015d0cd92f62450",
         "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
-        "node_modules/@katalon-experiments/ai-client/package.json": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
-        "node_modules/@katalon-experiments/ai-client/index.mjs": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
-        "node_modules/@katalon-experiments/ai-client/index.d.mts": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+        "node_modules/@katalon-experiments/ai-client/package.json": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
+        "node_modules/@katalon-experiments/ai-client/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
+        "node_modules/@katalon-experiments/ai-client/index.d.mts": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+        "node_modules/@katalon-experiments/ai-client/README.md": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a"
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
       "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
@@ -96,6 +97,11 @@
           "packageVersion": "2026.10.27-2",
           "filesSha256": "456896f483a81746c52f6708985756461accf6a6c03ddd4aaf2fc02911163dde",
           "sourceCommit": "640b2400067ce1b2cc214f7ac6c5598b28465a33"
+        },
+        {
+          "packageVersion": "2026.10.27-2",
+          "filesSha256": "0bfd497dc37e175e43e44cc2e330c88c96816d67d2ad4bff23eb753ec121c30b",
+          "sourceCommit": "ddc2201a6853aea09ca39efdc568ece588969376"
         }
       ],
       "sourceCommit": "008184b0a616b16768fb0e727e7679e8534aaf97",
@@ -124,15 +130,15 @@
         "github-capture/python_integer.mjs": "1d3341948089022f8c955c49eea14195c30f90a37ed1b2b0e2623776f504d664",
         "github-capture/unicode_bytes.mjs": "39b63c8199c79bbde04171c9759bb0eff592982e704842e62341898c9bf6c59c",
         "github-capture/unicode_properties.mjs": "7cbd7c76e2e6c03925b7f0c48dd7ec6ea19ea7f86b332cef444a7201de7f2d7e",
-        "node_modules/@katalon-experiments/ai-client/README.md": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
-        "node_modules/@katalon-experiments/ai-client/index.d.mts": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
-        "node_modules/@katalon-experiments/ai-client/index.mjs": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+        "node_modules/@katalon-experiments/ai-client/README.md": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
+        "node_modules/@katalon-experiments/ai-client/index.d.mts": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
+        "node_modules/@katalon-experiments/ai-client/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6",
-        "node_modules/@katalon-experiments/ai-client/package.json": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
+        "node_modules/@katalon-experiments/ai-client/package.json": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
         "pr-context-finder/comment-origin.mjs": "a237bafd7ad08ee5b878ca0f3a40a7a98ec3bb555340b01dac52e4c676069f0b",
         "pr-context-finder/core.mjs": "5116743c941ef50ab6749121f3f4b6ce4a1a62b38e7ec391bbd826262fd4c43a",
-        "pr-context-finder/planning/pcf_comment_filter.mjs": "62b93c49e050bddf02de6a1d19d58a2ea88ef6590e6944476d1da23165a4d0bf",
+        "pr-context-finder/planning/pcf_comment_filter.mjs": "e9e6459137f587475c68c565d3d9d8be4a7c69dc422761bfcf3c37602437f40f",
         "pr-context-finder/planning/pcf_comment_origin.mjs": "0f35c964e0892441d7d028ac12a7a17f5bae29f247eddb9fb6a21f3d693391dc",
         "pr-context-finder/planning/pcf_native.mjs": "bd13cfeac468ea1aa8cb498abbab1e29f9e70a9eaaf96bb89dbc3ec4aba868d8",
         "pr-context-finder/planning/pcf_parent_select.mjs": "700c8623abae802b776a79f207ca9fdac01d57b19d5787fbd804634a93ed2cdd",
@@ -181,9 +187,10 @@
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/related/query-prompt.mjs": "5f86a637846e771f22063810af0d4f0331badb18cdd5d2021b94890467499845",
         "pr-context-finder/related/query-agent.mjs": "d330e729fa7998ed92167f09cd3637f5eb54846334d26522ecba4dd1ada0cafe",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
-        "pr-context-finder/related/related-work-planner.mjs": "d292a62fe8ffcb416c0b9dd81f1f64f701aeb1ad2794397193cb1c32ecc53d5b"
+        "pr-context-finder/related/related-work-planner.mjs": "d292a62fe8ffcb416c0b9dd81f1f64f701aeb1ad2794397193cb1c32ecc53d5b",
+        "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "sharedDependency": {
         "name": "@katalon-experiments/github-authored-records@2026.10.26-2",
@@ -290,24 +297,25 @@
         "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55",
         "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "pr-context-finder/planning/pcf_plan.mjs": "73e69241d9b93378591b3680c52073950f1401794775b7de3d10247d20df31f3",
-        "pr-context-finder/planning/pcf_provider.mjs": "074e3b20f2ea885f5b657f4cbeef27fb4c1a5068926bae928b5fa3aae4c998c1",
+        "pr-context-finder/planning/pcf_plan.mjs": "a2209b6320e6c5a769df80c815543794bb8778ee000d2472a4b809af4f1a8aa3",
+        "pr-context-finder/planning/pcf_provider.mjs": "b9e0be5f3a9058124a7b9f20bfc770f6d9df2dccf0b6687a4ddac3b07c6ecc8b",
         "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
         "pr-context-finder/planning/prompts.mjs": "a1263d34092eaf0a61c354cf5d730c449fd5de25b41f7736d0ffb62a00a4beb0",
         "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
-        "node_modules/@katalon-experiments/ai-client/package.json": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
-        "node_modules/@katalon-experiments/ai-client/index.mjs": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
-        "node_modules/@katalon-experiments/ai-client/index.d.mts": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+        "node_modules/@katalon-experiments/ai-client/package.json": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
+        "node_modules/@katalon-experiments/ai-client/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
+        "node_modules/@katalon-experiments/ai-client/index.d.mts": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+        "node_modules/@katalon-experiments/ai-client/README.md": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
         "pr-context-finder/planning/planning-source.mjs": "8a00a037598e2f220ac07e1c5a163e7302e81313fc23a18739d9f0c5e2c562fa",
         "pr-context-finder/planning/risk-model-view.mjs": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058",
         "pr-context-finder/planning/request-instructions.mjs": "a97a0dd08b94c32b3e7d45282fb0311ca4442550703ef3ea124be9cc9666a35f",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a"
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "scope": "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.",
       "diagnosticOverlay": {
@@ -459,25 +467,26 @@
         "work-item-review.mjs": "57447f072018d1a95501a04fe0e635f3634bb131cff4cc0c0889dd5b01450e61",
         "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f",
         "work-item-output.schema.json": "f68dec67e6123da13624ea1106fc8844f43d2729c3590180878d58bcfaba5d34",
-        "runtime.mjs": "955be528dc9c9acb6ccb8dc03b89c0582002e0de419af0237bddd669dbdfaf6a",
-        "method.mjs": "70db9462d4872d204047634e7f684ebd4c2acc794ee25a9cefbd6ec51cf98797",
+        "runtime.mjs": "b441e4a0ebd74f163b1eb8139c3351a762841bd5793b3c0b579e95e10966cb8d",
+        "method.mjs": "db020956e5bc813541a497a857028e1f817d7d9469b800c3f2d19a7be806dd2b",
         "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9",
         "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
         "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
         "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5",
         "output.schema.json": "e1dc4387724432f70bfff6c950928b9b12c8050d6901df935015d0cd92f62450",
         "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
-        "node_modules/@katalon-experiments/ai-client/package.json": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
-        "node_modules/@katalon-experiments/ai-client/index.mjs": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
-        "node_modules/@katalon-experiments/ai-client/index.d.mts": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+        "node_modules/@katalon-experiments/ai-client/package.json": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
+        "node_modules/@katalon-experiments/ai-client/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
+        "node_modules/@katalon-experiments/ai-client/index.d.mts": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+        "node_modules/@katalon-experiments/ai-client/README.md": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
         "work-item-instructions.mjs": "2736771b5ef3478d7c1e3ec82f091821b3615881ca2c887e2cd427a309efa639",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a"
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "scope": "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.",
       "baselineSourceCommit": "8fea2fd74369e75acee6e6f9b147c030f40f024e",
@@ -552,8 +561,8 @@
         "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "experiments/work-verifier/supplied-evidence.mjs": "d4e5e3fe06e75d7ea88ecb497f7a3ca5118e7b05b709856bcfa94eae319aa40d",
-        "experiments/provider-transport/index.mjs": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+        "experiments/work-verifier/supplied-evidence.mjs": "1573fb5e2c04b71b9a719dff2d825a6bee883c2ba65b8ab6bdef9f77a75f9680",
+        "experiments/provider-transport/index.mjs": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
         "experiments/provider-transport/litellm-route.mjs": "be3c46a1c2dfec8834f92d9d8704c481f3a94e67448ec767b81d30afea9111c6",
         "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
         "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020",
@@ -564,17 +573,18 @@
         "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23",
         "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
         "experiments/work-verifier/assessment-contract.mjs": "2022ca826be08ffff2dc920c505a9f0796606636cb1b3c3aac666ae612dea3aa",
-        "experiments/work-verifier/assessment-runtime.mjs": "4e93eb7e9ebbfcbe69878ea1db916f0ebb8695f0c424d85805e68d6ca8b93ed7",
+        "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e",
         "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
         "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f",
         "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b",
         "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8",
         "experiments/work-verifier/request-instructions.mjs": "bbd0b95689d20ed6c74d9d5c571ef739a277b0f6be085a01dd408a25ebd4cbe3",
-        "experiments/context-finder/planning/supplement-instructions.mjs": "47ed86cf2964ffd2a0ace67de11a7088c1fa4c24611545f8824b1c7eaabda6f3",
+        "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12",
         "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
-        "experiments/context-finder/planning/agent-generation.mjs": "e53d786d15d67210d023e3efb959e35066f740ab6e64795a37efccc4a321d69d",
-        "experiments/work-verifier/planner-recap.mjs": "79010ace0c7f762da5ce9c6c05d1607417c5bb5e541ba65194cfa5e0ef07d4c2"
+        "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
+        "experiments/work-verifier/planner-recap.mjs": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
+        "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "assets": {
         "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json",
@@ -687,7 +697,7 @@
         "lib/jev-page-context.mjs": "fa083f4d651b73859ba94dc96df2cd1da996a8529309868a57a1c906971d942c",
         "lib/jev-seed-plan.mjs": "bab3893cfd99a40a3d962685606d6eacce4d180edc31a7e95a7156bf03763a15",
         "lib/map-reviews.mjs": "acf19c9726ac4f66abbe6375bb9f8b1fdbacfce9f12c1767f35e31985c0e6964",
-        "lib/model-provider.mjs": "98f0dbf82e8c86c3ffc2fe0f7d875ff26e400265569b1a3ecb46be1c89947615",
+        "lib/model-provider.mjs": "b851904f0e6baa9ae745d732899e1da281dd9b2210d0052ff5077e17b226ccbb",
         "lib/pipeline-error.mjs": "7b3a649eef35f74c6c297ce3d601819b6ce58f18407e278e2eba8c8f766bee18",
         "lib/python-data-semantics.mjs": "b3e8664d5c3d14ae65d75488c808e15c5d0e576a8a1fded7ed6e7edd43a6d6f4",
         "lib/source-hash.mjs": "e5e57f42f524561d2b589b6d2b4e5ea030ee11ef6c2f1c9dae5976dd3066bf53",
@@ -704,17 +714,17 @@
         "package.json": "6f6e987cc1c3db4c1549c2fc36068e4a7ffbb176e8b9a2f247ac4657baaf4c16",
         "promotion.json": "64e92de1d7b07b4aa41970bbf7ed3eeb1d8da7ae9cb8117dd15f814130e785a1",
         "published-license-notices.json": "11117612e071cd5d39514d555383f940a89054dc97fc99cf559674b772837a69",
-        "README.md": "6f657ac206e26f89d1a187019d4c2b21825a7fb1fea4640635a14e788864be0f",
-        "scripts/extract_ui_visible_elements.mjs": "8ae1c98b82ee6a5b35cedef4a92bd7f9e8cc2c228bc3706704179fe32668501c",
+        "README.md": "efae9b0046e6b238752d1223fbf30bb2f9870090e96d811233b256a79504d0c8",
+        "scripts/extract_ui_visible_elements.mjs": "f053593d9865991cac3e90972cf5432fe9cc07805e5093b2ebd4f1710f522ee7",
         "scripts/ui_binding_batches.mjs": "2991e584dfbb5f63990eed5511b6ffe22406270a0f32eab2cb37e3f4645bf137",
-        "scripts/ui_binding_read_lines.mjs": "e5b1232f6876361e4f56c3bd1158311dc5030fab8a47b5cede96fcede90cd538",
+        "scripts/ui_binding_read_lines.mjs": "9d5bf68dacc264022db8b9086ad2b9aec51ddbb26751cdd8f188c40ad85429ce",
         "scripts/ui_binding_retrieval.mjs": "f2287101b46a098435b9b470d5a4f99cf2df4cc7c95d09e86c4e6b3f74a196ab",
         "scripts/ui_compiler_imports.mjs": "6fa711f652e01d011bfb9f85374a2e5084557b476b197f9028cd6c4a32d954ef",
         "scripts/ui_continuation_context.mjs": "da999cf220d695c80058d966ee23f958bdb9a7f2c3156ff1a255644836f6b418",
         "scripts/ui_folder_inventory.mjs": "38036169a28b8d694b45643a6b57d88792cf1860148cb9a960a299a4bea3380f",
         "scripts/ui_http_transport.mjs": "0f76bcc5e3e5c144d37b50320bf8af7fc6b0d6ba3c6ee496fe70eb05291221a8",
         "scripts/ui_jev_context.mjs": "8947b823b0ca508778ae06f03d9c165cd10eb03f69a3f352b741c5716033dad5",
-        "scripts/ui_model_archive.mjs": "dc2a5ed940365bf1d3b9f594b8705eef599ce44bf3a9fa22c56ae0bd7d2992fa",
+        "scripts/ui_model_archive.mjs": "2bd013d5532a7e3effc07a3a0ac94b0c0d8ca405e8a48c429a908d30aea10ec4",
         "scripts/ui_page_binding_expressions.mjs": "8b6b9999a0bbb4cdfd4d887b21f8addb58c0685ed083e318064238c00aead831",
         "scripts/ui_page_bindings.mjs": "e045b699c424b01881e37042e62a13096e048de7c09debb3eb4028709e387e40",
         "scripts/ui_page_map_core.mjs": "724fe3870c5cc994f0f0b1ab6a2a9e50b823e4d23e1c3001507d72ee42f747d7",
@@ -734,7 +744,7 @@
         "tsconfig.json": "f0b1e3a2cdb22faf4141009ed5321c5f23a924d5a928878523adeb6629c8cc02",
         "extraction.json": "120f15677f5d618f7a70dd1bce0e32133aa995c5110a573a018b267db88f23a8",
         "lib/folder-review-state.mjs": "6e15ca350731ec5dcaa537fcc6881dfb9168b19467906d5a59e4e2039c92f326",
-        "lib/folder-source-discovery.mjs": "5ba2632c173071605001c3c5af64d415c588c00c8892d80448f1bb7f1ea5cab8",
+        "lib/folder-source-discovery.mjs": "708fe9a8dc8016e1e95123d4e8d2e49a1cdf8b520f014c52a3227916273395da",
         "lib/map-invocation.mjs": "94b18e82dc6bab9afa1338c9df23d981b2cdd9e06a2a17fc3db31aa13bc51fda",
         "lib/model-tariff.mjs": "09bfc1b721d30c939990c6450f0e49ae26924a47d8c5fa7d9c8c137d37bdbc28",
         "lib/page-schema.mjs": "a53da32f431e142492bc14aa6bc8f41b626649c37016e630682a2026ff94e9d4",
@@ -1261,12 +1271,12 @@
   "files": {
     "change-risk/runtime.mjs": {
       "source": "packages/risk-finder/runtime.mjs",
-      "sha256": "955be528dc9c9acb6ccb8dc03b89c0582002e0de419af0237bddd669dbdfaf6a",
+      "sha256": "b441e4a0ebd74f163b1eb8139c3351a762841bd5793b3c0b579e95e10966cb8d",
       "originalSha256": "88ec36963adff67b049029c0107df559f4479c889bb4dc7de1939ed2f00b672f"
     },
     "change-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "70db9462d4872d204047634e7f684ebd4c2acc794ee25a9cefbd6ec51cf98797",
+      "sha256": "db020956e5bc813541a497a857028e1f817d7d9469b800c3f2d19a7be806dd2b",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "change-risk/question-output.mjs": {
@@ -1301,17 +1311,17 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/package.json": {
       "source": "packages/provider-transport/package.json",
-      "sha256": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
+      "sha256": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
       "originalSha256": "4ac33ebdebdad528edee19f764b222ceec272503d9de885b64eac1952a39043d"
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/index.d.mts": {
       "source": "packages/provider-transport/index.d.mts",
-      "sha256": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+      "sha256": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
       "originalSha256": "9d0f6dbc4082ad27b8dd2d3e8841df26c8c2747f13caa3b150cbf0c716e18ca0"
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
@@ -1321,7 +1331,7 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
+      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
       "derivation": "Change-risk Planner SDK transport (#3752)."
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
@@ -1336,7 +1346,7 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+      "sha256": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "work-item-risk/work-item-review.mjs": {
@@ -1356,12 +1366,12 @@
     },
     "work-item-risk/runtime.mjs": {
       "source": "packages/risk-finder/runtime.mjs",
-      "sha256": "955be528dc9c9acb6ccb8dc03b89c0582002e0de419af0237bddd669dbdfaf6a",
+      "sha256": "b441e4a0ebd74f163b1eb8139c3351a762841bd5793b3c0b579e95e10966cb8d",
       "originalSha256": "88ec36963adff67b049029c0107df559f4479c889bb4dc7de1939ed2f00b672f"
     },
     "work-item-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "70db9462d4872d204047634e7f684ebd4c2acc794ee25a9cefbd6ec51cf98797",
+      "sha256": "db020956e5bc813541a497a857028e1f817d7d9469b800c3f2d19a7be806dd2b",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "work-item-risk/question-output.mjs": {
@@ -1396,22 +1406,22 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/package.json": {
       "source": "packages/provider-transport/package.json",
-      "sha256": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
+      "sha256": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
       "originalSha256": "4ac33ebdebdad528edee19f764b222ceec272503d9de885b64eac1952a39043d"
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/index.d.mts": {
       "source": "packages/provider-transport/index.d.mts",
-      "sha256": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+      "sha256": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
       "originalSha256": "9d0f6dbc4082ad27b8dd2d3e8841df26c8c2747f13caa3b150cbf0c716e18ca0"
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88",
+      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
       "derivation": "Work-item risk Planner SDK transport (#3746)."
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
@@ -1431,7 +1441,7 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+      "sha256": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/github-capture/authored_eligibility.mjs": {
@@ -1521,17 +1531,17 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+      "sha256": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/index.d.mts": {
       "source": "packages/provider-transport/index.d.mts",
-      "sha256": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+      "sha256": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
       "originalSha256": "9d0f6dbc4082ad27b8dd2d3e8841df26c8c2747f13caa3b150cbf0c716e18ca0"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": {
@@ -1546,7 +1556,7 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/package.json": {
       "source": "packages/provider-transport/package.json",
-      "sha256": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
+      "sha256": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
       "originalSha256": "4ac33ebdebdad528edee19f764b222ceec272503d9de885b64eac1952a39043d"
     },
     "pr-context/pr-context-finder/comment-origin.mjs": {
@@ -1561,7 +1571,7 @@
     },
     "pr-context/pr-context-finder/planning/pcf_comment_filter.mjs": {
       "source": "packages/context-finder/selected/related/pr-context-finder/planning/pcf_comment_filter.mjs",
-      "sha256": "62b93c49e050bddf02de6a1d19d58a2ea88ef6590e6944476d1da23165a4d0bf",
+      "sha256": "e9e6459137f587475c68c565d3d9d8be4a7c69dc422761bfcf3c37602437f40f",
       "originalSha256": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b"
     },
     "pr-context/pr-context-finder/planning/pcf_comment_origin.mjs": {
@@ -1800,12 +1810,12 @@
     },
     "planning/pr-context-finder/planning/pcf_plan.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/pcf_plan.mjs",
-      "sha256": "73e69241d9b93378591b3680c52073950f1401794775b7de3d10247d20df31f3",
+      "sha256": "a2209b6320e6c5a769df80c815543794bb8778ee000d2472a4b809af4f1a8aa3",
       "originalSha256": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5"
     },
     "planning/pr-context-finder/planning/pcf_provider.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/pcf_provider.mjs",
-      "sha256": "074e3b20f2ea885f5b657f4cbeef27fb4c1a5068926bae928b5fa3aae4c998c1",
+      "sha256": "b9e0be5f3a9058124a7b9f20bfc770f6d9df2dccf0b6687a4ddac3b07c6ecc8b",
       "originalSha256": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee"
     },
     "planning/pr-context-finder/planning/pcf_records.mjs": {
@@ -1825,17 +1835,17 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/package.json": {
       "source": "packages/provider-transport/package.json",
-      "sha256": "9054ca08534b1e8350aecee184e24b8ba6470bf4827579318596c76360027303",
+      "sha256": "bd453faa9787c555b6fdecd9848787405b8945b4f73297207e1e6b9150a63ea9",
       "originalSha256": "4ac33ebdebdad528edee19f764b222ceec272503d9de885b64eac1952a39043d"
     },
     "planning/node_modules/@katalon-experiments/ai-client/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
     },
     "planning/node_modules/@katalon-experiments/ai-client/index.d.mts": {
       "source": "packages/provider-transport/index.d.mts",
-      "sha256": "6254a46b9155aebe784c785c6eaacff33208b5974f1f0c5e885a59653fb635bc",
+      "sha256": "a9b6e2cf160bfee985670274bf8c84fbc04f46a5162e41d9cbb7cdba60fc9f80",
       "originalSha256": "9d0f6dbc4082ad27b8dd2d3e8841df26c8c2747f13caa3b150cbf0c716e18ca0"
     },
     "planning/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
@@ -1850,7 +1860,7 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "eb4033e2bb0aaa40d53be19d490b006734491cd92e205ddf8b4cb85e48450ce8",
+      "sha256": "9396f2ad0ed4fcf2062a223fde34a18c59d26b711791c7dc40e52696190b61c0",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "planner-loop-source/experiments/context-finder/planning/supplement.mjs": {
@@ -1895,7 +1905,7 @@
     },
     "planner-loop-source/experiments/provider-transport/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
     },
     "planner-loop-source/experiments/provider-transport/litellm-route.mjs": {
@@ -2062,7 +2072,7 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88"
+      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1"
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
@@ -2070,7 +2080,7 @@
     },
     "planner-loop-source/experiments/context-finder/planning/agent-generation.mjs": {
       "source": "packages/context-finder/planning/agent-generation.mjs",
-      "sha256": "e53d786d15d67210d023e3efb959e35066f740ab6e64795a37efccc4a321d69d",
+      "sha256": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
       "derivation": "Shared one-turn SDK generation for Planner and evidence-only Runner (#3774)."
     },
     "pr-context/pr-context-finder/related/query-prompt.mjs": {
@@ -2083,7 +2093,7 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "8549958b8f611aaad92a80df192b134969b169e73b919fd65cef709c43b53e88"
+      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
@@ -2102,13 +2112,33 @@
     },
     "planner-loop-source/experiments/work-verifier/planner-recap.mjs": {
       "source": "packages/work-verifier/planner-recap.mjs",
-      "sha256": "79010ace0c7f762da5ce9c6c05d1607417c5bb5e541ba65194cfa5e0ef07d4c2",
+      "sha256": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     },
     "planner-loop-source/experiments/work-verifier/assessment.mjs": {
       "source": "packages/work-verifier/assessment.mjs",
       "sha256": "fcbaac0526ed9ea7d93fa2f58e938706925f1aa26c2a515fe8daddddfe7fc4a2",
       "derivation": "Human-selected report-oriented assessment without model citation bookkeeping (#4305)."
+    },
+    "change-risk/node_modules/@katalon-experiments/ai-client/retention.mjs": {
+      "source": "packages/provider-transport/retention.mjs",
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
+    },
+    "work-item-risk/node_modules/@katalon-experiments/ai-client/retention.mjs": {
+      "source": "packages/provider-transport/retention.mjs",
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
+    },
+    "pr-context/node_modules/@katalon-experiments/ai-client/retention.mjs": {
+      "source": "packages/provider-transport/retention.mjs",
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
+    },
+    "planning/node_modules/@katalon-experiments/ai-client/retention.mjs": {
+      "source": "packages/provider-transport/retention.mjs",
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
+    },
+    "planner-loop-source/experiments/provider-transport/retention.mjs": {
+      "source": "packages/provider-transport/retention.mjs",
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
     }
   },
   "bundledSources": {
@@ -2153,7 +2183,7 @@
       "originalPath": "experiments/work-verifier/supplied-evidence.mjs"
     },
     "packages/provider-transport/index.mjs": {
-      "sha256": "4c04986c499a2192d92f357573fe8aa60f1fed59af2eb3b7c6ae3df9068608e7",
+      "sha256": "1e73b84650bfd6415ccbfa7817fec9032dc7eb679bea327a01da3cd7576239d1",
       "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3",
       "originalPath": "experiments/provider-transport/index.mjs"
     },
@@ -2287,7 +2317,7 @@
       "sha256": "acf19c9726ac4f66abbe6375bb9f8b1fdbacfce9f12c1767f35e31985c0e6964"
     },
     "packages/ui-modeler/lib/model-provider.mjs": {
-      "sha256": "98f0dbf82e8c86c3ffc2fe0f7d875ff26e400265569b1a3ecb46be1c89947615"
+      "sha256": "b851904f0e6baa9ae745d732899e1da281dd9b2210d0052ff5077e17b226ccbb"
     },
     "packages/ui-modeler/lib/pipeline-error.mjs": {
       "sha256": "7b3a649eef35f74c6c297ce3d601819b6ce58f18407e278e2eba8c8f766bee18"
@@ -2347,7 +2377,7 @@
       "sha256": "2991e584dfbb5f63990eed5511b6ffe22406270a0f32eab2cb37e3f4645bf137"
     },
     "packages/ui-modeler/scripts/ui_binding_read_lines.mjs": {
-      "sha256": "e5b1232f6876361e4f56c3bd1158311dc5030fab8a47b5cede96fcede90cd538"
+      "sha256": "9d5bf68dacc264022db8b9086ad2b9aec51ddbb26751cdd8f188c40ad85429ce"
     },
     "packages/ui-modeler/scripts/ui_binding_retrieval.mjs": {
       "sha256": "f2287101b46a098435b9b470d5a4f99cf2df4cc7c95d09e86c4e6b3f74a196ab"
@@ -2368,7 +2398,7 @@
       "sha256": "8947b823b0ca508778ae06f03d9c165cd10eb03f69a3f352b741c5716033dad5"
     },
     "packages/ui-modeler/scripts/ui_model_archive.mjs": {
-      "sha256": "dc2a5ed940365bf1d3b9f594b8705eef599ce44bf3a9fa22c56ae0bd7d2992fa"
+      "sha256": "2bd013d5532a7e3effc07a3a0ac94b0c0d8ca405e8a48c429a908d30aea10ec4"
     },
     "packages/ui-modeler/scripts/ui_page_binding_expressions.mjs": {
       "sha256": "8b6b9999a0bbb4cdfd4d887b21f8addb58c0685ed083e318064238c00aead831"
@@ -2434,7 +2464,7 @@
     "packages/ui-modeler/lib/folder-source-discovery.mjs": {
       "originalSha256": null,
       "derivation": "Selected/shared source after research-method extraction #2173.",
-      "sha256": "5ba2632c173071605001c3c5af64d415c588c00c8892d80448f1bb7f1ea5cab8"
+      "sha256": "708fe9a8dc8016e1e95123d4e8d2e49a1cdf8b520f014c52a3227916273395da"
     },
     "packages/ui-modeler/lib/map-invocation.mjs": {
       "originalSha256": null,
@@ -2530,7 +2560,7 @@
       "derivation": "Exact repeated response-schema sharing for new assessment representation 12; expanded local validation and historical requests retained (#3317)."
     },
     "packages/context-finder/planning/agent-generation.mjs": {
-      "sha256": "e53d786d15d67210d023e3efb959e35066f740ab6e64795a37efccc4a321d69d",
+      "sha256": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
       "derivation": "Shared one-turn SDK generation for Planner and evidence-only Runner (#3774)."
     },
     "packages/work-verifier/finding-record-links.mjs": {
@@ -2539,12 +2569,15 @@
       "derivation": "Explicit model-returned finding record/citation pairs for assessment representation 13; strict binding and original candidates preserved (#3893)."
     },
     "packages/work-verifier/planner-recap.mjs": {
-      "sha256": "79010ace0c7f762da5ce9c6c05d1607417c5bb5e541ba65194cfa5e0ef07d4c2",
+      "sha256": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     },
     "packages/work-verifier/assessment.mjs": {
       "sha256": "fcbaac0526ed9ea7d93fa2f58e938706925f1aa26c2a515fe8daddddfe7fc4a2",
       "derivation": "Human-selected report-oriented assessment without model citation bookkeeping (#4305)."
+    },
+    "packages/provider-transport/retention.mjs": {
+      "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
     }
   },
   "assets": {

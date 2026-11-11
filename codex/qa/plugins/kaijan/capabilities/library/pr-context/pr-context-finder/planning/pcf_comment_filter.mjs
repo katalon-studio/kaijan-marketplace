@@ -1,4 +1,4 @@
-import { providerConnection } from "@katalon-experiments/ai-client";
+import { providerConnection, zdrRequest } from "@katalon-experiments/ai-client";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -410,6 +410,7 @@ export class CommentFilter {
     }
   }
   async ask(body, root) {
+    body = zdrRequest(body, "openrouter");
     need(this.mode === "jev", "actor_only_has_no_native_stage");
     const wire = encoded(body);
     need(this.calls < this.max_calls, "filter_request_or_call_bound");

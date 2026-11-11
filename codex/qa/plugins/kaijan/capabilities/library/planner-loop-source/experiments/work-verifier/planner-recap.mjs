@@ -51,12 +51,19 @@ export function preparePlannerRecap(input) {
       input?.schema === "kaijan.planner-recap-assessment/7" ||
       input?.schema === "kaijan.planner-recap-assessment/8" ||
       input?.schema === "kaijan.planner-recap-assessment/9" ||
-      input?.schema === "kaijan.planner-recap-assessment/10",
+      input?.schema === "kaijan.planner-recap-assessment/10" ||
+      input?.schema === "kaijan.planner-recap-assessment/11",
   );
   assert(
     typeof input.previousResponseId === "string" &&
       input.previousResponseId.length > 0,
   );
+  const stateless = input.schema === "kaijan.planner-recap-assessment/11";
+  if (stateless)
+    assert(
+      Array.isArray(input.plannerHistory) && input.plannerHistory.length,
+      "Original Planner context required",
+    );
   const { request, tests } = input;
   const ids = request.planRef.selectedTestIds;
   assert(ids.length > 0 && new Set(ids).size === ids.length);
@@ -74,7 +81,8 @@ export function preparePlannerRecap(input) {
   });
   const explicitFindingReferences =
     input.schema === "kaijan.planner-recap-assessment/9" ||
-    input.schema === "kaijan.planner-recap-assessment/10";
+    input.schema === "kaijan.planner-recap-assessment/10" ||
+    stateless;
   const bugFinding =
     explicitFindingReferences ||
     input.schema === "kaijan.planner-recap-assessment/7" ||
@@ -125,9 +133,9 @@ export function preparePlannerRecap(input) {
     schema.properties.test_results.minItems = ids.length;
     schema.properties.test_results.maxItems = ids.length;
   }
-  // The Planner owns the task, sources and plan already. This input is only
-  // new Runner observations. Local IDs/digests/expectations are not a packet
-  // to resend; output membership lives in the response schema instead.
+  // The only new evidence is the Runner recap. Stateless requests replay the
+  // original Planner input/output from its private archive; response membership
+  // remains constrained by the selected tests in the output schema.
   const requestBody = {
     model: "gpt-6-luna",
     // v1–v3 stored low-effort request hashes. v4 and later use medium.
@@ -137,11 +145,12 @@ export function preparePlannerRecap(input) {
           ? "medium"
           : "low",
     },
-    previous_response_id: input.previousResponseId,
+    ...(stateless ? {} : { previous_response_id: input.previousResponseId }),
     // Older saved assessments retain their original request and hash.
     store:
-      explicitFindingReferences ||
-      input.schema === "kaijan.planner-recap-assessment/8",
+      !stateless &&
+      (explicitFindingReferences ||
+        input.schema === "kaijan.planner-recap-assessment/8"),
     instructions: explicitFindingReferences
       ? bugFindingInstructions.replace(
           "Report distinct supported findings with their selected test IDs and recap steps.",
@@ -162,7 +171,12 @@ export function preparePlannerRecap(input) {
                 ].includes(input.schema)
               ? expectationInstructions
               : instructions,
-    input: JSON.stringify(steps),
+    input: stateless
+      ? [
+          ...input.plannerHistory,
+          { role: "user", content: JSON.stringify(steps) },
+        ]
+      : JSON.stringify(steps),
     max_output_tokens: LIMITS.outputTokens,
     text: {
       format: {
@@ -185,7 +199,12 @@ export function projectPlannerRecap(prepared, candidate) {
   const verified = preparePlannerRecap(prepared.input);
   assert.equal(prepared.input_sha256, verified.input_sha256);
   assert.equal(prepared.request_sha256, verified.request_sha256);
-  if (verified.input.schema === "kaijan.planner-recap-assessment/10")
+  if (
+    [
+      "kaijan.planner-recap-assessment/10",
+      "kaijan.planner-recap-assessment/11",
+    ].includes(verified.input.schema)
+  )
     return projectAvailablePlannerRecap(verified, candidate);
   const explicitFindingReferences =
     verified.input.schema === "kaijan.planner-recap-assessment/9";
@@ -573,6 +592,11 @@ function projectAvailablePlannerRecap(prepared, candidate) {
 
 export async function assessPlannerRecap(input, options) {
   requireManagedBinding(options?.env ?? process.env);
+  assert.equal(
+    input?.schema,
+    "kaijan.planner-recap-assessment/11",
+    "Historical assessment requests are read-only; new assessment requires locally retained Planner context",
+  );
   return assessPreparedSuppliedEvidence(
     preparePlannerRecap(input),
     { ...options, agentName: "Planner" },
