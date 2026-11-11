@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "risk-finder/work-item-result/1",
+  "type": "object",
+  "required": [
+    "schema",
+    "method",
+    "evidence_type",
+    "status",
+    "source_bindings",
+    "coverage_details",
+    "assumptions_to_confirm",
+    "question_identity",
+    "limitations",
+    "accounting",
+    "native_result_persisted",
+    "continuation_allowed"
+  ],
+  "properties": {
+    "schema": {
+      "const": "risk-finder/work-item-result/1"
+    },
+    "method": {
+      "const": "work-item-luna-uncertainties/1"
+    },
+    "evidence_type": {
+      "const": "work-item"
+    },
+    "status": {
+      "enum": ["completed", "partial", "refused"]
+    },
+    "assumptions_to_confirm": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "observed_source_statement",
+          "assumption_to_confirm",
+          "question",
+          "why_it_matters",
+          "source_evidence",
+          "evidence_needed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "observed_source_statement": {
+            "type": "string"
+          },
+          "assumption_to_confirm": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "why_it_matters": {
+            "type": "string"
+          },
+          "evidence_needed": {
+            "type": "string"
+          },
+          "source_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "source_id",
+                "kind",
+                "uri",
+                "revision",
+                "line",
+                "quote",
+                "quote_sha256",
+                "semantic_support"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "source_id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": ["intent", "context"]
+                },
+                "uri": {
+                  "type": ["string", "null"]
+                },
+                "revision": {
+                  "type": ["string", "null"]
+                },
+                "line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "quote": {
+                  "type": "string"
+                },
+                "quote_sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "semantic_support": {
+                  "const": "not_verified"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "source_projection": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["schema", "presentation", "catalogSha256"],
+            "properties": {
+              "schema": {
+                "const": "risk-source-relations/1"
+              },
+              "presentation": {
+                "type": "object"
+              },
+              "catalogSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "question_identity": {
+      "type": ["object", "null"]
+    },
+    "accounting": {
+      "type": "object",
+      "required": ["calls_started", "known_cost_usd", "unknown_cost_calls"]
+    },
+    "native_result_persisted": {
+      "type": "boolean"
+    },
+    "continuation_allowed": {
+      "type": "boolean"
+    },
+    "source_bindings": {
+      "type": "array"
+    },
+    "coverage_details": {
+      "type": "object"
+    },
+    "limitations": {
+      "type": "string"
+    }
+  }
+}

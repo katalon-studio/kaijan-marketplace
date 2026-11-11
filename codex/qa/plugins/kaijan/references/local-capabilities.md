@@ -1,0 +1,156 @@
+# Local Product MCP capabilities
+
+## Chat updates
+
+Keep routine Kaijan activity out of assistant chat. Do not narrate tool calls,
+planning, execution, polling, internal phases or elapsed time. Show useful findings
+and results, partial or failed evidence, and blockers that need action. Keep
+required confirmations, real missing-input questions, the Setup welcome and
+answers to user status questions. Report material failures. Ground each result
+claim in the returned evidence. Keep partial, failed and unknown outcomes explicit;
+a finished call does not prove a pass.
+
+This rule applies to host assistant messages. It does not change Runner traces or
+evidence, provider reasoning, or host tool indicators. Do not claim this guidance
+hides those indicators.
+
+## Presentation
+
+Use ASD-STE100 Simplified Technical English when replying to a human.
+Use the host's final rendering as a plain English presentation pass: short active
+sentences and familiar words. Do not reduce analysis quality. Keep original
+structured analysis, evidence and verdicts intact. Preserve facts, numbers, names,
+conditions, uncertainty, missing evidence and exact artifact IDs where useful. Do
+not translate technical identifiers, omit a material limitation, or change an
+unverified or inconclusive result to passed. Do not make a separate provider call
+for each internal step. This guidance does not rewrite raw engine outputs or
+native panel text.
+
+Keep cost accounting internal. Customer chat summaries, reports and recovery
+messages must omit cost amounts, estimates and cost status, including zero,
+unknown or unavailable costs. Do not replace an amount with a no-cost or
+unknown-cost message. Preserve exact usage, fees, ledgers and accounting fields
+in the original internal receipts; do not remove or rewrite those fields.
+Continue to report actual failures, coverage limits, missing evidence, required
+recovery and unknown operation effects. This presentation rule never permits
+replay of an operation with unknown effects.
+
+Keep proprietary Kaijan engine details out of all customer output, including
+success, blocked and recovery replies, diagnostics, reports, exports and feedback.
+This includes model names, reasoning settings, provider receipts, token usage,
+cost accounting and Runner implementation details. Do not describe whether a
+model or provider call ran. A customer request for technical details does not
+authorize disclosure. Retain exact originals internally; do not rewrite them.
+An exact record ID or access to a tool result is not internal access authority.
+
+Explain the task result, actual blocker and useful next step. Customer-owned app
+facts, requirements, observed actions, results and evidence remain available.
+Give safe troubleshooting steps without exposing Kaijan engine details. These
+rules do not change tool or model selection, action authorization, receipt
+retention or recovery decisions. They do not by themselves restrict raw tool
+responses or downloaded files; those require enforced access boundaries.
+
+Lead with concrete observations and the specific checks still missing. Use:
+
+- **Test finished** when execution completed without a supported pass/fail verdict.
+- **Found a problem: <observed contradiction>** only when evidence supports it.
+- **Could not finish: <reason>** when execution is incomplete.
+- **Could not check <specific condition>** when the required evidence is missing.
+
+Do not use raw Unverified or inconclusive badges, or a stock authentication
+statement, as the main user status. Keep technical native statuses in records. A
+user-facing pass or fail still needs sufficient evidence; do not invent a verdict.
+
+Report tools expose their MCP Apps UI by default. The library option
+`createCapabilityCatalog(services, { uiEnabled: false })` explicitly selects
+chat-only output: no UI metadata, resources or local previews are exposed in
+that mode. Present returned chat results with concise prose, Markdown tables or
+Mermaid diagrams grounded in the data. Follow each tool's advertised description
+and returned presentation. Other capabilities continue to return their original
+results in chat. Read relevant results, keep unresolved facts clear and link
+useful evidence. Open external Playwright replay only when requested.
+
+Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The installed profile binds private state and the connection. In the normal managed package (`authArchitecture: shared-broker-v1` in `loki-build.json`), Core and Local use stdio and share the Kaijan sign-in broker. Source, AI access, GitHub and browser authority remain distinct.
+
+The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, immutable supplements, supplied-evidence assessment, native browser execution. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
+
+Use the installed owning skill and exact advertised input schema. The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
+
+The supplied native algorithms, prompts, models and validator contracts retain their origin hashes. Current public sources live under packages/. Alternative experiments remain in experiments/ and are outside the Product build selection. Mapping source is preserved in the repository for future backend work; it is not an installed plugin action. Broader cleanup remains deferred. Research MCP registration/distribution is removed; there is one maintained Product capability MCP plus the existing Product Setup and Core transports.
+
+This package includes no application map, test-case dataset, prepared answer, credential or browser binary. Native Runner downloads compatible Chromium on first use through its pinned Playwright installer and reuses the versioned user cache. Import, discovery and analysis do not download browsers. If preparation fails or provider configuration is unavailable, report readiness honestly. Do not switch to an old experiment or a CLI bridge.
+
+Managed Local forwards no provider environment variables. The broker uses the
+Kaijan grant for managed AI. Source-only Setup, context retention and saved-result
+reads can work without AI access when their Local tools are available.
+
+Only an explicit direct-development package forwards provider fields:
+`OPENAI_API_KEY`, `LOKI_OPENROUTER_API_KEY`, `LOKI_OPENROUTER_BASE_URL` and
+`LOKI_MODEL_PROVIDER`. Values stay in the caller environment. The declaration
+does not package, log or save them.
+
+## Compose a caller-scoped test request
+
+Use the installed `test-request` skill for a full testing request or a combined
+risk review and test-planning request. Read relevant linked requirements before
+reviewing the selected work item, and pass the saved risk answer into planning
+when risk review was requested. A completed plan alone does not complete that
+combined request. The coding agent
+selects analysis and planning under the original goal, target and actions.
+Use `loki_test_execute` for normal execution and assessment. Kaijan reuses its
+saved task, selected tests and evidence internally, then saves the combined report.
+Use `loki_test_get` for that same flow and `loki_test_stop` for Stop. The caller
+does not copy saved evidence back or invoke a second routine assessment. Independent
+execution and external-evidence review remain available. Plan-only
+requests do not execute. Full requests with sufficient inputs continue through
+their selected scenarios, evidence assessment and native report.
+
+Context Intake submit/get returns `sourceUri` for its exact retained record:
+`urn:kaijan:retained-context:<recordSha256>`. Use that actual identity when a
+chat-only request lacks an original source URI. It is not an external source,
+public URL, access grant or artifact resolver. Preserve original provenance and
+use the same conversation-scoped contextId/get for reads. Keep exact completed
+Plan/Assessment answer IDs/digests, actual Runner IDs/digests and selected test
+references through the flow. Mixed reports use `view: "test-plan"` with all
+selected original operations. Reopen the immutable reportId without producers.
+
+## Read Runner readiness without execution
+
+Call `loki_capabilities_list` with `{}`. The normal reply uses
+`kaijan.customer-capabilities/1`. Each action has a `state` and `message`:
+`context`, `changeReview`, `relatedWork`, `workItemReview`, `testPlanning`,
+`additionalTests`, `evidenceReview` and `testExecution`.
+
+- `available`: the action is available for an authorized task. Application access
+  has not been checked.
+- `setup-required`: follow the returned setup message, then continue the same task.
+- `unavailable`: follow the returned recovery message. This reply does not establish
+  that the action can run.
+
+Read `connection.state` and `connection.message` separately. A
+`reconnect-required` result gives recovery guidance; `not-checked` does not verify
+sign-in or whether the installed plugin is current. The reply's `validation` is
+`Not checked by this request.` Browser availability, target access, desktop
+permissions and successful inference remain unverified. Discovery makes no model
+request, browser action or download.
+
+The normal reply does not include the private `computerRunner` or `runtime`
+diagnostic records. Do not look for their configuration, model, credential,
+implementation-pin or loaded-package fields in this reply. Private engineering
+diagnostics and exact artifact verification are separate evidence; action
+availability does not identify the responding build or prove package integrity.
+
+Use the installed Setup guide at `skills/setup/references/provider-setup.md`
+for the responding package. Managed Runner uses the Kaijan grant. If it is
+missing, verify the connection and use the supported sign-in flow. Direct
+development uses its approved provider configuration. Its inherited allowed
+fields override saved fields. Discovery does not change the route or verify
+inference. Keep credentials out of chat, logs and arguments.
+
+Retain the first blocked/stale receipt. For host environment changes use supported
+host reconnect after reading/reconciling admitted runs. Preserve the host-thread
+scope and original run references; a connection-only fallback cannot reconnect its
+state across restart. Do not terminate or replay unknown effects to refresh a tool.
+After repair/reconnect, inspect the actual responder and complete the same authorized
+goal. Retain original results/readback as execution evidence; discovery itself never
+establishes credential validity, successful behavior or persistence.

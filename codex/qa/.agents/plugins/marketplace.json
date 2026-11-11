@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "kaijan-qa",
+      "name": "kaijan",
       "source": {
         "source": "local",
-        "path": "./plugins/kaijan-qa"
+        "path": "./plugins/kaijan"
       },
       "policy": {
         "installation": "AVAILABLE",

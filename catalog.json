@@ -21,15 +21,15 @@
       "platform": "codex",
       "plugin": "kaijan",
       "profile": "qa",
-      "path": "codex/qa/plugins/kaijan-qa",
+      "path": "codex/qa/plugins/kaijan",
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "qa",
-        "version": "0.5.0-build.42160482980.1",
-        "buildId": "bdda277b-8dc2-48b6-99d5-c884701b83e8",
-        "sourceRevision": "6b07fadf59a50c28086129c850e679233c99a943",
-        "treeDigest": "849b71d9628c6067a15c639c9f17ff2e685d1079246d946dce2be3adf3fcbeeb",
-        "run": "42160482980",
+        "version": "0.6.0-rc.64",
+        "buildId": "fedd7207-be8b-426f-82ac-1f9a78af007f",
+        "sourceRevision": "7c2941061754403b8f0cf14a7d639a39b4e24756",
+        "treeDigest": "cdac75d84c15db79cf5de8ce6786bd946e913f189e419ef0592403347b14e7e1",
+        "run": "42996828071",
         "attempt": "1"
       }
     }
