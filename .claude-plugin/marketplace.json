@@ -7,11 +7,11 @@
   "plugins": [
     {
       "name": "kaijan",
-      "version": "0.5.0-claude.42966705718.1",
+      "version": "0.5.0-rc.1",
       "source": {
         "source": "archive",
-        "url": "https://github.com/katalon-studio/kaijan-marketplace/releases/download/claude-v0.5.0-claude.42966705718.1/kaijan-0.5.0-claude.42966705718.1-darwin-arm64-plugin.zip",
-        "sha256": "5d6cab3db4da3494d39c4431e33c57895a916e87967bebead0a91c2392fd02ec"
+        "url": "https://github.com/katalon-studio/kaijan-marketplace/releases/download/claude%2Fkaijan%2Fv0.5.0-rc.1/kaijan-0.5.0-rc.1-darwin-arm64-plugin.zip",
+        "sha256": "e300aea783f9e288e6b8a93654221aa353f553ec9e04eabc82e6ca8a68b5f02f"
       }
     }
   ]
