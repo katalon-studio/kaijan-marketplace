@@ -304,6 +304,13 @@ transition-dependent parse path and remaining full audit are still open.
 
 The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Use a fresh requestKey for a distinct read-only attempt after a failure; retain original receipts and unknown charges. A conflict reports request_key_conflict, no dispatch, and a fresh suggested key. Same-key retries recover only their original attempt. Browser/desktop effects retain their independent no-replay boundary. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Live related-work queries reacquire GitHub data by default; an explicit correlation key reads the original receipt, never fresh data. Normal public tools expose only these queries and the completed-answer reader. Direct library start/get/stop APIs remain private compatibility entrypoints. Cancellation of the final coalesced caller aborts native work and waits for settlement; another active caller retains ownership. A process loss preserves a fence for that advisory request identity, with no automatic takeover. A distinct correlation or changed provider configuration can start a separate read-only attempt; it does not rewrite or resolve the original charge. Old input-wide fences are retained as historical artifacts, not global bans on future analysis.
 
+The private retained-output fallback used by operation/query errors preserves a
+complete regular `result.json` reference without the former 256 MiB cutoff. It
+streams the full byte count and SHA-256 through 64 KiB chunks, including growth
+after the initial file stat. The reference explicitly carries
+`semanticAssessment: "not-performed"`; unknown/error state and replay behavior
+remain separate. Missing output remains absent and linked files are not opened.
+
 ## Execution checks, PR sources and report reopening
 
 Use `loki_runner_execute` with optional `checks` (`loki.terminal-checks/1`) authored
