@@ -1,4 +1,10 @@
-import { providerConnection, zdrRequest } from "@katalon-experiments/ai-client";
+import {
+  providerConnection,
+  decisionsRequest,
+  decisionAnswers,
+  decisionsEndpoint,
+  decisionsUsageEstimate,
+} from "@katalon-experiments/ai-client";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -75,52 +81,21 @@ const need = (ok, reason) => {
   if (!ok) throw new FilterFailure(reason);
 };
 export function choicesFor(raw, questions) {
-  need(
-    object(raw) &&
-      !truth(raw.error) &&
-      ["jev-latest", "typesafe/jev-1.14-20261014"].includes(raw.model),
-    "filter_provider_identity",
+  const answers = decisionAnswers(raw, questions);
+  return Object.fromEntries(
+    Object.keys(questions).map((key) => {
+      const answer = answers?.[key];
+      return [
+        key,
+        answer?.type === "choice" &&
+        ["human", "generated", "uncertain"].includes(answer.choice)
+          ? answer.choice
+          : undefined,
+      ];
+    }),
   );
-  const answers = raw.answers;
-  need(
-    object(answers) &&
-      Object.keys(answers).length === Object.keys(questions).length &&
-      Object.keys(answers).every((k) => Object.hasOwn(questions, k)),
-    "filter_answer_set",
-  );
-  const result = {};
-  for (const key of Object.keys(questions)) {
-    const answer = answers[key];
-    need(object(answer), "filter_invalid_choice");
-    const p = answer.probabilities,
-      choice = answer.choice;
-    need(
-      answer.type === "choice" &&
-        ["human", "generated", "uncertain"].includes(choice) &&
-        object(p) &&
-        Object.keys(p).length === 3 &&
-        ["human", "generated", "uncertain"].every((k) => Object.hasOwn(p, k)) &&
-        Object.values(p).every(
-          (v) =>
-            typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1,
-        ) &&
-        Math.abs(Object.values(p).reduce((a, b) => a + b, 0) - 1) <= 0.020001 &&
-        p[choice] >= Math.max(...Object.values(p)) - 0.000001,
-      "filter_invalid_choice",
-    );
-    const confidence = answer.confidence;
-    need(
-      (confidence ?? null) === null ||
-        (typeof confidence === "number" &&
-          Number.isFinite(confidence) &&
-          confidence >= 0 &&
-          confidence <= 1),
-      "filter_invalid_confidence",
-    );
-    result[key] = choice;
-  }
-  return result;
 }
+
 function buildDiscussionClassificationRequest(pending) {
   const questions = Object.fromEntries(
     pending.map(([index]) => [
@@ -142,7 +117,7 @@ function buildDiscussionClassificationRequest(pending) {
     ]),
   );
   return {
-    model: "jev-latest",
+    model: "gpt-6-luna",
     state: Object.fromEntries(
       pending.map(([index, record]) => ["C" + index, record]),
     ),
@@ -171,6 +146,7 @@ export class CommentFilter {
     need(max_calls >= 1 && max_calls <= 4, "filter_call_limit");
     this.max_calls = max_calls;
     this.calls = 0;
+    this.logicalCalls = 0;
     this.batches = 0;
     this.receipts = [];
     this.decisions = [];
@@ -212,11 +188,15 @@ export class CommentFilter {
       policy: this.policy,
       policy_configured: actors.length > 0,
       max_calls: this.mode === "jev" ? max_calls : 0,
+      max_calls_basis:
+        "logical stages; native Decisions batches retain separate receipts",
       max_request_bytes: null,
       max_records_per_batch: null,
       timeout_seconds_per_call: 45,
       uncertain_policy:
-        this.mode === "jev" ? "native_jev_choice_only" : "retain_unverified",
+        this.mode === "jev"
+          ? "native_decisions_choice_only"
+          : "retain_unverified",
       automatic_retry: false,
       limits:
         "Input/call/deadline bounds; no proven provider output-token or dollar ceiling.",
@@ -252,20 +232,26 @@ export class CommentFilter {
         (d) => d.classification_method === "deterministic",
       ),
       jev_classified_records: count(
-        (d) => d.classification_method === "native_jev",
+        (d) => d.classification_method === "native_decisions",
       ),
       retained_without_content_classification: count(
         (d) =>
           d.decision === "retain" &&
-          d.classification_method === "deterministic",
+          ["deterministic", "native_decisions_unavailable"].includes(
+            d.classification_method,
+          ),
       ),
       pending_records: count((d) => d.decision === "pending"),
       content_classification: this.decisions.some(
-        (d) => d.decision === "pending",
+        (d) =>
+          d.decision === "pending" ||
+          d.classification_method === "native_decisions_unavailable",
       )
         ? "incomplete"
-        : this.decisions.some((d) => d.classification_method === "native_jev")
-          ? "native_jev"
+        : this.decisions.some(
+              (d) => d.classification_method === "native_decisions",
+            )
+          ? "native_decisions"
           : this.decisions.length
             ? "deterministic_only"
             : "not_started",
@@ -285,7 +271,7 @@ export class CommentFilter {
           ),
       ).length,
       excluded: count((d) => d.decision === "exclude"),
-      uncertain: count((d) => d.reason === "jev_uncertain"),
+      uncertain: count((d) => d.reason === "decisions_uncertain"),
       generation_observations: this.decisions.reduce(
         (sum, d) => sum + (d.content_provenance ?? []).length,
         0,
@@ -367,8 +353,8 @@ export class CommentFilter {
       ) {
         Object.assign(row, {
           decision: "pending",
-          reason: "awaiting_jev",
-          classification_method: "native_jev_pending",
+          reason: "awaiting_decisions",
+          classification_method: "native_decisions_pending",
         });
         pending.push([index, record]);
       }
@@ -383,11 +369,20 @@ export class CommentFilter {
         );
         for (const [index] of pending) {
           const choice = results["C" + index];
-          Object.assign(decisions[index], {
-            decision: choice === "human" ? "retain" : "exclude",
-            reason: "jev_" + choice,
-            classification_method: "native_jev",
-          });
+          Object.assign(
+            decisions[index],
+            choice === undefined
+              ? {
+                  decision: "retain",
+                  reason: "decisions_unavailable",
+                  classification_method: "native_decisions_unavailable",
+                }
+              : {
+                  decision: choice === "human" ? "retain" : "exclude",
+                  reason: "decisions_" + choice,
+                  classification_method: "native_decisions",
+                },
+          );
         }
       }
       const retained = records.filter(
@@ -410,24 +405,40 @@ export class CommentFilter {
     }
   }
   async ask(body, root) {
-    body = zdrRequest(body, "openrouter");
+    need(this.logicalCalls++ < this.max_calls, "filter_request_or_call_bound");
+    const entries = Object.entries(body.questions);
+    if (entries.length <= 400) return this.askOne(body, root);
+    const responses = [];
+    for (let offset = 0; offset < entries.length; offset += 400) {
+      const batchRoot = path.join(root, "batch-" + (offset / 400 + 1));
+      fs.mkdirSync(batchRoot, { mode: 0o700 });
+      const questions = Object.fromEntries(entries.slice(offset, offset + 400));
+      const raw = await this.askOne({ ...body, questions }, batchRoot);
+      responses.push({ questions, raw });
+    }
+    return {
+      model: responses[0]?.raw?.model,
+      answers: responses.flatMap(({ questions, raw }) =>
+        Object.keys(questions).map((_, index) => raw?.answers?.[index]),
+      ),
+      batches: responses.map(({ raw }) => raw),
+    };
+  }
+  async askOne(body, root) {
+    // Keep the existing exact JSON encoder for source IDs and large integers.
+    body = decisionsRequest({ ...body, state: encodedJson(body.state) });
     need(this.mode === "jev", "actor_only_has_no_native_stage");
     const wire = encoded(body);
-    need(this.calls < this.max_calls, "filter_request_or_call_bound");
-    const base =
-        this.env.LOKI_OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1",
-      key = this.env.LOKI_OPENROUTER_API_KEY;
+    const key = this.env.OPENAI_API_KEY;
     need(
-      base === "https://openrouter.ai/api/v1" &&
-        this.env.LOKI_MODEL_PROVIDER === "openrouter" &&
-        Boolean(this.env.LOKI_AUTH_BROKER_SOCKET || key),
+      Boolean(this.env.LOKI_AUTH_BROKER_SOCKET || key),
       "filter_provider_unavailable",
     );
-    const connection = providerConnection(base + "/systemone", key, this.env);
+    const connection = providerConnection(decisionsEndpoint, key, this.env);
     save(path.join(root, "request.json"), wire);
     const receipt = {
       route: connection.url,
-      model_requested: "jev-latest",
+      model_requested: "gpt-6-luna",
       calls: 1,
       request_sha256: digest(wire),
       automatic_retry: false,
@@ -500,11 +511,35 @@ export class CommentFilter {
       receipt.usage = usage;
       receipt.model_returned = object(raw) ? (raw.model ?? null) : null;
       receipt.response_id = object(raw) ? (raw.id ?? null) : null;
-      receipt.provider = object(raw) ? (raw.provider ?? null) : null;
+      receipt.provider = "openai";
       const cost = object(usage) ? usage.cost : null;
+      const headerCost = header(response, "x-litellm-response-cost");
       if (finiteNonnegativeCost(cost)) {
-        Object.assign(receipt, { cost_usd: cost, unknown_charge: false });
+        Object.assign(receipt, {
+          cost_usd: cost,
+          unknown_charge: false,
+          cost_basis: "provider_usage_cost",
+        });
         copyJsonMetadata(usage, receipt, [["cost", "cost_usd"]]);
+      } else if (
+        typeof headerCost === "string" &&
+        headerCost.trim() !== "" &&
+        Number.isFinite(Number(headerCost)) &&
+        Number(headerCost) >= 0
+      ) {
+        Object.assign(receipt, {
+          cost_usd: Number(headerCost),
+          unknown_charge: false,
+          cost_basis: "litellm_response_header",
+        });
+      } else {
+        const estimate = decisionsUsageEstimate(usage);
+        if (estimate !== null)
+          Object.assign(receipt, {
+            cost_usd: estimate,
+            unknown_charge: false,
+            cost_basis: "model_pricing_estimate",
+          });
       }
       need(receipt.http_status === 200, "filter_provider_http_failure");
       receipt.status = "received";

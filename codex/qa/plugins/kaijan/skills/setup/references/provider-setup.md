@@ -24,7 +24,7 @@ After the command reports `stopped`, follow [Recover in the same chat](update-re
 
 ## Direct-development provider key
 
-A confirmed direct-development build needs an approved OpenAI API key for Runner and OpenAI analysis. Use the installed plugin folder and its bundled Node to inspect configuration without making a provider call:
+A confirmed direct-development build needs an approved OpenAI API key for Runner, OpenAI analysis and optional Decisions selection. Use the installed plugin folder and its bundled Node to inspect configuration without making a provider call:
 
 ```sh
 ./capabilities/runtime/node ./scripts/provider-settings.mjs show
@@ -36,7 +36,7 @@ If the user has approved an existing local `.env` file for this plugin, import i
 ./capabilities/runtime/node ./scripts/provider-settings.mjs configure --from-file /absolute/path/to/approved.env
 ```
 
-The file must contain `OPENAI_API_KEY`. It may also contain `LOKI_OPENROUTER_API_KEY` or `OPENROUTER_API_KEY` for JEV. Ordinary OpenAI work does not require the JEV key. Only provider fields are saved. The command parses the file as data; it does not run shell commands from it. Do not print the file, put secrets in command arguments, or write it into the plugin archive. A source checkout is not required.
+The file must contain `OPENAI_API_KEY`; only that field is saved. Obsolete OpenRouter fields are not needed for Decisions. The command parses the file as data; it does not run shell commands from it. Do not print the file, put secrets in command arguments, or write it into the plugin archive. A source checkout is not required.
 
 `configure` without `--from-file` saves the command's inherited provider environment. This is useful when an operator has already set the key in a terminal. Both forms write the selected package's private profile. They do not change Codex settings, models or app credentials. `LOKI_CODEX_STATE_DIR`, or an explicit `--state` absolute path, must match the MCP host if it uses a custom state directory. Otherwise use the default.
 

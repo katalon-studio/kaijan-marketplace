@@ -42,6 +42,7 @@ export function providerConnection(nativeUrl, key, env = {}) {
     native.origin === "https://api.openai.com" &&
     [
       "/v1/responses",
+      "/v1/decisions",
       "/v1/responses/input_tokens",
       "/v1/models/gpt-6-luna",
     ].includes(native.pathname);
@@ -61,12 +62,11 @@ export function providerConnection(nativeUrl, key, env = {}) {
       env.LOKI_AUTH_BROKER_SOCKET.length > 103
     )
       throw new AiClientError("invalid_broker_channel");
-    const path =
-      native.pathname === "/v1/responses"
-        ? "/v1/responses"
-        : openai
-          ? `/openai_passthrough${native.pathname}`
-          : `/openrouter${native.pathname.slice(4)}`;
+    const path = ["/v1/responses", "/v1/decisions"].includes(native.pathname)
+      ? native.pathname
+      : openai
+        ? `/openai_passthrough${native.pathname}`
+        : `/openrouter${native.pathname.slice(4)}`;
     return {
       url: `http://localhost/${env.LOKI_AI_CONNECTION_BINDING ? "ai-bound" : "ai"}${path}`,
       headers: Object.fromEntries(

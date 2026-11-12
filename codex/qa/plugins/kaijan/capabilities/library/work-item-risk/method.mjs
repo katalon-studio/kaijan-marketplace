@@ -16,7 +16,7 @@ export const VERSION = "2026.10.26-1771.1";
 export const SCHEMA = "change-risk-finder/result/4";
 export const LIMITS = Object.freeze({
   inputBytes: 16000000,
-  // Published JEV Choice protocol: https://docs.typesafe.ai/primitives/choice
+  // Published Decisions choice protocol: https://developers.openai.com/api/docs/guides/decisions
   choices: 255,
   questions: 6,
 });
@@ -352,7 +352,7 @@ const criteria = Object.freeze({
 
 export function screenRequest(packet, hunks) {
   return {
-    model: "jev-latest",
+    model: "gpt-6-luna",
     state: {
       source_packet: packet,
       hunk_index: hunks.map(({ id, file, header }) => ({ id, file, header })),
@@ -389,7 +389,6 @@ export function linesRequest(packet, hunks) {
     }
     choices.none =
       "No individual changed line in this hunk has a concrete high-risk role.";
-    insist(Object.keys(choices).length <= LIMITS.choices, "line_option_limit");
     questions[hunk.id] = {
       type: "choice",
       instructions:
@@ -402,51 +401,23 @@ export function linesRequest(packet, hunks) {
     };
   }
   return {
-    model: "jev-latest",
+    model: "gpt-6-luna",
     state: { source_packet: packet, selected_hunks: hunks },
     questions,
   };
 }
 
-export function validateChoices(response, request) {
-  insist(record(response.answers), "invalid_choices");
-  const keys = Object.keys(request.questions);
-  insist(
-    Object.keys(response.answers).sort().join() === keys.slice().sort().join(),
-    "invalid_choices",
-  );
-  for (const key of keys) {
-    const answer = response.answers[key];
-    const labels = Object.keys(request.questions[key].criteria);
-    insist(
-      record(answer) &&
-        answer.type === "choice" &&
-        labels.includes(answer.choice),
-      "invalid_choices",
-    );
-    insist(record(answer.probabilities), "invalid_probabilities");
-    const probabilities = answer.probabilities;
-    insist(
-      Object.keys(probabilities).sort().join() === labels.slice().sort().join(),
-      "invalid_probabilities",
-    );
-    const values = Object.values(probabilities);
-    insist(
-      values.every(
-        (value) => Number.isFinite(value) && value >= 0 && value <= 1,
-      ),
-      "invalid_probabilities",
-    );
-    insist(
-      Math.abs(values.reduce((a, b) => a + b, 0) - 1) <= 0.020001,
-      "invalid_probabilities",
-    );
-    insist(
-      probabilities[answer.choice] >= Math.max(...values) - 0.000001,
-      "inconsistent_choice",
-    );
-  }
-  return response.answers;
+// Retain native rows, including refusals. Consumers use an offered choice when
+// available and record an unresolved hunk otherwise; one row cannot erase peers.
+export function validateChoices(response) {
+  return record(response?.answers) ? response.answers : {};
+}
+function offeredChoice(answers, key, request) {
+  const choice = answers[key]?.choice;
+  return typeof choice === "string" &&
+    Object.hasOwn(request.questions[key]?.criteria ?? {}, choice)
+    ? choice
+    : undefined;
 }
 
 export function validateAssumptions(
@@ -519,7 +490,7 @@ export function modeConfig(mode = "guided") {
     method:
       mode === "direct"
         ? "direct-luna-assumptions/3"
-        : "jev-high-only-luna-assumptions/3",
+        : "decisions-high-only-luna-assumptions/1",
     max_calls: mode === "direct" ? 1 : 3,
   };
 }
@@ -859,30 +830,58 @@ export async function evaluate(
   progress();
   const screen = screenRequest(packet, hunks);
   const answers = validateChoices(
-    await call("01-jev-hunks", "systemone", screen),
+    await call("01-decisions-hunks", "decisions", screen),
     screen,
   );
-  coverage_details.screening = "complete";
+  coverage_details.screening = hunks.some(
+    (hunk) => offeredChoice(answers, hunk.id, screen) === undefined,
+  )
+    ? "incomplete"
+    : "complete";
   coverage_details.unresolved_hunks = hunks
-    .filter((hunk) => answers[hunk.id].choice === "insufficient")
+    .filter((hunk) =>
+      [undefined, "insufficient"].includes(
+        offeredChoice(answers, hunk.id, screen),
+      ),
+    )
     .map((hunk) => hunk.id);
-  const high = hunks.filter((hunk) => answers[hunk.id].choice === "high");
+  const high = hunks.filter(
+    (hunk) => offeredChoice(answers, hunk.id, screen) === "high",
+  );
   counts.high_hunks = high.length;
   progress({ hunk_assessments: answers });
-  const selected = [];
+  const selected = [],
+    lineSelectionGaps = [];
   if (high.length) {
     coverage_details.localization = "incomplete";
     progress();
     const request = linesRequest(packet, high);
-    const lines = validateChoices(
-      await call("02-jev-lines", "systemone", request),
-      request,
+    request.questions = Object.fromEntries(
+      Object.entries(request.questions).filter(([id, question]) => {
+        const count = Object.keys(question.criteria).length;
+        if (count >= 2 && count <= LIMITS.choices) return true;
+        lineSelectionGaps.push(
+          `${id}: native Decisions choice API requires 2–255 options; this hunk has ${count}. Its full source remains supplied, but line selection is unavailable.`,
+        );
+        return false;
+      }),
     );
+    const lines = Object.keys(request.questions).length
+      ? validateChoices(
+          await call("02-decisions-lines", "decisions", request),
+          request,
+        )
+      : {};
     for (const hunk of high) {
       const answer = lines[hunk.id];
-      if (answer.choice === "none") continue;
-      const side = answer.choice.startsWith("R") ? "right" : "left";
-      const line = Number(answer.choice.slice(1));
+      const choice = offeredChoice(lines, hunk.id, request);
+      if (choice === undefined) {
+        coverage_details.unresolved_hunks.push(hunk.id);
+        continue;
+      }
+      if (choice === "none") continue;
+      const side = choice.startsWith("R") ? "right" : "left";
+      const line = Number(choice.slice(1));
       const source = hunk[
         side === "right" ? "added_lines" : "removed_lines"
       ].find((item) => item.line === line);
@@ -900,7 +899,12 @@ export async function evaluate(
     limitations:
       "No line cue survived the high-only gate. This does not establish that the change is safe.",
   };
-  if (high.length) coverage_details.localization = "complete";
+  if (high.length)
+    coverage_details.localization = high.some((hunk) =>
+      coverage_details.unresolved_hunks.includes(hunk.id),
+    )
+      ? "incomplete"
+      : "complete";
   counts.selected_lines = selected.length;
   progress({ risk_selections: selected });
   if (selected.length) {
@@ -914,6 +918,10 @@ export async function evaluate(
     );
     coverage_details.assumptions = "complete";
   }
+  if (lineSelectionGaps.length)
+    output.limitations = [output.limitations, ...lineSelectionGaps]
+      .filter(Boolean)
+      .join(" ");
   return {
     status:
       coverage_details.unresolved_hunks.length || nonHunk.length
