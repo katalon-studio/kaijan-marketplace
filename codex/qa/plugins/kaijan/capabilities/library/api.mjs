@@ -109967,7 +109967,12 @@ var planningRead = planningHandle.extend({
 });
 var planningRequest = external_exports.strictObject({
   requestKey: external_exports.string().min(1),
-  input: planningInputSchema,
+  input: planningInputSchema.describe(
+    "The original caller request and available application context. Preserve the original title/body or attributed source items. Add the coding agent's own planning guidance separately in agentInstructions; Planner receives both."
+  ),
+  agentInstructions: external_exports.string().optional().describe(
+    "Additional planning guidance from the coding agent, such as suggested steps or areas to explore. Planner uses this together with the original request in input. Keep its authorship distinct from the caller's request and existing source material."
+  ),
   taskInstructions: external_exports.string().optional().describe(
     "The caller's instructions for carrying out the testing work, separate from application behavior to check. Preserve the caller's wording. These instructions are retained with the Plan and passed to Run; they are not application test expectations."
   ),
@@ -110003,10 +110008,12 @@ function preparationHasUnknownUsage(preparation) {
 }
 var digest26 = (bytes2) => createHash25("sha256").update(bytes2).digest("hex");
 function planningTaskInput(request3, prepare2) {
-  if (request3.taskInstructions === void 0) return request3.input;
+  if (request3.taskInstructions === void 0 && request3.agentInstructions === void 0)
+    return request3.input;
   return {
     ...object10(prepare2(request3.input)),
-    taskInstructions: request3.taskInstructions
+    ...request3.taskInstructions === void 0 ? {} : { taskInstructions: request3.taskInstructions },
+    ...request3.agentInstructions === void 0 ? {} : { agentInstructions: request3.agentInstructions }
   };
 }
 function planningSignal(request3, signal) {
@@ -110575,7 +110582,8 @@ var TestPlanning = class {
           "evidence_catalog",
           "requirement_inventory",
           "input_projection",
-          "taskInstructions"
+          "taskInstructions",
+          "agentInstructions"
         ])
           if (canonicalJson(actual[key6] ?? null) !== canonicalJson(expected[key6] ?? null))
             throw Error(
@@ -127772,7 +127780,7 @@ var planningToolRequest = external_exports.strictObject({
   ...planningRequest.shape,
   requestKey: planningRequest.shape.requestKey.optional(),
   input: external_exports.union([planningRequest.shape.input, inlinePlanningInput]).optional().describe(
-    "Application behavior to test and available application context. Use title/body for one work item or separate attributed sources in a pr-context-plan/3 packet. Preserve supplied source text and attribution. Put the caller's instructions for carrying out the testing work in taskInstructions."
+    "The original caller request and available application context. Use title/body for one work item or separate attributed sources in a pr-context-plan/3 packet. Preserve supplied source text and attribution. Put the coding agent's additional planning guidance in agentInstructions; Planner receives both. Put the caller's instructions for carrying out the testing work in taskInstructions."
   ),
   contextId: contextIdSchema.optional().describe(
     "Use only a contextId returned by loki_context_submit with compatible nativeInputs.testPlanning. Application/Setup context IDs are configuration references, not planning inputs. After Setup, reuse the saved original workItem text and relevant source in input."
@@ -168581,7 +168589,7 @@ function createCapabilityCatalog(services, options2 = {}) {
     {
       name: "loki_test_plan",
       title: "Propose tests for an issue or supplied work item",
-      description: "Build functional and change-impact tests for a supplied work item or compatible contextId. Kaijan reads missing explicit GitHub issue/PR links within the supplied source repositories, assesses work-item risks and generates the plan in this operation. Sources already included in the input are reused. No PR, diff or map is required. Simple input requires title and body. Supply a real source URI in url when available; Kaijan retains pasted work-item text internally when url is omitted. Supply application behavior, target and attributed source text in input. Put the caller's instructions for carrying out testing in taskInstructions; Kaijan retains them with the Plan and carries them into Run. For multiple sources, prefer separate items in the supported input.sources packet, preserving original text, source roles, qualifications and conflicts; do not flatten them into one unattributed summary. Optional repositories supplies an authorized owner/repository search scope; Kaijan discovers related work internally before risk preparation and planning. Omit it when discovery is not requested. Optional change supplies actual frozen change data in this same call; Kaijan reviews it internally before planning. Optional procedures supplies historical steps as separate title/steps items or saved Run references; Kaijan reads only the selected authored scenario as background for this new plan. No history search, old verdict or execution permission is inherited. Explicit recorded-execution reuse stays in Run. Optional riskAnswers reuses exact saved changeRisk/riskFinder answers from this conversation, including a matching review of the supplied change. Do not arrange separate context or risk calls for normal planning, duplicate whole histories or invent missing facts. Linked sources remain context, not new acceptance requirements. Source access gaps, native outcomes and all stage receipts remain in the saved result. No tests are executed. To run selected tests with automatic result assessment, use loki_test_execute. options.deadline_ms covers the whole preparation and planning operation." + queryContract,
+      description: "Build functional and change-impact tests for a supplied work item or compatible contextId. Kaijan reads missing explicit GitHub issue/PR links within the supplied source repositories, assesses work-item risks and generates the plan in this operation. Sources already included in the input are reused. No PR, diff or map is required. Simple input requires title and body. Supply a real source URI in url when available; Kaijan retains pasted work-item text internally when url is omitted. Supply the original request, application behavior, target and attributed source text in input. Optional agentInstructions carries the coding agent's additional planning guidance or suggested steps; Planner uses both inputs together. Put the caller's instructions for carrying out testing in taskInstructions; Kaijan retains them with the Plan and carries them into Run. For multiple sources, prefer separate items in the supported input.sources packet, preserving original text, source roles, qualifications and conflicts; do not flatten them into one unattributed summary. Optional repositories supplies an authorized owner/repository search scope; Kaijan discovers related work internally before risk preparation and planning. Omit it when discovery is not requested. Optional change supplies actual frozen change data in this same call; Kaijan reviews it internally before planning. Optional procedures supplies historical steps as separate title/steps items or saved Run references; Kaijan reads only the selected authored scenario as background for this new plan. No history search, old verdict or execution permission is inherited. Explicit recorded-execution reuse stays in Run. Optional riskAnswers reuses exact saved changeRisk/riskFinder answers from this conversation, including a matching review of the supplied change. Do not arrange separate context or risk calls for normal planning, duplicate whole histories or invent missing facts. Linked sources remain context, not new acceptance requirements. Source access gaps, native outcomes and all stage receipts remain in the saved result. No tests are executed. To run selected tests with automatic result assessment, use loki_test_execute. options.deadline_ms covers the whole preparation and planning operation." + queryContract,
       input: advisoryToolRequests.testPlanning,
       inputSchema: advisoryToolInputSchemas.testPlanning,
       output: advisoryToolOutputSchemas.testPlanning,
