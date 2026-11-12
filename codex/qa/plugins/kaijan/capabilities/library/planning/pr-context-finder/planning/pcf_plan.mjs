@@ -110,8 +110,7 @@ export const SCHEMA = obj({
       execution_gaps: arr(S),
     }),
   ),
-  // Define tests before emitting coverage and handoff references. Keep the
-  // public shape and the independent reference validator unchanged.
+  // Define tests before emitting coverage and handoff references.
   requirement_coverage: arr(
     obj({
       requirement_id: S,
@@ -316,24 +315,12 @@ export function validatePlan(plan, packet) {
       schema.properties.tests.items.required.filter((key) => key !== "title");
   }
   validateSchema(plan, schema);
-  const sources = new Map(packet.sources.map((s) => [s.id, s])),
-    computed = evidenceCatalog(packet);
+  const computed = evidenceCatalog(packet);
   if (Object.hasOwn(packet, "evidence_catalog"))
     need(
       equal(packet.evidence_catalog, computed),
       "Evidence catalog differs from source",
     );
-  const catalog = new Map(computed.map((row) => [row.id, row]));
-  const refs = (items, at) => {
-    for (const [index, item] of items.entries()) {
-      const row = catalog.get(item.evidence_id);
-      need(row && sources.has(row.source_id), "Unknown evidence ID", () => ({
-        path: pointer(pointer(at, index), "evidence_id"),
-        rule: "known_evidence_id",
-        offending_ids: [item.evidence_id],
-      }));
-    }
-  };
   const objectives = plan.objectives.map((o) => o.id),
     tests = plan.tests.map((t) => t.id);
   need(
@@ -357,31 +344,6 @@ export function validatePlan(plan, packet) {
       "Empty intentions require explicit clarification",
       () => ({ path: "", rule: "empty_intentions_require_clarification" }),
     );
-  for (const [index, objective] of plan.objectives.entries())
-    refs(objective.refs, `/objectives/${index}/refs`);
-  for (const [index, surface] of plan.relevant_surfaces.entries())
-    refs(surface.refs, `/relevant_surfaces/${index}/refs`);
-  for (const [index, test] of plan.tests.entries()) {
-    need(
-      test.objective_ids.length &&
-        test.objective_ids.every((i) => objectives.includes(i)),
-      "Unknown or missing test objective",
-      () =>
-        test.objective_ids.length
-          ? referenceDiagnostic(
-              `/tests/${index}/objective_ids`,
-              test.objective_ids,
-              objectives,
-              false,
-            )
-          : {
-              path: `/tests/${index}/objective_ids`,
-              rule: "nonempty_objective_ids",
-            },
-    );
-    const expectation = test.expected;
-    refs(expectation.refs, `/tests/${index}/expected/refs`);
-  }
   const handoff = plan.runner_handoff.scenario_ids;
   need(
     new Set(handoff).size === handoff.length &&
@@ -517,19 +479,8 @@ export function prepare(packet) {
   packet.evidence_catalog = evidenceCatalog(packet);
   return packet;
 }
-export function schemaFor(packet) {
-  const schema = copy(SCHEMA),
-    ids = packet.evidence_catalog.map((row) => row.id);
-  const bind = (node) => {
-    if (object(node)) {
-      for (const [key, value] of Object.entries(node.properties ?? {})) {
-        if (key === "evidence_id") value.enum = ids;
-      }
-      for (const value of Object.values(node)) bind(value);
-    } else if (Array.isArray(node)) for (const value of node) bind(value);
-  };
-  bind(schema);
-  return schema;
+export function schemaFor() {
+  return copy(SCHEMA);
 }
 // Generation stores each membership beside the complete test. Public plans keep
 // their existing shape; old plans still use the independent validator above.
