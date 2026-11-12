@@ -16,7 +16,8 @@ the same authority.
 - Use [plan-tests](../plan-tests/SKILL.md) for requested planning or to prepare
   tests for a full request. Give it the original task and relevant attributed
   sources, including the actual frozen change when the request concerns a
-  change. Cover ordinary requested behavior and acceptance conditions as well
+  change. Put your own additional planning guidance in `agentInstructions`;
+  Planner uses both. Cover ordinary requested behavior and acceptance conditions as well
   as relevant risks. Keep assumptions distinct from supplied requirements.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
   A complete caller-supplied scenario can use [run-test](../run-test/SKILL.md)

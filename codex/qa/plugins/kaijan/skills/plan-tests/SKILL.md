@@ -28,6 +28,10 @@ the plan.
   item's source URI. For multiple sources, use the complete `pr-context-plan/3`
   packet and its separate `sources` items. A simple input with `sources` or
   `version` is interpreted as a versioned packet.
+- Use `agentInstructions` for your own additional planning guidance, including
+  useful suggested steps. Planner receives it together with the original request
+  in `input`; preserve both and their authorship. You can ask the person for
+  clarification when needed.
 - Use `change` for the actual frozen change, including source identity, coverage
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
   for Git patches and provided snapshots. Kaijan prepares risk analysis and
