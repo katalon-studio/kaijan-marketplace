@@ -324,11 +324,7 @@ export function validatePlan(plan, packet) {
       "Evidence catalog differs from source",
     );
   const catalog = new Map(computed.map((row) => [row.id, row]));
-  const refs = (items, at, intent = false, required = false) => {
-    need(!required || items.length, "Missing evidence", () => ({
-      path: at,
-      rule: "nonempty_evidence",
-    }));
+  const refs = (items, at) => {
     for (const [index, item] of items.entries()) {
       const row = catalog.get(item.evidence_id);
       need(row && sources.has(row.source_id), "Unknown evidence ID", () => ({
@@ -336,17 +332,6 @@ export function validatePlan(plan, packet) {
         rule: "known_evidence_id",
         offending_ids: [item.evidence_id],
       }));
-      if (intent)
-        need(
-          sources.get(row.source_id).kind === "intent",
-          "Implementation/context cannot establish intent",
-          () => ({
-            path: pointer(pointer(at, index), "evidence_id"),
-            rule: "intent_authority",
-            offending_ids: [item.evidence_id],
-            source_id: row.source_id,
-          }),
-        );
     }
   };
   const objectives = plan.objectives.map((o) => o.id),
@@ -373,7 +358,7 @@ export function validatePlan(plan, packet) {
       () => ({ path: "", rule: "empty_intentions_require_clarification" }),
     );
   for (const [index, objective] of plan.objectives.entries())
-    refs(objective.refs, `/objectives/${index}/refs`, true, true);
+    refs(objective.refs, `/objectives/${index}/refs`);
   for (const [index, surface] of plan.relevant_surfaces.entries())
     refs(surface.refs, `/relevant_surfaces/${index}/refs`);
   for (const [index, test] of plan.tests.entries()) {
@@ -395,12 +380,7 @@ export function validatePlan(plan, packet) {
             },
     );
     const expectation = test.expected;
-    refs(
-      expectation.refs,
-      `/tests/${index}/expected/refs`,
-      expectation.authority === "requirement",
-      expectation.authority === "requirement",
-    );
+    refs(expectation.refs, `/tests/${index}/expected/refs`);
   }
   const handoff = plan.runner_handoff.scenario_ids;
   need(
@@ -417,42 +397,7 @@ export function validatePlan(plan, packet) {
       equal(inventory, literalRequirements(packet)),
       "Requirement ledger differs from original evidence",
     );
-  const rows = plan.requirement_coverage,
-    ids = rows.map((r) => r.requirement_id);
-  need(
-    new Set(ids).size === ids.length &&
-      ids.every((i) => inventory.some((r) => r.id === i)),
-    "Unknown or duplicate requirement coverage ledger",
-    () =>
-      referenceDiagnostic(
-        "/requirement_coverage",
-        ids,
-        inventory.map((row) => row.id),
-      ),
-  );
-  for (const [index, row] of rows.entries()) {
-    need(
-      row.test_ids.every((i) => tests.includes(i)) &&
-        new Set(row.test_ids).size === row.test_ids.length,
-      "Unknown or duplicate coverage scenario",
-      () =>
-        referenceDiagnostic(
-          `/requirement_coverage/${index}/test_ids`,
-          row.test_ids,
-          tests,
-          false,
-        ),
-    );
-    need(
-      Boolean(row.test_ids.length) === (row.status === "proposed"),
-      "Coverage gap must have no tests; proposed coverage needs tests",
-      () => ({
-        path: `/requirement_coverage/${index}/test_ids`,
-        rule: "coverage_status_membership",
-        requirement_id: row.requirement_id,
-      }),
-    );
-  }
+  const rows = plan.requirement_coverage;
   const byId = new Map(rows.map((row) => [row.requirement_id, row])),
     missingRequirements = inventory
       .filter((row) => !byId.has(row.id))
@@ -574,35 +519,16 @@ export function prepare(packet) {
 }
 export function schemaFor(packet) {
   const schema = copy(SCHEMA),
-    ids = packet.evidence_catalog.map((row) => row.id),
-    inventoryIds = packet.requirement_inventory.map((row) => row.id);
+    ids = packet.evidence_catalog.map((row) => row.id);
   const bind = (node) => {
     if (object(node)) {
       for (const [key, value] of Object.entries(node.properties ?? {})) {
         if (key === "evidence_id") value.enum = ids;
-        if (key === "requirement_id") value.enum = inventoryIds;
       }
       for (const value of Object.values(node)) bind(value);
     } else if (Array.isArray(node)) for (const value of node) bind(value);
   };
   bind(schema);
-  const intentIds = packet.evidence_catalog
-    .filter((row) => row.kind === "intent")
-    .map((row) => row.id);
-  schema.properties.objectives.items.properties.refs.items.properties.evidence_id.enum =
-    intentIds;
-  // Constrain generation without changing saved plans or the validation guard.
-  // Context can support a proposed check, but cannot establish a requirement.
-  const expected = schema.properties.tests.items.properties.expected;
-  const requirement = copy(expected),
-    hypothesis = copy(expected);
-  requirement.properties.authority.enum = ["requirement"];
-  requirement.properties.refs.minItems = 1;
-  requirement.properties.refs.items.properties.evidence_id.enum = intentIds;
-  hypothesis.properties.authority.enum = ["hypothesis"];
-  schema.properties.tests.items.properties.expected = {
-    anyOf: [requirement, hypothesis],
-  };
   return schema;
 }
 // Generation stores each membership beside the complete test. Public plans keep
@@ -636,14 +562,6 @@ function generationShape(schema) {
 }
 export function generationSchemaFor(packet, version = GENERATED_PLAN_VERSION) {
   const schema = generationShape(schemaFor(packet));
-  // An inventory entry can have at most one coverage row, regardless of how
-  // many tests check it. Empty partial plans remain valid.
-  schema.properties.requirement_coverage.maxItems =
-    packet.requirement_inventory.length;
-  schema.properties.tests.items.properties.requirement_ids.items = {
-    type: "string",
-    enum: packet.requirement_inventory.map((row) => row.id),
-  };
   return sourceGenerationSchema(schema, packet.evidence_catalog, version);
 }
 export function projectGeneratedSourcePlan(
@@ -690,7 +608,7 @@ export function customerPlanFromRetained(result, input) {
     ? verifyPlanningSourceRecord(result, projectGeneratedPlan)
     : projectLegacyPlanning(result.plan, result.evidence);
 }
-export function projectGeneratedPlan(value, packet) {
+export function projectGeneratedPlan(value) {
   validateSchema(value, generationShape(SCHEMA));
   const outlined = value.test_outline.map((test) => test.id);
   const defined = value.tests.map((test) => test.id);
@@ -707,23 +625,6 @@ export function projectGeneratedPlan(value, packet) {
       undeclared_test_ids: defined.filter((id) => !outlined.includes(id)),
     }),
   );
-  const inventory = packet.requirement_inventory.map((row) => row.id);
-  const reported = value.requirement_coverage.map((row) => row.requirement_id);
-  for (const [index, test] of value.tests.entries()) {
-    need(
-      new Set(test.requirement_ids).size === test.requirement_ids.length &&
-        test.requirement_ids.every(
-          (id) => inventory.includes(id) && reported.includes(id),
-        ),
-      "Unknown, duplicate or unreported test requirement",
-      () =>
-        referenceDiagnostic(
-          `/tests/${index}/requirement_ids`,
-          test.requirement_ids,
-          inventory.filter((id) => reported.includes(id)),
-        ),
-    );
-  }
   // copy handles the lossless JSON parser's values. Never mutate provider data.
   const projected = copy(value);
   delete projected.test_outline;
