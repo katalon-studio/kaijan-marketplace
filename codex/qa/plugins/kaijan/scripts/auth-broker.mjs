@@ -70,6 +70,10 @@ function resolveRuntimeBuild(build, env = process.env) {
 
 // apps/codex-plugin/scripts/onboarding-environment.mjs
 var anonymousOnboardingVariable = "KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS";
+function anonymousOnboardingEnabled(environment = process.env) {
+  const preference = environment[anonymousOnboardingVariable];
+  return preference === void 0 || preference === "1";
+}
 
 // apps/codex-plugin/src/auth/broker-entry.mjs
 import { readFile as readFile2 } from "node:fs/promises";
@@ -26271,7 +26275,7 @@ async function main() {
     telemetry = openTelemetryOutbox(profile);
   } catch {
   }
-  const onboarding = telemetry && pluginHost(build) === "codex" && process.env[anonymousOnboardingVariable] === "1" ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
+  const onboarding = telemetry && pluginHost(build) === "codex" && anonymousOnboardingEnabled() ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
   if (!onboarding) {
     try {
       telemetry?.clearOnboardingKey();
