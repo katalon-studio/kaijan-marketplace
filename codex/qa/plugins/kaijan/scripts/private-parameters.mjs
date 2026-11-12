@@ -27817,6 +27817,17 @@ var inferenceUsageModelSchema = external_exports.enum([
   "gpt-6-astra",
   "typesafe/jev-1.13-20260917"
 ]);
+var inferenceFailureCategorySchema = external_exports.enum([
+  "authentication",
+  "quota",
+  "rate_limit",
+  "invalid_request",
+  "unavailable",
+  "connection",
+  "interrupted",
+  "cancelled",
+  "unknown"
+]);
 var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
 var coreInferencePropertiesSchema = external_exports.strictObject({
   operation_id: telemetryOperationId.nullable(),
@@ -27824,6 +27835,12 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   plan_id: telemetryOperationId.nullable().optional(),
   run_id: telemetryOperationId.nullable().optional(),
   model: inferenceUsageModelSchema.nullable(),
+  // Optional v1 additions. Requested identity is not a native usage receipt.
+  requested_model: inferenceUsageModelSchema.nullable().optional(),
+  inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
+  core_request_id: external_exports.uuidv4().optional(),
+  core_automatic_retry: external_exports.literal(false).optional(),
+  failure_category: inferenceFailureCategorySchema.optional(),
   provider_route: external_exports.literal("litellm"),
   input_tokens: nativeTokenCount,
   cached_input_tokens: nativeTokenCount,

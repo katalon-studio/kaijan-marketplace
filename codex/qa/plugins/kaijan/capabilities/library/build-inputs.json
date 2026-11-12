@@ -14,7 +14,7 @@
     "packages/capabilities/src/lifecycle.ts": "250de0db9b87621f2cda8170def8f8b997f7b3962968b0e303d353c8c2c4add4",
     "packages/capabilities/src/storage.ts": "95a4079dfa8911f53712db64e237df188f1d68526085725296427abbdd68f471",
     "packages/capabilities/src/configuration-contracts.ts": "27fc137abbdad1ec192a9aea4c3a7a675428ae5304220ce15c055d8f7d3a665f",
-    "packages/contracts/dist/telemetry.js": "8d4c15bfc1ea8b17823ba200c7d559d7d23517dd90d899a3dbfd87bfd301e5df",
+    "packages/contracts/dist/telemetry.js": "4e6698d3cafa35325eeb90d1ce11e990aba7d45eae0cfbcfad8ddec3c43d7158",
     "packages/contracts/dist/recording.js": "a84199595edeeeccd78dca485f097d1d493b391f660314a8327eb66dc0639480",
     "packages/contracts/dist/work-items.js": "4c69340cb5d3fee434dc8e00aa88c205163393a2c943143c85849ac74fd66c22",
     "packages/contracts/dist/source.js": "f4b9a54f454a3705f20f016b0d26b58d9b1193a747a0a87ac7d4cf9a491f0b57",
