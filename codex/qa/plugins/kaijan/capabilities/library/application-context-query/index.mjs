@@ -42,6 +42,31 @@ const nullableText = (v) => v === null || typeof v === "string";
 const uniqueIds = (v) =>
   Array.isArray(v) && v.every(nonempty) && new Set(v).size === v.length;
 const digest = (v) => typeof v === "string" && /^[a-f0-9]{64}$/.test(v);
+// Unknown source metadata stays in the retained original, not the model view.
+// Keep the existing inventory fields and their original serialization order.
+const inventoryFields = new Set([
+  "sourceId",
+  "uri",
+  "revision",
+  "capturedAt",
+  "attribution",
+  "provenance",
+  "rawArtifactSha256",
+  "unavailableReason",
+  "bindingId",
+  "bundleSha256",
+  "recordSha256",
+  "textSha256",
+]);
+const nullableInventoryText = new Set(["uri", "revision", "capturedAt"]);
+function inventoryField(name, value) {
+  if (!inventoryFields.has(name)) return false;
+  if (nullableInventoryText.has(name)) return nullableText(value);
+  if (name === "rawArtifactSha256") return value === null || digest(value);
+  if (name === "attribution") return typeof value === "string";
+  if (name === "provenance") return record(value);
+  return true;
+}
 function keys(value, allowed) {
   if (!record(value) || Object.keys(value).some((k) => !allowed.includes(k)))
     refuse("invalid_shape");
@@ -66,31 +91,21 @@ function utc(value) {
 }
 function requestValue(value) {
   const v = snapshotJson(value);
-  keys(v, [
-    "schema",
-    "requestId",
-    "queryId",
-    "runId",
-    "scenarioId",
-    "kind",
-    "question",
-    "observations",
-    "sourceBindingIds",
-    "retrieval",
-  ]);
+  if (!record(v)) refuse("invalid_shape");
   if (
     v.schema !== contract ||
-    ![v.requestId, v.queryId, v.runId, v.question].every(nonempty) ||
+    ![v.requestId, v.queryId, v.runId].every(nonempty) ||
+    typeof v.question !== "string" ||
     !nullableText(v.scenarioId) ||
     !["documentation", "risk", "map"].includes(v.kind) ||
     !uniqueIds(v.sourceBindingIds)
   )
     refuse("invalid_request");
-  keys(v.observations, ["screen", "path"]);
+  if (!record(v.observations)) refuse("invalid_shape");
   for (const field of ["screen", "path"])
     if (v.observations[field] !== null) {
       const observation = v.observations[field];
-      keys(observation, ["producer", "basis", "content"]);
+      if (!record(observation)) refuse("invalid_shape");
       if (
         !nonempty(observation.producer) ||
         observation.basis !== "observed" ||
@@ -98,56 +113,41 @@ function requestValue(value) {
       )
         refuse("invalid_observation");
     }
-  keys(v.retrieval, ["sourceIds", "cursor"]);
+  if (!record(v.retrieval)) refuse("invalid_shape");
   if (
-    !(v.retrieval.sourceIds === null || uniqueIds(v.retrieval.sourceIds)) ||
+    !(
+      v.retrieval.sourceIds === null ||
+      (Array.isArray(v.retrieval.sourceIds) &&
+        v.retrieval.sourceIds.every(nonempty))
+    ) ||
     !nullableText(v.retrieval.cursor)
   )
     refuse("invalid_retrieval");
   return v;
 }
 function validateBundle(value) {
-  keys(value, ["schema", "documents"]);
+  if (!record(value)) refuse("invalid_shape");
   if (value.schema !== bundleContract || !Array.isArray(value.documents))
     refuse("invalid_bundle");
-  const ids = new Set();
-  for (const doc of value.documents) {
-    keys(doc, [
-      "sourceId",
-      "text",
-      "uri",
-      "revision",
-      "capturedAt",
-      "attribution",
-      "provenance",
-      "rawArtifactSha256",
-      "unavailableReason",
-    ]);
-    if (!nonempty(doc.sourceId) || ids.has(doc.sourceId))
-      refuse("invalid_source_identity");
-    ids.add(doc.sourceId);
-    if (doc.unavailableReason !== undefined) {
-      if (
-        !nonempty(doc.unavailableReason) ||
-        Object.keys(doc).some(
-          (k) => !["sourceId", "unavailableReason"].includes(k),
-        )
-      )
-        refuse("invalid_unavailable_source");
-      continue;
-    }
-    if (
-      typeof doc.text !== "string" ||
-      !doc.text.isWellFormed() ||
-      ![doc.uri, doc.revision, doc.capturedAt].every(nullableText) ||
-      !nonempty(doc.attribution) ||
-      !record(doc.provenance) ||
-      !(doc.rawArtifactSha256 === null || digest(doc.rawArtifactSha256))
-    )
-      refuse("invalid_document");
-    if (doc.capturedAt !== null) utc(doc.capturedAt);
-  }
-  return value.documents;
+  return value.documents.map((doc) => {
+    const recordSha256 = identity(doc);
+    const unavailable = (sourceId, unavailableReason) => ({
+      source: { sourceId, unavailableReason },
+      recordSha256,
+    });
+    if (!record(doc)) return unavailable(null, "invalid_shape");
+    if (!nonempty(doc.sourceId))
+      return unavailable(null, "invalid_source_identity");
+    if (nonempty(doc.unavailableReason))
+      return { source: { ...doc }, recordSha256 };
+    if (typeof doc.text !== "string" || !doc.text.isWellFormed())
+      return unavailable(doc.sourceId, "invalid_document");
+    // Capture metadata is not a condition for reading usable source text.
+    // Keep its original record identity; only typed inventory fields are shown.
+    const source = { ...doc };
+    delete source.unavailableReason;
+    return { source, recordSha256 };
+  });
 }
 function controls(value) {
   keys(value, ["deadlineAt", "outputBytes"]);
@@ -330,13 +330,16 @@ export async function createApplicationContextService(options) {
               JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)),
             );
             verifiedBindingIds.push(bindingId);
-            for (const doc of docs)
+            for (const { source: doc, recordSha256 } of docs)
               sources.push({
                 ...doc,
                 bindingId,
                 bundleSha256: binding.sha256,
-                recordSha256: identity(doc),
-                textSha256: doc.text === undefined ? null : sha256(doc.text),
+                recordSha256,
+                textSha256:
+                  typeof doc.text === "string" && doc.text.isWellFormed()
+                    ? sha256(doc.text)
+                    : null,
               });
           } catch (error) {
             check();
@@ -364,7 +367,7 @@ export async function createApplicationContextService(options) {
             (s) =>
               s.sourceId === null || retrieval.sourceIds.includes(s.sourceId),
           );
-          for (const id of retrieval.sourceIds)
+          for (const id of new Set(retrieval.sourceIds))
             if (!sources.some((s) => s.sourceId === id))
               selected.push({
                 bindingId: null,
@@ -372,11 +375,25 @@ export async function createApplicationContextService(options) {
                 unavailableReason: "source_not_in_authorized_inventory",
               });
         }
-        const nonnull = selected
-          .filter((s) => s.sourceId !== null)
-          .map((s) => s.sourceId);
-        if (new Set(nonnull).size !== nonnull.length)
-          refuse("ambiguous_source_identity");
+        const occurrences = new Map();
+        for (const source of selected)
+          if (source.sourceId !== null)
+            occurrences.set(
+              source.sourceId,
+              (occurrences.get(source.sourceId) ?? 0) + 1,
+            );
+        selected = selected.map((source) =>
+          source.sourceId !== null && occurrences.get(source.sourceId) > 1
+            ? {
+                bindingId: source.bindingId,
+                sourceId: null,
+                bundleSha256: source.bundleSha256,
+                recordSha256: source.recordSha256,
+                textSha256: null,
+                unavailableReason: "ambiguous_source_identity",
+              }
+            : source,
+        );
         snapshot = {
           identity: queryIdentity,
           sources: selected,
@@ -439,7 +456,12 @@ export async function createApplicationContextService(options) {
         });
       const source = sources[position.sourceIndex];
       if (!source) refuse("invalid_cursor_position");
-      const { text, ...inventory } = source;
+      const { text } = source;
+      const inventory = Object.fromEntries(
+        Object.entries(source).filter(([name, value]) =>
+          inventoryField(name, value),
+        ),
+      );
       base.inventory = [inventory];
       const token = randomBytes(32).toString("hex");
       const render = (end) => {
@@ -475,7 +497,11 @@ export async function createApplicationContextService(options) {
                     textSha256: source.textSha256,
                     recordSha256: source.recordSha256,
                     bundleSha256: source.bundleSha256,
-                    rawArtifactSha256: source.rawArtifactSha256,
+                    rawArtifactSha256:
+                      source.rawArtifactSha256 === null ||
+                      digest(source.rawArtifactSha256)
+                        ? source.rawArtifactSha256
+                        : null,
                     quoteSha256: sha256(
                       text.slice(position.textOffsetUtf16, end),
                     ),
