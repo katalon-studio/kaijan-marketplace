@@ -120798,22 +120798,28 @@ var RunnerClarifications = class {
     const directory3 = dirname9(context.artifactDirectory);
     const seen = /* @__PURE__ */ new Set();
     const deadlineAt = new Date(Date.now() + ms).toISOString();
+    const expired = () => Object.assign(Error("Original Runner deadline expired"), {
+      code: "loki.runner.deadline/1"
+    });
     return async (raw, incomingSignal) => {
       const request3 = clarificationRequestSchema.parse(raw);
       if (seen.has(request3.clarificationId))
         throw Error("Clarification already requested; do not replay");
       seen.add(request3.clarificationId);
       const remaining = Date.parse(deadlineAt) - Date.now();
-      if (remaining <= 0) throw Error("Original Runner deadline expired");
+      if (remaining <= 0) throw expired();
+      const deadlineSignal = AbortSignal.timeout(remaining);
       const signal = AbortSignal.any([
         context.signal,
         incomingSignal,
-        AbortSignal.timeout(remaining)
+        deadlineSignal
       ]);
-      if (signal.aborted || this.active.has(directory3))
+      if (signal.aborted || this.active.has(directory3)) {
+        if (deadlineSignal.aborted) throw expired();
         throw Error(
           "Clarification interrupted or already pending; do not replay"
         );
+      }
       const root5 = join22(directory3, "clarifications", request3.clarificationId);
       try {
         await boundedFile(join22(root5, "request.json"));
@@ -120826,7 +120832,10 @@ var RunnerClarifications = class {
         "request.json",
         Buffer.from(JSON.stringify({ request: request3, deadlineAt }))
       );
-      if (signal.aborted) throw Error("Clarification interrupted");
+      if (signal.aborted) {
+        if (deadlineSignal.aborted) throw expired();
+        throw Error("Clarification interrupted");
+      }
       await atomicFile(
         directory3,
         "pending-clarification.json",
@@ -120838,9 +120847,10 @@ var RunnerClarifications = class {
           const abort = () => {
             this.active.delete(directory3);
             reject(
-              Object.assign(Error("Clarification interrupted; do not replay"), {
-                code: "loki.runner.clarification-interrupted/1"
-              })
+              deadlineSignal.aborted ? expired() : Object.assign(
+                Error("Clarification interrupted; do not replay"),
+                { code: "loki.runner.clarification-interrupted/1" }
+              )
             );
           };
           const lifecycle2 = context.owner?.kind === "run" && context.owner.persisted === true && context.owner.id === basename(directory3) ? context.lifecycle ?? null : null;
@@ -129722,7 +129732,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
               }
             })().catch((error62) => {
               if (contextSignal.aborted) return;
-              if (signal.aborted || Date.now() >= clarificationDeadline) {
+              if (signal.aborted || Date.now() >= clarificationDeadline || error62 instanceof Error && "code" in error62 && error62.code === "loki.runner.deadline/1") {
                 if (!resultReceived) send({ type: "stop", reason: "deadline" });
                 return;
               }
