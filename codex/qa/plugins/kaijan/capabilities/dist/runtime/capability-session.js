@@ -21131,18 +21131,18 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
 });
 
 // ../contracts/dist/clarification-presentation.js
-var binding = external_exports.strictObject({
+var binding = external_exports.object({
   sourceId: external_exports.string(),
-  quote: external_exports.string().min(1).max(512)
+  quote: external_exports.string().min(1)
 });
-var ordinaryPresentation = external_exports.strictObject({
+var ordinaryPresentation = external_exports.object({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
-  choices: external_exports.array(binding).max(8)
+  choices: external_exports.array(binding)
 });
 var clarificationPresentationSchema = external_exports.union([
   ordinaryPresentation,
-  external_exports.strictObject({
+  external_exports.object({
     kind: external_exports.literal("read-only-path"),
     subject: binding,
     control: binding,
@@ -21171,17 +21171,24 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
   basis: external_exports.literal("model-authored-unverified"),
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
-var runnerExecutionReportSchema = external_exports.union([
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view = { ...value };
+  if (view.effects !== "known" && view.effects !== "uncertain")
+    delete view.effects;
+  return view;
+}, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
     schema: external_exports.literal("loki.runner.execution-report/2")
   })
-]);
+]));
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -22368,7 +22375,7 @@ var customerExecutionEvidenceSchema = external_exports.object({
 });
 var progress2 = external_exports.object({
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
   completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
@@ -22684,7 +22691,7 @@ var executionReport = external_exports.object({
   completedSteps: strings3.optional(),
   remainingSteps: strings3,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
-  effects: external_exports.enum(["known", "uncertain"])
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
 var evidenceQuote = external_exports.object({
   id: external_exports.string(),

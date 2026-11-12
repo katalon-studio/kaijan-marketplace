@@ -12,7 +12,7 @@ export declare const runnerAnswerReceipt: z.ZodObject<{
     clarificationId: z.ZodString;
     answerKey: z.ZodString;
     status: z.ZodLiteral<"retained">;
-}, z.core.$strict>;
+}, z.core.$strip>;
 export declare const runnerAnswerError: z.ZodObject<{
     schema: z.ZodLiteral<"loki.runner.clarification-error/1">;
     runId: z.ZodString;
@@ -36,7 +36,7 @@ export declare const runnerAnswerOutput: z.ZodUnion<readonly [z.ZodObject<{
     clarificationId: z.ZodString;
     answerKey: z.ZodString;
     status: z.ZodLiteral<"retained">;
-}, z.core.$strict>, z.ZodObject<{
+}, z.core.$strip>, z.ZodObject<{
     schema: z.ZodLiteral<"loki.runner.clarification-error/1">;
     runId: z.ZodString;
     clarificationId: z.ZodString;
