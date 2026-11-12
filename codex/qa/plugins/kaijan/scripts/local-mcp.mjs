@@ -48227,6 +48227,7 @@ var present = (entry) => {
 async function createInstalledSession(root, build, data, broker, {
   runnerValidation,
   applicationContext,
+  createHostSurface,
   onStartupStage,
   lifecycleFactory
 } = {}) {
@@ -48428,6 +48429,27 @@ async function createInstalledSession(root, build, data, broker, {
       processElapsedMs: Math.round(initialized)
     }) + "\n"
   );
+  if (host === "claude_code" && createHostSurface) {
+    try {
+      session.projectHistory = await createHostSurface({
+        session,
+        library,
+        data,
+        broker,
+        build
+      });
+      const close = session.close.bind(session);
+      session.close = async () => {
+        try {
+          await session.projectHistory.close();
+        } catch {
+        } finally {
+          await close();
+        }
+      };
+    } catch {
+    }
+  }
   return session;
 }
 
@@ -57412,6 +57434,7 @@ function capabilityMcpRegistration(session, setup) {
       ...session.feedback?.tools ?? [],
       ...session.issues?.tools ?? [],
       ...session.configurations?.tools ?? [],
+      ...session.projectHistory?.tools ?? [],
       ...controls
     ].map((tool2) => {
       const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
@@ -57441,7 +57464,8 @@ function capabilityMcpRegistration(session, setup) {
       ...controls.map((tool2) => tool2.name),
       ...session.feedback?.tools.map((tool2) => tool2.name) ?? [],
       ...session.issues?.tools.map((tool2) => tool2.name) ?? [],
-      ...session.configurations?.tools.map((tool2) => tool2.name) ?? []
+      ...session.configurations?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.projectHistory?.tools.map((tool2) => tool2.name) ?? []
     ]
   };
 }
@@ -57588,6 +57612,11 @@ function createCapabilityMcpServer(session, version4, setup) {
         params.name,
         params.arguments ?? {},
         params._meta,
+        AbortSignal.any([extra.signal, lifetime.signal])
+      );
+    if (session.projectHistory?.hasTool(params.name))
+      return session.projectHistory.invoke(
+        params.arguments ?? {},
         AbortSignal.any([extra.signal, lifetime.signal])
       );
     if (params.name === "loki_report_rendered" && session.forRequest && (typeof params._meta?.threadId !== "string" || !params._meta.threadId.trim())) {
@@ -57978,7 +58007,7 @@ function localStateArguments(directory) {
 }
 
 // apps/codex-plugin/src/local-entry.mjs
-async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext } = {}) {
+async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext, createHostSurface } = {}) {
   let setup, server, telemetry, startupTelemetry, session, close;
   let startupStage = "verify_payload";
   const startupStarted = performance5.now();
@@ -58016,6 +58045,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
       {
         runnerValidation,
         applicationContext,
+        ...createHostSurface ? { createHostSurface } : {},
         lifecycleFactory: () => createBoundLifecycle(telemetry).observe,
         onStartupStage: (stage2) => {
           startupStage = stage2;

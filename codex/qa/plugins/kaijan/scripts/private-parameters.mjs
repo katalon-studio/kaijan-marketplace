@@ -32942,6 +32942,7 @@ var present = (entry) => {
 async function createInstalledSession(root, build, data, broker, {
   runnerValidation,
   applicationContext,
+  createHostSurface,
   onStartupStage,
   lifecycleFactory
 } = {}) {
@@ -33143,6 +33144,27 @@ async function createInstalledSession(root, build, data, broker, {
       processElapsedMs: Math.round(initialized)
     }) + "\n"
   );
+  if (host === "claude_code" && createHostSurface) {
+    try {
+      session.projectHistory = await createHostSurface({
+        session,
+        library,
+        data,
+        broker,
+        build
+      });
+      const close = session.close.bind(session);
+      session.close = async () => {
+        try {
+          await session.projectHistory.close();
+        } catch {
+        } finally {
+          await close();
+        }
+      };
+    } catch {
+    }
+  }
   return session;
 }
 
