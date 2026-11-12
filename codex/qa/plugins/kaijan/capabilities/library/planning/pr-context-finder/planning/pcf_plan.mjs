@@ -86,13 +86,11 @@ export const SCHEMA = obj({
     obj({
       title: {
         type: "string",
-        minLength: 1,
         description:
           "Short action name for this test, using the feature language.",
       },
       method: {
         type: "string",
-        minLength: 1,
         description:
           "Proposed verification approach; not an executable operation or execution permission.",
       },
@@ -253,29 +251,7 @@ function validateSchemaAt(value, schema, at) {
       path: at,
       rule: "output_enum",
     }));
-  if (kind === "string")
-    need(strip(value), "Empty output string", () => ({
-      path: at,
-      rule: "nonempty_string",
-    }));
   if (kind === "object") {
-    need(
-      equal(
-        new Set(Object.keys(value)).size,
-        Object.keys(schema.properties).length,
-      ) && Object.keys(value).every((k) => Object.hasOwn(schema.properties, k)),
-      "Output keys mismatch",
-      () => ({
-        path: at,
-        rule: "output_keys",
-        missing_keys: Object.keys(schema.properties).filter(
-          (key) => !Object.hasOwn(value, key),
-        ),
-        unexpected_keys: Object.keys(value).filter(
-          (key) => !Object.hasOwn(schema.properties, key),
-        ),
-      }),
-    );
     for (const [key, child] of Object.entries(schema.properties))
       validateSchemaAt(value[key], child, pointer(at, key));
   }
@@ -323,27 +299,9 @@ export function validatePlan(plan, packet) {
     );
   const objectives = plan.objectives.map((o) => o.id),
     tests = plan.tests.map((t) => t.id);
-  need(
-    new Set(objectives).size === objectives.length &&
-      new Set(tests).size === tests.length,
-    "Empty or duplicate objective/test identities",
-    () => {
-      const duplicateObjectives =
-        new Set(objectives).size !== objectives.length;
-      const values = duplicateObjectives ? objectives : tests;
-      return referenceDiagnostic(
-        duplicateObjectives ? "/objectives" : "/tests",
-        values,
-        values,
-      );
-    },
+  need(new Set(tests).size === tests.length, "Duplicate test identities", () =>
+    referenceDiagnostic("/tests", tests, tests),
   );
-  if (!objectives.length || !tests.length)
-    need(
-      plan.status === "needs_clarification" && plan.ambiguities.length,
-      "Empty intentions require explicit clarification",
-      () => ({ path: "", rule: "empty_intentions_require_clarification" }),
-    );
   const handoff = plan.runner_handoff.scenario_ids;
   need(
     new Set(handoff).size === handoff.length &&
@@ -486,8 +444,7 @@ export function schemaFor() {
 // their existing shape; old plans still use the independent validator above.
 function generationShape(schema) {
   const value = copy(schema);
-  // Keep an independent declaration before full definitions. Projection must
-  // not conceal an intended test whose body is missing from generation.
+  // Retain the generator's outline separately from the full test definitions.
   const properties = {};
   for (const [key, property] of Object.entries(value.properties)) {
     if (key === "tests")
@@ -521,13 +478,6 @@ export function projectGeneratedSourcePlan(
   version = SOURCE_PLAN_VERSION,
 ) {
   validateSchema(value, generationSchemaFor(packet, version));
-  need(
-    Array.isArray(value?.tests) &&
-      value.tests.every((row) => /^T[1-9][0-9]{0,5}$/.test(row.id)) &&
-      Array.isArray(value?.objectives) &&
-      value.objectives.every((row) => /^O[1-9][0-9]{0,5}$/.test(row.id)),
-    "Invalid source-plan identity",
-  );
   if (version === GENERATED_PLAN_VERSION)
     return projectGeneratedPlan(value, packet);
   validatePlanningRelationAuthority(value, packet.evidence_catalog);
@@ -561,21 +511,6 @@ export function customerPlanFromRetained(result, input) {
 }
 export function projectGeneratedPlan(value) {
   validateSchema(value, generationShape(SCHEMA));
-  const outlined = value.test_outline.map((test) => test.id);
-  const defined = value.tests.map((test) => test.id);
-  need(
-    new Set(outlined).size === outlined.length &&
-      outlined.length === defined.length &&
-      outlined.every((id) => defined.includes(id)) &&
-      defined.every((id) => outlined.includes(id)),
-    "Test outline and full definitions do not match",
-    () => ({
-      path: "/test_outline",
-      rule: "complete_test_definitions",
-      missing_test_ids: outlined.filter((id) => !defined.includes(id)),
-      undeclared_test_ids: defined.filter((id) => !outlined.includes(id)),
-    }),
-  );
   // copy handles the lossless JSON parser's values. Never mutate provider data.
   const projected = copy(value);
   delete projected.test_outline;

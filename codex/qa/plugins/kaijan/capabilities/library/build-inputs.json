@@ -2,7 +2,7 @@
   "schema": "loki.capability-library-build/1",
   "package": "@loki/capabilities",
   "version": "0.1.0",
-  "nativeSelectionSha256": "9146a2e336bd09d3f0e26b8a3ff91d76f07cfe0fe3ea9ad6f54d0d2da003b70e",
+  "nativeSelectionSha256": "1c68e2008adb95f9d5b62941a16e92db334040aaaabc97e18c9d88626b5d05ea",
   "firstPartyInputs": {
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
