@@ -780,9 +780,9 @@
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "1c90e9cba0f493650c6062e997371f50fdb3f7f76c97d5a8eb8586ac4249ef8e",
-      "packages/computer-runner/src/runner.mjs": "197770f866ea176d9293f779760d72a0f4b2dcfe69e19d66c9c4bf9515a9eadc",
+      "packages/computer-runner/src/runner.mjs": "24ad06663fa25c1f111ce6e16d4f91276261fa7f8ed2e7c4ee7093348b616196",
       "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73",
-      "packages/computer-runner/README.md": "a0cbe37d22d083b830e8784eb502fc795d02a36846a55a84081b871dbd2b831c",
+      "packages/computer-runner/README.md": "b866116cddce12a3d2eae102f5523634cc2a76d31dcbf6babbc328e2d4abbfc0",
       "packages/computer-runner/flow.md": "cab7b8d601f3bedda68be590243471296bedbd42138b7eb5b025dcd71183df26",
       "packages/computer-runner/src/runner.d.mts": "2398fbe401a6094312270daf1406ee4fd575ca5c31083bb2d5e6eceb2838c8da",
       "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
