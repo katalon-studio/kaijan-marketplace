@@ -125,8 +125,9 @@ capture/cleanup; late cleanup deadline/Stop observations are separate and cannot
 reverse it. `terminal.actor` and `terminal.reason` retain the cause. Final
 prose or capture alone is insufficient. Completion and step reports are
 model-authored and unverified; returned actions do not prove steps. Independently
-observe the application outcome. `testVerdict` remains `unverified`, and Product
-terminal checks cannot pass an incomplete run.
+observe the application outcome. `testVerdict` remains `unverified`. Independent
+caller-authored terminal checks can compare available captured fields even when
+other Run work is incomplete; they do not establish whole-task completion.
 
 For task intent, observations and result wording, follow the
 [caller preparation and result guidance](../skills/run-test/SKILL.md#execute-an-explicit-ui-scenario).
@@ -317,7 +318,10 @@ Pre-dispatch validation reads the original Plan only to verify identity and scop
 the caller still supplies the complete execution scenario. Changing a case uses
 a new requestKey and execution. Old request/results stay unchanged.
 
-Missing observations, Stop before the terminal decision or incomplete native execution block the checks. A
+Missing observations and an explicit operator Stop block the checks, even when
+that Stop has a recorded decision time. A host Stop without a recorded decision
+also blocks; a late host Stop does not reverse a recorded non-operator decision.
+Ordinary incomplete execution does not discard an available captured field. A
 terminal match is not viewport visibility, saved application data or a general
 semantic pass. Expected/Actual and evidence hashes are retained; raw private
 traces remain private. A deliberate failing control stays labelled as such.

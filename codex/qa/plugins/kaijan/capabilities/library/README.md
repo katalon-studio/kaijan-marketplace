@@ -276,6 +276,22 @@ parent's focused final validation. No new live acceptance is implied by a move.
 
 ### Per-question clarification failures
 
+Saved clarification assessment reads retain all selected, hash-bound exchanges.
+Their combined size no longer makes the entire context unavailable at 2 MiB.
+Compose this reader with the complete-input assessment preparation and image
+contract; updating only the first reader leaves the later packet veto in place.
+The exported `assessmentPreparationLimits.packetBytes` remains a historical
+constant for older consumers, not a current full-preparation size guarantee.
+Historical oversize refusals remain readable. Inspection still returns explicit
+excerpts and locators to the complete retained source, not a shortened assessment
+input. Caller answers remain caller context rather than application observations.
+Live and saved question reconstruction also read complete selected captures
+without the former 8 MiB per-file or 32 MiB aggregate cutoffs. The question still
+quotes only its selected text. Private-file checks and exact source-field hashes
+remain; saved reads additionally verify the selected manifest member's complete
+byte count and hash. Missing or changed sources keep the existing protected,
+unverified-question fallback rather than inventing a captured quotation.
+
 The parent and Product worker return a correlated private clarification error
 when a live callback fails. They do not turn that one question into an operator
 Stop, abort native work or discard a result the worker returned. An unusable
@@ -303,6 +319,13 @@ values remain protected, including unmatched answers. An older consumer can
 still reject or hide these records, so compose these consumers together. No
 new card/resource identity or automatic callback retry is introduced. The
 transition-dependent parse path and remaining full audit are still open.
+
+Context-query reply sends keep the original invocation identity separately from
+the callback's returned value. If IPC cannot send that value, the parent records
+the failure against the original query and sends its existing unresolved error
+while the channel is live. An undefined or unserializable reply cannot leave
+that query waiting after the host callback has returned. The callback is not
+repeated, and independent progress and actual Stop/deadline handling stay intact.
 
 ## Awaited advisory queries
 

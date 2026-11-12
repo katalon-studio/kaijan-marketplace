@@ -20475,18 +20475,18 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
 });
 
 // ../contracts/dist/clarification-presentation.js
-var binding = external_exports.strictObject({
+var binding = external_exports.object({
   sourceId: external_exports.string(),
-  quote: external_exports.string().min(1).max(512)
+  quote: external_exports.string().min(1)
 });
-var ordinaryPresentation = external_exports.strictObject({
+var ordinaryPresentation = external_exports.object({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
-  choices: external_exports.array(binding).max(8)
+  choices: external_exports.array(binding)
 });
 var clarificationPresentationSchema = external_exports.union([
   ordinaryPresentation,
-  external_exports.strictObject({
+  external_exports.object({
     kind: external_exports.literal("read-only-path"),
     subject: binding,
     control: binding,
@@ -20515,17 +20515,24 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
   basis: external_exports.literal("model-authored-unverified"),
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
-var runnerExecutionReportSchema = external_exports.union([
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view = { ...value };
+  if (view.effects !== "known" && view.effects !== "uncertain")
+    delete view.effects;
+  return view;
+}, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
     schema: external_exports.literal("loki.runner.execution-report/2")
   })
-]);
+]));
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -21712,7 +21719,7 @@ var customerExecutionEvidenceSchema = external_exports.object({
 });
 var progress2 = external_exports.object({
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
   completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
@@ -22028,7 +22035,7 @@ var executionReport = external_exports.object({
   completedSteps: strings3.optional(),
   remainingSteps: strings3,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
-  effects: external_exports.enum(["known", "uncertain"])
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
 var evidenceQuote = external_exports.object({
   id: external_exports.string(),
@@ -25509,7 +25516,7 @@ var runnerAnswer = external_exports.looseObject({
   answers: external_exports.record(external_exports.string(), external_exports.unknown()),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
-var runnerAnswerReceipt = external_exports.strictObject({
+var runnerAnswerReceipt = external_exports.object({
   schema: external_exports.literal("loki.runner.clarification-answer/1"),
   runId: hashId,
   clarificationId: hashId,
@@ -25540,30 +25547,45 @@ var runnerAnswerOutput = external_exports.union([
 // src/runner-clarification.ts
 var nonempty6 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var question = external_exports.strictObject({
-  id: nonempty6,
+var supportingStrings = external_exports.preprocess(
+  (value) => Array.isArray(value) ? value.filter((item) => typeof item === "string") : [],
+  external_exports.array(external_exports.string())
+);
+var question = external_exports.object({
+  id: external_exports.string(),
   question: nonempty6,
-  kind: nonempty6,
-  presentation: clarificationPresentationSchema.optional()
+  kind: nonempty6.catch("task-scope"),
+  presentation: clarificationPresentationSchema.optional().catch(void 0)
+}).transform((value) => {
+  if (value.presentation === void 0) delete value.presentation;
+  return value;
 });
-var clarificationRequestSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification/1"),
+var identityFields = {
   clarificationId: hashId2,
   providerResponseId: nonempty6,
-  callId: nonempty6,
-  reason: external_exports.string(),
-  completedSteps: external_exports.array(external_exports.string()),
-  remainingSteps: external_exports.array(external_exports.string()),
-  evidence: external_exports.array(external_exports.string()),
-  questions: external_exports.array(question).min(1),
-  provenance: external_exports.literal("model-authored-unverified")
-}).superRefine((v, ctx) => {
-  if (new Set(v.questions.map((q) => q.id)).size !== v.questions.length || v.clarificationId !== digest19(v.providerResponseId + "\0" + v.callId))
+  callId: nonempty6
+};
+var checkCorrelation = (value, ctx) => {
+  if (value.clarificationId !== digest19(value.providerResponseId + "\0" + value.callId))
     ctx.addIssue({
       code: "custom",
-      message: "Invalid clarification correlation or duplicate questions"
+      message: "Invalid clarification correlation"
     });
-});
+};
+var originalRequestIdentity = external_exports.object(identityFields).superRefine(checkCorrelation);
+var clarificationRequestSchema = external_exports.object({
+  schema: external_exports.literal("loki.runner.clarification/1").catch("loki.runner.clarification/1"),
+  ...identityFields,
+  reason: external_exports.string().catch(""),
+  completedSteps: supportingStrings,
+  remainingSteps: supportingStrings,
+  evidence: supportingStrings,
+  questions: external_exports.preprocess(
+    (value) => Array.isArray(value) ? value.filter((q) => question.safeParse(q).success) : value,
+    external_exports.array(question).min(1)
+  ),
+  provenance: external_exports.literal("model-authored-unverified").catch("model-authored-unverified")
+}).superRefine(checkCorrelation);
 var digest19 = (text5) => createHash3("sha256").update(text5).digest("hex");
 
 // src/runner-clarification-worker.ts
@@ -25762,8 +25784,6 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
         await send2(frame);
         const reply = await response;
         if (combined.aborted) throw Error("Operator Stop");
-        if (reply.type === "application-context-error" && reply.disposition === "unresolved")
-          throw Error("Application-context effect unresolved; do not replay");
         const output2 = reply.type === "application-context-result" ? reply.resultJson : JSON.stringify(reply);
         completed.set(frame.invocationId, {
           frameJson: JSON.stringify(frame),
@@ -25779,6 +25799,15 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
   return {
     tool,
     receive,
+    reject(frame) {
+      if (!frame || typeof frame !== "object" || !("invocationId" in frame) || typeof frame.invocationId !== "string")
+        return false;
+      const entry = pending.get(frame.invocationId);
+      if (!entry) return false;
+      pending.delete(frame.invocationId);
+      entry.reject(Error("Application context reply could not be used"));
+      return true;
+    },
     close: () => {
       closed = true;
       operationSignal.removeEventListener("abort", failAll);
@@ -26464,7 +26493,6 @@ controller.signal.addEventListener("abort", () => {
 });
 var started = false;
 var applicationContext;
-var applicationContextProtocolFailure = false;
 var clarification;
 var clarificationDirectory;
 var clarificationReplyErrors = [];
@@ -26478,6 +26506,29 @@ var retainClarificationReplyError = (frame, error62) => {
         directory,
         "runner-clarification-reply-errors.json",
         Buffer.from(JSON.stringify({ errors: clarificationReplyErrors }))
+      )
+    ).catch(() => {
+    });
+  }
+};
+var contextDirectory;
+var contextReplyErrors = [];
+var contextReplyWrites = Promise.resolve();
+var retainContextReplyError = (frame, error62) => {
+  let text5;
+  try {
+    text5 = String(error62);
+  } catch {
+    text5 = "Unprintable context reply failure";
+  }
+  contextReplyErrors.push({ frame, error: text5 });
+  if (contextDirectory) {
+    const directory = contextDirectory;
+    contextReplyWrites = contextReplyWrites.then(
+      () => atomicFile(
+        directory,
+        "runner-context-reply-errors.json",
+        Buffer.from(JSON.stringify({ errors: contextReplyErrors }))
       )
     ).catch(() => {
     });
@@ -26516,9 +26567,9 @@ process.on("message", (message) => {
     try {
       if (!applicationContext?.receive(frame))
         throw Error("Unregistered context reply");
-    } catch {
-      applicationContextProtocolFailure = true;
-      controller.abort();
+    } catch (error62) {
+      retainContextReplyError(frame, error62);
+      applicationContext?.reject(frame);
     }
     return;
   }
@@ -26536,8 +26587,10 @@ process.on("message", (message) => {
     let nativeDispatched = false;
     try {
       const options = frame.options;
-      if (typeof options.artifactDirectory === "string")
+      if (typeof options.artifactDirectory === "string") {
         clarificationDirectory = dirname5(options.artifactDirectory);
+        contextDirectory = clarificationDirectory;
+      }
       const input3 = frame.input;
       const limits = options.limits;
       if (input3.executionMethod !== "desktop-ui")
@@ -26660,11 +26713,8 @@ process.on("message", (message) => {
         throw Error(
           "Background worker failure; effects unknown, do not replay"
         );
-      if (applicationContextProtocolFailure)
-        throw Error(
-          "Application-context IPC failed; effects are unknown, do not replay"
-        );
       await clarificationReplyWrites;
+      await contextReplyWrites;
       await send({ type: "result", result });
       if (failures?.failed)
         throw Error("Background worker failure during result handoff");
@@ -26675,6 +26725,7 @@ process.on("message", (message) => {
       clarification?.close();
       applicationContext?.close();
       await clarificationReplyWrites;
+      await contextReplyWrites;
       await send({
         type: "error",
         nativeDispatched,

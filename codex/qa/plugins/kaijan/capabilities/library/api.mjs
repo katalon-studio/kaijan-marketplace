@@ -75,7 +75,7 @@ var init_define_LOKI_CHANGE_RISK_PINS = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "1c90e9cba0f493650c6062e997371f50fdb3f7f76c97d5a8eb8586ac4249ef8e", "packages/computer-runner/src/runner.mjs": "24ad06663fa25c1f111ce6e16d4f91276261fa7f8ed2e7c4ee7093348b616196", "packages/computer-runner/src/private.mjs": "a6009635979f9c1a39445034295838f4c051f19e234d010abc296e8a3f91fd73", "packages/computer-runner/README.md": "564647ede3063f79fde98d112405a085cf72a08d3d0c60c77bda288712d7c975", "packages/computer-runner/flow.md": "cab7b8d601f3bedda68be590243471296bedbd42138b7eb5b025dcd71183df26", "packages/computer-runner/src/runner.d.mts": "f21c7c7443e9593a611f504c0c08a00f2a89f96a1f741bc92ab26623be228aa4", "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "5e4d8a71ca6d797dc8045cdbc1e7c7d827a2f0da43f8150b3479399d758e3d0a", "packages/computer-runner/src/execution-status.mjs": "11b324629cbbdc04105271b1fd9a570bb49be43bc9ae127cf62623db113a66e4", "packages/computer-runner/src/redaction.mjs": "92dd8c30a366b52160bf2872eb189dbfcafbae6bbcdff7cc52f9a1037829317e", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "7842bf52bf6d6453af8215e90d38c57c751c119dc15445168339fd77b4b38318", "packages/computer-runner/src/case-evidence.mjs": "95eecc9db7dba4ba0dc922477297e1fa7a7f1bc23893490677380d24d9d58a10", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "574664071009e526b7c8d08ebe3d7bc724b6007151b2ad03106647c43050589e", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "dd7bdf9a3ccf9fb3ba06093ffec62eea3541c11e70c4fae93be0c5f3811bb79f", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "8a966c1566bd5d64dafc355bfbd12ee2136e1e0cbb1c8484f19845136c017314", "packages/computer-runner/src/browser-agent.mjs": "bd6c2296954aa7cd643ba8bc591e051a105d39fb32d4a3eb392b256509744ffa", "packages/computer-runner/src/browser-recap.mjs": "9bd8ebb3461d7b846d4f5c117e18653f12969c4d174b1f9d9f61734c1ed1681f", "packages/provider-transport/responses-session.mjs": "8cefcc395aad4fed689e0ea2f5a24f96fa6fb179dbd37381caf9f087f5254c05", "packages/provider-transport/responses-session.d.mts": "269fc88a0fb5a7e681498c0a751aa42af82a4927a944788883cd9721a8486137", "packages/provider-transport/package.json": "223fb5b41b49cc160ef83ba2742243454d1f06d197296f32c4c3e40a479d5580", "packages/provider-transport/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "1c90e9cba0f493650c6062e997371f50fdb3f7f76c97d5a8eb8586ac4249ef8e", "packages/computer-runner/src/runner.mjs": "1b2c25af563df72cedbb2e71943d41ba5bb7e683e6e6aa770dd45e2c47e74f2a", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "489699f4258b20efef6a7607665039a5af56818952454ab52b79fac83d8504bc", "packages/computer-runner/flow.md": "cab7b8d601f3bedda68be590243471296bedbd42138b7eb5b025dcd71183df26", "packages/computer-runner/src/runner.d.mts": "11beaa2ffb4e99fe5ed6b2135718702b81c440c6529e3b670f5e5dd60aa9304f", "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "fa4d0171502a82f7a0dc7b6709790f94b123eab942fadbc01819cf1e8a26ba74", "packages/computer-runner/src/redaction.mjs": "8570aa6285350900c0078a1c714a653569057ecd99a81d6b9ea44f9d761cc9fd", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "7842bf52bf6d6453af8215e90d38c57c751c119dc15445168339fd77b4b38318", "packages/computer-runner/src/case-evidence.mjs": "95eecc9db7dba4ba0dc922477297e1fa7a7f1bc23893490677380d24d9d58a10", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "574664071009e526b7c8d08ebe3d7bc724b6007151b2ad03106647c43050589e", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "8a966c1566bd5d64dafc355bfbd12ee2136e1e0cbb1c8484f19845136c017314", "packages/computer-runner/src/browser-agent.mjs": "bd6c2296954aa7cd643ba8bc591e051a105d39fb32d4a3eb392b256509744ffa", "packages/computer-runner/src/browser-recap.mjs": "9bd8ebb3461d7b846d4f5c117e18653f12969c4d174b1f9d9f61734c1ed1681f", "packages/provider-transport/responses-session.mjs": "8cefcc395aad4fed689e0ea2f5a24f96fa6fb179dbd37381caf9f087f5254c05", "packages/provider-transport/responses-session.d.mts": "269fc88a0fb5a7e681498c0a751aa42af82a4927a944788883cd9721a8486137", "packages/provider-transport/package.json": "223fb5b41b49cc160ef83ba2742243454d1f06d197296f32c4c3e40a479d5580", "packages/provider-transport/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -91992,18 +91992,18 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-var binding = external_exports.strictObject({
+var binding = external_exports.object({
   sourceId: external_exports.string(),
-  quote: external_exports.string().min(1).max(512)
+  quote: external_exports.string().min(1)
 });
-var ordinaryPresentation = external_exports.strictObject({
+var ordinaryPresentation = external_exports.object({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
-  choices: external_exports.array(binding).max(8)
+  choices: external_exports.array(binding)
 });
 var clarificationPresentationSchema = external_exports.union([
   ordinaryPresentation,
-  external_exports.strictObject({
+  external_exports.object({
     kind: external_exports.literal("read-only-path"),
     subject: binding,
     control: binding,
@@ -92032,17 +92032,24 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
   basis: external_exports.literal("model-authored-unverified"),
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
-var runnerExecutionReportSchema = external_exports.union([
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view = { ...value };
+  if (view.effects !== "known" && view.effects !== "uncertain")
+    delete view.effects;
+  return view;
+}, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
     schema: external_exports.literal("loki.runner.execution-report/2")
   })
-]);
+]));
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -93751,7 +93758,7 @@ function customerExecutionStatus(state2, effects, blockedReason) {
 }
 var progress2 = external_exports.object({
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
   completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
@@ -94475,7 +94482,7 @@ var executionReport = external_exports.object({
   completedSteps: strings3.optional(),
   remainingSteps: strings3,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
-  effects: external_exports.enum(["known", "uncertain"])
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
 var evidenceQuote = external_exports.object({
   id: external_exports.string(),
@@ -99811,7 +99818,7 @@ var runnerAnswer = external_exports.looseObject({
   answers: external_exports.record(external_exports.string(), external_exports.unknown()),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
-var runnerAnswerReceipt = external_exports.strictObject({
+var runnerAnswerReceipt = external_exports.object({
   schema: external_exports.literal("loki.runner.clarification-answer/1"),
   runId: hashId,
   clarificationId: hashId,
@@ -120144,8 +120151,7 @@ function projectClarificationContext(entry, original, readerRecord) {
   }).parse(original);
   const retained2 = clarificationRecord.parse(JSON.parse(evidence2.text));
   const ref5 = evidence2.provenance;
-  const ids2 = retained2.request.questions.map((question3) => question3.id);
-  if (hash27(evidence2.text) !== evidence2.sha256 || retained2.provenance.runId !== entry.runId || ref5.runId !== entry.runId || ref5.resultSha256 !== entry.resultSha256 || ref5.source !== retained2.provenance.source || ref5.manifestSha256 !== retained2.provenance.manifestSha256 || !isDeepStrictEqual15(ref5.artifact, retained2.provenance.artifact) || retained2.provenance.artifact.name !== `clarification-${retained2.request.clarificationId}.json` || new Set(ids2).size !== ids2.length || retained2.status === "answered" && retained2.answer === null)
+  if (hash27(evidence2.text) !== evidence2.sha256 || retained2.provenance.runId !== entry.runId || ref5.runId !== entry.runId || ref5.resultSha256 !== entry.resultSha256 || ref5.source !== retained2.provenance.source || ref5.manifestSha256 !== retained2.provenance.manifestSha256 || !isDeepStrictEqual15(ref5.artifact, retained2.provenance.artifact) || retained2.provenance.artifact.name !== `clarification-${retained2.request.clarificationId}.json` || retained2.status === "answered" && retained2.answer === null)
     throw Error("Unbound clarification evidence");
   const view = JSON.stringify(readerRecord) === evidence2.text ? readRetainedClarificationView(readerRecord) : void 0;
   const verifiedQuestions = view?.questions ?? [];
@@ -120732,30 +120738,45 @@ import { createHash as createHash52 } from "node:crypto";
 import { dirname as dirname9, join as join22, basename, resolve as resolve8 } from "node:path";
 var nonempty7 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var question = external_exports.strictObject({
-  id: nonempty7,
+var supportingStrings = external_exports.preprocess(
+  (value) => Array.isArray(value) ? value.filter((item2) => typeof item2 === "string") : [],
+  external_exports.array(external_exports.string())
+);
+var question = external_exports.object({
+  id: external_exports.string(),
   question: nonempty7,
-  kind: nonempty7,
-  presentation: clarificationPresentationSchema.optional()
+  kind: nonempty7.catch("task-scope"),
+  presentation: clarificationPresentationSchema.optional().catch(void 0)
+}).transform((value) => {
+  if (value.presentation === void 0) delete value.presentation;
+  return value;
 });
-var clarificationRequestSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification/1"),
+var identityFields = {
   clarificationId: hashId2,
   providerResponseId: nonempty7,
-  callId: nonempty7,
-  reason: external_exports.string(),
-  completedSteps: external_exports.array(external_exports.string()),
-  remainingSteps: external_exports.array(external_exports.string()),
-  evidence: external_exports.array(external_exports.string()),
-  questions: external_exports.array(question).min(1),
-  provenance: external_exports.literal("model-authored-unverified")
-}).superRefine((v, ctx) => {
-  if (new Set(v.questions.map((q) => q.id)).size !== v.questions.length || v.clarificationId !== digest37(v.providerResponseId + "\0" + v.callId))
+  callId: nonempty7
+};
+var checkCorrelation = (value, ctx) => {
+  if (value.clarificationId !== digest37(value.providerResponseId + "\0" + value.callId))
     ctx.addIssue({
       code: "custom",
-      message: "Invalid clarification correlation or duplicate questions"
+      message: "Invalid clarification correlation"
     });
-});
+};
+var originalRequestIdentity = external_exports.object(identityFields).superRefine(checkCorrelation);
+var clarificationRequestSchema = external_exports.object({
+  schema: external_exports.literal("loki.runner.clarification/1").catch("loki.runner.clarification/1"),
+  ...identityFields,
+  reason: external_exports.string().catch(""),
+  completedSteps: supportingStrings,
+  remainingSteps: supportingStrings,
+  evidence: supportingStrings,
+  questions: external_exports.preprocess(
+    (value) => Array.isArray(value) ? value.filter((q) => question.safeParse(q).success) : value,
+    external_exports.array(question).min(1)
+  ),
+  provenance: external_exports.literal("model-authored-unverified").catch("model-authored-unverified")
+}).superRefine(checkCorrelation);
 var ClarificationRejection = class extends Error {
   constructor(code) {
     super(code);
@@ -120832,13 +120853,13 @@ var RunnerClarifications = class {
         );
         if (digest37(bytes2.toString("utf8")) !== record16.sha256)
           throw new RunnerProjectionError();
-        const saved = external_exports.strictObject({ original: external_exports.string(), receipt: runnerAnswerReceipt }).parse(JSON.parse(bytes2.toString("utf8")));
+        const saved = external_exports.object({ original: external_exports.string(), receipt: runnerAnswerReceipt }).parse(JSON.parse(bytes2.toString("utf8")));
         const answer = runnerAnswer.parse(JSON.parse(saved.original));
         if (digest37(answer.answerKey) + ".json" !== record16.file || answer.runId !== saved.receipt.runId || answer.clarificationId !== saved.receipt.clarificationId || answer.answerKey !== saved.receipt.answerKey)
           throw new RunnerProjectionError();
         if (answer.runId !== basename(resolve8(directory3)))
           throw new RunnerProjectionError();
-        const originalRequest = external_exports.object({ request: clarificationRequestSchema }).passthrough().parse(
+        const originalRequest = external_exports.object({ request: originalRequestIdentity }).passthrough().parse(
           JSON.parse(
             (await boundedFile(
               join22(
@@ -120852,7 +120873,8 @@ var RunnerClarifications = class {
         ).request;
         if (originalRequest.clarificationId !== answer.clarificationId)
           throw new RunnerProjectionError();
-        values.push(...clarificationAnswerSecrets(answer));
+        for (const secret2 of clarificationAnswerSecrets(answer))
+          values.push(secret2);
       }
       const active2 = this.redactors.get(directory3) ?? redactor3();
       active2.addSecrets(values);
@@ -121038,17 +121060,12 @@ var RunnerClarifications = class {
       identities.push(...clarificationPrivateIdentities(protocol));
     } catch {
     }
-    let readBytes2 = 0;
     const render = clarificationQuestionRenderer(
       original,
       async (source4) => {
         const bytes2 = await privateFile(
-          join22(directory3, "artifacts", source4.path),
-          8 * 1024 * 1024
+          join22(directory3, "artifacts", source4.path)
         );
-        readBytes2 += bytes2.length;
-        if (readBytes2 > 32 * 1024 * 1024)
-          throw Error("Clarification source read budget exceeded.");
         const page4 = external_exports.object({
           text: external_exports.string().optional(),
           snapshot: external_exports.string().optional()
@@ -121088,10 +121105,7 @@ var RunnerClarifications = class {
         status: external_exports.string()
       }).parse(
         JSON.parse(
-          (await privateFile(
-            join22(directory3, "pending-clarification.json"),
-            1024 * 1024
-          )).toString("utf8")
+          (await privateFile(join22(directory3, "pending-clarification.json"))).toString("utf8")
         )
       );
     } catch (error62) {
@@ -121111,8 +121125,7 @@ var RunnerClarifications = class {
             "clarifications",
             pending.request.clarificationId,
             "request.json"
-          ),
-          1024 * 1024
+          )
         )).toString("utf8")
       )
     );
@@ -121158,8 +121171,7 @@ var RunnerClarifications = class {
             "clarifications",
             input3.clarificationId,
             "request.json"
-          ),
-          1024 * 1024
+          )
         )).toString("utf8")
       )
     );
@@ -121178,8 +121190,7 @@ var RunnerClarifications = class {
           directory3,
           "clarification-answers",
           digest37(input3.answerKey) + ".json"
-        ),
-        1024 * 1024
+        )
       );
       try {
         const record16 = JSON.parse(bytes2.toString("utf8"));
@@ -125205,11 +125216,11 @@ async function prepareFullAssessment(reader, raw, selected2) {
   ]);
   common2.accounting.original = originalAccounting.length ? Object.fromEntries(originalAccounting) : null;
   const missingFacts = [], unresolvedReferences = [];
-  if (resolved2.clarifications?.state === "unavailable")
+  if (resolved2.clarifications?.state === "unavailable" || resolved2.clarifications?.unavailableArtifacts?.length)
     unresolvedReferences.push({
       code: "clarification_evidence_unavailable",
       location: "retainedClarifications",
-      detail: "Original native clarification records are unavailable. No question, answer or continuation is inferred from the result or host answer receipts."
+      detail: "One or more original native clarification records are unavailable. Independently readable records remain included. No unavailable question, answer or continuation is inferred from the result or host answer receipts."
     });
   if (resolved2.cleanupEvidence?.state === "unavailable")
     unresolvedReferences.push({
@@ -129361,7 +129372,7 @@ import {
   redactor as redactor6,
   clarificationAnswerSecrets as clarificationAnswerSecrets2
 } from "@katalon-loki/computer-runner/redaction";
-var rowSchema = external_exports.strictObject({
+var rowSchema = external_exports.object({
   request: clarificationRequestSchema,
   answer: external_exports.looseObject({
     answers: external_exports.record(external_exports.string(), external_exports.unknown()),
@@ -129379,23 +129390,37 @@ async function readAssessmentClarifications(data2, runId, native2, protection, o
     );
     const rows4 = [];
     const secrets = [];
-    let selectedBytes2 = 0;
+    const unavailableArtifacts = [];
     for (const file3 of manifest.files) {
       if (!/^clarification-[a-f0-9]{64}\.json$/.test(file3.path)) continue;
-      selectedBytes2 += file3.bytes;
-      if (selectedBytes2 > assessmentPreparationLimits.packetBytes)
-        throw Error("Clarification evidence exceeds the assessment limit.");
-      const bytes2 = await privateFile(join35(directory3, file3.path), 1024 * 1024);
+      const bytes2 = await privateFile(join35(directory3, file3.path), file3.bytes);
       if (bytes2.length !== file3.bytes || hash35(bytes2) !== file3.sha256)
         throw Error("Clarification artifact changed.");
-      const row2 = rowSchema.parse(JSON.parse(bytes2.toString("utf8")));
-      if (file3.path !== `clarification-${row2.request.clarificationId}.json`)
-        throw Error("Clarification identity changed.");
-      if (row2.status === "answered" && row2.answer === null)
-        throw Error("Answered clarification has no original answer object.");
-      secrets.push(...clarificationAnswerSecrets2(row2.answer));
-      rows4.push({ row: row2, file: file3 });
+      const source4 = JSON.parse(bytes2.toString("utf8"));
+      if (source4 !== null && typeof source4 === "object" && !Array.isArray(source4))
+        for (const secret2 of clarificationAnswerSecrets2(
+          source4.answer
+        ))
+          secrets.push(secret2);
+      try {
+        const row2 = rowSchema.parse(source4);
+        if (file3.path !== `clarification-${row2.request.clarificationId}.json`)
+          throw Error("Clarification identity changed.");
+        if (row2.status === "answered" && row2.answer === null)
+          throw Error("Answered clarification has no original answer object.");
+        const originalQuestions = source4.request.questions;
+        if (Array.isArray(originalQuestions) && originalQuestions.length !== row2.request.questions.length)
+          unavailableArtifacts.push(file3.path);
+        rows4.push({ row: row2, file: file3 });
+      } catch {
+        unavailableArtifacts.push(file3.path);
+      }
     }
+    if (!rows4.length && unavailableArtifacts.length)
+      return {
+        state: "unavailable",
+        reason: "clarification-evidence-unavailable"
+      };
     const additional = redactor6(secrets);
     let privateIdentities = [];
     const protocol = manifest.files.find(
@@ -129414,7 +129439,6 @@ async function readAssessmentClarifications(data2, runId, native2, protection, o
       } catch {
       }
     }
-    let presentationBytes = 0;
     const captures2 = /* @__PURE__ */ new Map();
     const render = originalRequest === void 0 ? void 0 : clarificationQuestionRenderer(
       originalRequest,
@@ -129428,12 +129452,9 @@ async function readAssessmentClarifications(data2, runId, native2, protection, o
         let capture3 = captures2.get(path22);
         if (!capture3) {
           capture3 = (async () => {
-            presentationBytes += member3.bytes;
-            if (presentationBytes > 32 * 1024 * 1024)
-              throw Error("Clarification presentation budget exceeded.");
             const bytes2 = await privateFile(
               join35(directory3, path22),
-              8 * 1024 * 1024
+              member3.bytes
             );
             if (bytes2.length !== member3.bytes || hash35(bytes2) !== member3.sha256)
               throw Error("Clarification capture changed.");
@@ -129544,7 +129565,11 @@ async function readAssessmentClarifications(data2, runId, native2, protection, o
       bindRetainedClarificationView(record16, { questions: questions2 });
       records.push(record16);
     }
-    return { state: "ready", records };
+    return {
+      state: "ready",
+      records,
+      ...unavailableArtifacts.length ? { unavailableArtifacts } : {}
+    };
   } catch {
     return {
       state: "unavailable",
@@ -129655,7 +129680,10 @@ import { fork } from "node:child_process";
 import { open as open14, appendFile } from "node:fs/promises";
 import { dirname as dirname11, join as join37 } from "node:path";
 import { fileURLToPath as fileURLToPath12 } from "node:url";
-import { validateApplicationContextQuery } from "#loki-selected/runner-context";
+import {
+  validateApplicationContextQuery,
+  runnerContextSchema
+} from "#loki-selected/runner-context";
 var RunnerDispatchRefused = class extends Error {
   constructor() {
     super(
@@ -129713,6 +129741,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
   const contextSignal = AbortSignal.any([options2.signal, lifetime.signal]);
   const clarificationSeen = /* @__PURE__ */ new Set();
   const clarificationWork = /* @__PURE__ */ new Set();
+  const clarificationHandlers = /* @__PURE__ */ new Set();
   const clarificationDeadline = Date.now() + (options2.limits?.ms ?? 6e5);
   const clarificationErrorsPath = join37(
     directory3,
@@ -129743,6 +129772,29 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
     }).catch(() => {
     });
   };
+  const contextErrors = [];
+  const contextErrorsPath = join37(directory3, "runner-context-errors.json");
+  let contextErrorWrites = Promise.resolve(), contextErrorsStored = 0;
+  const retainContextError = (frame, error62) => {
+    let text16;
+    try {
+      text16 = String(error62);
+    } catch {
+      text16 = "Unprintable context failure";
+    }
+    contextErrors.push({ frame, error: text16 });
+    const count8 = contextErrors.length;
+    contextErrorWrites = contextErrorWrites.then(async () => {
+      await atomicFile(
+        directory3,
+        "runner-context-errors.json",
+        Buffer.from(JSON.stringify({ errors: contextErrors }))
+      );
+      contextErrorsStored = count8;
+    }).catch(() => {
+    });
+  };
+  const contextHandlers = /* @__PURE__ */ new Set();
   const contextWork = /* @__PURE__ */ new Set();
   let contextRequests = 0;
   const startedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -129773,6 +129825,32 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
       } catch {
         launchError = "IPC write failed; effects are unknown";
       }
+    };
+    const sendContextReply = (reply, failed) => {
+      if (!child2.connected) {
+        failed(Error("Application-context reply channel closed"));
+        return;
+      }
+      try {
+        child2.send(reply, (error62) => {
+          if (error62) failed(error62);
+        });
+      } catch (error62) {
+        failed(error62);
+      }
+    };
+    const failContextQuery = (frame, code, disposition) => {
+      if (!contextSignal.aborted && !resultReceived && typeof frame.invocationId === "string" && /^[a-f0-9]{64}$/.test(frame.invocationId))
+        sendContextReply(
+          {
+            schema: runnerContextSchema,
+            type: "application-context-error",
+            invocationId: frame.invocationId,
+            code,
+            disposition
+          },
+          (error62) => retainContextError(frame, error62)
+        );
     };
     stop = () => {
       stopRequested2 = true;
@@ -129835,10 +129913,13 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
               void interrupted.catch(() => {
               });
               try {
-                const answer = await Promise.race([
-                  handler(request3, signal),
-                  interrupted
-                ]);
+                const hostWork = Promise.resolve().then(
+                  () => handler(request3, signal)
+                );
+                clarificationHandlers.add(hostWork);
+                void hostWork.finally(() => clarificationHandlers.delete(hostWork)).catch(() => {
+                });
+                const answer = await Promise.race([hostWork, interrupted]);
                 returnedAnswer = answer;
                 if (!signal.aborted && !resultReceived && child2.connected)
                   send({
@@ -129886,18 +129967,70 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
             );
             contextRequests++;
             const work = (async () => {
-              const reply = await host.handle(query, { signal: contextSignal });
-              if (!contextSignal.aborted && !resultReceived && child2.connected)
-                send(reply);
-            })().catch(() => {
-              launchError = "Application-context IPC failed; effects are unknown";
-              stop();
+              let abort = () => {
+              };
+              const interrupted = new Promise((_, reject) => {
+                abort = () => reject(
+                  Error("Application-context channel closed; do not replay")
+                );
+                contextSignal.addEventListener("abort", abort, { once: true });
+                if (contextSignal.aborted) abort();
+              });
+              try {
+                const hostWork = Promise.resolve().then(() => {
+                  if (contextSignal.aborted || resultReceived)
+                    throw Error("Application-context channel closed");
+                  return host.handle(query, { signal: contextSignal });
+                });
+                contextHandlers.add(hostWork);
+                void hostWork.finally(() => contextHandlers.delete(hostWork)).catch(() => {
+                });
+                const reply = await Promise.race([hostWork, interrupted]);
+                if (!contextSignal.aborted && !resultReceived) {
+                  if (reply === null || typeof reply !== "object" || !("type" in reply) || reply.type !== "application-context-result" && reply.type !== "application-context-error" || !("invocationId" in reply) || reply.invocationId !== query.invocationId) {
+                    retainContextError(
+                      { ...frame, reply },
+                      Error(
+                        "Application-context reply could not be routed to its original invocation"
+                      )
+                    );
+                    failContextQuery(
+                      frame,
+                      "context_host_effect_unresolved",
+                      "unresolved"
+                    );
+                  } else
+                    sendContextReply(reply, (error62) => {
+                      retainContextError(frame, error62);
+                      failContextQuery(
+                        frame,
+                        "context_host_effect_unresolved",
+                        "unresolved"
+                      );
+                    });
+                } else
+                  retainContextError(
+                    { reply },
+                    Error(
+                      "Application-context reply arrived after channel completion"
+                    )
+                  );
+              } finally {
+                contextSignal.removeEventListener("abort", abort);
+              }
+            })().catch((error62) => {
+              retainContextError(frame, error62);
+              failContextQuery(
+                frame,
+                "context_host_effect_unresolved",
+                "unresolved"
+              );
             });
             contextWork.add(work);
             void work.finally(() => contextWork.delete(work));
-          } catch {
-            launchError = "Invalid application-context IPC; effects are unknown";
-            stop();
+          } catch (error62) {
+            retainContextError(frame, error62);
+            failContextQuery(frame, "invalid_request", "refused");
           }
         } else if (frame.type === "ready" && !sent) {
           sent = true;
@@ -129941,10 +130074,19 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
         } else if (frame.type === "result" && !resultReceived) {
           ownerTerminal = true;
           if (clarificationWork.size)
-            launchError = "Worker returned with unresolved clarification";
+            retainClarificationError(
+              {
+                pending: clarificationWork.size,
+                clarificationIds: [...clarificationSeen]
+              },
+              Error("Worker returned with unresolved clarification")
+            );
           nativeDispatched = true;
           if (contextWork.size)
-            launchError = "Worker returned with unresolved application-context work";
+            retainContextError(
+              { pending: contextWork.size },
+              Error("Worker returned with unresolved application-context work")
+            );
           resultReceived = true;
           result = frame.result ?? null;
         } else if (frame.type === "error") {
@@ -129963,6 +130105,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
     });
     await Promise.allSettled([...contextWork, ...clarificationWork]);
     await clarificationErrorWrites;
+    await contextErrorWrites;
     await eventWrites;
     await stdout.sync();
     await stderr.sync();
@@ -129994,6 +130137,14 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
       exitCode: exit2.code,
       exitSignal: exit2.signal,
       eventCount,
+      ...options2.requestClarification ? {
+        clarification: {
+          requests: clarificationSeen.size,
+          pendingHostCalls: clarificationHandlers.size,
+          hostCallsSettlement: clarificationHandlers.size ? "pending" : "settled",
+          accounting: "Host callback promise settlement only; no answer delivery, application effects or cleanup inferred."
+        }
+      } : {},
       ...clarificationErrors.length ? {
         clarificationErrors: {
           count: clarificationErrors.length,
@@ -130007,6 +130158,15 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
             JSON.stringify(options2.applicationContext.registration)
           ),
           requests: contextRequests,
+          pendingHostCalls: contextHandlers.size,
+          hostCallsSettlement: contextHandlers.size ? "pending" : "settled",
+          ...contextErrors.length ? {
+            errors: {
+              count: contextErrors.length,
+              stored: contextErrorsStored === contextErrors.length,
+              path: contextErrorsPath
+            }
+          } : {},
           accounting: "separate host context receipts; retained originals must not be charged twice"
         }
       } : {},
@@ -130177,11 +130337,11 @@ import { createHash as createHash71 } from "node:crypto";
 var authQuery = /([?&](?:code|state|session_state|access_token|id_token)=)[^&\s"\\]+/gi;
 function redactor7(secrets = []) {
   const originals = /* @__PURE__ */ new Set();
-  let pattern, secretPattern;
+  let values = [], literals = [];
   const addSecrets = (items) => {
     for (const item2 of items)
       if (typeof item2 === "string" && item2.length) originals.add(item2);
-    const values = [
+    values = [
       ...new Set(
         [...originals].flatMap((item2) => [
           item2,
@@ -130189,18 +130349,34 @@ function redactor7(secrets = []) {
         ])
       )
     ].sort((a, b) => b.length - a.length);
-    const escape4 = (item2) => item2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const source4 = values.map(escape4).join("|");
-    secretPattern = source4 ? new RegExp(source4) : void 0;
-    pattern = source4 ? new RegExp(
-      [...values, "[REDACTED]"].sort((a, b) => b.length - a.length).map(escape4).join("|"),
-      "g"
-    ) : void 0;
+    literals = values.length ? [.../* @__PURE__ */ new Set([...values, "[REDACTED]"])].sort(
+      (a, b) => b.length - a.length
+    ) : [];
   };
   addSecrets(secrets);
   const text16 = (value2) => {
     const input3 = String(value2);
-    return (pattern ? input3.replace(pattern, () => "[REDACTED]") : input3).replace(authQuery, "$1[REDACTED]");
+    if (!literals.length) return input3.replace(authQuery, "$1[REDACTED]");
+    const parts = [];
+    let offset2 = 0;
+    while (offset2 < input3.length) {
+      let at2 = -1, length = 0;
+      for (const literal7 of literals) {
+        const found = input3.indexOf(literal7, offset2);
+        if (found !== -1 && (at2 === -1 || found < at2)) {
+          at2 = found;
+          length = literal7.length;
+          if (at2 === offset2) break;
+        }
+      }
+      if (at2 === -1) {
+        parts.push(input3.slice(offset2));
+        break;
+      }
+      parts.push(input3.slice(offset2, at2), "[REDACTED]");
+      offset2 = at2 + length;
+    }
+    return parts.join("").replace(authQuery, "$1[REDACTED]");
   };
   const value = (input3) => {
     if (typeof input3 === "string") {
@@ -130222,7 +130398,10 @@ function redactor7(secrets = []) {
     text: text16,
     value,
     addSecrets,
-    hasSecret: (input3) => secretPattern?.test(String(input3)) ?? false,
+    hasSecret: (input3) => {
+      const text17 = String(input3);
+      return values.some((secret2) => text17.includes(secret2));
+    },
     get revision() {
       return originals.size;
     }
@@ -131448,19 +131627,13 @@ function evaluateTerminalChecks(checks, planRef, nativeResult, terminalObservati
   const observation = record14(terminalObservation);
   const original = canonicalJson(terminalObservation);
   const evidenceId = `terminal-${hash39(original)}`;
-  const report = record14(nativeResult.executionReport);
   const terminal2 = record14(nativeResult.terminal);
-  const coherentReport = [
-    "loki.runner.execution-report/1",
-    "loki.runner.execution-report/2"
-  ].includes(String(report.schema)) && report.status === "complete" && report.effects === "known" && Array.isArray(report.remainingSteps) && report.remainingSteps.length === 0 && Array.isArray(report.questions) && report.questions.length === 0 && (report.schema === "loki.runner.execution-report/2" || Array.isArray(report.completedSteps) && report.completedSteps.length > 0) && Array.isArray(report.evidence) && report.evidence.length > 0;
   const decisionRecorded = typeof terminal2.decidedAt === "string" && Number.isFinite(Date.parse(terminal2.decidedAt));
-  const stopBlocks = stopped3 && !decisionRecorded;
-  const ready2 = !stopBlocks && nativeResult.executionState === "completed" && terminal2.effects !== "uncertain" && coherentReport;
+  const stopBlocks = terminal2.actor === "operator" || stopped3 && !decisionRecorded;
   const tests2 = checks.tests.map((test) => {
     const steps = test.checks.map((check3) => {
       const actual = observation[check3.field];
-      const available2 = ready2 && typeof actual === "string";
+      const available2 = !stopBlocks && typeof actual === "string";
       const passed = available2 && (check3.operator === "contains" ? actual.includes(check3.expected) : check3.operator === "not-contains" ? !actual.includes(check3.expected) : actual === check3.expected);
       return {
         id: check3.id,
