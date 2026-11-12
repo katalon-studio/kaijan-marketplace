@@ -68,6 +68,9 @@ function resolveRuntimeBuild(build, env = process.env) {
   };
 }
 
+// apps/codex-plugin/scripts/onboarding-environment.mjs
+var anonymousOnboardingVariable = "KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS";
+
 // apps/codex-plugin/src/auth/broker-entry.mjs
 import { readFile as readFile2 } from "node:fs/promises";
 import { randomUUID as randomUUID6 } from "node:crypto";
@@ -26268,7 +26271,7 @@ async function main() {
     telemetry = openTelemetryOutbox(profile);
   } catch {
   }
-  const onboarding = telemetry && pluginHost(build) === "codex" && process.env.KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS === "1" ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
+  const onboarding = telemetry && pluginHost(build) === "codex" && process.env[anonymousOnboardingVariable] === "1" ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
   if (!onboarding) {
     try {
       telemetry?.clearOnboardingKey();
