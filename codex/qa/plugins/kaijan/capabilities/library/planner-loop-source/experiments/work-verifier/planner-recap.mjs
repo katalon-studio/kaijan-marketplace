@@ -6,6 +6,12 @@ import { reviewSchemaErrors } from "./source-binding.mjs";
 import { assessPreparedSuppliedEvidence } from "./assessment-runtime.mjs";
 import { LIMITS, SUPPLIED_ASSESSMENT } from "./assessment-contract.mjs";
 import { encodedJson } from "../context-finder/related/json.mjs";
+import {
+  assessPlannerWithRunner,
+  plannerRunnerInstructions,
+  runnerAssessmentTool,
+  associatedRunnerAssessmentTool,
+} from "./planner-runner.mjs";
 
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 const copy = (value) => JSON.parse(JSON.stringify(value));
@@ -52,13 +58,22 @@ export function preparePlannerRecap(input) {
       input?.schema === "kaijan.planner-recap-assessment/8" ||
       input?.schema === "kaijan.planner-recap-assessment/9" ||
       input?.schema === "kaijan.planner-recap-assessment/10" ||
-      input?.schema === "kaijan.planner-recap-assessment/11",
+      input?.schema === "kaijan.planner-recap-assessment/11" ||
+      input?.schema === "kaijan.planner-recap-assessment/12" ||
+      input?.schema === "kaijan.planner-recap-assessment/13" ||
+      input?.schema === "kaijan.planner-recap-assessment/14",
   );
   assert(
     typeof input.previousResponseId === "string" &&
       input.previousResponseId.length > 0,
   );
-  const stateless = input.schema === "kaijan.planner-recap-assessment/11";
+  const associated = input.schema === "kaijan.planner-recap-assessment/14";
+  const live =
+    associated || input.schema === "kaijan.planner-recap-assessment/13";
+  const delegated =
+    live || input.schema === "kaijan.planner-recap-assessment/12";
+  const stateless =
+    delegated || input.schema === "kaijan.planner-recap-assessment/11";
   if (stateless)
     assert(
       Array.isArray(input.plannerHistory) && input.plannerHistory.length,
@@ -72,12 +87,12 @@ export function preparePlannerRecap(input) {
   );
   assert(new Set(tests.map((test) => test.id)).size === ids.length);
   const steps = request.recap.steps;
-  assert(Array.isArray(steps) && steps.length > 0);
+  assert(Array.isArray(steps) && (delegated || steps.length > 0));
   assert(steps.every((step) => typeof step === "string" && step.trim()));
   const stepNumbers = list({
     type: "integer",
     minimum: 1,
-    maximum: steps.length,
+    ...(!live && steps.length ? { maximum: steps.length } : {}),
   });
   const explicitFindingReferences =
     input.schema === "kaijan.planner-recap-assessment/9" ||
@@ -106,7 +121,7 @@ export function preparePlannerRecap(input) {
     findings: list(
       object({
         claim: text,
-        test_ids: list({ type: "string", enum: ids }),
+        test_ids: list(associated ? text : { type: "string", enum: ids }),
         ...(explicitFindingReferences
           ? { additional_check_indexes: list({ type: "integer", minimum: 1 }) }
           : {}),
@@ -117,19 +132,23 @@ export function preparePlannerRecap(input) {
       ? {
           additional_checks: list(
             object({
+              ...(associated ? { test_id: text } : {}),
               title: text,
               expected: text,
               actual,
               verdict,
               ...(conciseResults ? {} : { reason: text }),
-              recap_steps: { ...stepNumbers, minItems: 1 },
+              recap_steps: {
+                ...stepNumbers,
+                ...(delegated ? {} : { minItems: 1 }),
+              },
             }),
           ),
         }
       : {}),
   });
   // Retained v1 answers must still reconstruct their exact request hash.
-  if (input.schema !== "kaijan.planner-recap-assessment/1") {
+  if (!delegated && input.schema !== "kaijan.planner-recap-assessment/1") {
     schema.properties.test_results.minItems = ids.length;
     schema.properties.test_results.maxItems = ids.length;
   }
@@ -151,33 +170,60 @@ export function preparePlannerRecap(input) {
       !stateless &&
       (explicitFindingReferences ||
         input.schema === "kaijan.planner-recap-assessment/8"),
-    instructions: explicitFindingReferences
-      ? bugFindingInstructions.replace(
-          "Report distinct supported findings with their selected test IDs and recap steps.",
-          "Report distinct supported findings with their selected test IDs, one-based additional_check_indexes into this reply's additional_checks array, and recap steps. Use an empty test_ids list when a finding belongs only to additional checks.",
-        )
-      : bugFinding
-        ? bugFindingInstructions
-        : conciseResults
-          ? recapAssessmentInstructions.replace(
-              "If you cannot judge, say what did not run or what evidence is missing.",
-              "In actual result, describe what happened and any limitation that affects the verdict, including work not performed or missing evidence.",
-            )
-          : additionalChecks
-            ? recapAssessmentInstructions
-            : [
-                  "kaijan.planner-recap-assessment/3",
-                  "kaijan.planner-recap-assessment/4",
-                ].includes(input.schema)
-              ? expectationInstructions
-              : instructions,
+    instructions: delegated
+      ? live
+        ? plannerRunnerInstructions.replace(
+            "Fill missing answers",
+            "Ask Runner to assess tests with missing answers in the same browser",
+          ) +
+          (associated
+            ? " Keep the same test ID in Runner questions, added tests and findings. Include a new test's definition when asking Runner."
+            : "")
+        : plannerRunnerInstructions
+      : explicitFindingReferences
+        ? bugFindingInstructions.replace(
+            "Report distinct supported findings with their selected test IDs and recap steps.",
+            "Report distinct supported findings with their selected test IDs, one-based additional_check_indexes into this reply's additional_checks array, and recap steps. Use an empty test_ids list when a finding belongs only to additional checks.",
+          )
+        : bugFinding
+          ? bugFindingInstructions
+          : conciseResults
+            ? recapAssessmentInstructions.replace(
+                "If you cannot judge, say what did not run or what evidence is missing.",
+                "In actual result, describe what happened and any limitation that affects the verdict, including work not performed or missing evidence.",
+              )
+            : additionalChecks
+              ? recapAssessmentInstructions
+              : [
+                    "kaijan.planner-recap-assessment/3",
+                    "kaijan.planner-recap-assessment/4",
+                  ].includes(input.schema)
+                ? expectationInstructions
+                : instructions,
     input: stateless
       ? [
           ...input.plannerHistory,
-          { role: "user", content: JSON.stringify(steps) },
+          {
+            role: "user",
+            content: JSON.stringify(
+              delegated
+                ? {
+                    steps,
+                    runner_test_results: request.runnerTestResults ?? [],
+                  }
+                : steps,
+            ),
+          },
         ]
       : JSON.stringify(steps),
     max_output_tokens: LIMITS.outputTokens,
+    ...(delegated
+      ? {
+          tools: [
+            associated ? associatedRunnerAssessmentTool : runnerAssessmentTool,
+          ],
+        }
+      : {}),
     text: {
       format: {
         type: "json_schema",
@@ -203,6 +249,9 @@ export function projectPlannerRecap(prepared, candidate) {
     [
       "kaijan.planner-recap-assessment/10",
       "kaijan.planner-recap-assessment/11",
+      "kaijan.planner-recap-assessment/12",
+      "kaijan.planner-recap-assessment/13",
+      "kaijan.planner-recap-assessment/14",
     ].includes(verified.input.schema)
   )
     return projectAvailablePlannerRecap(verified, candidate);
@@ -402,8 +451,24 @@ function projectAvailablePlannerRecap(prepared, candidate) {
   );
   const { request, tests } = prepared.input;
   const ids = request.planRef.selectedTestIds;
+  const delegated =
+    prepared.input.schema === "kaijan.planner-recap-assessment/12" ||
+    prepared.input.schema === "kaijan.planner-recap-assessment/13" ||
+    prepared.input.schema === "kaijan.planner-recap-assessment/14";
+  const associated =
+    prepared.input.schema === "kaijan.planner-recap-assessment/14";
+  const { runner_inspection_steps: inspectionSteps, ...plannerCandidate } =
+    candidate;
+  delete plannerCandidate.runner_test_results;
+  if (associated) delete plannerCandidate.runner_test_definitions;
+  const recapSteps = [
+    ...request.recap.steps,
+    ...(delegated && Array.isArray(inspectionSteps)
+      ? inspectionSteps.filter((step) => typeof step === "string")
+      : []),
+  ];
   const errors = reviewSchemaErrors(
-    candidate,
+    delegated ? plannerCandidate : candidate,
     prepared.request.text.format.schema,
   ).map(({ path, reason }) => `${path}: ${reason}`);
   const array = (value) => (Array.isArray(value) ? value : []);
@@ -421,7 +486,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
       (number) =>
         Number.isSafeInteger(number) &&
         number >= 1 &&
-        number <= request.recap.steps.length,
+        number <= recapSteps.length,
     );
   const citations = (numbers) =>
     numbers.map((number) => ({
@@ -430,8 +495,8 @@ function projectAvailablePlannerRecap(prepared, candidate) {
       through_line: number,
     }));
   const bindings = (numbers) =>
-    numbers.map((number) => {
-      const value = request.recap.steps[number - 1];
+    (request.recapSha256 ? [] : numbers).map((number) => {
+      const value = recapSteps[number - 1];
       return {
         status: "bound",
         sourceKind: "execution_record",
@@ -469,7 +534,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
       citations: citations(numbers),
       literal_bindings: bindings(numbers),
       observed_steps: numbers.map((number) => ({
-        description: request.recap.steps[number - 1],
+        description: recapSteps[number - 1],
         citations: citations([number]),
         literal_bindings: bindings([number]),
       })),
@@ -479,7 +544,25 @@ function projectAvailablePlannerRecap(prepared, candidate) {
       validation_errors: rowErrors,
     };
   };
-  const supplied = array(candidate.test_results);
+  const runnerAnswers = delegated
+    ? [
+        ...array(request.runnerTestResults),
+        ...array(candidate.runner_test_results),
+      ]
+    : [];
+  const answeredIds = new Set();
+  const originalAnswers = runnerAnswers.filter((row) => {
+    if (!row || typeof row.test_id !== "string" || answeredIds.has(row.test_id))
+      return false;
+    answeredIds.add(row.test_id);
+    return true;
+  });
+  const supplied = [
+    ...originalAnswers,
+    ...array(candidate.test_results).filter(
+      (row) => !answeredIds.has(row?.test_id),
+    ),
+  ];
   const results = [];
   const unresolved = [];
   for (const id of ids) {
@@ -510,24 +593,69 @@ function projectAvailablePlannerRecap(prepared, candidate) {
     else unresolved.push(id);
   }
   const additionalIds = [];
-  for (const [index, row] of array(candidate.additional_checks).entries()) {
-    const id = `additional-check-${hash(JSON.stringify([request.runId, index, row]))}`;
-    const result = projectResult(
-      row,
-      id,
-      typeof row?.expected === "string" ? row.expected : "",
-      `$.additional_checks[${index}]`,
-    );
-    additionalIds.push(result ? id : undefined);
-    if (result) results.push({ ...result, additional_check: true });
+  if (associated) {
+    const definitions = array(candidate.runner_test_definitions);
+    const added = new Set();
+    const append = (id, answer, planner, path) => {
+      if (added.has(id)) return;
+      const requested = definitions.find((row) => row?.test_id === id);
+      const definition = object(requested?.test) ? requested.test : planner;
+      const result = projectResult(
+        answer,
+        id,
+        typeof definition?.expected === "string" ? definition.expected : "",
+        path,
+      );
+      if (!result) return;
+      results.push({
+        ...result,
+        additional_check: true,
+        test_definition: {
+          id,
+          title: typeof definition?.title === "string" ? definition.title : id,
+          expected:
+            typeof definition?.expected === "string" ? definition.expected : "",
+        },
+      });
+      added.add(id);
+    };
+    for (const [index, row] of array(candidate.additional_checks).entries()) {
+      const id =
+        typeof row?.test_id === "string" && !ids.includes(row.test_id)
+          ? row.test_id
+          : `additional-check-${hash(JSON.stringify([request.runId, index, row]))}`;
+      const original = originalAnswers.find((answer) => answer.test_id === id);
+      append(id, original ?? row, row, `$.additional_checks[${index}]`);
+      additionalIds.push(added.has(id) ? id : undefined);
+    }
+    for (const [index, row] of originalAnswers.entries())
+      if (!ids.includes(row.test_id))
+        append(row.test_id, row, undefined, `$.runner_test_results[${index}]`);
+  } else {
+    for (const [index, row] of array(candidate.additional_checks).entries()) {
+      const id = `additional-check-${hash(JSON.stringify([request.runId, index, row]))}`;
+      const result = projectResult(
+        row,
+        id,
+        typeof row?.expected === "string" ? row.expected : "",
+        `$.additional_checks[${index}]`,
+      );
+      additionalIds.push(result ? id : undefined);
+      if (result) results.push({ ...result, additional_check: true });
+    }
   }
+
   const findings = array(candidate.findings).flatMap((row, index) => {
     const path = `$.findings[${index}]`;
     if (!object(row) || typeof row.claim !== "string") {
       errors.push(`${path}: No readable finding claim.`);
       return [];
     }
-    const linkedTests = array(row.test_ids).filter((id) => ids.includes(id));
+    const linkedTests = array(row.test_ids).filter(
+      (id) =>
+        ids.includes(id) ||
+        (associated && results.some((result) => result.test_id === id)),
+    );
     const findingErrors = at(path);
     for (const number of array(row.additional_check_indexes)) {
       const id =
@@ -593,10 +721,25 @@ function projectAvailablePlannerRecap(prepared, candidate) {
 export async function assessPlannerRecap(input, options) {
   requireManagedBinding(options?.env ?? process.env);
   assert.equal(
-    input?.schema,
-    "kaijan.planner-recap-assessment/11",
+    input?.schema === "kaijan.planner-recap-assessment/11" ||
+      input?.schema === "kaijan.planner-recap-assessment/12" ||
+      input?.schema === "kaijan.planner-recap-assessment/13" ||
+      input?.schema === "kaijan.planner-recap-assessment/14",
+    true,
     "Historical assessment requests are read-only; new assessment requires locally retained Planner context",
   );
+  if (
+    [
+      "kaijan.planner-recap-assessment/12",
+      "kaijan.planner-recap-assessment/13",
+      "kaijan.planner-recap-assessment/14",
+    ].includes(input.schema)
+  )
+    return assessPlannerWithRunner(
+      preparePlannerRecap(input),
+      options,
+      projectPlannerRecap,
+    );
   return assessPreparedSuppliedEvidence(
     preparePlannerRecap(input),
     { ...options, agentName: "Planner" },

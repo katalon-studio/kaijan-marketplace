@@ -21066,7 +21066,7 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 
 // ../contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)).min(1),
+  steps: external_exports.array(external_exports.string().min(1)),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -26483,6 +26483,91 @@ async function verifyExecutionSource(binding2, { signal } = {}) {
   stopped(signal);
 }
 
+// src/runner-review-channel.ts
+import { randomUUID as randomUUID3 } from "node:crypto";
+function replies(signal) {
+  const pending = /* @__PURE__ */ new Map();
+  const close = () => {
+    for (const item of pending.values())
+      item.reject(new Error("Runner review connection closed"));
+    pending.clear();
+  };
+  signal.addEventListener("abort", close, { once: true });
+  return {
+    request(send2, frame) {
+      signal.throwIfAborted();
+      const id4 = randomUUID3();
+      const result = new Promise(
+        (resolve2, reject) => pending.set(id4, { resolve: resolve2, reject })
+      );
+      const failed = (error62) => {
+        pending.get(id4)?.reject(error62 instanceof Error ? error62 : new Error(String(error62)));
+        pending.delete(id4);
+      };
+      try {
+        void Promise.resolve(send2({ ...frame, id: id4 })).catch(failed);
+      } catch (error62) {
+        failed(error62);
+      }
+      return result;
+    },
+    receive(frame) {
+      if (typeof frame.id !== "string") return false;
+      const item = pending.get(frame.id);
+      if (!item) return false;
+      pending.delete(frame.id);
+      if (typeof frame.error === "string") item.reject(new Error(frame.error));
+      else item.resolve(frame.result ?? null);
+      return true;
+    },
+    close() {
+      signal.removeEventListener("abort", close);
+      close();
+    }
+  };
+}
+function workerRunnerReview(send2, signal) {
+  const waiting = replies(signal);
+  let inspect2;
+  return {
+    review: async (info, runInspection) => {
+      inspect2 = runInspection;
+      try {
+        return await waiting.request(send2, { type: "runner-review", info });
+      } finally {
+        inspect2 = void 0;
+      }
+    },
+    receive(frame) {
+      if (frame.type === "runner-review-result") return waiting.receive(frame);
+      if (frame.type !== "runner-review-inspect" || typeof frame.id !== "string")
+        return false;
+      const current = inspect2;
+      void (async () => {
+        try {
+          signal.throwIfAborted();
+          if (!current)
+            throw new Error("Runner browser inspection is no longer available");
+          const result = await current(frame.request);
+          await send2({
+            type: "runner-review-inspection",
+            id: frame.id,
+            result
+          });
+        } catch (error62) {
+          await send2({
+            type: "runner-review-inspection",
+            id: frame.id,
+            error: String(error62)
+          });
+        }
+      })();
+      return true;
+    },
+    close: () => waiting.close()
+  };
+}
+
 // src/computer-runner-worker.ts
 var controller = new AbortController();
 var reportController = new AbortController();
@@ -26545,6 +26630,7 @@ var send = (message) => new Promise((resolve2) => {
     resolve2();
   }
 });
+var review = workerRunnerReview(send, reportController.signal);
 process.on("disconnect", () => {
   controller.abort();
   reportController.abort();
@@ -26553,6 +26639,7 @@ process.on("disconnect", () => {
 process.on("message", (message) => {
   if (!message || typeof message !== "object" || !("type" in message)) return;
   const frame = message;
+  if (review.receive(frame)) return;
   if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error") {
     try {
       if (!clarification) throw Error("Unregistered clarification reply");
@@ -26677,6 +26764,7 @@ process.on("message", (message) => {
       const requestClarification = clarification?.requestClarification;
       const runOptions = {
         ...nativeOptions,
+        ...options.reviewRun === true ? { reviewRun: review.review } : {},
         managedCore: managed && !controlled,
         ...requestClarification ? {
           requestClarification: async (...args) => {
@@ -26716,6 +26804,7 @@ process.on("message", (message) => {
       await clarificationReplyWrites;
       await contextReplyWrites;
       await send({ type: "result", result });
+      review.close();
       if (failures?.failed)
         throw Error("Background worker failure during result handoff");
       clarification?.close();

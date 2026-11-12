@@ -51833,7 +51833,7 @@ function presentAssessmentFinding(kind, supported, content) {
 
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)).min(1),
+  steps: external_exports.array(external_exports.string().min(1)),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);

@@ -24,8 +24,8 @@
         "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
@@ -187,8 +187,8 @@
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/related/query-prompt.mjs": "5f86a637846e771f22063810af0d4f0331badb18cdd5d2021b94890467499845",
         "pr-context-finder/related/query-agent.mjs": "d330e729fa7998ed92167f09cd3637f5eb54846334d26522ecba4dd1ada0cafe",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "pr-context-finder/related/related-work-planner.mjs": "d292a62fe8ffcb416c0b9dd81f1f64f701aeb1ad2794397193cb1c32ecc53d5b",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
@@ -313,8 +313,8 @@
         "pr-context-finder/planning/planning-source.mjs": "8a00a037598e2f220ac07e1c5a163e7302e81313fc23a18739d9f0c5e2c562fa",
         "pr-context-finder/planning/risk-model-view.mjs": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058",
         "pr-context-finder/planning/request-instructions.mjs": "a97a0dd08b94c32b3e7d45282fb0311ca4442550703ef3ea124be9cc9666a35f",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "scope": "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.",
@@ -484,8 +484,8 @@
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
         "work-item-instructions.mjs": "2736771b5ef3478d7c1e3ec82f091821b3615881ca2c887e2cd427a309efa639",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
-        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "scope": "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.",
@@ -558,7 +558,7 @@
         "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0",
         "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
-        "experiments/context-finder/planning/pcf_provider.mjs": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
+        "experiments/context-finder/planning/pcf_provider.mjs": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0",
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
         "experiments/work-verifier/supplied-evidence.mjs": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607",
@@ -583,7 +583,7 @@
         "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12",
         "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
         "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
-        "experiments/work-verifier/planner-recap.mjs": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
+        "experiments/work-verifier/planner-recap.mjs": "00664a84caa6525d9f1911a9501151f322d7c20ce32b11094fb411cc1b699939",
         "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "assets": {
@@ -1364,12 +1364,12 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
-      "sha256": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+      "sha256": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
       "derivation": "Change-risk Planner SDK transport (#3752)."
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
+      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
       "derivation": "Change-risk Planner SDK transport (#3752)."
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
@@ -1459,12 +1459,12 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1",
+      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
       "derivation": "Work-item risk Planner SDK transport (#3746)."
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
-      "sha256": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a",
+      "sha256": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
       "derivation": "Work-item risk Planner SDK transport (#3746)."
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
@@ -1923,7 +1923,7 @@
     },
     "planner-loop-source/experiments/context-finder/planning/pcf_provider.mjs": {
       "source": "packages/context-finder/planning/pcf_provider.mjs",
-      "sha256": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
+      "sha256": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0",
       "originalSha256": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee"
     },
     "planner-loop-source/experiments/context-finder/planning/semantics.mjs": {
@@ -2110,11 +2110,11 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1"
+      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192"
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
-      "sha256": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a"
+      "sha256": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811"
     },
     "planner-loop-source/experiments/context-finder/planning/agent-generation.mjs": {
       "source": "packages/context-finder/planning/agent-generation.mjs",
@@ -2131,11 +2131,11 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "3ba6e4ff3f3938ec8881abee138573889ec432c13218bc8317c0398a8b13e0b1"
+      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
-      "sha256": "21a538686356f8314aabe3bb49283766a8ed1bd74cfbe902d3d089365c0cf61a"
+      "sha256": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811"
     },
     "pr-context/pr-context-finder/related/related-work-planner.mjs": {
       "source": "packages/context-finder/selected/related/pr-context-finder/related/related-work-planner.mjs",
@@ -2150,7 +2150,7 @@
     },
     "planner-loop-source/experiments/work-verifier/planner-recap.mjs": {
       "source": "packages/work-verifier/planner-recap.mjs",
-      "sha256": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
+      "sha256": "00664a84caa6525d9f1911a9501151f322d7c20ce32b11094fb411cc1b699939",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     },
     "planner-loop-source/experiments/work-verifier/assessment.mjs": {
@@ -2201,7 +2201,7 @@
       "originalPath": "experiments/context-finder/planning/pcf_records.mjs"
     },
     "packages/context-finder/planning/pcf_provider.mjs": {
-      "sha256": "af8a86234303a643381716afe806e1ef43c54e80d9ffe82cdc1c8e1ce2ec6056",
+      "sha256": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0",
       "originalSha256": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee",
       "originalPath": "experiments/context-finder/planning/pcf_provider.mjs"
     },
@@ -2607,7 +2607,7 @@
       "derivation": "Explicit model-returned finding record/citation pairs for assessment representation 13; strict binding and original candidates preserved (#3893)."
     },
     "packages/work-verifier/planner-recap.mjs": {
-      "sha256": "74d36c1d67e406a54a99ae6c8fa8bbcda6e3813320f982d48eec3663ba8dba51",
+      "sha256": "00664a84caa6525d9f1911a9501151f322d7c20ce32b11094fb411cc1b699939",
       "derivation": "Retained Planner assessment of Runner recap only (#3939)."
     },
     "packages/work-verifier/assessment.mjs": {
@@ -2616,6 +2616,10 @@
     },
     "packages/provider-transport/retention.mjs": {
       "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
+    },
+    "packages/work-verifier/planner-runner.mjs": {
+      "sha256": "95ea0b702676a5d3fd260f4df4c6b6e2daaf5d0b67421ad605890c33e5f280ba",
+      "derivation": "Human-selected Agents SDK Planner-to-Runner assessment questions and retained answers (#4975)."
     }
   },
   "assets": {

@@ -115,6 +115,7 @@ export async function generate(
     env = process.env,
     signal,
     deadline_ms = 180000,
+    readCandidate,
   } = {},
 ) {
   if (
@@ -362,7 +363,9 @@ export async function generate(
                 }),
             )
             .join("");
-          candidate = parseJson(text);
+          candidate = readCandidate
+            ? await readCandidate(raw)
+            : parseJson(text);
           save(path.join(root, "candidate.json"), candidate);
           const before = digest(candidate);
           failureStage = "plan_validation";
