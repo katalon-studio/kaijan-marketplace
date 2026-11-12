@@ -19,7 +19,11 @@
       "type": "string"
     },
     "method": {
-      "enum": ["jev-high-only-luna-assumptions/3", "direct-luna-assumptions/3"]
+      "enum": [
+        "jev-high-only-luna-assumptions/3",
+        "direct-luna-assumptions/3",
+        "decisions-high-only-luna-assumptions/1"
+      ]
     },
     "status": {
       "enum": ["completed", "no_retained_cue", "partial", "refused"]
@@ -160,23 +164,13 @@
           },
           "risk_selection": {
             "type": "object",
-            "required": ["type", "choice", "probabilities"],
+            "required": ["choice"],
             "properties": {
-              "type": {
-                "const": "choice"
-              },
               "choice": {
                 "type": "string"
-              },
-              "probabilities": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                }
               }
-            }
+            },
+            "description": "Original row for an offered source-line choice. Other returned fields are retained without becoming prerequisites for using that choice."
           }
         }
       }
@@ -184,24 +178,7 @@
     "hunk_assessments": {
       "type": "object",
       "additionalProperties": {
-        "type": "object",
-        "required": ["type", "choice", "probabilities"],
-        "properties": {
-          "type": {
-            "const": "choice"
-          },
-          "choice": {
-            "type": "string"
-          },
-          "probabilities": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
-            }
-          }
-        }
+        "description": "Original received decision row, including refusal or malformed output. Usable offered choices are consumed independently; unresolved hunk IDs remain in coverage_details."
       }
     },
     "limitations": {
@@ -215,7 +192,6 @@
     },
     "ledger": {
       "type": "array",
-      "maxItems": 3,
       "items": {
         "type": "object",
         "required": ["stage", "route", "requested_model", "status", "cost_usd"],
@@ -224,7 +200,7 @@
             "type": "string"
           },
           "route": {
-            "enum": ["/responses", "/systemone"]
+            "enum": ["/responses", "/systemone", "/decisions"]
           },
           "requested_model": {
             "type": "string"
@@ -263,8 +239,7 @@
       "properties": {
         "calls_started": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+          "minimum": 0
         },
         "known_cost_usd": {
           "type": "number",
@@ -272,8 +247,7 @@
         },
         "unknown_cost_calls": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+          "minimum": 0
         },
         "elapsed_seconds": {
           "type": "number",
@@ -416,7 +390,8 @@
         "method": {
           "enum": [
             "jev-high-only-luna-assumptions/3",
-            "direct-luna-assumptions/3"
+            "direct-luna-assumptions/3",
+            "decisions-high-only-luna-assumptions/1"
           ]
         },
         "status": {
@@ -424,8 +399,7 @@
         },
         "calls_started": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+          "minimum": 0
         },
         "known_cost_usd": {
           "type": "number",
@@ -433,8 +407,7 @@
         },
         "unknown_cost_calls": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 3
+          "minimum": 0
         },
         "elapsed_seconds": {
           "type": "number",
@@ -577,7 +550,10 @@
       "then": {
         "properties": {
           "method": {
-            "const": "jev-high-only-luna-assumptions/3"
+            "enum": [
+              "jev-high-only-luna-assumptions/3",
+              "decisions-high-only-luna-assumptions/1"
+            ]
           },
           "invocation": {
             "properties": {
@@ -585,7 +561,10 @@
                 "const": "guided"
               },
               "method": {
-                "const": "jev-high-only-luna-assumptions/3"
+                "enum": [
+                  "jev-high-only-luna-assumptions/3",
+                  "decisions-high-only-luna-assumptions/1"
+                ]
               }
             },
             "type": "object"

@@ -151,17 +151,22 @@ A live clarification also returns top-level `nextAction` with `kind: input-requi
 safe projected `questions` and an `instruction`. This requires caller action, not
 repeated polling. Combined `loki_test_get` exposes the same next action at the top
 level and sets `status.execution: waiting-for-input`. Answer from known authorized
-context or ask the user now. If no answer can arrive within the deadline, stop the
-same run and keep partial results. Unknown, stopped or expired requests do not
+context or ask for missing consequential input. Supply the available context even
+if another answer is missing; do not invent values or stop independent work merely
+because the answer is partial. The original deadline still applies. Unknown, stopped or expired requests do not
 return a next action that authorizes an answer.
 
 For a live request, submit `loki_runner_answer({runId, clarificationId, answerKey,
 answers, sensitiveQuestionIds})`: runId and clarificationId are hex64 strings, answerKey is a nonempty
-string, and `answers: Record<string, string>` has nonempty values for the exact
-question IDs. Optional `sensitiveQuestionIds` lists unique exact answered IDs
-whose full unchanged values are newly sensitive. Omission adds no sensitivities;
+string, and `answers: Record<string, unknown>` carries the available JSON values.
+It may cover some questions and include unmatched or additional context. Null or
+empty rows remain in the private original and leave those questions unanswered;
+other usable values continue. Optional `sensitiveQuestionIds` marks supplied
+values, including structured context. Repeated or missing labels do not discard
+other answers. Omission adds no sensitivities;
 declaration metadata/order is part of exact receipt identity. Native and host
-redactors register declared values before continuation, and reconstruct public
+redactors register declared primitive/key echoes before continuation, mask marked
+structured values in saved assessment views, and reconstruct public
 protection from immutable parameters and retained declarations after restart.
 Public reason/steps/question/report/UI prose is projected; IDs/enums/hashes and
 evidence references are preserved. Unsafe model-authored identities or missing or
@@ -180,28 +185,30 @@ browser and provider history through the tool-call response. Waiting consumes th
 original deadline.
 
 Node hosts use `options.requestClarification(request, signal): Promise<{answers:
-Record<string, string>}>`. Its request has `schema: 'loki.runner.clarification/1'`,
+Record<string, unknown>, sensitiveQuestionIds?: string[]}>`. Its request has `schema: 'loki.runner.clarification/1'`,
 `clarificationId`, `providerResponseId`, `callId`, `reason`, string arrays
 `completedSteps`, `remainingSteps`, `evidence`, `questions: {id, question, kind}[]`,
 and `provenance: 'model-authored-unverified'`. The IDs and question fields are
 strings; clarificationId is SHA-256 of the response ID, a NUL separator and the
 call ID.
-The callback is a host function, not execute input; unavailable callback means
-incomplete. It carries no source grants or authorization.
+The callback is a host function, not execute input. An unavailable or failed
+callback returns its correlated error while preserving the original question and
+progress; it does not itself cancel the Run. Actual Stop/deadline remains separate.
+It carries no source grants or authorization.
 
-A `blocked` report ends the run incomplete without escalation. Use it for a task
-restriction, a prohibited transition, denied access or an unavailable service
-that reasoning cannot resolve. Preserve the reason and remaining checks. Missing
-caller information uses `needs_input`; navigation or reasoning difficulty uses
-`stuck`. The host uses the explicit status, not keyword guesses about the reason.
+Treat `blocked`, `stuck` and uncertain effects as the model's retained report,
+not an instruction for the host to end the Run, force a permission/observation
+step or require an effort change. Keep the reason, completed and remaining work,
+and original errors. The model can choose the next authorized action from the
+available context. Return an error with available progress when work cannot
+continue; a status label alone does not establish that condition.
 
-The first `stuck` with known effects raises Luna effort low to medium for one
-recovery phase within original limits. A second `stuck` terminates with reason and
-completed and remaining steps; missing input does not consume escalation. Errors,
-uncertain effects, safety, Stop, deadline and exhausted limits never auto-recover
-or replay. `effortAccounting` counts provider attempts, including retries, by
-low and medium effort. Native `executionReport` and its evidence references retain
-model-authored claims and original saved bytes, not independent semantic proof.
+Actual Stop, the original deadline and existing task/access boundaries remain
+separate. Do not automatically replay an application action whose effects are
+unknown. Another reasoning attempt or read is distinct from repeating that
+action. Provider-attempt accounting and native report/evidence references remain
+recorded boundaries and model claims, not independent semantic proof or a reason
+to discard usable work.
 
 ## Reuse a retained browser execution
 

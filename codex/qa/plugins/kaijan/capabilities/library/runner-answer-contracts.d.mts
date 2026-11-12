@@ -3,7 +3,7 @@ export declare const runnerAnswer: z.ZodObject<{
     runId: z.ZodString;
     clarificationId: z.ZodString;
     answerKey: z.ZodString;
-    answers: z.ZodRecord<z.ZodString, z.ZodString>;
+    answers: z.ZodRecord<z.ZodString, z.ZodUnknown>;
     sensitiveQuestionIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
 }, z.core.$loose>;
 export declare const runnerAnswerReceipt: z.ZodObject<{

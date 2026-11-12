@@ -47261,15 +47261,14 @@ function createConfigurationSurface({ session, library, data }) {
             )
           );
           const hasSecrets = Object.keys(secrets).length > 0;
-          const config2 = once?.value ?? saved.read(selectedId);
-          if (!args.target?.initialURL && (hasSecrets || config2.application))
+          if (!args.target?.initialURL && (hasSecrets || chosen.application))
             throw new library.ConfigurationError(
               "configuration_target",
               "This configuration uses a browser application. Choose its browser target before running."
             );
           const url2 = args.target?.initialURL ? new URL(args.target.initialURL) : void 0;
           const allowed = args.target?.allowedHosts ?? (url2 ? [url2.hostname] : []);
-          if (config2.application && new URL(config2.application).origin !== url2?.origin || hasSecrets && (!allowed.every((host) => chosen.allowedHosts.includes(host)) || !url2 || !chosen.allowedHosts.includes(url2.hostname)))
+          if (chosen.application && new URL(chosen.application).origin !== url2?.origin || hasSecrets && (!allowed.every((host) => chosen.allowedHosts.includes(host)) || !url2 || !chosen.allowedHosts.includes(url2.hostname)))
             throw new library.ConfigurationError(
               "configuration_target",
               "This configuration belongs to another application. Choose a matching configuration before running."

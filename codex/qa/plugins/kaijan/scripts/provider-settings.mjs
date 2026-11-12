@@ -109,10 +109,10 @@ export async function providerSettingsCommand(
   return {
     route: "direct-openai",
     configuration: diagnostic,
-    jev: {
-      configured: Boolean(provider.LOKI_OPENROUTER_API_KEY),
+    decisions: {
+      configured: Boolean(provider.OPENAI_API_KEY),
       requiredFor:
-        "JEV only; not browser execution or ordinary OpenAI planning",
+        "Optional source selection; uses the same OpenAI credential as planning and browser execution",
     },
     saved: command === "configure",
     connectionTested: false,

@@ -140,3 +140,100 @@ export function responsesUsageEstimate(usage, model) {
     1e6
   );
 }
+
+export const decisionsModel = "gpt-6-luna";
+export const decisionsEndpoint = "https://api.openai.com/v1/decisions";
+
+/** Adapt existing named selection questions without changing their meaning.
+ * Serialize the complete state as text; Decisions' input_json has a smaller
+ * provider envelope and is unnecessary for these existing JSON-text callers.
+ */
+export function decisionsRequest(request) {
+  return {
+    model: decisionsModel,
+    ...Object.fromEntries(
+      ["prompt_cache_key", "prompt_cache_options", "safety_identifier"]
+        .filter((key) => Object.hasOwn(request, key))
+        .map((key) => [key, request[key]]),
+    ),
+    input:
+      typeof request.state === "string"
+        ? request.state
+        : JSON.stringify(request.state),
+    questions: Object.entries(request.questions).map(([name, question]) => {
+      if (question.type === "boolean" || question.type === "noul") {
+        return {
+          type: "predicate",
+          name,
+          instructions: question.criteria
+            ? (question.instructions ?? "") +
+              "\n" +
+              JSON.stringify(question.criteria)
+            : (question.instructions ?? ""),
+        };
+      }
+      if (question.type === "choice" && question.criteria) {
+        return {
+          type: "choice",
+          name,
+          instructions: question.instructions ?? "",
+          choices: Object.entries(question.criteria).map(
+            ([value, description]) => ({
+              value,
+              ...(description === null || description === undefined
+                ? {}
+                : {
+                    description:
+                      typeof description === "string"
+                        ? description
+                        : JSON.stringify(description),
+                  }),
+            }),
+          ),
+        };
+      }
+      return { ...question, name, instructions: question.instructions ?? "" };
+    }),
+  };
+}
+
+/** Local compatibility view only. Callers retain the original native response
+ * before interpreting it. A refused/missing row does not erase other answers.
+ */
+export function decisionAnswers(response, questions) {
+  if (!Array.isArray(response?.answers)) return response?.answers;
+  return Object.fromEntries(
+    Object.keys(questions).map((name, index) => {
+      const answer = response.answers[index];
+      if (answer?.type === "predicate")
+        return [name, { ...answer, type: "noul", noul: answer.probability }];
+      if (answer?.type === "choice" && Array.isArray(answer.probabilities))
+        return [
+          name,
+          {
+            ...answer,
+            probabilities: Object.fromEntries(
+              answer.probabilities.flatMap((entry) =>
+                entry !== null &&
+                typeof entry === "object" &&
+                (typeof entry.value === "string" ||
+                  typeof entry.value === "boolean") &&
+                typeof entry.probability === "number" &&
+                Number.isFinite(entry.probability)
+                  ? [[entry.value, entry.probability]]
+                  : [],
+              ),
+            ),
+          },
+        ];
+      return [name, answer];
+    }),
+  );
+}
+
+/** Decisions charges input, cache reads and writes; no output-token charge. */
+export function decisionsUsageEstimate(usage) {
+  if (!Number.isSafeInteger(usage?.output_tokens) || usage.output_tokens < 0)
+    return null;
+  return lunaUsageEstimate({ ...usage, output_tokens: 0 });
+}

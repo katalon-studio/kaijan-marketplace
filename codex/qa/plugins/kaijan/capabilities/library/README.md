@@ -196,13 +196,17 @@ correlation only. Runner retains its separate process, native API and traces.
 username/password, including caller-authorized local development targets.
 Provider transport remains HTTPS and browser certificate verification is unchanged.
 
-OpenAI Responses use only `https://api.openai.com/v1/responses` and
-`OPENAI_API_KEY`. This includes Luna medium analysis and Terra low browser/desktop Runner.
-JEV alone uses native OpenRouter System One with `LOKI_OPENROUTER_API_KEY`
-(or `OPENROUTER_API_KEY`); its endpoint is `https://openrouter.ai/api/v1/systemone`.
-The legacy `LOKI_MODEL_PROVIDER=openrouter` selector applies only to JEV.
-OpenAI models never use OpenRouter or LiteLLM; legacy gateway settings cannot
-redirect these calls. Credentials stay separate in the private provider profile.
+OpenAI Responses and Decisions use `OPENAI_API_KEY` for the direct profile.
+Analysis retains Luna medium and Runner keeps its separately selected settings;
+code-owned selection uses `gpt-6-luna` at `/v1/decisions`. Managed calls use the
+existing private broker/Core/LiteLLM connection. Old OpenRouter settings remain
+on disk but no longer configure or reject these calls. Legacy gateway flags
+cannot redirect the native endpoints. System One routes remain for older
+installed packages; fresh selection uses Decisions.
+The optional reuse selector preserves native refusals and provider errors with
+their original response bytes. It does not turn an unavailable answer into a
+`NONE` selection or silently trim offered procedures to the native API's
+255-choice limit.
 `adoptProviderEnvironment(data)` explicitly saves trusted host configuration;
 the library does not invoke it on import. Scoped services resolve the shared
 host profile without copying secrets. No credentials belong in tool arguments.
@@ -212,7 +216,7 @@ receipts; missing usage and uncertain dispatch remain unknown and non-replayable
 ## Source folder maps
 
 `loki_ui_modeler_build_map` accepts an explicit local `folder` and `workItem`.
-It captures plain folders or current Git working-tree contents, uses native JEV
+It captures plain folders or current Git working-tree contents, uses native Decisions
 for path/question relevance before submitting source text, follows relevant source
 and material connections, and awaits the canonical Node producer. Lower-scored and
 uncertain paths remain eligible; there is no application-specific exclusion.
@@ -355,7 +359,7 @@ prose is not automatically safe, and original capture permission does not grant
 permission to disclose it to a provider.
 
 Inspect the complete preview and approve only if authorized to disclose its text
-to OpenRouter native System One JEV (`typesafe/jev-1.13-20260917`) and execute
+to OpenAI Decisions (`gpt-6-luna`) and execute
 the fresh task. Pass the exact preview IDs and hash with the unchanged current
 request. The binding is checked again against the exact source and current
 request. Full current parameters, target and authorization remain fresh; the
@@ -395,8 +399,7 @@ if (result.schema === "loki.runner-operation/1") {
 The shared catalog exposes the same flow through
 `loki_runner_reuse_prepare`, then `loki_runner_execute`, `loki_runner_get` and
 `loki_runner_stop`. Pass the same objects to `catalog.invoke`. Native browser
-execution uses OpenAI direct Responses with Terra low; JEV selection uses its
-separate OpenRouter provider. A NONE selection, unavailable or stale approved
+execution uses OpenAI direct Responses with Terra low; selection uses OpenAI Decisions through the same connection. A NONE selection, unavailable or stale approved
 material, or selector/provider failure retains `reuse-not-executed` with
 `nativeDispatched: false`; there is no fallback execution. A malformed or
 missing approval inside `reuse` fails argument validation before dispatch; omitting

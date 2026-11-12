@@ -25336,6 +25336,7 @@ function providerConnection(nativeUrl, key, env = {}) {
     throw new AiClientError("managed_count_binding_required");
   const openai = native.origin === "https://api.openai.com" && [
     "/v1/responses",
+    "/v1/decisions",
     "/v1/responses/input_tokens",
     "/v1/models/gpt-6-luna"
   ].includes(native.pathname);
@@ -25348,7 +25349,7 @@ function providerConnection(nativeUrl, key, env = {}) {
       requireManagedBinding(env);
     if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
       throw new AiClientError("invalid_broker_channel");
-    const path = native.pathname === "/v1/responses" ? "/v1/responses" : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
+    const path = ["/v1/responses", "/v1/decisions"].includes(native.pathname) ? native.pathname : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
     return {
       url: `http://localhost/${env.LOKI_AI_CONNECTION_BINDING ? "ai-bound" : "ai"}${path}`,
       headers: Object.fromEntries(
@@ -25405,13 +25406,7 @@ function sendFetch(connection, options, transport = globalThis.fetch) {
 
 // src/provider.ts
 var keySchema = external_exports.string().min(1).max(8192);
-var providerSchema2 = external_exports.strictObject({
-  OPENAI_API_KEY: keySchema,
-  LOKI_OPENROUTER_API_KEY: keySchema.optional(),
-  LOKI_OPENROUTER_BASE_URL: external_exports.literal("https://openrouter.ai/api/v1").optional(),
-  // This legacy selector now applies only to native JEV, never Luna routing.
-  LOKI_MODEL_PROVIDER: external_exports.literal("openrouter").optional()
-});
+var providerSchema2 = external_exports.strictObject({ OPENAI_API_KEY: keySchema });
 var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
   external_exports.strictObject({
     model: external_exports.literal("gpt-6.1-terra"),
@@ -25484,6 +25479,7 @@ function canonicalJson(value) {
 // src/runner-clarification.ts
 import {
   redactor as redactor2,
+  clarificationAnswerSecrets,
   projectClarification,
   RunnerProjectionError
 } from "@katalon-loki/computer-runner/redaction";
@@ -25496,7 +25492,7 @@ var runnerAnswer = external_exports.looseObject({
   runId: hashId,
   clarificationId: hashId,
   answerKey: nonempty5,
-  answers: external_exports.record(external_exports.string(), external_exports.string()),
+  answers: external_exports.record(external_exports.string(), external_exports.unknown()),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
 var runnerAnswerReceipt = external_exports.strictObject({
@@ -25561,7 +25557,7 @@ var answerFrame = external_exports.looseObject({
   type: external_exports.literal("runner-clarification-answer"),
   clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
-  answers: external_exports.record(external_exports.string(), external_exports.string())
+  answers: external_exports.record(external_exports.string(), external_exports.unknown())
 });
 var failureFrame = external_exports.strictObject({
   type: external_exports.literal("runner-clarification-error"),
