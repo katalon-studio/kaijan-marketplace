@@ -35967,10 +35967,10 @@ function getLiteralValue(schema) {
 var MCP_INSTRUCTIONS_KEY = "_mcp_instructions";
 var INSTRUCTIONS_FIELD_DESCRIPTION = "Server-issued metadata for this conversation.";
 var CONVERSATION_ID_FIELD_DESCRIPTION = "The server-issued conversation identifier.";
-function canDeclareOutputInstructions(outputSchema2) {
-  if (!outputSchema2 || "object" != typeof outputSchema2) return false;
-  if (isSchemaObjectLike(outputSchema2)) return false;
-  const schema = outputSchema2;
+function canDeclareOutputInstructions(outputSchema3) {
+  if (!outputSchema3 || "object" != typeof outputSchema3) return false;
+  if (isSchemaObjectLike(outputSchema3)) return false;
+  const schema = outputSchema3;
   if (schema.$ref || schema.oneOf || schema.allOf || schema.anyOf) return false;
   const { properties } = schema;
   if (void 0 !== properties && ("object" != typeof properties || null === properties || Array.isArray(properties))) return false;
@@ -36003,9 +36003,9 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
   const modifiedTool = {
     ...tool2
   };
-  const outputSchema2 = JSON.parse(JSON.stringify(original2));
-  if (!outputSchema2.properties) outputSchema2.properties = {};
-  outputSchema2.properties[MCP_INSTRUCTIONS_KEY] = {
+  const outputSchema3 = JSON.parse(JSON.stringify(original2));
+  if (!outputSchema3.properties) outputSchema3.properties = {};
+  outputSchema3.properties[MCP_INSTRUCTIONS_KEY] = {
     type: "object",
     description: INSTRUCTIONS_FIELD_DESCRIPTION,
     properties: {
@@ -36015,7 +36015,7 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
       }
     }
   };
-  modifiedTool.outputSchema = outputSchema2;
+  modifiedTool.outputSchema = outputSchema3;
   return modifiedTool;
 }
 function addInstructionsToOutputSchemas(tools2, logger = log) {
@@ -36075,40 +36075,40 @@ function addAnalyticsParameterToTool(tool2, parameterName, description, injectio
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema2 = modifiedTool.inputSchema;
-  if (!inputSchema2.properties) inputSchema2.properties = {};
-  if (false === inputSchema2.additionalProperties) inputSchema2.additionalProperties = void 0;
-  inputSchema2.properties[parameterName] = {
+  const inputSchema3 = modifiedTool.inputSchema;
+  if (!inputSchema3.properties) inputSchema3.properties = {};
+  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
+  inputSchema3.properties[parameterName] = {
     type: "string",
     description
   };
-  if (Array.isArray(inputSchema2.required)) {
-    if (!inputSchema2.required.includes(parameterName)) inputSchema2.required.push(parameterName);
-  } else inputSchema2.required = [
+  if (Array.isArray(inputSchema3.required)) {
+    if (!inputSchema3.required.includes(parameterName)) inputSchema3.required.push(parameterName);
+  } else inputSchema3.required = [
     parameterName
   ];
   return modifiedTool;
 }
-function analyticsOwnsParameter(inputSchema2, parameterName) {
-  if (!inputSchema2 || "object" != typeof inputSchema2) return canInjectAnalyticsParameter(void 0, parameterName);
-  if (isZodRawShapeCompat(inputSchema2)) return canInjectAnalyticsParameter({
-    properties: inputSchema2
+function analyticsOwnsParameter(inputSchema3, parameterName) {
+  if (!inputSchema3 || "object" != typeof inputSchema3) return canInjectAnalyticsParameter(void 0, parameterName);
+  if (isZodRawShapeCompat(inputSchema3)) return canInjectAnalyticsParameter({
+    properties: inputSchema3
   }, parameterName);
-  const shape = getObjectShape(inputSchema2);
+  const shape = getObjectShape(inputSchema3);
   if (shape) return canInjectAnalyticsParameter({
     properties: shape
   }, parameterName);
-  const schema = inputSchema2;
+  const schema = inputSchema3;
   if (JSON_SCHEMA_KEYWORDS.some((keyword) => Object.prototype.hasOwnProperty.call(schema, keyword))) return canInjectAnalyticsParameter(schema, parameterName);
   if ("_def" in schema || "_zod" in schema || "~standard" in schema) return canInjectAnalyticsParameter(void 0, parameterName);
   return canInjectAnalyticsParameter(schema, parameterName);
 }
-function getAnalyticsParameterOwnership(inputSchema2, outputSchema2) {
+function getAnalyticsParameterOwnership(inputSchema3, outputSchema3) {
   return {
-    context: analyticsOwnsParameter(inputSchema2, "context"),
-    conversationId: analyticsOwnsParameter(inputSchema2, "conversation_id"),
-    llmModel: analyticsOwnsParameter(inputSchema2, "llm_model"),
-    outputInstructions: canDeclareOutputInstructions(outputSchema2)
+    context: analyticsOwnsParameter(inputSchema3, "context"),
+    conversationId: analyticsOwnsParameter(inputSchema3, "conversation_id"),
+    llmModel: analyticsOwnsParameter(inputSchema3, "llm_model"),
+    outputInstructions: canDeclareOutputInstructions(outputSchema3)
   };
 }
 function stripOwnedAnalyticsArguments(args, ownership2) {
@@ -36255,10 +36255,10 @@ function addConversationIdToTool(tool2, logger = log) {
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema2 = modifiedTool.inputSchema;
-  if (!inputSchema2.properties) inputSchema2.properties = {};
-  if (false === inputSchema2.additionalProperties) inputSchema2.additionalProperties = void 0;
-  inputSchema2.properties[CONVERSATION_ID_PARAM_NAME] = {
+  const inputSchema3 = modifiedTool.inputSchema;
+  if (!inputSchema3.properties) inputSchema3.properties = {};
+  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
+  inputSchema3.properties[CONVERSATION_ID_PARAM_NAME] = {
     type: "string",
     description: DEFAULT_CONVERSATION_ID_DESCRIPTION
   };
@@ -36455,12 +36455,12 @@ function describeAliasesUsed(aliases, input3) {
   }
   return used.sort().slice(0, MAX_INPUT_KEYS);
 }
-function getToolInputProperties(input3, inputSchema2, options) {
+function getToolInputProperties(input3, inputSchema3, options) {
   try {
     if (!isRecord4(input3)) return {};
     const prototype = Object.getPrototypeOf(input3);
     if (null !== prototype && prototype !== Object.prototype) return {};
-    const properties = declaredProperties(inputSchema2);
+    const properties = declaredProperties(inputSchema3);
     const known = /* @__PURE__ */ new Set([
       ...Object.keys(properties ?? {}),
       ...aliasNames(options?.inputAliases)
@@ -36509,7 +36509,7 @@ function resolveInputAliases(data, toolName) {
   }
 }
 async function captureToolCall(params) {
-  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema: inputSchema2, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
+  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema: inputSchema3, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
   const resolvedEventType = eventType ?? MCPAnalyticsEventType.mcpToolsCall;
   const isVirtualAnalyticsTool = resolvedEventType === MCPAnalyticsEventType.mcpMissingCapability || resolvedEventType === MCPAnalyticsEventType.mcpFeedback;
   const ownership2 = getActiveAnalyticsParameterOwnership(data, request3.params?.name, parameterOwnership, isVirtualAnalyticsTool);
@@ -36521,7 +36521,7 @@ async function captureToolCall(params) {
   const preparedEvent = await prepareToolCallEvent(server, data, request3, downstreamRequest, extra, startTime, conversation, ownership2, resolvedEventType, canCaptureContextIntent);
   if (preparedEvent && resolvedEventType === MCPAnalyticsEventType.mcpToolsCall) {
     const sessionSchemas = (preparedEvent.event.sessionId ? data.toolInputSchemas.get(preparedEvent.event.sessionId) : void 0) ?? data.toolInputSchemas.get(schemaSessionId);
-    const schema = inputSchema2 ?? sessionSchemas?.get(request3.params?.name ?? "");
+    const schema = inputSchema3 ?? sessionSchemas?.get(request3.params?.name ?? "");
     preparedEvent.event.properties = {
       ...preparedEvent.event.properties,
       ...getToolInputProperties(request3.params?.arguments ?? {}, schema, {
@@ -37214,11 +37214,11 @@ function addTracingToToolCallbackInternal(tool2, toolName, server, getCurrentInp
       args = void 0;
       extra = params[0];
     }
-    const inputSchema2 = getCurrentInputSchema();
+    const inputSchema3 = getCurrentInputSchema();
     const cleanedArgs = stripOwnedAnalyticsArguments(args, {
-      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema2, "context"),
-      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema2, "conversation_id"),
-      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema2, "llm_model")
+      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema3, "context"),
+      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema3, "conversation_id"),
+      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema3, "llm_model")
     });
     try {
       if (void 0 === cleanedArgs) {
@@ -48344,9 +48344,17 @@ async function createInstalledSession(root, build, data, broker, {
             uri: library.setupCardUri,
             name: "Kaijan setup",
             mimeType: "text/html;profile=mcp-app"
-          }
+          },
+          ...library.onboardingUri ? [
+            {
+              uri: library.onboardingUri,
+              name: "Set up Kaijan",
+              mimeType: "text/html;profile=mcp-app"
+            }
+          ] : []
         ],
-        readResource: library.readSetupCard
+        onboardingUri: library.onboardingUri,
+        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
       };
     session.feedback = createFeedbackSurface({
       session,
@@ -49733,6 +49741,54 @@ async function createSetup({
   return api;
 }
 
+// apps/codex-plugin/src/setup/onboarding.mjs
+var inputSchema2 = external_exports.strictObject({
+  applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
+  task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
+});
+var outputSchema2 = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.onboarding/1"),
+  applicationURL: external_exports.string(),
+  task: external_exports.string()
+});
+function createOnboarding(ui) {
+  if (!ui?.onboardingUri) return void 0;
+  return {
+    tool: {
+      name: "kaijan_onboarding_show",
+      title: "Set up Kaijan",
+      description: "Open Kaijan's getting-started panel from post-install Set up or when the person asks to set up Kaijan. Prefill the application URL and original request when known. Opening this panel does not start a test or save credentials.",
+      inputSchema: external_exports.toJSONSchema(inputSchema2),
+      outputSchema: external_exports.toJSONSchema(outputSchema2),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false
+      },
+      _meta: { ui: { resourceUri: ui.onboardingUri } }
+    },
+    invoke(input3) {
+      const parsed = inputSchema2.safeParse(input3 ?? {});
+      if (!parsed.success) {
+        const message = "Invalid onboarding input. Use the advertised schema.";
+        const error63 = new McpError(ErrorCode.InvalidParams, message);
+        error63.message = message;
+        throw error63;
+      }
+      const result2 = {
+        schema: "kaijan.onboarding/1",
+        applicationURL: parsed.data.applicationURL ?? "",
+        task: parsed.data.task ?? ""
+      };
+      return {
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+  };
+}
+
 // apps/codex-plugin/src/setup/customer-output.mjs
 var configuration = external_exports.object({
   source: sourceSchema,
@@ -50087,6 +50143,7 @@ async function createSetupTools({
       false
     ]
   ];
+  const onboarding = createOnboarding(ui);
   const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
     name,
     description: customerSetupDescriptions[name],
@@ -50109,7 +50166,9 @@ async function createSetupTools({
       openWorldHint: !readOnly
     }
   }));
+  if (onboarding) tools2.push(onboarding.tool);
   const invoke = async (name, arguments_, signal, invocation) => {
+    if (name === onboarding?.tool.name) return onboarding.invoke(arguments_);
     const definition = definitions.find(([toolName]) => toolName === name);
     if (!definition) throw invalidSetupInput("Unknown Setup tool");
     const parsed = definition[2].safeParse(arguments_ ?? {});
@@ -57164,15 +57223,15 @@ function projectCustomerReusePreparation(value) {
     return customerPreparationFailure();
   }
 }
-function extendCustomerAssessmentInputSchema(inputSchema2) {
-  if (!object8(inputSchema2?.properties?.input))
+function extendCustomerAssessmentInputSchema(inputSchema3) {
+  if (!object8(inputSchema3?.properties?.input))
     throw Error("Assessment input schema unavailable");
   return {
-    ...inputSchema2,
+    ...inputSchema3,
     $id: "urn:kaijan:customer-assessment-request:1",
     properties: {
-      ...inputSchema2.properties,
-      input: { anyOf: [inputSchema2.properties.input, selectorJson] }
+      ...inputSchema3.properties,
+      input: { anyOf: [inputSchema3.properties.input, selectorJson] }
     }
   };
 }
