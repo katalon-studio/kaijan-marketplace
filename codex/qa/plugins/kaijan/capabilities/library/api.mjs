@@ -97288,6 +97288,32 @@ async function readSetupCard(uri2 = setupCardUri) {
     ]
   };
 }
+var onboardingUri = "ui://kaijan/onboarding/v1.html";
+async function readOnboarding() {
+  return {
+    contents: [
+      {
+        uri: onboardingUri,
+        mimeType: "text/html;profile=mcp-app",
+        text: new TextDecoder("utf-8", { fatal: true }).decode(
+          await boundedFile(
+            fileURLToPath3(new URL("./onboarding.html", import.meta.url))
+          )
+        ),
+        _meta: {
+          "openai/ui": {
+            preferredDisplayMode: "inline",
+            availableDisplayModes: ["inline"]
+          },
+          ui: {
+            prefersBorder: false,
+            csp: { connectDomains: [], resourceDomains: [] }
+          }
+        }
+      }
+    ]
+  };
+}
 
 // src/feedback-drafts.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -170338,6 +170364,7 @@ export {
   mapUiMetadata,
   mapUiMime,
   mapUiUri,
+  onboardingUri,
   parseRunnerContextBinding,
   parseRunnerValidationBinding,
   native as plannerLoopTransport,
@@ -170354,6 +170381,7 @@ export {
   readFeedbackForm,
   readIssueForm,
   readMapUi,
+  readOnboarding,
   readRetainedMap,
   readSetupCard,
   reportCardSchema,

@@ -6,7 +6,17 @@ description: Set up Kaijan and save the selected application context. Use for on
 # Set up Kaijan
 
 Follow the [shared Product MCP guidance](../../references/local-capabilities.md).
-On first Setup, welcome the user briefly in English. Use the selected project,
+On first Setup, welcome the user briefly in English. When
+`kaijan_onboarding_show` is available, open its real Kaijan panel and prefill any
+application URL and original task already supplied. The person can continue in
+chat or choose Not now. Keep login details in the existing private login path
+when the task needs them. After opening the panel, end the turn and wait for the
+person's reply. Do not ask another question or save Setup before that reply.
+When the panel returns the person's request, continue
+that request without reopening the panel merely to confirm it. Opening the panel
+does not start a test.
+
+Use the selected project,
 local directory and saved context. If needed, use the host project inventory.
 Ask a native Question only when a consequential selection is missing or
 ambiguous. A suggestion or unanswered Question does not select a project.

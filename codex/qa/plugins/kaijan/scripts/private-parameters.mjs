@@ -33059,9 +33059,17 @@ async function createInstalledSession(root, build, data, broker, {
             uri: library.setupCardUri,
             name: "Kaijan setup",
             mimeType: "text/html;profile=mcp-app"
-          }
+          },
+          ...library.onboardingUri ? [
+            {
+              uri: library.onboardingUri,
+              name: "Set up Kaijan",
+              mimeType: "text/html;profile=mcp-app"
+            }
+          ] : []
         ],
-        readResource: library.readSetupCard
+        onboardingUri: library.onboardingUri,
+        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
       };
     session.feedback = createFeedbackSurface({
       session,
