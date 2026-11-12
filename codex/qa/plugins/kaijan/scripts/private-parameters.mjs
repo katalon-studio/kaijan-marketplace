@@ -31709,9 +31709,13 @@ var cachedFormUris = /* @__PURE__ */ new Set([
 var id2 = external_exports.uuid();
 var inputSchema = external_exports.strictObject({
   operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
-  id: id2.nullable().optional(),
-  revision: external_exports.number().int().nonnegative().optional(),
-  application: external_exports.string().optional(),
+  id: id2.nullable().optional().describe(
+    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
+  ),
+  revision: external_exports.number().int().nonnegative().optional().describe(
+    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
+  ),
+  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
   values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
   name: external_exports.string().optional(),
   automatic: external_exports.literal(true).optional()
@@ -31726,7 +31730,7 @@ var allowedFields = {
 var tool = {
   name: "kaijan_configuration",
   title: "Read or update Configurations",
-  description: "List, read, save, delete or select personal key\u2013value configurations. Save accepts ordinary values only. Keep existing secrets as references and use the private login path for a missing or changed secret. A saved configuration is optional and never starts a test.",
+  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and use the private login path for a missing or changed secret. A saved configuration is optional and never starts a test.",
   inputSchema: external_exports.toJSONSchema(inputSchema),
   annotations: {
     readOnlyHint: false,
