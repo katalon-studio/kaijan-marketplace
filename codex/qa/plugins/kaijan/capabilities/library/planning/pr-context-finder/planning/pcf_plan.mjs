@@ -375,12 +375,7 @@ export function validatePlan(plan, packet) {
   for (const [index, objective] of plan.objectives.entries())
     refs(objective.refs, `/objectives/${index}/refs`, true, true);
   for (const [index, surface] of plan.relevant_surfaces.entries())
-    refs(
-      surface.refs,
-      `/relevant_surfaces/${index}/refs`,
-      false,
-      surface.basis === "supplied",
-    );
+    refs(surface.refs, `/relevant_surfaces/${index}/refs`);
   for (const [index, test] of plan.tests.entries()) {
     need(
       test.objective_ids.length &&
