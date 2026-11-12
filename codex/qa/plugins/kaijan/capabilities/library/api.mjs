@@ -86260,7 +86260,7 @@ async function retainedNativeFile(directory3) {
   }
   try {
     const info = await file3.stat();
-    if (!info.isFile() || info.size > 256 * 1024 * 1024) return null;
+    if (!info.isFile()) return null;
     const hash45 = createHash("sha256");
     let bytes2 = 0;
     for (; ; ) {
@@ -86268,7 +86268,6 @@ async function retainedNativeFile(directory3) {
       const next2 = await file3.read(buffer);
       if (!next2.bytesRead) break;
       bytes2 += next2.bytesRead;
-      if (bytes2 > 256 * 1024 * 1024) return null;
       hash45.update(buffer.subarray(0, next2.bytesRead));
     }
     return {
