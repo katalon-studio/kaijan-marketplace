@@ -25581,9 +25581,7 @@ var ai = /* @__PURE__ */ new Map([
   ["/ai/v1/models", "GET"],
   ["/ai/v1/responses", "POST"],
   ["/ai/v1/decisions", "POST"],
-  ["/ai/openrouter/v1/systemone", "POST"],
-  ["/ai/openai_passthrough/v1/models/gpt-6-luna", "GET"],
-  ["/ai/openrouter/v1/models/typesafe/jev-1.13/endpoints", "GET"]
+  ["/ai/openai_passthrough/v1/models/gpt-6-luna", "GET"]
 ]);
 var boundAI = new Map([
   ...ai,

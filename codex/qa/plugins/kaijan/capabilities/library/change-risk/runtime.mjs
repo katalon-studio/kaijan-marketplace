@@ -198,15 +198,17 @@ export async function runWithMethod(
         "logical method stages; Decisions batches retain separate native ledger rows",
     });
     const callOne = async (stage, route, request) => {
+      const nativeUrl = {
+        responses: BASE_URL + "/responses",
+        decisions: decisionsEndpoint,
+      }[route];
+      if (!nativeUrl) throw new RiskError("unsupported_analysis_route");
       const namedQuestions =
         route === "decisions" ? request.questions : undefined;
       request =
         route === "decisions"
           ? decisionsRequest(request)
-          : zdrRequest(
-              request,
-              route === "systemone" ? "openrouter" : "openai",
-            );
+          : zdrRequest(request, "openai");
       if (
         route === "responses" &&
         (!["gpt-6-luna", "gpt-6.1-terra"].includes(request.model) ||
@@ -218,7 +220,7 @@ export async function runWithMethod(
       await save(stage + ".request.json", wire);
       const row = {
         stage,
-        provider: route === "systemone" ? "openrouter" : "openai",
+        provider: "openai",
         route: "/" + route,
         requested_model: request.model,
         ...(request.reasoning
@@ -247,20 +249,7 @@ export async function runWithMethod(
         nativeOperation: {
           try {
             diagnosticStage = "provider_dispatch";
-            const target =
-              route === "systemone"
-                ? providerConnection(
-                    "https://openrouter.ai/api/v1/systemone",
-                    env.LOKI_OPENROUTER_API_KEY ?? env.OPENROUTER_API_KEY,
-                    env,
-                  )
-                : providerConnection(
-                    route === "decisions"
-                      ? decisionsEndpoint
-                      : BASE_URL + "/responses",
-                    key,
-                    env,
-                  );
+            const target = providerConnection(nativeUrl, key, env);
             requestDeadline = AbortSignal.timeout(120000);
             const requestOptions = {
               method: "POST",

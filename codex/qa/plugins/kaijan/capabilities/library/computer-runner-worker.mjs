@@ -25340,16 +25340,13 @@ function providerConnection(nativeUrl, key, env = {}) {
     "/v1/responses/input_tokens",
     "/v1/models/gpt-6-luna"
   ].includes(native.pathname);
-  const jev = native.origin === "https://openrouter.ai" && (native.pathname === "/api/v1/systemone" || /^\/api\/v1\/models\/typesafe\/jev[^?#]*\/endpoints$/.test(
-    native.pathname
-  ));
-  if (!openai && !jev) throw new AiClientError("unsupported_native_route");
+  if (!openai) throw new AiClientError("unsupported_native_route");
   if (env.LOKI_AUTH_BROKER_SOCKET) {
     if (env.LOKI_AI_CONNECTION_BINDING !== void 0)
       requireManagedBinding(env);
     if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
       throw new AiClientError("invalid_broker_channel");
-    const path = ["/v1/responses", "/v1/decisions"].includes(native.pathname) ? native.pathname : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
+    const path = ["/v1/responses", "/v1/decisions"].includes(native.pathname) ? native.pathname : `/openai_passthrough${native.pathname}`;
     return {
       url: `http://localhost/${env.LOKI_AI_CONNECTION_BINDING ? "ai-bound" : "ai"}${path}`,
       headers: Object.fromEntries(
