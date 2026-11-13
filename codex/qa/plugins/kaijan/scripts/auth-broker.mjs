@@ -25735,6 +25735,7 @@ async function startBroker({
       }
       if (req.url === "/telemetry/health" && req.method === "GET")
         return json2(200, {
+          owner_diagnostics: true,
           epoch: telemetry?.lease({
             unsettled: Boolean(
               authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut

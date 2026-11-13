@@ -101735,6 +101735,26 @@ async function capturePlannerConversation(directory3, receipt4, providerIdentity
   return (await readPlannerConversation(directory3, receipt4, providerIdentity)).binding;
 }
 
+// src/planning-failure-diagnostics.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+function planningFailureDiagnostics2(reason, receipt4) {
+  return {
+    ...planningFailureDiagnostics(reason, receipt4),
+    ...reason === "transport_failure_no_retry" ? {
+      transport_reason: receipt4.abort_source === "absolute_deadline" ? "absolute_deadline" : receipt4.abort_source === "caller" ? "caller_abort" : receipt4.error_type === "TimeoutError" ? "socket_timeout" : "unknown"
+    } : {}
+  };
+}
+
 // src/test-planning.ts
 import { createHash as createHash25, randomUUID as randomUUID9 } from "node:crypto";
 import { redactor } from "@katalon-loki/computer-runner/redaction";
@@ -110557,7 +110577,7 @@ var TestPlanning = class {
             outcome: plan ? plan.status : "failed",
             errorCode,
             ...failed ? {
-              failureDiagnostics: planningFailureDiagnostics(
+              failureDiagnostics: planningFailureDiagnostics2(
                 value.reason,
                 object10(value.receipt)
               )
@@ -135411,9 +135431,13 @@ var TestRun = class {
     const flush = () => {
       if (!committed || !terminal2 || emitted) return;
       emitted = true;
+      const assessmentStatus = runAssessmentStatusSchema.safeParse(
+        result.status.assessment
+      ).data;
       observeLifecycle(context.lifecycle, {
         ...terminal2,
         assessedSummary: summary2,
+        ...assessmentStatus ? { assessmentStatus } : {},
         ...initialNavigationBlocked && terminal2.nativeExecutionState === "incomplete" ? { blockedReason: "initial_navigation_blocked" } : {}
       });
     };
