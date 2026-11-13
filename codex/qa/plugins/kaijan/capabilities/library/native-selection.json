@@ -9,7 +9,7 @@
       "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
       "files": {
         "runtime.mjs": "a0b15f48175415d5cfc274e999c51e1333d4377dcecf5d110c09b16dd0644d25",
-        "method.mjs": "1ec1bc5b6f52db52d0919944c8ceea2fac2fc4c375b39343cc9d74112c1b72d7",
+        "method.mjs": "4b479d8438d18ca3fbc7e49f0640ab7423fa1bc120ccadeee8992b75a83182cd",
         "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9",
         "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
         "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
@@ -23,7 +23,7 @@
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
         "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
-        "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+        "source-relations.mjs": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
         "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
@@ -464,11 +464,11 @@
       "sourceCommit": "647725aa971b168b58a92db867b7d0b523715d29",
       "mergedCommit": "77dd326a586562a263a0bb8f0f9175eef68afcdc",
       "files": {
-        "work-item-review.mjs": "57447f072018d1a95501a04fe0e635f3634bb131cff4cc0c0889dd5b01450e61",
+        "work-item-review.mjs": "5321a26b459eb64aa9a18af1474f9e1091bdd25155ae27088fa7a58a8fc86450",
         "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f",
         "work-item-output.schema.json": "f68dec67e6123da13624ea1106fc8844f43d2729c3590180878d58bcfaba5d34",
         "runtime.mjs": "a0b15f48175415d5cfc274e999c51e1333d4377dcecf5d110c09b16dd0644d25",
-        "method.mjs": "1ec1bc5b6f52db52d0919944c8ceea2fac2fc4c375b39343cc9d74112c1b72d7",
+        "method.mjs": "4b479d8438d18ca3fbc7e49f0640ab7423fa1bc120ccadeee8992b75a83182cd",
         "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9",
         "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
         "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
@@ -482,7 +482,7 @@
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
         "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
-        "source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+        "source-relations.mjs": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
         "work-item-instructions.mjs": "2736771b5ef3478d7c1e3ec82f091821b3615881ca2c887e2cd427a309efa639",
         "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
@@ -656,7 +656,7 @@
         "representation": 15,
         "source": "packages/work-verifier/assessment.mjs",
         "sha256": "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871",
-        "scope": "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1–14 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged."
+        "scope": "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1\u201314 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged."
       },
       "assessmentInputSizeCleanup": {
         "sourceCommit": "3bfd2314a9a5d6ee2675420232faea5604002915",
@@ -1314,7 +1314,7 @@
     },
     "change-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "1ec1bc5b6f52db52d0919944c8ceea2fac2fc4c375b39343cc9d74112c1b72d7",
+      "sha256": "4b479d8438d18ca3fbc7e49f0640ab7423fa1bc120ccadeee8992b75a83182cd",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "change-risk/question-output.mjs": {
@@ -1389,7 +1389,7 @@
     },
     "work-item-risk/work-item-review.mjs": {
       "source": "packages/risk-finder/work-item-review.mjs",
-      "sha256": "57447f072018d1a95501a04fe0e635f3634bb131cff4cc0c0889dd5b01450e61",
+      "sha256": "5321a26b459eb64aa9a18af1474f9e1091bdd25155ae27088fa7a58a8fc86450",
       "originalSha256": "1f5c1d5cbe959cfd44c902fcdf59e86697415ca06695544c7a462a39b89f9938"
     },
     "work-item-risk/work-item-input.schema.json": {
@@ -1409,7 +1409,7 @@
     },
     "work-item-risk/method.mjs": {
       "source": "packages/risk-finder/method.mjs",
-      "sha256": "1ec1bc5b6f52db52d0919944c8ceea2fac2fc4c375b39343cc9d74112c1b72d7",
+      "sha256": "4b479d8438d18ca3fbc7e49f0640ab7423fa1bc120ccadeee8992b75a83182cd",
       "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
     },
     "work-item-risk/question-output.mjs": {
@@ -2060,12 +2060,12 @@
     },
     "change-risk/source-relations.mjs": {
       "source": "packages/risk-finder/source-relations.mjs",
-      "sha256": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+      "sha256": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
       "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
     "work-item-risk/source-relations.mjs": {
       "source": "packages/risk-finder/source-relations.mjs",
-      "sha256": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+      "sha256": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
       "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
     "planner-loop-source/experiments/work-verifier/step-observation-sources.mjs": {
@@ -2571,7 +2571,7 @@
       "sha256": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f"
     },
     "packages/risk-finder/source-relations.mjs": {
-      "sha256": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+      "sha256": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
       "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
     "packages/work-verifier/step-observation-sources.mjs": {

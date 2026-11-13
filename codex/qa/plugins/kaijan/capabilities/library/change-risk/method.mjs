@@ -1,8 +1,6 @@
 import {
   changeRiskCatalog,
-  riskPresentationSchema,
   availableRiskPresentation,
-  RISK_RELATION_GUIDANCE,
 } from "./source-relations.mjs";
 import { isDeepStrictEqual } from "node:util";
 import { createHash } from "node:crypto";
@@ -649,19 +647,12 @@ function assumptionsRequestBody(
     questionContentSchema(
       text.format.schema.properties.assumptions_to_confirm.items,
     );
-  if (resolveApplicationSpan)
-    text.format.schema.properties.assumptions_to_confirm.items =
-      riskPresentationSchema(
-        requestRiskCatalog(packet, resolveApplicationSpan),
-        {
-          literalExcerpts: true,
-        },
-      );
   const instructions =
     template.instructions +
+    " Return the required JSON without display IDs." +
     (resolveApplicationSpan
-      ? " The JSON schema controls the output format. Return typed relations."
-      : " Return the required JSON without display IDs.") +
+      ? " Use source_catalog IDs in source_evidence."
+      : "") +
     " Leave omitted behavior unknown and record affected evidence gaps in limitations.";
   const nonHunk = nonHunkEvidence(packet);
   return {
@@ -675,10 +666,6 @@ function assumptionsRequestBody(
         role: "system",
         content:
           instructions +
-          (resolveApplicationSpan
-            ? " Each operand needs a source ID and a complete phrase of at most 160 characters that occurs exactly once in that source. Never count character offsets. Omit questions the source cannot support as a coherent relation and record the evidence limit. " +
-              RISK_RELATION_GUIDANCE
-            : "") +
           (nonHunk.length
             ? " Treat file metadata as file-level evidence. Zero line deltas do not prove equal contents. Cite metadata by file and field, without inferring changed lines or hunks."
             : ""),
