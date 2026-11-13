@@ -40,8 +40,8 @@ Verify the responding build, inference and application access separately when
 needed. Pass authorized related-work discovery scope to `plan-tests`.
 
 Use the caller's selected or authorized sources and reuse context already
-available. Ask a native host Question only for consequential missing inputs
-or decisions. Continue work that can proceed independently. When a task
+available. Ask a native host Question only when the task cannot be completed
+without the person's answer. Continue work that can proceed independently. When a task
 depends on the running application matching a local checkout, retain the actual
 revision and dirty content digests, how the target was started, and observations
 that connect the listener and served build to the source. Supply these as

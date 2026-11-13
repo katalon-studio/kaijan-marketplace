@@ -152,9 +152,10 @@ A live clarification also returns top-level `nextAction` with `kind: input-requi
 safe projected `questions` and an `instruction`. This requires caller action, not
 repeated polling. Combined `loki_test_get` exposes the same next action at the top
 level and sets `status.execution: waiting-for-input`. Answer from known authorized
-context or ask for missing consequential input. Supply the available context even
-if another answer is missing; do not invent values or stop independent work merely
-because the answer is partial. The original deadline still applies. Unknown, stopped or expired requests do not
+context or suitable generated test data. Ask the person only when the task cannot
+be completed without their answer. Supply the available context even if another
+answer is missing; do not stop independent work merely because the answer is
+partial. The original deadline still applies. Unknown, stopped or expired requests do not
 return a next action that authorizes an answer.
 
 For a live request, submit `loki_runner_answer({runId, clarificationId, answerKey,
