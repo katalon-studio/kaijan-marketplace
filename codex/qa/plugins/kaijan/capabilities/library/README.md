@@ -285,12 +285,14 @@ constant for older consumers, not a current full-preparation size guarantee.
 Historical oversize refusals remain readable. Inspection still returns explicit
 excerpts and locators to the complete retained source, not a shortened assessment
 input. Caller answers remain caller context rather than application observations.
-Live and saved question reconstruction also read complete selected captures
-without the former 8 MiB per-file or 32 MiB aggregate cutoffs. The question still
-quotes only its selected text. Private-file checks and exact source-field hashes
-remain; saved reads additionally verify the selected manifest member's complete
-byte count and hash. Missing or changed sources keep the existing protected,
-unverified-question fallback rather than inventing a captured quotation.
+Live pending questions and saved clarification readback preserve the original
+model-authored question with existing secret and private-diagnostic protection.
+A legacy presentation hint cannot replace that wording with a task-excerpt or
+captured-text template. The public view labels the wording unverified; it does
+not assert an application quote or successful navigation. Private-file checks,
+original request identity, saved manifest hashes, question aliases, deadlines
+and same-Run answer delivery remain. The legacy hint and original records stay
+unchanged in private storage. No model instruction or question schema changes.
 
 The parent and Product worker return a correlated private clarification error
 when a live callback fails. They do not turn that one question into an operator

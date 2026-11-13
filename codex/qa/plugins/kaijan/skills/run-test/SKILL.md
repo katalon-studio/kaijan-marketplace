@@ -21,9 +21,9 @@ Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
 When `kaijan_configuration` is available, check for a matching Configuration
-before asking the person to repeat settings. Reuse a single match automatically.
-Ask which set to use when several match. Name the selected set before Run.
-Ask only for the value that is missing, changed or rejected.
+before asking the person to repeat settings. Reuse the matching set identified
+by the task and available context. Name the selected set before Run. Ask the
+person only when the task cannot be completed without their answer.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
@@ -77,10 +77,10 @@ When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
 original run and clarification IDs, one answer key and the available authorized
 context. Match known questions when possible; partial answers and extra JSON
-context remain usable. Leave missing values explicit rather than inventing them.
-Mark sensitive supplied values with `sensitiveQuestionIds`. Ask for consequential
-input only when it is missing. The original deadline still applies; a missing
-answer does not require discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
+context remain usable. Use available authorized context and suitable generated
+test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
+The original deadline still applies; a missing answer does not require
+discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
 for delivery and readback.
 
 Recover a lost reply with the same key and full original input. A new execution
