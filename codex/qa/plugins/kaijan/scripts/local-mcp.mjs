@@ -47858,38 +47858,6 @@ var reportSourcesSchema = external_exports.strictObject({
 // packages/contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
 var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var terminalChecksSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.terminal-checks/1"),
-  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
-  pullRequestUrl: external_exports.url().nullable(),
-  tests: external_exports.array(external_exports.strictObject({
-    testId: nonempty2,
-    title: nonempty2,
-    deliberateFailure: external_exports.boolean().default(false),
-    checks: external_exports.array(external_exports.strictObject({
-      id: nonempty2,
-      title: nonempty2,
-      field: external_exports.enum(["text", "snapshot", "url"]),
-      operator: external_exports.enum(["contains", "not-contains", "equals"]),
-      expected: nonempty2
-    })).min(1)
-  })).min(1)
-}).superRefine((input3, ctx) => {
-  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs and each test's check IDs must be unique."
-    });
-  if (input3.pullRequestUrl !== null) {
-    const prefix = `https://github.com/${input3.repository}/pull/`;
-    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
-      ctx.addIssue({
-        code: "custom",
-        message: "The PR must belong to the selected repository."
-      });
-  }
-});
 var checkedPlanReferenceSchema = external_exports.strictObject({
   answerId: digest5,
   resultSha256: digest5,
@@ -54799,9 +54767,6 @@ ${guidance}`
   };
 }
 
-// apps/codex-plugin/src/customer-plan-selection.mjs
-import { isDeepStrictEqual } from "node:util";
-
 // apps/codex-plugin/src/customer-output.mjs
 import { createHash as createHash8 } from "node:crypto";
 
@@ -56536,14 +56501,6 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
 var executions = /* @__PURE__ */ new Set(["loki_test_execute", "loki_runner_execute"]);
 var object6 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
-var omitTestIds = (checks) => ({
-  ...checks,
-  tests: checks.tests.map((test) => {
-    const copy = { ...test };
-    delete copy.testId;
-    return copy;
-  })
-});
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
   const invalid = () => ({
@@ -56554,41 +56511,25 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
-  const checked = args.planRef !== void 0 && (args.checks !== void 0 || object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key)));
-  if (!saved && !checked)
-    return args.checks === void 0 ? { arguments: args } : invalid();
+  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
+  if (!saved && !checked) return { arguments: args };
   if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0) || typeof options.resolveSelection !== "function")
     return invalid();
   try {
     invocation?.signal?.throwIfAborted();
     const key = saved ? "savedTests" : "planRef";
     const reference2 = checkedPlanReferenceSchema.parse(args[key]);
-    const input3 = {
-      reference: reference2,
-      ...args.checks === void 0 ? {} : { checks: structuredClone(args.checks) }
-    };
-    const resolved2 = await options.resolveSelection(structuredClone(input3));
+    const resolved2 = await options.resolveSelection({
+      reference: structuredClone(reference2)
+    });
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
       return invalid();
-    if (args.checks === void 0) {
-      if (resolved2.checks !== void 0) return invalid();
-    } else {
-      if (!object6(resolved2.checks) || !Array.isArray(resolved2.checks.tests) || !object6(args.checks) || !Array.isArray(args.checks.tests) || !isDeepStrictEqual(
-        omitTestIds(args.checks),
-        omitTestIds(resolved2.checks)
-      ))
-        return invalid();
-      const ids2 = resolved2.checks.tests.map((test) => test.testId);
-      if (ids2.length !== selected.selectedTestIds.length || new Set(ids2).size !== ids2.length || ids2.some((id8) => !selected.selectedTestIds.includes(id8)))
-        return invalid();
-    }
     return {
       arguments: {
         ...args,
-        [key]: selected,
-        ...args.checks === void 0 ? {} : { checks: resolved2.checks }
+        [key]: selected
       }
     };
   } catch {

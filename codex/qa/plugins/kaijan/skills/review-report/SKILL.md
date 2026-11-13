@@ -64,8 +64,8 @@ as `loki.report-sources/1` in `nativeInputs.reportSources`. A uniquely linked
 Runner source context is selected automatically. Use an explicit compatible
 reference when adding PR sources without a linked Run. Keep selected Runs
 within the same source context. The source revision, Plan digest and selected
-identities must agree. Terminal verification comes from the retained Runner
-operation and remains separate from the model assessment. See the
+identities must agree. Historical terminal verification stays attributed to its
+original saved operation and remains separate from model assessment. See the
 [terminal-check/source contract](../../references/RUNNER.md#terminal-checks-and-pr-sources).
 
 ## View a saved browser trace
