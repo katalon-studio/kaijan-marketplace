@@ -422,8 +422,8 @@ if (result.schema === "loki.runner-operation/1") {
 ```
 
 The shared catalog exposes the same flow through
-`loki_runner_reuse_prepare`, then `loki_runner_execute`, `loki_runner_get` and
-`loki_runner_stop`. Pass the same objects to `catalog.invoke`. Native browser
+`loki_runner_reuse_prepare`, then `loki_test_execute`, `loki_test_get` and
+`loki_test_stop`. The test tools include assessment and a saved report. Pass the same fresh supplied-scenario request to `catalog.invoke`. Native browser
 execution uses OpenAI direct Responses with Terra low; selection uses OpenAI Decisions through the same connection. A NONE selection, unavailable or stale approved
 material, or selector/provider failure retains `reuse-not-executed` with
 `nativeDispatched: false`; there is no fallback execution. A malformed or
@@ -431,8 +431,9 @@ missing approval inside `reuse` fails argument validation before dispatch; omitt
 `reuse` entirely requests ordinary execution. Same key and identical input
 recover the original operation after a lost reply. Never replay an unknown
 operation. Stop covers selection and native execution, but a request to stop does
-not confirm cancellation. The native verdict remains `unverified`; independently
-verify the result. This is a bounded library/catalog integration, with no UI,
+not confirm cancellation. Keep the native execution label separate from the assessment returned by the
+test flow. A direct Node-only execution still requires separately requested verification.
+This is a bounded library/catalog integration, with no UI,
 index, global history or new store, and does not establish installed-plugin
 acceptance.
 

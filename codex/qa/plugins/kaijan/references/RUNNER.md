@@ -1,4 +1,4 @@
-# Explicit standalone Runner integration
+# Runner integration
 
 The plugin calls the public Node `run(input, options)` API of
 `@katalon-loki/computer-runner` for browser execution and
@@ -6,7 +6,7 @@ The plugin calls the public Node `run(input, options)` API of
 selected official Playwright MCP tools, browser lifecycle, Stop and traces. The
 plugin invokes that API in one isolated Node process per execution, so native
 cleanup owns only that invocation’s browser/MCP children. It never invokes the
-component CLI or implements browser actions. Planning remains a proposal; only `loki_runner_execute` starts execution.
+component CLI or implements browser actions. Planning remains a proposal. Use `loki_test_execute` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
 
 ```json
 {
@@ -47,7 +47,7 @@ method. `executionMethod` defaults to `browser-ui`; a method other than `browser
 nonempty `unresolvedInputs` returns `not-executed` with zero provider calls.
 
 For headless browser execution, set `options.headless: true` on
-`loki_runner_execute`. Omission keeps the headed default; `false` selects headed
+`loki_test_execute`. Omission keeps the headed default; `false` selects headed
 execution. The option passes to the isolated Runner host, stays in the frozen
 request identity and appears in `executionConfig.headless` and
 `executionHost.headless`. It does not change the native scenario input. Desktop
@@ -216,7 +216,7 @@ to discard usable work.
 
 For an authorized fresh browser task, call `loki_runner_reuse_prepare` with
 `{ current, runIds? }`. `current` is the complete fresh
-`loki_runner_execute` request without `reuse`. If IDs are omitted, the host
+supplied-scenario `loki_test_execute` request without `reuse`. If IDs are omitted, the host
 discovers completed, validated browser captures in the existing private Runner
 operation store and the same scope; explicit IDs select prior Runner receipts.
 There is no global history mining or new store. External experimental capture
@@ -239,20 +239,20 @@ safe, and permission to capture does not authorize provider disclosure.
 
 Inspect all preview text and proceed only with authorization to disclose it to
 OpenRouter native System One JEV (`typesafe/jev-1.13-20260917`) and execute the
-fresh task. Call `loki_runner_execute` with the identical `current` fields plus
+fresh task. Call `loki_test_execute` with the identical `current` fields plus
 `reuse: { runIds: preview.runIds, approvalSha256: preview.approvalSha256 }`.
 The host checks the binding again, then makes an advisory selection. Current
 params, target and authorization stay fresh; historical text is untrusted.
 Callers do not construct directories, projections or provider callbacks.
 
-Use `loki_runner_get` to read the original operation and `loki_runner_stop` to
+Use `loki_test_get` to read the original test and `loki_test_stop` to
 request Stop during selection or native execution. NONE, unavailable or stale
 approved material, and provider errors return retained `reuse-not-executed` with
 `nativeDispatched: false`; there is no fallback. An incomplete `reuse` object
 fails argument validation before dispatch; omitting `reuse` entirely requests
 ordinary execution. Repeat the same key and input to recover a lost reply; never
-replay an unknown operation. Stop is a request, not confirmation. Native verdicts
-remain `unverified` and need independent verification.
+replay an unknown operation. Stop is a request, not confirmation. Keep the native execution label separate from the assessment and saved report
+returned by `loki_test_execute`; do not start a separate assessment to recover it.
 The selector retains a complete response up to 8 MiB. If reading fails or the
 response exceeds that capacity, its receipt retains an incomplete prefix and
 remaining fees are unknown; a valid-looking prefix is not final accounting.
@@ -365,7 +365,7 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 ## Local macOS desktop execution
 
-`loki_runner_execute` also accepts `executionMethod: "desktop-ui"`, a full scenario,
+`loki_test_execute` also accepts `executionMethod: "desktop-ui"`, a full scenario,
 explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
 Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
 on the main display. The same get/Stop tools retain their durable run lifecycle.
@@ -419,7 +419,7 @@ credential presence and tool discovery cannot.
 ## Host validation
 
 An ordinary installation has no fault plan. The existing public
-`loki_runner_execute`, `get` and `stop` arguments are unchanged; the answer
+`loki_test_execute`, `loki_test_get` and `loki_test_stop` arguments are unchanged; the answer
 interface is described above. No tool argument selects faults, endpoints, models
 or credentials. The following interface is only for a sealed, isolated
 host control. It is not a provider readiness check or a production fault API.

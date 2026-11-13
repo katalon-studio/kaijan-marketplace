@@ -49068,6 +49068,233 @@ function presentAssessmentFinding(kind, supported, content) {
   };
 }
 
+// packages/contracts/dist/customer-related.js
+var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings2 = external_exports.array(external_exports.string());
+var optional2 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional2(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional2(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional2(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional2(external_exports.string()),
+    evidence_ids: optional2(strings2),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional2(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id4.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id4,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional2(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional2(external_exports.string())
+});
+var proof = /* @__PURE__ */ new WeakMap();
+var object3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var rows = (value) => Array.isArray(value) ? value.filter(object3) : [];
+function retainVerifiedRelatedSource(value) {
+  proof.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedRelatedSource(value) {
+  return object3(value) && proof.get(value) === JSON.stringify(value);
+}
+function transferRelatedSourceProof(source3, target, verify) {
+  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
+    retainVerifiedRelatedSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferRelatedSourceProof(source3[key], target[key], verify);
+  return target;
+}
+var reasons = {
+  same_work: "Suggested shared work. Review the cited sources; this is not verified identity.",
+  explicit_fix: "A cited source claims a fix. The repair has not been verified.",
+  explicit_reference: "Suggested source reference. Review the cited sources for relevance.",
+  adjacent_capability: "Suggested related functionality. This does not establish the same requirement or failure.",
+  shared_vocabulary: "Suggested topic overlap. Shared terms do not establish the same work.",
+  unsupported: "The recorded review did not support a relationship.",
+  unjudged: "This item has not been assessed for relevance."
+};
+var links = {
+  literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
+  timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
+};
+var unavailable = "The retained source is unavailable in this view.";
+var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
+var safeRelation = (value) => {
+  if (typeof value !== "string" || !Object.hasOwn(reasons, value))
+    throw Error("Unknown related-work relationship");
+  return value;
+};
+function projectCustomerRelatedResult(input3) {
+  if (!object3(input3) || input3.schema !== "pr-context-related/1" && input3.kind !== "related-work")
+    throw Error("Unsupported related-work result");
+  const native = input3.schema === "pr-context-related/1";
+  const scope = object3(input3.scope) ? input3.scope : {};
+  const admitted = (source3, target) => hasVerifiedRelatedSource(source3) ? retainVerifiedRelatedSource(target) : target;
+  const candidate = (row) => {
+    const known = hasVerifiedRelatedSource(row);
+    const relationship = safeRelation(row.relationship_type);
+    return admitted(row, {
+      id: referenceId(row.id),
+      kind: row.kind,
+      title: known ? row.title : "Source title unavailable",
+      url: known ? row.url : "",
+      state: row.state,
+      relation: row.relation,
+      relationship_type: relationship,
+      reason: reasons[relationship],
+      evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
+      sourceState: known ? "available" : "unavailable",
+      ...!known ? { notice: unavailable } : {},
+      direct_links: (known ? rows(row.direct_links) : []).flatMap((link3) => {
+        if (!hasVerifiedRelatedSource(link3) || typeof link3.type !== "string" || !Object.hasOwn(links, link3.type))
+          return [];
+        return [
+          admitted(link3, {
+            type: link3.type,
+            source_uri: link3.source_uri,
+            explanation: links[link3.type],
+            ...link3.depth === 1 || link3.depth === 2 ? { depth: link3.depth } : {},
+            ...link3.depth === 2 ? {
+              via_issue_key: link3.via_issue_key,
+              source_evidence_id: link3.source_evidence_id
+            } : {}
+          })
+        ];
+      })
+    });
+  };
+  const evidence2 = rows(input3.evidence).map((row) => {
+    const known = hasVerifiedRelatedSource(row);
+    return admitted(row, {
+      id: referenceId(row.id),
+      text: known ? row.text : "Source excerpt unavailable",
+      source_uri: known ? row.source_uri : "",
+      revision: known ? row.revision : "",
+      sha256: known ? row.sha256 : null,
+      omitted_characters: known ? row.omitted_characters : 0,
+      sourceState: known ? "available" : "unavailable"
+    });
+  });
+  const references = rows(native ? input3.literal_references : input3.literalReferences);
+  const unjudged = rows(native ? scope.unjudged : input3.unjudged);
+  const uninspected = rows(native ? scope.uninspected_references : input3.uninspected);
+  const candidates = rows(input3.candidates).map(candidate);
+  const missing = (values) => values.filter((row) => !hasVerifiedRelatedSource(row)).length;
+  const prior = !native && object3(input3.sourceCoverage) && hasVerifiedRelatedSource(input3.sourceCoverage) ? input3.sourceCoverage : {};
+  const priorCount = (key) => Number.isSafeInteger(prior[key]) && prior[key] >= 0 ? prior[key] : 0;
+  const selected = {
+    kind: "related-work",
+    status: input3.status,
+    ...hasVerifiedRelatedSource(input3.seed) ? { seed: input3.seed } : {},
+    candidates,
+    evidence: evidence2,
+    literalReferences: references.filter(hasVerifiedRelatedSource),
+    unjudged: unjudged.filter(hasVerifiedRelatedSource),
+    uninspected: uninspected.filter(hasVerifiedRelatedSource),
+    sourceCoverage: retainVerifiedRelatedSource({
+      unavailableCandidates: candidates.filter((row) => row.sourceState === "unavailable").length,
+      unavailableExcerpts: evidence2.filter((row) => row.sourceState === "unavailable").length,
+      unavailableReferences: missing(references) + priorCount("unavailableReferences"),
+      unavailableUnjudgedItems: missing(unjudged) + priorCount("unavailableUnjudgedItems"),
+      unavailableUninspectedItems: missing(uninspected) + priorCount("unavailableUninspectedItems")
+    }),
+    reviewRequired: true,
+    message: "Relationships are suggestions, not verified fixes. Unavailable source text and unassessed items remain coverage gaps."
+  };
+  const parsed = customerRelatedResultSchema.parse(selected);
+  const copy = (source3, target) => {
+    if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+      return;
+    if (hasVerifiedRelatedSource(source3))
+      retainVerifiedRelatedSource(target);
+    for (const key of Object.keys(target))
+      if (Object.hasOwn(source3, key))
+        copy(source3[key], target[key]);
+  };
+  copy(selected, parsed);
+  return parsed;
+}
+
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
   steps: external_exports.array(external_exports.string()),
@@ -49075,6 +49302,33 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
+var related = customerRelatedResultSchema.shape;
+var contextFinderPlan = { planSourceId: digest12, planResultSha256: digest12 };
+var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
+var reportContextFinderSchema = external_exports.discriminatedUnion("state", [
+  external_exports.object({ ...contextFinderPlan, state: external_exports.literal("unavailable") }),
+  external_exports.object({
+    ...contextFinderPlan,
+    state: external_exports.literal("ready"),
+    result: external_exports.object({
+      status: related.status,
+      candidates: external_exports.array(related.candidates.element.pick({
+        kind: true,
+        title: true,
+        url: true,
+        relationship_type: true,
+        sourceState: true
+      })),
+      unjudged: related.unjudged,
+      uninspected: external_exports.array(related.uninspected.unwrap().element.pick({ repo: true, number: true })).optional(),
+      sourceCoverage: related.sourceCoverage.pick({
+        unavailableCandidates: true,
+        unavailableUnjudgedItems: true,
+        unavailableUninspectedItems: true
+      })
+    })
+  })
+]);
 var reportExpectationAuthoritySchema = external_exports.string();
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
@@ -49193,6 +49447,7 @@ var testPlanViewSchema = external_exports.object({
     assertions: reportExecutionSchema.nullable().optional()
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
+  contextFinder: external_exports.array(reportContextFinderSchema).optional(),
   plans: external_exports.array(external_exports.object({
     sourceId: digest12,
     sourceKind: external_exports.enum(["answer", "run"]),
@@ -49677,15 +49932,15 @@ var planningServiceRejectionNotice = "The planning service rejected the request.
 var hasCapturedPlanningFailure = (value) => capturedPlanningFailure.safeParse(value).success;
 var planningRejectionMessage = (value) => planningRejection.safeParse(value).success || classifiedPlanningRejection.safeParse(value).success ? planningServiceRejectionNotice : void 0;
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
-var proof = /* @__PURE__ */ new WeakMap();
+var proof2 = /* @__PURE__ */ new WeakMap();
 var json2 = (value) => JSON.stringify(value);
 function retainCustomerPlanningSource(value) {
   if (value !== null && typeof value === "object")
-    proof.set(value, json2(value));
+    proof2.set(value, json2(value));
   return value;
 }
 function hasCustomerPlanningSource(value) {
-  return value !== null && typeof value === "object" && proof.get(value) === json2(value);
+  return value !== null && typeof value === "object" && proof2.get(value) === json2(value);
 }
 function transferCustomerPlanningSource(source3, target, verify) {
   if (!verify || source3 === null || target === null || typeof source3 !== "object" || typeof target !== "object")
@@ -49913,29 +50168,29 @@ function customerAuthoredText(value) {
 }
 var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
 var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var optional2 = (schema) => schema.optional();
-var strings2 = external_exports.array(external_exports.string());
+var optional3 = (schema) => schema.optional();
+var strings3 = external_exports.array(external_exports.string());
 var citation = external_exports.object({
-  source_id: optional2(external_exports.string()),
-  sourceId: optional2(external_exports.string()),
-  evidence_id: optional2(external_exports.string()),
-  from_line: optional2(external_exports.number().int()),
-  through_line: optional2(external_exports.number().int())
+  source_id: optional3(external_exports.string()),
+  sourceId: optional3(external_exports.string()),
+  evidence_id: optional3(external_exports.string()),
+  from_line: optional3(external_exports.number().int()),
+  through_line: optional3(external_exports.number().int())
 });
 var boundQuote = customerAssessmentQuoteSchema;
 var bindings = external_exports.array(external_exports.unknown());
 var assessmentTest = external_exports.object({
   test_id: external_exports.string().nullable(),
   title: external_exports.string().optional(),
-  outcome_ids: strings2,
+  outcome_ids: strings3,
   expected: external_exports.string().nullable(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   actual: external_exports.string().nullable(),
   reason: external_exports.string(),
-  evidence_ids: optional2(strings2),
-  citations: optional2(external_exports.array(citation)),
+  evidence_ids: optional3(strings3),
+  citations: optional3(external_exports.array(citation)),
   recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
-  observed_steps: optional2(external_exports.array(external_exports.object({
+  observed_steps: optional3(external_exports.array(external_exports.object({
     description: external_exports.string(),
     citations: external_exports.array(citation),
     evidenceQuotes: external_exports.array(boundQuote).optional(),
@@ -49946,14 +50201,14 @@ var assessmentTest = external_exports.object({
 var assessmentFinding = external_exports.object({
   id: external_exports.string(),
   support: external_exports.enum(["requires-review", "needs-review"]),
-  requirement_ids: optional2(strings2),
-  test_ids: optional2(strings2),
-  outcome_ids: optional2(strings2),
-  kind: optional2(external_exports.string()),
-  claim: optional2(external_exports.string()),
-  citations: optional2(external_exports.array(citation)),
-  remaining_gap: optional2(external_exports.string()),
-  notice: optional2(external_exports.string()),
+  requirement_ids: optional3(strings3),
+  test_ids: optional3(strings3),
+  outcome_ids: optional3(strings3),
+  kind: optional3(external_exports.string()),
+  claim: optional3(external_exports.string()),
+  citations: optional3(external_exports.array(citation)),
+  remaining_gap: optional3(external_exports.string()),
+  notice: optional3(external_exports.string()),
   evidenceQuotes: external_exports.array(boundQuote).optional()
 });
 var reportedOutcome = external_exports.object({
@@ -49970,21 +50225,21 @@ var reportedOutcome = external_exports.object({
     "skipped",
     "unknown"
   ]),
-  evidence_ids: strings2
+  evidence_ids: strings3
 });
 var customerAssessmentResultSchema = external_exports.object({
-  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  reportedOutcomes: optional3(external_exports.array(reportedOutcome)),
   kind: external_exports.literal("evidence-assessment"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  tests: optional2(external_exports.array(assessmentTest)),
-  findings: optional2(external_exports.array(assessmentFinding)),
-  coverage: optional2(external_exports.object({
+  tests: optional3(external_exports.array(assessmentTest)),
+  findings: optional3(external_exports.array(assessmentFinding)),
+  coverage: optional3(external_exports.object({
     status: external_exports.enum(["complete", "partial"]),
-    unassessed_requirement_ids: strings2
+    unassessed_requirement_ids: strings3
   })),
   meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
   acceptanceDecision: external_exports.null(),
-  message: optional2(external_exports.string())
+  message: optional3(external_exports.string())
 });
 var assessmentInput = external_exports.object({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
@@ -50004,9 +50259,9 @@ var assessmentInput = external_exports.object({
       status: external_exports.enum(["needs_review", "bound_model_assessment"]),
       literal_bindings: bindings.optional(),
       original_finding: external_exports.object({
-        requirement_ids: strings2.optional(),
-        test_ids: strings2.optional(),
-        outcome_ids: strings2.optional(),
+        requirement_ids: strings3.optional(),
+        test_ids: strings3.optional(),
+        outcome_ids: strings3.optional(),
         kind: external_exports.string().optional(),
         claim: external_exports.string().optional(),
         citations: external_exports.array(citation).optional(),
@@ -50017,11 +50272,11 @@ var assessmentInput = external_exports.object({
       id: external_exports.string(),
       test_id: external_exports.string().nullable(),
       status: external_exports.string(),
-      evidence_ids: strings2
+      evidence_ids: strings3
     })).optional(),
     coverage: external_exports.object({
       status: external_exports.enum(["complete", "partial"]),
-      unassessed_requirement_ids: strings2
+      unassessed_requirement_ids: strings3
     })
   }).nullable()
 });
@@ -50176,7 +50431,7 @@ function projectCustomerAssessment(value, sources, presentation) {
 }
 
 // packages/contracts/dist/customer-report.js
-var strings3 = external_exports.array(external_exports.string());
+var strings4 = external_exports.array(external_exports.string());
 var operationState = external_exports.enum([
   "accepted",
   "running",
@@ -50231,28 +50486,28 @@ var customerPlanSchema = external_exports.object({
     id: external_exports.string(),
     title: external_exports.string().optional(),
     method: external_exports.string().optional(),
-    objective_ids: strings3.optional(),
+    objective_ids: strings4.optional(),
     priority: external_exports.string().optional(),
     reason: external_exports.string().optional(),
-    prerequisites: strings3.optional(),
-    steps: strings3,
+    prerequisites: strings4.optional(),
+    steps: strings4,
     expected: external_exports.object({
       text: external_exports.string(),
       authority: external_exports.string(),
       refs: refs3.optional()
     }),
-    execution_gaps: strings3.optional()
+    execution_gaps: strings4.optional()
   })),
   requirement_coverage: external_exports.array(external_exports.object({
     requirement_id: external_exports.string(),
     text: external_exports.string().optional(),
     status: external_exports.enum(["proposed", "gap"]),
-    test_ids: strings3,
+    test_ids: strings4,
     reason: external_exports.string().optional()
   })).optional(),
-  ambiguities: strings3.optional(),
-  disagreements: strings3.optional(),
-  limitations: strings3.optional(),
+  ambiguities: strings4.optional(),
+  disagreements: strings4.optional(),
+  limitations: strings4.optional(),
   relevant_surfaces: external_exports.array(external_exports.object({
     description: external_exports.string(),
     basis: external_exports.string(),
@@ -50260,13 +50515,13 @@ var customerPlanSchema = external_exports.object({
   })).optional(),
   runner_handoff: external_exports.object({
     status: external_exports.literal("proposed_only"),
-    scenario_ids: strings3,
-    required_inputs: strings3
+    scenario_ids: strings4,
+    required_inputs: strings4
   }).optional()
 });
 var coverage2 = external_exports.object({
   status: external_exports.enum(["complete", "partial"]),
-  unassessed_requirement_ids: strings3
+  unassessed_requirement_ids: strings4
 });
 var evidenceIdentity = external_exports.object({
   id: external_exports.string(),
@@ -50536,8 +50791,8 @@ function projectLinkedAssessment(value) {
 var executionReport = external_exports.object({
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
-  completedSteps: strings3.optional(),
-  remainingSteps: strings3,
+  completedSteps: strings4.optional(),
+  remainingSteps: strings4,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
   effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
@@ -50552,7 +50807,7 @@ var assertionStep = external_exports.object({
   status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
   expected: external_exports.string(),
   actual: external_exports.string(),
-  evidenceIds: strings3
+  evidenceIds: strings4
 });
 var assertionTest = external_exports.object({
   testId: external_exports.string(),
@@ -50588,7 +50843,8 @@ var customerReportSchema = testPlanViewSchema.pick({
   title: true,
   createdAt: true,
   mapId: true,
-  selectedPullRequestUrl: true
+  selectedPullRequestUrl: true,
+  contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
   assessments: external_exports.array(external_exports.object({
@@ -50776,7 +51032,7 @@ var customerReportReadSchema = external_exports.object({
     testVerdict: testVerdict.nullable(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     stopRequested: external_exports.boolean().nullable().optional(),
-    selectedTestIds: strings3,
+    selectedTestIds: strings4,
     assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
     facts: external_exports.array(external_exports.discriminatedUnion("key", [
       external_exports.object({
@@ -50822,10 +51078,26 @@ var customerReportOutputSchema = external_exports.union([
   customerReportReadSchema,
   customerReportFailureSchema
 ]);
+var reportWithoutContextFinder = customerReportSchema.omit({
+  contextFinder: true
+});
+var reportContextFinderInput = external_exports.object({
+  contextFinder: external_exports.array(external_exports.unknown()).optional()
+});
 function projectReportResult(input3, sha256, verifiedPlanningFailures) {
-  const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, customerReportSchema.parse(input3))));
+  const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, reportWithoutContextFinder.parse(input3))));
+  const entries = reportContextFinderInput.safeParse(input3).data?.contextFinder ?? [];
+  const contextFinder = entries.flatMap((entry) => {
+    if (!hasVerifiedRelatedSource(entry))
+      return [];
+    const parsed = reportContextFinderSchema.safeParse(entry);
+    if (!parsed.success || !value.plans.some((plan2) => plan2.sourceKind === "answer" && plan2.sourceId === parsed.data.planSourceId && plan2.resultSha256 === parsed.data.planResultSha256))
+      return [];
+    return [retainVerifiedRelatedSource(parsed.data)];
+  });
   return {
     ...value,
+    ...contextFinder.length ? { contextFinder } : {},
     plans: value.plans.map((saved, index) => {
       const source3 = { ...saved };
       delete source3.planningFailure;
@@ -50933,6 +51205,7 @@ function projectCustomerTestPlanView(input3, sha256) {
     createdAt: value.createdAt,
     mapId: value.mapId,
     selectedPullRequestUrl: value.selectedPullRequestUrl,
+    contextFinder: record5(input3).contextFinder,
     assessmentFailures: value.assessmentFailures,
     assessments: value.assessments?.map(({ result: result2, ...identity4 }) => {
       try {
@@ -51019,233 +51292,6 @@ function projectCustomerPageObservations(result2, sha256) {
       }
     ];
   });
-}
-
-// packages/contracts/dist/customer-related.js
-var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var strings4 = external_exports.array(external_exports.string());
-var optional3 = (value) => value.optional();
-var customerRelatedResultSchema = external_exports.object({
-  kind: external_exports.literal("related-work"),
-  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
-  seed: optional3(external_exports.object({
-    repo: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue", "supplied"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    number: optional3(external_exports.number().int())
-  })),
-  candidates: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    state: external_exports.enum(["open", "closed"]),
-    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
-    reason: optional3(external_exports.string()),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    notice: optional3(external_exports.string()),
-    evidence_ids: optional3(strings4),
-    relationship_type: external_exports.enum([
-      "same_work",
-      "explicit_fix",
-      "explicit_reference",
-      "adjacent_capability",
-      "shared_vocabulary",
-      "unsupported",
-      "unjudged"
-    ]),
-    direct_links: optional3(external_exports.array(external_exports.object({
-      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
-      source_uri: external_exports.string(),
-      explanation: external_exports.string(),
-      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
-      via_issue_key: external_exports.string().optional(),
-      source_evidence_id: external_exports.string().optional()
-    })))
-  })),
-  evidence: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    text: external_exports.string(),
-    source_uri: external_exports.string(),
-    revision: external_exports.string(),
-    sha256: id4.nullable(),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    omitted_characters: external_exports.number().int().nonnegative()
-  })),
-  literalReferences: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    retrieved: external_exports.boolean(),
-    relation: external_exports.literal("unjudged"),
-    provenance: external_exports.array(external_exports.object({
-      source_uri: external_exports.string(),
-      source_text_sha256: id4,
-      captured_at: external_exports.string()
-    }))
-  })).optional(),
-  unjudged: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    kind: external_exports.enum(["issue", "pr"]),
-    title: external_exports.string(),
-    relation: external_exports.literal("unjudged")
-  })).optional(),
-  uninspected: optional3(external_exports.array(external_exports.object({
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    source_uri: external_exports.string(),
-    reason: external_exports.enum([
-      "repository_not_authorized",
-      "global_candidate_limit",
-      "literal_fetch_limit",
-      "acquisition_unavailable",
-      "authored_intake_quarantine"
-    ])
-  }))),
-  sourceCoverage: external_exports.object({
-    unavailableCandidates: external_exports.number().int().nonnegative(),
-    unavailableExcerpts: external_exports.number().int().nonnegative(),
-    unavailableReferences: external_exports.number().int().nonnegative(),
-    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
-    unavailableUninspectedItems: external_exports.number().int().nonnegative()
-  }),
-  reviewRequired: external_exports.literal(true),
-  message: optional3(external_exports.string())
-});
-var proof2 = /* @__PURE__ */ new WeakMap();
-var object3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var rows = (value) => Array.isArray(value) ? value.filter(object3) : [];
-function retainVerifiedRelatedSource(value) {
-  proof2.set(value, JSON.stringify(value));
-  return value;
-}
-function hasVerifiedRelatedSource(value) {
-  return object3(value) && proof2.get(value) === JSON.stringify(value);
-}
-function transferRelatedSourceProof(source3, target, verify) {
-  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
-    return target;
-  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
-    retainVerifiedRelatedSource(target);
-  for (const key of Object.keys(target))
-    if (Object.hasOwn(source3, key))
-      transferRelatedSourceProof(source3[key], target[key], verify);
-  return target;
-}
-var reasons = {
-  same_work: "Suggested shared work. Review the cited sources; this is not verified identity.",
-  explicit_fix: "A cited source claims a fix. The repair has not been verified.",
-  explicit_reference: "Suggested source reference. Review the cited sources for relevance.",
-  adjacent_capability: "Suggested related functionality. This does not establish the same requirement or failure.",
-  shared_vocabulary: "Suggested topic overlap. Shared terms do not establish the same work.",
-  unsupported: "The recorded review did not support a relationship.",
-  unjudged: "This item has not been assessed for relevance."
-};
-var links = {
-  literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
-  timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
-};
-var unavailable = "The retained source is unavailable in this view.";
-var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
-var safeRelation = (value) => {
-  if (typeof value !== "string" || !Object.hasOwn(reasons, value))
-    throw Error("Unknown related-work relationship");
-  return value;
-};
-function projectCustomerRelatedResult(input3) {
-  if (!object3(input3) || input3.schema !== "pr-context-related/1" && input3.kind !== "related-work")
-    throw Error("Unsupported related-work result");
-  const native = input3.schema === "pr-context-related/1";
-  const scope = object3(input3.scope) ? input3.scope : {};
-  const admitted = (source3, target) => hasVerifiedRelatedSource(source3) ? retainVerifiedRelatedSource(target) : target;
-  const candidate = (row) => {
-    const known = hasVerifiedRelatedSource(row);
-    const relationship = safeRelation(row.relationship_type);
-    return admitted(row, {
-      id: referenceId(row.id),
-      kind: row.kind,
-      title: known ? row.title : "Source title unavailable",
-      url: known ? row.url : "",
-      state: row.state,
-      relation: row.relation,
-      relationship_type: relationship,
-      reason: reasons[relationship],
-      evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
-      sourceState: known ? "available" : "unavailable",
-      ...!known ? { notice: unavailable } : {},
-      direct_links: (known ? rows(row.direct_links) : []).flatMap((link3) => {
-        if (!hasVerifiedRelatedSource(link3) || typeof link3.type !== "string" || !Object.hasOwn(links, link3.type))
-          return [];
-        return [
-          admitted(link3, {
-            type: link3.type,
-            source_uri: link3.source_uri,
-            explanation: links[link3.type],
-            ...link3.depth === 1 || link3.depth === 2 ? { depth: link3.depth } : {},
-            ...link3.depth === 2 ? {
-              via_issue_key: link3.via_issue_key,
-              source_evidence_id: link3.source_evidence_id
-            } : {}
-          })
-        ];
-      })
-    });
-  };
-  const evidence2 = rows(input3.evidence).map((row) => {
-    const known = hasVerifiedRelatedSource(row);
-    return admitted(row, {
-      id: referenceId(row.id),
-      text: known ? row.text : "Source excerpt unavailable",
-      source_uri: known ? row.source_uri : "",
-      revision: known ? row.revision : "",
-      sha256: known ? row.sha256 : null,
-      omitted_characters: known ? row.omitted_characters : 0,
-      sourceState: known ? "available" : "unavailable"
-    });
-  });
-  const references = rows(native ? input3.literal_references : input3.literalReferences);
-  const unjudged = rows(native ? scope.unjudged : input3.unjudged);
-  const uninspected = rows(native ? scope.uninspected_references : input3.uninspected);
-  const candidates = rows(input3.candidates).map(candidate);
-  const missing = (values) => values.filter((row) => !hasVerifiedRelatedSource(row)).length;
-  const prior = !native && object3(input3.sourceCoverage) && hasVerifiedRelatedSource(input3.sourceCoverage) ? input3.sourceCoverage : {};
-  const priorCount = (key) => Number.isSafeInteger(prior[key]) && prior[key] >= 0 ? prior[key] : 0;
-  const selected = {
-    kind: "related-work",
-    status: input3.status,
-    ...hasVerifiedRelatedSource(input3.seed) ? { seed: input3.seed } : {},
-    candidates,
-    evidence: evidence2,
-    literalReferences: references.filter(hasVerifiedRelatedSource),
-    unjudged: unjudged.filter(hasVerifiedRelatedSource),
-    uninspected: uninspected.filter(hasVerifiedRelatedSource),
-    sourceCoverage: retainVerifiedRelatedSource({
-      unavailableCandidates: candidates.filter((row) => row.sourceState === "unavailable").length,
-      unavailableExcerpts: evidence2.filter((row) => row.sourceState === "unavailable").length,
-      unavailableReferences: missing(references) + priorCount("unavailableReferences"),
-      unavailableUnjudgedItems: missing(unjudged) + priorCount("unavailableUnjudgedItems"),
-      unavailableUninspectedItems: missing(uninspected) + priorCount("unavailableUninspectedItems")
-    }),
-    reviewRequired: true,
-    message: "Relationships are suggestions, not verified fixes. Unavailable source text and unassessed items remain coverage gaps."
-  };
-  const parsed = customerRelatedResultSchema.parse(selected);
-  const copy = (source3, target) => {
-    if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
-      return;
-    if (hasVerifiedRelatedSource(source3))
-      retainVerifiedRelatedSource(target);
-    for (const key of Object.keys(target))
-      if (Object.hasOwn(source3, key))
-        copy(source3[key], target[key]);
-  };
-  copy(selected, parsed);
-  return parsed;
 }
 
 // packages/contracts/dist/customer-supplement.js
@@ -52514,7 +52560,7 @@ async function createInstalledSession(root, build, data, broker, {
   }) : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
@@ -56812,7 +56858,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
-  const resourceUri = "ui://loki/test-plan/card/v83.html";
+  const resourceUri = "ui://loki/test-plan/card/v84.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -56851,6 +56897,11 @@ function retainedCustomerEvidenceView(value, options) {
     value,
     clone3,
     options.verifyCustomerRiskEvidence
+  );
+  transferRelatedSourceProof(
+    value.contextFinder,
+    clone3.contextFinder,
+    options.verifyCustomerRelatedSource
   );
   return clone3;
 }
@@ -57507,6 +57558,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v77.html",
   "ui://loki/test-plan/card/v78.html",
   "ui://loki/test-plan/card/v82.html",
+  "ui://loki/test-plan/card/v83.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
@@ -57848,6 +57900,9 @@ function createCapabilityMcpServer(session, version4, setup) {
             selected.services.reports
           ),
           verifyCustomerRiskEvidence: selected.services?.reports?.verifyCustomerRiskEvidence?.bind(
+            selected.services.reports
+          ),
+          verifyCustomerRelatedSource: selected.services?.reports?.verifyCustomerRelatedSource?.bind(
             selected.services.reports
           ),
           readReportView: typeof selected.services?.reports?.readTestPlanView === "function" ? (reportId, invocation) => selected.services.reports.readTestPlanView(
