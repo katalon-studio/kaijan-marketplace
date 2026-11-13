@@ -51914,7 +51914,7 @@ function presentAssessmentFinding(kind, supported, content) {
 
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)),
+  steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -56699,7 +56699,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
-  const resourceUri = "ui://loki/test-plan/card/v81.html";
+  const resourceUri = "ui://loki/test-plan/card/v83.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -57393,6 +57393,8 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v76.html",
   "ui://loki/test-plan/card/v77.html",
   "ui://loki/test-plan/card/v78.html",
+  "ui://loki/test-plan/card/v82.html",
+  "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
 ]);

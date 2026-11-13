@@ -91,7 +91,7 @@ var init_define_LOKI_MAC_RUNNER_PINS = __esm({
 var define_LOKI_PLANNER_LOOP_PINS_default;
 var init_define_LOKI_PLANNER_LOOP_PINS = __esm({
   "<define:LOKI_PLANNER_LOOP_PINS>"() {
-    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93", "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/work-verifier/supplied-evidence.mjs": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607", "experiments/provider-transport/index.mjs": "e2e6cb27a8e01e5c168ff68502044e7f2158df6d43bd4f0226f98c23213360a4", "experiments/provider-transport/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a", "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f", "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b", "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8", "experiments/work-verifier/request-instructions.mjs": "bbd0b95689d20ed6c74d9d5c571ef739a277b0f6be085a01dd408a25ebd4cbe3", "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12", "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4", "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a", "experiments/work-verifier/planner-recap.mjs": "00664a84caa6525d9f1911a9501151f322d7c20ce32b11094fb411cc1b699939", "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", scenarioOutcomeResultSlots: { issue: 2530, scope: "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks." }, declaredLinkCitation: { issue: 3109, previousSha256: "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1", sha256: "88bda6bf9c25137f3a137fee76332d535eb46c302449510038c08f436ddd27e9", scope: "New shared-run responses explicitly return the exact full inventory citation in a required schema field. Preserve proposal, outcome and evidence guards, original candidates, one-call execution and historical request digests." }, reportAssessment: { issue: 4305, representation: 15, source: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871", scope: "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1\u201314 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged." }, assessmentInputSizeCleanup: { sourceCommit: "3bfd2314a9a5d6ee2675420232faea5604002915", scope: "Remove implicit preparation/request/image/artifact/manifest/original-read size and count admission cutoffs; complete original inputs and actual errors remain. Historical baseline and originalPins remain unchanged; the listed hashes identify the maintained sources. No replacement numeric budget or model/prompt change.", files: [{ path: "packages/capabilities/src/assessment-preparation.ts", sha256: "6cf9d9bed84c47738427420078c19c270b2aad64cba80389cecb64034b84ecac" }, { path: "packages/capabilities/src/planner-loop.ts", sha256: "9e750673f604665ad8093b502b013861edf4982cb7673aa194b6f0baa952e777" }, { path: "packages/capabilities/src/report-artifact.ts", sha256: "9950f4cb4306e9b362b16f1ced8bfb1bff4dde955e917207f15f0a2169000540" }, { path: "packages/capabilities/research/planner-loop-api.d.mts", sha256: "b05ffc7965c5258b6cac6d139fc5ae4472ee01c13a95a22c9143e5ee85639420" }, { path: "packages/contracts/src/advisory.ts", sha256: "04d442d6eab45e6d07b3b7951ea7a416e8f437b7dd89823d9834e5c38205cc34" }, { path: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871" }, { path: "packages/work-verifier/assessment-contract.mjs", sha256: "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a" }, { path: "packages/work-verifier/supplied-evidence.mjs", sha256: "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607" }] } };
+    define_LOKI_PLANNER_LOOP_PINS_default = { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", supplementSource: "8983e43efc06b0ff18300cca27c3d6c1bad5e43e", assessmentSource: "af9e9b1f42a831fed5c6c5c7d83593c20be8f781", scope: "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.", files: { "experiments/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93", "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0", "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "experiments/context-finder/planning/pcf_provider.mjs": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0", "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "experiments/work-verifier/supplied-evidence.mjs": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607", "experiments/provider-transport/index.mjs": "e2e6cb27a8e01e5c168ff68502044e7f2158df6d43bd4f0226f98c23213360a4", "experiments/provider-transport/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61", "experiments/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "experiments/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8", "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23", "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67", "experiments/work-verifier/assessment-contract.mjs": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a", "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e", "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f", "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b", "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8", "experiments/work-verifier/request-instructions.mjs": "bbd0b95689d20ed6c74d9d5c571ef739a277b0f6be085a01dd408a25ebd4cbe3", "experiments/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12", "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4", "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a", "experiments/work-verifier/planner-recap.mjs": "af853b82142708d0dafedb2ed1e005819f71316830695fe7e766d5d2272d777a", "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, assets: { "unicode-word-13.0.0.json": "experiments/context-finder/related/unicode-word-13.0.0.json", "unicode-word-15.0.0.json": "experiments/context-finder/related/unicode-word-15.0.0.json" }, failureDiagnosticSource: "918bcc24a2cf1ce58636daaf1253a682d57ff589", prerequisiteContractSource: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineConciseSource: "305d4d3d4951ab9b52438e86a137156c2b684a11", assessmentByteCapRemovalSource: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", nativeDiagnosticSource: "80795a4ac9836edf62da228784ad038f2074d1ac", inputLimitCleanupSource: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", sourceResponseLimitCleanupSource: "1852e6676718c6b73a108f86c42384e13db0a548", sourcePinRepair: { sourceCommit: "c7dc4e71f9d5e7b746eb6eec72e311fd434b119c", scope: "Admit the already merged #1949 optional line-adjacent request representation; default assessment construction remains unchanged. No new MCP option or default is exposed by Runner integration." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", currentPromotedFiles: { "packages/context-finder/planning/supplement.mjs": "74054f9e9874dc78bf837e71da70f20324f9841aa0f4a1798091cca578815e03", "packages/context-finder/planning/pcf_plan.mjs": "9442d5e527ec7e6201a74e2082c18cfbadeab4795e895eb8d95f844fa6b915eb", "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "packages/context-finder/planning/pcf_provider.mjs": "d9bc90af0f2b8d01f2c9343ae827068a31d6c7872321a381aea433b97b68bb04", "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "packages/context-finder/planning/pcf_native.mjs": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec", "packages/context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5", "packages/work-verifier/supplied-evidence.mjs": "379a2223ecb1cf1e7c115fb68e6954f8a4de0650f5770dc6e967eeb5d79f4568", "packages/work-verifier/tooling/source-bound-review.mjs": "3b0e6dcaba3485402994477cb803a517d59431f48a0998b6227ccaad481e44b6", "packages/work-verifier/tooling/generic-relation.mjs": "abd0d108202ddaf35bd642d954843301ba78a842a3b466d1eaa5a87d5e94c48e", "packages/work-verifier/tooling/bounded-evidence.mjs": "bdcad8f26d6cd4c6c97ce3fe6824eec2bb7bef29b58d64f61950caf2d4f1e7f5", "packages/provider-transport/index.mjs": "c7e840b7c3c029666420609d2cd00805476322e46e99280ead7f75fbb848ecf3", "packages/provider-transport/litellm-route.mjs": "821cc7eacf2d5eec12c1653870054f4f433c5371b0a99103df4465385fc54976", "packages/context-finder/related/source-screen.mjs": "a1e3b26e7be1562e3ec51dc38d0db31d7937fca90b49c39eca272632c4474f61", "packages/context-finder/related/source-sanitizer.mjs": "ea7678a6333f67284f56d67b0314d2e60a195c43cc2f6f606f131410dd15cb6f", "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020", "packages/context-finder/related/unicode-word.mjs": "01522146279c30b566c9149efee0d64dd3589814f07e3f3b8170fb90b79bc33b", "packages/context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "packages/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "packages/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148", "packages/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8" } }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, testResultsDerivation: { sourceCommit: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", pullRequest: 2435, scope: "Retain per-test evidence verdicts and validate nullable schema values from the merged work-verifier change." }, structuredTestAssessmentSource: "c154d9aaf6a05a5fd5a53cc7dd8fbd6b0cd615f7", scenarioOutcomeResultSlots: { issue: 2530, scope: "Use exact scenario identity, Plan reference and complete selected-test bindings to avoid a separate physical-scenario test result. Preserve original outcomes, unmatched test results and all citation checks." }, declaredLinkCitation: { issue: 3109, previousSha256: "d3d79e716397e2896b332fbeb46be826b883ce1fe8487841990699253ea9afd1", sha256: "88bda6bf9c25137f3a137fee76332d535eb46c302449510038c08f436ddd27e9", scope: "New shared-run responses explicitly return the exact full inventory citation in a required schema field. Preserve proposal, outcome and evidence guards, original candidates, one-call execution and historical request digests." }, reportAssessment: { issue: 4305, representation: 15, source: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871", scope: "New supplied-evidence replies contain report text without model-side citation bookkeeping. The host restores original test/outcome association. Formats 1\u201314 retain their original request/result readers; new replies use Actual result without a duplicate reason; retained-Planner recap behavior is unchanged." }, assessmentInputSizeCleanup: { sourceCommit: "3bfd2314a9a5d6ee2675420232faea5604002915", scope: "Remove implicit preparation/request/image/artifact/manifest/original-read size and count admission cutoffs; complete original inputs and actual errors remain. Historical baseline and originalPins remain unchanged; the listed hashes identify the maintained sources. No replacement numeric budget or model/prompt change.", files: [{ path: "packages/capabilities/src/assessment-preparation.ts", sha256: "6cf9d9bed84c47738427420078c19c270b2aad64cba80389cecb64034b84ecac" }, { path: "packages/capabilities/src/planner-loop.ts", sha256: "9e750673f604665ad8093b502b013861edf4982cb7673aa194b6f0baa952e777" }, { path: "packages/capabilities/src/report-artifact.ts", sha256: "9950f4cb4306e9b362b16f1ced8bfb1bff4dde955e917207f15f0a2169000540" }, { path: "packages/capabilities/research/planner-loop-api.d.mts", sha256: "b05ffc7965c5258b6cac6d139fc5ae4472ee01c13a95a22c9143e5ee85639420" }, { path: "packages/contracts/src/advisory.ts", sha256: "04d442d6eab45e6d07b3b7951ea7a416e8f437b7dd89823d9834e5c38205cc34" }, { path: "packages/work-verifier/assessment.mjs", sha256: "a8c96ac39f1cba43914a20d5a820ef8a4ce3992db52b7cd476b4964e332bd871" }, { path: "packages/work-verifier/assessment-contract.mjs", sha256: "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a" }, { path: "packages/work-verifier/supplied-evidence.mjs", sha256: "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607" }] } };
   }
 });
 
@@ -92766,7 +92766,7 @@ function presentAssessmentFinding(kind, supported, content4) {
 
 // ../contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)),
+  steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -92850,6 +92850,23 @@ function savedRunProgressCaption(state2) {
   if (state2 === "accepted")
     return "Run was accepted when this report was saved";
   return void 0;
+}
+function additionalReportTestIds(planTestIds, selectedTestIds, assessments) {
+  const originalIds = /* @__PURE__ */ new Set([...planTestIds, ...selectedTestIds]);
+  let number4 = BigInt(originalIds.size);
+  for (const id8 of originalIds) {
+    const suffix = /^T([1-9][0-9]*)$/.exec(id8)?.[1];
+    if (suffix && BigInt(suffix) > number4)
+      number4 = BigInt(suffix);
+  }
+  const displayIds = /* @__PURE__ */ new Map();
+  for (const assessment of assessments) {
+    if (assessment.additionalCheck && !displayIds.has(assessment.testId)) {
+      number4 += 1n;
+      displayIds.set(assessment.testId, `T${number4}`);
+    }
+  }
+  return displayIds;
 }
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
@@ -118028,7 +118045,7 @@ function preparePlannerRecap(input3) {
   assert6(new Set(tests2.map((test) => test.id)).size === ids2.length);
   const steps = request3.recap.steps;
   assert6(Array.isArray(steps) && (delegated || steps.length > 0));
-  assert6(steps.every((step) => typeof step === "string" && step.trim()));
+  assert6(steps.every((step) => typeof step === "string"));
   const stepNumbers = list5({
     type: "integer",
     minimum: 1,
@@ -119014,16 +119031,9 @@ import { createHash as createHash46 } from "node:crypto";
 var hash23 = (text16) => createHash46("sha256").update(text16).digest("hex");
 var digest33 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var record8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
-var recap = external_exports.strictObject({
+var recap = external_exports.object({
   schema: external_exports.literal("loki.runner.execution-recap/1"),
-  steps: external_exports.array(external_exports.string().trim().min(1)).min(1),
-  // Historical recaps keep this flag; current recaps omit it. Neither form
-  // changes the reported-source attribution or grants literal app authority.
-  requiresOriginalEvidence: external_exports.boolean().optional(),
-  executionElapsedMs: external_exports.number().int().nonnegative(),
-  meaning: external_exports.literal(
-    "Chronological Runner notes from the same execution. These are model-authored observations, not independently verified facts or a verdict. Original captures are retained. Mark checks inconclusive when the notes cannot support them."
-  )
+  steps: external_exports.array(external_exports.string()).min(1)
 });
 var sourceSchema = external_exports.object({
   id: external_exports.string(),
@@ -120639,9 +120649,12 @@ function executionFacts(entry) {
 }
 var executionRecap = external_exports.object({
   schema: external_exports.literal("loki.runner.execution-recap/1"),
-  steps: external_exports.array(external_exports.string().trim().min(1)),
-  requiresOriginalEvidence: external_exports.boolean().optional(),
-  executionElapsedMs: external_exports.number().int().nonnegative()
+  // These are original step strings. Trimming changes their source identity.
+  steps: external_exports.array(external_exports.string()),
+  // Optional bookkeeping cannot hide readable observations. Keep valid older
+  // values for the existing projection; all original values stay in the Run.
+  requiresOriginalEvidence: external_exports.boolean().optional().catch(void 0),
+  executionElapsedMs: external_exports.number().int().nonnegative().optional().catch(void 0)
 });
 function readAssessmentRecap(entry) {
   const native2 = object26(object26(entry.result).nativeResult);
@@ -124771,6 +124784,14 @@ function customerReportHtmlSections(view, text16, selectedKinds2 = ["plan", "run
     });
   }
   for (const [index2, run] of view.runs.entries()) {
+    const plan = view.plans.find(
+      (source4) => source4.sourceId === run.planSourceId && source4.resultSha256 === run.planResultSha256
+    )?.plan;
+    const displayIds = additionalReportTestIds(
+      plan?.tests.map((test) => test.id) ?? [],
+      run.selectedTestIds,
+      run.assessments ?? []
+    );
     const execution = run.executionReport;
     const completedSteps = execution?.completedSteps ?? [];
     const hasExecutionSteps = Boolean(
@@ -124789,14 +124810,11 @@ function customerReportHtmlSections(view, text16, selectedKinds2 = ["plan", "run
         (action3) => article("Action record", [presentRecordedAction(action3)])
       ).join("") + boundQuotes(run.executionEvidence.observations)
     ) : "") + (run.assessments ?? []).map((assessment) => {
-      const plan = view.plans.find(
-        (source4) => source4.sourceId === run.planSourceId && source4.resultSha256 === run.planResultSha256
-      )?.plan;
       const test = plan?.tests.find(
         (item2) => item2.id === assessment.testId
       );
       const scenarioTitle = assessment.scenarioTitle?.trim();
-      const title = assessment.additionalCheck ? scenarioTitle || "Test" : `${assessment.testId} \xB7 ${test?.title ?? "Test assessment"}`;
+      const title = assessment.additionalCheck ? `${displayIds.get(assessment.testId)} \xB7 ${scenarioTitle || "Test"}` : `${assessment.testId} \xB7 ${test?.title ?? "Test assessment"}`;
       const verdict2 = label3(assessment.verdict);
       const observed = assessment.actual?.trim() ? customerLiteralText(assessment.actual, assessment.evidence) : "";
       return assessmentOutcome({
@@ -127930,7 +127948,7 @@ var plannerRecapRequest = external_exports.strictObject({
   recapSha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
   planRef: checkedPlanReferenceSchema,
   recap: external_exports.strictObject({
-    steps: external_exports.array(external_exports.string().min(1)),
+    steps: external_exports.array(external_exports.string()),
     evidenceId: external_exports.string().min(1),
     stepsPointer: external_exports.literal("/executionRecap/steps")
   }),
@@ -129331,7 +129349,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath10 } from "node:url";
-var testPlanCardUri = "ui://loki/test-plan/card/v81.html";
+var testPlanCardUri = "ui://loki/test-plan/card/v83.html";
 var testPlanCardMetadata = {
   ui: { resourceUri: testPlanCardUri },
   "openai/outputTemplate": testPlanCardUri
@@ -129383,16 +129401,16 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath11 } from "node:url";
-var reportUiUri = "ui://loki/report/v15.html";
+var reportUiUri = "ui://loki/report/v17.html";
 var reportUiMetadata = {
   ui: { resourceUri: reportUiUri },
   "openai/outputTemplate": reportUiUri
 };
-async function readReportUi() {
+async function readReportUi(uri2 = reportUiUri) {
   return {
     contents: [
       {
-        uri: reportUiUri,
+        uri: uri2,
         mimeType: "text/html;profile=mcp-app",
         text: (await boundedFile(
           fileURLToPath11(new URL("./report-ui.html", import.meta.url)),
@@ -170157,7 +170175,8 @@ function createCapabilityCatalog(services, options2 = {}) {
         throw new CapabilityCatalogError(
           testPlanUi ? "This resource is unavailable in Test plan presentation mode." : "Custom UI is disabled; present tool results in chat."
         );
-      if (uri2 === reportUiUri) return readReportUi();
+      if (uri2 === reportUiUri || uri2 === "ui://loki/report/v16.html" || uri2 === "ui://loki/report/v15.html")
+        return readReportUi(uri2);
       if (!mapsEnabled || uri2 !== mapUiUri)
         throw new CapabilityCatalogError("Unknown Loki resource.");
       return readMapUi();

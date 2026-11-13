@@ -88,7 +88,7 @@ export function preparePlannerRecap(input) {
   assert(new Set(tests.map((test) => test.id)).size === ids.length);
   const steps = request.recap.steps;
   assert(Array.isArray(steps) && (delegated || steps.length > 0));
-  assert(steps.every((step) => typeof step === "string" && step.trim()));
+  assert(steps.every((step) => typeof step === "string"));
   const stepNumbers = list({
     type: "integer",
     minimum: 1,
