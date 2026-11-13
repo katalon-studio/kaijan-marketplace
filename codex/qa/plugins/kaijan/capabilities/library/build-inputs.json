@@ -2,7 +2,7 @@
   "schema": "loki.capability-library-build/1",
   "package": "@loki/capabilities",
   "version": "0.1.0",
-  "nativeSelectionSha256": "563f80539748e78391c9140edf0cb231a8944c885e1052b8a12946123a012620",
+  "nativeSelectionSha256": "9008e10942111051d4496738519e85af68251008322cb051afa21952e540a0fc",
   "firstPartyInputs": {
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
@@ -91,7 +91,7 @@
     "packages/capabilities/src/context-customer-output.ts": "597249b94ddc358ad856df639c060a1739afcda055970d9e016ce3fe031f2ce8",
     "packages/capabilities/src/planning-intake.ts": "0246c9b7fed896d30b699675b121f238e8c15cd2fcf6e549307f2a9b31fc5f7a",
     "packages/capabilities/src/report-evidence.ts": "481fb5c9ea7491167d7eaa4a92dac415df0be5dc156ba538f72172423675f7a2",
-    "packages/risk-finder/source-relations.mjs": "181731cb38a4ac25b99ea9814c7c898f3ce7ae51b6ad58649a43dd8d632ec2ac",
+    "packages/risk-finder/source-relations.mjs": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
     "packages/capabilities/src/risk-customer.ts": "9936d04f36a6a3b951debfd68d0a89a7cb755898472302962443b3a261bc286a",
     "packages/capabilities/src/advisory-contracts.ts": "9c2d5cadbfa23eeab701e51fc5714adf609d73db8e0b9316e4912aa1b4a925c1",
     "packages/capabilities/src/read-answer.ts": "b04d3c337dc4234860feb607f2206b0884b9d82c01b496c42838aa037844dbe4",

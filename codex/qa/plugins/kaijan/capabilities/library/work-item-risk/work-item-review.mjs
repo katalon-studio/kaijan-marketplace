@@ -2,10 +2,7 @@ import { Agent } from "@openai/agents-core";
 import { createRetainedAgentRunner } from "@katalon-experiments/ai-client/agents";
 import { isDeepStrictEqual } from "node:util";
 import { renderWorkItemInstructions } from "./work-item-instructions.mjs";
-import {
-  riskPresentationSchema,
-  availableRiskPresentation,
-} from "./source-relations.mjs";
+import { availableRiskPresentation } from "./source-relations.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -223,7 +220,6 @@ export function createWorkItemRisk(dependencies) {
 
   const instructions = renderWorkItemInstructions({
     questionLimit: LIMITS.questions,
-    sourceBound: Boolean(dependencies.resolveApplicationSpan),
   });
 
   function prepare(packet) {
@@ -275,13 +271,6 @@ export function createWorkItemRisk(dependencies) {
       },
       required: ["assumptions_to_confirm", "limitations"],
     };
-    if (dependencies.resolveApplicationSpan) {
-      schema.$defs = {};
-      schema.properties.assumptions_to_confirm.items = riskPresentationSchema(
-        catalog,
-        { literalExcerpts: true, definitions: schema.$defs },
-      );
-    }
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },

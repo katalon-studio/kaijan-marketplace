@@ -240,22 +240,40 @@ export function availableRiskPresentation(value, catalog, resolve) {
     ...list(value?.resolution?.operands),
   ];
   const known = new Set(catalog.map((row) => row.id));
-  const question = render(value?.assumption, predicates);
+  const prose = (field) =>
+    typeof value?.[field] === "string" ? value[field] : "";
+  const question =
+    (typeof value === "string" ? value : prose("question")) ||
+    render(value?.assumption, predicates);
   const statements = observed.map(literal).filter(Boolean);
+  const originalStatement = [
+    prose("observed_source_statement"),
+    prose("observed_code_behavior"),
+  ]
+    .filter(Boolean)
+    .join("\n");
   return {
     row: {
-      observed: statements.length
-        ? `The risk review refers to: ${statements.join("; ")}.`
-        : "",
-      assumption_to_confirm: question
-        ? `Unresolved assumption: ${question}`
-        : "",
+      observed:
+        originalStatement ||
+        (statements.length
+          ? `The risk review refers to: ${statements.join("; ")}.`
+          : ""),
+      assumption_to_confirm:
+        prose("assumption_to_confirm") ||
+        (question ? `Unresolved assumption: ${question}` : ""),
       question,
-      why_it_matters: render(value?.consequence, consequences),
-      evidence_needed: render(value?.resolution, resolutions),
+      why_it_matters:
+        prose("why_it_matters") || render(value?.consequence, consequences),
+      evidence_needed:
+        prose("evidence_needed") || render(value?.resolution, resolutions),
       evidence_ids: [
         ...new Set(
-          spans.map((span) => span?.evidence_id).filter((id) => known.has(id)),
+          [
+            ...spans.map((span) => span?.evidence_id),
+            ...list(value?.evidence_ids),
+            ...list(value?.source_evidence),
+          ].filter((id) => known.has(id)),
         ),
       ],
     },
