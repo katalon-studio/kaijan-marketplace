@@ -265,23 +265,23 @@ export function encodedJson(
     allowNan = true,
   } = {},
 ) {
-  const quote = (text) => {
-    let result = '"';
-    for (let i = 0; i < text.length; i++) {
-      const code = text.charCodeAt(i),
-        c = text[i];
-      if (c === '"' || c === "\\") result += "\\" + c;
-      else if (code === 8) result += "\\b";
-      else if (code === 9) result += "\\t";
-      else if (code === 10) result += "\\n";
-      else if (code === 12) result += "\\f";
-      else if (code === 13) result += "\\r";
-      else if (code < 32 || (ascii && code >= 127))
-        result += "\\u" + code.toString(16).padStart(4, "0");
-      else result += c;
-    }
-    return result + '"';
-  };
+  const quote = (text) =>
+    '"' +
+    text.replace(
+      // eslint-disable-next-line no-control-regex -- JSON requires escaping U+0000 through U+001F.
+      ascii ? /["\\\u0000-\u001f\u007f-\uffff]/g : /["\\\u0000-\u001f]/g,
+      (c) => {
+        const code = c.charCodeAt(0);
+        if (c === '"' || c === "\\") return "\\" + c;
+        if (code === 8) return "\\b";
+        if (code === 9) return "\\t";
+        if (code === 10) return "\\n";
+        if (code === 12) return "\\f";
+        if (code === 13) return "\\r";
+        return "\\u" + code.toString(16).padStart(4, "0");
+      },
+    ) +
+    '"';
   const visit = (item, depth, token) => {
     if (item === null) return "null";
     if (typeof item === "string") return quote(item);
