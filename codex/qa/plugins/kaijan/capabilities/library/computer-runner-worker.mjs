@@ -23111,6 +23111,12 @@ var planningValidationRuleSchema = external_exports.enum([
   "coverage_status_membership",
   "complete_test_definitions"
 ]);
+var planningTransportReasonSchema = external_exports.enum([
+  "caller_abort",
+  "absolute_deadline",
+  "socket_timeout",
+  "unknown"
+]);
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -23135,9 +23141,12 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   error_message: external_exports.string().max(128).nullable().optional(),
   provider_http_status: providerHttpStatusSchema.optional(),
   failure_stage: planningFailureStageSchema.optional(),
-  validation_rule: planningValidationRuleSchema.optional()
+  validation_rule: planningValidationRuleSchema.optional(),
+  transport_reason: planningTransportReasonSchema.optional()
 }).refine((value) => {
-  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0) && value.outcome !== "failed")
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0) && value.outcome !== "failed")
+    return false;
+  if (value.transport_reason !== void 0 && value.error_code !== "transport_failure_no_retry")
     return false;
   if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
     return false;
@@ -23159,6 +23168,21 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 });
 var runServiceRejectionCode = "native_execution_service_rejected";
 var runServiceRejectionMessage = "The test service rejected a request.";
+var runAssessmentStatusSchema = external_exports.enum([
+  "not-started",
+  "stopped",
+  "context-unavailable",
+  "input-unavailable",
+  "preparing",
+  "preparation-refused",
+  "preparation-error",
+  "running",
+  "accepted",
+  "complete",
+  "failed",
+  "unknown",
+  "error"
+]);
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
@@ -23184,6 +23208,7 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
   ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
+  assessment_status: runAssessmentStatusSchema.optional(),
   unverified_reason: external_exports.enum([
     "no_saved_assessment",
     "no_validated_checks",
