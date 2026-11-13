@@ -1,9 +1,9 @@
 {
   "build": {
     "schemaVersion": 1,
-    "buildId": "8de01db0-9a1e-4fb9-b06a-159d429f4a23",
-    "builtAt": "2026-11-11T07:20:40.874Z",
-    "sourceRevision": "01f626b6b1747c91f3015af1481a5b2bfebd8697",
+    "buildId": "70a604f4-5e31-460a-aa35-ec803905d562",
+    "builtAt": "2026-11-13T02:37:28.364Z",
+    "sourceRevision": "ef203ac8e9556005b375389320aa584983d1128d",
     "sourceDirty": false,
     "profile": "production",
     "profileMode": "runtime-env/1",
@@ -24,39 +24,39 @@
     "authArchitecture": "shared-broker-v1",
     "credentialStorage": "private-file-v1",
     "runtimeLayout": "installed",
-    "capabilityDigest": "8ca7a5cd22b2d0f0e5c6d8f260c9a97b9736fba8f25c7f28ae04067e79ade270",
-    "pluginVersion": "0.5.0-rc.1",
+    "capabilityDigest": "75115bf880cb653f1fa2f84693bd6c53f3c0e964d397fa139479e3d79bcb0920",
+    "pluginVersion": "0.5.0-rc.121",
     "mcpUrl": "https://kaijan.ai/mcp",
     "mcpServerName": "kaijan_core",
     "localMcpServerName": "kaijan_local"
   },
-  "archive": "kaijan-0.5.0-rc.1-darwin-arm64-plugin.zip",
-  "digest": "e300aea783f9e288e6b8a93654221aa353f553ec9e04eabc82e6ca8a68b5f02f",
-  "sumsDigest": "c36ace4f4e4c4de2e89f9b97170c8dbbd870e69483b87431d302ab1ea7c19888",
-  "tag": "claude/kaijan/v0.5.0-rc.1",
-  "title": "Kaijan — claude/kaijan/v0.5.0-rc.1",
+  "archive": "kaijan-0.5.0-rc.121-darwin-arm64-plugin.zip",
+  "digest": "683863f6f1948b05a89ebd7f03ba41abbdb908a17e36b37d8be282f06d572a19",
+  "sumsDigest": "2aa264e92e8db4e503f969d3120cfb0ca5bf11fe25054bc0f4da30aa5e152658",
+  "tag": "claude/kaijan/v0.5.0-rc.121",
+  "title": "Kaijan — claude/kaijan/v0.5.0-rc.121",
   "prerelease": true,
   "versionSelection": {
     "schema": "kaijan.claude-version-selection/1",
     "kind": "candidate",
-    "version": "0.5.0-rc.1",
-    "source": "01f626b6b1747c91f3015af1481a5b2bfebd8697",
-    "workflowRevision": "01f626b6b1747c91f3015af1481a5b2bfebd8697",
+    "version": "0.5.0-rc.121",
+    "source": "ef203ac8e9556005b375389320aa584983d1128d",
+    "workflowRevision": "ef203ac8e9556005b375389320aa584983d1128d",
     "tag": "",
-    "run": "42978143034",
+    "run": "43352883901",
     "attempt": "1",
     "event": "push",
     "workflow": ".github/workflows/claude-plugin.yml",
     "profile": "production",
-    "ledgerRevision": "1fa547d7c4813e0861abe731212346d061bd354d"
+    "ledgerRevision": "9e2eeeff3264a5500ec9f54847224a6fd483a004"
   },
   "selected": {
-    "run": "42978143034",
+    "run": "43352883901",
     "attempt": "1",
-    "digest": "c36ace4f4e4c4de2e89f9b97170c8dbbd870e69483b87431d302ab1ea7c19888",
-    "artifact": "kaijan-claude-42978143034-1"
+    "digest": "2aa264e92e8db4e503f969d3120cfb0ca5bf11fe25054bc0f4da30aa5e152658",
+    "artifact": "kaijan-claude-43352883901-1"
   },
-  "source": "01f626b6b1747c91f3015af1481a5b2bfebd8697",
+  "source": "ef203ac8e9556005b375389320aa584983d1128d",
   "catalog": {
     "name": "kaijan-claude",
     "owner": {
@@ -66,11 +66,11 @@
     "plugins": [
       {
         "name": "kaijan",
-        "version": "0.5.0-rc.1",
+        "version": "0.5.0-rc.121",
         "source": {
           "source": "archive",
-          "url": "https://github.com/katalon-studio/kaijan-marketplace/releases/download/claude%2Fkaijan%2Fv0.5.0-rc.1/kaijan-0.5.0-rc.1-darwin-arm64-plugin.zip",
-          "sha256": "e300aea783f9e288e6b8a93654221aa353f553ec9e04eabc82e6ca8a68b5f02f"
+          "url": "https://github.com/katalon-studio/kaijan-marketplace/releases/download/claude%2Fkaijan%2Fv0.5.0-rc.121/kaijan-0.5.0-rc.121-darwin-arm64-plugin.zip",
+          "sha256": "683863f6f1948b05a89ebd7f03ba41abbdb908a17e36b37d8be282f06d572a19"
         }
       }
     ]
