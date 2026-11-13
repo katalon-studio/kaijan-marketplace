@@ -20909,22 +20909,22 @@ var proposedPlanSchema = external_exports.strictObject({
   ambiguities: strings,
   relevant_surfaces: external_exports.array(external_exports.strictObject({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
+    basis: external_exports.string(),
     refs: refs2
   })),
   tests: external_exports.array(external_exports.strictObject({
-    title: nonempty3.optional(),
+    title: external_exports.string().optional(),
     // Absent only in historical saved plans.
-    method: nonempty3,
+    method: external_exports.string(),
     id: external_exports.string(),
     objective_ids: strings,
-    priority: external_exports.enum(["P1", "P2", "P3"]),
+    priority: external_exports.string(),
     reason: external_exports.string(),
     prerequisites: strings,
     steps: strings,
     expected: external_exports.strictObject({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis"]),
+      authority: external_exports.string(),
       refs: refs2
     }),
     execution_gaps: strings
@@ -21727,11 +21727,7 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
-var reportExpectationAuthoritySchema = external_exports.enum([
-  "requirement",
-  "hypothesis",
-  "unresolved"
-]);
+var reportExpectationAuthoritySchema = external_exports.string();
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
   display: true,
@@ -22581,13 +22577,13 @@ var customerPlanSchema = external_exports.object({
     title: external_exports.string().optional(),
     method: external_exports.string().optional(),
     objective_ids: strings3.optional(),
-    priority: external_exports.enum(["P1", "P2", "P3"]).optional(),
+    priority: external_exports.string().optional(),
     reason: external_exports.string().optional(),
     prerequisites: strings3.optional(),
     steps: strings3,
     expected: external_exports.object({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+      authority: external_exports.string(),
       refs: refs3.optional()
     }),
     execution_gaps: strings3.optional()
@@ -22604,7 +22600,7 @@ var customerPlanSchema = external_exports.object({
   limitations: strings3.optional(),
   relevant_surfaces: external_exports.array(external_exports.object({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
+    basis: external_exports.string(),
     refs: refs3
   })).optional(),
   runner_handoff: external_exports.object({
