@@ -581,13 +581,15 @@ button.dz-back:hover {
   display: grid;
   gap: 8px;
 }
-.dz-sec h2 {
+.dz-sec h2,
+.dz-sec > h3 {
   margin: 6px 0 0;
   font-size: 16px;
   font-weight: 650;
   letter-spacing: -0.2px;
 }
-.dz-sec h2 span {
+.dz-sec h2 span,
+.dz-sec > h3 span {
   color: var(--ink3);
   font-weight: 500;
 }
@@ -664,7 +666,8 @@ button.dz-back:hover {
   overflow: hidden;
 }
 .dz-grp .dz-row + .dz-row,
-.dz-snapshot .dz-row + .dz-row {
+.dz-snapshot .dz-row + .dz-row,
+.dz-test-rows > .dz-row + .dz-row {
   border-top: 1px solid var(--ln);
 }
 .dz-rh {
@@ -672,7 +675,7 @@ button.dz-back:hover {
   display: grid;
   grid-template-columns:
     20px var(--test-id-width, 28px) minmax(0, 1fr)
-    var(--test-status-width) 50px 16px;
+    var(--test-status-width) 16px;
   gap: 10px;
   align-items: center;
   width: 100%;
@@ -728,14 +731,11 @@ button.dz-back:hover {
 }
 .dz-tt {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .dz-check-title {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .dz-tt .dz-observation {
   display: -webkit-box;
@@ -775,6 +775,15 @@ button.dz-back:hover {
 .dz-du {
   color: var(--ink3);
   text-align: right;
+}
+.dz-du:empty {
+  display: none;
+}
+.dz .dz-check-status {
+  font-family: var(--sans);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
 }
 .dz-det {
   display: grid;
@@ -1161,7 +1170,7 @@ button.dz-back:hover {
   }
   .dz-rh > .dz-check-status {
     display: block;
-    text-align: right;
+    text-align: left;
     white-space: normal;
   }
   .dz-q {
@@ -1503,8 +1512,7 @@ body.light .dz-nb .f {
   overflow-wrap: anywhere;
 }
 .dz-tr > span:nth-child(2),
-.dz-tr > span:nth-child(3),
-.dz-rh > .dz-check-status {
+.dz-tr > span:nth-child(3) {
   align-self: stretch;
   align-content: center;
   margin-inline-start: -4px;
@@ -1765,7 +1773,8 @@ body.light .dz-nb .f {
 .dz-sec {
   gap: 6px;
 }
-.dz-sec h2 {
+.dz-sec h2,
+.dz-sec > h3 {
   margin: 0 0 2px;
 }
 .dz-sec + .dz-sec,

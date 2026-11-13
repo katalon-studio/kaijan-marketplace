@@ -21722,7 +21722,7 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 
 // ../contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)),
+  steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
