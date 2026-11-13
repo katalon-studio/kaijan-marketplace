@@ -2,7 +2,7 @@
   "schema": "loki.capability-library-build/1",
   "package": "@loki/capabilities",
   "version": "0.1.0",
-  "nativeSelectionSha256": "9008e10942111051d4496738519e85af68251008322cb051afa21952e540a0fc",
+  "nativeSelectionSha256": "100ae170b67d9bb15f3af0684787d101ef3a9b183fa8152785e3f7c82ee4a212",
   "firstPartyInputs": {
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
@@ -112,7 +112,7 @@
     "packages/capabilities/src/work-item-risk.ts": "90147b600b92a0847e07095dc03842a764c32517c501b83c82b71393f1853f77",
     "packages/contracts/dist/customer-assessment-rejection.js": "345f8e1b63971831e9f501b8f35cb779af955e443d1db3ab855e19d7e36228c2",
     "packages/provider-transport/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
-    "packages/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
+    "packages/context-finder/related/json.mjs": "a44fb4f672f51a5836c4079b83b92e67703fe087f9aa15b6eb85385c6be79ea8",
     "packages/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
     "packages/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
     "packages/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
