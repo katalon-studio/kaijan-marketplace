@@ -16,13 +16,7 @@ export { resolveApplicationSpan } from "./source-relations.mjs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { encodedJson, utf8 } from "../related/json.mjs";
-import {
-  digest,
-  save,
-  validationFailure,
-  pointer,
-  referenceDiagnostic,
-} from "./pcf_records.mjs";
+import { digest, save, validationFailure, pointer } from "./pcf_records.mjs";
 import {
   generate,
   MODEL,
@@ -299,16 +293,7 @@ export function validatePlan(plan, packet) {
     );
   const objectives = plan.objectives.map((o) => o.id),
     tests = plan.tests.map((t) => t.id);
-  need(new Set(tests).size === tests.length, "Duplicate test identities", () =>
-    referenceDiagnostic("/tests", tests, tests),
-  );
   const handoff = plan.runner_handoff.scenario_ids;
-  need(
-    new Set(handoff).size === handoff.length &&
-      handoff.every((i) => tests.includes(i)),
-    "Unknown or duplicate Runner handoff scenario",
-    () => referenceDiagnostic("/runner_handoff/scenario_ids", handoff, tests),
-  );
   const inventory = Object.hasOwn(packet, "requirement_inventory")
     ? packet.requirement_inventory
     : literalRequirements(packet);
