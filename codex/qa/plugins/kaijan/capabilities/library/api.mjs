@@ -119406,12 +119406,14 @@ function protectArtifactText(raw, protection) {
   for (const match of raw.matchAll(addresses)) {
     const before = raw.slice(offset2, match.index);
     result += protection?.text(before) ?? before;
-    const address = match[0];
+    const linkEnd = raw.slice(Math.max(0, match.index - 2), match.index) === "](" && match[0].endsWith(")");
+    const address = linkEnd ? match[0].slice(0, -1) : match[0];
     result += /^https?:\/\//i.test(address) ? protectApplicationUrl(address, protection) : address.startsWith("//") ? protectApplicationUrl("https:" + address, protection).replace(
       /^https:/,
       ""
     ) : checkedAddress(location(address, protection), protection);
-    offset2 = match.index + address.length;
+    if (linkEnd) result += ")";
+    offset2 = match.index + match[0].length;
   }
   const after = raw.slice(offset2);
   result += protection?.text(after) ?? after;
