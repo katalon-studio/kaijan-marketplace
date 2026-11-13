@@ -42696,6 +42696,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -47663,9 +47664,22 @@ function scopedIssueTransport({
   signal,
   journal,
   request: request3,
-  execute: execute2
+  execute: execute2,
+  publicationRoute
 }) {
   const legacy = issueTransport({ library, broker, build, signal });
+  if (publicationRoute === "github-app")
+    return {
+      requiresPublisher: false,
+      async submit(owner2, input3, images, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.submit(owner2, input3, images);
+      },
+      async read(owner2, requestId, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.read(owner2, requestId);
+      }
+    };
   const authorization = issueUserAuthorization({
     library,
     broker,
@@ -47694,2865 +47708,13 @@ function scopedIssueTransport({
   };
 }
 
-// apps/codex-plugin/src/issues.mjs
-var viewKey2 = "kaijan/issue-view";
-var selectionKey = "kaijan/issue-selections";
-var unavailable = () => ({
-  error: "issue_unavailable",
-  message: "Kaijan could not open this issue connection. Keep any visible text before starting a new report or reopening an earlier saved issue."
-});
-function createIssueSurface({
-  session,
-  library,
-  broker,
-  build,
-  now = Date.now,
-  createTransport = scopedIssueTransport
-}) {
-  const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
-  let stopped = false;
-  const fields = library.issueFieldsSchema;
-  const textFields = fields.omit({ images: true }).partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
-  const draftInput = external_exports.strictObject({
-    operation: external_exports.enum(["open", "read", "update", "discard_edit", "status"]),
-    requestId: external_exports.uuid().optional(),
-    draftId: external_exports.uuid().optional(),
-    revision: external_exports.number().int().positive().optional(),
-    title: fields.shape.title.optional(),
-    description: fields.shape.description.optional(),
-    changes: textFields.optional()
-  });
-  const image = library.issueSelectionSchema.shape.image;
-  const offset = external_exports.number().int().nonnegative().max(5 * 1024 * 1024);
-  const revision3 = external_exports.number().int().positive();
-  const actionBase = library.issueViewSchema;
-  const actionArgs = {
-    read: library.issueGetSchema.extend({
-      refreshPublisher: external_exports.literal(true).optional()
-    }),
-    update: library.issueUpdateSchema,
-    discard_edit: library.issueGetSchema,
-    status: library.issueGetSchema,
-    publish: library.issuePublishSchema,
-    continue_on_github: library.issuePublishSchema,
-    close_review: library.issueGetSchema,
-    begin_image: library.issueGetSchema.extend({ revision: revision3, image }),
-    append_image: library.issueGetSchema.extend({
-      revision: revision3,
-      imageId: external_exports.uuid(),
-      offset,
-      base64: external_exports.string().min(4).max(4 * Math.ceil(256 * 1024 / 3))
-    }),
-    remove_image: library.issueGetSchema.extend({
-      revision: revision3,
-      imageId: external_exports.uuid()
-    }),
-    read_image: library.issueGetSchema.extend({ imageId: external_exports.uuid(), offset })
-  };
-  const actionInput = actionBase.extend({
-    operation: external_exports.enum(Object.keys(actionArgs)),
-    revision: revision3.optional(),
-    changes: library.issueChangesSchema.optional(),
-    image: image.optional(),
-    imageId: external_exports.uuid().optional(),
-    offset: offset.optional(),
-    base64: actionArgs.append_image.shape.base64.optional(),
-    refreshPublisher: external_exports.literal(true).optional()
-  });
-  const schemas = {
-    kaijan_issue_draft: draftInput,
-    kaijan_issue_publish: library.issuePublishSchema,
-    kaijan_issue_form_action: actionInput
-  };
-  const resource = {
-    uri: library.issueFormUri,
-    name: "Report a Kaijan issue",
-    mimeType: "text/html;profile=mcp-app"
-  };
-  const describe3 = (name, title, description, appOnly = false) => ({
-    name,
-    title,
-    description,
-    inputSchema: external_exports.toJSONSchema(schemas[name]),
-    outputSchema: {
-      type: "object",
-      anyOf: external_exports.toJSONSchema(
-        appOnly ? library.issueAppResultSchema : library.issueResultSchema
-      ).anyOf
-    },
-    annotations: {
-      readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: name === "kaijan_issue_publish",
-      openWorldHint: true
-    },
-    _meta: {
-      ui: {
-        resourceUri: resource.uri,
-        ...appOnly ? { visibility: ["app"] } : {}
-      }
-    }
-  });
-  const tools2 = [
-    describe3(
-      "kaijan_issue_draft",
-      "Review a Kaijan issue",
-      "Open or edit a Kaijan issue review in this chat. New reviews exist only in memory until closed or the plugin restarts. Closing discards unsent edits. Existing saved drafts keep their recovery path. Open requires requestId and optional title/description. Read, status and discard_edit require only draftId. Read is local; status checks only the original publication receipt. Update requires draftId, revision and nonempty text changes. Keep a refused edit and review the saved revision before applying it. New drafts are text-only. The person reviews the draft, continues on GitHub and submits there."
-    ),
-    describe3(
-      "kaijan_issue_publish",
-      "Open Kaijan issue review",
-      "Open the existing issue form for the person to review it. For new drafts, the person continues on GitHub and submits to public katalon-studio/kaijan-marketplace. For an earlier unconfirmed publication, use status on the original draft."
-    ),
-    describe3(
-      "kaijan_issue_form_action",
-      "Edit issue form",
-      "Application-only action for the exact issue form grant in the originating chat.",
-      true
-    )
-  ];
-  function checked(name, raw) {
-    if (!Object.hasOwn(schemas, name)) throw Error("invalid_tool");
-    const input3 = schemas[name].parse(raw);
-    if (name === "kaijan_issue_publish")
-      return { operation: "read", draftId: input3.draftId };
-    const { operation, viewToken, cleanupToken, ...args } = input3;
-    let selected;
-    if (name === "kaijan_issue_form_action") selected = actionArgs[operation];
-    else if (operation === "open") selected = library.issueOpenSchema;
-    else if (operation === "update")
-      selected = library.issueGetSchema.extend({
-        revision: revision3,
-        changes: textFields
-      });
-    else selected = library.issueGetSchema;
-    return {
-      operation,
-      ...selected.parse(args),
-      ...viewToken ? { viewToken } : {},
-      ...cleanupToken ? { cleanupToken } : {}
-    };
-  }
-  async function identity4(signal) {
-    const result2 = await forwardCore(
-      broker,
-      "loki_connection_status",
-      {},
-      signal
-    );
-    const connection = coreConnectionSchema.parse(result2.structuredContent);
-    return {
-      userId: connection.context.user.id,
-      workspaceId: connection.context.workspace.id
-    };
-  }
-  function grant2(scope, owner2, draftId) {
-    for (const [key, value2] of views)
-      if (value2.until < now()) views.delete(key);
-    while (views.size >= 64) views.delete(views.keys().next().value);
-    const temporary = temporaryStores.get(scope.data)?.has(draftId);
-    const cleanup = temporary ? [...cleanupViews].find(
-      ([, value2]) => value2.scope === scope.scope.id && value2.draftId === draftId
-    ) : void 0;
-    const viewToken = randomBytes2(32).toString("hex");
-    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes2(32).toString("hex") : void 0;
-    const value = {
-      scope: scope.scope.id,
-      ...owner2,
-      draftId,
-      until: now() + 12 * 36e5
-    };
-    views.set(viewToken, value);
-    if (temporary) cleanupViews.set(cleanupToken, value);
-    return { draftId, viewToken, ...cleanupToken ? { cleanupToken } : {} };
-  }
-  function reply(value, { appOnly = false, view: view2, selections } = {}) {
-    const result2 = (appOnly ? library.issueAppResultSchema : library.issueResultSchema).parse(value);
-    return {
-      ...result2.error ? { isError: true } : {},
-      structuredContent: result2,
-      // Image bytes exist only in the granted app response, never normal text.
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            result2.chunk || result2.githubUrl ? { draft: result2.draft } : result2
-          )
-        }
-      ],
-      ...view2 ? { _meta: { [viewKey2]: view2, [selectionKey]: selections } } : {}
-    };
-  }
-  async function existingStore(data) {
-    let opened = stores.get(data);
-    if (!opened) {
-      try {
-        await lstat5(join4(data, "issue-drafts", "drafts.sqlite3"));
-      } catch (error63) {
-        if (error63?.code === "ENOENT") return void 0;
-        throw error63;
-      }
-      opened = library.IssueDraftStore.open(data);
-      stores.set(data, opened);
-      opened.catch(() => stores.delete(data));
-    }
-    return opened;
-  }
-  function temporaryStore(data) {
-    let store = temporaryStores.get(data);
-    if (!store) {
-      store = library.IssueDraftStore.temporary();
-      temporaryStores.set(data, store);
-    }
-    return store;
-  }
-  return {
-    tools: tools2,
-    resources: [resource],
-    hasResource: (uri) => uri === resource.uri || library.cachedIssueFormUris?.includes(uri) === true,
-    hasTool: (name) => Object.hasOwn(schemas, name),
-    async readResource(uri) {
-      if (stopped || uri !== resource.uri && !library.cachedIssueFormUris?.includes(uri))
-        throw Error("Unknown issue resource.");
-      return library.readIssueForm(uri);
-    },
-    async invoke(name, raw, metadata2, signal) {
-      const appOnly = name === "kaijan_issue_form_action";
-      let input3;
-      try {
-        input3 = checked(name, raw);
-      } catch {
-        return reply(
-          {
-            error: "invalid_arguments",
-            message: "Use the advertised issue fields for this action. Nothing was published."
-          },
-          { appOnly }
-        );
-      }
-      if (stopped || signal?.aborted) return reply(unavailable(), { appOnly });
-      if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
-        return reply(
-          {
-            error: "chat_required",
-            message: "Open the issue in its original chat. Nothing was published."
-          },
-          { appOnly }
-        );
-      try {
-        const scope = await session.forRequest(metadata2);
-        if (scope.scope.kind !== "host-thread" || !scope.scope.restartPersistent)
-          throw Error("invalid_scope");
-        const view2 = appOnly ? input3.operation === "close_review" && input3.cleanupToken ? cleanupViews.get(input3.cleanupToken) : views.get(input3.viewToken) : void 0;
-        if (appOnly && (!view2 || view2.until < now() && input3.operation !== "close_review" || view2.scope !== scope.scope.id || view2.draftId !== input3.draftId))
-          return reply(
-            {
-              error: "view_expired",
-              message: "Reopen this issue in its original chat. Your local draft and images are kept."
-            },
-            { appOnly }
-          );
-        if (appOnly && input3.operation === "close_review") {
-          const temporary = temporaryStores.get(scope.data);
-          if (temporary?.has(input3.draftId)) {
-            temporary.discardTemporary(input3.draftId, {
-              userId: view2.userId,
-              workspaceId: view2.workspaceId,
-              kind: "human",
-              canEdit: true,
-              canPublish: false
-            });
-            if (temporary.size === 0) {
-              temporary.close();
-              temporaryStores.delete(scope.data);
-            }
-            for (const [token, granted] of views)
-              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
-                views.delete(token);
-            for (const [token, granted] of cleanupViews)
-              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
-                cleanupViews.delete(token);
-            return reply({ closedReviewId: input3.draftId }, { appOnly: true });
-          }
-        }
-        const owner2 = await identity4(signal);
-        if (stopped || signal?.aborted)
-          return reply(unavailable(), { appOnly });
-        if (view2 && (owner2.userId !== view2.userId || owner2.workspaceId !== view2.workspaceId))
-          return reply(
-            {
-              error: "connection_changed",
-              message: "The connected account or workspace changed. Return to the original connection to use this issue."
-            },
-            { appOnly }
-          );
-        const actor = {
-          ...owner2,
-          kind: appOnly ? "human" : "agent",
-          canEdit: true,
-          canPublish: appOnly
-        };
-        const { operation, draftId, revision: revision4 } = input3;
-        let store = temporaryStores.get(scope.data);
-        if (operation === "open") {
-          const historical = await existingStore(scope.data);
-          if (historical?.findOpen(input3.requestId, actor)) store = historical;
-          else {
-            if (cleanupViews.size >= 64 && !store?.findOpen(input3.requestId, actor))
-              throw new library.IssueDraftError(
-                "review_limit",
-                "Close an open issue review before starting another."
-              );
-            store = temporaryStore(scope.data);
-          }
-        } else if (!store?.has(draftId)) {
-          store = await existingStore(scope.data);
-          if (!store)
-            throw new library.IssueDraftError(
-              "not_found",
-              "This review is closed. Start a new report."
-            );
-        }
-        if (stopped || signal?.aborted)
-          return reply(unavailable(), { appOnly });
-        const transport = () => createTransport({
-          library,
-          broker,
-          build,
-          signal,
-          journal: () => {
-            let pending = journals.get(scope.data);
-            if (!pending) {
-              pending = library.DirectIssueJournal.open(scope.data);
-              journals.set(scope.data, pending);
-              pending.catch(() => journals.delete(scope.data));
-            }
-            return pending;
-          }
-        });
-        let draft, chunk, githubUrl;
-        const current = operation === "open" ? void 0 : store.get(draftId, actor);
-        const githubLink = current?.publicationRoute === "github-link";
-        if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
-          throw new library.IssueDraftError(
-            "github_handoff_required",
-            "This report is text-only. Reopen it and select Continue on GitHub.",
-            current
-          );
-        if (operation === "open")
-          draft = store.create(
-            {
-              requestId: input3.requestId,
-              ...input3.title !== void 0 ? { title: input3.title } : {},
-              ...input3.description !== void 0 ? { description: input3.description } : {}
-            },
-            actor,
-            "github-link"
-          );
-        else if (operation === "update")
-          draft = store.update(
-            { draftId, revision: revision4, changes: input3.changes },
-            actor
-          );
-        else if (operation === "close_review") {
-          throw new library.IssueDraftError(
-            "original_route_required",
-            "This saved draft keeps its original recovery path."
-          );
-        } else if (operation === "discard_edit")
-          draft = store.discardEdit(draftId, actor);
-        else if (operation === "continue_on_github") {
-          if (!githubLink || current.status !== "draft")
-            throw new library.IssueDraftError(
-              "original_route_required",
-              "Use the original publication controls for this issue.",
-              current
-            );
-          if (view2?.reviewedRevision !== revision4 || current.revision !== revision4 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
-            throw new library.IssueDraftError(
-              "review_required",
-              "Save and review the current title and observed behavior before continuing.",
-              current
-            );
-          githubUrl = library.githubIssueDraftUrl(current.fields);
-          if (!githubUrl)
-            throw new library.IssueDraftError(
-              "github_url_too_long",
-              "This draft is too long to prefill on GitHub. Shorten it or copy the text and paste it into a new issue there. Your full draft is kept.",
-              current
-            );
-          draft = current;
-        } else if (operation === "publish" || operation === "status" && !githubLink) {
-          const publisherTransport = transport();
-          if (operation === "publish") {
-            if (current.status === "draft") {
-              if (view2?.reviewedRevision !== revision4 || current.revision !== revision4)
-                throw new library.IssueDraftError(
-                  "review_required",
-                  "Open Preview issue and review the current text, images and account before publishing.",
-                  current
-                );
-              if (publisherTransport.requiresPublisher) {
-                const selected = await publisherTransport.identify(owner2, {
-                  imagesRequired: current.fields.images.length > 0
-                });
-                store.setPublisher(draftId, actor, selected);
-              }
-            }
-          }
-          draft = operation === "publish" ? await store.publish(
-            draftId,
-            revision4,
-            actor,
-            publisherTransport
-          ) : await store.refresh(draftId, actor, publisherTransport);
-        } else {
-          if (operation === "begin_image")
-            store.beginImage(draftId, revision4, actor, input3.image);
-          else if (operation === "append_image")
-            store.appendImage(
-              draftId,
-              revision4,
-              actor,
-              input3.imageId,
-              input3.offset,
-              input3.base64
-            );
-          else if (operation === "remove_image")
-            store.removeImage(draftId, revision4, actor, input3.imageId);
-          else if (operation === "read_image") {
-            const selected = store.readImage(draftId, actor, input3.imageId);
-            if (input3.offset >= selected.bytes.length || input3.offset % (256 * 1024) !== 0)
-              throw new library.IssueDraftError(
-                "invalid_image_offset",
-                "Read the next advertised image chunk."
-              );
-            chunk = {
-              imageId: selected.image.id,
-              offset: input3.offset,
-              totalBytes: selected.image.bytes,
-              mediaType: selected.image.mediaType,
-              base64: Buffer.from(selected.bytes).subarray(input3.offset, input3.offset + 256 * 1024).toString("base64")
-            };
-          }
-          draft = store.get(draftId, actor);
-        }
-        if (draft.status === "draft" && draft.publicationRoute !== "github-link" && (operation === "open" || operation === "read" && appOnly && input3.refreshPublisher === true)) {
-          const publisherTransport = transport();
-          try {
-            if (publisherTransport.requiresPublisher) {
-              const selected = await publisherTransport.identify(owner2, {
-                imagesRequired: draft.fields.images.length > 0
-              });
-              draft = store.setPublisher(draft.id, actor, selected);
-            }
-          } catch {
-            if (operation !== "open")
-              return reply(
-                {
-                  error: "posting_account_unavailable",
-                  message: "Publishing is unavailable for the connected GitHub account. Your draft is kept.",
-                  draft
-                },
-                { appOnly }
-              );
-          }
-        }
-        const selections = store.listImages(draft.id, actor);
-        if (view2 && operation === "read" && input3.refreshPublisher === true)
-          view2.reviewedRevision = draft.revision;
-        return reply(
-          {
-            draft,
-            ...appOnly ? {
-              selections,
-              ...chunk ? { chunk } : {},
-              ...githubUrl ? { githubUrl } : {}
-            } : {}
-          },
-          {
-            appOnly,
-            ...appOnly ? {} : { view: grant2(scope, owner2, draft.id), selections }
-          }
-        );
-      } catch (error63) {
-        if (error63 instanceof library.IssueDraftError)
-          return reply(
-            {
-              error: error63.code,
-              message: error63.message,
-              ...error63.draft ? { draft: error63.draft } : {}
-            },
-            { appOnly }
-          );
-        return reply(unavailable(), { appOnly });
-      }
-    },
-    async close() {
-      stopped = true;
-      views.clear();
-      cleanupViews.clear();
-      for (const store of temporaryStores.values()) store.close();
-      temporaryStores.clear();
-      const opened = await Promise.allSettled([
-        ...stores.values(),
-        ...journals.values()
-      ]);
-      for (const value of opened)
-        if (value.status === "fulfilled") value.value.close();
-      stores.clear();
-      journals.clear();
-    }
-  };
-}
-
-// apps/codex-plugin/src/installed-session.mjs
-import { join as join5, delimiter } from "node:path";
-import { pathToFileURL } from "node:url";
-import process3 from "node:process";
-import { performance as performance3 } from "node:perf_hooks";
-import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
-import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
-var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
-var present = (entry) => {
-  if (Array.isArray(entry)) return entry.map(present);
-  if (!entry || typeof entry !== "object") return entry;
-  return Object.fromEntries(
-    Object.entries(entry).map(([key, value]) => [
-      key,
-      ["title", "description"].includes(key) ? brand(value) : present(value)
-    ])
-  );
-};
-async function createInstalledSession(root, build, data, broker, {
-  runnerValidation,
-  applicationContext,
-  createHostSurface,
-  onStartupStage,
-  lifecycleFactory
-} = {}) {
-  const host = pluginHost(build);
-  const stage2 = (value) => {
-    try {
-      onStartupStage?.(value);
-    } catch {
-    }
-  };
-  stage2("verify_payload");
-  const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
-  if (build.runtimeLayout !== "installed")
-    throw Error("Rebuild the installed runtime layout");
-  const source3 = join5(root, "capabilities");
-  const started = performance3.now();
-  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
-  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
-    throw Error("Installed runtime must contain regular files");
-  const verified = performance3.now();
-  process3.env.PATH = [join5(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
-  stage2("import_library");
-  const library = await import(pathToFileURL(join5(source3, "library/api.mjs")).href);
-  stage2("init_services");
-  if (Boolean(build.validationContext) !== Boolean(runnerValidation))
-    throw Error(
-      "Validation artifact requires its explicit private host binding"
-    );
-  const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
-    throw Error("Validation artifact/binding mismatch");
-  if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
-    (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
-    throw Error("Application-context artifact/scope binding mismatch");
-  const contextBinding = contextSetup ? library.parseRunnerContextBinding({
-    ...contextSetup.binding,
-    artifactDigest: identity4.digest
-  }) : void 0;
-  const hostLibrary = {
-    ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
-    createCapabilityServices(scopedData, options) {
-      return library.createCapabilityServices(scopedData, {
-        ...options,
-        mapGeneration: false,
-        ...validation ? { runnerValidation: validation } : {},
-        ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
-        ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
-      });
-    },
-    createCapabilityCatalog(services, options) {
-      return library.createCapabilityCatalog(services, {
-        ...options,
-        mapsEnabled: false
-      });
-    }
-  };
-  if (broker) {
-    if (typeof library.bindManagedProvider !== "function")
-      throw Error("Shared-auth runtime required");
-    library.bindManagedProvider(data, broker.socketPath);
-  }
-  const imported = performance3.now();
-  const workspaceService = broker && build.workspaceResults ? new library.WorkspaceResults(
-    (path, options) => broker.send(path.slice("/api/v1".length), options),
-    build.profile === "local"
-  ) : void 0;
-  const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
-  const session = await createCapabilitySession({
-    host,
-    data,
-    payloadDigest: identity4.digest,
-    packageIdentity: JSON.stringify(build),
-    library: broker ? {
-      ...hostLibrary,
-      createCapabilityCatalog(...args) {
-        const catalog2 = hostLibrary.createCapabilityCatalog(...args);
-        return withModelDiscovery(
-          {
-            ...catalog2,
-            tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
-            async invoke(name, input3, invocation) {
-              if (workspaceResults?.tools.some((tool2) => tool2.name === name))
-                return workspaceResults.invoke(
-                  name,
-                  input3,
-                  invocation?.signal
-                );
-              return catalog2.invoke(name, input3, invocation);
-            }
-          },
-          broker,
-          library.CapabilityCatalogError
-        );
-      }
-    } : hostLibrary,
-    ...host === "claude_code" ? { uiEnabled: false } : {},
-    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
-    uiMode: "panel"
-  });
-  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
-  session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
-  session.workspaceResults = workspaceService;
-  if (host === "codex") {
-    session.configurations = createConfigurationSurface({
-      session,
-      library,
-      data
-    });
-    if (typeof library.readSetupCard === "function")
-      session.setupCard = {
-        resources: [
-          {
-            uri: library.setupCardUri,
-            name: "Kaijan setup",
-            mimeType: "text/html;profile=mcp-app"
-          },
-          ...library.onboardingUri ? [
-            {
-              uri: library.onboardingUri,
-              name: "Set up Kaijan",
-              mimeType: "text/html;profile=mcp-app"
-            }
-          ] : []
-        ],
-        onboardingUri: library.onboardingUri,
-        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
-      };
-    session.feedback = createFeedbackSurface({
-      session,
-      library,
-      broker,
-      build
-    });
-    session.issues = createIssueSurface({ session, library, broker, build });
-    const close = session.close.bind(session);
-    session.close = async () => {
-      await session.configurations.close();
-      await session.feedback.close();
-      await session.issues.close();
-      await close();
-    };
-  }
-  session.privateParameters = {
-    async provision(threadId, input3) {
-      if (typeof threadId !== "string" || !threadId.trim())
-        throw Error("A conversation ID is required.");
-      const scope = await session.forRequest({ threadId });
-      return library.provisionRunnerParameters(
-        scope.data,
-        scope.scope.id,
-        input3
-      );
-    },
-    async revoke(threadId, bindingId) {
-      if (typeof threadId !== "string" || !threadId.trim())
-        throw Error("A conversation ID is required.");
-      const scope = await session.forRequest({ threadId });
-      return library.revokeRunnerParameters(
-        scope.data,
-        scope.scope.id,
-        bindingId
-      );
-    }
-  };
-  const originalFailure = session.failure.bind(session);
-  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
-  const initialized = performance3.now();
-  session.runtimeIdentity = Object.freeze({
-    pluginVersion: build.pluginVersion,
-    buildId: build.buildId,
-    sourceRevision: build.sourceRevision,
-    sourceDirty: build.sourceDirty,
-    capabilityDigest: build.capabilityDigest
-  });
-  session.runtimeDiscovery = () => installedRuntimeDiscovery(root, {
-    artifact: session.runtimeIdentity,
-    installation: session.identity,
-    connectionId: session.connectionId
-  });
-  session.instructions = brand(session.instructions);
-  session.providerReady = async () => library.providerConfigured(await library.providerEnvironment(data));
-  const catalog = session.catalog;
-  session.catalog = {
-    ...catalog,
-    tools: catalog.tools.map(present),
-    resources: catalog.resources.map((entry) => ({
-      ...present(entry),
-      name: brand(entry.name)
-    }))
-  };
-  process3.stderr.write(
-    JSON.stringify({
-      event: "kaijan.local.startup",
-      validationMs: Math.round(verified - started),
-      importMs: Math.round(imported - verified),
-      servicesMs: Math.round(initialized - imported),
-      processElapsedMs: Math.round(initialized)
-    }) + "\n"
-  );
-  if (host === "claude_code" && createHostSurface) {
-    try {
-      session.projectHistory = await createHostSurface({
-        session,
-        library,
-        data,
-        broker,
-        build
-      });
-      const close = session.close.bind(session);
-      session.close = async () => {
-        try {
-          await session.projectHistory.close();
-        } catch {
-        } finally {
-          await close();
-        }
-      };
-    } catch {
-    }
-  }
-  return session;
-}
-
-// apps/codex-plugin/src/setup/service.mjs
-import { randomUUID as randomUUID6 } from "node:crypto";
-import { performance as performance4 } from "node:perf_hooks";
-
-// apps/codex-plugin/src/setup/store.mjs
-import { DatabaseSync } from "node:sqlite";
-import { constants as constants3 } from "node:fs";
-import { mkdir as mkdir4, lstat as lstat6, realpath as realpath2, open as open3 } from "node:fs/promises";
-import { randomUUID as randomUUID4 } from "node:crypto";
-import process4 from "node:process";
-import { join as join6, resolve } from "node:path";
-
-// apps/codex-plugin/src/setup/contracts.mjs
+// apps/codex-plugin/src/issue-screenshot.mjs
+import assert2 from "node:assert/strict";
 import { createHash as createHash3 } from "node:crypto";
-import { URL as URL2 } from "node:url";
-var digest4 = (value) => createHash3("sha256").update(JSON.stringify(value)).digest("hex");
-var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
-var requestKey = external_exports.string().min(8).max(120);
-var label2 = external_exports.string().min(1).max(1e3);
-var sourceSchema = external_exports.strictObject({
-  directory: external_exports.string().min(1).max(4096),
-  revision
-});
-var targetSchema = external_exports.strictObject({
-  url: external_exports.string().url().max(4096).refine((value) => {
-    const url2 = new URL2(value);
-    return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
-  }),
-  profileId: external_exports.string().min(1).max(80),
-  profileRevision: identity3.optional()
-});
-var configurationSchema = external_exports.strictObject({
-  source: sourceSchema,
-  workItem: external_exports.string().min(1).max(1e5).optional(),
-  target: targetSchema.optional(),
-  configurationRefs: external_exports.array(
-    external_exports.strictObject({
-      kind: external_exports.enum(["source", "target", "provider"]),
-      handle: external_exports.string().min(1).max(200)
-    })
-  ).max(30).default([])
-});
-var prepareSchema = external_exports.strictObject({
-  requestKey,
-  configuration: configurationSchema.extend({
-    source: sourceSchema.extend({
-      revision: external_exports.string().min(1).max(512).default("main").describe(
-        "Use HEAD for the current checkout commit, or supply a branch, a full Git ref or an exact commit. Omit to select main."
-      )
-    })
-  })
-});
-var listSchema = external_exports.strictObject({
-  directory: external_exports.string().min(1).max(4096),
-  offset: external_exports.number().int().min(0).default(0)
-});
-var handleSchema = external_exports.strictObject({
-  applicationId: identity3,
-  contextId: identity3
-});
-var commandSchema = handleSchema.extend({ requestKey });
-var waitSchema = handleSchema.extend({
-  timeoutMs: external_exports.number().int().min(1).max(3e4).default(3e4)
-});
-var resolveSchema = handleSchema.extend({
-  expectedRevision: revision,
-  expectedProfileRevision: identity3.optional().describe(
-    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
-  )
-});
-var handoffSchema = resolveSchema.extend({ requestKey });
-var workItemReadinessScopeSchema = external_exports.strictObject({
-  kind: external_exports.literal("work-item"),
-  workItem: external_exports.string().min(1).max(1e5),
-  applicationCoverage: external_exports.literal("incomplete"),
-  evidence: external_exports.literal("source-inferred"),
-  browserObserved: external_exports.literal(false),
-  selectedPageIds: external_exports.array(label2).optional(),
-  sourceLimitations: external_exports.array(
-    external_exports.strictObject({
-      stage: external_exports.literal("global/definitions"),
-      reason: external_exports.string().min(1),
-      relevance: external_exports.literal("unknown")
-    })
-  ).optional()
-});
-var mappingSchema = external_exports.strictObject({
-  mapId: identity3,
-  pages: external_exports.array(external_exports.strictObject({ id: label2, title: label2 })).max(200),
-  pagePreviewLimit: external_exports.literal(40).optional(),
-  coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
-  readinessScope: workItemReadinessScopeSchema.optional(),
-  readinessIssues: external_exports.array(
-    external_exports.strictObject({
-      code: label2,
-      recovery: label2
-    })
-  ).optional(),
-  answerId: identity3.optional(),
-  resultSha256: identity3.optional(),
-  snapshotTree: revision.optional()
-});
-var provenanceSchema = external_exports.strictObject({
-  kind: external_exports.enum(["controlled-fixture", "unavailable", "product-adapter"]),
-  version: label2
-});
-var missingSchema = external_exports.array(label2).max(30);
-var authorizationSchema = external_exports.discriminatedUnion("kind", [
-  external_exports.strictObject({
-    kind: external_exports.literal("host-managed-tool-dispatch"),
-    host: external_exports.literal("codex"),
-    policy: external_exports.literal("host-managed"),
-    scopeId: identity3,
-    requestId: external_exports.union([external_exports.string().max(200), external_exports.number().int()]),
-    tool: external_exports.enum(["loki_setup_prepare", "loki_setup_retry"]),
-    argumentsSha256: identity3,
-    configurationSha256: identity3
-  }),
-  external_exports.strictObject({ kind: external_exports.literal("controlled-selection-only") })
-]);
-var consumerReceiptSchema = external_exports.strictObject({
-  accepted: external_exports.boolean(),
-  contextId: identity3,
-  receiptId: identity3,
-  provenance: provenanceSchema
-});
-var mapReceiptSchema = external_exports.strictObject({
-  requestKey: identity3,
-  runId: identity3,
-  sourceRevision: revision,
-  state: external_exports.enum([
-    "running",
-    "ready",
-    "incomplete",
-    "failed",
-    "stopped",
-    "uncertain"
-  ]),
-  progress: label2,
-  resultId: identity3.nullable(),
-  data: mappingSchema.nullable(),
-  provenance: provenanceSchema,
-  executionSettled: external_exports.boolean().optional()
-});
-var setupStateSchema = external_exports.enum([
-  "awaiting-authority",
-  "blocked",
-  "admitting",
-  "mapping",
-  "uncertain",
-  "stop-requested",
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var setupReceiptSchema = handleSchema.extend({
-  version: external_exports.number().int().positive(),
-  recovered: external_exports.boolean().optional(),
-  reused: external_exports.boolean().optional()
-});
-var setupSummarySchema = external_exports.strictObject({
-  state: setupStateSchema,
-  missing: missingSchema,
-  nextAction: label2,
-  provenance: provenanceSchema
-});
-var setupPreparationOutputSchema = setupReceiptSchema.extend(
-  setupSummarySchema.shape
-);
-var mappedSetupContextSchema = handleSchema.extend({
-  schema: external_exports.literal("loki.setup-context/3"),
-  version: external_exports.number().int().positive(),
-  configuration: configurationSchema.extend({
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault()
-  }),
-  configurationHash: identity3,
-  sourceIdentity: external_exports.strictObject({
-    device: external_exports.number().int(),
-    inode: external_exports.number().int()
-  }),
-  provenance: provenanceSchema,
-  state: setupStateSchema,
-  missing: missingSchema,
-  authorityRef: identity3.nullable(),
-  authorityKind: external_exports.enum(["host-managed-tool-dispatch", "controlled-selection-only"]).nullable(),
-  authority: authorizationSchema.optional(),
-  owner: external_exports.uuid(),
-  map: external_exports.strictObject({
-    requestKey: identity3,
-    runId: identity3.nullable(),
-    resultId: identity3.nullable(),
-    data: mappingSchema.nullable(),
-    sourceRevision: revision.optional(),
-    state: mapReceiptSchema.shape.state.optional(),
-    progress: label2.optional(),
-    provenance: provenanceSchema.optional(),
-    executionSettled: external_exports.boolean().optional()
-  }),
-  progress: label2,
-  error: label2.nullable(),
-  supersededBy: identity3.optional()
-});
-var setupContextSchema = external_exports.union([
-  mappedSetupContextSchema,
-  mappedSetupContextSchema.extend({
-    schema: external_exports.literal("loki.setup-context/4"),
-    map: external_exports.null(),
-    authorityRef: external_exports.null(),
-    authorityKind: external_exports.null()
-  })
-]);
-var setupListOutputSchema = external_exports.strictObject({
-  contexts: external_exports.array(
-    setupReceiptSchema.omit({ recovered: true, reused: true }).extend({
-      source: sourceSchema,
-      target: targetSchema.optional(),
-      state: setupStateSchema,
-      supersededBy: identity3.nullable(),
-      provenance: provenanceSchema
-    })
-  ).max(50),
-  nextOffset: external_exports.number().int().nonnegative().nullable()
-});
-var setupStopOutputSchema = setupReceiptSchema.extend({
-  ...setupSummarySchema.shape,
-  runId: identity3.nullable(),
-  cancellationRequested: external_exports.boolean()
-});
-var mappedResolveOutputSchema = external_exports.strictObject({
-  application: external_exports.strictObject({
-    schema: external_exports.literal("loki.application-context/2"),
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    map: external_exports.strictObject({
-      mapId: identity3,
-      runId: identity3,
-      resultId: identity3,
-      sourceRevision: revision,
-      preview: mappingSchema
-    }),
-    readiness: external_exports.strictObject({
-      state: external_exports.literal("ready"),
-      missing: external_exports.array(external_exports.never()).max(0),
-      scope: workItemReadinessScopeSchema.optional()
-    }),
-    provenance: provenanceSchema
-  }),
-  setup: handleSchema.extend({
-    version: external_exports.number().int().positive(),
-    mapRunId: identity3,
-    mapResultId: identity3,
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
-    authorityRef: identity3
-  }),
-  authority: external_exports.enum([
-    "host-managed-tool-dispatch",
-    "controlled-selection-only"
-  ])
-});
-var configuredResolveOutputSchema = external_exports.strictObject({
-  application: external_exports.strictObject({
-    schema: external_exports.literal("loki.application-context/3"),
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    workItem: external_exports.string().min(1).max(1e5).nullable(),
-    map: external_exports.null(),
-    readiness: external_exports.strictObject({
-      state: external_exports.literal("configured"),
-      missing: external_exports.array(external_exports.never()).max(0),
-      map: external_exports.literal("not-required"),
-      browserObserved: external_exports.literal(false)
-    }),
-    provenance: provenanceSchema
-  }),
-  setup: handleSchema.extend({
-    version: external_exports.number().int().positive(),
-    mapRunId: external_exports.null(),
-    mapResultId: external_exports.null(),
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
-    authorityRef: external_exports.null()
-  }),
-  authority: external_exports.literal("configuration-only")
-});
-var setupResolveOutputSchema = external_exports.union([
-  mappedResolveOutputSchema,
-  configuredResolveOutputSchema
-]);
-var handoffFields = {
-  consumer: external_exports.union([
-    external_exports.strictObject({
-      state: external_exports.literal("pending"),
-      provenance: provenanceSchema
-    }),
-    consumerReceiptSchema
-  ]),
-  recovered: external_exports.boolean().optional()
-};
-var setupHandoffOutputSchema = external_exports.union([
-  mappedResolveOutputSchema.extend(handoffFields),
-  configuredResolveOutputSchema.extend(handoffFields)
-]);
-var setupErrorOutputSchema = external_exports.strictObject({
-  error: external_exports.strictObject({
-    code: external_exports.string().regex(/^[a-z][a-z0-9_]{0,99}$/),
-    message: label2
-  })
-});
-var setupSuccessSchemas = {
-  loki_setup_list: setupListOutputSchema,
-  loki_setup_prepare: setupPreparationOutputSchema,
-  loki_setup_get: setupContextSchema,
-  loki_setup_wait: setupContextSchema,
-  loki_setup_retry: setupPreparationOutputSchema,
-  loki_setup_stop: setupStopOutputSchema,
-  loki_setup_resolve: setupResolveOutputSchema,
-  loki_setup_handoff: setupHandoffOutputSchema
-};
-var setupOutputVersion = (name) => [
-  "loki_setup_prepare",
-  "loki_setup_retry",
-  "loki_setup_stop",
-  "loki_setup_get",
-  "loki_setup_wait",
-  "loki_setup_resolve",
-  "loki_setup_handoff"
-].includes(name) ? 2 : 1;
-var setupOutputSchemas = Object.fromEntries(
-  Object.entries(setupSuccessSchemas).map(([name, schema]) => [
-    name,
-    external_exports.union([schema, setupErrorOutputSchema]).meta({ id: `urn:loki:${name}:output:${setupOutputVersion(name)}` })
-  ])
-);
-var SetupFailure = class extends Error {
-  constructor(code) {
-    super(code);
-    this.code = code;
-  }
-};
-var recoveryMessages = {
-  unknown_application_context: "Use the original conversation and application/context IDs. List retained contexts for the selected project; do not recreate unknown work.",
-  request_conflict: "This request key already records different input. Read its original receipt. Use a new key only for a separately authorized new operation, never to replay unknown effects.",
-  retry_not_required: "Read the original context. Only known blocked, failed or stopped work can be retried; uncertain or pending effects must be reconciled without replay.",
-  stale_application_context: "Use the selected context's exact source and target-profile revisions. A different source selection is a new operation.",
-  application_not_ready: "Read the original context's state and missing prerequisites. A receipt, completed wait or partial map does not establish application readiness.",
-  consumer_integration_unavailable: "No supported application consumer is ready. Retain the source-bound context and original map; do not substitute a fixture acknowledgement.",
-  setup_output_invalid: "The Setup response did not match its advertised contract. Read retained state with the original identities before recovery; do not replay an operation whose effects are unknown.",
-  setup_interrupted: "The request was interrupted. Read the original context to confirm its state and any pending Stop. Request cancellation alone does not prove producer cancellation."
-};
-function failure3(error63) {
-  const code = error63 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error63.code) ? error63.code : error63?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
-  return {
-    code,
-    message: (Object.hasOwn(recoveryMessages, code) ? recoveryMessages[code] : void 0) ?? "Read the original Setup context before retrying. Keep its application, source version and request key."
-  };
-}
-
-// apps/codex-plugin/src/setup/store.mjs
-async function openSetupStore(directory) {
-  await mkdir4(directory, { recursive: true, mode: 448 });
-  const info = await lstat6(directory);
-  if (!info.isDirectory() || info.uid !== process4.getuid?.() || info.mode & 63 || await realpath2(directory) !== resolve(directory))
-    throw new SetupFailure("unsafe_setup_state");
-  const path = join6(directory, "setup.sqlite");
-  const file2 = await open3(
-    path,
-    constants3.O_RDWR | constants3.O_CREAT | constants3.O_NOFOLLOW | constants3.O_NONBLOCK,
-    384
-  );
-  try {
-    const stat2 = await file2.stat();
-    if (!stat2.isFile() || stat2.uid !== process4.getuid?.() || stat2.mode & 63 || stat2.nlink !== 1)
-      throw new SetupFailure("unsafe_setup_state");
-  } finally {
-    await file2.close();
-  }
-  const database = new DatabaseSync(path);
-  let closed2 = false;
-  database.exec(`PRAGMA busy_timeout=5000;
-    CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS applications(id TEXT PRIMARY KEY, version INTEGER NOT NULL);
-    CREATE TABLE IF NOT EXISTS contexts(id TEXT PRIMARY KEY, application_id TEXT NOT NULL, configuration_hash TEXT NOT NULL, value TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS map_observations(context_id TEXT, digest TEXT, value TEXT NOT NULL, PRIMARY KEY(context_id,digest));
-    CREATE TABLE IF NOT EXISTS commands(scope TEXT, key TEXT, digest TEXT, value TEXT, PRIMARY KEY(scope,key));`);
-  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID4());
-  return {
-    installation: database.prepare("SELECT value FROM metadata WHERE key='installation'").get().value,
-    transaction(fn) {
-      database.exec("BEGIN IMMEDIATE");
-      try {
-        const value = fn();
-        database.exec("COMMIT");
-        return value;
-      } catch (error63) {
-        database.exec("ROLLBACK");
-        throw error63;
-      }
-    },
-    version(applicationId) {
-      database.prepare(
-        "INSERT INTO applications VALUES(?,1) ON CONFLICT(id) DO UPDATE SET version=version+1"
-      ).run(applicationId);
-      return database.prepare("SELECT version FROM applications WHERE id=?").get(applicationId).version;
-    },
-    get(applicationId, contextId) {
-      const row = database.prepare("SELECT value FROM contexts WHERE id=? AND application_id=?").get(contextId, applicationId);
-      if (!row) throw new SetupFailure("unknown_application_context");
-      return JSON.parse(row.value);
-    },
-    matching(applicationId, hash6) {
-      const rows2 = database.prepare(
-        "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
-      ).all(applicationId, hash6);
-      return rows2.length ? JSON.parse(rows2[0].value) : null;
-    },
-    list(directory2, offset) {
-      return database.prepare(
-        "SELECT value FROM contexts WHERE json_extract(value,'$.configuration.source.directory')=? ORDER BY rowid DESC LIMIT 51 OFFSET ?"
-      ).all(directory2, offset).map((row) => JSON.parse(row.value));
-    },
-    put(value) {
-      database.prepare(
-        "INSERT INTO contexts VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value"
-      ).run(
-        value.contextId,
-        value.applicationId,
-        value.configurationHash,
-        JSON.stringify(value)
-      );
-    },
-    command(scope, key, hash6) {
-      const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
-      if (!row) return null;
-      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
-      return JSON.parse(row.value);
-    },
-    receipt(scope, key, hash6, value) {
-      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
-    },
-    complete(scope, key, hash6, value) {
-      database.prepare(
-        "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
-      ).run(JSON.stringify(value), scope, key, hash6);
-    },
-    observe(contextId, value) {
-      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest4(value), JSON.stringify(value));
-    },
-    producer(key) {
-      const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
-      return row ? JSON.parse(row.value) : null;
-    },
-    retainProducer(key, value) {
-      database.prepare(
-        "INSERT INTO metadata VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value"
-      ).run(`producer:${key}`, JSON.stringify(value));
-    },
-    close: () => {
-      if (!closed2) {
-        closed2 = true;
-        database.close();
-      }
-    }
-  };
-}
-
-// apps/codex-plugin/src/setup/source.mjs
-import { execFile as execFile2 } from "node:child_process";
-import { promisify as promisify3 } from "node:util";
-import { realpath as realpath3, lstat as lstat7 } from "node:fs/promises";
-import { isAbsolute as isAbsolute3 } from "node:path";
-import { randomUUID as randomUUID5 } from "node:crypto";
-var execute = promisify3(execFile2);
-async function resolveSourceRevision(source3, signal) {
-  const git = async (args, cleanup = false) => (await execute(
-    "git",
-    [
-      "-c",
-      "core.hooksPath=/dev/null",
-      "-c",
-      "core.fsmonitor=false",
-      "-c",
-      "protocol.ext.allow=never",
-      "-C",
-      source3.directory,
-      ...args
-    ],
-    {
-      timeout: 6e4,
-      maxBuffer: 16384,
-      signal: cleanup ? void 0 : signal
-    }
-  )).stdout.trim();
-  const requested = source3.revision ?? "main";
-  if (/^[a-f0-9]{40}$/.test(requested)) {
-    await inspectSource({ ...source3, revision: requested });
-    return requested;
-  }
-  try {
-    const head = await git(["rev-parse", "--verify", "HEAD^{commit}"]);
-    await inspectSource({ ...source3, revision: head });
-    if (requested === "HEAD") return head;
-    const ref = requested.startsWith("refs/") ? requested : `refs/heads/${requested}`;
-    await git(["check-ref-format", ref]);
-    let remote = false;
-    try {
-      await git(["remote", "get-url", "origin"]);
-      remote = true;
-    } catch {
-    }
-    if (!remote) return await git(["rev-parse", "--verify", `${ref}^{commit}`]);
-    const temporary = `refs/loki/setup/${randomUUID5()}`;
-    try {
-      await git([
-        "fetch",
-        "--quiet",
-        "--no-tags",
-        "--no-recurse-submodules",
-        "--no-write-fetch-head",
-        "origin",
-        `${ref}:${temporary}`
-      ]);
-      const upstream = await git([
-        "rev-parse",
-        "--verify",
-        `${temporary}^{commit}`
-      ]);
-      let local;
-      try {
-        local = await git(["rev-parse", "--verify", `${ref}^{commit}`]);
-      } catch {
-        return upstream;
-      }
-      if (local === upstream) return local;
-      try {
-        await git(["merge-base", "--is-ancestor", local, upstream]);
-        return upstream;
-      } catch {
-      }
-      try {
-        await git(["merge-base", "--is-ancestor", upstream, local]);
-        return local;
-      } catch {
-      }
-      throw new SetupFailure("source_revision_ambiguous");
-    } finally {
-      await git(["update-ref", "-d", temporary], true);
-    }
-  } catch (error63) {
-    if (signal?.aborted) throw signal.reason;
-    if (error63 instanceof SetupFailure) throw error63;
-    if (error63.code === "ENOENT" && error63.path === "git")
-      throw new SetupFailure("git_unavailable");
-    throw new SetupFailure("source_revision_unavailable");
-  }
-}
-async function inspectSource(source3) {
-  try {
-    if (!isAbsolute3(source3.directory) || source3.directory.includes("\0") || await realpath3(source3.directory) !== source3.directory)
-      throw Error();
-    const stat2 = await lstat7(source3.directory);
-    if (!stat2.isDirectory()) throw Error();
-    const git = async (args) => (await execute(
-      "git",
-      [
-        "-c",
-        "core.hooksPath=/dev/null",
-        "-c",
-        "core.fsmonitor=false",
-        "-C",
-        source3.directory,
-        ...args
-      ],
-      {
-        timeout: 1e4,
-        maxBuffer: 16384
-      }
-    )).stdout.trim();
-    if (await git(["rev-parse", "--show-toplevel"]) !== source3.directory)
-      throw Error();
-    if (await git(["rev-parse", "--verify", `${source3.revision}^{commit}`]) !== source3.revision)
-      throw Error();
-    return { device: stat2.dev, inode: stat2.ino };
-  } catch (error63) {
-    if (error63.code === "ENOENT" && error63.path === "git")
-      throw new SetupFailure("git_unavailable");
-    throw new SetupFailure("invalid_source");
-  }
-}
-
-// apps/codex-plugin/src/setup/service.mjs
-var active = /* @__PURE__ */ new Set(["admitting", "mapping", "uncertain", "stop-requested"]);
-var terminal = /* @__PURE__ */ new Set([
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var retryable = /* @__PURE__ */ new Set([
-  "failed",
-  "stopped",
-  "blocked",
-  "awaiting-authority"
-]);
-var handle = ({ applicationId, contextId, version: version4 }) => ({
-  applicationId,
-  contextId,
-  version: version4
-});
-async function createSetup({
-  directory,
-  mapper,
-  consumer,
-  authorize,
-  createTelemetry
-}) {
-  const store = await openSetupStore(directory);
-  const provenance2 = provenanceSchema.parse(
-    mapper?.provenance ?? {
-      kind: "product-adapter",
-      version: "application-source-configuration/1"
-    }
-  );
-  const owner2 = randomUUID6();
-  const telemetryByContext = /* @__PURE__ */ new Map();
-  const telemetryStarts = /* @__PURE__ */ new Map();
-  const observe = (method, input3) => {
-    try {
-      Promise.resolve(
-        telemetryByContext.get(input3.setupId)?.[method]?.(input3)
-      ).catch(() => {
-      });
-    } catch {
-    }
-  };
-  const inheritedCapability = (contextId) => {
-    try {
-      const sink = telemetryByContext.get(contextId)?.capabilityLifecycle;
-      return typeof sink === "function" ? sink : null;
-    } catch {
-      return null;
-    }
-  };
-  const snapshotObserver = () => {
-    try {
-      const observer = createTelemetry?.();
-      if (!observer || typeof observer !== "object") return null;
-      if (typeof observer.then === "function") {
-        Promise.resolve(observer).catch(() => {
-        });
-        return null;
-      }
-      return observer;
-    } catch {
-      return null;
-    }
-  };
-  const started = (value, observer) => {
-    if (!observer || telemetryByContext.size >= 512) return;
-    telemetryByContext.set(value.contextId, observer);
-    telemetryStarts.set(value.contextId, performance4.now());
-    observe("setupStarted", {
-      transitionKey: value.contextId,
-      setupId: value.contextId,
-      transition: "fresh-admission",
-      validated: true,
-      persisted: true,
-      recovered: false,
-      reused: false,
-      sourceKind: "local_folder",
-      entry: null,
-      hasTargetUrl: Boolean(value.configuration.target)
-    });
-  };
-  const finished2 = (value, executionSettled) => observe("setupFinished", {
-    transitionKey: value.contextId,
-    setupId: value.contextId,
-    transition: "first-authoritative-terminal",
-    validated: true,
-    authoritative: true,
-    executionSettled,
-    recovered: false,
-    reused: false,
-    state: value.state,
-    missingPrerequisites: value.missing,
-    durationKnown: telemetryStarts.has(value.contextId),
-    durationMs: performance4.now() - telemetryStarts.get(value.contextId)
-  });
-  const read = (input3) => store.get(input3.applicationId, input3.contextId);
-  async function summarize(receipt2, stop = false) {
-    let value = read(receipt2);
-    if (!stop) {
-      await verify(value);
-      value = read(receipt2);
-    }
-    let nextAction3;
-    switch (value.state) {
-      case "blocked":
-      case "awaiting-authority":
-        nextAction3 = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
-        break;
-      case "admitting":
-      case "mapping":
-        nextAction3 = "Wait on this original context. A receipt does not establish application readiness.";
-        break;
-      case "uncertain":
-        nextAction3 = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
-        break;
-      case "stop-requested":
-        nextAction3 = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
-        break;
-      case "incomplete":
-        nextAction3 = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
-        break;
-      case "ready":
-        nextAction3 = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
-        if (value.map?.data?.readinessScope?.sourceLimitations?.length)
-          nextAction3 += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
-        break;
-      default:
-        nextAction3 = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
-    }
-    if (!mapper && value.map && active.has(value.state))
-      nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
-    if (stop && !receipt2.cancellationRequested) {
-      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
-    }
-    if (value.provenance.kind === "controlled-fixture")
-      nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
-    return {
-      ...receipt2,
-      state: value.state,
-      missing: [...value.missing],
-      nextAction: nextAction3,
-      provenance: value.provenance
-    };
-  }
-  const edit = (input3, fn) => store.transaction(() => {
-    const value = read(input3);
-    fn(value);
-    store.put(value);
-    return value;
-  });
-  async function verify(value) {
-    if (digest4(await inspectSource(value.configuration.source)) !== digest4(value.sourceIdentity))
-      throw new SetupFailure("source_identity_changed");
-    if (mapper && digest4(provenance2) !== digest4(value.provenance))
-      throw new SetupFailure("adapter_changed");
-  }
-  function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
-    return store.transaction(() => {
-      const hash6 = digest4(input3), previous = store.command(scope, input3.requestKey, hash6);
-      if (previous) return { receipt: { ...previous, recovered: true } };
-      const applicationId = digest4({
-        installation: store.installation,
-        directory: configuration2.source.directory,
-        sourceIdentity
-      });
-      const configurationHash = digest4({ configuration: configuration2, provenance: provenance2 });
-      const existing = store.matching(applicationId, configurationHash);
-      if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
-        const receipt3 = handle(existing);
-        store.receipt(scope, input3.requestKey, hash6, receipt3);
-        return {
-          receipt: { ...receipt3, reused: true },
-          retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
-            transitionKey: existing.contextId,
-            setupId: existing.contextId,
-            mapId: existing.map.data.mapId
-          } : null
-        };
-      }
-      const previousContext = retry ? read(input3) : null;
-      if (previousContext && !retryable.has(previousContext.state))
-        throw new SetupFailure("retry_not_required");
-      const version4 = store.version(applicationId);
-      const value = {
-        schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
-        applicationId,
-        version: version4,
-        contextId: digest4({ applicationId, version: version4, configurationHash }),
-        configuration: configuration2,
-        configurationHash,
-        sourceIdentity,
-        provenance: provenance2,
-        state: "awaiting-authority",
-        missing: [],
-        authorityRef: null,
-        authorityKind: null,
-        owner: owner2,
-        map: mapper ? { requestKey: null, runId: null, resultId: null, data: null } : null,
-        progress: mapper ? "Checking required execution prerequisites and source authority" : "Saving application source configuration",
-        error: null
-      };
-      if (value.map) value.map.requestKey = value.contextId;
-      if (previousContext?.state === "awaiting-authority") {
-        previousContext.state = "superseded";
-        previousContext.supersededBy = value.contextId;
-        previousContext.progress = "Replaced by an explicit retry; late confirmation answers are ignored";
-        store.put(previousContext);
-      }
-      store.put(value);
-      const receipt2 = handle(value);
-      store.receipt(scope, input3.requestKey, hash6, receipt2);
-      return { receipt: receipt2, value };
-    });
-  }
-  function applyMap(input3, raw) {
-    const result2 = mapReceiptSchema.parse(raw);
-    store.observe(input3.contextId, result2);
-    let firstTerminal = false;
-    const accepted = edit(input3, (value) => {
-      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest4(result2.provenance) !== digest4(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
-        throw new SetupFailure("map_scope_mismatch");
-      if (result2.state === "ready" && (!result2.data || !result2.resultId))
-        throw new SetupFailure("invalid_map_result");
-      if (terminal.has(value.state)) return;
-      value.map = { ...value.map, ...result2 };
-      if (value.state === "stop-requested" && result2.state !== "stopped") {
-        if (!result2.executionSettled) return;
-        value.state = "stopped";
-        value.progress = `Setup stopped; original map operation settled as ${result2.state}`;
-        value.missing = [];
-        firstTerminal = true;
-        return;
-      }
-      value.state = result2.state === "running" ? "mapping" : result2.state;
-      value.progress = result2.progress;
-      value.missing = [];
-      value.error = result2.state === "failed" ? "map_failed" : null;
-      firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
-        value.state
-      );
-    });
-    if (firstTerminal) finished2(accepted, result2.executionSettled === true);
-    return accepted;
-  }
-  async function initialize(value, signal, invocation) {
-    try {
-      if (read(value).state !== "awaiting-authority") return;
-      signal?.throwIfAborted();
-      if (!mapper) {
-        await verify(value);
-        signal?.throwIfAborted();
-        const configured2 = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "ready";
-          current.missing = [];
-          current.progress = "Application source and optional target configured; no map generated";
-        });
-        finished2(configured2, true);
-        return;
-      }
-      const parsed = missingSchema.safeParse(
-        await mapper.readiness(value.configuration)
-      );
-      if (!parsed.success) throw new SetupFailure("invalid_map_readiness");
-      signal?.throwIfAborted();
-      if (parsed.data.length) {
-        const blocked = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "blocked";
-          current.missing = parsed.data;
-          current.progress = "Setup needs the listed prerequisites";
-        });
-        finished2(blocked, true);
-        return;
-      }
-      if (read(value).state !== "awaiting-authority") return;
-      const authorization = await authorize(
-        value.configuration,
-        signal,
-        invocation
-      );
-      if (!authorization) {
-        const blocked = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "blocked";
-          current.missing = ["source-authorization"];
-          current.progress = "Source or target authority was denied";
-          current.error = "authority_denied";
-        });
-        finished2(blocked, true);
-        return;
-      }
-      const parsedAuthorization = authorizationSchema.safeParse(authorization);
-      if (!parsedAuthorization.success)
-        throw new SetupFailure("invalid_source_authorization");
-      const authority = parsedAuthorization.data;
-      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest4(value.configuration))
-        throw new SetupFailure("source_authorization_scope_mismatch");
-      signal?.throwIfAborted();
-      await verify(value);
-      if (read(value).state !== "awaiting-authority") return;
-      edit(value, (current) => {
-        if (current.state !== "awaiting-authority") return;
-        current.authorityRef = digest4({
-          contextId: value.contextId,
-          owner: owner2,
-          authority
-        });
-        current.authorityKind = authority.kind;
-        current.authority = authority;
-        current.state = "admitting";
-        current.missing = [];
-        current.progress = "Starting the selected map";
-      });
-      if (read(value).state !== "admitting") return;
-      try {
-        signal?.throwIfAborted();
-        const result2 = await mapper.start(
-          { requestKey: value.contextId, ...value.configuration },
-          signal,
-          {
-            lifecycle: inheritedCapability(value.contextId),
-            setupOperationId: value.contextId
-          }
-        );
-        applyMap(value, result2);
-        if (read(value).state === "stop-requested")
-          await api.stop({
-            applicationId: value.applicationId,
-            contextId: value.contextId,
-            requestKey: `pending-stop-${value.map.requestKey}`
-          });
-      } catch {
-        edit(value, (current) => {
-          if (current.state === "admitting") {
-            current.state = "uncertain";
-            current.progress = "Map admission reply is unknown; read the original operation";
-          }
-        });
-      } finally {
-        if (signal?.aborted)
-          await api.stop({
-            applicationId: value.applicationId,
-            contextId: value.contextId,
-            requestKey: `interrupt-${value.map.requestKey}`
-          });
-      }
-    } catch (error63) {
-      const interrupted = edit(value, (current) => {
-        if (current.state === "awaiting-authority") {
-          current.state = signal?.aborted ? "stopped" : "blocked";
-          current.missing = [
-            error63 instanceof SetupFailure ? error63.code : "setup_interrupted"
-          ];
-          current.progress = "Setup confirmation or prerequisites were not completed; explicitly retry when ready";
-          current.error = error63 instanceof SetupFailure ? error63.code : "setup_interrupted";
-        }
-      });
-      if (["blocked", "stopped"].includes(interrupted.state))
-        finished2(interrupted, true);
-    }
-  }
-  const api = {
-    provenance: provenance2,
-    async prepare(raw, signal, invocation) {
-      const observer = snapshotObserver();
-      signal?.throwIfAborted();
-      const input3 = prepareSchema.parse(raw);
-      if (input3.configuration.target) {
-        input3.configuration.target.profileRevision ??= digest4({
-          url: input3.configuration.target.url,
-          profileId: input3.configuration.target.profileId
-        });
-      }
-      const previous = store.command(
-        "prepare",
-        input3.requestKey,
-        digest4(input3)
-      );
-      if (previous) return summarize({ ...previous, recovered: true });
-      const configuration2 = structuredClone(input3.configuration);
-      configuration2.source.revision = await resolveSourceRevision(
-        configuration2.source,
-        signal
-      );
-      signal?.throwIfAborted();
-      const sourceIdentity = await inspectSource(configuration2.source);
-      const reserved = reserve("prepare", input3, configuration2, sourceIdentity);
-      if (reserved.retainedSelection) {
-        try {
-          void Promise.resolve(
-            observer?.retainedMapSelected?.({
-              ...reserved.retainedSelection,
-              transition: "persisted-retained-selection",
-              persisted: true,
-              validated: true
-            })
-          ).catch(() => {
-          });
-        } catch {
-        }
-      }
-      if (reserved.value) {
-        started(reserved.value, observer);
-        await initialize(reserved.value, signal, invocation);
-      }
-      return summarize(reserved.receipt);
-    },
-    list(raw) {
-      const input3 = listSchema.parse(raw), rows2 = store.list(input3.directory, input3.offset);
-      return {
-        contexts: rows2.slice(0, 50).map((value) => ({
-          ...handle(value),
-          source: value.configuration.source,
-          target: value.configuration.target,
-          state: value.state,
-          supersededBy: value.supersededBy ?? null,
-          provenance: value.provenance
-        })),
-        nextOffset: rows2.length > 50 ? input3.offset + 50 : null
-      };
-    },
-    async get(raw) {
-      const input3 = handleSchema.parse(raw), value = read(input3);
-      await verify(value);
-      if (mapper && active.has(value.state)) {
-        let result2;
-        try {
-          result2 = await mapper.get({
-            requestKey: value.map.requestKey,
-            runId: value.map.runId
-          });
-        } catch {
-          return read(input3);
-        }
-        return applyMap(input3, result2);
-      }
-      return read(input3);
-    },
-    async wait(raw, signal) {
-      const { timeoutMs, ...input3 } = waitSchema.parse(raw);
-      const original2 = read(input3);
-      const deadline = new AbortController();
-      const bounded = AbortSignal.any([
-        deadline.signal,
-        ...signal ? [signal] : []
-      ]);
-      const timer = setTimeout(
-        () => deadline.abort(
-          new DOMException("Setup wait timed out", "TimeoutError")
-        ),
-        timeoutMs
-      );
-      let abort, stopDeadline;
-      try {
-        const result2 = await Promise.race([
-          (async () => {
-            const value = await this.get(input3);
-            bounded.throwIfAborted();
-            if (!active.has(value.state) || !mapper?.wait) return null;
-            return mapper.wait(
-              { requestKey: value.map.requestKey, runId: value.map.runId },
-              bounded
-            );
-          })(),
-          new Promise((_, reject) => {
-            abort = () => reject(bounded.reason);
-            bounded.addEventListener("abort", abort, { once: true });
-            if (bounded.aborted) abort();
-          })
-        ]);
-        return result2 ? applyMap(input3, result2) : read(input3);
-      } catch (error63) {
-        if (signal?.aborted) {
-          await Promise.race([
-            this.stop({
-              ...input3,
-              requestKey: `interrupt-${original2.map?.requestKey ?? original2.contextId}`
-            }),
-            new Promise((resolve4) => {
-              stopDeadline = () => resolve4();
-              deadline.signal.addEventListener("abort", stopDeadline, {
-                once: true
-              });
-              if (deadline.signal.aborted) stopDeadline();
-            })
-          ]);
-        } else if (!deadline.signal.aborted) throw error63;
-        return read(input3);
-      } finally {
-        clearTimeout(timer);
-        bounded.removeEventListener("abort", abort);
-        if (stopDeadline)
-          deadline.signal.removeEventListener("abort", stopDeadline);
-      }
-    },
-    async retry(raw, signal, invocation) {
-      const observer = snapshotObserver();
-      const input3 = commandSchema.parse(raw), value = read(input3);
-      await verify(value);
-      const previous = store.command("retry", input3.requestKey, digest4(input3));
-      if (previous) return summarize({ ...previous, recovered: true });
-      const reserved = reserve(
-        "retry",
-        input3,
-        value.configuration,
-        value.sourceIdentity,
-        true
-      );
-      if (reserved.retainedSelection) {
-        try {
-          void Promise.resolve(
-            observer?.retainedMapSelected?.({
-              ...reserved.retainedSelection,
-              transition: "persisted-retained-selection",
-              persisted: true,
-              validated: true
-            })
-          ).catch(() => {
-          });
-        } catch {
-        }
-      }
-      if (reserved.value) {
-        started(reserved.value, observer);
-        await initialize(reserved.value, signal, invocation);
-      }
-      return summarize(reserved.receipt);
-    },
-    async stop(raw) {
-      const input3 = commandSchema.parse(raw);
-      let stoppedBeforeAdmission = false;
-      const reserved = store.transaction(() => {
-        const hash6 = digest4(input3), previous = store.command("stop", input3.requestKey, hash6);
-        if (previous) {
-          const value2 = read(input3);
-          return {
-            receipt: { ...previous, recovered: true },
-            value: value2,
-            cancel: value2.state === "stop-requested"
-          };
-        }
-        const value = read(input3);
-        const cancel = active.has(value.state);
-        if (value.state === "awaiting-authority") {
-          value.state = "stopped";
-          value.progress = mapper ? "Stopped before map admission" : "Setup stopped before configuration completed";
-          store.put(value);
-          stoppedBeforeAdmission = true;
-        }
-        if (cancel) {
-          value.state = "stop-requested";
-          value.progress = "Stop requested for this original map";
-          store.put(value);
-        }
-        const receipt2 = {
-          ...handle(value),
-          runId: value.map?.runId ?? null,
-          cancellationRequested: cancel
-        };
-        store.receipt("stop", input3.requestKey, hash6, receipt2);
-        return { receipt: receipt2, value, cancel };
-      });
-      if (stoppedBeforeAdmission) finished2(reserved.value, true);
-      if (reserved.cancel && mapper) {
-        try {
-          applyMap(
-            input3,
-            await mapper.stop({
-              requestKey: reserved.value.map.requestKey,
-              runId: reserved.value.map.runId
-            })
-          );
-        } catch {
-        }
-      }
-      return summarize(reserved.receipt, true);
-    },
-    async resolve(raw) {
-      const input3 = resolveSchema.parse(raw), value = read(input3);
-      await verify(value);
-      if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
-        throw new SetupFailure("stale_application_context");
-      if (value.schema === "loki.setup-context/4" && value.state === "ready") {
-        const source4 = value.configuration.source;
-        const target2 = value.configuration.target ?? null;
-        const workItem = value.configuration.workItem ?? null;
-        return {
-          application: {
-            schema: "loki.application-context/3",
-            contextId: digest4({
-              source: source4,
-              target: target2,
-              workItem,
-              provenance: value.provenance
-            }),
-            source: source4,
-            target: target2,
-            workItem,
-            map: null,
-            readiness: {
-              state: "configured",
-              missing: [],
-              map: "not-required",
-              browserObserved: false
-            },
-            provenance: value.provenance
-          },
-          setup: {
-            ...handle(value),
-            mapRunId: null,
-            mapResultId: null,
-            configurationRefs: value.configuration.configurationRefs,
-            authorityRef: null
-          },
-          authority: "configuration-only"
-        };
-      }
-      if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
-        throw new SetupFailure("application_not_ready");
-      const source3 = value.configuration.source, target = value.configuration.target ?? null;
-      const map2 = {
-        mapId: value.map.data.mapId,
-        runId: value.map.runId,
-        resultId: value.map.resultId,
-        sourceRevision: source3.revision,
-        preview: value.map.data
-      };
-      const readiness2 = {
-        state: "ready",
-        missing: [],
-        ...value.map.data.readinessScope ? { scope: value.map.data.readinessScope } : {}
-      };
-      const application = {
-        schema: "loki.application-context/2",
-        contextId: digest4({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
-        source: source3,
-        target: target ?? null,
-        map: map2,
-        readiness: readiness2,
-        provenance: provenance2
-      };
-      return {
-        application,
-        setup: {
-          ...handle(value),
-          mapRunId: value.map.runId,
-          mapResultId: value.map.resultId,
-          configurationRefs: value.configuration.configurationRefs,
-          authorityRef: value.authorityRef
-        },
-        authority: value.authorityKind
-      };
-    },
-    async handoff(raw) {
-      const input3 = handoffSchema.parse(raw);
-      if (!consumer || (await consumer.readiness?.())?.length)
-        throw new SetupFailure("consumer_integration_unavailable");
-      const payload = await this.resolve({
-        applicationId: input3.applicationId,
-        contextId: input3.contextId,
-        expectedRevision: input3.expectedRevision,
-        expectedProfileRevision: input3.expectedProfileRevision
-      });
-      const hash6 = digest4(input3);
-      const reserved = store.transaction(() => {
-        const previous = store.command("handoff", input3.requestKey, hash6);
-        if (previous) return { receipt: previous, recovered: true };
-        const receipt2 = {
-          ...payload,
-          consumer: { state: "pending", provenance: provenance2 }
-        };
-        store.receipt("handoff", input3.requestKey, hash6, receipt2);
-        return { receipt: receipt2, recovered: false };
-      });
-      if (reserved.receipt.consumer.state !== "pending")
-        return { ...reserved.receipt, recovered: true };
-      const request3 = { requestKey: input3.requestKey, ...payload };
-      let rawResult;
-      try {
-        rawResult = reserved.recovered ? await consumer.get?.(request3) : await consumer.accept(request3);
-      } catch {
-        return { ...reserved.receipt, recovered: reserved.recovered };
-      }
-      if (!rawResult)
-        return { ...reserved.receipt, recovered: reserved.recovered };
-      const result2 = consumerReceiptSchema.parse(rawResult);
-      if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
-        throw new SetupFailure("consumer_scope_mismatch");
-      return store.transaction(() => {
-        const prior = store.command("handoff", input3.requestKey, hash6);
-        if (prior.consumer.state !== "pending")
-          return { ...prior, recovered: true };
-        const receipt2 = { ...payload, consumer: result2 };
-        store.complete("handoff", input3.requestKey, hash6, receipt2);
-        return receipt2;
-      });
-    },
-    close() {
-      for (const observer of telemetryByContext.values()) {
-        try {
-          observer.close?.();
-        } catch {
-        }
-      }
-      telemetryByContext.clear();
-      telemetryStarts.clear();
-      store.close();
-    }
-  };
-  return api;
-}
-
-// apps/codex-plugin/src/setup/onboarding.mjs
-var inputSchema2 = external_exports.strictObject({
-  applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
-  task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
-});
-var outputSchema2 = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.onboarding/1"),
-  applicationURL: external_exports.string(),
-  task: external_exports.string()
-});
-function createOnboarding(ui) {
-  if (!ui?.onboardingUri) return void 0;
-  return {
-    tool: {
-      name: "kaijan_onboarding_show",
-      title: "Set up Kaijan",
-      description: "Open Kaijan's getting-started panel from post-install Set up or when the person asks to set up Kaijan. Prefill the application URL and original request when known. Opening this panel does not start a test or save credentials.",
-      inputSchema: external_exports.toJSONSchema(inputSchema2),
-      outputSchema: external_exports.toJSONSchema(outputSchema2),
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: true,
-        openWorldHint: false
-      },
-      _meta: { ui: { resourceUri: ui.onboardingUri } }
-    },
-    invoke(input3) {
-      const parsed = inputSchema2.safeParse(input3 ?? {});
-      if (!parsed.success) {
-        const message = "Invalid onboarding input. Use the advertised schema.";
-        const error63 = new McpError(ErrorCode.InvalidParams, message);
-        error63.message = message;
-        throw error63;
-      }
-      const result2 = {
-        schema: "kaijan.onboarding/1",
-        applicationURL: parsed.data.applicationURL ?? "",
-        task: parsed.data.task ?? ""
-      };
-      return {
-        structuredContent: result2,
-        content: [{ type: "text", text: JSON.stringify(result2) }]
-      };
-    }
-  };
-}
-
-// apps/codex-plugin/src/setup/customer-output.mjs
-var configuration = external_exports.object({
-  source: sourceSchema,
-  workItem: external_exports.string().optional(),
-  target: targetSchema.optional(),
-  configurationRefs: external_exports.array(
-    external_exports.object({
-      kind: external_exports.enum(["source", "target"]),
-      handle: external_exports.string()
-    })
-  )
-});
-var state = external_exports.enum([
-  "awaiting-confirmation",
-  "blocked",
-  "preparing",
-  "uncertain",
-  "stop-requested",
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var handle2 = {
-  applicationId: identity3,
-  contextId: identity3,
-  version: external_exports.number().int().positive()
-};
-var summary = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-setup/1"),
-  ...handle2,
-  state,
-  missing: external_exports.array(external_exports.string()),
-  nextAction: external_exports.string(),
-  recovered: external_exports.boolean().optional(),
-  reused: external_exports.boolean().optional(),
-  cancellationRequested: external_exports.boolean().optional(),
-  supersededBy: identity3.optional(),
-  configuration: configuration.optional(),
-  notice: external_exports.string().optional()
-});
-var list = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-setup-list/1"),
-  contexts: external_exports.array(
-    external_exports.object({
-      ...handle2,
-      source: sourceSchema,
-      target: targetSchema.optional(),
-      state,
-      supersededBy: identity3.nullable(),
-      notice: external_exports.string().optional()
-    })
-  ),
-  nextOffset: external_exports.number().int().nonnegative().nullable()
-});
-var resolved = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-application/1"),
-  application: external_exports.object({
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    workItem: external_exports.string().nullable(),
-    readiness: external_exports.object({
-      state: external_exports.literal("configured"),
-      browserObserved: external_exports.literal(false),
-      applicationCoverage: external_exports.literal("not-verified")
-    })
-  }),
-  setup: external_exports.object(handle2),
-  nextAction: external_exports.string(),
-  consumer: external_exports.object({
-    state: external_exports.enum(["pending", "accepted", "refused"]),
-    accepted: external_exports.boolean().optional()
-  }).optional(),
-  recovered: external_exports.boolean().optional(),
-  notice: external_exports.string().optional()
-});
-var error62 = external_exports.object({
-  error: external_exports.object({ code: external_exports.string(), message: external_exports.string() })
-});
-var customerSetupOutputSchemas = Object.fromEntries(
-  [
-    ["loki_setup_list", list],
-    ...["prepare", "get", "wait", "retry", "stop"].map((name) => [
-      `loki_setup_${name}`,
-      summary
-    ]),
-    ["loki_setup_resolve", resolved],
-    ["loki_setup_handoff", resolved]
-  ].map(([name, success2]) => [name, external_exports.union([success2, error62])])
-);
-var statuses = {
-  "awaiting-authority": "awaiting-confirmation",
-  admitting: "preparing",
-  mapping: "preparing"
-};
-var status2 = (value) => state.parse(statuses[value] ?? value);
-var selection2 = (value) => configuration.parse({
-  ...value,
-  configurationRefs: value.configurationRefs.filter(
-    (ref) => ["source", "target"].includes(ref.kind)
-  )
-});
-var notice = (value) => value.provenance?.kind === "controlled-fixture" ? { notice: "Test data only. This does not verify the application." } : {};
-var missingLabels = {
-  "source-authorization": "Permission to read the selected source",
-  "work-item-or-mapping-question": "The work item to check",
-  "model-provider": "Kaijan sign-in and connection",
-  "admitted-map-producer": "Application setup support"
-};
-function nextAction(value) {
-  switch (value.state) {
-    case "ready":
-      return "Source context is saved. For planning, use the original work item from Setup or this chat and relevant source. Running tests needs a target and authorization. Setup does not verify application behavior.";
-    case "uncertain":
-      return "Read this original context to check what happened. Do not retry or create replacement work while its effects are unknown.";
-    case "stop-requested":
-      return "Stop is still pending. Read this original context again; do not assume the work has stopped.";
-    case "mapping":
-    case "admitting":
-      return "Preparation is unfinished. Keep this saved context and check its state. Do not start replacement work.";
-    case "blocked":
-    case "awaiting-authority":
-      return "Resolve the listed missing input or access, then retry only this known blocked setup when authorized.";
-    case "superseded":
-      return "This context has been replaced. Read the replacement context before continuing.";
-    case "incomplete":
-      return "Only part of the source context is available. Keep the saved record and resolve the missing input before continuing.";
-    default:
-      return "Setup did not complete. Keep the original context and check the selected source and access before an authorized retry.";
-  }
-}
-var failures = {
-  consumer_integration_unavailable: [
-    "application_connection_unavailable",
-    "This application connection is unavailable. Your saved source remains available for planning and testing."
-  ],
-  unknown_application_context: [
-    "setup_unavailable",
-    "This saved Setup is unavailable in this chat. Use its original chat and exact application and context IDs."
-  ],
-  request_conflict: [
-    "request_conflict",
-    "This request key belongs to different input. Read its original Setup. Use a new key only for separately authorized new work; never to recover unknown effects."
-  ],
-  retry_not_required: [
-    "retry_not_required",
-    "Read the saved Setup. Retry only known failed, stopped or blocked work after its missing input changes or when requested."
-  ],
-  stale_application_context: [
-    "stale_application_context",
-    "Use the exact source and target revisions from the saved Setup. A different source selection requires a new request."
-  ],
-  application_not_ready: [
-    "application_not_ready",
-    "Setup is not ready. Read its saved state and resolve the missing input or access."
-  ],
-  source_revision_unavailable: [
-    "source_revision_unavailable",
-    "The selected source revision is unavailable. No Setup context was saved. Check the repository and your access, then select an available branch or commit."
-  ],
-  source_revision_ambiguous: [
-    "source_revision_ambiguous",
-    "The selected source revision is ambiguous. No Setup context was saved. Supply an exact commit."
-  ],
-  invalid_source: [
-    "invalid_source",
-    "The selected source cannot be read. Check the project directory and repository access."
-  ],
-  source_identity_changed: [
-    "source_changed",
-    "The selected source has changed. Review the source selection before continuing."
-  ],
-  setup_interrupted: [
-    "setup_interrupted",
-    "The request was interrupted. Read the original Setup to check its state before continuing. Do not replay unknown effects."
-  ]
-};
-function customerSetupFailure(code) {
-  const [safeCode, message] = failures[code] ?? [
-    "setup_unavailable",
-    "Setup could not complete. Read the original saved context and check the selected source and access. Do not replay work with unknown effects."
-  ];
-  return error62.parse({ error: { code: safeCode, message } });
-}
-function projectCustomerSetup(name, value) {
-  if (value.error && typeof value.error === "object")
-    return customerSetupFailure(value.error.code);
-  if (name === "loki_setup_list")
-    return list.parse({
-      schema: "kaijan.customer-setup-list/1",
-      contexts: value.contexts.map((item) => ({
-        ...item,
-        state: status2(item.state),
-        ...notice(item)
-      })),
-      nextOffset: value.nextOffset
-    });
-  if (["loki_setup_resolve", "loki_setup_handoff"].includes(name)) {
-    const application = value.application;
-    return resolved.parse({
-      schema: "kaijan.customer-application/1",
-      application: {
-        contextId: application.contextId,
-        source: application.source,
-        target: application.target,
-        workItem: application.workItem ?? application.readiness.scope?.workItem ?? null,
-        readiness: {
-          state: "configured",
-          browserObserved: false,
-          applicationCoverage: "not-verified"
-        }
-      },
-      setup: value.setup,
-      nextAction: "For planning, use the saved work item and relevant source as input, not these Setup IDs. Setup does not create a test plan or check application behavior. Testing needs its own authorization.",
-      ...value.consumer ? {
-        consumer: value.consumer.state === "pending" ? { state: "pending" } : {
-          state: value.consumer.accepted ? "accepted" : "refused",
-          accepted: value.consumer.accepted
-        }
-      } : {},
-      ...value.recovered === void 0 ? {} : { recovered: value.recovered },
-      ...notice(application)
-    });
-  }
-  return summary.parse({
-    schema: "kaijan.customer-setup/1",
-    ...Object.fromEntries(
-      [
-        "applicationId",
-        "contextId",
-        "version",
-        "recovered",
-        "reused",
-        "supersededBy",
-        "cancellationRequested"
-      ].filter((key) => value[key] !== void 0).map((key) => [key, value[key]])
-    ),
-    state: status2(value.state),
-    missing: [
-      ...new Set(
-        value.missing.map(
-          (item) => missingLabels[item] ?? "Application setup needs attention"
-        )
-      )
-    ],
-    nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
-    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
-    ...notice(value)
-  });
-}
-var customerSetupDescriptions = {
-  loki_setup_list: "Find saved application setups for the selected project directory. This does not start tests or change the source.",
-  loki_setup_prepare: "Save the selected application's committed source revision, work item and optional test target. Resolve the selected Git ref without changing the checkout; unsaved edits are not included. Keep the same requestKey after a lost reply. This does not test application behavior.",
-  loki_setup_get: "Read the original saved application setup and its current state. Do not recreate unfinished work to recover a result.",
-  loki_setup_wait: "Read or wait for the original Setup state. Do not restart unfinished work or assume unknown effects have stopped.",
-  loki_setup_retry: "Retry only a known failed, stopped or blocked Setup after its missing input changes or the user requests it. Keep the original source selection. Do not replay work with unknown effects.",
-  loki_setup_stop: "Request Stop for this exact original Setup. Read its state afterward; a request alone does not confirm it stopped.",
-  loki_setup_resolve: "Read the configured application source, work item and optional target using the exact saved source and target revisions. Returned context IDs select application configuration, not a planning-input record. For planning, reuse the original workItem text and relevant source as input. Setup is not a test result and grants no permission to run tests.",
-  loki_setup_handoff: "Use the saved application configuration with an available connected application. Acknowledgment does not verify application behavior."
-};
-
-// apps/codex-plugin/src/setup/mcp.mjs
-var customerPrepareSchema = prepareSchema.extend({
-  configuration: prepareSchema.shape.configuration.extend({
-    configurationRefs: external_exports.array(
-      external_exports.strictObject({
-        kind: external_exports.enum(["source", "target"]),
-        handle: external_exports.string().min(1).max(200)
-      })
-    ).max(30).default([])
-  })
-});
-function invalidSetupInput(message, data) {
-  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
-  error63.message = message;
-  return error63;
-}
-async function createSetupTools({
-  directory,
-  mapper,
-  consumer,
-  createTelemetry,
-  ui,
-  authorize = async () => {
-    throw new SetupFailure("source_authorization_adapter_unavailable");
-  }
-}) {
-  const setup = await createSetup({
-    directory,
-    mapper,
-    consumer,
-    authorize,
-    createTelemetry
-  });
-  const definitions = [
-    [
-      "loki_setup_list",
-      "Find retained Setup contexts for the explicitly selected project directory. No source scan, mapping, provider call or authority grant.",
-      listSchema,
-      (input3) => setup.list(input3),
-      true
-    ],
-    [
-      "loki_setup_prepare",
-      "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
-      customerPrepareSchema,
-      (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
-      false
-    ],
-    [
-      "loki_setup_get",
-      "Reconcile the original map receipt and persist the updated Setup context. Progress/failure and cancellation remain explicit; this never starts another map.",
-      handleSchema,
-      (input3) => setup.get(input3),
-      false
-    ],
-    [
-      "loki_setup_wait",
-      "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
-      waitSchema,
-      (input3, signal) => setup.wait(input3, signal),
-      false
-    ],
-    [
-      "loki_setup_retry",
-      "Retry a known failed, stopped or blocked Setup after the user requests it or supplies its actual missing prerequisite. This can send the selected committed source to the configured provider within the original $10/5400-second scope. The native host applies its selected approval policy; no second mandatory form. Preserve the original revision/evidence and automatically admit the replacement when ready. Never replay uncertain effects.",
-      commandSchema,
-      (input3, signal, invocation) => setup.retry(input3, signal, invocation),
-      false
-    ],
-    [
-      "loki_setup_stop",
-      "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
-      commandSchema,
-      (input3) => setup.stop(input3),
-      false
-    ],
-    [
-      "loki_setup_resolve",
-      "Resolve a ready context with explicit expected source and target-profile revisions. Read readiness.scope: a source-inferred work-item map has incomplete application coverage and no observed browser behavior. Returns source-bound references; a handle grants no browser/source/provider access.",
-      resolveSchema,
-      (input3) => setup.resolve(input3),
-      true
-    ],
-    [
-      "loki_setup_handoff",
-      "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
-      handoffSchema,
-      (input3) => setup.handoff(input3),
-      false
-    ]
-  ];
-  const onboarding = createOnboarding(ui);
-  const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
-    name,
-    description: customerSetupDescriptions[name],
-    inputSchema: {
-      ...external_exports.toJSONSchema(schema, { io: "input" }),
-      $id: `urn:loki:${name}:input:1`
-    },
-    outputSchema: {
-      type: "object",
-      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
-      $id: `urn:kaijan:${name}:customer-output:1`
-    },
-    ...ui ? { _meta: { ui: { resourceUri: ui.resources[0].uri } } } : {},
-    annotations: {
-      readOnlyHint: readOnly,
-      destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
-        name
-      ),
-      idempotentHint: true,
-      openWorldHint: !readOnly
-    }
-  }));
-  if (onboarding) tools2.push(onboarding.tool);
-  const invoke = async (name, arguments_, signal, invocation) => {
-    if (name === onboarding?.tool.name) return onboarding.invoke(arguments_);
-    const definition = definitions.find(([toolName]) => toolName === name);
-    if (!definition) throw invalidSetupInput("Unknown Setup tool");
-    const parsed = definition[2].safeParse(arguments_ ?? {});
-    if (!parsed.success) {
-      const fields = [
-        ...new Set(
-          parsed.error.issues.filter((issue3) => issue3.path.length).map((issue3) => issue3.path.join("."))
-        )
-      ];
-      throw invalidSetupInput(
-        fields.length ? `Invalid Setup input. Supply valid values for: ${fields.join(", ")}.` : "Invalid Setup input. Use the advertised schema.",
-        { code: "invalid_setup_input", fields }
-      );
-    }
-    try {
-      signal?.throwIfAborted();
-      const result2 = await definition[3](parsed.data, signal, invocation);
-      const text4 = JSON.stringify(result2);
-      const original2 = JSON.parse(text4);
-      if (!setupSuccessSchemas[name].safeParse(original2).success)
-        throw new SetupFailure("setup_output_invalid");
-      const wire = projectCustomerSetup(name, original2);
-      return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
-        structuredContent: wire,
-        content: [{ type: "text", text: JSON.stringify(wire) }]
-      };
-    } catch (error63) {
-      const result2 = customerSetupFailure(failure3(error63).code);
-      return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
-        isError: true,
-        structuredContent: result2,
-        content: [{ type: "text", text: JSON.stringify(result2) }]
-      };
-    }
-  };
-  return {
-    tools: tools2,
-    resources: ui?.resources ?? [],
-    readResource: ui?.readResource,
-    // Configuration-only Setup returns synchronously. There is no mapping job
-    // to wait for or stop, and no handoff when no consumer is connected.
-    hiddenTools: [
-      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
-      ...!consumer ? ["loki_setup_handoff"] : []
-    ],
-    invoke,
-    setup,
-    close: () => setup.close()
-  };
-}
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-import process5 from "node:process";
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
-var STDIO_DEFAULT_MAX_BUFFER_SIZE = 10 * 1024 * 1024;
-var ReadBuffer = class {
-  constructor(options) {
-    this._maxBufferSize = options?.maxBufferSize ?? STDIO_DEFAULT_MAX_BUFFER_SIZE;
-  }
-  append(chunk) {
-    const newSize = (this._buffer?.length ?? 0) + chunk.length;
-    if (newSize > this._maxBufferSize) {
-      this.clear();
-      throw new Error(`ReadBuffer exceeded maximum size of ${this._maxBufferSize} bytes`);
-    }
-    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
-  }
-  readMessage() {
-    if (!this._buffer) {
-      return null;
-    }
-    const index = this._buffer.indexOf("\n");
-    if (index === -1) {
-      return null;
-    }
-    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
-    this._buffer = this._buffer.subarray(index + 1);
-    return deserializeMessage(line);
-  }
-  clear() {
-    this._buffer = void 0;
-  }
-};
-function deserializeMessage(line) {
-  return JSONRPCMessageSchema.parse(JSON.parse(line));
-}
-function serializeMessage(message) {
-  return JSON.stringify(message) + "\n";
-}
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-var StdioServerTransport = class {
-  constructor(_stdin = process5.stdin, _stdout = process5.stdout, options) {
-    this._stdin = _stdin;
-    this._stdout = _stdout;
-    this._started = false;
-    this._ondata = (chunk) => {
-      try {
-        this._readBuffer.append(chunk);
-        this.processReadBuffer();
-      } catch (error63) {
-        this.onerror?.(error63);
-        this.close().catch(() => {
-        });
-      }
-    };
-    this._onerror = (error63) => {
-      this.onerror?.(error63);
-    };
-    this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
-  }
-  /**
-   * Starts listening for messages on stdin.
-   */
-  async start() {
-    if (this._started) {
-      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
-    }
-    this._started = true;
-    this._stdin.on("data", this._ondata);
-    this._stdin.on("error", this._onerror);
-  }
-  processReadBuffer() {
-    while (true) {
-      try {
-        const message = this._readBuffer.readMessage();
-        if (message === null) {
-          break;
-        }
-        this.onmessage?.(message);
-      } catch (error63) {
-        this.onerror?.(error63);
-      }
-    }
-  }
-  async close() {
-    this._stdin.off("data", this._ondata);
-    this._stdin.off("error", this._onerror);
-    const remainingDataListeners = this._stdin.listenerCount("data");
-    if (remainingDataListeners === 0) {
-      this._stdin.pause();
-    }
-    this._readBuffer.clear();
-    this.onclose?.();
-  }
-  send(message) {
-    return new Promise((resolve4) => {
-      const json3 = serializeMessage(message);
-      if (this._stdout.write(json3)) {
-        resolve4();
-      } else {
-        this._stdout.once("drain", resolve4);
-      }
-    });
-  }
-};
-
-// apps/codex-plugin/plugin/scripts/profile-state.mjs
-import { TextDecoder as TextDecoder2 } from "node:util";
-import { constants as constants4 } from "node:fs";
-import {
-  mkdir as mkdir5,
-  open as open4,
-  readdir,
-  realpath as realpath4,
-  stat,
-  link as link2,
-  unlink as unlink4
-} from "node:fs/promises";
-import { createHash as createHash4, randomUUID as randomUUID7 } from "node:crypto";
-import { dirname as dirname3, join as join7, resolve as resolve2 } from "node:path";
-async function bindProfileState(build, args, home) {
-  const host = build.host ?? "codex";
-  if (!["codex", "claude_code"].includes(host))
-    throw new Error("Unsupported plugin host.");
-  if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
-    throw new Error(
-      "Missing fixed plugin profile. Reinstall the selected artifact."
-    );
-  const identity4 = JSON.stringify({
-    profile: build.profile,
-    origin: build.coreOrigin,
-    client: build.oauthClientId
-  });
-  const key = createHash4("sha256").update(identity4).digest("hex").slice(0, 20);
-  let selected;
-  const forwarded = [];
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--state" || arg.startsWith("--state=")) {
-      if (selected !== void 0)
-        throw new Error("Supply one private state directory.");
-      selected = arg === "--state" ? args[++i] : arg.slice(8);
-      if (!selected || selected.startsWith("--"))
-        throw new Error("Missing private state directory.");
-    } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const requested = arg === "--host" ? args[++i] : arg.slice(7);
-      if (requested !== host)
-        throw new Error(
-          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
-        );
-    } else forwarded.push(arg);
-  }
-  const state2 = resolve2(
-    selected ?? join7(home, ".local", "share", "loki", host, build.profile, key)
-  );
-  await mkdir5(state2, { recursive: true, mode: 448 });
-  if (await realpath4(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
-    throw new Error("Use a canonical private state directory with mode 0700.");
-  const path = join7(state2, "plugin-profile.json");
-  const expected = {
-    schemaVersion: 1,
-    profile: build.profile,
-    coreOrigin: build.coreOrigin,
-    oauthClientId: build.oauthClientId
-  };
-  let file2;
-  const readBinding = () => open4(
-    path,
-    constants4.O_RDONLY | constants4.O_NOFOLLOW | constants4.O_NONBLOCK
-  );
-  try {
-    file2 = await readBinding();
-  } catch (error63) {
-    if (error63.code !== "ENOENT") throw error63;
-    if ((await readdir(state2)).length) {
-      try {
-        file2 = await readBinding();
-      } catch (readError) {
-        if (readError.code !== "ENOENT") throw readError;
-        throw new Error(
-          "Unbound populated state cannot be reused. Select a fresh profile state; do not copy credentials.",
-          { cause: readError }
-        );
-      }
-    } else {
-      const temporary = join7(dirname3(state2), `.loki-profile-${randomUUID7()}`);
-      const created = await open4(temporary, "wx", 384);
-      try {
-        try {
-          await created.writeFile(JSON.stringify(expected));
-          await created.sync();
-        } finally {
-          await created.close();
-        }
-        try {
-          await link2(temporary, path);
-        } catch (linkError) {
-          if (linkError.code !== "EEXIST") throw linkError;
-        }
-      } finally {
-        await unlink4(temporary);
-      }
-      file2 = await readBinding();
-    }
-  }
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || info.size > 4096 || (info.mode & 63) !== 0)
-      throw new Error("Invalid private profile binding.");
-    const actual = JSON.parse(
-      new TextDecoder2("utf-8", { fatal: true }).decode(await file2.readFile())
-    );
-    if (JSON.stringify(actual) !== JSON.stringify(expected))
-      throw new Error(
-        "Private state belongs to a different environment. Select its own state directory."
-      );
-  } finally {
-    await file2.close();
-  }
-  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
-}
-
-// apps/codex-plugin/src/claude-tool-schema.mjs
-var alternatives = /* @__PURE__ */ new Map([
-  [
-    "loki_test_execute",
-    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
-  ],
-  [
-    "loki_report_show",
-    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
-  ]
-]);
-var sourceAlternatives = /* @__PURE__ */ new Map([
-  ["loki_pr_context_find_related", ["url", "context", "contextId"]],
-  ["loki_context_finder_find_related", ["url", "context", "contextId"]],
-  ["loki_change_risk_analyze", ["packet", "contextId"]],
-  ["loki_risk_finder_analyze", ["packet", "contextId"]],
-  ["loki_test_plan", ["input", "contextId"]],
-  ["loki_test_supplement", ["input", "contextId"]],
-  ["loki_test_evidence_assess", ["input", "contextId"]]
-]);
-function sourceDefinition(tool2, fields, host = "Claude") {
-  const { oneOf, ...root } = tool2.inputSchema;
-  if (root.type !== "object" || !root.properties || root.additionalProperties !== false || root.anyOf !== void 0 || root.allOf !== void 0 || !Array.isArray(oneOf) || oneOf.length !== fields.length || oneOf.some(
-    (branch, index) => !branch || Object.keys(branch).length !== 1 || !Array.isArray(branch.required) || branch.required.length !== 1 || branch.required[0] !== fields[index] || !Object.hasOwn(root.properties, fields[index])
-  ))
-    throw new Error(`Unsupported ${host} advisory source layout.`);
-  return {
-    ...tool2,
-    inputSchema: root,
-    description: `${tool2.description}
-Supply exactly one source: ${fields.join(", ")}. Do not combine source forms. The receiver validates the selected source before starting work.`
-  };
-}
-function codexToolDefinition(tool2) {
-  const sources = tool2 && sourceAlternatives.get(tool2.name);
-  return sources && tool2.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool2, sources, "Codex") : tool2;
-}
-function claudeToolDefinition(tool2) {
-  const sources = tool2 && sourceAlternatives.get(tool2.name);
-  if (sources && tool2.inputSchema?.oneOf !== void 0)
-    return sourceDefinition(tool2, sources);
-  const guidance = tool2 && alternatives.get(tool2.name);
-  if (!guidance || !Array.isArray(tool2.inputSchema?.anyOf)) return tool2;
-  const { anyOf, ...root } = tool2.inputSchema;
-  if (anyOf.length < 2 || anyOf.some(
-    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
-      (key) => ![
-        "type",
-        "properties",
-        "required",
-        "additionalProperties"
-      ].includes(key)
-    )
-  ))
-    throw new Error("Unsupported Claude tool input layout.");
-  const properties = {};
-  for (const branch of anyOf)
-    for (const [name, schema] of Object.entries(branch.properties)) {
-      const previous = properties[name];
-      if (previous === void 0) properties[name] = schema;
-      else if (JSON.stringify(previous) !== JSON.stringify(schema))
-        throw new Error("Conflicting Claude tool input field.");
-    }
-  const required2 = (anyOf[0].required ?? []).filter(
-    (name) => anyOf.every((branch) => branch.required?.includes(name))
-  );
-  return {
-    ...tool2,
-    inputSchema: {
-      ...root,
-      type: "object",
-      properties,
-      ...required2.length ? { required: required2 } : {},
-      additionalProperties: false
-    },
-    description: `${tool2.description}
-${guidance}`
-  };
-}
-
-// apps/codex-plugin/src/customer-plan-selection.mjs
-import { isDeepStrictEqual } from "node:util";
 
 // packages/contracts/dist/report-evidence.js
-var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
 var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
 var reportedTestStatusSchema = external_exports.enum([
@@ -50583,7 +47745,7 @@ var reportedTestSchema = external_exports.strictObject({
     revision: nonempty,
     language: nonempty,
     text: nonempty,
-    sha256: digest5
+    sha256: digest4
   }).nullable()
 }).superRefine((test, ctx) => {
   if (new Set(test.steps.map((step2) => step2.id)).size !== test.steps.length)
@@ -50606,9 +47768,9 @@ var reportPullRequestSchema = external_exports.strictObject({
   title: nonempty,
   state: external_exports.enum(["open", "closed", "merged"]),
   author: nonempty,
-  base: external_exports.strictObject({ ref: nonempty, sha: revision2 }),
-  head: external_exports.strictObject({ ref: nonempty, sha: revision2 }),
-  mergeCommit: revision2.nullable(),
+  base: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  head: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  mergeCommit: revision.nullable(),
   openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
   capturedAt: external_exports.iso.datetime({ offset: true }),
   files: external_exports.array(external_exports.strictObject({
@@ -50621,7 +47783,7 @@ var reportPullRequestSchema = external_exports.strictObject({
   source: external_exports.strictObject({
     kind: external_exports.literal("supplied-github-read"),
     record: external_exports.json(),
-    sha256: digest5
+    sha256: digest4
   })
 }).superRefine((pr, ctx) => {
   if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
@@ -50636,14 +47798,14 @@ var reportPullRequestSchema = external_exports.strictObject({
     });
 });
 var reportVerificationSchema = external_exports.strictObject({
-  planRef: external_exports.strictObject({ answerId: digest5, resultSha256: digest5 }),
+  planRef: external_exports.strictObject({ answerId: digest4, resultSha256: digest4 }),
   repository,
-  sourceRevision: revision2,
+  sourceRevision: revision,
   pullRequestUrl: external_exports.url().nullable(),
   recordedAt: external_exports.iso.datetime({ offset: true }),
   provenance: external_exports.literal("product-terminal-checks/1"),
   oracle: nonempty,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest5 })).min(1),
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest4 })).min(1),
   tests: external_exports.array(reportedTestSchema).min(1)
 }).superRefine((run, ctx) => {
   if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
@@ -50659,7 +47821,7 @@ var reportVerificationSchema = external_exports.strictObject({
     });
 });
 var reportExecutionSchema = reportVerificationSchema.safeExtend({
-  runId: digest5
+  runId: digest4
 });
 var reportEvidenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.report-evidence/1"),
@@ -50695,7 +47857,7 @@ var reportSourcesSchema = external_exports.strictObject({
 
 // packages/contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
-var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var terminalChecksSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.terminal-checks/1"),
   repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
@@ -50729,13 +47891,13 @@ var terminalChecksSchema = external_exports.strictObject({
   }
 });
 var checkedPlanReferenceSchema = external_exports.strictObject({
-  answerId: digest6,
-  resultSha256: digest6,
+  answerId: digest5,
+  resultSha256: digest5,
   selectedTestIds: external_exports.array(nonempty2).min(1)
 });
 
 // packages/contracts/dist/report-view.js
-var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var groupSchema = external_exports.object({
   key: external_exports.enum([
     "why",
@@ -50767,9 +47929,9 @@ var reportItemSchema = external_exports.object({
 var sectionBase = external_exports.object({
   title: external_exports.string(),
   kind: external_exports.enum(["plan", "runner", "assessment"]),
-  sourceId: digest7,
+  sourceId: digest6,
   sourceKind: external_exports.enum(["answer", "run"]),
-  resultSha256: digest7.nullable(),
+  resultSha256: digest6.nullable(),
   operationState: external_exports.string(),
   stopRequested: external_exports.boolean().nullable().optional(),
   producerStatus: external_exports.object({
@@ -50789,7 +47951,7 @@ var sectionBase = external_exports.object({
     supplied: external_exports.boolean().optional()
   })),
   items: external_exports.array(reportItemSchema),
-  assessedRunIds: external_exports.array(digest7).optional(),
+  assessedRunIds: external_exports.array(digest6).optional(),
   localArtifacts: external_exports.object({
     kind: external_exports.enum(["browser", "desktop", "unavailable"]),
     message: external_exports.string(),
@@ -50807,15 +47969,15 @@ var reportSectionSchema = external_exports.union([
 ]);
 var reportViewSchema = external_exports.object({
   schema: external_exports.literal("loki.report-view/3"),
-  reportId: digest7,
+  reportId: digest6,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest7.nullable(),
+  mapId: digest6.nullable(),
   sections: external_exports.array(reportSectionSchema),
   displayNotice: external_exports.string().nullable(),
   evidenceContext: external_exports.object({
-    contextId: digest7,
-    recordSha256: digest7,
+    contextId: digest6,
+    recordSha256: digest6,
     readTool: external_exports.literal("loki_context_get"),
     provenance: external_exports.string()
   }).optional(),
@@ -50835,7 +47997,7 @@ var reportReadOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/advisory-read.js
-var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var advisoryReadInputSchema = external_exports.strictObject({
   family: external_exports.enum([
     "uiModeler",
@@ -50846,14 +48008,14 @@ var advisoryReadInputSchema = external_exports.strictObject({
     "testSupplement",
     "suppliedEvidence"
   ]),
-  answerId: digest8,
+  answerId: digest7,
   offset: external_exports.number().int().nonnegative().optional()
 }).meta({ $id: "urn:kaijan:advisory-read-input:1" });
 var advisoryReadSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.advisory-read/1"),
   state: external_exports.literal("complete"),
-  answerId: digest8,
-  resultSha256: digest8,
+  answerId: digest7,
+  resultSha256: digest7,
   resultChunk: external_exports.strictObject({
     encoding: external_exports.literal("JSON text, UTF-16 offsets"),
     offset: external_exports.number().int().nonnegative(),
@@ -50882,7 +48044,7 @@ var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advis
 
 // packages/contracts/dist/advisory.js
 var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
-var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var strings = external_exports.array(external_exports.string());
 var count4 = external_exports.number().int().nonnegative();
@@ -50942,12 +48104,12 @@ var record3 = external_exports.looseObject({
 });
 var assessmentImageReferenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.assessment-image-ref/1"),
-  reportId: digest9,
-  runId: digest9,
-  resultSha256: digest9,
-  manifestSha256: digest9,
-  artifactId: digest9,
-  sha256: digest9,
+  reportId: digest8,
+  runId: digest8,
+  resultSha256: digest8,
+  manifestSha256: digest8,
+  artifactId: digest8,
+  sha256: digest8,
   bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
@@ -50971,7 +48133,7 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
     media_type: external_exports.literal("image/png").optional(),
     reference: jsonObject.nullable(),
     provenance: jsonObject.nullable(),
-    sha256: digest9.optional(),
+    sha256: digest8.optional(),
     artifact_ref: assessmentImageReferenceSchema.optional()
   })),
   target: jsonObject.nullable(),
@@ -51037,7 +48199,7 @@ var evidenceCatalog = external_exports.array(external_exports.looseObject({
   revision: external_exports.string(),
   line: count4,
   quote: external_exports.string(),
-  quote_sha256: digest9
+  quote_sha256: digest8
 }));
 var nativePlanningResultSchema = external_exports.union([
   external_exports.looseObject({
@@ -51051,7 +48213,7 @@ var nativePlanningResultSchema = external_exports.union([
       tests: count4,
       objectives: count4
     }),
-    input_hash: digest9,
+    input_hash: digest8,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog
@@ -51108,7 +48270,7 @@ var nativeSupplementResultSchema = external_exports.union([
       text: external_exports.string(),
       uri: external_exports.string(),
       revision: external_exports.string(),
-      sha256: digest9,
+      sha256: digest8,
       bytes: count4,
       test_ids: strings
     }),
@@ -51117,10 +48279,10 @@ var nativeSupplementResultSchema = external_exports.union([
       status: external_exports.literal("structurally_valid_supplement"),
       executed: external_exports.literal(false),
       semantic_support: external_exports.literal("requires_separate_review"),
-      original_baseline_sha256: digest9,
+      original_baseline_sha256: digest8,
       original_baseline_test_ids: strings
     }),
-    input_hash: digest9,
+    input_hash: digest8,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog,
@@ -51131,8 +48293,8 @@ var nativeSupplementResultSchema = external_exports.union([
 var nativeAssessmentResultSchema = external_exports.looseObject({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  input_sha256: digest9,
-  request_sha256: digest9,
+  input_sha256: digest8,
+  request_sha256: digest8,
   assessment: external_exports.looseObject({
     schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
     original_candidate: jsonObject,
@@ -51162,7 +48324,7 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
   native_artifact_directory: external_exports.string(),
   complete_call_elapsed_seconds: external_exports.number().nonnegative(),
   provider_calls_started: count4,
-  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest9 })),
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest8 })),
   result_persisted: external_exports.boolean(),
   continuation_allowed: external_exports.boolean(),
   limitations: external_exports.string(),
@@ -51170,11 +48332,11 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
 });
 var advisoryIncompleteSchema = external_exports.strictObject({
   state: external_exports.enum(["unknown", "refused", "cancelled"]),
-  answerId: digest9.optional(),
+  answerId: digest8.optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count4,
-    sha256: digest9,
+    sha256: digest8,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional(),
   reason: external_exports.string(),
@@ -51192,7 +48354,7 @@ var advisoryIncompleteSchema = external_exports.strictObject({
 });
 var advisoryContextUnavailableSchema = external_exports.strictObject({
   state: external_exports.literal("unsupported-consumption"),
-  contextId: digest9,
+  contextId: digest8,
   capability: external_exports.string(),
   detail: jsonObject,
   contextRetained: external_exports.literal(true),
@@ -51232,7 +48394,7 @@ var clarificationPresentationSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/runner.js
-var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
 var questions = external_exports.array(external_exports.strictObject({
@@ -51296,7 +48458,7 @@ var runnerClarificationSchema = external_exports.strictObject({
 });
 var originalReference = external_exports.strictObject({
   path: external_exports.string(),
-  sha256: digest10,
+  sha256: digest9,
   bytes: count5
 });
 var checkpointReference = originalReference.extend({
@@ -51381,13 +48543,13 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
       provenance: jsonObject2
     }),
     verification: reportVerificationSchema.optional(),
-    sourceContextId: digest10.nullable().optional()
+    sourceContextId: digest9.nullable().optional()
   })
 ]);
 var runnerNextActionSchema = external_exports.strictObject({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: digest10,
+  runId: digest9,
   clarificationId: external_exports.string().min(1),
   deadlineAt: external_exports.string(),
   questions,
@@ -51395,7 +48557,7 @@ var runnerNextActionSchema = external_exports.strictObject({
 });
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
-  runId: digest10,
+  runId: digest9,
   state: external_exports.enum([
     "accepted",
     "running",
@@ -51416,14 +48578,14 @@ var operationBase = external_exports.strictObject({
   receiptDirectory: external_exports.string().optional(),
   providerCallsStarted: external_exports.literal(0).optional(),
   resultValidated: external_exports.boolean().optional(),
-  resultSha256: digest10.optional(),
+  resultSha256: digest9.optional(),
   resultBytes: count5.optional(),
-  resultRecordSha256: digest10.optional(),
+  resultRecordSha256: digest9.optional(),
   resultRecord: external_exports.json().optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count5,
-    sha256: digest10,
+    sha256: digest9,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional()
 });
@@ -51442,7 +48604,7 @@ var resultChunk = external_exports.strictObject({
 var finished = operationBase.extend({
   state: external_exports.literal("finished"),
   resultValidated: external_exports.literal(true),
-  resultSha256: digest10,
+  resultSha256: digest9,
   resultBytes: external_exports.number().int().positive()
 });
 var runnerOperationSchema = external_exports.union([
@@ -51463,7 +48625,7 @@ var runnerOperationSchema = external_exports.union([
 var runnerErrorSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-error/1"),
   method: external_exports.enum(["execute", "get", "stop"]),
-  runId: digest10.optional(),
+  runId: digest9.optional(),
   error: external_exports.strictObject({
     code: external_exports.enum([
       "invalid_arguments",
@@ -51484,7 +48646,7 @@ var runnerErrorSchema = external_exports.strictObject({
       action: external_exports.string(),
       instruction: external_exports.string(),
       requestKey: external_exports.string().optional(),
-      existingRunId: digest10.optional(),
+      existingRunId: digest9.optional(),
       existingRunScope: external_exports.string().optional()
     })
   })
@@ -51492,7 +48654,7 @@ var runnerErrorSchema = external_exports.strictObject({
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
 // packages/contracts/dist/assessment-preparation.js
-var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
 var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var assessmentReceiptSchema = external_exports.looseObject({
@@ -51504,10 +48666,10 @@ var assessmentPreparationLimits = {
   packetBytes: 2 * 1024 * 1024
 };
 var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
-  reportId: digest11,
-  runId: digest11,
+  reportId: digest10,
+  runId: digest10,
   view: external_exports.literal("inspection").optional(),
-  expectedResultSha256: digest11.optional(),
+  expectedResultSha256: digest10.optional(),
   work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
   requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
   proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
@@ -51516,23 +48678,23 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   preflight: assessmentReceiptSchema.nullable().optional(),
   runtimeComparison: assessmentReceiptSchema.nullable().optional(),
   cleanup: assessmentReceiptSchema.nullable().optional(),
-  selectedArtifactIds: external_exports.array(digest11).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+  selectedArtifactIds: external_exports.array(digest10).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
 var locator2 = external_exports.strictObject({
   report: external_exports.strictObject({
     tool: external_exports.literal("loki_report_get"),
-    reportId: digest11
+    reportId: digest10
   }),
   operation: external_exports.strictObject({
     tool: external_exports.literal("loki_runner_get"),
-    runId: digest11
+    runId: digest10
   }),
   artifacts: external_exports.strictObject({
     tool: external_exports.literal("loki_report_artifact_read"),
-    reportId: digest11,
-    runId: digest11
+    reportId: digest10,
+    runId: digest10
   }),
-  resultSha256: digest11.nullable()
+  resultSha256: digest10.nullable()
 });
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
@@ -51605,7 +48767,7 @@ var assessmentInspectionLocatorSchema = external_exports.union([
     document: external_exports.literal("full-preparation-packet"),
     pointer: external_exports.string()
   }),
-  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest11 })
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest10 })
 ]);
 var section = external_exports.strictObject({
   total: count6,
@@ -51759,7 +48921,7 @@ function transferAssessmentPresentationProof(source3, target, verifySource) {
       transferAssessmentPresentationProof(source3[key], target[key], verifySource);
   return target;
 }
-var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var customerCleanupFactsSchema = external_exports.object({
   kind: external_exports.literal("browser-cleanup"),
   scope: external_exports.literal("test-browser-resources"),
@@ -51775,8 +48937,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
   // display copy; serialized fields alone never grant source proof.
   projection: external_exports.object({
     schema: external_exports.literal("kaijan.customer-source-projection/1"),
-    sourceSha256: digest12,
-    sha256: digest12,
+    sourceSha256: digest11,
+    sha256: digest11,
     bytes: external_exports.number().int().nonnegative()
   }).optional(),
   state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
@@ -51789,8 +48951,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
     "supplied-source"
   ]).optional(),
   text: external_exports.string().optional(),
-  sha256: digest12.optional(),
-  sourceSha256: digest12.optional(),
+  sha256: digest11.optional(),
+  sourceSha256: digest11.optional(),
   facts: customerCleanupFactsSchema.optional(),
   notice: external_exports.string().optional()
 });
@@ -51840,7 +49002,7 @@ function presentAssessmentText(_verdict, actual, _quotes, steps, reason) {
 }
 var customerRecordedActionSchema = external_exports.object({
   sourceId: external_exports.string(),
-  sourceSha256: digest12.optional(),
+  sourceSha256: digest11.optional(),
   evidenceId: external_exports.string(),
   index: external_exports.number().int().positive(),
   action: external_exports.object({
@@ -51918,7 +49080,7 @@ var reportExecutionRecapSchema = external_exports.object({
   steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
-var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
 var reportExpectationAuthoritySchema = external_exports.string();
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
@@ -51941,8 +49103,8 @@ var reportTestAssessmentSchema = external_exports.object({
     evidence: external_exports.array(assessmentQuote),
     facts: customerAssessmentStepFactsSchema.optional()
   })).optional(),
-  answerId: digest13,
-  resultSha256: digest13,
+  answerId: digest12,
+  resultSha256: digest12,
   model: external_exports.string(),
   testId: external_exports.string(),
   additionalCheck: external_exports.literal(true).optional(),
@@ -51967,13 +49129,13 @@ var configurationShape = external_exports.object({
   automaticRetries: external_exports.literal(0),
   trigger: external_exports.literal("explicit-tool-call")
 }).catchall(nativeJson);
-var configurationSchema2 = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
+var configurationSchema = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
 var reportObservedPageSchema = external_exports.object({
   id: external_exports.string(),
   text: external_exports.string(),
   accessibilityText: external_exports.string().optional(),
-  sourceSha256: digest13,
-  contentSha256: digest13,
+  sourceSha256: digest12,
+  contentSha256: digest12,
   contentState: external_exports.literal("projected-page-content")
 });
 var reportExecutionRejectionNoticeSchema = external_exports.enum([
@@ -51995,27 +49157,27 @@ var reportOutcomeNoticeSchema = external_exports.enum([
 ]);
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest13.nullable(),
+  mapId: digest12.nullable(),
   assessmentFailures: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13,
+    sourceId: digest12,
+    resultSha256: digest12,
     reason: external_exports.enum(["service-rejected", "unavailable"])
   })).optional(),
   selectedPullRequestUrl: external_exports.string().nullable().optional(),
   assessments: external_exports.array(external_exports.object({
-    assessedRunIds: external_exports.array(digest13).optional(),
-    sourceId: digest13,
+    assessedRunIds: external_exports.array(digest12).optional(),
+    sourceId: digest12,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest13.nullable(),
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     result: nativeJson
   })).optional(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13.nullable(),
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
@@ -52034,14 +49196,14 @@ var testPlanViewSchema = external_exports.object({
     traceRetained: external_exports.boolean(),
     recordedAt: external_exports.string().nullable().optional(),
     assessments: external_exports.array(reportTestAssessmentSchema).optional(),
-    configuration: configurationSchema2.nullable().optional(),
+    configuration: configurationSchema.nullable().optional(),
     assertions: reportExecutionSchema.nullable().optional()
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest13,
+    sourceId: digest12,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest13.nullable(),
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     result: nativeJson,
     requestTestIndexes: external_exports.array(count7)
@@ -52052,14 +49214,14 @@ var reportPanelSchema = testPlanViewSchema.extend({
 });
 var reportLinkSchema = external_exports.object({
   schema: external_exports.literal("loki.report-link/1"),
-  reportId: digest13,
+  reportId: digest12,
   presentation: external_exports.literal("browser"),
   previewURL: external_exports.url()
 });
 var reportCardFailedTitleLimit = 5;
 var summarySchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   counts: external_exports.object({
     pass: count7,
@@ -52081,32 +49243,32 @@ var summarySchema = external_exports.object({
     url: external_exports.url()
   }).nullable(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest13,
+    sourceId: digest12,
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string()
   })),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13.nullable(),
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
     requestTests: count7,
     executedTests: external_exports.boolean().nullable(),
     proposedTests: count7.nullable()
   }))
 });
 var cardBase = external_exports.object({
-  mapId: digest13.nullable().optional(),
+  mapId: digest12.nullable().optional(),
   schema: external_exports.literal("loki.report-card/1"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   createdAt: external_exports.string(),
   originalResults: external_exports.array(external_exports.object({
     kind: external_exports.enum(["plan", "runner", "assessment"]),
-    answerId: digest13.nullable(),
-    runId: digest13.nullable(),
-    resultSha256: digest13.nullable()
+    answerId: digest12.nullable(),
+    runId: digest12.nullable(),
+    resultSha256: digest12.nullable()
   })),
-  sourceContextId: digest13.nullable(),
+  sourceContextId: digest12.nullable(),
   testPlanSummary: summarySchema,
   instructions: external_exports.string()
 });
@@ -52161,8 +49323,8 @@ var artifactsSchema = external_exports.object({
 });
 var traceIdentity = {
   schema: external_exports.literal("loki.report-trace/1"),
-  reportId: digest13,
-  runId: digest13
+  reportId: digest12,
+  runId: digest12
 };
 var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
   const url2 = new URL(value);
@@ -52225,8 +49387,8 @@ var selectedKinds = external_exports.array(external_exports.enum(["plan", "runne
 var reportExportPreviewSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest13,
-  previewSha256: digest13,
+  reportId: digest12,
+  previewSha256: digest12,
   html: external_exports.string(),
   omitted: external_exports.array(external_exports.string()),
   redaction: external_exports.string(),
@@ -52235,8 +49397,8 @@ var reportExportPreviewSchema = external_exports.object({
 var reportExportReceiptSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest13,
-  sha256: digest13,
+  reportId: digest12,
+  sha256: digest12,
   path: external_exports.string(),
   delivery: external_exports.literal("local-file-only"),
   uploaded: external_exports.literal(false)
@@ -52251,13 +49413,13 @@ var reportExportOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/report-artifact.js
-var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count8 = external_exports.number().int().nonnegative();
 var captureTime = external_exports.iso.datetime({ offset: true });
 var pageCaptureBindingSchema = external_exports.object({
   screenshot: external_exports.object({
     name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
-    sha256: digest14,
+    sha256: digest13,
     capturedAt: captureTime
   }),
   afterAction: external_exports.number().int().positive().nullable(),
@@ -52266,32 +49428,32 @@ var pageCaptureBindingSchema = external_exports.object({
 });
 var reportArtifactProjectionSchema = external_exports.object({
   schema: external_exports.literal("loki.report-artifact-projection/1"),
-  sourceSha256: digest14,
-  sha256: digest14,
+  sourceSha256: digest13,
+  sha256: digest13,
   bytes: count8,
   redactionRevision: count8,
   // Only the owning manifest reader can supply this checked association.
   pageCapture: pageCaptureBindingSchema.optional()
 });
 var reportArtifactInputSchema = external_exports.strictObject({
-  reportId: digest14,
-  runId: digest14,
-  artifactId: digest14.optional(),
+  reportId: digest13,
+  runId: digest13,
+  artifactId: digest13.optional(),
   offset: count8.optional()
 });
 var artifact = external_exports.object({
-  artifactId: digest14,
+  artifactId: digest13,
   name: external_exports.string(),
   mediaType: external_exports.enum(["image/png", "application/json"]),
   bytes: count8,
-  sha256: digest14
+  sha256: digest13
 });
 var provenance = {
   schema: external_exports.literal("loki.report-artifact/1"),
-  reportId: digest14,
-  runId: digest14,
-  resultSha256: digest14,
-  manifestSha256: digest14,
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
+  manifestSha256: digest13,
   manifestSchema: external_exports.enum([
     "loki.computer-runner.private-evidence/1",
     "loki.mac-computer-runner.private-evidence/1"
@@ -52339,9 +49501,9 @@ var reportArtifactOutputSchema = external_exports.union([
 ]);
 var customerIdentity = {
   schema: external_exports.literal("kaijan.customer-artifact/1"),
-  reportId: digest14,
-  runId: digest14,
-  resultSha256: digest14,
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
   createdAt: external_exports.string(),
   semanticAssessment: external_exports.literal("not-performed")
 };
@@ -52374,8 +49536,8 @@ var customerReportArtifactResultSchema = external_exports.union([
         totalCodeUnits: count8,
         projection: external_exports.object({
           schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
-          sourceSha256: digest14,
-          sha256: digest14,
+          sourceSha256: digest13,
+          sha256: digest13,
           bytes: count8
         })
       })
@@ -52385,7 +49547,7 @@ var customerReportArtifactResultSchema = external_exports.union([
 var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
 var customerCaseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-case-evidence/1"),
-  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
+  planRef: external_exports.object({ answerId: digest13, resultSha256: digest13 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -52394,7 +49556,7 @@ var customerCaseEvidenceSchema = external_exports.object({
     state: external_exports.enum(["recording", "ended", "interrupted"]),
     screenshots: external_exports.array(external_exports.object({
       name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-      sha256: digest14,
+      sha256: digest13,
       capturedAt: external_exports.string()
     }))
   }))
@@ -52422,10 +49584,10 @@ var reportRenderAckSchema = reportRenderMetadataSchema.extend({
 });
 
 // packages/contracts/dist/case-evidence.js
-var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var screenshot = external_exports.object({
   name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest15,
+  sha256: digest14,
   capturedAt: external_exports.string()
 });
 var browserRefresh = external_exports.object({
@@ -52453,7 +49615,7 @@ var action = external_exports.object({
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
   attribution: external_exports.literal("runner-declared-boundaries"),
-  planRef: external_exports.object({ answerId: digest15, resultSha256: digest15 }),
+  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -52552,7 +49714,7 @@ function customerPlanningId(kind, original2, sha256, allowPublicAlias = false) {
 }
 
 // packages/contracts/dist/customer-risk.js
-var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var source2 = external_exports.object({
   id: external_exports.string(),
   source_id: external_exports.string(),
@@ -52561,7 +49723,7 @@ var source2 = external_exports.object({
   revision: external_exports.string().nullable(),
   line: external_exports.number().int().nonnegative(),
   quote: external_exports.string(),
-  quote_sha256: digest16
+  quote_sha256: digest15
 });
 var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
 var unverifiedRiskNotice = "Review these questions against the source.";
@@ -52757,7 +49919,7 @@ function customerAuthoredText(value) {
   return diagnostic.test(projected) ? customerOmittedDetail : projected;
 }
 var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
-var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional2 = (schema) => schema.optional();
 var strings2 = external_exports.array(external_exports.string());
 var citation = external_exports.object({
@@ -53533,7 +50695,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   })).optional()
 });
 var panelCard = reportCardSchema.options[0];
-var summary2 = panelCard.shape.testPlanSummary;
+var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -53550,7 +50712,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary2.pick({
+  testPlanSummary: summary.pick({
     schema: true,
     reportId: true,
     title: true,
@@ -53558,7 +50720,7 @@ var customerReportCardSchema = panelCard.pick({
     observation: true,
     failedTestTitles: true
   }).extend({
-    counts: summary2.shape.counts.pick({
+    counts: summary.shape.counts.pick({
       pass: true,
       fail: true,
       blocked: true,
@@ -53577,14 +50739,14 @@ var customerReportCardSchema = panelCard.pick({
       title: external_exports.string(),
       url: external_exports.url()
     }).nullable(),
-    plans: external_exports.array(summary2.shape.plans.element.pick({
+    plans: external_exports.array(summary.shape.plans.element.pick({
       sourceId: true,
       resultSha256: true,
       requestTests: true,
       executedTests: true,
       proposedTests: true
     })),
-    runs: external_exports.array(summary2.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
   })
 });
 var customerReportFailureSchema = external_exports.object({
@@ -53995,7 +51157,7 @@ var links = {
   literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
   timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
 };
-var unavailable2 = "The retained source is unavailable in this view.";
+var unavailable = "The retained source is unavailable in this view.";
 var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
 var safeRelation = (value) => {
   if (typeof value !== "string" || !Object.hasOwn(reasons, value))
@@ -54022,7 +51184,7 @@ function projectCustomerRelatedResult(input3) {
       reason: reasons[relationship],
       evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
       sourceState: known ? "available" : "unavailable",
-      ...!known ? { notice: unavailable2 } : {},
+      ...!known ? { notice: unavailable } : {},
       direct_links: (known ? rows(row.direct_links) : []).flatMap((link3) => {
         if (!hasVerifiedRelatedSource(link3) || typeof link3.type !== "string" || !Object.hasOwn(links, link3.type))
           return [];
@@ -54205,7 +51367,7 @@ function transferSupplementSourceProof(source3, target, verify) {
 }
 var supplementUnsupportedRelation = "This saved proposal relation has no verified source-bound presentation. Review the linked application sources; no action or expected result is inferred.";
 var object4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
-var list2 = (value) => Array.isArray(value) ? value : [];
+var list = (value) => Array.isArray(value) ? value : [];
 function supplementPublicId(kind, value, hash6) {
   return `${kind}-${hash6(JSON.stringify(value ?? null))}`;
 }
@@ -54216,11 +51378,11 @@ function projectCustomerSupplementResult(value, hash6) {
   }
   const native = object4(value), body = object4(native.supplement), baseline = object4(native.baseline);
   const id8 = (kind, v) => supplementPublicId(kind, v, hash6);
-  const links2 = (value2, kind) => list2(value2).map((v) => id8(kind, v));
-  const references = (value2) => list2(value2).map((v) => ({
+  const links2 = (value2, kind) => list(value2).map((v) => id8(kind, v));
+  const references = (value2) => list(value2).map((v) => ({
     evidence_id: id8("source", object4(v).evidence_id)
   }));
-  const additions = list2(body.additional_tests).map(object4), concerns = list2(body.baseline_concerns).map(object4), questions2 = list2(body.unanswered_questions).map(object4);
+  const additions = list(body.additional_tests).map(object4), concerns = list(body.baseline_concerns).map(object4), questions2 = list(body.unanswered_questions).map(object4);
   const status3 = external_exports.enum(["proposed_supplement", "no_additional_tests", "needs_clarification"]).safeParse(body.status);
   if (!status3.success) {
     const message = native.schema !== "loki.supplement-failure/1" ? "The retained supplement cannot be represented in this view. Keep its original record; do not replay it." : native.reason === "invalid_first_plan_no_repair" ? "Kaijan could not validate the proposed additional tests. Your original plan is unchanged." : "Kaijan could not add tests to the saved plan. Your original plan is unchanged.";
@@ -54297,7 +51459,7 @@ function projectCustomerSupplementResult(value, hash6) {
       })),
       notice: "Original baseline retained; source presentation is unavailable and no approval is inferred."
     },
-    evidence: list2(native.evidence).map(object4).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
+    evidence: list(native.evidence).map(object4).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
       id: id8("source", row.id),
       source_id: id8("source-document", row.source_id),
       kind: row.kind,
@@ -54311,7 +51473,7 @@ function projectCustomerSupplementResult(value, hash6) {
     risks: [],
     coverage: {
       additions: additions.length,
-      baselineTests: list2(baseline.test_ids).length,
+      baselineTests: list(baseline.test_ids).length,
       baselineConcerns: concerns.length,
       unansweredQuestions: questions2.length,
       meaning: "Proposed links and counts only; not proof of complete coverage or semantic support."
@@ -54333,7 +51495,7 @@ var localLimits = {
   inputLifetimeMs: 30 * 60 * 1e3
 };
 var id5 = external_exports.uuid();
-var digest18 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
   coreOrigin: external_exports.url().refine((value) => {
@@ -54427,7 +51589,7 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
     inputId: id5,
-    inputDigest: digest18,
+    inputDigest: digest17,
     transferAcknowledged: external_exports.literal(true),
     idempotencyKey: id5
   })),
@@ -54463,7 +51625,7 @@ var localInputSchema = external_exports.strictObject({
   inputId: id5,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
-  digest: digest18.nullable(),
+  digest: digest17.nullable(),
   includedFiles: external_exports.number().int().nonnegative(),
   includedBytes: external_exports.number().int().nonnegative(),
   omissionCount: external_exports.number().int().nonnegative(),
@@ -54487,9 +51649,9 @@ var localRunSchema = external_exports.strictObject({
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
   cliVersion: external_exports.literal("2026.10.18-8"),
-  cliDigest: digest18,
+  cliDigest: digest17,
   adapter: external_exports.literal(localAdapter),
-  inputDigest: digest18,
+  inputDigest: digest17,
   sourcePolicy: external_exports.literal("local-source-v1"),
   displayName: external_exports.string().max(255),
   execution: external_exports.literal("local"),
@@ -54506,7 +51668,7 @@ var localRunSchema = external_exports.strictObject({
     artifactId: id5,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
-    sha256: digest18
+    sha256: digest17
   })).max(100)
 });
 var localSetupSchema = external_exports.strictObject({
@@ -54635,7 +51797,7 @@ var localResultSchemas = {
     artifactId: id5,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
-    sha256: digest18,
+    sha256: digest17,
     totalSize: external_exports.number().int().nonnegative(),
     eof: external_exports.boolean()
   }),
@@ -54656,8 +51818,2992 @@ var localResponseSchema = external_exports.discriminatedUnion("ok", [
   })
 ]);
 
+// apps/codex-plugin/src/issue-screenshot.mjs
+var issueScreenshotReference = reportArtifactInputSchema.omit({ offset: true }).required({ artifactId: true });
+async function selectIssueScreenshot(reports, reference2, imageId) {
+  const input3 = issueScreenshotReference.parse(reference2);
+  assert2(reports?.customerArtifact, "Saved screenshot reads are unavailable.");
+  const value = customerReportArtifactResultSchema.parse(
+    await reports.customerArtifact(input3)
+  );
+  assert2.equal(value.reportId, input3.reportId);
+  assert2.equal(value.runId, input3.runId);
+  assert2.equal(value.state, "read");
+  assert2.equal(value.artifact.artifactId, input3.artifactId);
+  assert2.equal(value.artifact.mediaType, "image/png");
+  assert2.equal(value.content.mediaType, "image/png");
+  assert2.equal(value.content.encoding, "base64");
+  assert2(
+    value.content.data.length <= 4 * Math.ceil(issueImageLimits.fileBytes / 3)
+  );
+  const bytes = Buffer.from(value.content.data, "base64");
+  assert2.equal(bytes.length, value.artifact.bytes);
+  assert2.equal(
+    createHash3("sha256").update(bytes).digest("hex"),
+    value.artifact.sha256
+  );
+  return {
+    image: issueImageSchema.parse({
+      id: imageId,
+      name: value.artifact.name,
+      mediaType: "image/png",
+      bytes: bytes.length,
+      sha256: value.artifact.sha256
+    }),
+    bytes
+  };
+}
+
+// apps/codex-plugin/src/issues.mjs
+var viewKey2 = "kaijan/issue-view";
+var selectionKey = "kaijan/issue-selections";
+var unavailable2 = () => ({
+  error: "issue_unavailable",
+  message: "Kaijan could not open this issue connection. Keep any visible text before starting a new report or reopening an earlier saved issue."
+});
+function createIssueSurface({
+  session,
+  library,
+  broker,
+  build,
+  now = Date.now,
+  createTransport = scopedIssueTransport
+}) {
+  const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
+  let stopped = false;
+  const fields = library.issueFieldsSchema;
+  const textFields = fields.omit({ images: true }).partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
+  const draftInput = external_exports.strictObject({
+    operation: external_exports.enum([
+      "open",
+      "read",
+      "update",
+      "discard_edit",
+      "status",
+      "attach_screenshot"
+    ]),
+    requestId: external_exports.uuid().optional(),
+    draftId: external_exports.uuid().optional(),
+    revision: external_exports.number().int().positive().optional(),
+    title: fields.shape.title.optional(),
+    description: fields.shape.description.optional(),
+    context: fields.shape.context,
+    screenshot: issueScreenshotReference.optional(),
+    changes: textFields.optional()
+  });
+  const image = library.issueSelectionSchema.shape.image;
+  const offset = external_exports.number().int().nonnegative().max(5 * 1024 * 1024);
+  const revision3 = external_exports.number().int().positive();
+  const actionBase = library.issueViewSchema;
+  const actionArgs = {
+    read: library.issueGetSchema.extend({
+      refreshPublisher: external_exports.literal(true).optional()
+    }),
+    update: library.issueUpdateSchema,
+    discard_edit: library.issueGetSchema,
+    status: library.issueGetSchema,
+    publish: library.issuePublishSchema,
+    continue_on_github: library.issuePublishSchema,
+    close_review: library.issueGetSchema,
+    begin_image: library.issueGetSchema.extend({ revision: revision3, image }),
+    append_image: library.issueGetSchema.extend({
+      revision: revision3,
+      imageId: external_exports.uuid(),
+      offset,
+      base64: external_exports.string().min(4).max(4 * Math.ceil(256 * 1024 / 3))
+    }),
+    remove_image: library.issueGetSchema.extend({
+      revision: revision3,
+      imageId: external_exports.uuid()
+    }),
+    read_image: library.issueGetSchema.extend({ imageId: external_exports.uuid(), offset })
+  };
+  const actionInput = actionBase.extend({
+    operation: external_exports.enum(Object.keys(actionArgs)),
+    revision: revision3.optional(),
+    changes: library.issueChangesSchema.optional(),
+    image: image.optional(),
+    imageId: external_exports.uuid().optional(),
+    offset: offset.optional(),
+    base64: actionArgs.append_image.shape.base64.optional(),
+    refreshPublisher: external_exports.literal(true).optional()
+  });
+  const schemas = {
+    kaijan_issue_draft: draftInput,
+    kaijan_issue_publish: library.issuePublishSchema,
+    kaijan_issue_form_action: actionInput
+  };
+  const resource = {
+    uri: library.issueFormUri,
+    name: "Report a Kaijan issue",
+    mimeType: "text/html;profile=mcp-app"
+  };
+  const describe3 = (name, title, description, appOnly = false) => ({
+    name,
+    title,
+    description,
+    inputSchema: external_exports.toJSONSchema(schemas[name]),
+    outputSchema: {
+      type: "object",
+      anyOf: external_exports.toJSONSchema(
+        appOnly ? library.issueAppResultSchema : library.issueResultSchema
+      ).anyOf
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: name === "kaijan_issue_publish",
+      openWorldHint: true
+    },
+    _meta: {
+      ui: {
+        resourceUri: resource.uri,
+        ...appOnly ? { visibility: ["app"] } : {}
+      }
+    }
+  });
+  const tools2 = [
+    describe3(
+      "kaijan_issue_draft",
+      "Review a Kaijan issue",
+      "Open or edit a report about Kaijan in this chat. Help prepare the observed failure, relevant context, expected behavior and steps from known facts. Open requires requestId and optional title, description and context. Unsent text and chosen images stay in this temporary review until Cancel or shutdown. The person reviews the text and screenshots, then confirms publication to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App, without opening GitHub. Only the confirmed submission is retained for receipt recovery. Read, status and discard_edit require draftId. Read is local; status checks only the original publication. Update requires draftId, revision and nonempty text changes. To collect a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId, and screenshot reportId/runId/artifactId from the same chat. This stages verified original PNG bytes for review and makes no public write. Never use filesystem paths or invent an artifact. The person can also choose images in the form. Keep refused edits. Earlier saved records keep their original recovery route."
+    ),
+    describe3(
+      "kaijan_issue_publish",
+      "Open Kaijan issue review",
+      "Open the current issue form for the person to review the exact text, context and chosen screenshots. The person confirms submission to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App. This tool does not publish or open GitHub. For an unconfirmed publication, check status on the original report."
+    ),
+    describe3(
+      "kaijan_issue_form_action",
+      "Edit issue form",
+      "Application-only action for the exact issue form grant in the originating chat.",
+      true
+    )
+  ];
+  function checked(name, raw) {
+    if (!Object.hasOwn(schemas, name)) throw Error("invalid_tool");
+    const input3 = schemas[name].parse(raw);
+    if (name === "kaijan_issue_publish")
+      return { operation: "read", draftId: input3.draftId };
+    const { operation, viewToken, cleanupToken, ...args } = input3;
+    let selected;
+    if (name === "kaijan_issue_form_action") selected = actionArgs[operation];
+    else if (operation === "open") selected = library.issueOpenSchema;
+    else if (operation === "update")
+      selected = library.issueGetSchema.extend({
+        revision: revision3,
+        changes: textFields
+      });
+    else if (operation === "attach_screenshot")
+      selected = library.issueGetSchema.extend({
+        revision: revision3,
+        requestId: external_exports.uuid(),
+        screenshot: issueScreenshotReference
+      });
+    else selected = library.issueGetSchema;
+    return {
+      operation,
+      ...selected.parse(args),
+      ...viewToken ? { viewToken } : {},
+      ...cleanupToken ? { cleanupToken } : {}
+    };
+  }
+  async function identity4(signal) {
+    const result2 = await forwardCore(
+      broker,
+      "loki_connection_status",
+      {},
+      signal
+    );
+    const connection = coreConnectionSchema.parse(result2.structuredContent);
+    return {
+      userId: connection.context.user.id,
+      workspaceId: connection.context.workspace.id
+    };
+  }
+  function grant2(scope, owner2, draftId) {
+    for (const [key, value2] of views)
+      if (value2.until < now()) views.delete(key);
+    while (views.size >= 64) views.delete(views.keys().next().value);
+    const temporary = temporaryStores.get(scope.data)?.has(draftId);
+    const cleanup = temporary ? [...cleanupViews].find(
+      ([, value2]) => value2.scope === scope.scope.id && value2.draftId === draftId
+    ) : void 0;
+    const viewToken = randomBytes2(32).toString("hex");
+    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes2(32).toString("hex") : void 0;
+    const value = {
+      scope: scope.scope.id,
+      ...owner2,
+      draftId,
+      until: now() + 12 * 36e5
+    };
+    views.set(viewToken, value);
+    if (temporary) cleanupViews.set(cleanupToken, value);
+    return { draftId, viewToken, ...cleanupToken ? { cleanupToken } : {} };
+  }
+  function reply(value, { appOnly = false, view: view2, selections } = {}) {
+    const result2 = (appOnly ? library.issueAppResultSchema : library.issueResultSchema).parse(value);
+    return {
+      ...result2.error ? { isError: true } : {},
+      structuredContent: result2,
+      // Image bytes exist only in the granted app response, never normal text.
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            result2.chunk || result2.githubUrl ? { draft: result2.draft } : result2
+          )
+        }
+      ],
+      ...view2 ? { _meta: { [viewKey2]: view2, [selectionKey]: selections } } : {}
+    };
+  }
+  async function existingStore(data) {
+    let opened = stores.get(data);
+    if (!opened) {
+      try {
+        await lstat5(join4(data, "issue-drafts", "drafts.sqlite3"));
+      } catch (error63) {
+        if (error63?.code === "ENOENT") return void 0;
+        throw error63;
+      }
+      opened = library.IssueDraftStore.open(data);
+      stores.set(data, opened);
+      opened.catch(() => stores.delete(data));
+    }
+    return opened;
+  }
+  function publicationStore(data) {
+    let opened = stores.get(data);
+    if (!opened) {
+      opened = library.IssueDraftStore.open(data);
+      stores.set(data, opened);
+      opened.catch(() => stores.delete(data));
+    }
+    return opened;
+  }
+  function temporaryStore(data) {
+    let store = temporaryStores.get(data);
+    if (!store) {
+      store = library.IssueDraftStore.temporary({
+        publicationRoute: "github-app"
+      });
+      temporaryStores.set(data, store);
+    }
+    return store;
+  }
+  return {
+    tools: tools2,
+    resources: [resource],
+    hasResource: (uri) => uri === resource.uri || library.cachedIssueFormUris?.includes(uri) === true,
+    hasTool: (name) => Object.hasOwn(schemas, name),
+    async readResource(uri) {
+      if (stopped || uri !== resource.uri && !library.cachedIssueFormUris?.includes(uri))
+        throw Error("Unknown issue resource.");
+      return library.readIssueForm(uri);
+    },
+    async invoke(name, raw, metadata2, signal) {
+      const appOnly = name === "kaijan_issue_form_action";
+      let input3;
+      try {
+        input3 = checked(name, raw);
+      } catch {
+        return reply(
+          {
+            error: "invalid_arguments",
+            message: "Use the advertised issue fields for this action. Nothing was published."
+          },
+          { appOnly }
+        );
+      }
+      if (stopped || signal?.aborted) return reply(unavailable2(), { appOnly });
+      if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
+        return reply(
+          {
+            error: "chat_required",
+            message: "Open the issue in its original chat. Nothing was published."
+          },
+          { appOnly }
+        );
+      try {
+        const scope = await session.forRequest(metadata2);
+        if (scope.scope.kind !== "host-thread" || !scope.scope.restartPersistent)
+          throw Error("invalid_scope");
+        const view2 = appOnly ? input3.operation === "close_review" && input3.cleanupToken ? cleanupViews.get(input3.cleanupToken) : views.get(input3.viewToken) : void 0;
+        if (appOnly && (!view2 || view2.until < now() && input3.operation !== "close_review" || view2.scope !== scope.scope.id || view2.draftId !== input3.draftId))
+          return reply(
+            {
+              error: "view_expired",
+              message: "Reopen this issue in its original chat. Your local draft and images are kept."
+            },
+            { appOnly }
+          );
+        if (appOnly && input3.operation === "close_review") {
+          const temporary = temporaryStores.get(scope.data);
+          if (temporary?.has(input3.draftId)) {
+            temporary.discardTemporary(input3.draftId, {
+              userId: view2.userId,
+              workspaceId: view2.workspaceId,
+              kind: "human",
+              canEdit: true,
+              canPublish: false
+            });
+            if (temporary.size === 0) {
+              temporary.close();
+              temporaryStores.delete(scope.data);
+            }
+            for (const [token, granted] of views)
+              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
+                views.delete(token);
+            for (const [token, granted] of cleanupViews)
+              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
+                cleanupViews.delete(token);
+            return reply({ closedReviewId: input3.draftId }, { appOnly: true });
+          }
+        }
+        const owner2 = await identity4(signal);
+        if (stopped || signal?.aborted)
+          return reply(unavailable2(), { appOnly });
+        if (view2 && (owner2.userId !== view2.userId || owner2.workspaceId !== view2.workspaceId))
+          return reply(
+            {
+              error: "connection_changed",
+              message: "The connected account or workspace changed. Return to the original connection to use this issue."
+            },
+            { appOnly }
+          );
+        const actor = {
+          ...owner2,
+          kind: appOnly ? "human" : "agent",
+          canEdit: true,
+          canPublish: appOnly
+        };
+        const { operation, draftId, revision: revision4 } = input3;
+        let store = temporaryStores.get(scope.data);
+        if (operation === "open") {
+          const historical = await existingStore(scope.data);
+          if (historical?.findOpen(input3.requestId, actor)) store = historical;
+          else {
+            if (cleanupViews.size >= 64 && !store?.findOpen(input3.requestId, actor))
+              throw new library.IssueDraftError(
+                "review_limit",
+                "Close an open issue review before starting another."
+              );
+            store = temporaryStore(scope.data);
+          }
+        } else {
+          const retained = await existingStore(scope.data);
+          if (retained?.has(draftId)) store = retained;
+          else if (!store?.has(draftId)) store = void 0;
+          if (!store)
+            throw new library.IssueDraftError(
+              "not_found",
+              "This review is closed. Start a new report."
+            );
+        }
+        if (stopped || signal?.aborted)
+          return reply(unavailable2(), { appOnly });
+        const transport = (publicationRoute) => createTransport({
+          library,
+          broker,
+          build,
+          signal,
+          publicationRoute,
+          journal: () => {
+            let pending = journals.get(scope.data);
+            if (!pending) {
+              pending = library.DirectIssueJournal.open(scope.data);
+              journals.set(scope.data, pending);
+              pending.catch(() => journals.delete(scope.data));
+            }
+            return pending;
+          }
+        });
+        let draft, chunk, githubUrl;
+        const current = operation === "open" ? void 0 : store.get(draftId, actor);
+        const githubLink = current?.publicationRoute === "github-link";
+        if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
+          throw new library.IssueDraftError(
+            "github_handoff_required",
+            "This report is text-only. Reopen it and select Continue on GitHub.",
+            current
+          );
+        if (operation === "open")
+          draft = store.create(
+            {
+              requestId: input3.requestId,
+              ...input3.title !== void 0 ? { title: input3.title } : {},
+              ...input3.description !== void 0 ? { description: input3.description } : {},
+              context: input3.context ?? [
+                ...build.pluginVersion ? [`Kaijan version: ${build.pluginVersion}`] : [],
+                "Host: Codex",
+                `Platform: ${process.platform} (${process.arch})`
+              ].join("\n")
+            },
+            actor,
+            "github-app"
+          );
+        else if (operation === "attach_screenshot") {
+          if (current.publicationRoute !== "github-app" || current.status !== "draft")
+            throw new library.IssueDraftError(
+              "original_route_required",
+              "Keep the original report and selected images.",
+              current
+            );
+          if (current.revision !== revision4)
+            throw new library.IssueDraftError(
+              "revision_conflict",
+              "Read and review the current report before adding this screenshot.",
+              current
+            );
+          let selected;
+          try {
+            selected = await selectIssueScreenshot(
+              scope.services?.reports,
+              input3.screenshot,
+              input3.requestId
+            );
+          } catch {
+            throw new library.IssueDraftError(
+              "screenshot_unavailable",
+              "This screenshot could not be added. Choose an image or use a saved screenshot from this chat.",
+              current
+            );
+          }
+          store.beginImage(draftId, revision4, actor, selected.image);
+          for (let offset2 = 0; offset2 < selected.bytes.length; offset2 += 256 * 1024)
+            store.appendImage(
+              draftId,
+              revision4,
+              actor,
+              selected.image.id,
+              offset2,
+              selected.bytes.subarray(offset2, offset2 + 256 * 1024).toString("base64")
+            );
+          draft = store.update(
+            {
+              draftId,
+              revision: revision4,
+              changes: { images: [...current.fields.images, selected.image] }
+            },
+            actor
+          );
+        } else if (operation === "update")
+          draft = store.update(
+            { draftId, revision: revision4, changes: input3.changes },
+            actor
+          );
+        else if (operation === "close_review") {
+          throw new library.IssueDraftError(
+            "original_route_required",
+            "This saved draft keeps its original recovery path."
+          );
+        } else if (operation === "discard_edit")
+          draft = store.discardEdit(draftId, actor);
+        else if (operation === "continue_on_github") {
+          if (!githubLink || current.status !== "draft")
+            throw new library.IssueDraftError(
+              "original_route_required",
+              "Use the original publication controls for this issue.",
+              current
+            );
+          if (view2?.reviewedRevision !== revision4 || current.revision !== revision4 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
+            throw new library.IssueDraftError(
+              "review_required",
+              "Save and review the current title and observed behavior before continuing.",
+              current
+            );
+          githubUrl = library.githubIssueDraftUrl(current.fields);
+          if (!githubUrl)
+            throw new library.IssueDraftError(
+              "github_url_too_long",
+              "This draft is too long to prefill on GitHub. Shorten it or copy the text and paste it into a new issue there. Your full draft is kept.",
+              current
+            );
+          draft = current;
+        } else if (operation === "publish" || operation === "status" && !githubLink) {
+          const publisherTransport = transport(current.publicationRoute);
+          if (operation === "publish") {
+            if (current.status === "draft") {
+              if (view2?.reviewedRevision !== revision4 || current.revision !== revision4)
+                throw new library.IssueDraftError(
+                  "review_required",
+                  "Open Preview issue and review the current text, images and account before publishing.",
+                  current
+                );
+              if (publisherTransport.requiresPublisher) {
+                const selected = await publisherTransport.identify(owner2, {
+                  imagesRequired: current.fields.images.length > 0
+                });
+                store.setPublisher(draftId, actor, selected);
+              }
+            }
+          }
+          if (operation === "publish" && current.temporary && current.publicationRoute === "github-app") {
+            const temporary = store;
+            const durable = await publicationStore(scope.data);
+            temporary.promoteReviewed(draftId, revision4, actor, durable);
+            store = durable;
+            if (temporary.size === 0) {
+              temporary.close();
+              temporaryStores.delete(scope.data);
+            }
+            for (const [token, granted] of cleanupViews)
+              if (granted.draftId === draftId && granted.scope === scope.scope.id)
+                cleanupViews.delete(token);
+          }
+          draft = operation === "publish" ? await store.publish(
+            draftId,
+            revision4,
+            actor,
+            publisherTransport
+          ) : await store.refresh(draftId, actor, publisherTransport);
+        } else {
+          if (operation === "begin_image")
+            store.beginImage(draftId, revision4, actor, input3.image);
+          else if (operation === "append_image")
+            store.appendImage(
+              draftId,
+              revision4,
+              actor,
+              input3.imageId,
+              input3.offset,
+              input3.base64
+            );
+          else if (operation === "remove_image")
+            store.removeImage(draftId, revision4, actor, input3.imageId);
+          else if (operation === "read_image") {
+            const selected = store.readImage(draftId, actor, input3.imageId);
+            if (input3.offset >= selected.bytes.length || input3.offset % (256 * 1024) !== 0)
+              throw new library.IssueDraftError(
+                "invalid_image_offset",
+                "Read the next advertised image chunk."
+              );
+            chunk = {
+              imageId: selected.image.id,
+              offset: input3.offset,
+              totalBytes: selected.image.bytes,
+              mediaType: selected.image.mediaType,
+              base64: Buffer.from(selected.bytes).subarray(input3.offset, input3.offset + 256 * 1024).toString("base64")
+            };
+          }
+          draft = store.get(draftId, actor);
+        }
+        if (draft.status === "draft" && draft.publicationRoute !== "github-link" && (operation === "open" || operation === "read" && appOnly && input3.refreshPublisher === true)) {
+          const publisherTransport = transport(draft.publicationRoute);
+          try {
+            if (publisherTransport.requiresPublisher) {
+              const selected = await publisherTransport.identify(owner2, {
+                imagesRequired: draft.fields.images.length > 0
+              });
+              draft = store.setPublisher(draft.id, actor, selected);
+            }
+          } catch {
+            if (operation !== "open")
+              return reply(
+                {
+                  error: "posting_account_unavailable",
+                  message: "Publishing is unavailable for the connected GitHub account. Your draft is kept.",
+                  draft
+                },
+                { appOnly }
+              );
+          }
+        }
+        const selections = store.listImages(draft.id, actor);
+        if (view2 && operation === "read" && input3.refreshPublisher === true)
+          view2.reviewedRevision = draft.revision;
+        return reply(
+          {
+            draft,
+            ...appOnly ? {
+              selections,
+              ...chunk ? { chunk } : {},
+              ...githubUrl ? { githubUrl } : {}
+            } : {}
+          },
+          {
+            appOnly,
+            ...appOnly ? {} : { view: grant2(scope, owner2, draft.id), selections }
+          }
+        );
+      } catch (error63) {
+        if (error63 instanceof library.IssueDraftError)
+          return reply(
+            {
+              error: error63.code,
+              message: error63.message,
+              ...error63.draft ? { draft: error63.draft } : {}
+            },
+            { appOnly }
+          );
+        return reply(unavailable2(), { appOnly });
+      }
+    },
+    async close() {
+      stopped = true;
+      views.clear();
+      cleanupViews.clear();
+      for (const store of temporaryStores.values()) store.close();
+      temporaryStores.clear();
+      const opened = await Promise.allSettled([
+        ...stores.values(),
+        ...journals.values()
+      ]);
+      for (const value of opened)
+        if (value.status === "fulfilled") value.value.close();
+      stores.clear();
+      journals.clear();
+    }
+  };
+}
+
+// apps/codex-plugin/src/installed-session.mjs
+import { join as join5, delimiter } from "node:path";
+import { pathToFileURL } from "node:url";
+import process3 from "node:process";
+import { performance as performance3 } from "node:perf_hooks";
+import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
+import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
+var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
+var present = (entry) => {
+  if (Array.isArray(entry)) return entry.map(present);
+  if (!entry || typeof entry !== "object") return entry;
+  return Object.fromEntries(
+    Object.entries(entry).map(([key, value]) => [
+      key,
+      ["title", "description"].includes(key) ? brand(value) : present(value)
+    ])
+  );
+};
+async function createInstalledSession(root, build, data, broker, {
+  runnerValidation,
+  applicationContext,
+  createHostSurface,
+  onStartupStage,
+  lifecycleFactory
+} = {}) {
+  const host = pluginHost(build);
+  const stage2 = (value) => {
+    try {
+      onStartupStage?.(value);
+    } catch {
+    }
+  };
+  stage2("verify_payload");
+  const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
+  if (build.runtimeLayout !== "installed")
+    throw Error("Rebuild the installed runtime layout");
+  const source3 = join5(root, "capabilities");
+  const started = performance3.now();
+  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
+  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
+    throw Error("Installed runtime must contain regular files");
+  const verified = performance3.now();
+  process3.env.PATH = [join5(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  stage2("import_library");
+  const library = await import(pathToFileURL(join5(source3, "library/api.mjs")).href);
+  stage2("init_services");
+  if (Boolean(build.validationContext) !== Boolean(runnerValidation))
+    throw Error(
+      "Validation artifact requires its explicit private host binding"
+    );
+  const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
+  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+    throw Error("Validation artifact/binding mismatch");
+  if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
+    (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
+  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+    throw Error("Application-context artifact/scope binding mismatch");
+  const contextBinding = contextSetup ? library.parseRunnerContextBinding({
+    ...contextSetup.binding,
+    artifactDigest: identity4.digest
+  }) : void 0;
+  const hostLibrary = {
+    ...library,
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    createCapabilityServices(scopedData, options) {
+      return library.createCapabilityServices(scopedData, {
+        ...options,
+        mapGeneration: false,
+        ...validation ? { runnerValidation: validation } : {},
+        ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
+        ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
+      });
+    },
+    createCapabilityCatalog(services, options) {
+      return library.createCapabilityCatalog(services, {
+        ...options,
+        mapsEnabled: false
+      });
+    }
+  };
+  if (broker) {
+    if (typeof library.bindManagedProvider !== "function")
+      throw Error("Shared-auth runtime required");
+    library.bindManagedProvider(data, broker.socketPath);
+  }
+  const imported = performance3.now();
+  const workspaceService = broker && build.workspaceResults ? new library.WorkspaceResults(
+    (path, options) => broker.send(path.slice("/api/v1".length), options),
+    build.profile === "local"
+  ) : void 0;
+  const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
+  const session = await createCapabilitySession({
+    host,
+    data,
+    payloadDigest: identity4.digest,
+    packageIdentity: JSON.stringify(build),
+    library: broker ? {
+      ...hostLibrary,
+      createCapabilityCatalog(...args) {
+        const catalog2 = hostLibrary.createCapabilityCatalog(...args);
+        return withModelDiscovery(
+          {
+            ...catalog2,
+            tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
+            async invoke(name, input3, invocation) {
+              if (workspaceResults?.tools.some((tool2) => tool2.name === name))
+                return workspaceResults.invoke(
+                  name,
+                  input3,
+                  invocation?.signal
+                );
+              return catalog2.invoke(name, input3, invocation);
+            }
+          },
+          broker,
+          library.CapabilityCatalogError
+        );
+      }
+    } : hostLibrary,
+    ...host === "claude_code" ? { uiEnabled: false } : {},
+    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
+    uiMode: "panel"
+  });
+  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
+  session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
+  session.workspaceResults = workspaceService;
+  if (host === "codex") {
+    session.configurations = createConfigurationSurface({
+      session,
+      library,
+      data
+    });
+    if (typeof library.readSetupCard === "function")
+      session.setupCard = {
+        resources: [
+          {
+            uri: library.setupCardUri,
+            name: "Kaijan setup",
+            mimeType: "text/html;profile=mcp-app"
+          },
+          ...library.onboardingUri ? [
+            {
+              uri: library.onboardingUri,
+              name: "Set up Kaijan",
+              mimeType: "text/html;profile=mcp-app"
+            }
+          ] : []
+        ],
+        onboardingUri: library.onboardingUri,
+        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
+      };
+    session.feedback = createFeedbackSurface({
+      session,
+      library,
+      broker,
+      build
+    });
+    session.issues = createIssueSurface({ session, library, broker, build });
+    const close = session.close.bind(session);
+    session.close = async () => {
+      await session.configurations.close();
+      await session.feedback.close();
+      await session.issues.close();
+      await close();
+    };
+  }
+  session.privateParameters = {
+    async provision(threadId, input3) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.provisionRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        input3
+      );
+    },
+    async revoke(threadId, bindingId) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.revokeRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        bindingId
+      );
+    }
+  };
+  const originalFailure = session.failure.bind(session);
+  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
+  const initialized = performance3.now();
+  session.runtimeIdentity = Object.freeze({
+    pluginVersion: build.pluginVersion,
+    buildId: build.buildId,
+    sourceRevision: build.sourceRevision,
+    sourceDirty: build.sourceDirty,
+    capabilityDigest: build.capabilityDigest
+  });
+  session.runtimeDiscovery = () => installedRuntimeDiscovery(root, {
+    artifact: session.runtimeIdentity,
+    installation: session.identity,
+    connectionId: session.connectionId
+  });
+  session.instructions = brand(session.instructions);
+  session.providerReady = async () => library.providerConfigured(await library.providerEnvironment(data));
+  const catalog = session.catalog;
+  session.catalog = {
+    ...catalog,
+    tools: catalog.tools.map(present),
+    resources: catalog.resources.map((entry) => ({
+      ...present(entry),
+      name: brand(entry.name)
+    }))
+  };
+  process3.stderr.write(
+    JSON.stringify({
+      event: "kaijan.local.startup",
+      validationMs: Math.round(verified - started),
+      importMs: Math.round(imported - verified),
+      servicesMs: Math.round(initialized - imported),
+      processElapsedMs: Math.round(initialized)
+    }) + "\n"
+  );
+  if (host === "claude_code" && createHostSurface) {
+    try {
+      session.projectHistory = await createHostSurface({
+        session,
+        library,
+        data,
+        broker,
+        build
+      });
+      const close = session.close.bind(session);
+      session.close = async () => {
+        try {
+          await session.projectHistory.close();
+        } catch {
+        } finally {
+          await close();
+        }
+      };
+    } catch {
+    }
+  }
+  return session;
+}
+
+// apps/codex-plugin/src/setup/service.mjs
+import { randomUUID as randomUUID6 } from "node:crypto";
+import { performance as performance4 } from "node:perf_hooks";
+
+// apps/codex-plugin/src/setup/store.mjs
+import { DatabaseSync } from "node:sqlite";
+import { constants as constants3 } from "node:fs";
+import { mkdir as mkdir4, lstat as lstat6, realpath as realpath2, open as open3 } from "node:fs/promises";
+import { randomUUID as randomUUID4 } from "node:crypto";
+import process4 from "node:process";
+import { join as join6, resolve } from "node:path";
+
+// apps/codex-plugin/src/setup/contracts.mjs
+import { createHash as createHash4 } from "node:crypto";
+import { URL as URL2 } from "node:url";
+var digest18 = (value) => createHash4("sha256").update(JSON.stringify(value)).digest("hex");
+var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var requestKey = external_exports.string().min(8).max(120);
+var label2 = external_exports.string().min(1).max(1e3);
+var sourceSchema = external_exports.strictObject({
+  directory: external_exports.string().min(1).max(4096),
+  revision: revision2
+});
+var targetSchema = external_exports.strictObject({
+  url: external_exports.string().url().max(4096).refine((value) => {
+    const url2 = new URL2(value);
+    return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
+  }),
+  profileId: external_exports.string().min(1).max(80),
+  profileRevision: identity3.optional()
+});
+var configurationSchema2 = external_exports.strictObject({
+  source: sourceSchema,
+  workItem: external_exports.string().min(1).max(1e5).optional(),
+  target: targetSchema.optional(),
+  configurationRefs: external_exports.array(
+    external_exports.strictObject({
+      kind: external_exports.enum(["source", "target", "provider"]),
+      handle: external_exports.string().min(1).max(200)
+    })
+  ).max(30).default([])
+});
+var prepareSchema = external_exports.strictObject({
+  requestKey,
+  configuration: configurationSchema2.extend({
+    source: sourceSchema.extend({
+      revision: external_exports.string().min(1).max(512).default("main").describe(
+        "Use HEAD for the current checkout commit, or supply a branch, a full Git ref or an exact commit. Omit to select main."
+      )
+    })
+  })
+});
+var listSchema = external_exports.strictObject({
+  directory: external_exports.string().min(1).max(4096),
+  offset: external_exports.number().int().min(0).default(0)
+});
+var handleSchema = external_exports.strictObject({
+  applicationId: identity3,
+  contextId: identity3
+});
+var commandSchema = handleSchema.extend({ requestKey });
+var waitSchema = handleSchema.extend({
+  timeoutMs: external_exports.number().int().min(1).max(3e4).default(3e4)
+});
+var resolveSchema = handleSchema.extend({
+  expectedRevision: revision2,
+  expectedProfileRevision: identity3.optional().describe(
+    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
+  )
+});
+var handoffSchema = resolveSchema.extend({ requestKey });
+var workItemReadinessScopeSchema = external_exports.strictObject({
+  kind: external_exports.literal("work-item"),
+  workItem: external_exports.string().min(1).max(1e5),
+  applicationCoverage: external_exports.literal("incomplete"),
+  evidence: external_exports.literal("source-inferred"),
+  browserObserved: external_exports.literal(false),
+  selectedPageIds: external_exports.array(label2).optional(),
+  sourceLimitations: external_exports.array(
+    external_exports.strictObject({
+      stage: external_exports.literal("global/definitions"),
+      reason: external_exports.string().min(1),
+      relevance: external_exports.literal("unknown")
+    })
+  ).optional()
+});
+var mappingSchema = external_exports.strictObject({
+  mapId: identity3,
+  pages: external_exports.array(external_exports.strictObject({ id: label2, title: label2 })).max(200),
+  pagePreviewLimit: external_exports.literal(40).optional(),
+  coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
+  readinessScope: workItemReadinessScopeSchema.optional(),
+  readinessIssues: external_exports.array(
+    external_exports.strictObject({
+      code: label2,
+      recovery: label2
+    })
+  ).optional(),
+  answerId: identity3.optional(),
+  resultSha256: identity3.optional(),
+  snapshotTree: revision2.optional()
+});
+var provenanceSchema = external_exports.strictObject({
+  kind: external_exports.enum(["controlled-fixture", "unavailable", "product-adapter"]),
+  version: label2
+});
+var missingSchema = external_exports.array(label2).max(30);
+var authorizationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("host-managed-tool-dispatch"),
+    host: external_exports.literal("codex"),
+    policy: external_exports.literal("host-managed"),
+    scopeId: identity3,
+    requestId: external_exports.union([external_exports.string().max(200), external_exports.number().int()]),
+    tool: external_exports.enum(["loki_setup_prepare", "loki_setup_retry"]),
+    argumentsSha256: identity3,
+    configurationSha256: identity3
+  }),
+  external_exports.strictObject({ kind: external_exports.literal("controlled-selection-only") })
+]);
+var consumerReceiptSchema = external_exports.strictObject({
+  accepted: external_exports.boolean(),
+  contextId: identity3,
+  receiptId: identity3,
+  provenance: provenanceSchema
+});
+var mapReceiptSchema = external_exports.strictObject({
+  requestKey: identity3,
+  runId: identity3,
+  sourceRevision: revision2,
+  state: external_exports.enum([
+    "running",
+    "ready",
+    "incomplete",
+    "failed",
+    "stopped",
+    "uncertain"
+  ]),
+  progress: label2,
+  resultId: identity3.nullable(),
+  data: mappingSchema.nullable(),
+  provenance: provenanceSchema,
+  executionSettled: external_exports.boolean().optional()
+});
+var setupStateSchema = external_exports.enum([
+  "awaiting-authority",
+  "blocked",
+  "admitting",
+  "mapping",
+  "uncertain",
+  "stop-requested",
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var setupReceiptSchema = handleSchema.extend({
+  version: external_exports.number().int().positive(),
+  recovered: external_exports.boolean().optional(),
+  reused: external_exports.boolean().optional()
+});
+var setupSummarySchema = external_exports.strictObject({
+  state: setupStateSchema,
+  missing: missingSchema,
+  nextAction: label2,
+  provenance: provenanceSchema
+});
+var setupPreparationOutputSchema = setupReceiptSchema.extend(
+  setupSummarySchema.shape
+);
+var mappedSetupContextSchema = handleSchema.extend({
+  schema: external_exports.literal("loki.setup-context/3"),
+  version: external_exports.number().int().positive(),
+  configuration: configurationSchema2.extend({
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault()
+  }),
+  configurationHash: identity3,
+  sourceIdentity: external_exports.strictObject({
+    device: external_exports.number().int(),
+    inode: external_exports.number().int()
+  }),
+  provenance: provenanceSchema,
+  state: setupStateSchema,
+  missing: missingSchema,
+  authorityRef: identity3.nullable(),
+  authorityKind: external_exports.enum(["host-managed-tool-dispatch", "controlled-selection-only"]).nullable(),
+  authority: authorizationSchema.optional(),
+  owner: external_exports.uuid(),
+  map: external_exports.strictObject({
+    requestKey: identity3,
+    runId: identity3.nullable(),
+    resultId: identity3.nullable(),
+    data: mappingSchema.nullable(),
+    sourceRevision: revision2.optional(),
+    state: mapReceiptSchema.shape.state.optional(),
+    progress: label2.optional(),
+    provenance: provenanceSchema.optional(),
+    executionSettled: external_exports.boolean().optional()
+  }),
+  progress: label2,
+  error: label2.nullable(),
+  supersededBy: identity3.optional()
+});
+var setupContextSchema = external_exports.union([
+  mappedSetupContextSchema,
+  mappedSetupContextSchema.extend({
+    schema: external_exports.literal("loki.setup-context/4"),
+    map: external_exports.null(),
+    authorityRef: external_exports.null(),
+    authorityKind: external_exports.null()
+  })
+]);
+var setupListOutputSchema = external_exports.strictObject({
+  contexts: external_exports.array(
+    setupReceiptSchema.omit({ recovered: true, reused: true }).extend({
+      source: sourceSchema,
+      target: targetSchema.optional(),
+      state: setupStateSchema,
+      supersededBy: identity3.nullable(),
+      provenance: provenanceSchema
+    })
+  ).max(50),
+  nextOffset: external_exports.number().int().nonnegative().nullable()
+});
+var setupStopOutputSchema = setupReceiptSchema.extend({
+  ...setupSummarySchema.shape,
+  runId: identity3.nullable(),
+  cancellationRequested: external_exports.boolean()
+});
+var mappedResolveOutputSchema = external_exports.strictObject({
+  application: external_exports.strictObject({
+    schema: external_exports.literal("loki.application-context/2"),
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    map: external_exports.strictObject({
+      mapId: identity3,
+      runId: identity3,
+      resultId: identity3,
+      sourceRevision: revision2,
+      preview: mappingSchema
+    }),
+    readiness: external_exports.strictObject({
+      state: external_exports.literal("ready"),
+      missing: external_exports.array(external_exports.never()).max(0),
+      scope: workItemReadinessScopeSchema.optional()
+    }),
+    provenance: provenanceSchema
+  }),
+  setup: handleSchema.extend({
+    version: external_exports.number().int().positive(),
+    mapRunId: identity3,
+    mapResultId: identity3,
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault(),
+    authorityRef: identity3
+  }),
+  authority: external_exports.enum([
+    "host-managed-tool-dispatch",
+    "controlled-selection-only"
+  ])
+});
+var configuredResolveOutputSchema = external_exports.strictObject({
+  application: external_exports.strictObject({
+    schema: external_exports.literal("loki.application-context/3"),
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().min(1).max(1e5).nullable(),
+    map: external_exports.null(),
+    readiness: external_exports.strictObject({
+      state: external_exports.literal("configured"),
+      missing: external_exports.array(external_exports.never()).max(0),
+      map: external_exports.literal("not-required"),
+      browserObserved: external_exports.literal(false)
+    }),
+    provenance: provenanceSchema
+  }),
+  setup: handleSchema.extend({
+    version: external_exports.number().int().positive(),
+    mapRunId: external_exports.null(),
+    mapResultId: external_exports.null(),
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault(),
+    authorityRef: external_exports.null()
+  }),
+  authority: external_exports.literal("configuration-only")
+});
+var setupResolveOutputSchema = external_exports.union([
+  mappedResolveOutputSchema,
+  configuredResolveOutputSchema
+]);
+var handoffFields = {
+  consumer: external_exports.union([
+    external_exports.strictObject({
+      state: external_exports.literal("pending"),
+      provenance: provenanceSchema
+    }),
+    consumerReceiptSchema
+  ]),
+  recovered: external_exports.boolean().optional()
+};
+var setupHandoffOutputSchema = external_exports.union([
+  mappedResolveOutputSchema.extend(handoffFields),
+  configuredResolveOutputSchema.extend(handoffFields)
+]);
+var setupErrorOutputSchema = external_exports.strictObject({
+  error: external_exports.strictObject({
+    code: external_exports.string().regex(/^[a-z][a-z0-9_]{0,99}$/),
+    message: label2
+  })
+});
+var setupSuccessSchemas = {
+  loki_setup_list: setupListOutputSchema,
+  loki_setup_prepare: setupPreparationOutputSchema,
+  loki_setup_get: setupContextSchema,
+  loki_setup_wait: setupContextSchema,
+  loki_setup_retry: setupPreparationOutputSchema,
+  loki_setup_stop: setupStopOutputSchema,
+  loki_setup_resolve: setupResolveOutputSchema,
+  loki_setup_handoff: setupHandoffOutputSchema
+};
+var setupOutputVersion = (name) => [
+  "loki_setup_prepare",
+  "loki_setup_retry",
+  "loki_setup_stop",
+  "loki_setup_get",
+  "loki_setup_wait",
+  "loki_setup_resolve",
+  "loki_setup_handoff"
+].includes(name) ? 2 : 1;
+var setupOutputSchemas = Object.fromEntries(
+  Object.entries(setupSuccessSchemas).map(([name, schema]) => [
+    name,
+    external_exports.union([schema, setupErrorOutputSchema]).meta({ id: `urn:loki:${name}:output:${setupOutputVersion(name)}` })
+  ])
+);
+var SetupFailure = class extends Error {
+  constructor(code) {
+    super(code);
+    this.code = code;
+  }
+};
+var recoveryMessages = {
+  unknown_application_context: "Use the original conversation and application/context IDs. List retained contexts for the selected project; do not recreate unknown work.",
+  request_conflict: "This request key already records different input. Read its original receipt. Use a new key only for a separately authorized new operation, never to replay unknown effects.",
+  retry_not_required: "Read the original context. Only known blocked, failed or stopped work can be retried; uncertain or pending effects must be reconciled without replay.",
+  stale_application_context: "Use the selected context's exact source and target-profile revisions. A different source selection is a new operation.",
+  application_not_ready: "Read the original context's state and missing prerequisites. A receipt, completed wait or partial map does not establish application readiness.",
+  consumer_integration_unavailable: "No supported application consumer is ready. Retain the source-bound context and original map; do not substitute a fixture acknowledgement.",
+  setup_output_invalid: "The Setup response did not match its advertised contract. Read retained state with the original identities before recovery; do not replay an operation whose effects are unknown.",
+  setup_interrupted: "The request was interrupted. Read the original context to confirm its state and any pending Stop. Request cancellation alone does not prove producer cancellation."
+};
+function failure3(error63) {
+  const code = error63 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error63.code) ? error63.code : error63?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
+  return {
+    code,
+    message: (Object.hasOwn(recoveryMessages, code) ? recoveryMessages[code] : void 0) ?? "Read the original Setup context before retrying. Keep its application, source version and request key."
+  };
+}
+
+// apps/codex-plugin/src/setup/store.mjs
+async function openSetupStore(directory) {
+  await mkdir4(directory, { recursive: true, mode: 448 });
+  const info = await lstat6(directory);
+  if (!info.isDirectory() || info.uid !== process4.getuid?.() || info.mode & 63 || await realpath2(directory) !== resolve(directory))
+    throw new SetupFailure("unsafe_setup_state");
+  const path = join6(directory, "setup.sqlite");
+  const file2 = await open3(
+    path,
+    constants3.O_RDWR | constants3.O_CREAT | constants3.O_NOFOLLOW | constants3.O_NONBLOCK,
+    384
+  );
+  try {
+    const stat2 = await file2.stat();
+    if (!stat2.isFile() || stat2.uid !== process4.getuid?.() || stat2.mode & 63 || stat2.nlink !== 1)
+      throw new SetupFailure("unsafe_setup_state");
+  } finally {
+    await file2.close();
+  }
+  const database = new DatabaseSync(path);
+  let closed2 = false;
+  database.exec(`PRAGMA busy_timeout=5000;
+    CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS applications(id TEXT PRIMARY KEY, version INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS contexts(id TEXT PRIMARY KEY, application_id TEXT NOT NULL, configuration_hash TEXT NOT NULL, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS map_observations(context_id TEXT, digest TEXT, value TEXT NOT NULL, PRIMARY KEY(context_id,digest));
+    CREATE TABLE IF NOT EXISTS commands(scope TEXT, key TEXT, digest TEXT, value TEXT, PRIMARY KEY(scope,key));`);
+  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID4());
+  return {
+    installation: database.prepare("SELECT value FROM metadata WHERE key='installation'").get().value,
+    transaction(fn) {
+      database.exec("BEGIN IMMEDIATE");
+      try {
+        const value = fn();
+        database.exec("COMMIT");
+        return value;
+      } catch (error63) {
+        database.exec("ROLLBACK");
+        throw error63;
+      }
+    },
+    version(applicationId) {
+      database.prepare(
+        "INSERT INTO applications VALUES(?,1) ON CONFLICT(id) DO UPDATE SET version=version+1"
+      ).run(applicationId);
+      return database.prepare("SELECT version FROM applications WHERE id=?").get(applicationId).version;
+    },
+    get(applicationId, contextId) {
+      const row = database.prepare("SELECT value FROM contexts WHERE id=? AND application_id=?").get(contextId, applicationId);
+      if (!row) throw new SetupFailure("unknown_application_context");
+      return JSON.parse(row.value);
+    },
+    matching(applicationId, hash6) {
+      const rows2 = database.prepare(
+        "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
+      ).all(applicationId, hash6);
+      return rows2.length ? JSON.parse(rows2[0].value) : null;
+    },
+    list(directory2, offset) {
+      return database.prepare(
+        "SELECT value FROM contexts WHERE json_extract(value,'$.configuration.source.directory')=? ORDER BY rowid DESC LIMIT 51 OFFSET ?"
+      ).all(directory2, offset).map((row) => JSON.parse(row.value));
+    },
+    put(value) {
+      database.prepare(
+        "INSERT INTO contexts VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value"
+      ).run(
+        value.contextId,
+        value.applicationId,
+        value.configurationHash,
+        JSON.stringify(value)
+      );
+    },
+    command(scope, key, hash6) {
+      const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
+      if (!row) return null;
+      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
+      return JSON.parse(row.value);
+    },
+    receipt(scope, key, hash6, value) {
+      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
+    },
+    complete(scope, key, hash6, value) {
+      database.prepare(
+        "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
+      ).run(JSON.stringify(value), scope, key, hash6);
+    },
+    observe(contextId, value) {
+      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest18(value), JSON.stringify(value));
+    },
+    producer(key) {
+      const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
+      return row ? JSON.parse(row.value) : null;
+    },
+    retainProducer(key, value) {
+      database.prepare(
+        "INSERT INTO metadata VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value"
+      ).run(`producer:${key}`, JSON.stringify(value));
+    },
+    close: () => {
+      if (!closed2) {
+        closed2 = true;
+        database.close();
+      }
+    }
+  };
+}
+
+// apps/codex-plugin/src/setup/source.mjs
+import { execFile as execFile2 } from "node:child_process";
+import { promisify as promisify3 } from "node:util";
+import { realpath as realpath3, lstat as lstat7 } from "node:fs/promises";
+import { isAbsolute as isAbsolute3 } from "node:path";
+import { randomUUID as randomUUID5 } from "node:crypto";
+var execute = promisify3(execFile2);
+async function resolveSourceRevision(source3, signal) {
+  const git = async (args, cleanup = false) => (await execute(
+    "git",
+    [
+      "-c",
+      "core.hooksPath=/dev/null",
+      "-c",
+      "core.fsmonitor=false",
+      "-c",
+      "protocol.ext.allow=never",
+      "-C",
+      source3.directory,
+      ...args
+    ],
+    {
+      timeout: 6e4,
+      maxBuffer: 16384,
+      signal: cleanup ? void 0 : signal
+    }
+  )).stdout.trim();
+  const requested = source3.revision ?? "main";
+  if (/^[a-f0-9]{40}$/.test(requested)) {
+    await inspectSource({ ...source3, revision: requested });
+    return requested;
+  }
+  try {
+    const head = await git(["rev-parse", "--verify", "HEAD^{commit}"]);
+    await inspectSource({ ...source3, revision: head });
+    if (requested === "HEAD") return head;
+    const ref = requested.startsWith("refs/") ? requested : `refs/heads/${requested}`;
+    await git(["check-ref-format", ref]);
+    let remote = false;
+    try {
+      await git(["remote", "get-url", "origin"]);
+      remote = true;
+    } catch {
+    }
+    if (!remote) return await git(["rev-parse", "--verify", `${ref}^{commit}`]);
+    const temporary = `refs/loki/setup/${randomUUID5()}`;
+    try {
+      await git([
+        "fetch",
+        "--quiet",
+        "--no-tags",
+        "--no-recurse-submodules",
+        "--no-write-fetch-head",
+        "origin",
+        `${ref}:${temporary}`
+      ]);
+      const upstream = await git([
+        "rev-parse",
+        "--verify",
+        `${temporary}^{commit}`
+      ]);
+      let local;
+      try {
+        local = await git(["rev-parse", "--verify", `${ref}^{commit}`]);
+      } catch {
+        return upstream;
+      }
+      if (local === upstream) return local;
+      try {
+        await git(["merge-base", "--is-ancestor", local, upstream]);
+        return upstream;
+      } catch {
+      }
+      try {
+        await git(["merge-base", "--is-ancestor", upstream, local]);
+        return local;
+      } catch {
+      }
+      throw new SetupFailure("source_revision_ambiguous");
+    } finally {
+      await git(["update-ref", "-d", temporary], true);
+    }
+  } catch (error63) {
+    if (signal?.aborted) throw signal.reason;
+    if (error63 instanceof SetupFailure) throw error63;
+    if (error63.code === "ENOENT" && error63.path === "git")
+      throw new SetupFailure("git_unavailable");
+    throw new SetupFailure("source_revision_unavailable");
+  }
+}
+async function inspectSource(source3) {
+  try {
+    if (!isAbsolute3(source3.directory) || source3.directory.includes("\0") || await realpath3(source3.directory) !== source3.directory)
+      throw Error();
+    const stat2 = await lstat7(source3.directory);
+    if (!stat2.isDirectory()) throw Error();
+    const git = async (args) => (await execute(
+      "git",
+      [
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "core.fsmonitor=false",
+        "-C",
+        source3.directory,
+        ...args
+      ],
+      {
+        timeout: 1e4,
+        maxBuffer: 16384
+      }
+    )).stdout.trim();
+    if (await git(["rev-parse", "--show-toplevel"]) !== source3.directory)
+      throw Error();
+    if (await git(["rev-parse", "--verify", `${source3.revision}^{commit}`]) !== source3.revision)
+      throw Error();
+    return { device: stat2.dev, inode: stat2.ino };
+  } catch (error63) {
+    if (error63.code === "ENOENT" && error63.path === "git")
+      throw new SetupFailure("git_unavailable");
+    throw new SetupFailure("invalid_source");
+  }
+}
+
+// apps/codex-plugin/src/setup/service.mjs
+var active = /* @__PURE__ */ new Set(["admitting", "mapping", "uncertain", "stop-requested"]);
+var terminal = /* @__PURE__ */ new Set([
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var retryable = /* @__PURE__ */ new Set([
+  "failed",
+  "stopped",
+  "blocked",
+  "awaiting-authority"
+]);
+var handle = ({ applicationId, contextId, version: version4 }) => ({
+  applicationId,
+  contextId,
+  version: version4
+});
+async function createSetup({
+  directory,
+  mapper,
+  consumer,
+  authorize,
+  createTelemetry
+}) {
+  const store = await openSetupStore(directory);
+  const provenance2 = provenanceSchema.parse(
+    mapper?.provenance ?? {
+      kind: "product-adapter",
+      version: "application-source-configuration/1"
+    }
+  );
+  const owner2 = randomUUID6();
+  const telemetryByContext = /* @__PURE__ */ new Map();
+  const telemetryStarts = /* @__PURE__ */ new Map();
+  const observe = (method, input3) => {
+    try {
+      Promise.resolve(
+        telemetryByContext.get(input3.setupId)?.[method]?.(input3)
+      ).catch(() => {
+      });
+    } catch {
+    }
+  };
+  const inheritedCapability = (contextId) => {
+    try {
+      const sink = telemetryByContext.get(contextId)?.capabilityLifecycle;
+      return typeof sink === "function" ? sink : null;
+    } catch {
+      return null;
+    }
+  };
+  const snapshotObserver = () => {
+    try {
+      const observer = createTelemetry?.();
+      if (!observer || typeof observer !== "object") return null;
+      if (typeof observer.then === "function") {
+        Promise.resolve(observer).catch(() => {
+        });
+        return null;
+      }
+      return observer;
+    } catch {
+      return null;
+    }
+  };
+  const started = (value, observer) => {
+    if (!observer || telemetryByContext.size >= 512) return;
+    telemetryByContext.set(value.contextId, observer);
+    telemetryStarts.set(value.contextId, performance4.now());
+    observe("setupStarted", {
+      transitionKey: value.contextId,
+      setupId: value.contextId,
+      transition: "fresh-admission",
+      validated: true,
+      persisted: true,
+      recovered: false,
+      reused: false,
+      sourceKind: "local_folder",
+      entry: null,
+      hasTargetUrl: Boolean(value.configuration.target)
+    });
+  };
+  const finished2 = (value, executionSettled) => observe("setupFinished", {
+    transitionKey: value.contextId,
+    setupId: value.contextId,
+    transition: "first-authoritative-terminal",
+    validated: true,
+    authoritative: true,
+    executionSettled,
+    recovered: false,
+    reused: false,
+    state: value.state,
+    missingPrerequisites: value.missing,
+    durationKnown: telemetryStarts.has(value.contextId),
+    durationMs: performance4.now() - telemetryStarts.get(value.contextId)
+  });
+  const read = (input3) => store.get(input3.applicationId, input3.contextId);
+  async function summarize(receipt2, stop = false) {
+    let value = read(receipt2);
+    if (!stop) {
+      await verify(value);
+      value = read(receipt2);
+    }
+    let nextAction3;
+    switch (value.state) {
+      case "blocked":
+      case "awaiting-authority":
+        nextAction3 = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
+        break;
+      case "admitting":
+      case "mapping":
+        nextAction3 = "Wait on this original context. A receipt does not establish application readiness.";
+        break;
+      case "uncertain":
+        nextAction3 = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
+        break;
+      case "stop-requested":
+        nextAction3 = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
+        break;
+      case "incomplete":
+        nextAction3 = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
+        break;
+      case "ready":
+        nextAction3 = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
+        if (value.map?.data?.readinessScope?.sourceLimitations?.length)
+          nextAction3 += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
+        break;
+      default:
+        nextAction3 = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
+    }
+    if (!mapper && value.map && active.has(value.state))
+      nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
+    if (stop && !receipt2.cancellationRequested) {
+      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
+    }
+    if (value.provenance.kind === "controlled-fixture")
+      nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
+    return {
+      ...receipt2,
+      state: value.state,
+      missing: [...value.missing],
+      nextAction: nextAction3,
+      provenance: value.provenance
+    };
+  }
+  const edit = (input3, fn) => store.transaction(() => {
+    const value = read(input3);
+    fn(value);
+    store.put(value);
+    return value;
+  });
+  async function verify(value) {
+    if (digest18(await inspectSource(value.configuration.source)) !== digest18(value.sourceIdentity))
+      throw new SetupFailure("source_identity_changed");
+    if (mapper && digest18(provenance2) !== digest18(value.provenance))
+      throw new SetupFailure("adapter_changed");
+  }
+  function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
+    return store.transaction(() => {
+      const hash6 = digest18(input3), previous = store.command(scope, input3.requestKey, hash6);
+      if (previous) return { receipt: { ...previous, recovered: true } };
+      const applicationId = digest18({
+        installation: store.installation,
+        directory: configuration2.source.directory,
+        sourceIdentity
+      });
+      const configurationHash = digest18({ configuration: configuration2, provenance: provenance2 });
+      const existing = store.matching(applicationId, configurationHash);
+      if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
+        const receipt3 = handle(existing);
+        store.receipt(scope, input3.requestKey, hash6, receipt3);
+        return {
+          receipt: { ...receipt3, reused: true },
+          retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
+            transitionKey: existing.contextId,
+            setupId: existing.contextId,
+            mapId: existing.map.data.mapId
+          } : null
+        };
+      }
+      const previousContext = retry ? read(input3) : null;
+      if (previousContext && !retryable.has(previousContext.state))
+        throw new SetupFailure("retry_not_required");
+      const version4 = store.version(applicationId);
+      const value = {
+        schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
+        applicationId,
+        version: version4,
+        contextId: digest18({ applicationId, version: version4, configurationHash }),
+        configuration: configuration2,
+        configurationHash,
+        sourceIdentity,
+        provenance: provenance2,
+        state: "awaiting-authority",
+        missing: [],
+        authorityRef: null,
+        authorityKind: null,
+        owner: owner2,
+        map: mapper ? { requestKey: null, runId: null, resultId: null, data: null } : null,
+        progress: mapper ? "Checking required execution prerequisites and source authority" : "Saving application source configuration",
+        error: null
+      };
+      if (value.map) value.map.requestKey = value.contextId;
+      if (previousContext?.state === "awaiting-authority") {
+        previousContext.state = "superseded";
+        previousContext.supersededBy = value.contextId;
+        previousContext.progress = "Replaced by an explicit retry; late confirmation answers are ignored";
+        store.put(previousContext);
+      }
+      store.put(value);
+      const receipt2 = handle(value);
+      store.receipt(scope, input3.requestKey, hash6, receipt2);
+      return { receipt: receipt2, value };
+    });
+  }
+  function applyMap(input3, raw) {
+    const result2 = mapReceiptSchema.parse(raw);
+    store.observe(input3.contextId, result2);
+    let firstTerminal = false;
+    const accepted = edit(input3, (value) => {
+      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest18(result2.provenance) !== digest18(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
+        throw new SetupFailure("map_scope_mismatch");
+      if (result2.state === "ready" && (!result2.data || !result2.resultId))
+        throw new SetupFailure("invalid_map_result");
+      if (terminal.has(value.state)) return;
+      value.map = { ...value.map, ...result2 };
+      if (value.state === "stop-requested" && result2.state !== "stopped") {
+        if (!result2.executionSettled) return;
+        value.state = "stopped";
+        value.progress = `Setup stopped; original map operation settled as ${result2.state}`;
+        value.missing = [];
+        firstTerminal = true;
+        return;
+      }
+      value.state = result2.state === "running" ? "mapping" : result2.state;
+      value.progress = result2.progress;
+      value.missing = [];
+      value.error = result2.state === "failed" ? "map_failed" : null;
+      firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
+        value.state
+      );
+    });
+    if (firstTerminal) finished2(accepted, result2.executionSettled === true);
+    return accepted;
+  }
+  async function initialize(value, signal, invocation) {
+    try {
+      if (read(value).state !== "awaiting-authority") return;
+      signal?.throwIfAborted();
+      if (!mapper) {
+        await verify(value);
+        signal?.throwIfAborted();
+        const configured2 = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "ready";
+          current.missing = [];
+          current.progress = "Application source and optional target configured; no map generated";
+        });
+        finished2(configured2, true);
+        return;
+      }
+      const parsed = missingSchema.safeParse(
+        await mapper.readiness(value.configuration)
+      );
+      if (!parsed.success) throw new SetupFailure("invalid_map_readiness");
+      signal?.throwIfAborted();
+      if (parsed.data.length) {
+        const blocked = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "blocked";
+          current.missing = parsed.data;
+          current.progress = "Setup needs the listed prerequisites";
+        });
+        finished2(blocked, true);
+        return;
+      }
+      if (read(value).state !== "awaiting-authority") return;
+      const authorization = await authorize(
+        value.configuration,
+        signal,
+        invocation
+      );
+      if (!authorization) {
+        const blocked = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "blocked";
+          current.missing = ["source-authorization"];
+          current.progress = "Source or target authority was denied";
+          current.error = "authority_denied";
+        });
+        finished2(blocked, true);
+        return;
+      }
+      const parsedAuthorization = authorizationSchema.safeParse(authorization);
+      if (!parsedAuthorization.success)
+        throw new SetupFailure("invalid_source_authorization");
+      const authority = parsedAuthorization.data;
+      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest18(value.configuration))
+        throw new SetupFailure("source_authorization_scope_mismatch");
+      signal?.throwIfAborted();
+      await verify(value);
+      if (read(value).state !== "awaiting-authority") return;
+      edit(value, (current) => {
+        if (current.state !== "awaiting-authority") return;
+        current.authorityRef = digest18({
+          contextId: value.contextId,
+          owner: owner2,
+          authority
+        });
+        current.authorityKind = authority.kind;
+        current.authority = authority;
+        current.state = "admitting";
+        current.missing = [];
+        current.progress = "Starting the selected map";
+      });
+      if (read(value).state !== "admitting") return;
+      try {
+        signal?.throwIfAborted();
+        const result2 = await mapper.start(
+          { requestKey: value.contextId, ...value.configuration },
+          signal,
+          {
+            lifecycle: inheritedCapability(value.contextId),
+            setupOperationId: value.contextId
+          }
+        );
+        applyMap(value, result2);
+        if (read(value).state === "stop-requested")
+          await api.stop({
+            applicationId: value.applicationId,
+            contextId: value.contextId,
+            requestKey: `pending-stop-${value.map.requestKey}`
+          });
+      } catch {
+        edit(value, (current) => {
+          if (current.state === "admitting") {
+            current.state = "uncertain";
+            current.progress = "Map admission reply is unknown; read the original operation";
+          }
+        });
+      } finally {
+        if (signal?.aborted)
+          await api.stop({
+            applicationId: value.applicationId,
+            contextId: value.contextId,
+            requestKey: `interrupt-${value.map.requestKey}`
+          });
+      }
+    } catch (error63) {
+      const interrupted = edit(value, (current) => {
+        if (current.state === "awaiting-authority") {
+          current.state = signal?.aborted ? "stopped" : "blocked";
+          current.missing = [
+            error63 instanceof SetupFailure ? error63.code : "setup_interrupted"
+          ];
+          current.progress = "Setup confirmation or prerequisites were not completed; explicitly retry when ready";
+          current.error = error63 instanceof SetupFailure ? error63.code : "setup_interrupted";
+        }
+      });
+      if (["blocked", "stopped"].includes(interrupted.state))
+        finished2(interrupted, true);
+    }
+  }
+  const api = {
+    provenance: provenance2,
+    async prepare(raw, signal, invocation) {
+      const observer = snapshotObserver();
+      signal?.throwIfAborted();
+      const input3 = prepareSchema.parse(raw);
+      if (input3.configuration.target) {
+        input3.configuration.target.profileRevision ??= digest18({
+          url: input3.configuration.target.url,
+          profileId: input3.configuration.target.profileId
+        });
+      }
+      const previous = store.command(
+        "prepare",
+        input3.requestKey,
+        digest18(input3)
+      );
+      if (previous) return summarize({ ...previous, recovered: true });
+      const configuration2 = structuredClone(input3.configuration);
+      configuration2.source.revision = await resolveSourceRevision(
+        configuration2.source,
+        signal
+      );
+      signal?.throwIfAborted();
+      const sourceIdentity = await inspectSource(configuration2.source);
+      const reserved = reserve("prepare", input3, configuration2, sourceIdentity);
+      if (reserved.retainedSelection) {
+        try {
+          void Promise.resolve(
+            observer?.retainedMapSelected?.({
+              ...reserved.retainedSelection,
+              transition: "persisted-retained-selection",
+              persisted: true,
+              validated: true
+            })
+          ).catch(() => {
+          });
+        } catch {
+        }
+      }
+      if (reserved.value) {
+        started(reserved.value, observer);
+        await initialize(reserved.value, signal, invocation);
+      }
+      return summarize(reserved.receipt);
+    },
+    list(raw) {
+      const input3 = listSchema.parse(raw), rows2 = store.list(input3.directory, input3.offset);
+      return {
+        contexts: rows2.slice(0, 50).map((value) => ({
+          ...handle(value),
+          source: value.configuration.source,
+          target: value.configuration.target,
+          state: value.state,
+          supersededBy: value.supersededBy ?? null,
+          provenance: value.provenance
+        })),
+        nextOffset: rows2.length > 50 ? input3.offset + 50 : null
+      };
+    },
+    async get(raw) {
+      const input3 = handleSchema.parse(raw), value = read(input3);
+      await verify(value);
+      if (mapper && active.has(value.state)) {
+        let result2;
+        try {
+          result2 = await mapper.get({
+            requestKey: value.map.requestKey,
+            runId: value.map.runId
+          });
+        } catch {
+          return read(input3);
+        }
+        return applyMap(input3, result2);
+      }
+      return read(input3);
+    },
+    async wait(raw, signal) {
+      const { timeoutMs, ...input3 } = waitSchema.parse(raw);
+      const original2 = read(input3);
+      const deadline = new AbortController();
+      const bounded = AbortSignal.any([
+        deadline.signal,
+        ...signal ? [signal] : []
+      ]);
+      const timer = setTimeout(
+        () => deadline.abort(
+          new DOMException("Setup wait timed out", "TimeoutError")
+        ),
+        timeoutMs
+      );
+      let abort, stopDeadline;
+      try {
+        const result2 = await Promise.race([
+          (async () => {
+            const value = await this.get(input3);
+            bounded.throwIfAborted();
+            if (!active.has(value.state) || !mapper?.wait) return null;
+            return mapper.wait(
+              { requestKey: value.map.requestKey, runId: value.map.runId },
+              bounded
+            );
+          })(),
+          new Promise((_, reject) => {
+            abort = () => reject(bounded.reason);
+            bounded.addEventListener("abort", abort, { once: true });
+            if (bounded.aborted) abort();
+          })
+        ]);
+        return result2 ? applyMap(input3, result2) : read(input3);
+      } catch (error63) {
+        if (signal?.aborted) {
+          await Promise.race([
+            this.stop({
+              ...input3,
+              requestKey: `interrupt-${original2.map?.requestKey ?? original2.contextId}`
+            }),
+            new Promise((resolve4) => {
+              stopDeadline = () => resolve4();
+              deadline.signal.addEventListener("abort", stopDeadline, {
+                once: true
+              });
+              if (deadline.signal.aborted) stopDeadline();
+            })
+          ]);
+        } else if (!deadline.signal.aborted) throw error63;
+        return read(input3);
+      } finally {
+        clearTimeout(timer);
+        bounded.removeEventListener("abort", abort);
+        if (stopDeadline)
+          deadline.signal.removeEventListener("abort", stopDeadline);
+      }
+    },
+    async retry(raw, signal, invocation) {
+      const observer = snapshotObserver();
+      const input3 = commandSchema.parse(raw), value = read(input3);
+      await verify(value);
+      const previous = store.command("retry", input3.requestKey, digest18(input3));
+      if (previous) return summarize({ ...previous, recovered: true });
+      const reserved = reserve(
+        "retry",
+        input3,
+        value.configuration,
+        value.sourceIdentity,
+        true
+      );
+      if (reserved.retainedSelection) {
+        try {
+          void Promise.resolve(
+            observer?.retainedMapSelected?.({
+              ...reserved.retainedSelection,
+              transition: "persisted-retained-selection",
+              persisted: true,
+              validated: true
+            })
+          ).catch(() => {
+          });
+        } catch {
+        }
+      }
+      if (reserved.value) {
+        started(reserved.value, observer);
+        await initialize(reserved.value, signal, invocation);
+      }
+      return summarize(reserved.receipt);
+    },
+    async stop(raw) {
+      const input3 = commandSchema.parse(raw);
+      let stoppedBeforeAdmission = false;
+      const reserved = store.transaction(() => {
+        const hash6 = digest18(input3), previous = store.command("stop", input3.requestKey, hash6);
+        if (previous) {
+          const value2 = read(input3);
+          return {
+            receipt: { ...previous, recovered: true },
+            value: value2,
+            cancel: value2.state === "stop-requested"
+          };
+        }
+        const value = read(input3);
+        const cancel = active.has(value.state);
+        if (value.state === "awaiting-authority") {
+          value.state = "stopped";
+          value.progress = mapper ? "Stopped before map admission" : "Setup stopped before configuration completed";
+          store.put(value);
+          stoppedBeforeAdmission = true;
+        }
+        if (cancel) {
+          value.state = "stop-requested";
+          value.progress = "Stop requested for this original map";
+          store.put(value);
+        }
+        const receipt2 = {
+          ...handle(value),
+          runId: value.map?.runId ?? null,
+          cancellationRequested: cancel
+        };
+        store.receipt("stop", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, value, cancel };
+      });
+      if (stoppedBeforeAdmission) finished2(reserved.value, true);
+      if (reserved.cancel && mapper) {
+        try {
+          applyMap(
+            input3,
+            await mapper.stop({
+              requestKey: reserved.value.map.requestKey,
+              runId: reserved.value.map.runId
+            })
+          );
+        } catch {
+        }
+      }
+      return summarize(reserved.receipt, true);
+    },
+    async resolve(raw) {
+      const input3 = resolveSchema.parse(raw), value = read(input3);
+      await verify(value);
+      if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
+        throw new SetupFailure("stale_application_context");
+      if (value.schema === "loki.setup-context/4" && value.state === "ready") {
+        const source4 = value.configuration.source;
+        const target2 = value.configuration.target ?? null;
+        const workItem = value.configuration.workItem ?? null;
+        return {
+          application: {
+            schema: "loki.application-context/3",
+            contextId: digest18({
+              source: source4,
+              target: target2,
+              workItem,
+              provenance: value.provenance
+            }),
+            source: source4,
+            target: target2,
+            workItem,
+            map: null,
+            readiness: {
+              state: "configured",
+              missing: [],
+              map: "not-required",
+              browserObserved: false
+            },
+            provenance: value.provenance
+          },
+          setup: {
+            ...handle(value),
+            mapRunId: null,
+            mapResultId: null,
+            configurationRefs: value.configuration.configurationRefs,
+            authorityRef: null
+          },
+          authority: "configuration-only"
+        };
+      }
+      if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
+        throw new SetupFailure("application_not_ready");
+      const source3 = value.configuration.source, target = value.configuration.target ?? null;
+      const map2 = {
+        mapId: value.map.data.mapId,
+        runId: value.map.runId,
+        resultId: value.map.resultId,
+        sourceRevision: source3.revision,
+        preview: value.map.data
+      };
+      const readiness2 = {
+        state: "ready",
+        missing: [],
+        ...value.map.data.readinessScope ? { scope: value.map.data.readinessScope } : {}
+      };
+      const application = {
+        schema: "loki.application-context/2",
+        contextId: digest18({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
+        source: source3,
+        target: target ?? null,
+        map: map2,
+        readiness: readiness2,
+        provenance: provenance2
+      };
+      return {
+        application,
+        setup: {
+          ...handle(value),
+          mapRunId: value.map.runId,
+          mapResultId: value.map.resultId,
+          configurationRefs: value.configuration.configurationRefs,
+          authorityRef: value.authorityRef
+        },
+        authority: value.authorityKind
+      };
+    },
+    async handoff(raw) {
+      const input3 = handoffSchema.parse(raw);
+      if (!consumer || (await consumer.readiness?.())?.length)
+        throw new SetupFailure("consumer_integration_unavailable");
+      const payload = await this.resolve({
+        applicationId: input3.applicationId,
+        contextId: input3.contextId,
+        expectedRevision: input3.expectedRevision,
+        expectedProfileRevision: input3.expectedProfileRevision
+      });
+      const hash6 = digest18(input3);
+      const reserved = store.transaction(() => {
+        const previous = store.command("handoff", input3.requestKey, hash6);
+        if (previous) return { receipt: previous, recovered: true };
+        const receipt2 = {
+          ...payload,
+          consumer: { state: "pending", provenance: provenance2 }
+        };
+        store.receipt("handoff", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, recovered: false };
+      });
+      if (reserved.receipt.consumer.state !== "pending")
+        return { ...reserved.receipt, recovered: true };
+      const request3 = { requestKey: input3.requestKey, ...payload };
+      let rawResult;
+      try {
+        rawResult = reserved.recovered ? await consumer.get?.(request3) : await consumer.accept(request3);
+      } catch {
+        return { ...reserved.receipt, recovered: reserved.recovered };
+      }
+      if (!rawResult)
+        return { ...reserved.receipt, recovered: reserved.recovered };
+      const result2 = consumerReceiptSchema.parse(rawResult);
+      if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
+        throw new SetupFailure("consumer_scope_mismatch");
+      return store.transaction(() => {
+        const prior = store.command("handoff", input3.requestKey, hash6);
+        if (prior.consumer.state !== "pending")
+          return { ...prior, recovered: true };
+        const receipt2 = { ...payload, consumer: result2 };
+        store.complete("handoff", input3.requestKey, hash6, receipt2);
+        return receipt2;
+      });
+    },
+    close() {
+      for (const observer of telemetryByContext.values()) {
+        try {
+          observer.close?.();
+        } catch {
+        }
+      }
+      telemetryByContext.clear();
+      telemetryStarts.clear();
+      store.close();
+    }
+  };
+  return api;
+}
+
+// apps/codex-plugin/src/setup/onboarding.mjs
+var inputSchema2 = external_exports.strictObject({
+  applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
+  task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
+});
+var outputSchema2 = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.onboarding/1"),
+  applicationURL: external_exports.string(),
+  task: external_exports.string()
+});
+function createOnboarding(ui) {
+  if (!ui?.onboardingUri) return void 0;
+  return {
+    tool: {
+      name: "kaijan_onboarding_show",
+      title: "Set up Kaijan",
+      description: "Open Kaijan's getting-started panel from post-install Set up or when the person asks to set up Kaijan. Prefill the application URL and original request when known. Opening this panel does not start a test or save credentials.",
+      inputSchema: external_exports.toJSONSchema(inputSchema2),
+      outputSchema: external_exports.toJSONSchema(outputSchema2),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false
+      },
+      _meta: { ui: { resourceUri: ui.onboardingUri } }
+    },
+    invoke(input3) {
+      const parsed = inputSchema2.safeParse(input3 ?? {});
+      if (!parsed.success) {
+        const message = "Invalid onboarding input. Use the advertised schema.";
+        const error63 = new McpError(ErrorCode.InvalidParams, message);
+        error63.message = message;
+        throw error63;
+      }
+      const result2 = {
+        schema: "kaijan.onboarding/1",
+        applicationURL: parsed.data.applicationURL ?? "",
+        task: parsed.data.task ?? ""
+      };
+      return {
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+  };
+}
+
+// apps/codex-plugin/src/setup/customer-output.mjs
+var configuration = external_exports.object({
+  source: sourceSchema,
+  workItem: external_exports.string().optional(),
+  target: targetSchema.optional(),
+  configurationRefs: external_exports.array(
+    external_exports.object({
+      kind: external_exports.enum(["source", "target"]),
+      handle: external_exports.string()
+    })
+  )
+});
+var state = external_exports.enum([
+  "awaiting-confirmation",
+  "blocked",
+  "preparing",
+  "uncertain",
+  "stop-requested",
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var handle2 = {
+  applicationId: identity3,
+  contextId: identity3,
+  version: external_exports.number().int().positive()
+};
+var summary2 = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup/1"),
+  ...handle2,
+  state,
+  missing: external_exports.array(external_exports.string()),
+  nextAction: external_exports.string(),
+  recovered: external_exports.boolean().optional(),
+  reused: external_exports.boolean().optional(),
+  cancellationRequested: external_exports.boolean().optional(),
+  supersededBy: identity3.optional(),
+  configuration: configuration.optional(),
+  notice: external_exports.string().optional()
+});
+var list2 = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup-list/1"),
+  contexts: external_exports.array(
+    external_exports.object({
+      ...handle2,
+      source: sourceSchema,
+      target: targetSchema.optional(),
+      state,
+      supersededBy: identity3.nullable(),
+      notice: external_exports.string().optional()
+    })
+  ),
+  nextOffset: external_exports.number().int().nonnegative().nullable()
+});
+var resolved = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-application/1"),
+  application: external_exports.object({
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().nullable(),
+    readiness: external_exports.object({
+      state: external_exports.literal("configured"),
+      browserObserved: external_exports.literal(false),
+      applicationCoverage: external_exports.literal("not-verified")
+    })
+  }),
+  setup: external_exports.object(handle2),
+  nextAction: external_exports.string(),
+  consumer: external_exports.object({
+    state: external_exports.enum(["pending", "accepted", "refused"]),
+    accepted: external_exports.boolean().optional()
+  }).optional(),
+  recovered: external_exports.boolean().optional(),
+  notice: external_exports.string().optional()
+});
+var error62 = external_exports.object({
+  error: external_exports.object({ code: external_exports.string(), message: external_exports.string() })
+});
+var customerSetupOutputSchemas = Object.fromEntries(
+  [
+    ["loki_setup_list", list2],
+    ...["prepare", "get", "wait", "retry", "stop"].map((name) => [
+      `loki_setup_${name}`,
+      summary2
+    ]),
+    ["loki_setup_resolve", resolved],
+    ["loki_setup_handoff", resolved]
+  ].map(([name, success2]) => [name, external_exports.union([success2, error62])])
+);
+var statuses = {
+  "awaiting-authority": "awaiting-confirmation",
+  admitting: "preparing",
+  mapping: "preparing"
+};
+var status2 = (value) => state.parse(statuses[value] ?? value);
+var selection2 = (value) => configuration.parse({
+  ...value,
+  configurationRefs: value.configurationRefs.filter(
+    (ref) => ["source", "target"].includes(ref.kind)
+  )
+});
+var notice = (value) => value.provenance?.kind === "controlled-fixture" ? { notice: "Test data only. This does not verify the application." } : {};
+var missingLabels = {
+  "source-authorization": "Permission to read the selected source",
+  "work-item-or-mapping-question": "The work item to check",
+  "model-provider": "Kaijan sign-in and connection",
+  "admitted-map-producer": "Application setup support"
+};
+function nextAction(value) {
+  switch (value.state) {
+    case "ready":
+      return "Source context is saved. For planning, use the original work item from Setup or this chat and relevant source. Running tests needs a target and authorization. Setup does not verify application behavior.";
+    case "uncertain":
+      return "Read this original context to check what happened. Do not retry or create replacement work while its effects are unknown.";
+    case "stop-requested":
+      return "Stop is still pending. Read this original context again; do not assume the work has stopped.";
+    case "mapping":
+    case "admitting":
+      return "Preparation is unfinished. Keep this saved context and check its state. Do not start replacement work.";
+    case "blocked":
+    case "awaiting-authority":
+      return "Resolve the listed missing input or access, then retry only this known blocked setup when authorized.";
+    case "superseded":
+      return "This context has been replaced. Read the replacement context before continuing.";
+    case "incomplete":
+      return "Only part of the source context is available. Keep the saved record and resolve the missing input before continuing.";
+    default:
+      return "Setup did not complete. Keep the original context and check the selected source and access before an authorized retry.";
+  }
+}
+var failures = {
+  consumer_integration_unavailable: [
+    "application_connection_unavailable",
+    "This application connection is unavailable. Your saved source remains available for planning and testing."
+  ],
+  unknown_application_context: [
+    "setup_unavailable",
+    "This saved Setup is unavailable in this chat. Use its original chat and exact application and context IDs."
+  ],
+  request_conflict: [
+    "request_conflict",
+    "This request key belongs to different input. Read its original Setup. Use a new key only for separately authorized new work; never to recover unknown effects."
+  ],
+  retry_not_required: [
+    "retry_not_required",
+    "Read the saved Setup. Retry only known failed, stopped or blocked work after its missing input changes or when requested."
+  ],
+  stale_application_context: [
+    "stale_application_context",
+    "Use the exact source and target revisions from the saved Setup. A different source selection requires a new request."
+  ],
+  application_not_ready: [
+    "application_not_ready",
+    "Setup is not ready. Read its saved state and resolve the missing input or access."
+  ],
+  source_revision_unavailable: [
+    "source_revision_unavailable",
+    "The selected source revision is unavailable. No Setup context was saved. Check the repository and your access, then select an available branch or commit."
+  ],
+  source_revision_ambiguous: [
+    "source_revision_ambiguous",
+    "The selected source revision is ambiguous. No Setup context was saved. Supply an exact commit."
+  ],
+  invalid_source: [
+    "invalid_source",
+    "The selected source cannot be read. Check the project directory and repository access."
+  ],
+  source_identity_changed: [
+    "source_changed",
+    "The selected source has changed. Review the source selection before continuing."
+  ],
+  setup_interrupted: [
+    "setup_interrupted",
+    "The request was interrupted. Read the original Setup to check its state before continuing. Do not replay unknown effects."
+  ]
+};
+function customerSetupFailure(code) {
+  const [safeCode, message] = failures[code] ?? [
+    "setup_unavailable",
+    "Setup could not complete. Read the original saved context and check the selected source and access. Do not replay work with unknown effects."
+  ];
+  return error62.parse({ error: { code: safeCode, message } });
+}
+function projectCustomerSetup(name, value) {
+  if (value.error && typeof value.error === "object")
+    return customerSetupFailure(value.error.code);
+  if (name === "loki_setup_list")
+    return list2.parse({
+      schema: "kaijan.customer-setup-list/1",
+      contexts: value.contexts.map((item) => ({
+        ...item,
+        state: status2(item.state),
+        ...notice(item)
+      })),
+      nextOffset: value.nextOffset
+    });
+  if (["loki_setup_resolve", "loki_setup_handoff"].includes(name)) {
+    const application = value.application;
+    return resolved.parse({
+      schema: "kaijan.customer-application/1",
+      application: {
+        contextId: application.contextId,
+        source: application.source,
+        target: application.target,
+        workItem: application.workItem ?? application.readiness.scope?.workItem ?? null,
+        readiness: {
+          state: "configured",
+          browserObserved: false,
+          applicationCoverage: "not-verified"
+        }
+      },
+      setup: value.setup,
+      nextAction: "For planning, use the saved work item and relevant source as input, not these Setup IDs. Setup does not create a test plan or check application behavior. Testing needs its own authorization.",
+      ...value.consumer ? {
+        consumer: value.consumer.state === "pending" ? { state: "pending" } : {
+          state: value.consumer.accepted ? "accepted" : "refused",
+          accepted: value.consumer.accepted
+        }
+      } : {},
+      ...value.recovered === void 0 ? {} : { recovered: value.recovered },
+      ...notice(application)
+    });
+  }
+  return summary2.parse({
+    schema: "kaijan.customer-setup/1",
+    ...Object.fromEntries(
+      [
+        "applicationId",
+        "contextId",
+        "version",
+        "recovered",
+        "reused",
+        "supersededBy",
+        "cancellationRequested"
+      ].filter((key) => value[key] !== void 0).map((key) => [key, value[key]])
+    ),
+    state: status2(value.state),
+    missing: [
+      ...new Set(
+        value.missing.map(
+          (item) => missingLabels[item] ?? "Application setup needs attention"
+        )
+      )
+    ],
+    nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
+    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
+    ...notice(value)
+  });
+}
+var customerSetupDescriptions = {
+  loki_setup_list: "Find saved application setups for the selected project directory. This does not start tests or change the source.",
+  loki_setup_prepare: "Save the selected application's committed source revision, work item and optional test target. Resolve the selected Git ref without changing the checkout; unsaved edits are not included. Keep the same requestKey after a lost reply. This does not test application behavior.",
+  loki_setup_get: "Read the original saved application setup and its current state. Do not recreate unfinished work to recover a result.",
+  loki_setup_wait: "Read or wait for the original Setup state. Do not restart unfinished work or assume unknown effects have stopped.",
+  loki_setup_retry: "Retry only a known failed, stopped or blocked Setup after its missing input changes or the user requests it. Keep the original source selection. Do not replay work with unknown effects.",
+  loki_setup_stop: "Request Stop for this exact original Setup. Read its state afterward; a request alone does not confirm it stopped.",
+  loki_setup_resolve: "Read the configured application source, work item and optional target using the exact saved source and target revisions. Returned context IDs select application configuration, not a planning-input record. For planning, reuse the original workItem text and relevant source as input. Setup is not a test result and grants no permission to run tests.",
+  loki_setup_handoff: "Use the saved application configuration with an available connected application. Acknowledgment does not verify application behavior."
+};
+
+// apps/codex-plugin/src/setup/mcp.mjs
+var customerPrepareSchema = prepareSchema.extend({
+  configuration: prepareSchema.shape.configuration.extend({
+    configurationRefs: external_exports.array(
+      external_exports.strictObject({
+        kind: external_exports.enum(["source", "target"]),
+        handle: external_exports.string().min(1).max(200)
+      })
+    ).max(30).default([])
+  })
+});
+function invalidSetupInput(message, data) {
+  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
+  error63.message = message;
+  return error63;
+}
+async function createSetupTools({
+  directory,
+  mapper,
+  consumer,
+  createTelemetry,
+  ui,
+  authorize = async () => {
+    throw new SetupFailure("source_authorization_adapter_unavailable");
+  }
+}) {
+  const setup = await createSetup({
+    directory,
+    mapper,
+    consumer,
+    authorize,
+    createTelemetry
+  });
+  const definitions = [
+    [
+      "loki_setup_list",
+      "Find retained Setup contexts for the explicitly selected project directory. No source scan, mapping, provider call or authority grant.",
+      listSchema,
+      (input3) => setup.list(input3),
+      true
+    ],
+    [
+      "loki_setup_prepare",
+      "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
+      customerPrepareSchema,
+      (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
+      false
+    ],
+    [
+      "loki_setup_get",
+      "Reconcile the original map receipt and persist the updated Setup context. Progress/failure and cancellation remain explicit; this never starts another map.",
+      handleSchema,
+      (input3) => setup.get(input3),
+      false
+    ],
+    [
+      "loki_setup_wait",
+      "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
+      waitSchema,
+      (input3, signal) => setup.wait(input3, signal),
+      false
+    ],
+    [
+      "loki_setup_retry",
+      "Retry a known failed, stopped or blocked Setup after the user requests it or supplies its actual missing prerequisite. This can send the selected committed source to the configured provider within the original $10/5400-second scope. The native host applies its selected approval policy; no second mandatory form. Preserve the original revision/evidence and automatically admit the replacement when ready. Never replay uncertain effects.",
+      commandSchema,
+      (input3, signal, invocation) => setup.retry(input3, signal, invocation),
+      false
+    ],
+    [
+      "loki_setup_stop",
+      "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
+      commandSchema,
+      (input3) => setup.stop(input3),
+      false
+    ],
+    [
+      "loki_setup_resolve",
+      "Resolve a ready context with explicit expected source and target-profile revisions. Read readiness.scope: a source-inferred work-item map has incomplete application coverage and no observed browser behavior. Returns source-bound references; a handle grants no browser/source/provider access.",
+      resolveSchema,
+      (input3) => setup.resolve(input3),
+      true
+    ],
+    [
+      "loki_setup_handoff",
+      "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
+      handoffSchema,
+      (input3) => setup.handoff(input3),
+      false
+    ]
+  ];
+  const onboarding = createOnboarding(ui);
+  const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
+    name,
+    description: customerSetupDescriptions[name],
+    inputSchema: {
+      ...external_exports.toJSONSchema(schema, { io: "input" }),
+      $id: `urn:loki:${name}:input:1`
+    },
+    outputSchema: {
+      type: "object",
+      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
+      $id: `urn:kaijan:${name}:customer-output:1`
+    },
+    ...ui ? { _meta: { ui: { resourceUri: ui.resources[0].uri } } } : {},
+    annotations: {
+      readOnlyHint: readOnly,
+      destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
+        name
+      ),
+      idempotentHint: true,
+      openWorldHint: !readOnly
+    }
+  }));
+  if (onboarding) tools2.push(onboarding.tool);
+  const invoke = async (name, arguments_, signal, invocation) => {
+    if (name === onboarding?.tool.name) return onboarding.invoke(arguments_);
+    const definition = definitions.find(([toolName]) => toolName === name);
+    if (!definition) throw invalidSetupInput("Unknown Setup tool");
+    const parsed = definition[2].safeParse(arguments_ ?? {});
+    if (!parsed.success) {
+      const fields = [
+        ...new Set(
+          parsed.error.issues.filter((issue3) => issue3.path.length).map((issue3) => issue3.path.join("."))
+        )
+      ];
+      throw invalidSetupInput(
+        fields.length ? `Invalid Setup input. Supply valid values for: ${fields.join(", ")}.` : "Invalid Setup input. Use the advertised schema.",
+        { code: "invalid_setup_input", fields }
+      );
+    }
+    try {
+      signal?.throwIfAborted();
+      const result2 = await definition[3](parsed.data, signal, invocation);
+      const text4 = JSON.stringify(result2);
+      const original2 = JSON.parse(text4);
+      if (!setupSuccessSchemas[name].safeParse(original2).success)
+        throw new SetupFailure("setup_output_invalid");
+      const wire = projectCustomerSetup(name, original2);
+      return {
+        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
+        structuredContent: wire,
+        content: [{ type: "text", text: JSON.stringify(wire) }]
+      };
+    } catch (error63) {
+      const result2 = customerSetupFailure(failure3(error63).code);
+      return {
+        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
+        isError: true,
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+  };
+  return {
+    tools: tools2,
+    resources: ui?.resources ?? [],
+    readResource: ui?.readResource,
+    // Configuration-only Setup returns synchronously. There is no mapping job
+    // to wait for or stop, and no handoff when no consumer is connected.
+    hiddenTools: [
+      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
+      ...!consumer ? ["loki_setup_handoff"] : []
+    ],
+    invoke,
+    setup,
+    close: () => setup.close()
+  };
+}
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+import process5 from "node:process";
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
+var STDIO_DEFAULT_MAX_BUFFER_SIZE = 10 * 1024 * 1024;
+var ReadBuffer = class {
+  constructor(options) {
+    this._maxBufferSize = options?.maxBufferSize ?? STDIO_DEFAULT_MAX_BUFFER_SIZE;
+  }
+  append(chunk) {
+    const newSize = (this._buffer?.length ?? 0) + chunk.length;
+    if (newSize > this._maxBufferSize) {
+      this.clear();
+      throw new Error(`ReadBuffer exceeded maximum size of ${this._maxBufferSize} bytes`);
+    }
+    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
+  }
+  readMessage() {
+    if (!this._buffer) {
+      return null;
+    }
+    const index = this._buffer.indexOf("\n");
+    if (index === -1) {
+      return null;
+    }
+    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
+    this._buffer = this._buffer.subarray(index + 1);
+    return deserializeMessage(line);
+  }
+  clear() {
+    this._buffer = void 0;
+  }
+};
+function deserializeMessage(line) {
+  return JSONRPCMessageSchema.parse(JSON.parse(line));
+}
+function serializeMessage(message) {
+  return JSON.stringify(message) + "\n";
+}
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+var StdioServerTransport = class {
+  constructor(_stdin = process5.stdin, _stdout = process5.stdout, options) {
+    this._stdin = _stdin;
+    this._stdout = _stdout;
+    this._started = false;
+    this._ondata = (chunk) => {
+      try {
+        this._readBuffer.append(chunk);
+        this.processReadBuffer();
+      } catch (error63) {
+        this.onerror?.(error63);
+        this.close().catch(() => {
+        });
+      }
+    };
+    this._onerror = (error63) => {
+      this.onerror?.(error63);
+    };
+    this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
+  }
+  /**
+   * Starts listening for messages on stdin.
+   */
+  async start() {
+    if (this._started) {
+      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
+    }
+    this._started = true;
+    this._stdin.on("data", this._ondata);
+    this._stdin.on("error", this._onerror);
+  }
+  processReadBuffer() {
+    while (true) {
+      try {
+        const message = this._readBuffer.readMessage();
+        if (message === null) {
+          break;
+        }
+        this.onmessage?.(message);
+      } catch (error63) {
+        this.onerror?.(error63);
+      }
+    }
+  }
+  async close() {
+    this._stdin.off("data", this._ondata);
+    this._stdin.off("error", this._onerror);
+    const remainingDataListeners = this._stdin.listenerCount("data");
+    if (remainingDataListeners === 0) {
+      this._stdin.pause();
+    }
+    this._readBuffer.clear();
+    this.onclose?.();
+  }
+  send(message) {
+    return new Promise((resolve4) => {
+      const json3 = serializeMessage(message);
+      if (this._stdout.write(json3)) {
+        resolve4();
+      } else {
+        this._stdout.once("drain", resolve4);
+      }
+    });
+  }
+};
+
+// apps/codex-plugin/plugin/scripts/profile-state.mjs
+import { TextDecoder as TextDecoder2 } from "node:util";
+import { constants as constants4 } from "node:fs";
+import {
+  mkdir as mkdir5,
+  open as open4,
+  readdir,
+  realpath as realpath4,
+  stat,
+  link as link2,
+  unlink as unlink4
+} from "node:fs/promises";
+import { createHash as createHash5, randomUUID as randomUUID7 } from "node:crypto";
+import { dirname as dirname3, join as join7, resolve as resolve2 } from "node:path";
+async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
+  if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
+    throw new Error(
+      "Missing fixed plugin profile. Reinstall the selected artifact."
+    );
+  const identity4 = JSON.stringify({
+    profile: build.profile,
+    origin: build.coreOrigin,
+    client: build.oauthClientId
+  });
+  const key = createHash5("sha256").update(identity4).digest("hex").slice(0, 20);
+  let selected;
+  const forwarded = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--state" || arg.startsWith("--state=")) {
+      if (selected !== void 0)
+        throw new Error("Supply one private state directory.");
+      selected = arg === "--state" ? args[++i] : arg.slice(8);
+      if (!selected || selected.startsWith("--"))
+        throw new Error("Missing private state directory.");
+    } else if (arg === "--host" || arg.startsWith("--host=")) {
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
+        );
+    } else forwarded.push(arg);
+  }
+  const state2 = resolve2(
+    selected ?? join7(home, ".local", "share", "loki", host, build.profile, key)
+  );
+  await mkdir5(state2, { recursive: true, mode: 448 });
+  if (await realpath4(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
+    throw new Error("Use a canonical private state directory with mode 0700.");
+  const path = join7(state2, "plugin-profile.json");
+  const expected = {
+    schemaVersion: 1,
+    profile: build.profile,
+    coreOrigin: build.coreOrigin,
+    oauthClientId: build.oauthClientId
+  };
+  let file2;
+  const readBinding = () => open4(
+    path,
+    constants4.O_RDONLY | constants4.O_NOFOLLOW | constants4.O_NONBLOCK
+  );
+  try {
+    file2 = await readBinding();
+  } catch (error63) {
+    if (error63.code !== "ENOENT") throw error63;
+    if ((await readdir(state2)).length) {
+      try {
+        file2 = await readBinding();
+      } catch (readError) {
+        if (readError.code !== "ENOENT") throw readError;
+        throw new Error(
+          "Unbound populated state cannot be reused. Select a fresh profile state; do not copy credentials.",
+          { cause: readError }
+        );
+      }
+    } else {
+      const temporary = join7(dirname3(state2), `.loki-profile-${randomUUID7()}`);
+      const created = await open4(temporary, "wx", 384);
+      try {
+        try {
+          await created.writeFile(JSON.stringify(expected));
+          await created.sync();
+        } finally {
+          await created.close();
+        }
+        try {
+          await link2(temporary, path);
+        } catch (linkError) {
+          if (linkError.code !== "EEXIST") throw linkError;
+        }
+      } finally {
+        await unlink4(temporary);
+      }
+      file2 = await readBinding();
+    }
+  }
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || info.size > 4096 || (info.mode & 63) !== 0)
+      throw new Error("Invalid private profile binding.");
+    const actual = JSON.parse(
+      new TextDecoder2("utf-8", { fatal: true }).decode(await file2.readFile())
+    );
+    if (JSON.stringify(actual) !== JSON.stringify(expected))
+      throw new Error(
+        "Private state belongs to a different environment. Select its own state directory."
+      );
+  } finally {
+    await file2.close();
+  }
+  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
+}
+
+// apps/codex-plugin/src/claude-tool-schema.mjs
+var alternatives = /* @__PURE__ */ new Map([
+  [
+    "loki_test_execute",
+    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
+  ],
+  [
+    "loki_report_show",
+    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
+  ]
+]);
+var sourceAlternatives = /* @__PURE__ */ new Map([
+  ["loki_pr_context_find_related", ["url", "context", "contextId"]],
+  ["loki_context_finder_find_related", ["url", "context", "contextId"]],
+  ["loki_change_risk_analyze", ["packet", "contextId"]],
+  ["loki_risk_finder_analyze", ["packet", "contextId"]],
+  ["loki_test_plan", ["input", "contextId"]],
+  ["loki_test_supplement", ["input", "contextId"]],
+  ["loki_test_evidence_assess", ["input", "contextId"]]
+]);
+function sourceDefinition(tool2, fields, host = "Claude") {
+  const { oneOf, ...root } = tool2.inputSchema;
+  if (root.type !== "object" || !root.properties || root.additionalProperties !== false || root.anyOf !== void 0 || root.allOf !== void 0 || !Array.isArray(oneOf) || oneOf.length !== fields.length || oneOf.some(
+    (branch, index) => !branch || Object.keys(branch).length !== 1 || !Array.isArray(branch.required) || branch.required.length !== 1 || branch.required[0] !== fields[index] || !Object.hasOwn(root.properties, fields[index])
+  ))
+    throw new Error(`Unsupported ${host} advisory source layout.`);
+  return {
+    ...tool2,
+    inputSchema: root,
+    description: `${tool2.description}
+Supply exactly one source: ${fields.join(", ")}. Do not combine source forms. The receiver validates the selected source before starting work.`
+  };
+}
+function codexToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  return sources && tool2.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool2, sources, "Codex") : tool2;
+}
+function claudeToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  if (sources && tool2.inputSchema?.oneOf !== void 0)
+    return sourceDefinition(tool2, sources);
+  const guidance = tool2 && alternatives.get(tool2.name);
+  if (!guidance || !Array.isArray(tool2.inputSchema?.anyOf)) return tool2;
+  const { anyOf, ...root } = tool2.inputSchema;
+  if (anyOf.length < 2 || anyOf.some(
+    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
+      (key) => ![
+        "type",
+        "properties",
+        "required",
+        "additionalProperties"
+      ].includes(key)
+    )
+  ))
+    throw new Error("Unsupported Claude tool input layout.");
+  const properties = {};
+  for (const branch of anyOf)
+    for (const [name, schema] of Object.entries(branch.properties)) {
+      const previous = properties[name];
+      if (previous === void 0) properties[name] = schema;
+      else if (JSON.stringify(previous) !== JSON.stringify(schema))
+        throw new Error("Conflicting Claude tool input field.");
+    }
+  const required2 = (anyOf[0].required ?? []).filter(
+    (name) => anyOf.every((branch) => branch.required?.includes(name))
+  );
+  return {
+    ...tool2,
+    inputSchema: {
+      ...root,
+      type: "object",
+      properties,
+      ...required2.length ? { required: required2 } : {},
+      additionalProperties: false
+    },
+    description: `${tool2.description}
+${guidance}`
+  };
+}
+
+// apps/codex-plugin/src/customer-plan-selection.mjs
+import { isDeepStrictEqual } from "node:util";
+
 // apps/codex-plugin/src/customer-output.mjs
-import { createHash as createHash7 } from "node:crypto";
+import { createHash as createHash8 } from "node:crypto";
 
 // apps/codex-plugin/src/completed-test-reply.mjs
 function completedTestReply(value) {
@@ -54745,8 +54891,8 @@ function restoreVerifiedAssessmentRejection(view2, report) {
 }
 
 // apps/codex-plugin/src/customer-proposal-source.mjs
-import { createHash as createHash5 } from "node:crypto";
-var hash2 = (text4) => createHash5("sha256").update(text4).digest("hex");
+import { createHash as createHash6 } from "node:crypto";
+var hash2 = (text4) => createHash6("sha256").update(text4).digest("hex");
 async function readCustomerProposalSource(family2, native, options) {
   if (native?.state !== "complete") return void 0;
   if (family2 === "testPlanning" && native.result?.schema === "loki.planning-failure/1" || family2 === "testSupplement" && native.result?.schema === "loki.supplement-failure/1")
@@ -54809,7 +54955,7 @@ async function readCustomerProposalEvidence(evidence2, options) {
 }
 
 // apps/codex-plugin/src/customer-advisory-output.mjs
-import { createHash as createHash6 } from "node:crypto";
+import { createHash as createHash7 } from "node:crypto";
 import { join as join8 } from "node:path";
 
 // apps/codex-plugin/src/customer-input-corrections.mjs
@@ -54914,7 +55060,7 @@ function planningTemporaryFailureGuidance(answer) {
 }
 
 // apps/codex-plugin/src/customer-advisory-output.mjs
-var hash3 = (value) => createHash6("sha256").update(value).digest("hex");
+var hash3 = (value) => createHash7("sha256").update(value).digest("hex");
 var id6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional4 = (value) => value.optional();
 var advisoryFamilies = {
@@ -55576,7 +55722,7 @@ var developmentTools = /* @__PURE__ */ new Set([
   "loki_report_export"
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
-var hash4 = (value) => createHash7("sha256").update(value).digest("hex");
+var hash4 = (value) => createHash8("sha256").update(value).digest("hex");
 var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings6 = external_exports.array(external_exports.string());
 var optional5 = (schema) => schema.optional();
@@ -56561,7 +56707,7 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
 }
 
 // apps/codex-plugin/src/customer-report-output.mjs
-import { createHash as createHash8 } from "node:crypto";
+import { createHash as createHash9 } from "node:crypto";
 var tools = /* @__PURE__ */ new Set([
   "loki_report_get",
   "loki_report_open",
@@ -56691,7 +56837,7 @@ function projectCustomerReport(value) {
       return customerReportFailure();
     const projected = projectCustomerTestPlanView(
       value,
-      (text4) => createHash8("sha256").update(text4).digest("hex")
+      (text4) => createHash9("sha256").update(text4).digest("hex")
     );
     return restoreVerifiedAssessmentRejection(value, projected);
   } catch {
@@ -56866,9 +57012,9 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
 }
 
 // apps/codex-plugin/src/customer-preparation-output.mjs
-import { createHash as createHash9 } from "node:crypto";
+import { createHash as createHash10 } from "node:crypto";
 var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var hash5 = (value) => createHash9("sha256").update(JSON.stringify(value)).digest("hex");
+var hash5 = (value) => createHash10("sha256").update(JSON.stringify(value)).digest("hex");
 var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var clone2 = (value) => JSON.parse(JSON.stringify(value));
 var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
@@ -57103,7 +57249,7 @@ function callerObservations(request3) {
 function applicationPageObservations(input3, packet) {
   return (input3?.evidence ?? []).flatMap((item) => {
     const provenance2 = item.provenance;
-    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash9("sha256").update(item.text).digest("hex") !== item.sha256)
+    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash10("sha256").update(item.text).digest("hex") !== item.sha256)
       return [];
     try {
       const page2 = external_exports.object({
@@ -57182,7 +57328,7 @@ function projectCustomerAssessmentPreparation(packet, request3) {
         ...[
           ...projectCustomerPageObservations(
             { assessmentFragment: input3 },
-            (text4) => createHash9("sha256").update(text4).digest("hex")
+            (text4) => createHash10("sha256").update(text4).digest("hex")
           ),
           ...applicationPageObservations(input3, packet)
         ].map((observation2) => ({
@@ -57884,7 +58030,7 @@ function createCapabilityMcpServer(session, version4, setup) {
             origin: "codex-local-mcp",
             requestId: extra.requestId,
             tool: params.name,
-            argumentsSha256: digest4(params.arguments ?? {}),
+            argumentsSha256: digest18(params.arguments ?? {}),
             scope: selected.scope
           }
         );

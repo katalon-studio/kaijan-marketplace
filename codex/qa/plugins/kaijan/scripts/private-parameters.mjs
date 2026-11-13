@@ -2220,25 +2220,25 @@ var require_resolve = __commonJS({
       return false;
     }
     function countKeys(schema) {
-      let count2 = 0;
+      let count7 = 0;
       for (const key in schema) {
         if (key === "$ref")
           return Infinity;
-        count2++;
+        count7++;
         if (SIMPLE_INLINED.has(key))
           continue;
         if (typeof schema[key] == "object") {
-          (0, util_1.eachItem)(schema[key], (sch) => count2 += countKeys(sch));
+          (0, util_1.eachItem)(schema[key], (sch) => count7 += countKeys(sch));
         }
-        if (count2 === Infinity)
+        if (count7 === Infinity)
           return Infinity;
       }
-      return count2;
+      return count7;
     }
-    function getFullPath(resolver, id4 = "", normalize) {
+    function getFullPath(resolver, id6 = "", normalize) {
       if (normalize !== false)
-        id4 = normalizeId(id4);
-      const p = resolver.parse(id4);
+        id6 = normalizeId(id6);
+      const p = resolver.parse(id6);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2248,13 +2248,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id4) {
-      return id4 ? id4.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id6) {
+      return id6 ? id6.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id4) {
-      id4 = normalizeId(id4);
-      return resolver.resolve(baseId, id4);
+    function resolveUrl(resolver, baseId, id6) {
+      id6 = normalizeId(id6);
+      return resolver.resolve(baseId, id6);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -3024,8 +3024,8 @@ var require_compile = __commonJS({
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id4 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id4] || this.schemas[id4];
+      const id6 = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id6] || this.schemas[id6];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3036,7 +3036,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id4 === (0, resolve_1.normalizeId)(ref)) {
+      if (id6 === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -4519,15 +4519,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id4;
+        let id6;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id4 = schema[schemaId];
-          if (id4 !== void 0 && typeof id4 != "string") {
+          id6 = schema[schemaId];
+          if (id6 !== void 0 && typeof id6 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id4);
+        key = (0, resolve_1.normalizeId)(key || id6);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4606,11 +4606,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id4 = schemaKeyRef[this.opts.schemaId];
-            if (id4) {
-              id4 = (0, resolve_1.normalizeId)(id4);
-              delete this.schemas[id4];
-              delete this.refs[id4];
+            let id6 = schemaKeyRef[this.opts.schemaId];
+            if (id6) {
+              id6 = (0, resolve_1.normalizeId)(id6);
+              delete this.schemas[id6];
+              delete this.refs[id6];
             }
             return this;
           }
@@ -4717,10 +4717,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta3, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id4;
+        let id6;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id4 = schema[schemaId];
+          id6 = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4730,7 +4730,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id4 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id6 || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta: meta3, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4743,9 +4743,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id4) {
-        if (this.schemas[id4] || this.refs[id4]) {
-          throw new Error(`schema with key or id "${id4}" already exists`);
+      _checkUnique(id6) {
+        if (this.schemas[id6] || this.refs[id6]) {
+          throw new Error(`schema with key or id "${id6}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -5000,12 +5000,12 @@ var require_ref = __commonJS({
       function callSyncRef() {
         cxt.result((0, code_1.callValidateCode)(cxt, v, passCxt), () => addEvaluatedFrom(v), () => addErrorsFrom(v));
       }
-      function addErrorsFrom(source2) {
-        const errs = (0, codegen_1._)`${source2}.errors`;
+      function addErrorsFrom(source3) {
+        const errs = (0, codegen_1._)`${source3}.errors`;
         gen.assign(names_1.default.vErrors, (0, codegen_1._)`${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`);
         gen.assign(names_1.default.errors, (0, codegen_1._)`${names_1.default.vErrors}.length`);
       }
-      function addEvaluatedFrom(source2) {
+      function addEvaluatedFrom(source3) {
         var _a3;
         if (!it.opts.unevaluated)
           return;
@@ -5016,7 +5016,7 @@ var require_ref = __commonJS({
               it.props = util_1.mergeEvaluated.props(gen, schEvaluated.props, it.props);
             }
           } else {
-            const props = gen.var("props", (0, codegen_1._)`${source2}.evaluated.props`);
+            const props = gen.var("props", (0, codegen_1._)`${source3}.evaluated.props`);
             it.props = util_1.mergeEvaluated.props(gen, props, it.props, codegen_1.Name);
           }
         }
@@ -5026,7 +5026,7 @@ var require_ref = __commonJS({
               it.items = util_1.mergeEvaluated.items(gen, schEvaluated.items, it.items);
             }
           } else {
-            const items = gen.var("items", (0, codegen_1._)`${source2}.evaluated.items`);
+            const items = gen.var("items", (0, codegen_1._)`${source3}.evaluated.items`);
             it.items = util_1.mergeEvaluated.items(gen, items, it.items, codegen_1.Name);
           }
         }
@@ -5771,8 +5771,8 @@ var require_contains = __commonJS({
         cxt.result(valid, () => cxt.reset());
         function validateItemsWithCount() {
           const schValid = gen.name("_valid");
-          const count2 = gen.let("count", 0);
-          validateItems(schValid, () => gen.if(schValid, () => checkLimits(count2)));
+          const count7 = gen.let("count", 0);
+          validateItems(schValid, () => gen.if(schValid, () => checkLimits(count7)));
         }
         function validateItems(_valid, block) {
           gen.forRange("i", 0, len, (i) => {
@@ -5785,16 +5785,16 @@ var require_contains = __commonJS({
             block();
           });
         }
-        function checkLimits(count2) {
-          gen.code((0, codegen_1._)`${count2}++`);
+        function checkLimits(count7) {
+          gen.code((0, codegen_1._)`${count7}++`);
           if (max === void 0) {
-            gen.if((0, codegen_1._)`${count2} >= ${min}`, () => gen.assign(valid, true).break());
+            gen.if((0, codegen_1._)`${count7} >= ${min}`, () => gen.assign(valid, true).break());
           } else {
-            gen.if((0, codegen_1._)`${count2} > ${max}`, () => gen.assign(valid, false).break());
+            gen.if((0, codegen_1._)`${count7} > ${max}`, () => gen.assign(valid, false).break());
             if (min === 1)
               gen.assign(valid, true);
             else
-              gen.if((0, codegen_1._)`${count2} >= ${min}`, () => gen.assign(valid, true));
+              gen.if((0, codegen_1._)`${count7} >= ${min}`, () => gen.assign(valid, true));
           }
         }
       }
@@ -8157,10 +8157,10 @@ function cached(getter) {
 function nullish(input3) {
   return input3 === null || input3 === void 0;
 }
-function cleanRegex(source2) {
-  const start = source2.startsWith("^") ? 1 : 0;
-  const end = source2.endsWith("$") ? source2.length - 1 : source2.length;
-  return source2.slice(start, end);
+function cleanRegex(source3) {
+  const start = source3.startsWith("^") ? 1 : 0;
+  const end = source3.endsWith("$") ? source3.length - 1 : source3.length;
+  return source3.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -8228,28 +8228,28 @@ function putProp(target, key, value) {
   else
     target[key] = value;
 }
-function mirrorShape(target, source2, keys, wrap) {
-  const raw = sourceShape(source2);
+function mirrorShape(target, source3, keys, wrap) {
+  const raw = sourceShape(source3);
   for (const key of keys) {
     const desc = Object.getOwnPropertyDescriptor(raw, key);
     if (!desc.enumerable)
       continue;
     if (desc.get) {
       deferProp(target, key, () => {
-        const value = source2._zod.def.shape[key];
+        const value = source3._zod.def.shape[key];
         return wrap ? wrap(value, key) : value;
       });
     } else
       putProp(target, key, wrap ? wrap(desc.value, key) : desc.value);
   }
 }
-function mirrorProps(target, source2) {
-  for (const key of Reflect.ownKeys(source2)) {
-    const desc = Object.getOwnPropertyDescriptor(source2, key);
+function mirrorProps(target, source3) {
+  for (const key of Reflect.ownKeys(source3)) {
+    const desc = Object.getOwnPropertyDescriptor(source3, key);
     if (!desc.enumerable)
       continue;
     if (desc.get)
-      deferProp(target, key, () => source2[key]);
+      deferProp(target, key, () => source3[key]);
     else
       putProp(target, key, desc.value);
   }
@@ -8675,14 +8675,14 @@ function codePointLength(str) {
   const units = str.length;
   if (!highSurrogate.test(str))
     return units;
-  let count2 = units;
+  let count7 = units;
   for (let i = 0; i < units - 1; i++) {
     if ((str.charCodeAt(i) & 64512) === 55296 && (str.charCodeAt(i + 1) & 64512) === 56320) {
-      count2--;
+      count7--;
       i++;
     }
   }
-  return count2;
+  return count7;
 }
 function getLengthableOrigin(input3) {
   if (Array.isArray(input3))
@@ -9060,7 +9060,7 @@ function node(obj, key, make) {
   }
   return obj[key];
 }
-function flattenError(error62, mapper = (issue2) => issue2.message) {
+function flattenError(error62, mapper = (issue3) => issue3.message) {
   const fieldErrors = {};
   const formErrors = [];
   for (const sub of error62.issues) {
@@ -9072,20 +9072,20 @@ function flattenError(error62, mapper = (issue2) => issue2.message) {
   }
   return { formErrors, fieldErrors };
 }
-function formatError(error62, mapper = (issue2) => issue2.message) {
+function formatError(error62, mapper = (issue3) => issue3.message) {
   const fieldErrors = { _errors: [] };
   const processError = (error63, path = []) => {
-    for (const issue2 of error63.issues) {
-      if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
-      } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
-      } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+    for (const issue3 of error63.issues) {
+      if (issue3.code === "invalid_union" && issue3.errors.length) {
+        issue3.errors.map((issues) => processError({ issues }, [...path, ...issue3.path]));
+      } else if (issue3.code === "invalid_key") {
+        processError({ issues: issue3.issues }, [...path, ...issue3.path]);
+      } else if (issue3.code === "invalid_element") {
+        processError({ issues: issue3.issues }, [...path, ...issue3.path]);
       } else {
-        const fullpath = [...path, ...issue2.path];
+        const fullpath = [...path, ...issue3.path];
         if (fullpath.length === 0) {
-          fieldErrors._errors.push(mapper(issue2));
+          fieldErrors._errors.push(mapper(issue3));
         } else {
           let curr = fieldErrors;
           let i = 0;
@@ -9094,7 +9094,7 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
             const terminal = i === fullpath.length - 1;
             if (el === "_errors") {
               if (terminal)
-                curr._errors.push(mapper(issue2));
+                curr._errors.push(mapper(issue3));
               i++;
               continue;
             }
@@ -9108,7 +9108,7 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
             }
             const node2 = curr[el];
             if (terminal) {
-              node2._errors.push(mapper(issue2));
+              node2._errors.push(mapper(issue3));
             }
             curr = node2;
             i++;
@@ -9120,21 +9120,21 @@ function formatError(error62, mapper = (issue2) => issue2.message) {
   processError(error62);
   return fieldErrors;
 }
-function treeifyError(error62, mapper = (issue2) => issue2.message) {
+function treeifyError(error62, mapper = (issue3) => issue3.message) {
   const result = { errors: [] };
   const processError = (error63, path = []) => {
     var _a3;
-    for (const issue2 of error63.issues) {
-      if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
-      } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
-      } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+    for (const issue3 of error63.issues) {
+      if (issue3.code === "invalid_union" && issue3.errors.length) {
+        issue3.errors.map((issues) => processError({ issues }, [...path, ...issue3.path]));
+      } else if (issue3.code === "invalid_key") {
+        processError({ issues: issue3.issues }, [...path, ...issue3.path]);
+      } else if (issue3.code === "invalid_element") {
+        processError({ issues: issue3.issues }, [...path, ...issue3.path]);
       } else {
-        const fullpath = [...path, ...issue2.path];
+        const fullpath = [...path, ...issue3.path];
         if (fullpath.length === 0) {
-          result.errors.push(mapper(issue2));
+          result.errors.push(mapper(issue3));
           continue;
         }
         let curr = result;
@@ -9159,7 +9159,7 @@ function treeifyError(error62, mapper = (issue2) => issue2.message) {
             curr = curr.items[el];
           }
           if (terminal) {
-            curr.errors.push(mapper(issue2));
+            curr.errors.push(mapper(issue3));
           }
           i++;
         }
@@ -9190,10 +9190,10 @@ function toDotPath(_path) {
 function prettifyError(error62) {
   const lines = [];
   const issues = [...error62.issues].sort((a, b) => (a.path ?? []).length - (b.path ?? []).length);
-  for (const issue2 of issues) {
-    lines.push(`\u2716 ${issue2.message}`);
-    if (issue2.path?.length)
-      lines.push(`  \u2192 at ${toDotPath(issue2.path)}`);
+  for (const issue3 of issues) {
+    lines.push(`\u2716 ${issue3.message}`);
+    if (issue3.path?.length)
+      lines.push(`  \u2192 at ${toDotPath(issue3.path)}`);
   }
   return lines.join("\n");
 }
@@ -9474,8 +9474,8 @@ var creditCard = /^\d(?:[ -]?\d){11,18}$/;
 var currencyCode = /^(?:AED|AFN|ALL|AMD|AOA|ARS|AUD|AWG|AZN|BAM|BBD|BDT|BHD|BIF|BMD|BND|BOB|BOV|BRL|BSD|BTN|BWP|BYN|BZD|CAD|CDF|CHE|CHF|CHW|CLF|CLP|CNY|COP|COU|CRC|CUP|CVE|CZK|DJF|DKK|DOP|DZD|EGP|ERN|ETB|EUR|FJD|FKP|GBP|GEL|GHS|GIP|GMD|GNF|GTQ|GYD|HKD|HNL|HTG|HUF|IDR|ILS|INR|IQD|IRR|ISK|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LRD|LSL|LYD|MAD|MDL|MGA|MKD|MMK|MNT|MOP|MRU|MUR|MVR|MWK|MXN|MXV|MYR|MZN|NAD|NGN|NIO|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SLE|SOS|SRD|SSP|STN|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UYW|UZS|VED|VES|VND|VUV|WST|XAD|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XCD|XCG|XDR|XOF|XPD|XPF|XPT|XSU|XTS|XUA|XXX|YER|ZAR|ZMW|ZWG)$/;
 var iban = /^[A-Z]{2}(?!00|01|99)\d{2}[A-Z0-9]{11,30}$/;
 var dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-function anchor(source2) {
-  return new RegExp(`^${source2}$`);
+function anchor(source3) {
+  return new RegExp(`^${source3}$`);
 }
 var date = /* @__PURE__ */ anchor(dateSource);
 function timeSource(args) {
@@ -11066,15 +11066,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id4, k) => `
-          let ${id4}_ab = false;
-          for (let i = 0; i < ${id4}.issues.length; i++) {
-            const iss = ${id4}.issues[i];
+    const prefixStr = (id6, k) => `
+          let ${id6}_ab = false;
+          for (let i = 0; i < ${id6}.issues.length; i++) {
+            const iss = ${id6}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id4}_ab = true;
+            if (iss.continue !== true) ${id6}_ab = true;
           }
-          if (${id4}_ab && ctx && ctx.abortEarly) {
+          if (${id6}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -11088,34 +11088,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id4 = ids2[key];
+      const id6 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id4} = ${parseStr(k)};`);
+      doc.write(`const ${id6} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id4}_present` : `${id4}.value !== undefined || ${id4}_present`;
+        const assign = optin === "optional" ? `${id6}_present` : `${id6}.value !== undefined || ${id6}_present`;
         doc.write(`
-        const ${id4}_present = ${isPresent};
-        if (!${id4}.issues.length || ${id4}_present) {
-          if (${id4}.issues.length) {${prefixStr(id4, k)}
+        const ${id6}_present = ${isPresent};
+        if (!${id6}.issues.length || ${id6}_present) {
+          if (${id6}.issues.length) {${prefixStr(id6, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id4}.value;
+            newResult[${k}] = ${id6}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id4}_present = ${isPresent};
-        if (${id4}.issues.length) {${prefixStr(id4, k)}
+        const ${id6}_present = ${isPresent};
+        if (${id6}.issues.length) {${prefixStr(id6, k)}
         }
-        if (!${id4}_present && !${id4}.issues.length) {
+        if (!${id6}_present && !${id6}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -11128,22 +11128,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id4}_present) {
-          newResult[${k}] = ${id4}.value;
+        if (${id6}_present) {
+          newResult[${k}] = ${id6}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id4}.issues.length) {${prefixStr(id4, k)}
+        if (${id6}.issues.length) {${prefixStr(id6, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id4}.value;`);
+          doc.write(`newResult[${k}] = ${id6}.value;`);
         } else {
           doc.write(`
-        if (${id4}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id4}.value;
+        if (${id6}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id6}.value;
         }
       `);
         }
@@ -12326,11 +12326,11 @@ var $ZodTemplateLiteral = /* @__PURE__ */ $constructor("$ZodTemplateLiteral", (i
   const regexParts = [];
   for (const part of def.parts) {
     if (typeof part === "object" && part !== null) {
-      const source2 = partPattern(part);
-      if (!source2) {
+      const source3 = partPattern(part);
+      if (!source3) {
         throw new Error(`Invalid template literal part, no pattern found: ${[...part._zod.traits].shift()}`);
       }
-      regexParts.push(cleanRegex(source2));
+      regexParts.push(cleanRegex(source3));
     } else if (part === null || primitiveTypes.has(typeof part)) {
       regexParts.push(escapeRegex(`${part}`));
     } else {
@@ -12890,58 +12890,58 @@ var error = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0645\u062F\u062E\u0644\u0627\u062A \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644\u0629: \u064A\u0641\u062A\u0631\u0636 \u0625\u062F\u062E\u0627\u0644 instanceof ${issue2.expected}\u060C \u0648\u0644\u0643\u0646 \u062A\u0645 \u0625\u062F\u062E\u0627\u0644 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0645\u062F\u062E\u0644\u0627\u062A \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644\u0629: \u064A\u0641\u062A\u0631\u0636 \u0625\u062F\u062E\u0627\u0644 instanceof ${issue3.expected}\u060C \u0648\u0644\u0643\u0646 \u062A\u0645 \u0625\u062F\u062E\u0627\u0644 ${received}`;
         }
         return `\u0645\u062F\u062E\u0644\u0627\u062A \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644\u0629: \u064A\u0641\u062A\u0631\u0636 \u0625\u062F\u062E\u0627\u0644 ${expected}\u060C \u0648\u0644\u0643\u0646 \u062A\u0645 \u0625\u062F\u062E\u0627\u0644 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0645\u062F\u062E\u0644\u0627\u062A \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644\u0629: \u064A\u0641\u062A\u0631\u0636 \u0625\u062F\u062E\u0627\u0644 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0627\u062E\u062A\u064A\u0627\u0631 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062A\u0648\u0642\u0639 \u0627\u0646\u062A\u0642\u0627\u0621 \u0623\u062D\u062F \u0647\u0630\u0647 \u0627\u0644\u062E\u064A\u0627\u0631\u0627\u062A: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0645\u062F\u062E\u0644\u0627\u062A \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644\u0629: \u064A\u0641\u062A\u0631\u0636 \u0625\u062F\u062E\u0627\u0644 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0627\u062E\u062A\u064A\u0627\u0631 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062A\u0648\u0642\u0639 \u0627\u0646\u062A\u0642\u0627\u0621 \u0623\u062D\u062F \u0647\u0630\u0647 \u0627\u0644\u062E\u064A\u0627\u0631\u0627\u062A: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return ` \u0623\u0643\u0628\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0623\u0646 \u062A\u0643\u0648\u0646 ${issue2.origin ?? "\u0627\u0644\u0642\u064A\u0645\u0629"} ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631"}`;
-        return `\u0623\u0643\u0628\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0623\u0646 \u062A\u0643\u0648\u0646 ${issue2.origin ?? "\u0627\u0644\u0642\u064A\u0645\u0629"} ${adj} ${issue2.maximum.toString()}`;
+          return ` \u0623\u0643\u0628\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0623\u0646 \u062A\u0643\u0648\u0646 ${issue3.origin ?? "\u0627\u0644\u0642\u064A\u0645\u0629"} ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631"}`;
+        return `\u0623\u0643\u0628\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0623\u0646 \u062A\u0643\u0648\u0646 ${issue3.origin ?? "\u0627\u0644\u0642\u064A\u0645\u0629"} ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0623\u0635\u063A\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0644\u0640 ${issue2.origin} \u0623\u0646 \u064A\u0643\u0648\u0646 ${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u0623\u0635\u063A\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0644\u0640 ${issue3.origin} \u0623\u0646 \u064A\u0643\u0648\u0646 ${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u0623\u0635\u063A\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0644\u0640 ${issue2.origin} \u0623\u0646 \u064A\u0643\u0648\u0646 ${adj} ${issue2.minimum.toString()}`;
+        return `\u0623\u0635\u063A\u0631 \u0645\u0646 \u0627\u0644\u0644\u0627\u0632\u0645: \u064A\u0641\u062A\u0631\u0636 \u0644\u0640 ${issue3.origin} \u0623\u0646 \u064A\u0643\u0648\u0646 ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
-          return `\u0646\u064E\u0635 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0628\u062F\u0623 \u0628\u0640 "${issue2.prefix}"`;
+          return `\u0646\u064E\u0635 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0628\u062F\u0623 \u0628\u0640 "${issue3.prefix}"`;
         if (_issue.format === "ends_with")
           return `\u0646\u064E\u0635 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0646\u062A\u0647\u064A \u0628\u0640 "${_issue.suffix}"`;
         if (_issue.format === "includes")
           return `\u0646\u064E\u0635 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u062A\u0636\u0645\u0651\u064E\u0646 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u0646\u064E\u0635 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0637\u0627\u0628\u0642 \u0627\u0644\u0646\u0645\u0637 ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644`;
       }
       case "not_multiple_of":
-        return `\u0631\u0642\u0645 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0643\u0648\u0646 \u0645\u0646 \u0645\u0636\u0627\u0639\u0641\u0627\u062A ${issue2.divisor}`;
+        return `\u0631\u0642\u0645 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644: \u064A\u062C\u0628 \u0623\u0646 \u064A\u0643\u0648\u0646 \u0645\u0646 \u0645\u0636\u0627\u0639\u0641\u0627\u062A ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u0645\u0639\u0631\u0641${issue2.keys.length > 1 ? "\u0627\u062A" : ""} \u063A\u0631\u064A\u0628${issue2.keys.length > 1 ? "\u0629" : ""}: ${joinValues(issue2.keys, "\u060C ")}`;
+        return `\u0645\u0639\u0631\u0641${issue3.keys.length > 1 ? "\u0627\u062A" : ""} \u063A\u0631\u064A\u0628${issue3.keys.length > 1 ? "\u0629" : ""}: ${joinValues(issue3.keys, "\u060C ")}`;
       case "invalid_key":
-        return `\u0645\u0639\u0631\u0641 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644 \u0641\u064A ${issue2.origin}`;
+        return `\u0645\u0639\u0631\u0641 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644 \u0641\u064A ${issue3.origin}`;
       case "invalid_union":
         return "\u0645\u062F\u062E\u0644 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644";
       case "invalid_element":
-        return `\u0645\u062F\u062E\u0644 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644 \u0641\u064A ${issue2.origin}`;
+        return `\u0645\u062F\u062E\u0644 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644 \u0641\u064A ${issue3.origin}`;
       default:
         return "\u0645\u062F\u062E\u0644 \u063A\u064A\u0631 \u0645\u0642\u0628\u0648\u0644";
     }
@@ -13002,37 +13002,37 @@ var error2 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Yanl\u0131\u015F d\u0259y\u0259r: g\xF6zl\u0259nil\u0259n instanceof ${issue2.expected}, daxil olan ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Yanl\u0131\u015F d\u0259y\u0259r: g\xF6zl\u0259nil\u0259n instanceof ${issue3.expected}, daxil olan ${received}`;
         }
         return `Yanl\u0131\u015F d\u0259y\u0259r: g\xF6zl\u0259nil\u0259n ${expected}, daxil olan ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Yanl\u0131\u015F d\u0259y\u0259r: g\xF6zl\u0259nil\u0259n ${stringifyPrimitive(issue2.values[0])}`;
-        return `Yanl\u0131\u015F se\xE7im: a\u015Fa\u011F\u0131dak\u0131lardan biri olmal\u0131d\u0131r: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Yanl\u0131\u015F d\u0259y\u0259r: g\xF6zl\u0259nil\u0259n ${stringifyPrimitive(issue3.values[0])}`;
+        return `Yanl\u0131\u015F se\xE7im: a\u015Fa\u011F\u0131dak\u0131lardan biri olmal\u0131d\u0131r: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\xC7ox b\xF6y\xFCk: g\xF6zl\u0259nil\u0259n ${issue2.origin ?? "d\u0259y\u0259r"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "element"}`;
-        return `\xC7ox b\xF6y\xFCk: g\xF6zl\u0259nil\u0259n ${issue2.origin ?? "d\u0259y\u0259r"} ${adj}${issue2.maximum.toString()}`;
+          return `\xC7ox b\xF6y\xFCk: g\xF6zl\u0259nil\u0259n ${issue3.origin ?? "d\u0259y\u0259r"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "element"}`;
+        return `\xC7ox b\xF6y\xFCk: g\xF6zl\u0259nil\u0259n ${issue3.origin ?? "d\u0259y\u0259r"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\xC7ox ki\xE7ik: g\xF6zl\u0259nil\u0259n ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
-        return `\xC7ox ki\xE7ik: g\xF6zl\u0259nil\u0259n ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+          return `\xC7ox ki\xE7ik: g\xF6zl\u0259nil\u0259n ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
+        return `\xC7ox ki\xE7ik: g\xF6zl\u0259nil\u0259n ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Yanl\u0131\u015F m\u0259tn: "${_issue.prefix}" il\u0259 ba\u015Flamal\u0131d\u0131r`;
         if (_issue.format === "ends_with")
@@ -13041,18 +13041,18 @@ var error2 = () => {
           return `Yanl\u0131\u015F m\u0259tn: "${_issue.includes}" daxil olmal\u0131d\u0131r`;
         if (_issue.format === "regex")
           return `Yanl\u0131\u015F m\u0259tn: ${_issue.pattern} \u015Fablonuna uy\u011Fun olmal\u0131d\u0131r`;
-        return `Yanl\u0131\u015F ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Yanl\u0131\u015F ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Yanl\u0131\u015F \u0259d\u0259d: ${issue2.divisor} il\u0259 b\xF6l\xFCn\u0259 bil\u0259n olmal\u0131d\u0131r`;
+        return `Yanl\u0131\u015F \u0259d\u0259d: ${issue3.divisor} il\u0259 b\xF6l\xFCn\u0259 bil\u0259n olmal\u0131d\u0131r`;
       case "unrecognized_keys":
-        return `Tan\u0131nmayan a\xE7ar${issue2.keys.length > 1 ? "lar" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Tan\u0131nmayan a\xE7ar${issue3.keys.length > 1 ? "lar" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} daxilind\u0259 yanl\u0131\u015F a\xE7ar`;
+        return `${issue3.origin} daxilind\u0259 yanl\u0131\u015F a\xE7ar`;
       case "invalid_union":
         return "Yanl\u0131\u015F d\u0259y\u0259r";
       case "invalid_element":
-        return `${issue2.origin} daxilind\u0259 yanl\u0131\u015F d\u0259y\u0259r`;
+        return `${issue3.origin} daxilind\u0259 yanl\u0131\u015F d\u0259y\u0259r`;
       default:
         return `Yanl\u0131\u015F d\u0259y\u0259r`;
     }
@@ -13065,8 +13065,8 @@ function az_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
-function getBelarusianPlural(count2, one, few, many) {
-  const absCount = Math.abs(count2);
+function getBelarusianPlural(count7, one, few, many) {
+  const absCount = Math.abs(count7);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -13165,43 +13165,43 @@ var error3 = () => {
     number: "\u043B\u0456\u043A",
     array: "\u043C\u0430\u0441\u0456\u045E"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434: \u0447\u0430\u043A\u0430\u045E\u0441\u044F instanceof ${issue2.expected}, \u0430\u0442\u0440\u044B\u043C\u0430\u043D\u0430 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434: \u0447\u0430\u043A\u0430\u045E\u0441\u044F instanceof ${issue3.expected}, \u0430\u0442\u0440\u044B\u043C\u0430\u043D\u0430 ${received}`;
         }
         return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434: \u0447\u0430\u043A\u0430\u045E\u0441\u044F ${expected}, \u0430\u0442\u0440\u044B\u043C\u0430\u043D\u0430 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u0432\u0430\u0440\u044B\u044F\u043D\u0442: \u0447\u0430\u043A\u0430\u045E\u0441\u044F \u0430\u0434\u0437\u0456\u043D \u0437 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u0432\u0430\u0440\u044B\u044F\u043D\u0442: \u0447\u0430\u043A\u0430\u045E\u0441\u044F \u0430\u0434\u0437\u0456\u043D \u0437 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const maxValue = Number(issue2.maximum);
+          const maxValue = Number(issue3.maximum);
           const unit = getBelarusianPlural(maxValue, sizing.unit.one, sizing.unit.few, sizing.unit.many);
-          return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u0432\u044F\u043B\u0456\u043A\u0456: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435"} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 ${sizing.verb} ${adj}${issue2.maximum.toString()} ${unit}`;
+          return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u0432\u044F\u043B\u0456\u043A\u0456: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435"} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 ${sizing.verb} ${adj}${issue3.maximum.toString()} ${unit}`;
         }
-        return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u0432\u044F\u043B\u0456\u043A\u0456: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435"} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 \u0431\u044B\u0446\u044C ${adj}${issue2.maximum.toString()}`;
+        return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u0432\u044F\u043B\u0456\u043A\u0456: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435"} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 \u0431\u044B\u0446\u044C ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const minValue = Number(issue2.minimum);
+          const minValue = Number(issue3.minimum);
           const unit = getBelarusianPlural(minValue, sizing.unit.one, sizing.unit.few, sizing.unit.many);
-          return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u043C\u0430\u043B\u044B: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue2.origin} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 ${sizing.verb} ${adj}${issue2.minimum.toString()} ${unit}`;
+          return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u043C\u0430\u043B\u044B: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue3.origin} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 ${sizing.verb} ${adj}${issue3.minimum.toString()} ${unit}`;
         }
-        return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u043C\u0430\u043B\u044B: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue2.origin} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 \u0431\u044B\u0446\u044C ${adj}${issue2.minimum.toString()}`;
+        return `\u0417\u0430\u043D\u0430\u0434\u0442\u0430 \u043C\u0430\u043B\u044B: \u0447\u0430\u043A\u0430\u043B\u0430\u0441\u044F, \u0448\u0442\u043E ${issue3.origin} \u043F\u0430\u0432\u0456\u043D\u043D\u0430 \u0431\u044B\u0446\u044C ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u0440\u0430\u0434\u043E\u043A: \u043F\u0430\u0432\u0456\u043D\u0435\u043D \u043F\u0430\u0447\u044B\u043D\u0430\u0446\u0446\u0430 \u0437 "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -13210,18 +13210,18 @@ var error3 = () => {
           return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u0440\u0430\u0434\u043E\u043A: \u043F\u0430\u0432\u0456\u043D\u0435\u043D \u0437\u043C\u044F\u0448\u0447\u0430\u0446\u044C "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u0440\u0430\u0434\u043E\u043A: \u043F\u0430\u0432\u0456\u043D\u0435\u043D \u0430\u0434\u043F\u0430\u0432\u044F\u0434\u0430\u0446\u044C \u0448\u0430\u0431\u043B\u043E\u043D\u0443 ${_issue.pattern}`;
-        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u043B\u0456\u043A: \u043F\u0430\u0432\u0456\u043D\u0435\u043D \u0431\u044B\u0446\u044C \u043A\u0440\u0430\u0442\u043D\u044B\u043C ${issue2.divisor}`;
+        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u043B\u0456\u043A: \u043F\u0430\u0432\u0456\u043D\u0435\u043D \u0431\u044B\u0446\u044C \u043A\u0440\u0430\u0442\u043D\u044B\u043C ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u041D\u0435\u0440\u0430\u0441\u043F\u0430\u0437\u043D\u0430\u043D\u044B ${issue2.keys.length > 1 ? "\u043A\u043B\u044E\u0447\u044B" : "\u043A\u043B\u044E\u0447"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u041D\u0435\u0440\u0430\u0441\u043F\u0430\u0437\u043D\u0430\u043D\u044B ${issue3.keys.length > 1 ? "\u043A\u043B\u044E\u0447\u044B" : "\u043A\u043B\u044E\u0447"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u043A\u043B\u044E\u0447 \u0443 ${issue2.origin}`;
+        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u043A\u043B\u044E\u0447 \u0443 ${issue3.origin}`;
       case "invalid_union":
         return "\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434";
       case "invalid_element":
-        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u0430\u0435 \u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435 \u045E ${issue2.origin}`;
+        return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u0430\u0435 \u0437\u043D\u0430\u0447\u044D\u043D\u043D\u0435 \u045E ${issue3.origin}`;
       default:
         return `\u041D\u044F\u043F\u0440\u0430\u0432\u0456\u043B\u044C\u043D\u044B \u045E\u0432\u043E\u0434`;
     }
@@ -13284,38 +13284,38 @@ var error4 = () => {
     number: "\u0447\u0438\u0441\u043B\u043E",
     array: "\u043C\u0430\u0441\u0438\u0432"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434: \u043E\u0447\u0430\u043A\u0432\u0430\u043D instanceof ${issue2.expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434: \u043E\u0447\u0430\u043A\u0432\u0430\u043D instanceof ${issue3.expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D ${received}`;
         }
         return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434: \u043E\u0447\u0430\u043A\u0432\u0430\u043D ${expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434: \u043E\u0447\u0430\u043A\u0432\u0430\u043D ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u0430 \u043E\u043F\u0446\u0438\u044F: \u043E\u0447\u0430\u043A\u0432\u0430\u043D\u043E \u0435\u0434\u043D\u043E \u043E\u0442 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434: \u043E\u0447\u0430\u043A\u0432\u0430\u043D ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u0430 \u043E\u043F\u0446\u0438\u044F: \u043E\u0447\u0430\u043A\u0432\u0430\u043D\u043E \u0435\u0434\u043D\u043E \u043E\u0442 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0422\u0432\u044A\u0440\u0434\u0435 \u0433\u043E\u043B\u044F\u043C\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue2.origin ?? "\u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442"} \u0434\u0430 \u0441\u044A\u0434\u044A\u0440\u0436\u0430 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0430"}`;
-        return `\u0422\u0432\u044A\u0440\u0434\u0435 \u0433\u043E\u043B\u044F\u043C\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue2.origin ?? "\u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442"} \u0434\u0430 \u0431\u044A\u0434\u0435 ${adj}${issue2.maximum.toString()}`;
+          return `\u0422\u0432\u044A\u0440\u0434\u0435 \u0433\u043E\u043B\u044F\u043C\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue3.origin ?? "\u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442"} \u0434\u0430 \u0441\u044A\u0434\u044A\u0440\u0436\u0430 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0430"}`;
+        return `\u0422\u0432\u044A\u0440\u0434\u0435 \u0433\u043E\u043B\u044F\u043C\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue3.origin ?? "\u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442"} \u0434\u0430 \u0431\u044A\u0434\u0435 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0422\u0432\u044A\u0440\u0434\u0435 \u043C\u0430\u043B\u043A\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue2.origin} \u0434\u0430 \u0441\u044A\u0434\u044A\u0440\u0436\u0430 ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u0422\u0432\u044A\u0440\u0434\u0435 \u043C\u0430\u043B\u043A\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue3.origin} \u0434\u0430 \u0441\u044A\u0434\u044A\u0440\u0436\u0430 ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u0422\u0432\u044A\u0440\u0434\u0435 \u043C\u0430\u043B\u043A\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue2.origin} \u0434\u0430 \u0431\u044A\u0434\u0435 ${adj}${issue2.minimum.toString()}`;
+        return `\u0422\u0432\u044A\u0440\u0434\u0435 \u043C\u0430\u043B\u043A\u043E: \u043E\u0447\u0430\u043A\u0432\u0430 \u0441\u0435 ${issue3.origin} \u0434\u0430 \u0431\u044A\u0434\u0435 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u043D\u0438\u0437: \u0442\u0440\u044F\u0431\u0432\u0430 \u0434\u0430 \u0437\u0430\u043F\u043E\u0447\u0432\u0430 \u0441 "${_issue.prefix}"`;
         }
@@ -13336,18 +13336,18 @@ var error4 = () => {
           invalid_adj = "\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u043E";
         if (_issue.format === "duration")
           invalid_adj = "\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u0430";
-        return `${invalid_adj} ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `${invalid_adj} ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u043E \u0447\u0438\u0441\u043B\u043E: \u0442\u0440\u044F\u0431\u0432\u0430 \u0434\u0430 \u0431\u044A\u0434\u0435 \u043A\u0440\u0430\u0442\u043D\u043E \u043D\u0430 ${issue2.divisor}`;
+        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u043E \u0447\u0438\u0441\u043B\u043E: \u0442\u0440\u044F\u0431\u0432\u0430 \u0434\u0430 \u0431\u044A\u0434\u0435 \u043A\u0440\u0430\u0442\u043D\u043E \u043D\u0430 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u041D\u0435\u0440\u0430\u0437\u043F\u043E\u0437\u043D\u0430\u0442${issue2.keys.length > 1 ? "\u0438" : ""} \u043A\u043B\u044E\u0447${issue2.keys.length > 1 ? "\u043E\u0432\u0435" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u041D\u0435\u0440\u0430\u0437\u043F\u043E\u0437\u043D\u0430\u0442${issue3.keys.length > 1 ? "\u0438" : ""} \u043A\u043B\u044E\u0447${issue3.keys.length > 1 ? "\u043E\u0432\u0435" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u043A\u043B\u044E\u0447 \u0432 ${issue2.origin}`;
+        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u043A\u043B\u044E\u0447 \u0432 ${issue3.origin}`;
       case "invalid_union":
         return "\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434";
       case "invalid_element":
-        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u0430 \u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442 \u0432 ${issue2.origin}`;
+        return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u043D\u0430 \u0441\u0442\u043E\u0439\u043D\u043E\u0441\u0442 \u0432 ${issue3.origin}`;
       default:
         return `\u041D\u0435\u0432\u0430\u043B\u0438\u0434\u0435\u043D \u0432\u0445\u043E\u0434`;
     }
@@ -13408,35 +13408,35 @@ var error5 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0985\u09AC\u09C8\u09A7 \u0987\u09A8\u09AA\u09C1\u099F: \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4 ${expected}, \u09AA\u09CD\u09B0\u09BE\u09AA\u09CD\u09A4 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0985\u09AC\u09C8\u09A7 \u0987\u09A8\u09AA\u09C1\u099F: \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0985\u09AC\u09C8\u09A7 \u0985\u09AA\u09B6\u09A8: ${joinValues(issue2.values, " | ")} \u098F\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4`;
+        if (issue3.values.length === 1)
+          return `\u0985\u09AC\u09C8\u09A7 \u0987\u09A8\u09AA\u09C1\u099F: \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0985\u09AC\u09C8\u09A7 \u0985\u09AA\u09B6\u09A8: ${joinValues(issue3.values, " | ")} \u098F\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0985\u09A8\u09C7\u0995 \u09AC\u09A1\u09BC: ${issue2.origin ?? "\u09AE\u09BE\u09A8"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u098F\u09B2\u09BF\u09AE\u09C7\u09A8\u09CD\u099F"} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
-        return `\u0985\u09A8\u09C7\u0995 \u09AC\u09A1\u09BC: ${issue2.origin ?? "\u09AE\u09BE\u09A8"} ${adj}${issue2.maximum.toString()} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
+          return `\u0985\u09A8\u09C7\u0995 \u09AC\u09A1\u09BC: ${issue3.origin ?? "\u09AE\u09BE\u09A8"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u098F\u09B2\u09BF\u09AE\u09C7\u09A8\u09CD\u099F"} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
+        return `\u0985\u09A8\u09C7\u0995 \u09AC\u09A1\u09BC: ${issue3.origin ?? "\u09AE\u09BE\u09A8"} ${adj}${issue3.maximum.toString()} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0985\u09A8\u09C7\u0995 \u099B\u09CB\u099F: ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
+          return `\u0985\u09A8\u09C7\u0995 \u099B\u09CB\u099F: ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
         }
-        return `\u0985\u09A8\u09C7\u0995 \u099B\u09CB\u099F: ${issue2.origin} ${adj}${issue2.minimum.toString()} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
+        return `\u0985\u09A8\u09C7\u0995 \u099B\u09CB\u099F: ${issue3.origin} ${adj}${issue3.minimum.toString()} \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0985\u09AC\u09C8\u09A7 \u09B8\u09CD\u099F\u09CD\u09B0\u09BF\u0982: "${_issue.prefix}" \u09A6\u09BF\u09AF\u09BC\u09C7 \u09B6\u09C1\u09B0\u09C1 \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
         }
@@ -13446,22 +13446,22 @@ var error5 = () => {
           return `\u0985\u09AC\u09C8\u09A7 \u09B8\u09CD\u099F\u09CD\u09B0\u09BF\u0982: "${_issue.includes}" \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u09A5\u09BE\u0995\u09A4\u09C7 \u09B9\u09AC\u09C7`;
         if (_issue.format === "regex")
           return `\u0985\u09AC\u09C8\u09A7 \u09B8\u09CD\u099F\u09CD\u09B0\u09BF\u0982: ${_issue.pattern} \u09AA\u09CD\u09AF\u09BE\u099F\u09BE\u09B0\u09CD\u09A8 \u09AE\u09BF\u09B2\u09A4\u09C7 \u09B9\u09AC\u09C7`;
-        return `\u0985\u09AC\u09C8\u09A7 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0985\u09AC\u09C8\u09A7 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0985\u09AC\u09C8\u09A7 \u09A8\u09AE\u09CD\u09AC\u09B0: ${issue2.divisor} \u098F\u09B0 \u0997\u09C1\u09A3\u09BF\u09A4\u0995 \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
+        return `\u0985\u09AC\u09C8\u09A7 \u09A8\u09AE\u09CD\u09AC\u09B0: ${issue3.divisor} \u098F\u09B0 \u0997\u09C1\u09A3\u09BF\u09A4\u0995 \u09B9\u09A4\u09C7 \u09B9\u09AC\u09C7`;
       case "unrecognized_keys":
-        return `\u0985\u099A\u09C7\u09A8\u09BE \u0995\u09C0${issue2.keys.length > 1 ? "\u0997\u09C1\u09B2\u09CB" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0985\u099A\u09C7\u09A8\u09BE \u0995\u09C0${issue3.keys.length > 1 ? "\u0997\u09C1\u09B2\u09CB" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} \u098F \u0985\u09AC\u09C8\u09A7 \u0995\u09C0`;
+        return `${issue3.origin} \u098F \u0985\u09AC\u09C8\u09A7 \u0995\u09C0`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0985\u09AC\u09C8\u09A7 \u09A1\u09BF\u09B8\u0995\u09CD\u09B0\u09BF\u09AE\u09BF\u09A8\u09C7\u099F\u09B0 \u09AE\u09BE\u09A8\u0964 \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u09B6\u09BF\u09A4 ${opts}`;
         }
         return "\u0985\u09AC\u09C8\u09A7 \u0987\u09A8\u09AA\u09C1\u099F";
       case "invalid_element":
-        return `${issue2.origin} \u098F \u0985\u09AC\u09C8\u09A7 \u09AE\u09BE\u09A8`;
+        return `${issue3.origin} \u098F \u0985\u09AC\u09C8\u09A7 \u09AE\u09BE\u09A8`;
       default:
         return "\u0985\u09AC\u09C8\u09A7 \u0987\u09A8\u09AA\u09C1\u099F";
     }
@@ -13522,38 +13522,38 @@ var error6 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Tipus inv\xE0lid: s'esperava instanceof ${issue2.expected}, s'ha rebut ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Tipus inv\xE0lid: s'esperava instanceof ${issue3.expected}, s'ha rebut ${received}`;
         }
         return `Tipus inv\xE0lid: s'esperava ${expected}, s'ha rebut ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Valor inv\xE0lid: s'esperava ${stringifyPrimitive(issue2.values[0])}`;
-        return `Opci\xF3 inv\xE0lida: s'esperava una de ${joinValues(issue2.values, " o ")}`;
+        if (issue3.values.length === 1)
+          return `Valor inv\xE0lid: s'esperava ${stringifyPrimitive(issue3.values[0])}`;
+        return `Opci\xF3 inv\xE0lida: s'esperava una de ${joinValues(issue3.values, " o ")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "com a m\xE0xim" : "menys de";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "com a m\xE0xim" : "menys de";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Massa gran: s'esperava que ${issue2.origin ?? "el valor"} contingu\xE9s ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "elements"}`;
-        return `Massa gran: s'esperava que ${issue2.origin ?? "el valor"} fos ${adj} ${issue2.maximum.toString()}`;
+          return `Massa gran: s'esperava que ${issue3.origin ?? "el valor"} contingu\xE9s ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "elements"}`;
+        return `Massa gran: s'esperava que ${issue3.origin ?? "el valor"} fos ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? "com a m\xEDnim" : "m\xE9s de";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "com a m\xEDnim" : "m\xE9s de";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Massa petit: s'esperava que ${issue2.origin} contingu\xE9s ${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Massa petit: s'esperava que ${issue3.origin} contingu\xE9s ${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Massa petit: s'esperava que ${issue2.origin} fos ${adj} ${issue2.minimum.toString()}`;
+        return `Massa petit: s'esperava que ${issue3.origin} fos ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Format inv\xE0lid: ha de comen\xE7ar amb "${_issue.prefix}"`;
         }
@@ -13563,19 +13563,19 @@ var error6 = () => {
           return `Format inv\xE0lid: ha d'incloure "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Format inv\xE0lid: ha de coincidir amb el patr\xF3 ${_issue.pattern}`;
-        return `Format inv\xE0lid per a ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Format inv\xE0lid per a ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `N\xFAmero inv\xE0lid: ha de ser m\xFAltiple de ${issue2.divisor}`;
+        return `N\xFAmero inv\xE0lid: ha de ser m\xFAltiple de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Clau${issue2.keys.length > 1 ? "s" : ""} no reconeguda${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Clau${issue3.keys.length > 1 ? "s" : ""} no reconeguda${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Clau inv\xE0lida a ${issue2.origin}`;
+        return `Clau inv\xE0lida a ${issue3.origin}`;
       case "invalid_union":
         return "Entrada inv\xE0lida";
       // Could also be "Tipus d'unió invàlid" but "Entrada invàlida" is more general
       case "invalid_element":
-        return `Element inv\xE0lid a ${issue2.origin}`;
+        return `Element inv\xE0lid a ${issue3.origin}`;
       default:
         return `Entrada inv\xE0lida`;
     }
@@ -13654,11 +13654,11 @@ var error7 = () => {
     map: "map",
     set: "set"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         const postfix = ["\u0627", "\u0648", "\u06C6", "\u0648\u0648", "\u06D5", "\u06CC", "\u06CE"].some((p) => received.endsWith(p)) ? "\u06CC\u06D5" : "\u06D5";
         const isEnglish = /^[a-zA-Z]+$/.test(received);
@@ -13667,23 +13667,23 @@ var error7 = () => {
         return `\u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648\u06D5 ${expected} \u0628\u06CE\u062A\u060C \u0628\u06D5\u06B5\u0627\u0645 ${received}${isEnglish ? "" : postfix}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0628\u06D5\u0647\u0627\u06A9\u06D5 \u0646\u0627\u062F\u0631\u0648\u0648\u0633\u062A\u06D5: \u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648\u06D5 ${stringifyPrimitive(issue2.values[0])} \u0628\u06CE\u062A`;
-        return `\u0647\u06D5\u06B5\u0628\u0698\u0627\u0631\u062F\u06D5\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648\u06D5 \u06CC\u06D5\u06A9\u06CE\u06A9 \u0628\u06CE\u062A \u0644\u06D5 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0628\u06D5\u0647\u0627\u06A9\u06D5 \u0646\u0627\u062F\u0631\u0648\u0648\u0633\u062A\u06D5: \u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648\u06D5 ${stringifyPrimitive(issue3.values[0])} \u0628\u06CE\u062A`;
+        return `\u0647\u06D5\u06B5\u0628\u0698\u0627\u0631\u062F\u06D5\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648\u06D5 \u06CC\u06D5\u06A9\u06CE\u06A9 \u0628\u06CE\u062A \u0644\u06D5 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const sizing = getSizing(issue2.origin);
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u0632\u06C6\u0631\u06D5\u0648\u06D5 ${issue2.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u0632\u06C6\u0631\u06D5\u0648\u06D5 ${issue2.maximum.toString()} \u0628\u06CE\u062A`;
+          return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u0632\u06C6\u0631\u06D5\u0648\u06D5 ${issue3.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u0632\u06C6\u0631\u06D5\u0648\u06D5 ${issue3.maximum.toString()} \u0628\u06CE\u062A`;
       }
       case "too_small": {
-        const sizing = getSizing(issue2.origin);
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u06A9\u06D5\u0645\u06D5\u0648\u06D5 ${issue2.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u06A9\u06D5\u0645\u06D5\u0648\u06D5 ${issue2.minimum.toString()} \u0628\u06CE\u062A`;
+          return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u06A9\u06D5\u0645\u06D5\u0648\u06D5 ${issue3.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0628\u06D5 \u0644\u0627\u06CC\u06D5\u0646\u06CC \u06A9\u06D5\u0645\u06D5\u0648\u06D5 ${issue3.minimum.toString()} \u0628\u06CE\u062A`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u062F\u06D5\u0642\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u062F\u06D5\u0633\u062A\u067E\u06CE\u0628\u06A9\u0627\u062A \u0628\u06D5 "${_issue.prefix}"`;
         }
@@ -13693,22 +13693,22 @@ var error7 = () => {
           return `\u062F\u06D5\u0642\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 "${_issue.includes}" \u0644\u06D5\u062E\u06C6\u0628\u06AF\u0631\u06CE\u062A`;
         if (_issue.format === "regex")
           return `\u062F\u06D5\u0642\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u067E\u06CE\u0648\u06CC\u0633\u062A\u06D5 \u0644\u06D5\u06AF\u06D5\u06B5 \u067E\u0627\u062A\u06CE\u0631\u0646\u06CC ${_issue.pattern} \u0628\u06AF\u0648\u0646\u062C\u06CE\u062A`;
-        return `\u0628\u06D5\u0647\u0627\u06CC ${FormatDictionary[_issue.format] ?? issue2.format} \u0646\u0627\u062F\u0631\u0648\u0633\u062A\u06D5`;
+        return `\u0628\u06D5\u0647\u0627\u06CC ${FormatDictionary[_issue.format] ?? issue3.format} \u0646\u0627\u062F\u0631\u0648\u0633\u062A\u06D5`;
       }
       case "not_multiple_of":
-        return `\u0698\u0645\u0627\u0631\u06D5\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u062F\u06D5\u0628\u06CE\u062A \u0686\u06D5\u0646\u062F \u0647\u06CE\u0646\u062F\u06D5 \u0628\u06CE\u062A \u0628\u06C6 ${issue2.divisor}`;
+        return `\u0698\u0645\u0627\u0631\u06D5\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A: \u062F\u06D5\u0628\u06CE\u062A \u0686\u06D5\u0646\u062F \u0647\u06CE\u0646\u062F\u06D5 \u0628\u06CE\u062A \u0628\u06C6 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u06A9\u0644\u06CC\u0644\u06CC \u0646\u06D5\u0646\u0627\u0633\u0631\u0627\u0648: ${joinValues(issue2.keys, ", ")}`;
+        return `\u06A9\u0644\u06CC\u0644\u06CC \u0646\u06D5\u0646\u0627\u0633\u0631\u0627\u0648: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u06A9\u0644\u06CC\u0644\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A \u0644\u06D5 ${issue2.origin}`;
+        return `\u06A9\u0644\u06CC\u0644\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A \u0644\u06D5 ${issue3.origin}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0628\u06D5\u0647\u0627\u06CC \u0646\u06D5\u0646\u0627\u0633\u0631\u0627\u0648 \u0647\u06D5\u06CC\u06D5. \u0628\u06D5\u0647\u0627\u06CC \u0686\u0627\u0648\u06D5\u0695\u0648\u0627\u0646\u06A9\u0631\u0627\u0648: ${opts}`;
         }
         return "\u06CC\u06D5\u06A9\u06AF\u0631\u062A\u0646\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A";
       case "invalid_element":
-        return `${issue2.origin} \u0628\u06D5\u0647\u0627\u06A9\u06D5 \u0646\u0627\u062F\u0631\u0648\u0633\u062A\u06D5`;
+        return `${issue3.origin} \u0628\u06D5\u0647\u0627\u06A9\u06D5 \u0646\u0627\u062F\u0631\u0648\u0633\u062A\u06D5`;
       default:
         return `\u062A\u06CE\u06A9\u0631\u062F\u06D5\u06CC \u0646\u0627\u062F\u0631\u0648\u0633\u062A`;
     }
@@ -13773,39 +13773,39 @@ var error8 = () => {
     function: "funkce",
     array: "pole"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Neplatn\xFD vstup: o\u010Dek\xE1v\xE1no instanceof ${issue2.expected}, obdr\u017Eeno ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Neplatn\xFD vstup: o\u010Dek\xE1v\xE1no instanceof ${issue3.expected}, obdr\u017Eeno ${received}`;
         }
         return `Neplatn\xFD vstup: o\u010Dek\xE1v\xE1no ${expected}, obdr\u017Eeno ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Neplatn\xFD vstup: o\u010Dek\xE1v\xE1no ${stringifyPrimitive(issue2.values[0])}`;
-        return `Neplatn\xE1 mo\u017Enost: o\u010Dek\xE1v\xE1na jedna z hodnot ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Neplatn\xFD vstup: o\u010Dek\xE1v\xE1no ${stringifyPrimitive(issue3.values[0])}`;
+        return `Neplatn\xE1 mo\u017Enost: o\u010Dek\xE1v\xE1na jedna z hodnot ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Hodnota je p\u0159\xEDli\u0161 velk\xE1: ${issue2.origin ?? "hodnota"} mus\xED m\xEDt ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "prvk\u016F"}`;
+          return `Hodnota je p\u0159\xEDli\u0161 velk\xE1: ${issue3.origin ?? "hodnota"} mus\xED m\xEDt ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "prvk\u016F"}`;
         }
-        return `Hodnota je p\u0159\xEDli\u0161 velk\xE1: ${issue2.origin ?? "hodnota"} mus\xED b\xFDt ${adj}${issue2.maximum.toString()}`;
+        return `Hodnota je p\u0159\xEDli\u0161 velk\xE1: ${issue3.origin ?? "hodnota"} mus\xED b\xFDt ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Hodnota je p\u0159\xEDli\u0161 mal\xE1: ${issue2.origin ?? "hodnota"} mus\xED m\xEDt ${adj}${issue2.minimum.toString()} ${sizing.unit ?? "prvk\u016F"}`;
+          return `Hodnota je p\u0159\xEDli\u0161 mal\xE1: ${issue3.origin ?? "hodnota"} mus\xED m\xEDt ${adj}${issue3.minimum.toString()} ${sizing.unit ?? "prvk\u016F"}`;
         }
-        return `Hodnota je p\u0159\xEDli\u0161 mal\xE1: ${issue2.origin ?? "hodnota"} mus\xED b\xFDt ${adj}${issue2.minimum.toString()}`;
+        return `Hodnota je p\u0159\xEDli\u0161 mal\xE1: ${issue3.origin ?? "hodnota"} mus\xED b\xFDt ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Neplatn\xFD \u0159et\u011Bzec: mus\xED za\u010D\xEDnat na "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -13814,18 +13814,18 @@ var error8 = () => {
           return `Neplatn\xFD \u0159et\u011Bzec: mus\xED obsahovat "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Neplatn\xFD \u0159et\u011Bzec: mus\xED odpov\xEDdat vzoru ${_issue.pattern}`;
-        return `Neplatn\xFD form\xE1t ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Neplatn\xFD form\xE1t ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Neplatn\xE9 \u010D\xEDslo: mus\xED b\xFDt n\xE1sobkem ${issue2.divisor}`;
+        return `Neplatn\xE9 \u010D\xEDslo: mus\xED b\xFDt n\xE1sobkem ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Nezn\xE1m\xE9 kl\xED\u010De: ${joinValues(issue2.keys, ", ")}`;
+        return `Nezn\xE1m\xE9 kl\xED\u010De: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Neplatn\xFD kl\xED\u010D v ${issue2.origin}`;
+        return `Neplatn\xFD kl\xED\u010D v ${issue3.origin}`;
       case "invalid_union":
         return "Neplatn\xFD vstup";
       case "invalid_element":
-        return `Neplatn\xE1 hodnota v ${issue2.origin}`;
+        return `Neplatn\xE1 hodnota v ${issue3.origin}`;
       default:
         return `Neplatn\xFD vstup`;
     }
@@ -13893,40 +13893,40 @@ var error9 = () => {
     set: "s\xE6t",
     file: "fil"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ugyldigt input: forventede instanceof ${issue2.expected}, fik ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ugyldigt input: forventede instanceof ${issue3.expected}, fik ${received}`;
         }
         return `Ugyldigt input: forventede ${expected}, fik ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ugyldig v\xE6rdi: forventede ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ugyldigt valg: forventede en af f\xF8lgende ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ugyldig v\xE6rdi: forventede ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ugyldigt valg: forventede en af f\xF8lgende ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing)
-          return `For stor: forventede ${origin ?? "value"} ${sizing.verb} ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "elementer"}`;
-        return `For stor: forventede ${origin ?? "value"} havde ${adj} ${issue2.maximum.toString()}`;
+          return `For stor: forventede ${origin ?? "value"} ${sizing.verb} ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "elementer"}`;
+        return `For stor: forventede ${origin ?? "value"} havde ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing) {
-          return `For lille: forventede ${origin} ${sizing.verb} ${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
+          return `For lille: forventede ${origin} ${sizing.verb} ${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `For lille: forventede ${origin} havde ${adj} ${issue2.minimum.toString()}`;
+        return `For lille: forventede ${origin} havde ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Ugyldig streng: skal starte med "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -13935,18 +13935,18 @@ var error9 = () => {
           return `Ugyldig streng: skal indeholde "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Ugyldig streng: skal matche m\xF8nsteret ${_issue.pattern}`;
-        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ugyldigt tal: skal v\xE6re deleligt med ${issue2.divisor}`;
+        return `Ugyldigt tal: skal v\xE6re deleligt med ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Ukendte n\xF8gler" : "Ukendt n\xF8gle"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Ukendte n\xF8gler" : "Ukendt n\xF8gle"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ugyldig n\xF8gle i ${issue2.origin}`;
+        return `Ugyldig n\xF8gle i ${issue3.origin}`;
       case "invalid_union":
         return "Ugyldigt input: matcher ingen af de tilladte typer";
       case "invalid_element":
-        return `Ugyldig v\xE6rdi i ${issue2.origin}`;
+        return `Ugyldig v\xE6rdi i ${issue3.origin}`;
       default:
         return `Ugyldigt input`;
     }
@@ -14009,38 +14009,38 @@ var error10 = () => {
     number: "Zahl",
     array: "Array"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ung\xFCltige Eingabe: erwartet instanceof ${issue2.expected}, erhalten ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ung\xFCltige Eingabe: erwartet instanceof ${issue3.expected}, erhalten ${received}`;
         }
         return `Ung\xFCltige Eingabe: erwartet ${expected}, erhalten ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ung\xFCltige Eingabe: erwartet ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ung\xFCltige Option: erwartet eine von ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ung\xFCltige Eingabe: erwartet ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ung\xFCltige Option: erwartet eine von ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Zu gro\xDF: erwartet, dass ${issue2.origin ?? "Wert"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "Elemente"} hat`;
-        return `Zu gro\xDF: erwartet, dass ${issue2.origin ?? "Wert"} ${adj}${issue2.maximum.toString()} ist`;
+          return `Zu gro\xDF: erwartet, dass ${issue3.origin ?? "Wert"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "Elemente"} hat`;
+        return `Zu gro\xDF: erwartet, dass ${issue3.origin ?? "Wert"} ${adj}${issue3.maximum.toString()} ist`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Zu klein: erwartet, dass ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} hat`;
+          return `Zu klein: erwartet, dass ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} hat`;
         }
-        return `Zu klein: erwartet, dass ${issue2.origin} ${adj}${issue2.minimum.toString()} ist`;
+        return `Zu klein: erwartet, dass ${issue3.origin} ${adj}${issue3.minimum.toString()} ist`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Ung\xFCltiger String: muss mit "${_issue.prefix}" beginnen`;
         if (_issue.format === "ends_with")
@@ -14049,18 +14049,18 @@ var error10 = () => {
           return `Ung\xFCltiger String: muss "${_issue.includes}" enthalten`;
         if (_issue.format === "regex")
           return `Ung\xFCltiger String: muss dem Muster ${_issue.pattern} entsprechen`;
-        return `Ung\xFCltig: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ung\xFCltig: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ung\xFCltige Zahl: muss ein Vielfaches von ${issue2.divisor} sein`;
+        return `Ung\xFCltige Zahl: muss ein Vielfaches von ${issue3.divisor} sein`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Unbekannte Schl\xFCssel" : "Unbekannter Schl\xFCssel"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Unbekannte Schl\xFCssel" : "Unbekannter Schl\xFCssel"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ung\xFCltiger Schl\xFCssel in ${issue2.origin}`;
+        return `Ung\xFCltiger Schl\xFCssel in ${issue3.origin}`;
       case "invalid_union":
         return "Ung\xFCltige Eingabe";
       case "invalid_element":
-        return `Ung\xFCltiger Wert in ${issue2.origin}`;
+        return `Ung\xFCltiger Wert in ${issue3.origin}`;
       default:
         return `Ung\xFCltige Eingabe`;
     }
@@ -14121,38 +14121,38 @@ var error11 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (typeof issue2.expected === "string" && /^[A-Z]/.test(issue2.expected)) {
-          return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD instanceof ${issue2.expected}, \u03BB\u03AE\u03C6\u03B8\u03B7\u03BA\u03B5 ${received}`;
+        if (typeof issue3.expected === "string" && /^[A-Z]/.test(issue3.expected)) {
+          return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD instanceof ${issue3.expected}, \u03BB\u03AE\u03C6\u03B8\u03B7\u03BA\u03B5 ${received}`;
         }
         return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${expected}, \u03BB\u03AE\u03C6\u03B8\u03B7\u03BA\u03B5 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03C0\u03B9\u03BB\u03BF\u03B3\u03AE: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD \u03AD\u03BD\u03B1 \u03B1\u03C0\u03CC ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03C0\u03B9\u03BB\u03BF\u03B3\u03AE: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD \u03AD\u03BD\u03B1 \u03B1\u03C0\u03CC ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B5\u03B3\u03AC\u03BB\u03BF: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue2.origin ?? "\u03C4\u03B9\u03BC\u03AE"} \u03BD\u03B1 \u03AD\u03C7\u03B5\u03B9 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u03C3\u03C4\u03BF\u03B9\u03C7\u03B5\u03AF\u03B1"}`;
-        return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B5\u03B3\u03AC\u03BB\u03BF: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue2.origin ?? "\u03C4\u03B9\u03BC\u03AE"} \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 ${adj}${issue2.maximum.toString()}`;
+          return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B5\u03B3\u03AC\u03BB\u03BF: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue3.origin ?? "\u03C4\u03B9\u03BC\u03AE"} \u03BD\u03B1 \u03AD\u03C7\u03B5\u03B9 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u03C3\u03C4\u03BF\u03B9\u03C7\u03B5\u03AF\u03B1"}`;
+        return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B5\u03B3\u03AC\u03BB\u03BF: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue3.origin ?? "\u03C4\u03B9\u03BC\u03AE"} \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B9\u03BA\u03C1\u03CC: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue2.origin} \u03BD\u03B1 \u03AD\u03C7\u03B5\u03B9 ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B9\u03BA\u03C1\u03CC: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue3.origin} \u03BD\u03B1 \u03AD\u03C7\u03B5\u03B9 ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B9\u03BA\u03C1\u03CC: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue2.origin} \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 ${adj}${issue2.minimum.toString()}`;
+        return `\u03A0\u03BF\u03BB\u03CD \u03BC\u03B9\u03BA\u03C1\u03CC: \u03B1\u03BD\u03B1\u03BC\u03B5\u03BD\u03CC\u03C4\u03B1\u03BD ${issue3.origin} \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03C3\u03C5\u03BC\u03B2\u03BF\u03BB\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC: \u03C0\u03C1\u03AD\u03C0\u03B5\u03B9 \u03BD\u03B1 \u03BE\u03B5\u03BA\u03B9\u03BD\u03AC \u03BC\u03B5 "${_issue.prefix}"`;
         }
@@ -14162,18 +14162,18 @@ var error11 = () => {
           return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03C3\u03C5\u03BC\u03B2\u03BF\u03BB\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC: \u03C0\u03C1\u03AD\u03C0\u03B5\u03B9 \u03BD\u03B1 \u03C0\u03B5\u03C1\u03B9\u03AD\u03C7\u03B5\u03B9 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03C3\u03C5\u03BC\u03B2\u03BF\u03BB\u03BF\u03C3\u03B5\u03B9\u03C1\u03AC: \u03C0\u03C1\u03AD\u03C0\u03B5\u03B9 \u03BD\u03B1 \u03C4\u03B1\u03B9\u03C1\u03B9\u03AC\u03B6\u03B5\u03B9 \u03BC\u03B5 \u03C4\u03BF \u03BC\u03BF\u03C4\u03AF\u03B2\u03BF ${_issue.pattern}`;
-        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF\u03C2 \u03B1\u03C1\u03B9\u03B8\u03BC\u03CC\u03C2: \u03C0\u03C1\u03AD\u03C0\u03B5\u03B9 \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03C0\u03BF\u03BB\u03BB\u03B1\u03C0\u03BB\u03AC\u03C3\u03B9\u03BF \u03C4\u03BF\u03C5 ${issue2.divisor}`;
+        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF\u03C2 \u03B1\u03C1\u03B9\u03B8\u03BC\u03CC\u03C2: \u03C0\u03C1\u03AD\u03C0\u03B5\u03B9 \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03C0\u03BF\u03BB\u03BB\u03B1\u03C0\u03BB\u03AC\u03C3\u03B9\u03BF \u03C4\u03BF\u03C5 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u0386\u03B3\u03BD\u03C9\u03C3\u03C4${issue2.keys.length > 1 ? "\u03B1" : "\u03BF"} \u03BA\u03BB\u03B5\u03B9\u03B4${issue2.keys.length > 1 ? "\u03B9\u03AC" : "\u03AF"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0386\u03B3\u03BD\u03C9\u03C3\u03C4${issue3.keys.length > 1 ? "\u03B1" : "\u03BF"} \u03BA\u03BB\u03B5\u03B9\u03B4${issue3.keys.length > 1 ? "\u03B9\u03AC" : "\u03AF"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF \u03BA\u03BB\u03B5\u03B9\u03B4\u03AF \u03C3\u03C4\u03BF ${issue2.origin}`;
+        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03BF \u03BA\u03BB\u03B5\u03B9\u03B4\u03AF \u03C3\u03C4\u03BF ${issue3.origin}`;
       case "invalid_union":
         return "\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2";
       case "invalid_element":
-        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03C4\u03B9\u03BC\u03AE \u03C3\u03C4\u03BF ${issue2.origin}`;
+        return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03C4\u03B9\u03BC\u03AE \u03C3\u03C4\u03BF ${issue3.origin}`;
       default:
         return `\u039C\u03B7 \u03AD\u03B3\u03BA\u03C5\u03C1\u03B7 \u03B5\u03AF\u03C3\u03BF\u03B4\u03BF\u03C2`;
     }
@@ -14242,35 +14242,35 @@ var error12 = () => {
     }
     return TypeDictionary[type] ?? type;
   }
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = getTypeName(issue2.expected);
-        const receivedType = parsedType(issue2.input);
-        const received = getTypeName(receivedType, issue2.input);
+        const expected = getTypeName(issue3.expected);
+        const receivedType = parsedType(issue3.input);
+        const received = getTypeName(receivedType, issue3.input);
         return `Invalid input: expected ${expected}, received ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Invalid input: expected ${stringifyPrimitive(issue2.values[0])}`;
-        return `Invalid option: expected one of ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Invalid input: expected ${stringifyPrimitive(issue3.values[0])}`;
+        return `Invalid option: expected one of ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.exact ? "exactly " : issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.exact ? "exactly " : issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Too big: expected ${issue2.origin ?? "value"} to have ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elements"}`;
-        return `Too big: expected ${issue2.origin ?? "value"} to be ${adj}${issue2.maximum.toString()}`;
+          return `Too big: expected ${issue3.origin ?? "value"} to have ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elements"}`;
+        return `Too big: expected ${issue3.origin ?? "value"} to be ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.exact ? "exactly " : issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.exact ? "exactly " : issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Too small: expected ${issue2.origin} to have ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Too small: expected ${issue3.origin} to have ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Too small: expected ${issue2.origin} to be ${adj}${issue2.minimum.toString()}`;
+        return `Too small: expected ${issue3.origin} to be ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Invalid string: must start with "${_issue.prefix}"`;
         }
@@ -14280,25 +14280,25 @@ var error12 = () => {
           return `Invalid string: must include "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Invalid string: must match pattern ${_issue.pattern}`;
-        return `Invalid ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Invalid ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Invalid number: must be a multiple of ${issue2.divisor}`;
+        return `Invalid number: must be a multiple of ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Unrecognized key${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Unrecognized key${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Invalid key in ${issue2.origin}`;
+        return `Invalid key in ${issue3.origin}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `Invalid discriminator value. Expected ${opts}`;
         }
-        if (issue2.inclusive === false) {
+        if (issue3.inclusive === false) {
           return "Invalid input: more than one option matched";
         }
         return "Invalid input";
       case "invalid_element":
-        return `Invalid value in ${issue2.origin}`;
+        return `Invalid value in ${issue3.origin}`;
       default:
         return `Invalid input`;
     }
@@ -14362,38 +14362,38 @@ var error13 = () => {
     array: "tabelo",
     null: "senvalora"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Nevalida enigo: atendi\u011Dis instanceof ${issue2.expected}, ricevi\u011Dis ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Nevalida enigo: atendi\u011Dis instanceof ${issue3.expected}, ricevi\u011Dis ${received}`;
         }
         return `Nevalida enigo: atendi\u011Dis ${expected}, ricevi\u011Dis ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Nevalida enigo: atendi\u011Dis ${stringifyPrimitive(issue2.values[0])}`;
-        return `Nevalida opcio: atendi\u011Dis unu el ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Nevalida enigo: atendi\u011Dis ${stringifyPrimitive(issue3.values[0])}`;
+        return `Nevalida opcio: atendi\u011Dis unu el ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Tro granda: atendi\u011Dis ke ${issue2.origin ?? "valoro"} havu ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementojn"}`;
-        return `Tro granda: atendi\u011Dis ke ${issue2.origin ?? "valoro"} havu ${adj}${issue2.maximum.toString()}`;
+          return `Tro granda: atendi\u011Dis ke ${issue3.origin ?? "valoro"} havu ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementojn"}`;
+        return `Tro granda: atendi\u011Dis ke ${issue3.origin ?? "valoro"} havu ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Tro malgranda: atendi\u011Dis ke ${issue2.origin} havu ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Tro malgranda: atendi\u011Dis ke ${issue3.origin} havu ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Tro malgranda: atendi\u011Dis ke ${issue2.origin} estu ${adj}${issue2.minimum.toString()}`;
+        return `Tro malgranda: atendi\u011Dis ke ${issue3.origin} estu ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Nevalida karaktraro: devas komenci\u011Di per "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -14402,18 +14402,18 @@ var error13 = () => {
           return `Nevalida karaktraro: devas inkluzivi "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Nevalida karaktraro: devas kongrui kun la modelo ${_issue.pattern}`;
-        return `Nevalida ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Nevalida ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Nevalida nombro: devas esti oblo de ${issue2.divisor}`;
+        return `Nevalida nombro: devas esti oblo de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Nekonata${issue2.keys.length > 1 ? "j" : ""} \u015Dlosilo${issue2.keys.length > 1 ? "j" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Nekonata${issue3.keys.length > 1 ? "j" : ""} \u015Dlosilo${issue3.keys.length > 1 ? "j" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Nevalida \u015Dlosilo en ${issue2.origin}`;
+        return `Nevalida \u015Dlosilo en ${issue3.origin}`;
       case "invalid_union":
         return "Nevalida enigo";
       case "invalid_element":
-        return `Nevalida valoro en ${issue2.origin}`;
+        return `Nevalida valoro en ${issue3.origin}`;
       default:
         return `Nevalida enigo`;
     }
@@ -14497,40 +14497,40 @@ var error14 = () => {
     unknown: "desconocido",
     any: "cualquiera"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Entrada inv\xE1lida: se esperaba instanceof ${issue2.expected}, recibido ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Entrada inv\xE1lida: se esperaba instanceof ${issue3.expected}, recibido ${received}`;
         }
         return `Entrada inv\xE1lida: se esperaba ${expected}, recibido ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Entrada inv\xE1lida: se esperaba ${stringifyPrimitive(issue2.values[0])}`;
-        return `Opci\xF3n inv\xE1lida: se esperaba una de ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Entrada inv\xE1lida: se esperaba ${stringifyPrimitive(issue3.values[0])}`;
+        return `Opci\xF3n inv\xE1lida: se esperaba una de ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing)
-          return `Demasiado grande: se esperaba que ${origin ?? "valor"} tuviera ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementos"}`;
-        return `Demasiado grande: se esperaba que ${origin ?? "valor"} fuera ${adj}${issue2.maximum.toString()}`;
+          return `Demasiado grande: se esperaba que ${origin ?? "valor"} tuviera ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementos"}`;
+        return `Demasiado grande: se esperaba que ${origin ?? "valor"} fuera ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing) {
-          return `Demasiado peque\xF1o: se esperaba que ${origin} tuviera ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Demasiado peque\xF1o: se esperaba que ${origin} tuviera ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Demasiado peque\xF1o: se esperaba que ${origin} fuera ${adj}${issue2.minimum.toString()}`;
+        return `Demasiado peque\xF1o: se esperaba que ${origin} fuera ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Cadena inv\xE1lida: debe comenzar con "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -14539,18 +14539,18 @@ var error14 = () => {
           return `Cadena inv\xE1lida: debe incluir "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Cadena inv\xE1lida: debe coincidir con el patr\xF3n ${_issue.pattern}`;
-        return `Inv\xE1lido ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Inv\xE1lido ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `N\xFAmero inv\xE1lido: debe ser m\xFAltiplo de ${issue2.divisor}`;
+        return `N\xFAmero inv\xE1lido: debe ser m\xFAltiplo de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Llave${issue2.keys.length > 1 ? "s" : ""} desconocida${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Llave${issue3.keys.length > 1 ? "s" : ""} desconocida${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Llave inv\xE1lida en ${TypeDictionary[issue2.origin] ?? issue2.origin}`;
+        return `Llave inv\xE1lida en ${TypeDictionary[issue3.origin] ?? issue3.origin}`;
       case "invalid_union":
         return "Entrada inv\xE1lida";
       case "invalid_element":
-        return `Valor inv\xE1lido en ${TypeDictionary[issue2.origin] ?? issue2.origin}`;
+        return `Valor inv\xE1lido en ${TypeDictionary[issue3.origin] ?? issue3.origin}`;
       default:
         return `Entrada inv\xE1lida`;
     }
@@ -14613,40 +14613,40 @@ var error15 = () => {
     number: "\u0639\u062F\u062F",
     array: "\u0622\u0631\u0627\u06CC\u0647"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A instanceof ${issue2.expected} \u0645\u06CC\u200C\u0628\u0648\u062F\u060C ${received} \u062F\u0631\u06CC\u0627\u0641\u062A \u0634\u062F`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A instanceof ${issue3.expected} \u0645\u06CC\u200C\u0628\u0648\u062F\u060C ${received} \u062F\u0631\u06CC\u0627\u0641\u062A \u0634\u062F`;
         }
         return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A ${expected} \u0645\u06CC\u200C\u0628\u0648\u062F\u060C ${received} \u062F\u0631\u06CC\u0627\u0641\u062A \u0634\u062F`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1) {
-          return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A ${stringifyPrimitive(issue2.values[0])} \u0645\u06CC\u200C\u0628\u0648\u062F`;
+        if (issue3.values.length === 1) {
+          return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A ${stringifyPrimitive(issue3.values[0])} \u0645\u06CC\u200C\u0628\u0648\u062F`;
         }
-        return `\u06AF\u0632\u06CC\u0646\u0647 \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A \u06CC\u06A9\u06CC \u0627\u0632 ${joinValues(issue2.values, "|")} \u0645\u06CC\u200C\u0628\u0648\u062F`;
+        return `\u06AF\u0632\u06CC\u0646\u0647 \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0645\u06CC\u200C\u0628\u0627\u06CC\u0633\u062A \u06CC\u06A9\u06CC \u0627\u0632 ${joinValues(issue3.values, "|")} \u0645\u06CC\u200C\u0628\u0648\u062F`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u062E\u06CC\u0644\u06CC \u0628\u0632\u0631\u06AF: ${issue2.origin ?? "\u0645\u0642\u062F\u0627\u0631"} \u0628\u0627\u06CC\u062F ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631"} \u0628\u0627\u0634\u062F`;
+          return `\u062E\u06CC\u0644\u06CC \u0628\u0632\u0631\u06AF: ${issue3.origin ?? "\u0645\u0642\u062F\u0627\u0631"} \u0628\u0627\u06CC\u062F ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631"} \u0628\u0627\u0634\u062F`;
         }
-        return `\u062E\u06CC\u0644\u06CC \u0628\u0632\u0631\u06AF: ${issue2.origin ?? "\u0645\u0642\u062F\u0627\u0631"} \u0628\u0627\u06CC\u062F ${adj}${issue2.maximum.toString()} \u0628\u0627\u0634\u062F`;
+        return `\u062E\u06CC\u0644\u06CC \u0628\u0632\u0631\u06AF: ${issue3.origin ?? "\u0645\u0642\u062F\u0627\u0631"} \u0628\u0627\u06CC\u062F ${adj}${issue3.maximum.toString()} \u0628\u0627\u0634\u062F`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u062E\u06CC\u0644\u06CC \u06A9\u0648\u0686\u06A9: ${issue2.origin} \u0628\u0627\u06CC\u062F ${adj}${issue2.minimum.toString()} ${sizing.unit} \u0628\u0627\u0634\u062F`;
+          return `\u062E\u06CC\u0644\u06CC \u06A9\u0648\u0686\u06A9: ${issue3.origin} \u0628\u0627\u06CC\u062F ${adj}${issue3.minimum.toString()} ${sizing.unit} \u0628\u0627\u0634\u062F`;
         }
-        return `\u062E\u06CC\u0644\u06CC \u06A9\u0648\u0686\u06A9: ${issue2.origin} \u0628\u0627\u06CC\u062F ${adj}${issue2.minimum.toString()} \u0628\u0627\u0634\u062F`;
+        return `\u062E\u06CC\u0644\u06CC \u06A9\u0648\u0686\u06A9: ${issue3.origin} \u0628\u0627\u06CC\u062F ${adj}${issue3.minimum.toString()} \u0628\u0627\u0634\u062F`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0631\u0634\u062A\u0647 \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0628\u0627\u06CC\u062F \u0628\u0627 "${_issue.prefix}" \u0634\u0631\u0648\u0639 \u0634\u0648\u062F`;
         }
@@ -14659,18 +14659,18 @@ var error15 = () => {
         if (_issue.format === "regex") {
           return `\u0631\u0634\u062A\u0647 \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0628\u0627\u06CC\u062F \u0628\u0627 \u0627\u0644\u06AF\u0648\u06CC ${_issue.pattern} \u0645\u0637\u0627\u0628\u0642\u062A \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F`;
         }
-        return `${FormatDictionary[_issue.format] ?? issue2.format} \u0646\u0627\u0645\u0639\u062A\u0628\u0631`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} \u0646\u0627\u0645\u0639\u062A\u0628\u0631`;
       }
       case "not_multiple_of":
-        return `\u0639\u062F\u062F \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0628\u0627\u06CC\u062F \u0645\u0636\u0631\u0628 ${issue2.divisor} \u0628\u0627\u0634\u062F`;
+        return `\u0639\u062F\u062F \u0646\u0627\u0645\u0639\u062A\u0628\u0631: \u0628\u0627\u06CC\u062F \u0645\u0636\u0631\u0628 ${issue3.divisor} \u0628\u0627\u0634\u062F`;
       case "unrecognized_keys":
-        return `\u06A9\u0644\u06CC\u062F${issue2.keys.length > 1 ? "\u0647\u0627\u06CC" : ""} \u0646\u0627\u0634\u0646\u0627\u0633: ${joinValues(issue2.keys, ", ")}`;
+        return `\u06A9\u0644\u06CC\u062F${issue3.keys.length > 1 ? "\u0647\u0627\u06CC" : ""} \u0646\u0627\u0634\u0646\u0627\u0633: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u06A9\u0644\u06CC\u062F \u0646\u0627\u0634\u0646\u0627\u0633 \u062F\u0631 ${issue2.origin}`;
+        return `\u06A9\u0644\u06CC\u062F \u0646\u0627\u0634\u0646\u0627\u0633 \u062F\u0631 ${issue3.origin}`;
       case "invalid_union":
         return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631`;
       case "invalid_element":
-        return `\u0645\u0642\u062F\u0627\u0631 \u0646\u0627\u0645\u0639\u062A\u0628\u0631 \u062F\u0631 ${issue2.origin}`;
+        return `\u0645\u0642\u062F\u0627\u0631 \u0646\u0627\u0645\u0639\u062A\u0628\u0631 \u062F\u0631 ${issue3.origin}`;
       default:
         return `\u0648\u0631\u0648\u062F\u06CC \u0646\u0627\u0645\u0639\u062A\u0628\u0631`;
     }
@@ -14735,39 +14735,39 @@ var error16 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Virheellinen tyyppi: odotettiin instanceof ${issue2.expected}, oli ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Virheellinen tyyppi: odotettiin instanceof ${issue3.expected}, oli ${received}`;
         }
         return `Virheellinen tyyppi: odotettiin ${expected}, oli ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Virheellinen sy\xF6te: t\xE4ytyy olla ${stringifyPrimitive(issue2.values[0])}`;
-        return `Virheellinen valinta: t\xE4ytyy olla yksi seuraavista: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Virheellinen sy\xF6te: t\xE4ytyy olla ${stringifyPrimitive(issue3.values[0])}`;
+        return `Virheellinen valinta: t\xE4ytyy olla yksi seuraavista: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Liian suuri: ${sizing.subject} t\xE4ytyy olla ${adj}${issue2.maximum.toString()} ${sizing.unit}`.trim();
+          return `Liian suuri: ${sizing.subject} t\xE4ytyy olla ${adj}${issue3.maximum.toString()} ${sizing.unit}`.trim();
         }
-        return `Liian suuri: arvon t\xE4ytyy olla ${adj}${issue2.maximum.toString()}`;
+        return `Liian suuri: arvon t\xE4ytyy olla ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Liian pieni: ${sizing.subject} t\xE4ytyy olla ${adj}${issue2.minimum.toString()} ${sizing.unit}`.trim();
+          return `Liian pieni: ${sizing.subject} t\xE4ytyy olla ${adj}${issue3.minimum.toString()} ${sizing.unit}`.trim();
         }
-        return `Liian pieni: arvon t\xE4ytyy olla ${adj}${issue2.minimum.toString()}`;
+        return `Liian pieni: arvon t\xE4ytyy olla ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Virheellinen sy\xF6te: t\xE4ytyy alkaa "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -14777,12 +14777,12 @@ var error16 = () => {
         if (_issue.format === "regex") {
           return `Virheellinen sy\xF6te: t\xE4ytyy vastata s\xE4\xE4nn\xF6llist\xE4 lauseketta ${_issue.pattern}`;
         }
-        return `Virheellinen ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Virheellinen ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Virheellinen luku: t\xE4ytyy olla luvun ${issue2.divisor} monikerta`;
+        return `Virheellinen luku: t\xE4ytyy olla luvun ${issue3.divisor} monikerta`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Tuntemattomat avaimet" : "Tuntematon avain"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Tuntemattomat avaimet" : "Tuntematon avain"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
         return "Virheellinen avain tietueessa";
       case "invalid_union":
@@ -14868,37 +14868,37 @@ var error17 = () => {
     nan: "NaN",
     function: "fonction"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Entr\xE9e invalide : instance de ${issue2.expected} attendu, ${received} re\xE7u`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Entr\xE9e invalide : instance de ${issue3.expected} attendu, ${received} re\xE7u`;
         }
         return `Entr\xE9e invalide : ${expected} attendu, ${received} re\xE7u`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Entr\xE9e invalide : ${stringifyPrimitive(issue2.values[0])} attendu`;
-        return `Option invalide : une valeur parmi ${joinValues(issue2.values, "|")} attendue`;
+        if (issue3.values.length === 1)
+          return `Entr\xE9e invalide : ${stringifyPrimitive(issue3.values[0])} attendu`;
+        return `Option invalide : une valeur parmi ${joinValues(issue3.values, "|")} attendue`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Trop grand : ${TypeDictionary[issue2.origin] ?? "valeur"} doit ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\xE9l\xE9ment(s)"}`;
-        return `Trop grand : ${TypeDictionary[issue2.origin] ?? "valeur"} doit \xEAtre ${adj}${issue2.maximum.toString()}`;
+          return `Trop grand : ${TypeDictionary[issue3.origin] ?? "valeur"} doit ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\xE9l\xE9ment(s)"}`;
+        return `Trop grand : ${TypeDictionary[issue3.origin] ?? "valeur"} doit \xEAtre ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Trop petit : ${TypeDictionary[issue2.origin] ?? "valeur"} doit ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
-        return `Trop petit : ${TypeDictionary[issue2.origin] ?? "valeur"} doit \xEAtre ${adj}${issue2.minimum.toString()}`;
+          return `Trop petit : ${TypeDictionary[issue3.origin] ?? "valeur"} doit ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
+        return `Trop petit : ${TypeDictionary[issue3.origin] ?? "valeur"} doit \xEAtre ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Cha\xEEne de caract\xE8res invalide : doit commencer par "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -14907,18 +14907,18 @@ var error17 = () => {
           return `Cha\xEEne de caract\xE8res invalide : doit inclure "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Cha\xEEne de caract\xE8res invalide : doit correspondre au motif ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} invalide`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} invalide`;
       }
       case "not_multiple_of":
-        return `Nombre invalide : doit \xEAtre un multiple de ${issue2.divisor}`;
+        return `Nombre invalide : doit \xEAtre un multiple de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Cl\xE9${issue2.keys.length > 1 ? "s" : ""} non reconnue${issue2.keys.length > 1 ? "s" : ""} : ${joinValues(issue2.keys, ", ")}`;
+        return `Cl\xE9${issue3.keys.length > 1 ? "s" : ""} non reconnue${issue3.keys.length > 1 ? "s" : ""} : ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Cl\xE9 invalide dans ${issue2.origin}`;
+        return `Cl\xE9 invalide dans ${issue3.origin}`;
       case "invalid_union":
         return "Entr\xE9e invalide";
       case "invalid_element":
-        return `Valeur invalide dans ${issue2.origin}`;
+        return `Valeur invalide dans ${issue3.origin}`;
       default:
         return `Entr\xE9e invalide`;
     }
@@ -14979,38 +14979,38 @@ var error18 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Entr\xE9e invalide : attendu instanceof ${issue2.expected}, re\xE7u ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Entr\xE9e invalide : attendu instanceof ${issue3.expected}, re\xE7u ${received}`;
         }
         return `Entr\xE9e invalide : attendu ${expected}, re\xE7u ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Entr\xE9e invalide : attendu ${stringifyPrimitive(issue2.values[0])}`;
-        return `Option invalide : attendu l'une des valeurs suivantes ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Entr\xE9e invalide : attendu ${stringifyPrimitive(issue3.values[0])}`;
+        return `Option invalide : attendu l'une des valeurs suivantes ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "\u2264" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u2264" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Trop grand : attendu que ${issue2.origin ?? "la valeur"} ait ${adj}${issue2.maximum.toString()} ${sizing.unit}`;
-        return `Trop grand : attendu que ${issue2.origin ?? "la valeur"} soit ${adj}${issue2.maximum.toString()}`;
+          return `Trop grand : attendu que ${issue3.origin ?? "la valeur"} ait ${adj}${issue3.maximum.toString()} ${sizing.unit}`;
+        return `Trop grand : attendu que ${issue3.origin ?? "la valeur"} soit ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? "\u2265" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u2265" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Trop petit : attendu que ${issue2.origin} ait ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Trop petit : attendu que ${issue3.origin} ait ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Trop petit : attendu que ${issue2.origin} soit ${adj}${issue2.minimum.toString()}`;
+        return `Trop petit : attendu que ${issue3.origin} soit ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Cha\xEEne invalide : doit commencer par "${_issue.prefix}"`;
         }
@@ -15020,18 +15020,18 @@ var error18 = () => {
           return `Cha\xEEne invalide : doit inclure "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Cha\xEEne invalide : doit correspondre au motif ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} invalide`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} invalide`;
       }
       case "not_multiple_of":
-        return `Nombre invalide : doit \xEAtre un multiple de ${issue2.divisor}`;
+        return `Nombre invalide : doit \xEAtre un multiple de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Cl\xE9${issue2.keys.length > 1 ? "s" : ""} non reconnue${issue2.keys.length > 1 ? "s" : ""} : ${joinValues(issue2.keys, ", ")}`;
+        return `Cl\xE9${issue3.keys.length > 1 ? "s" : ""} non reconnue${issue3.keys.length > 1 ? "s" : ""} : ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Cl\xE9 invalide dans ${issue2.origin}`;
+        return `Cl\xE9 invalide dans ${issue3.origin}`;
       case "invalid_union":
         return "Entr\xE9e invalide";
       case "invalid_element":
-        return `Valeur invalide dans ${issue2.origin}`;
+        return `Valeur invalide dans ${issue3.origin}`;
       default:
         return `Entr\xE9e invalide`;
     }
@@ -15092,35 +15092,35 @@ var error19 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A87\u0AA8\u0AAA\u0AC1\u0A9F: \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4 ${expected}, \u0AAA\u0ACD\u0AB0\u0ABE\u0AAA\u0ACD\u0AA4 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A87\u0AA8\u0AAA\u0AC1\u0A9F: \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AB5\u0ABF\u0A95\u0AB2\u0ACD\u0AAA: ${joinValues(issue2.values, " | ")} \u0AAE\u0ABE\u0AA7\u0ACD\u0AAF\u0AAE\u0AA5\u0AC0 \u0A8F\u0A95 \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4`;
+        if (issue3.values.length === 1)
+          return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A87\u0AA8\u0AAA\u0AC1\u0A9F: \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AB5\u0ABF\u0A95\u0AB2\u0ACD\u0AAA: ${joinValues(issue3.values, " | ")} \u0AAE\u0ABE\u0AA7\u0ACD\u0AAF\u0AAE\u0AA5\u0AC0 \u0A8F\u0A95 \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0A96\u0AC2\u0AAC \u0AAE\u0ACB\u0A9F\u0AC1\u0A82: ${issue2.origin ?? "\u0AAE\u0AC2\u0AB2\u0ACD\u0AAF"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0A8F\u0AB2\u0ABF\u0AAE\u0AC7\u0AA8\u0ACD\u0A9F"} \u0AB9\u0ACB\u0AB5\u0ABE \u0A9C\u0ACB\u0A88\u0A8F`;
-        return `\u0A96\u0AC2\u0AAC \u0AAE\u0ACB\u0A9F\u0AC1\u0A82: ${issue2.origin ?? "\u0AAE\u0AC2\u0AB2\u0ACD\u0AAF"} ${adj}${issue2.maximum.toString()} \u0AB9\u0ACB\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
+          return `\u0A96\u0AC2\u0AAC \u0AAE\u0ACB\u0A9F\u0AC1\u0A82: ${issue3.origin ?? "\u0AAE\u0AC2\u0AB2\u0ACD\u0AAF"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0A8F\u0AB2\u0ABF\u0AAE\u0AC7\u0AA8\u0ACD\u0A9F"} \u0AB9\u0ACB\u0AB5\u0ABE \u0A9C\u0ACB\u0A88\u0A8F`;
+        return `\u0A96\u0AC2\u0AAC \u0AAE\u0ACB\u0A9F\u0AC1\u0A82: ${issue3.origin ?? "\u0AAE\u0AC2\u0AB2\u0ACD\u0AAF"} ${adj}${issue3.maximum.toString()} \u0AB9\u0ACB\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0A96\u0AC2\u0AAC \u0AA8\u0ABE\u0AA8\u0AC1\u0A82: ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} \u0AB9\u0ACB\u0AB5\u0ABE \u0A9C\u0ACB\u0A88\u0A8F`;
+          return `\u0A96\u0AC2\u0AAC \u0AA8\u0ABE\u0AA8\u0AC1\u0A82: ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} \u0AB9\u0ACB\u0AB5\u0ABE \u0A9C\u0ACB\u0A88\u0A8F`;
         }
-        return `\u0A96\u0AC2\u0AAC \u0AA8\u0ABE\u0AA8\u0AC1\u0A82: ${issue2.origin} ${adj}${issue2.minimum.toString()} \u0AB9\u0ACB\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
+        return `\u0A96\u0AC2\u0AAC \u0AA8\u0ABE\u0AA8\u0AC1\u0A82: ${issue3.origin} ${adj}${issue3.minimum.toString()} \u0AB9\u0ACB\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AB8\u0ACD\u0A9F\u0ACD\u0AB0\u0ABF\u0A82\u0A97: "${_issue.prefix}" \u0AA5\u0AC0 \u0AB6\u0AB0\u0AC2 \u0AA5\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
         }
@@ -15130,22 +15130,22 @@ var error19 = () => {
           return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AB8\u0ACD\u0A9F\u0ACD\u0AB0\u0ABF\u0A82\u0A97: "${_issue.includes}" \u0AB6\u0ABE\u0AAE\u0AC7\u0AB2 \u0AB9\u0ACB\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
         if (_issue.format === "regex")
           return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AB8\u0ACD\u0A9F\u0ACD\u0AB0\u0ABF\u0A82\u0A97: \u0AAA\u0AC7\u0A9F\u0AB0\u0ACD\u0AA8 ${_issue.pattern} \u0AB8\u0ABE\u0AA5\u0AC7 \u0AAE\u0AC7\u0AB3 \u0A96\u0ABE\u0AB5\u0AC1\u0A82 \u0A9C\u0ACB\u0A88\u0A8F`;
-        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AA8\u0A82\u0AAC\u0AB0: ${issue2.divisor} \u0AA8\u0ACB \u0A97\u0AC1\u0AA3\u0ABE\u0A82\u0A95 \u0AB9\u0ACB\u0AB5\u0ACB \u0A9C\u0ACB\u0A88\u0A8F`;
+        return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AA8\u0A82\u0AAC\u0AB0: ${issue3.divisor} \u0AA8\u0ACB \u0A97\u0AC1\u0AA3\u0ABE\u0A82\u0A95 \u0AB9\u0ACB\u0AB5\u0ACB \u0A9C\u0ACB\u0A88\u0A8F`;
       case "unrecognized_keys":
-        return `\u0A93\u0AB3\u0A96\u0AC0 \u0AB6\u0A95\u0ABE\u0AA4\u0ABE \u0AA8\u0AB9\u0AC0\u0A82 \u0AA4\u0AC7 \u0A95\u0AC0${issue2.keys.length > 1 ? "\u0A93" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0A93\u0AB3\u0A96\u0AC0 \u0AB6\u0A95\u0ABE\u0AA4\u0ABE \u0AA8\u0AB9\u0AC0\u0A82 \u0AA4\u0AC7 \u0A95\u0AC0${issue3.keys.length > 1 ? "\u0A93" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} \u0AAE\u0ABE\u0A82 \u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A95\u0AC0`;
+        return `${issue3.origin} \u0AAE\u0ABE\u0A82 \u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A95\u0AC0`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AA1\u0ABF\u0AB8\u0ACD\u0A95\u0ACD\u0AB0\u0ABF\u0AAE\u0ABF\u0AA8\u0AC7\u0A9F\u0AB0 \u0AAE\u0AC2\u0AB2\u0ACD\u0AAF. \u0A85\u0AAA\u0AC7\u0A95\u0ACD\u0AB7\u0ABF\u0AA4 ${opts}`;
         }
         return "\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A87\u0AA8\u0AAA\u0AC1\u0A9F";
       case "invalid_element":
-        return `${issue2.origin} \u0AAE\u0ABE\u0A82 \u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AAE\u0AC2\u0AB2\u0ACD\u0AAF`;
+        return `${issue3.origin} \u0AAE\u0ABE\u0A82 \u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0AAE\u0AC2\u0AB2\u0ACD\u0AAF`;
       default:
         return "\u0A85\u0AAE\u0ABE\u0AA8\u0ACD\u0AAF \u0A87\u0AA8\u0AAA\u0AC1\u0A9F";
     }
@@ -15247,24 +15247,24 @@ var error20 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expectedKey = issue2.expected;
+        const expectedKey = issue3.expected;
         const expected = TypeDictionary[expectedKey ?? ""] ?? typeLabel(expectedKey);
-        const receivedType = parsedType(issue2.input);
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? TypeNames[receivedType]?.label ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u05E7\u05DC\u05D8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA instanceof ${issue2.expected}, \u05D4\u05EA\u05E7\u05D1\u05DC ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u05E7\u05DC\u05D8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA instanceof ${issue3.expected}, \u05D4\u05EA\u05E7\u05D1\u05DC ${received}`;
         }
         return `\u05E7\u05DC\u05D8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA ${expected}, \u05D4\u05EA\u05E7\u05D1\u05DC ${received}`;
       }
       case "invalid_value": {
-        if (issue2.values.length === 1) {
-          return `\u05E2\u05E8\u05DA \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D4\u05E2\u05E8\u05DA \u05D7\u05D9\u05D9\u05D1 \u05DC\u05D4\u05D9\u05D5\u05EA ${stringifyPrimitive(issue2.values[0])}`;
+        if (issue3.values.length === 1) {
+          return `\u05E2\u05E8\u05DA \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D4\u05E2\u05E8\u05DA \u05D7\u05D9\u05D9\u05D1 \u05DC\u05D4\u05D9\u05D5\u05EA ${stringifyPrimitive(issue3.values[0])}`;
         }
-        const stringified = issue2.values.map((v) => stringifyPrimitive(v));
-        if (issue2.values.length === 2) {
+        const stringified = issue3.values.map((v) => stringifyPrimitive(v));
+        if (issue3.values.length === 2) {
           return `\u05E2\u05E8\u05DA \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D4\u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA \u05D4\u05DE\u05EA\u05D0\u05D9\u05DE\u05D5\u05EA \u05D4\u05DF ${stringified[0]} \u05D0\u05D5 ${stringified[1]}`;
         }
         const lastValue = stringified[stringified.length - 1];
@@ -15272,55 +15272,55 @@ var error20 = () => {
         return `\u05E2\u05E8\u05DA \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D4\u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA \u05D4\u05DE\u05EA\u05D0\u05D9\u05DE\u05D5\u05EA \u05D4\u05DF ${restValues} \u05D0\u05D5 ${lastValue}`;
       }
       case "too_big": {
-        const sizing = getSizing(issue2.origin);
-        const subject = withDefinite(issue2.origin ?? "value");
-        if (issue2.origin === "string") {
-          return `${sizing?.longLabel ?? "\u05D0\u05E8\u05D5\u05DA"} \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05DB\u05D9\u05DC ${issue2.maximum.toString()} ${sizing?.unit ?? ""} ${issue2.inclusive ? "\u05D0\u05D5 \u05E4\u05D7\u05D5\u05EA" : "\u05DC\u05DB\u05DC \u05D4\u05D9\u05D5\u05EA\u05E8"}`.trim();
+        const sizing = getSizing(issue3.origin);
+        const subject = withDefinite(issue3.origin ?? "value");
+        if (issue3.origin === "string") {
+          return `${sizing?.longLabel ?? "\u05D0\u05E8\u05D5\u05DA"} \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05DB\u05D9\u05DC ${issue3.maximum.toString()} ${sizing?.unit ?? ""} ${issue3.inclusive ? "\u05D0\u05D5 \u05E4\u05D7\u05D5\u05EA" : "\u05DC\u05DB\u05DC \u05D4\u05D9\u05D5\u05EA\u05E8"}`.trim();
         }
-        if (issue2.origin === "number") {
-          const comparison = issue2.inclusive ? `\u05E7\u05D8\u05DF \u05D0\u05D5 \u05E9\u05D5\u05D5\u05D4 \u05DC-${issue2.maximum}` : `\u05E7\u05D8\u05DF \u05DE-${issue2.maximum}`;
+        if (issue3.origin === "number") {
+          const comparison = issue3.inclusive ? `\u05E7\u05D8\u05DF \u05D0\u05D5 \u05E9\u05D5\u05D5\u05D4 \u05DC-${issue3.maximum}` : `\u05E7\u05D8\u05DF \u05DE-${issue3.maximum}`;
           return `\u05D2\u05D3\u05D5\u05DC \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA ${comparison}`;
         }
-        if (issue2.origin === "array" || issue2.origin === "set") {
-          const verb = issue2.origin === "set" ? "\u05E6\u05E8\u05D9\u05DB\u05D4" : "\u05E6\u05E8\u05D9\u05DA";
-          const comparison = issue2.inclusive ? `${issue2.maximum} ${sizing?.unit ?? ""} \u05D0\u05D5 \u05E4\u05D7\u05D5\u05EA` : `\u05E4\u05D7\u05D5\u05EA \u05DE-${issue2.maximum} ${sizing?.unit ?? ""}`;
+        if (issue3.origin === "array" || issue3.origin === "set") {
+          const verb = issue3.origin === "set" ? "\u05E6\u05E8\u05D9\u05DB\u05D4" : "\u05E6\u05E8\u05D9\u05DA";
+          const comparison = issue3.inclusive ? `${issue3.maximum} ${sizing?.unit ?? ""} \u05D0\u05D5 \u05E4\u05D7\u05D5\u05EA` : `\u05E4\u05D7\u05D5\u05EA \u05DE-${issue3.maximum} ${sizing?.unit ?? ""}`;
           return `\u05D2\u05D3\u05D5\u05DC \u05DE\u05D3\u05D9: ${subject} ${verb} \u05DC\u05D4\u05DB\u05D9\u05DC ${comparison}`.trim();
         }
-        const adj = issue2.inclusive ? "<=" : "<";
-        const be = verbFor(issue2.origin ?? "value");
+        const adj = issue3.inclusive ? "<=" : "<";
+        const be = verbFor(issue3.origin ?? "value");
         if (sizing?.unit) {
-          return `${sizing.longLabel} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue2.maximum.toString()} ${sizing.unit}`;
+          return `${sizing.longLabel} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue3.maximum.toString()} ${sizing.unit}`;
         }
-        return `${sizing?.longLabel ?? "\u05D2\u05D3\u05D5\u05DC"} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue2.maximum.toString()}`;
+        return `${sizing?.longLabel ?? "\u05D2\u05D3\u05D5\u05DC"} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const sizing = getSizing(issue2.origin);
-        const subject = withDefinite(issue2.origin ?? "value");
-        if (issue2.origin === "string") {
-          return `${sizing?.shortLabel ?? "\u05E7\u05E6\u05E8"} \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05DB\u05D9\u05DC ${issue2.minimum.toString()} ${sizing?.unit ?? ""} ${issue2.inclusive ? "\u05D0\u05D5 \u05D9\u05D5\u05EA\u05E8" : "\u05DC\u05E4\u05D7\u05D5\u05EA"}`.trim();
+        const sizing = getSizing(issue3.origin);
+        const subject = withDefinite(issue3.origin ?? "value");
+        if (issue3.origin === "string") {
+          return `${sizing?.shortLabel ?? "\u05E7\u05E6\u05E8"} \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05DB\u05D9\u05DC ${issue3.minimum.toString()} ${sizing?.unit ?? ""} ${issue3.inclusive ? "\u05D0\u05D5 \u05D9\u05D5\u05EA\u05E8" : "\u05DC\u05E4\u05D7\u05D5\u05EA"}`.trim();
         }
-        if (issue2.origin === "number") {
-          const comparison = issue2.inclusive ? `\u05D2\u05D3\u05D5\u05DC \u05D0\u05D5 \u05E9\u05D5\u05D5\u05D4 \u05DC-${issue2.minimum}` : `\u05D2\u05D3\u05D5\u05DC \u05DE-${issue2.minimum}`;
+        if (issue3.origin === "number") {
+          const comparison = issue3.inclusive ? `\u05D2\u05D3\u05D5\u05DC \u05D0\u05D5 \u05E9\u05D5\u05D5\u05D4 \u05DC-${issue3.minimum}` : `\u05D2\u05D3\u05D5\u05DC \u05DE-${issue3.minimum}`;
           return `\u05E7\u05D8\u05DF \u05DE\u05D3\u05D9: ${subject} \u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA ${comparison}`;
         }
-        if (issue2.origin === "array" || issue2.origin === "set") {
-          const verb = issue2.origin === "set" ? "\u05E6\u05E8\u05D9\u05DB\u05D4" : "\u05E6\u05E8\u05D9\u05DA";
-          if (issue2.minimum === 1 && issue2.inclusive) {
-            const singularPhrase = issue2.origin === "set" ? "\u05DC\u05E4\u05D7\u05D5\u05EA \u05E4\u05E8\u05D9\u05D8 \u05D0\u05D7\u05D3" : "\u05DC\u05E4\u05D7\u05D5\u05EA \u05E4\u05E8\u05D9\u05D8 \u05D0\u05D7\u05D3";
+        if (issue3.origin === "array" || issue3.origin === "set") {
+          const verb = issue3.origin === "set" ? "\u05E6\u05E8\u05D9\u05DB\u05D4" : "\u05E6\u05E8\u05D9\u05DA";
+          if (issue3.minimum === 1 && issue3.inclusive) {
+            const singularPhrase = issue3.origin === "set" ? "\u05DC\u05E4\u05D7\u05D5\u05EA \u05E4\u05E8\u05D9\u05D8 \u05D0\u05D7\u05D3" : "\u05DC\u05E4\u05D7\u05D5\u05EA \u05E4\u05E8\u05D9\u05D8 \u05D0\u05D7\u05D3";
             return `\u05E7\u05D8\u05DF \u05DE\u05D3\u05D9: ${subject} ${verb} \u05DC\u05D4\u05DB\u05D9\u05DC ${singularPhrase}`;
           }
-          const comparison = issue2.inclusive ? `${issue2.minimum} ${sizing?.unit ?? ""} \u05D0\u05D5 \u05D9\u05D5\u05EA\u05E8` : `\u05D9\u05D5\u05EA\u05E8 \u05DE-${issue2.minimum} ${sizing?.unit ?? ""}`;
+          const comparison = issue3.inclusive ? `${issue3.minimum} ${sizing?.unit ?? ""} \u05D0\u05D5 \u05D9\u05D5\u05EA\u05E8` : `\u05D9\u05D5\u05EA\u05E8 \u05DE-${issue3.minimum} ${sizing?.unit ?? ""}`;
           return `\u05E7\u05D8\u05DF \u05DE\u05D3\u05D9: ${subject} ${verb} \u05DC\u05D4\u05DB\u05D9\u05DC ${comparison}`.trim();
         }
-        const adj = issue2.inclusive ? ">=" : ">";
-        const be = verbFor(issue2.origin ?? "value");
+        const adj = issue3.inclusive ? ">=" : ">";
+        const be = verbFor(issue3.origin ?? "value");
         if (sizing?.unit) {
-          return `${sizing.shortLabel} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `${sizing.shortLabel} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `${sizing?.shortLabel ?? "\u05E7\u05D8\u05DF"} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue2.minimum.toString()}`;
+        return `${sizing?.shortLabel ?? "\u05E7\u05D8\u05DF"} \u05DE\u05D3\u05D9: ${subject} ${be} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u05D4\u05DE\u05D7\u05E8\u05D5\u05D6\u05EA \u05D7\u05D9\u05D9\u05D1\u05EA \u05DC\u05D4\u05EA\u05D7\u05D9\u05DC \u05D1 "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -15336,16 +15336,16 @@ var error20 = () => {
         return `${noun} \u05DC\u05D0 ${adjective}`;
       }
       case "not_multiple_of":
-        return `\u05DE\u05E1\u05E4\u05E8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D7\u05D9\u05D9\u05D1 \u05DC\u05D4\u05D9\u05D5\u05EA \u05DE\u05DB\u05E4\u05DC\u05D4 \u05E9\u05DC ${issue2.divisor}`;
+        return `\u05DE\u05E1\u05E4\u05E8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF: \u05D7\u05D9\u05D9\u05D1 \u05DC\u05D4\u05D9\u05D5\u05EA \u05DE\u05DB\u05E4\u05DC\u05D4 \u05E9\u05DC ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u05DE\u05E4\u05EA\u05D7${issue2.keys.length > 1 ? "\u05D5\u05EA" : ""} \u05DC\u05D0 \u05DE\u05D6\u05D5\u05D4${issue2.keys.length > 1 ? "\u05D9\u05DD" : "\u05D4"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u05DE\u05E4\u05EA\u05D7${issue3.keys.length > 1 ? "\u05D5\u05EA" : ""} \u05DC\u05D0 \u05DE\u05D6\u05D5\u05D4${issue3.keys.length > 1 ? "\u05D9\u05DD" : "\u05D4"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key": {
         return `\u05E9\u05D3\u05D4 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF \u05D1\u05D0\u05D5\u05D1\u05D9\u05D9\u05E7\u05D8`;
       }
       case "invalid_union":
         return "\u05E7\u05DC\u05D8 \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF";
       case "invalid_element": {
-        const place = withDefinite(issue2.origin ?? "array");
+        const place = withDefinite(issue3.origin ?? "array");
         return `\u05E2\u05E8\u05DA \u05DC\u05D0 \u05EA\u05E7\u05D9\u05DF \u05D1${place}`;
       }
       default:
@@ -15408,34 +15408,34 @@ var error21 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${expected}, \u092A\u094D\u0930\u093E\u092A\u094D\u0924 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0935\u093F\u0915\u0932\u094D\u092A: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u092E\u093E\u0928\u094B\u0902 \u092E\u0947\u0902 \u0938\u0947 \u090F\u0915 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0935\u093F\u0915\u0932\u094D\u092A: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u092E\u093E\u0928\u094B\u0902 \u092E\u0947\u0902 \u0938\u0947 \u090F\u0915 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u092C\u0939\u0941\u0924 \u092C\u0921\u093C\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue2.origin ?? "\u092E\u093E\u0928"} \u092E\u0947\u0902 ${adj}${issue2.maximum} ${sizing.unit} \u0939\u094B\u0902`;
-        return `\u092C\u0939\u0941\u0924 \u092C\u0921\u093C\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue2.origin ?? "\u092E\u093E\u0928"} ${adj}${issue2.maximum} \u0939\u094B`;
+          return `\u092C\u0939\u0941\u0924 \u092C\u0921\u093C\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue3.origin ?? "\u092E\u093E\u0928"} \u092E\u0947\u0902 ${adj}${issue3.maximum} ${sizing.unit} \u0939\u094B\u0902`;
+        return `\u092C\u0939\u0941\u0924 \u092C\u0921\u093C\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue3.origin ?? "\u092E\u093E\u0928"} ${adj}${issue3.maximum} \u0939\u094B`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u092C\u0939\u0941\u0924 \u091B\u094B\u091F\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue2.origin} \u092E\u0947\u0902 ${adj}${issue2.minimum} ${sizing.unit} \u0939\u094B\u0902`;
-        return `\u092C\u0939\u0941\u0924 \u091B\u094B\u091F\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue2.origin} ${adj}${issue2.minimum} \u0939\u094B`;
+          return `\u092C\u0939\u0941\u0924 \u091B\u094B\u091F\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue3.origin} \u092E\u0947\u0902 ${adj}${issue3.minimum} ${sizing.unit} \u0939\u094B\u0902`;
+        return `\u092C\u0939\u0941\u0924 \u091B\u094B\u091F\u093E: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u0925\u093E \u0915\u093F ${issue3.origin} ${adj}${issue3.minimum} \u0939\u094B`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0902\u0917: "${_issue.prefix}" \u0938\u0947 \u0936\u0941\u0930\u0942 \u0939\u094B\u0928\u093E \u091A\u093E\u0939\u093F\u090F`;
         if (_issue.format === "ends_with")
@@ -15444,22 +15444,22 @@ var error21 = () => {
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0902\u0917: \u0907\u0938\u092E\u0947\u0902 "${_issue.includes}" \u0936\u093E\u092E\u093F\u0932 \u0939\u094B\u0928\u093E \u091A\u093E\u0939\u093F\u090F`;
         if (_issue.format === "regex")
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0902\u0917: \u092A\u0948\u091F\u0930\u094D\u0928 ${_issue.pattern} \u0938\u0947 \u092E\u0947\u0932 \u0916\u093E\u0928\u093E \u091A\u093E\u0939\u093F\u090F`;
-        return `\u0905\u092E\u093E\u0928\u094D\u092F ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u0902\u0916\u094D\u092F\u093E: \u092F\u0939 ${issue2.divisor} \u0915\u093E \u0917\u0941\u0923\u091C \u0939\u094B\u0928\u093E \u091A\u093E\u0939\u093F\u090F`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u0902\u0916\u094D\u092F\u093E: \u092F\u0939 ${issue3.divisor} \u0915\u093E \u0917\u0941\u0923\u091C \u0939\u094B\u0928\u093E \u091A\u093E\u0939\u093F\u090F`;
       case "unrecognized_keys":
-        return `\u0905\u092A\u0930\u093F\u091A\u093F\u0924 \u0915\u0941\u0902\u091C\u0940${issue2.keys.length > 1 ? "\u092F\u093E\u0901" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0905\u092A\u0930\u093F\u091A\u093F\u0924 \u0915\u0941\u0902\u091C\u0940${issue3.keys.length > 1 ? "\u092F\u093E\u0901" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0915\u0941\u0902\u091C\u0940: ${issue2.origin} \u092E\u0947\u0902`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0915\u0941\u0902\u091C\u0940: ${issue3.origin} \u092E\u0947\u0902`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0921\u093F\u0938\u094D\u0915\u094D\u0930\u093F\u092E\u093F\u0928\u0947\u091F\u0930 \u092E\u093E\u0928: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${opts}`;
         }
         return "\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F";
       case "invalid_element":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u092E\u093E\u0928: ${issue2.origin} \u092E\u0947\u0902`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u092E\u093E\u0928: ${issue3.origin} \u092E\u0947\u0902`;
       default:
         return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F`;
     }
@@ -15533,40 +15533,40 @@ var error22 = () => {
     function: "funkcija",
     map: "mapa"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Neispravan unos: o\u010Dekuje se instanceof ${issue2.expected}, a primljeno je ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Neispravan unos: o\u010Dekuje se instanceof ${issue3.expected}, a primljeno je ${received}`;
         }
         return `Neispravan unos: o\u010Dekuje se ${expected}, a primljeno je ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Neispravna vrijednost: o\u010Dekivano ${stringifyPrimitive(issue2.values[0])}`;
-        return `Neispravna opcija: o\u010Dekivano jedno od ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Neispravna vrijednost: o\u010Dekivano ${stringifyPrimitive(issue3.values[0])}`;
+        return `Neispravna opcija: o\u010Dekivano jedno od ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing)
-          return `Preveliko: o\u010Dekivano da ${origin ?? "vrijednost"} ima ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elemenata"}`;
-        return `Preveliko: o\u010Dekivano da ${origin ?? "vrijednost"} bude ${adj}${issue2.maximum.toString()}`;
+          return `Preveliko: o\u010Dekivano da ${origin ?? "vrijednost"} ima ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elemenata"}`;
+        return `Preveliko: o\u010Dekivano da ${origin ?? "vrijednost"} bude ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
         if (sizing) {
-          return `Premalo: o\u010Dekivano da ${origin} ima ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Premalo: o\u010Dekivano da ${origin} ima ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Premalo: o\u010Dekivano da ${origin} bude ${adj}${issue2.minimum.toString()}`;
+        return `Premalo: o\u010Dekivano da ${origin} bude ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Neispravan tekst: mora zapo\u010Dinjati s "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -15575,18 +15575,18 @@ var error22 = () => {
           return `Neispravan tekst: mora sadr\u017Eavati "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Neispravan tekst: mora odgovarati uzorku ${_issue.pattern}`;
-        return `Neispravna ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Neispravna ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Neispravan broj: mora biti vi\u0161ekratnik od ${issue2.divisor}`;
+        return `Neispravan broj: mora biti vi\u0161ekratnik od ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Neprepoznat${issue2.keys.length > 1 ? "i klju\u010Devi" : " klju\u010D"}: ${joinValues(issue2.keys, ", ")}`;
+        return `Neprepoznat${issue3.keys.length > 1 ? "i klju\u010Devi" : " klju\u010D"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Neispravan klju\u010D u ${TypeDictionary[issue2.origin] ?? issue2.origin}`;
+        return `Neispravan klju\u010D u ${TypeDictionary[issue3.origin] ?? issue3.origin}`;
       case "invalid_union":
         return "Neispravan unos";
       case "invalid_element":
-        return `Neispravna vrijednost u ${TypeDictionary[issue2.origin] ?? issue2.origin}`;
+        return `Neispravna vrijednost u ${TypeDictionary[issue3.origin] ?? issue3.origin}`;
       default:
         return `Neispravan unos`;
     }
@@ -15649,38 +15649,38 @@ var error23 = () => {
     number: "sz\xE1m",
     array: "t\xF6mb"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\xC9rv\xE9nytelen bemenet: a v\xE1rt \xE9rt\xE9k instanceof ${issue2.expected}, a kapott \xE9rt\xE9k ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\xC9rv\xE9nytelen bemenet: a v\xE1rt \xE9rt\xE9k instanceof ${issue3.expected}, a kapott \xE9rt\xE9k ${received}`;
         }
         return `\xC9rv\xE9nytelen bemenet: a v\xE1rt \xE9rt\xE9k ${expected}, a kapott \xE9rt\xE9k ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\xC9rv\xE9nytelen bemenet: a v\xE1rt \xE9rt\xE9k ${stringifyPrimitive(issue2.values[0])}`;
-        return `\xC9rv\xE9nytelen opci\xF3: valamelyik \xE9rt\xE9k v\xE1rt ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\xC9rv\xE9nytelen bemenet: a v\xE1rt \xE9rt\xE9k ${stringifyPrimitive(issue3.values[0])}`;
+        return `\xC9rv\xE9nytelen opci\xF3: valamelyik \xE9rt\xE9k v\xE1rt ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `T\xFAl nagy: ${issue2.origin ?? "\xE9rt\xE9k"} m\xE9rete t\xFAl nagy ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elem"}`;
-        return `T\xFAl nagy: a bemeneti \xE9rt\xE9k ${issue2.origin ?? "\xE9rt\xE9k"} t\xFAl nagy: ${adj}${issue2.maximum.toString()}`;
+          return `T\xFAl nagy: ${issue3.origin ?? "\xE9rt\xE9k"} m\xE9rete t\xFAl nagy ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elem"}`;
+        return `T\xFAl nagy: a bemeneti \xE9rt\xE9k ${issue3.origin ?? "\xE9rt\xE9k"} t\xFAl nagy: ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `T\xFAl kicsi: a bemeneti \xE9rt\xE9k ${issue2.origin} m\xE9rete t\xFAl kicsi ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `T\xFAl kicsi: a bemeneti \xE9rt\xE9k ${issue3.origin} m\xE9rete t\xFAl kicsi ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `T\xFAl kicsi: a bemeneti \xE9rt\xE9k ${issue2.origin} t\xFAl kicsi ${adj}${issue2.minimum.toString()}`;
+        return `T\xFAl kicsi: a bemeneti \xE9rt\xE9k ${issue3.origin} t\xFAl kicsi ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\xC9rv\xE9nytelen string: "${_issue.prefix}" \xE9rt\xE9kkel kell kezd\u0151dnie`;
         if (_issue.format === "ends_with")
@@ -15689,18 +15689,18 @@ var error23 = () => {
           return `\xC9rv\xE9nytelen string: "${_issue.includes}" \xE9rt\xE9ket kell tartalmaznia`;
         if (_issue.format === "regex")
           return `\xC9rv\xE9nytelen string: ${_issue.pattern} mint\xE1nak kell megfelelnie`;
-        return `\xC9rv\xE9nytelen ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\xC9rv\xE9nytelen ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\xC9rv\xE9nytelen sz\xE1m: ${issue2.divisor} t\xF6bbsz\xF6r\xF6s\xE9nek kell lennie`;
+        return `\xC9rv\xE9nytelen sz\xE1m: ${issue3.divisor} t\xF6bbsz\xF6r\xF6s\xE9nek kell lennie`;
       case "unrecognized_keys":
-        return `Ismeretlen kulcs${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Ismeretlen kulcs${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\xC9rv\xE9nytelen kulcs ${issue2.origin}`;
+        return `\xC9rv\xE9nytelen kulcs ${issue3.origin}`;
       case "invalid_union":
         return "\xC9rv\xE9nytelen bemenet";
       case "invalid_element":
-        return `\xC9rv\xE9nytelen \xE9rt\xE9k: ${issue2.origin}`;
+        return `\xC9rv\xE9nytelen \xE9rt\xE9k: ${issue3.origin}`;
       default:
         return `\xC9rv\xE9nytelen bemenet`;
     }
@@ -15713,8 +15713,8 @@ function hu_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
-function getArmenianPlural(count2, one, many) {
-  return Math.abs(count2) === 1 ? one : many;
+function getArmenianPlural(count7, one, many) {
+  return Math.abs(count7) === 1 ? one : many;
 }
 function withDefiniteArticle(word) {
   if (!word)
@@ -15803,43 +15803,43 @@ var error24 = () => {
     number: "\u0569\u056B\u057E",
     array: "\u0566\u0561\u0576\u0563\u057E\u0561\u056E"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 instanceof ${issue2.expected}, \u057D\u057F\u0561\u0581\u057E\u0565\u056C \u0567 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 instanceof ${issue3.expected}, \u057D\u057F\u0561\u0581\u057E\u0565\u056C \u0567 ${received}`;
         }
         return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 ${expected}, \u057D\u057F\u0561\u0581\u057E\u0565\u056C \u0567 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 ${stringifyPrimitive(issue2.values[1])}`;
-        return `\u054D\u056D\u0561\u056C \u057F\u0561\u0580\u0562\u0565\u0580\u0561\u056F\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 \u0570\u0565\u057F\u0587\u0575\u0561\u056C\u0576\u0565\u0580\u056B\u0581 \u0574\u0565\u056F\u0568\u055D ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 ${stringifyPrimitive(issue3.values[1])}`;
+        return `\u054D\u056D\u0561\u056C \u057F\u0561\u0580\u0562\u0565\u0580\u0561\u056F\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567\u0580 \u0570\u0565\u057F\u0587\u0575\u0561\u056C\u0576\u0565\u0580\u056B\u0581 \u0574\u0565\u056F\u0568\u055D ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const maxValue = Number(issue2.maximum);
+          const maxValue = Number(issue3.maximum);
           const unit = getArmenianPlural(maxValue, sizing.unit.one, sizing.unit.many);
-          return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0574\u0565\u056E \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue2.origin ?? "\u0561\u0580\u056A\u0565\u0584")} \u056F\u0578\u0582\u0576\u0565\u0576\u0561 ${adj}${issue2.maximum.toString()} ${unit}`;
+          return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0574\u0565\u056E \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue3.origin ?? "\u0561\u0580\u056A\u0565\u0584")} \u056F\u0578\u0582\u0576\u0565\u0576\u0561 ${adj}${issue3.maximum.toString()} ${unit}`;
         }
-        return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0574\u0565\u056E \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue2.origin ?? "\u0561\u0580\u056A\u0565\u0584")} \u056C\u056B\u0576\u056B ${adj}${issue2.maximum.toString()}`;
+        return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0574\u0565\u056E \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue3.origin ?? "\u0561\u0580\u056A\u0565\u0584")} \u056C\u056B\u0576\u056B ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const minValue = Number(issue2.minimum);
+          const minValue = Number(issue3.minimum);
           const unit = getArmenianPlural(minValue, sizing.unit.one, sizing.unit.many);
-          return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0583\u0578\u0584\u0580 \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue2.origin)} \u056F\u0578\u0582\u0576\u0565\u0576\u0561 ${adj}${issue2.minimum.toString()} ${unit}`;
+          return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0583\u0578\u0584\u0580 \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue3.origin)} \u056F\u0578\u0582\u0576\u0565\u0576\u0561 ${adj}${issue3.minimum.toString()} ${unit}`;
         }
-        return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0583\u0578\u0584\u0580 \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue2.origin)} \u056C\u056B\u0576\u056B ${adj}${issue2.minimum.toString()}`;
+        return `\u0549\u0561\u0583\u0561\u0566\u0561\u0576\u0581 \u0583\u0578\u0584\u0580 \u0561\u0580\u056A\u0565\u0584\u2024 \u057D\u057A\u0561\u057D\u057E\u0578\u0582\u0574 \u0567, \u0578\u0580 ${withDefiniteArticle(issue3.origin)} \u056C\u056B\u0576\u056B ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u054D\u056D\u0561\u056C \u057F\u0578\u0572\u2024 \u057A\u0565\u057F\u0584 \u0567 \u057D\u056F\u057D\u057E\u056B "${_issue.prefix}"-\u0578\u057E`;
         if (_issue.format === "ends_with")
@@ -15848,18 +15848,18 @@ var error24 = () => {
           return `\u054D\u056D\u0561\u056C \u057F\u0578\u0572\u2024 \u057A\u0565\u057F\u0584 \u0567 \u057A\u0561\u0580\u0578\u0582\u0576\u0561\u056F\u056B "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u054D\u056D\u0561\u056C \u057F\u0578\u0572\u2024 \u057A\u0565\u057F\u0584 \u0567 \u0570\u0561\u0574\u0561\u057A\u0561\u057F\u0561\u057D\u056D\u0561\u0576\u056B ${_issue.pattern} \u0571\u0587\u0561\u0579\u0561\u0583\u056B\u0576`;
-        return `\u054D\u056D\u0561\u056C ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u054D\u056D\u0561\u056C ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u054D\u056D\u0561\u056C \u0569\u056B\u057E\u2024 \u057A\u0565\u057F\u0584 \u0567 \u0562\u0561\u0566\u0574\u0561\u057A\u0561\u057F\u056B\u056F \u056C\u056B\u0576\u056B ${issue2.divisor}-\u056B`;
+        return `\u054D\u056D\u0561\u056C \u0569\u056B\u057E\u2024 \u057A\u0565\u057F\u0584 \u0567 \u0562\u0561\u0566\u0574\u0561\u057A\u0561\u057F\u056B\u056F \u056C\u056B\u0576\u056B ${issue3.divisor}-\u056B`;
       case "unrecognized_keys":
-        return `\u0549\u0573\u0561\u0576\u0561\u0579\u057E\u0561\u056E \u0562\u0561\u0576\u0561\u056C\u056B${issue2.keys.length > 1 ? "\u0576\u0565\u0580" : ""}. ${joinValues(issue2.keys, ", ")}`;
+        return `\u0549\u0573\u0561\u0576\u0561\u0579\u057E\u0561\u056E \u0562\u0561\u0576\u0561\u056C\u056B${issue3.keys.length > 1 ? "\u0576\u0565\u0580" : ""}. ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u054D\u056D\u0561\u056C \u0562\u0561\u0576\u0561\u056C\u056B ${withDefiniteArticle(issue2.origin)}-\u0578\u0582\u0574`;
+        return `\u054D\u056D\u0561\u056C \u0562\u0561\u0576\u0561\u056C\u056B ${withDefiniteArticle(issue3.origin)}-\u0578\u0582\u0574`;
       case "invalid_union":
         return "\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574";
       case "invalid_element":
-        return `\u054D\u056D\u0561\u056C \u0561\u0580\u056A\u0565\u0584 ${withDefiniteArticle(issue2.origin)}-\u0578\u0582\u0574`;
+        return `\u054D\u056D\u0561\u056C \u0561\u0580\u056A\u0565\u0584 ${withDefiniteArticle(issue3.origin)}-\u0578\u0582\u0574`;
       default:
         return `\u054D\u056D\u0561\u056C \u0574\u0578\u0582\u057F\u0584\u0561\u0563\u0580\u0578\u0582\u0574`;
     }
@@ -15920,38 +15920,38 @@ var error25 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Input tidak valid: diharapkan instanceof ${issue2.expected}, diterima ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Input tidak valid: diharapkan instanceof ${issue3.expected}, diterima ${received}`;
         }
         return `Input tidak valid: diharapkan ${expected}, diterima ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Input tidak valid: diharapkan ${stringifyPrimitive(issue2.values[0])}`;
-        return `Pilihan tidak valid: diharapkan salah satu dari ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Input tidak valid: diharapkan ${stringifyPrimitive(issue3.values[0])}`;
+        return `Pilihan tidak valid: diharapkan salah satu dari ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Terlalu besar: diharapkan ${issue2.origin ?? "value"} memiliki ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elemen"}`;
-        return `Terlalu besar: diharapkan ${issue2.origin ?? "value"} menjadi ${adj}${issue2.maximum.toString()}`;
+          return `Terlalu besar: diharapkan ${issue3.origin ?? "value"} memiliki ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elemen"}`;
+        return `Terlalu besar: diharapkan ${issue3.origin ?? "value"} menjadi ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Terlalu kecil: diharapkan ${issue2.origin} memiliki ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Terlalu kecil: diharapkan ${issue3.origin} memiliki ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Terlalu kecil: diharapkan ${issue2.origin} menjadi ${adj}${issue2.minimum.toString()}`;
+        return `Terlalu kecil: diharapkan ${issue3.origin} menjadi ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `String tidak valid: harus dimulai dengan "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -15960,18 +15960,18 @@ var error25 = () => {
           return `String tidak valid: harus menyertakan "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `String tidak valid: harus sesuai pola ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} tidak valid`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} tidak valid`;
       }
       case "not_multiple_of":
-        return `Angka tidak valid: harus kelipatan dari ${issue2.divisor}`;
+        return `Angka tidak valid: harus kelipatan dari ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Kunci tidak dikenali ${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Kunci tidak dikenali ${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Kunci tidak valid di ${issue2.origin}`;
+        return `Kunci tidak valid di ${issue3.origin}`;
       case "invalid_union":
         return "Input tidak valid";
       case "invalid_element":
-        return `Nilai tidak valid di ${issue2.origin}`;
+        return `Nilai tidak valid di ${issue3.origin}`;
       default:
         return `Input tidak valid`;
     }
@@ -16034,38 +16034,38 @@ var error26 = () => {
     number: "n\xFAmer",
     array: "fylki"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Rangt gildi: \xDE\xFA sl\xF3st inn ${received} \xFEar sem \xE1 a\xF0 vera instanceof ${issue2.expected}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Rangt gildi: \xDE\xFA sl\xF3st inn ${received} \xFEar sem \xE1 a\xF0 vera instanceof ${issue3.expected}`;
         }
         return `Rangt gildi: \xDE\xFA sl\xF3st inn ${received} \xFEar sem \xE1 a\xF0 vera ${expected}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Rangt gildi: gert r\xE1\xF0 fyrir ${stringifyPrimitive(issue2.values[0])}`;
-        return `\xD3gilt val: m\xE1 vera eitt af eftirfarandi ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Rangt gildi: gert r\xE1\xF0 fyrir ${stringifyPrimitive(issue3.values[0])}`;
+        return `\xD3gilt val: m\xE1 vera eitt af eftirfarandi ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Of st\xF3rt: gert er r\xE1\xF0 fyrir a\xF0 ${issue2.origin ?? "gildi"} hafi ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "hluti"}`;
-        return `Of st\xF3rt: gert er r\xE1\xF0 fyrir a\xF0 ${issue2.origin ?? "gildi"} s\xE9 ${adj}${issue2.maximum.toString()}`;
+          return `Of st\xF3rt: gert er r\xE1\xF0 fyrir a\xF0 ${issue3.origin ?? "gildi"} hafi ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "hluti"}`;
+        return `Of st\xF3rt: gert er r\xE1\xF0 fyrir a\xF0 ${issue3.origin ?? "gildi"} s\xE9 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Of l\xEDti\xF0: gert er r\xE1\xF0 fyrir a\xF0 ${issue2.origin} hafi ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Of l\xEDti\xF0: gert er r\xE1\xF0 fyrir a\xF0 ${issue3.origin} hafi ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Of l\xEDti\xF0: gert er r\xE1\xF0 fyrir a\xF0 ${issue2.origin} s\xE9 ${adj}${issue2.minimum.toString()}`;
+        return `Of l\xEDti\xF0: gert er r\xE1\xF0 fyrir a\xF0 ${issue3.origin} s\xE9 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\xD3gildur strengur: ver\xF0ur a\xF0 byrja \xE1 "${_issue.prefix}"`;
         }
@@ -16075,18 +16075,18 @@ var error26 = () => {
           return `\xD3gildur strengur: ver\xF0ur a\xF0 innihalda "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\xD3gildur strengur: ver\xF0ur a\xF0 fylgja mynstri ${_issue.pattern}`;
-        return `Rangt ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Rangt ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `R\xF6ng tala: ver\xF0ur a\xF0 vera margfeldi af ${issue2.divisor}`;
+        return `R\xF6ng tala: ver\xF0ur a\xF0 vera margfeldi af ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\xD3\xFEekkt ${issue2.keys.length > 1 ? "ir lyklar" : "ur lykill"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\xD3\xFEekkt ${issue3.keys.length > 1 ? "ir lyklar" : "ur lykill"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Rangur lykill \xED ${issue2.origin}`;
+        return `Rangur lykill \xED ${issue3.origin}`;
       case "invalid_union":
         return "Rangt gildi";
       case "invalid_element":
-        return `Rangt gildi \xED ${issue2.origin}`;
+        return `Rangt gildi \xED ${issue3.origin}`;
       default:
         return `Rangt gildi`;
     }
@@ -16149,38 +16149,38 @@ var error27 = () => {
     number: "numero",
     array: "vettore"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Input non valido: atteso instanceof ${issue2.expected}, ricevuto ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Input non valido: atteso instanceof ${issue3.expected}, ricevuto ${received}`;
         }
         return `Input non valido: atteso ${expected}, ricevuto ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Input non valido: atteso ${stringifyPrimitive(issue2.values[0])}`;
-        return `Opzione non valida: atteso uno tra ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Input non valido: atteso ${stringifyPrimitive(issue3.values[0])}`;
+        return `Opzione non valida: atteso uno tra ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Troppo grande: ${issue2.origin ?? "valore"} deve avere ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementi"}`;
-        return `Troppo grande: ${issue2.origin ?? "valore"} deve essere ${adj}${issue2.maximum.toString()}`;
+          return `Troppo grande: ${issue3.origin ?? "valore"} deve avere ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementi"}`;
+        return `Troppo grande: ${issue3.origin ?? "valore"} deve essere ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Troppo piccolo: ${issue2.origin} deve avere ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Troppo piccolo: ${issue3.origin} deve avere ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Troppo piccolo: ${issue2.origin} deve essere ${adj}${issue2.minimum.toString()}`;
+        return `Troppo piccolo: ${issue3.origin} deve essere ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Stringa non valida: deve iniziare con "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -16189,18 +16189,18 @@ var error27 = () => {
           return `Stringa non valida: deve includere "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Stringa non valida: deve corrispondere al pattern ${_issue.pattern}`;
-        return `Input non valido: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Input non valido: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Numero non valido: deve essere un multiplo di ${issue2.divisor}`;
+        return `Numero non valido: deve essere un multiplo di ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Chiav${issue2.keys.length > 1 ? "i" : "e"} non riconosciut${issue2.keys.length > 1 ? "e" : "a"}: ${joinValues(issue2.keys, ", ")}`;
+        return `Chiav${issue3.keys.length > 1 ? "i" : "e"} non riconosciut${issue3.keys.length > 1 ? "e" : "a"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Chiave non valida in ${issue2.origin}`;
+        return `Chiave non valida in ${issue3.origin}`;
       case "invalid_union":
         return "Input non valido";
       case "invalid_element":
-        return `Valore non valido in ${issue2.origin}`;
+        return `Valore non valido in ${issue3.origin}`;
       default:
         return `Input non valido`;
     }
@@ -16263,37 +16263,37 @@ var error28 = () => {
     number: "\u6570\u5024",
     array: "\u914D\u5217"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u7121\u52B9\u306A\u5165\u529B: instanceof ${issue2.expected}\u304C\u671F\u5F85\u3055\u308C\u307E\u3057\u305F\u304C\u3001${received}\u304C\u5165\u529B\u3055\u308C\u307E\u3057\u305F`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u7121\u52B9\u306A\u5165\u529B: instanceof ${issue3.expected}\u304C\u671F\u5F85\u3055\u308C\u307E\u3057\u305F\u304C\u3001${received}\u304C\u5165\u529B\u3055\u308C\u307E\u3057\u305F`;
         }
         return `\u7121\u52B9\u306A\u5165\u529B: ${expected}\u304C\u671F\u5F85\u3055\u308C\u307E\u3057\u305F\u304C\u3001${received}\u304C\u5165\u529B\u3055\u308C\u307E\u3057\u305F`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u7121\u52B9\u306A\u5165\u529B: ${stringifyPrimitive(issue2.values[0])}\u304C\u671F\u5F85\u3055\u308C\u307E\u3057\u305F`;
-        return `\u7121\u52B9\u306A\u9078\u629E: ${joinValues(issue2.values, "\u3001")}\u306E\u3044\u305A\u308C\u304B\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+        if (issue3.values.length === 1)
+          return `\u7121\u52B9\u306A\u5165\u529B: ${stringifyPrimitive(issue3.values[0])}\u304C\u671F\u5F85\u3055\u308C\u307E\u3057\u305F`;
+        return `\u7121\u52B9\u306A\u9078\u629E: ${joinValues(issue3.values, "\u3001")}\u306E\u3044\u305A\u308C\u304B\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
       case "too_big": {
-        const adj = issue2.inclusive ? "\u4EE5\u4E0B\u3067\u3042\u308B" : "\u3088\u308A\u5C0F\u3055\u3044";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u4EE5\u4E0B\u3067\u3042\u308B" : "\u3088\u308A\u5C0F\u3055\u3044";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u5927\u304D\u3059\u304E\u308B\u5024: ${issue2.origin ?? "\u5024"}\u306F${issue2.maximum.toString()}${sizing.unit ?? "\u8981\u7D20"}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
-        return `\u5927\u304D\u3059\u304E\u308B\u5024: ${issue2.origin ?? "\u5024"}\u306F${issue2.maximum.toString()}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+          return `\u5927\u304D\u3059\u304E\u308B\u5024: ${issue3.origin ?? "\u5024"}\u306F${issue3.maximum.toString()}${sizing.unit ?? "\u8981\u7D20"}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+        return `\u5927\u304D\u3059\u304E\u308B\u5024: ${issue3.origin ?? "\u5024"}\u306F${issue3.maximum.toString()}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? "\u4EE5\u4E0A\u3067\u3042\u308B" : "\u3088\u308A\u5927\u304D\u3044";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u4EE5\u4E0A\u3067\u3042\u308B" : "\u3088\u308A\u5927\u304D\u3044";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u5C0F\u3055\u3059\u304E\u308B\u5024: ${issue2.origin}\u306F${issue2.minimum.toString()}${sizing.unit}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
-        return `\u5C0F\u3055\u3059\u304E\u308B\u5024: ${issue2.origin}\u306F${issue2.minimum.toString()}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+          return `\u5C0F\u3055\u3059\u304E\u308B\u5024: ${issue3.origin}\u306F${issue3.minimum.toString()}${sizing.unit}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+        return `\u5C0F\u3055\u3059\u304E\u308B\u5024: ${issue3.origin}\u306F${issue3.minimum.toString()}${adj}\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u7121\u52B9\u306A\u6587\u5B57\u5217: "${_issue.prefix}"\u3067\u59CB\u307E\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
         if (_issue.format === "ends_with")
@@ -16302,18 +16302,18 @@ var error28 = () => {
           return `\u7121\u52B9\u306A\u6587\u5B57\u5217: "${_issue.includes}"\u3092\u542B\u3080\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
         if (_issue.format === "regex")
           return `\u7121\u52B9\u306A\u6587\u5B57\u5217: \u30D1\u30BF\u30FC\u30F3${_issue.pattern}\u306B\u4E00\u81F4\u3059\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
-        return `\u7121\u52B9\u306A${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u7121\u52B9\u306A${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u7121\u52B9\u306A\u6570\u5024: ${issue2.divisor}\u306E\u500D\u6570\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
+        return `\u7121\u52B9\u306A\u6570\u5024: ${issue3.divisor}\u306E\u500D\u6570\u3067\u3042\u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059`;
       case "unrecognized_keys":
-        return `\u8A8D\u8B58\u3055\u308C\u3066\u3044\u306A\u3044\u30AD\u30FC${issue2.keys.length > 1 ? "\u7FA4" : ""}: ${joinValues(issue2.keys, "\u3001")}`;
+        return `\u8A8D\u8B58\u3055\u308C\u3066\u3044\u306A\u3044\u30AD\u30FC${issue3.keys.length > 1 ? "\u7FA4" : ""}: ${joinValues(issue3.keys, "\u3001")}`;
       case "invalid_key":
-        return `${issue2.origin}\u5185\u306E\u7121\u52B9\u306A\u30AD\u30FC`;
+        return `${issue3.origin}\u5185\u306E\u7121\u52B9\u306A\u30AD\u30FC`;
       case "invalid_union":
         return "\u7121\u52B9\u306A\u5165\u529B";
       case "invalid_element":
-        return `${issue2.origin}\u5185\u306E\u7121\u52B9\u306A\u5024`;
+        return `${issue3.origin}\u5185\u306E\u7121\u52B9\u306A\u5024`;
       default:
         return `\u7121\u52B9\u306A\u5165\u529B`;
     }
@@ -16379,38 +16379,38 @@ var error29 = () => {
     function: "\u10E4\u10E3\u10DC\u10E5\u10EA\u10D8\u10D0",
     array: "\u10DB\u10D0\u10E1\u10D8\u10D5\u10D8"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 instanceof ${issue2.expected}, \u10DB\u10D8\u10E6\u10D4\u10D1\u10E3\u10DA\u10D8 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 instanceof ${issue3.expected}, \u10DB\u10D8\u10E6\u10D4\u10D1\u10E3\u10DA\u10D8 ${received}`;
         }
         return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${expected}, \u10DB\u10D8\u10E6\u10D4\u10D1\u10E3\u10DA\u10D8 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D5\u10D0\u10E0\u10D8\u10D0\u10DC\u10E2\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8\u10D0 \u10D4\u10E0\u10D7-\u10D4\u10E0\u10D7\u10D8 ${joinValues(issue2.values, "|")}-\u10D3\u10D0\u10DC`;
+        if (issue3.values.length === 1)
+          return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D5\u10D0\u10E0\u10D8\u10D0\u10DC\u10E2\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8\u10D0 \u10D4\u10E0\u10D7-\u10D4\u10E0\u10D7\u10D8 ${joinValues(issue3.values, "|")}-\u10D3\u10D0\u10DC`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10D3\u10D8\u10D3\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue2.origin ?? "\u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0"} ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit}`;
-        return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10D3\u10D8\u10D3\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue2.origin ?? "\u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0"} \u10D8\u10E7\u10DD\u10E1 ${adj}${issue2.maximum.toString()}`;
+          return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10D3\u10D8\u10D3\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue3.origin ?? "\u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0"} ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit}`;
+        return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10D3\u10D8\u10D3\u10D8: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue3.origin ?? "\u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0"} \u10D8\u10E7\u10DD\u10E1 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10DE\u10D0\u10E2\u10D0\u10E0\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10DE\u10D0\u10E2\u10D0\u10E0\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10DE\u10D0\u10E2\u10D0\u10E0\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue2.origin} \u10D8\u10E7\u10DD\u10E1 ${adj}${issue2.minimum.toString()}`;
+        return `\u10D6\u10D4\u10D3\u10DB\u10D4\u10E2\u10D0\u10D3 \u10DE\u10D0\u10E2\u10D0\u10E0\u10D0: \u10DB\u10DD\u10E1\u10D0\u10DA\u10DD\u10D3\u10DC\u10D4\u10DA\u10D8 ${issue3.origin} \u10D8\u10E7\u10DD\u10E1 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D5\u10D4\u10DA\u10D8: \u10E3\u10DC\u10D3\u10D0 \u10D8\u10EC\u10E7\u10D4\u10D1\u10DD\u10D3\u10D4\u10E1 "${_issue.prefix}"-\u10D8\u10D7`;
         }
@@ -16420,18 +16420,18 @@ var error29 = () => {
           return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D5\u10D4\u10DA\u10D8: \u10E3\u10DC\u10D3\u10D0 \u10E8\u10D4\u10D8\u10EA\u10D0\u10D5\u10D3\u10D4\u10E1 "${_issue.includes}"-\u10E1`;
         if (_issue.format === "regex")
           return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D5\u10D4\u10DA\u10D8: \u10E3\u10DC\u10D3\u10D0 \u10E8\u10D4\u10D4\u10E1\u10D0\u10D1\u10D0\u10DB\u10D4\u10D1\u10DD\u10D3\u10D4\u10E1 \u10E8\u10D0\u10D1\u10DA\u10DD\u10DC\u10E1 ${_issue.pattern}`;
-        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E0\u10D8\u10EA\u10EE\u10D5\u10D8: \u10E3\u10DC\u10D3\u10D0 \u10D8\u10E7\u10DD\u10E1 ${issue2.divisor}-\u10D8\u10E1 \u10EF\u10D4\u10E0\u10D0\u10D3\u10D8`;
+        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E0\u10D8\u10EA\u10EE\u10D5\u10D8: \u10E3\u10DC\u10D3\u10D0 \u10D8\u10E7\u10DD\u10E1 ${issue3.divisor}-\u10D8\u10E1 \u10EF\u10D4\u10E0\u10D0\u10D3\u10D8`;
       case "unrecognized_keys":
-        return `\u10E3\u10EA\u10DC\u10DD\u10D1\u10D8 \u10D2\u10D0\u10E1\u10D0\u10E6\u10D4\u10D1${issue2.keys.length > 1 ? "\u10D4\u10D1\u10D8" : "\u10D8"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u10E3\u10EA\u10DC\u10DD\u10D1\u10D8 \u10D2\u10D0\u10E1\u10D0\u10E6\u10D4\u10D1${issue3.keys.length > 1 ? "\u10D4\u10D1\u10D8" : "\u10D8"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D2\u10D0\u10E1\u10D0\u10E6\u10D4\u10D1\u10D8 ${issue2.origin}-\u10E8\u10D8`;
+        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10D2\u10D0\u10E1\u10D0\u10E6\u10D4\u10D1\u10D8 ${issue3.origin}-\u10E8\u10D8`;
       case "invalid_union":
         return "\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0";
       case "invalid_element":
-        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0 ${issue2.origin}-\u10E8\u10D8`;
+        return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10DB\u10DC\u10D8\u10E8\u10D5\u10DC\u10D4\u10DA\u10DD\u10D1\u10D0 ${issue3.origin}-\u10E8\u10D8`;
       default:
         return `\u10D0\u10E0\u10D0\u10E1\u10EC\u10DD\u10E0\u10D8 \u10E8\u10D4\u10E7\u10D5\u10D0\u10DC\u10D0`;
     }
@@ -16495,38 +16495,38 @@ var error30 = () => {
     array: "\u17A2\u17B6\u179A\u17C1 (Array)",
     null: "\u1782\u17D2\u1798\u17B6\u1793\u178F\u1798\u17D2\u179B\u17C3 (null)"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1794\u1789\u17D2\u1785\u17BC\u179B\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A instanceof ${issue2.expected} \u1794\u17C9\u17BB\u1793\u17D2\u178F\u17C2\u1791\u1791\u17BD\u179B\u1794\u17B6\u1793 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1794\u1789\u17D2\u1785\u17BC\u179B\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A instanceof ${issue3.expected} \u1794\u17C9\u17BB\u1793\u17D2\u178F\u17C2\u1791\u1791\u17BD\u179B\u1794\u17B6\u1793 ${received}`;
         }
         return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1794\u1789\u17D2\u1785\u17BC\u179B\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${expected} \u1794\u17C9\u17BB\u1793\u17D2\u178F\u17C2\u1791\u1791\u17BD\u179B\u1794\u17B6\u1793 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1794\u1789\u17D2\u1785\u17BC\u179B\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u1787\u1798\u17D2\u179A\u17BE\u179F\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1787\u17B6\u1798\u17BD\u1799\u1780\u17D2\u1793\u17BB\u1784\u1785\u17C6\u178E\u17C4\u1798 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1794\u1789\u17D2\u1785\u17BC\u179B\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u1787\u1798\u17D2\u179A\u17BE\u179F\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1787\u17B6\u1798\u17BD\u1799\u1780\u17D2\u1793\u17BB\u1784\u1785\u17C6\u178E\u17C4\u1798 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u1792\u17C6\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue2.origin ?? "\u178F\u1798\u17D2\u179B\u17C3"} ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "\u1792\u17B6\u178F\u17BB"}`;
-        return `\u1792\u17C6\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue2.origin ?? "\u178F\u1798\u17D2\u179B\u17C3"} ${adj} ${issue2.maximum.toString()}`;
+          return `\u1792\u17C6\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue3.origin ?? "\u178F\u1798\u17D2\u179B\u17C3"} ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "\u1792\u17B6\u178F\u17BB"}`;
+        return `\u1792\u17C6\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue3.origin ?? "\u178F\u1798\u17D2\u179B\u17C3"} ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u178F\u17BC\u1785\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue2.origin} ${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u178F\u17BC\u1785\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue3.origin} ${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u178F\u17BC\u1785\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue2.origin} ${adj} ${issue2.minimum.toString()}`;
+        return `\u178F\u17BC\u1785\u1796\u17C1\u1780\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1780\u17B6\u179A ${issue3.origin} ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u1781\u17D2\u179F\u17C2\u17A2\u1780\u17D2\u179F\u179A\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1785\u17B6\u1794\u17CB\u1795\u17D2\u178F\u17BE\u1798\u178A\u17C4\u1799 "${_issue.prefix}"`;
         }
@@ -16536,18 +16536,18 @@ var error30 = () => {
           return `\u1781\u17D2\u179F\u17C2\u17A2\u1780\u17D2\u179F\u179A\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u1798\u17B6\u1793 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u1781\u17D2\u179F\u17C2\u17A2\u1780\u17D2\u179F\u179A\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u178F\u17C2\u1795\u17D2\u1782\u17BC\u1795\u17D2\u1782\u1784\u1793\u17B9\u1784\u1791\u1798\u17D2\u179A\u1784\u17CB\u178A\u17C2\u179B\u1794\u17B6\u1793\u1780\u17C6\u178E\u178F\u17CB ${_issue.pattern}`;
-        return `\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u179B\u17C1\u1781\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u178F\u17C2\u1787\u17B6\u1796\u17A0\u17BB\u1782\u17BB\u178E\u1793\u17C3 ${issue2.divisor}`;
+        return `\u179B\u17C1\u1781\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u17D6 \u178F\u17D2\u179A\u17BC\u179C\u178F\u17C2\u1787\u17B6\u1796\u17A0\u17BB\u1782\u17BB\u178E\u1793\u17C3 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u179A\u1780\u1783\u17BE\u1789\u179F\u17C4\u1798\u17B7\u1793\u179F\u17D2\u1782\u17B6\u179B\u17CB\u17D6 ${joinValues(issue2.keys, ", ")}`;
+        return `\u179A\u1780\u1783\u17BE\u1789\u179F\u17C4\u1798\u17B7\u1793\u179F\u17D2\u1782\u17B6\u179B\u17CB\u17D6 ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u179F\u17C4\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u1793\u17C5\u1780\u17D2\u1793\u17BB\u1784 ${issue2.origin}`;
+        return `\u179F\u17C4\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u1793\u17C5\u1780\u17D2\u1793\u17BB\u1784 ${issue3.origin}`;
       case "invalid_union":
         return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C`;
       case "invalid_element":
-        return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u1793\u17C5\u1780\u17D2\u1793\u17BB\u1784 ${issue2.origin}`;
+        return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C\u1793\u17C5\u1780\u17D2\u1793\u17BB\u1784 ${issue3.origin}`;
       default:
         return `\u1791\u17B7\u1793\u17D2\u1793\u1793\u17D0\u1799\u1798\u17B7\u1793\u178F\u17D2\u179A\u17B9\u1798\u178F\u17D2\u179A\u17BC\u179C`;
     }
@@ -16615,35 +16615,35 @@ var error31 = () => {
     nan: "NaN"
     // All other type names omitted - they fall back to raw values via ?? operator
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C87\u0CA8\u0CCD\u200C\u0CAA\u0CC1\u0C9F\u0CCD: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${expected}, \u0CB8\u0CCD\u0CB5\u0CC0\u0C95\u0CB0\u0CBF\u0CB8\u0CBF\u0CA6\u0CA8\u0CC1 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C87\u0CA8\u0CCD\u200C\u0CAA\u0CC1\u0C9F\u0CCD: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C86\u0CAF\u0CCD\u0C95\u0CC6: \u0C87\u0CB5\u0CC1\u0C97\u0CB3\u0CB2\u0CCD\u0CB2\u0CBF \u0C92\u0C82\u0CA6\u0CA8\u0CCD\u0CA8\u0CC1 \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C87\u0CA8\u0CCD\u200C\u0CAA\u0CC1\u0C9F\u0CCD: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C86\u0CAF\u0CCD\u0C95\u0CC6: \u0C87\u0CB5\u0CC1\u0C97\u0CB3\u0CB2\u0CCD\u0CB2\u0CBF \u0C92\u0C82\u0CA6\u0CA8\u0CCD\u0CA8\u0CC1 \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0CA6\u0CCA\u0CA1\u0CCD\u0CA1\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue2.origin ?? "value"} \u0CB9\u0CCA\u0C82\u0CA6\u0CB2\u0CC1 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0C85\u0C82\u0CB6\u0C97\u0CB3\u0CC1"}`;
-        return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0CA6\u0CCA\u0CA1\u0CCD\u0CA1\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue2.origin ?? "value"} \u0C8E\u0C82\u0CA6\u0CC1 ${adj}${issue2.maximum.toString()}`;
+          return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0CA6\u0CCA\u0CA1\u0CCD\u0CA1\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue3.origin ?? "value"} \u0CB9\u0CCA\u0C82\u0CA6\u0CB2\u0CC1 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0C85\u0C82\u0CB6\u0C97\u0CB3\u0CC1"}`;
+        return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0CA6\u0CCA\u0CA1\u0CCD\u0CA1\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue3.origin ?? "value"} \u0C8E\u0C82\u0CA6\u0CC1 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0C9A\u0CBF\u0C95\u0CCD\u0C95\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue2.origin} \u0CB9\u0CCA\u0C82\u0CA6\u0CB2\u0CC1 ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0C9A\u0CBF\u0C95\u0CCD\u0C95\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue3.origin} \u0CB9\u0CCA\u0C82\u0CA6\u0CB2\u0CC1 ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0C9A\u0CBF\u0C95\u0CCD\u0C95\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue2.origin} \u0C8E\u0C82\u0CA6\u0CC1 ${adj}${issue2.minimum.toString()}`;
+        return `\u0CA4\u0CC1\u0C82\u0CAC\u0CBE \u0C9A\u0CBF\u0C95\u0CCD\u0C95\u0CA6\u0CC1: \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${issue3.origin} \u0C8E\u0C82\u0CA6\u0CC1 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF\u0CB5\u0CBE\u0CA6 \u0CB8\u0CCD\u0C9F\u0CCD\u0CB0\u0CBF\u0C82\u0C97\u0CCD: \u0C87\u0CA6\u0CB0\u0CCA\u0C82\u0CA6\u0CBF\u0C97\u0CC6 \u0CAA\u0CCD\u0CB0\u0CBE\u0CB0\u0C82\u0CAD\u0CBF\u0CB8\u0CAC\u0CC7\u0C95\u0CC1 "${_issue.prefix}"`;
         }
@@ -16653,22 +16653,22 @@ var error31 = () => {
           return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CB8\u0CCD\u0C9F\u0CCD\u0CB0\u0CBF\u0C82\u0C97\u0CCD: \u0C92\u0CB3\u0C97\u0CCA\u0C82\u0CA1\u0CBF\u0CB0\u0CAC\u0CC7\u0C95\u0CC1 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF\u0CB5\u0CBE\u0CA6 \u0CB8\u0CCD\u0C9F\u0CCD\u0CB0\u0CBF\u0C82\u0C97\u0CCD: \u0CAE\u0CBE\u0CA6\u0CB0\u0CBF\u0C97\u0CC6 \u0CB9\u0CCA\u0C82\u0CA6\u0CBF\u0C95\u0CC6\u0CAF\u0CBE\u0C97\u0CAC\u0CC7\u0C95\u0CC1 ${_issue.pattern}`;
-        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CB8\u0C82\u0C96\u0CCD\u0CAF\u0CC6: \u0CAC\u0CB9\u0CC1\u0CB8\u0C82\u0C96\u0CCD\u0CAF\u0CC6\u0CAF\u0CBE\u0C97\u0CBF\u0CB0\u0CAC\u0CC7\u0C95\u0CC1 ${issue2.divisor}`;
+        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CB8\u0C82\u0C96\u0CCD\u0CAF\u0CC6: \u0CAC\u0CB9\u0CC1\u0CB8\u0C82\u0C96\u0CCD\u0CAF\u0CC6\u0CAF\u0CBE\u0C97\u0CBF\u0CB0\u0CAC\u0CC7\u0C95\u0CC1 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u0C97\u0CC1\u0CB0\u0CC1\u0CA4\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CA6 \u0C95\u0CC0 ${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0C97\u0CC1\u0CB0\u0CC1\u0CA4\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CA6 \u0C95\u0CC0 ${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF\u0CB5\u0CBE\u0CA6 \u0C95\u0CC0 \u0C87\u0CA8\u0CCD ${issue2.origin}`;
+        return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF\u0CB5\u0CBE\u0CA6 \u0C95\u0CC0 \u0C87\u0CA8\u0CCD ${issue3.origin}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CA4\u0CBE\u0CB0\u0CA4\u0CAE\u0CCD\u0CAF \u0CAE\u0CCC\u0CB2\u0CCD\u0CAF. \u0CA8\u0CBF\u0CB0\u0CC0\u0C95\u0CCD\u0CB7\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6 ${opts}`;
         }
         return "\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C87\u0CA8\u0CCD\u200C\u0CAA\u0CC1\u0C9F\u0CCD";
       case "invalid_element":
-        return `\u0CB0\u0CB2\u0CCD\u0CB2\u0CBF \u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CAE\u0CCC\u0CB2\u0CCD\u0CAF ${issue2.origin}`;
+        return `\u0CB0\u0CB2\u0CCD\u0CB2\u0CBF \u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0CAE\u0CCC\u0CB2\u0CCD\u0CAF ${issue3.origin}`;
       default:
         return `\u0C85\u0CAE\u0CBE\u0CA8\u0CCD\u0CAF \u0C87\u0CA8\u0CCD\u200C\u0CAA\u0CC1\u0C9F\u0CCD`;
     }
@@ -16729,42 +16729,42 @@ var error32 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\uC798\uBABB\uB41C \uC785\uB825: \uC608\uC0C1 \uD0C0\uC785\uC740 instanceof ${issue2.expected}, \uBC1B\uC740 \uD0C0\uC785\uC740 ${received}\uC785\uB2C8\uB2E4`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\uC798\uBABB\uB41C \uC785\uB825: \uC608\uC0C1 \uD0C0\uC785\uC740 instanceof ${issue3.expected}, \uBC1B\uC740 \uD0C0\uC785\uC740 ${received}\uC785\uB2C8\uB2E4`;
         }
         return `\uC798\uBABB\uB41C \uC785\uB825: \uC608\uC0C1 \uD0C0\uC785\uC740 ${expected}, \uBC1B\uC740 \uD0C0\uC785\uC740 ${received}\uC785\uB2C8\uB2E4`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\uC798\uBABB\uB41C \uC785\uB825: \uAC12\uC740 ${stringifyPrimitive(issue2.values[0])} \uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4`;
-        return `\uC798\uBABB\uB41C \uC635\uC158: ${joinValues(issue2.values, "\uB610\uB294 ")} \uC911 \uD558\uB098\uC5EC\uC57C \uD569\uB2C8\uB2E4`;
+        if (issue3.values.length === 1)
+          return `\uC798\uBABB\uB41C \uC785\uB825: \uAC12\uC740 ${stringifyPrimitive(issue3.values[0])} \uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4`;
+        return `\uC798\uBABB\uB41C \uC635\uC158: ${joinValues(issue3.values, "\uB610\uB294 ")} \uC911 \uD558\uB098\uC5EC\uC57C \uD569\uB2C8\uB2E4`;
       case "too_big": {
-        const adj = issue2.inclusive ? "\uC774\uD558" : "\uBBF8\uB9CC";
+        const adj = issue3.inclusive ? "\uC774\uD558" : "\uBBF8\uB9CC";
         const suffix = adj === "\uBBF8\uB9CC" ? "\uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4" : "\uC5EC\uC57C \uD569\uB2C8\uB2E4";
-        const sizing = getSizing(issue2.origin);
+        const sizing = getSizing(issue3.origin);
         const unit = sizing?.unit ?? "\uC694\uC18C";
         if (sizing)
-          return `${issue2.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uD07D\uB2C8\uB2E4: ${issue2.maximum.toString()}${unit} ${adj}${suffix}`;
-        return `${issue2.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uD07D\uB2C8\uB2E4: ${issue2.maximum.toString()} ${adj}${suffix}`;
+          return `${issue3.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uD07D\uB2C8\uB2E4: ${issue3.maximum.toString()}${unit} ${adj}${suffix}`;
+        return `${issue3.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uD07D\uB2C8\uB2E4: ${issue3.maximum.toString()} ${adj}${suffix}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? "\uC774\uC0C1" : "\uCD08\uACFC";
+        const adj = issue3.inclusive ? "\uC774\uC0C1" : "\uCD08\uACFC";
         const suffix = adj === "\uC774\uC0C1" ? "\uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4" : "\uC5EC\uC57C \uD569\uB2C8\uB2E4";
-        const sizing = getSizing(issue2.origin);
+        const sizing = getSizing(issue3.origin);
         const unit = sizing?.unit ?? "\uC694\uC18C";
         if (sizing) {
-          return `${issue2.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uC791\uC2B5\uB2C8\uB2E4: ${issue2.minimum.toString()}${unit} ${adj}${suffix}`;
+          return `${issue3.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uC791\uC2B5\uB2C8\uB2E4: ${issue3.minimum.toString()}${unit} ${adj}${suffix}`;
         }
-        return `${issue2.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uC791\uC2B5\uB2C8\uB2E4: ${issue2.minimum.toString()} ${adj}${suffix}`;
+        return `${issue3.origin ?? "\uAC12"}\uC774 \uB108\uBB34 \uC791\uC2B5\uB2C8\uB2E4: ${issue3.minimum.toString()} ${adj}${suffix}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\uC798\uBABB\uB41C \uBB38\uC790\uC5F4: "${_issue.prefix}"(\uC73C)\uB85C \uC2DC\uC791\uD574\uC57C \uD569\uB2C8\uB2E4`;
         }
@@ -16774,18 +16774,18 @@ var error32 = () => {
           return `\uC798\uBABB\uB41C \uBB38\uC790\uC5F4: "${_issue.includes}"\uC744(\uB97C) \uD3EC\uD568\uD574\uC57C \uD569\uB2C8\uB2E4`;
         if (_issue.format === "regex")
           return `\uC798\uBABB\uB41C \uBB38\uC790\uC5F4: \uC815\uADDC\uC2DD ${_issue.pattern} \uD328\uD134\uACFC \uC77C\uCE58\uD574\uC57C \uD569\uB2C8\uB2E4`;
-        return `\uC798\uBABB\uB41C ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\uC798\uBABB\uB41C ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\uC798\uBABB\uB41C \uC22B\uC790: ${issue2.divisor}\uC758 \uBC30\uC218\uC5EC\uC57C \uD569\uB2C8\uB2E4`;
+        return `\uC798\uBABB\uB41C \uC22B\uC790: ${issue3.divisor}\uC758 \uBC30\uC218\uC5EC\uC57C \uD569\uB2C8\uB2E4`;
       case "unrecognized_keys":
-        return `\uC778\uC2DD\uD560 \uC218 \uC5C6\uB294 \uD0A4: ${joinValues(issue2.keys, ", ")}`;
+        return `\uC778\uC2DD\uD560 \uC218 \uC5C6\uB294 \uD0A4: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\uC798\uBABB\uB41C \uD0A4: ${issue2.origin}`;
+        return `\uC798\uBABB\uB41C \uD0A4: ${issue3.origin}`;
       case "invalid_union":
         return `\uC798\uBABB\uB41C \uC785\uB825`;
       case "invalid_element":
-        return `\uC798\uBABB\uB41C \uAC12: ${issue2.origin}`;
+        return `\uC798\uBABB\uB41C \uAC12: ${issue3.origin}`;
       default:
         return `\uC798\uBABB\uB41C \uC785\uB825`;
     }
@@ -16938,39 +16938,39 @@ var error33 = () => {
     object: "objektas",
     null: "nulin\u0117 reik\u0161m\u0117"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Gautas tipas ${received}, o tik\u0117tasi - instanceof ${issue2.expected}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Gautas tipas ${received}, o tik\u0117tasi - instanceof ${issue3.expected}`;
         }
         return `Gautas tipas ${received}, o tik\u0117tasi - ${expected}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Privalo b\u016Bti ${stringifyPrimitive(issue2.values[0])}`;
-        return `Privalo b\u016Bti vienas i\u0161 ${joinValues(issue2.values, "|")} pasirinkim\u0173`;
+        if (issue3.values.length === 1)
+          return `Privalo b\u016Bti ${stringifyPrimitive(issue3.values[0])}`;
+        return `Privalo b\u016Bti vienas i\u0161 ${joinValues(issue3.values, "|")} pasirinkim\u0173`;
       case "too_big": {
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
-        const sizing = getSizing(issue2.origin, getUnitTypeFromNumber(Number(issue2.maximum)), issue2.inclusive ?? false, "smaller");
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
+        const sizing = getSizing(issue3.origin, getUnitTypeFromNumber(Number(issue3.maximum)), issue3.inclusive ?? false, "smaller");
         if (sizing?.verb)
-          return `${capitalizeFirstCharacter(origin ?? issue2.origin ?? "reik\u0161m\u0117")} ${sizing.verb} ${issue2.maximum.toString()} ${sizing.unit ?? "element\u0173"}`;
-        const adj = issue2.inclusive ? "ne didesnis kaip" : "ma\u017Eesnis kaip";
-        return `${capitalizeFirstCharacter(origin ?? issue2.origin ?? "reik\u0161m\u0117")} turi b\u016Bti ${adj} ${issue2.maximum.toString()} ${sizing?.unit}`;
+          return `${capitalizeFirstCharacter(origin ?? issue3.origin ?? "reik\u0161m\u0117")} ${sizing.verb} ${issue3.maximum.toString()} ${sizing.unit ?? "element\u0173"}`;
+        const adj = issue3.inclusive ? "ne didesnis kaip" : "ma\u017Eesnis kaip";
+        return `${capitalizeFirstCharacter(origin ?? issue3.origin ?? "reik\u0161m\u0117")} turi b\u016Bti ${adj} ${issue3.maximum.toString()} ${sizing?.unit}`;
       }
       case "too_small": {
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
-        const sizing = getSizing(issue2.origin, getUnitTypeFromNumber(Number(issue2.minimum)), issue2.inclusive ?? false, "bigger");
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
+        const sizing = getSizing(issue3.origin, getUnitTypeFromNumber(Number(issue3.minimum)), issue3.inclusive ?? false, "bigger");
         if (sizing?.verb)
-          return `${capitalizeFirstCharacter(origin ?? issue2.origin ?? "reik\u0161m\u0117")} ${sizing.verb} ${issue2.minimum.toString()} ${sizing.unit ?? "element\u0173"}`;
-        const adj = issue2.inclusive ? "ne ma\u017Eesnis kaip" : "didesnis kaip";
-        return `${capitalizeFirstCharacter(origin ?? issue2.origin ?? "reik\u0161m\u0117")} turi b\u016Bti ${adj} ${issue2.minimum.toString()} ${sizing?.unit}`;
+          return `${capitalizeFirstCharacter(origin ?? issue3.origin ?? "reik\u0161m\u0117")} ${sizing.verb} ${issue3.minimum.toString()} ${sizing.unit ?? "element\u0173"}`;
+        const adj = issue3.inclusive ? "ne ma\u017Eesnis kaip" : "didesnis kaip";
+        return `${capitalizeFirstCharacter(origin ?? issue3.origin ?? "reik\u0161m\u0117")} turi b\u016Bti ${adj} ${issue3.minimum.toString()} ${sizing?.unit}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Eilut\u0117 privalo prasid\u0117ti "${_issue.prefix}"`;
         }
@@ -16980,19 +16980,19 @@ var error33 = () => {
           return `Eilut\u0117 privalo \u012Ftraukti "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Eilut\u0117 privalo atitikti ${_issue.pattern}`;
-        return `Neteisingas ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Neteisingas ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Skai\u010Dius privalo b\u016Bti ${issue2.divisor} kartotinis.`;
+        return `Skai\u010Dius privalo b\u016Bti ${issue3.divisor} kartotinis.`;
       case "unrecognized_keys":
-        return `Neatpa\u017Eint${issue2.keys.length > 1 ? "i" : "as"} rakt${issue2.keys.length > 1 ? "ai" : "as"}: ${joinValues(issue2.keys, ", ")}`;
+        return `Neatpa\u017Eint${issue3.keys.length > 1 ? "i" : "as"} rakt${issue3.keys.length > 1 ? "ai" : "as"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
         return "Rastas klaidingas raktas";
       case "invalid_union":
         return "Klaidinga \u012Fvestis";
       case "invalid_element": {
-        const origin = TypeDictionary[issue2.origin] ?? issue2.origin;
-        return `${capitalizeFirstCharacter(origin ?? issue2.origin ?? "reik\u0161m\u0117")} turi klaiding\u0105 \u012Fvest\u012F`;
+        const origin = TypeDictionary[issue3.origin] ?? issue3.origin;
+        return `${capitalizeFirstCharacter(origin ?? issue3.origin ?? "reik\u0161m\u0117")} turi klaiding\u0105 \u012Fvest\u012F`;
       }
       default:
         return "Klaidinga \u012Fvestis";
@@ -17056,38 +17056,38 @@ var error34 = () => {
     number: "\u0431\u0440\u043E\u0458",
     array: "\u043D\u0438\u0437\u0430"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0413\u0440\u0435\u0448\u0435\u043D \u0432\u043D\u0435\u0441: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 instanceof ${issue2.expected}, \u043F\u0440\u0438\u043C\u0435\u043D\u043E ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0413\u0440\u0435\u0448\u0435\u043D \u0432\u043D\u0435\u0441: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 instanceof ${issue3.expected}, \u043F\u0440\u0438\u043C\u0435\u043D\u043E ${received}`;
         }
         return `\u0413\u0440\u0435\u0448\u0435\u043D \u0432\u043D\u0435\u0441: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${expected}, \u043F\u0440\u0438\u043C\u0435\u043D\u043E ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Invalid input: expected ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0413\u0440\u0435\u0448\u0430\u043D\u0430 \u043E\u043F\u0446\u0438\u0458\u0430: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 \u0435\u0434\u043D\u0430 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Invalid input: expected ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0413\u0440\u0435\u0448\u0430\u043D\u0430 \u043E\u043F\u0446\u0438\u0458\u0430: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 \u0435\u0434\u043D\u0430 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u0433\u043E\u043B\u0435\u043C: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue2.origin ?? "\u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442\u0430"} \u0434\u0430 \u0438\u043C\u0430 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0438"}`;
-        return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u0433\u043E\u043B\u0435\u043C: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue2.origin ?? "\u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442\u0430"} \u0434\u0430 \u0431\u0438\u0434\u0435 ${adj}${issue2.maximum.toString()}`;
+          return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u0433\u043E\u043B\u0435\u043C: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue3.origin ?? "\u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442\u0430"} \u0434\u0430 \u0438\u043C\u0430 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0438"}`;
+        return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u0433\u043E\u043B\u0435\u043C: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue3.origin ?? "\u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442\u0430"} \u0434\u0430 \u0431\u0438\u0434\u0435 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u043C\u0430\u043B: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue2.origin} \u0434\u0430 \u0438\u043C\u0430 ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u043C\u0430\u043B: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue3.origin} \u0434\u0430 \u0438\u043C\u0430 ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u043C\u0430\u043B: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue2.origin} \u0434\u0430 \u0431\u0438\u0434\u0435 ${adj}${issue2.minimum.toString()}`;
+        return `\u041F\u0440\u0435\u043C\u043D\u043E\u0433\u0443 \u043C\u0430\u043B: \u0441\u0435 \u043E\u0447\u0435\u043A\u0443\u0432\u0430 ${issue3.origin} \u0434\u0430 \u0431\u0438\u0434\u0435 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u041D\u0435\u0432\u0430\u0436\u0435\u0447\u043A\u0430 \u043D\u0438\u0437\u0430: \u043C\u043E\u0440\u0430 \u0434\u0430 \u0437\u0430\u043F\u043E\u0447\u043D\u0443\u0432\u0430 \u0441\u043E "${_issue.prefix}"`;
         }
@@ -17097,18 +17097,18 @@ var error34 = () => {
           return `\u041D\u0435\u0432\u0430\u0436\u0435\u0447\u043A\u0430 \u043D\u0438\u0437\u0430: \u043C\u043E\u0440\u0430 \u0434\u0430 \u0432\u043A\u043B\u0443\u0447\u0443\u0432\u0430 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u041D\u0435\u0432\u0430\u0436\u0435\u0447\u043A\u0430 \u043D\u0438\u0437\u0430: \u043C\u043E\u0440\u0430 \u0434\u0430 \u043E\u0434\u0433\u043E\u0430\u0440\u0430 \u043D\u0430 \u043F\u0430\u0442\u0435\u0440\u043D\u043E\u0442 ${_issue.pattern}`;
-        return `Invalid ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Invalid ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0413\u0440\u0435\u0448\u0435\u043D \u0431\u0440\u043E\u0458: \u043C\u043E\u0440\u0430 \u0434\u0430 \u0431\u0438\u0434\u0435 \u0434\u0435\u043B\u0438\u0432 \u0441\u043E ${issue2.divisor}`;
+        return `\u0413\u0440\u0435\u0448\u0435\u043D \u0431\u0440\u043E\u0458: \u043C\u043E\u0440\u0430 \u0434\u0430 \u0431\u0438\u0434\u0435 \u0434\u0435\u043B\u0438\u0432 \u0441\u043E ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "\u041D\u0435\u043F\u0440\u0435\u043F\u043E\u0437\u043D\u0430\u0435\u043D\u0438 \u043A\u043B\u0443\u0447\u0435\u0432\u0438" : "\u041D\u0435\u043F\u0440\u0435\u043F\u043E\u0437\u043D\u0430\u0435\u043D \u043A\u043B\u0443\u0447"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "\u041D\u0435\u043F\u0440\u0435\u043F\u043E\u0437\u043D\u0430\u0435\u043D\u0438 \u043A\u043B\u0443\u0447\u0435\u0432\u0438" : "\u041D\u0435\u043F\u0440\u0435\u043F\u043E\u0437\u043D\u0430\u0435\u043D \u043A\u043B\u0443\u0447"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0413\u0440\u0435\u0448\u0435\u043D \u043A\u043B\u0443\u0447 \u0432\u043E ${issue2.origin}`;
+        return `\u0413\u0440\u0435\u0448\u0435\u043D \u043A\u043B\u0443\u0447 \u0432\u043E ${issue3.origin}`;
       case "invalid_union":
         return "\u0413\u0440\u0435\u0448\u0435\u043D \u0432\u043D\u0435\u0441";
       case "invalid_element":
-        return `\u0413\u0440\u0435\u0448\u043D\u0430 \u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442 \u0432\u043E ${issue2.origin}`;
+        return `\u0413\u0440\u0435\u0448\u043D\u0430 \u0432\u0440\u0435\u0434\u043D\u043E\u0441\u0442 \u0432\u043E ${issue3.origin}`;
       default:
         return `\u0413\u0440\u0435\u0448\u0435\u043D \u0432\u043D\u0435\u0441`;
     }
@@ -17170,38 +17170,38 @@ var error35 = () => {
     nan: "NaN",
     number: "nombor"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Input tidak sah: dijangka instanceof ${issue2.expected}, diterima ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Input tidak sah: dijangka instanceof ${issue3.expected}, diterima ${received}`;
         }
         return `Input tidak sah: dijangka ${expected}, diterima ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Input tidak sah: dijangka ${stringifyPrimitive(issue2.values[0])}`;
-        return `Pilihan tidak sah: dijangka salah satu daripada ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Input tidak sah: dijangka ${stringifyPrimitive(issue3.values[0])}`;
+        return `Pilihan tidak sah: dijangka salah satu daripada ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Terlalu besar: dijangka ${issue2.origin ?? "nilai"} ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elemen"}`;
-        return `Terlalu besar: dijangka ${issue2.origin ?? "nilai"} adalah ${adj}${issue2.maximum.toString()}`;
+          return `Terlalu besar: dijangka ${issue3.origin ?? "nilai"} ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elemen"}`;
+        return `Terlalu besar: dijangka ${issue3.origin ?? "nilai"} adalah ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Terlalu kecil: dijangka ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Terlalu kecil: dijangka ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Terlalu kecil: dijangka ${issue2.origin} adalah ${adj}${issue2.minimum.toString()}`;
+        return `Terlalu kecil: dijangka ${issue3.origin} adalah ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `String tidak sah: mesti bermula dengan "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -17210,18 +17210,18 @@ var error35 = () => {
           return `String tidak sah: mesti mengandungi "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `String tidak sah: mesti sepadan dengan corak ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} tidak sah`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} tidak sah`;
       }
       case "not_multiple_of":
-        return `Nombor tidak sah: perlu gandaan ${issue2.divisor}`;
+        return `Nombor tidak sah: perlu gandaan ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Kunci tidak dikenali: ${joinValues(issue2.keys, ", ")}`;
+        return `Kunci tidak dikenali: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Kunci tidak sah dalam ${issue2.origin}`;
+        return `Kunci tidak sah dalam ${issue3.origin}`;
       case "invalid_union":
         return "Input tidak sah";
       case "invalid_element":
-        return `Nilai tidak sah dalam ${issue2.origin}`;
+        return `Nilai tidak sah dalam ${issue3.origin}`;
       default:
         return `Input tidak sah`;
     }
@@ -17282,34 +17282,34 @@ var error36 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${expected}, \u092A\u094D\u0930\u093E\u092A\u094D\u0924 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0935\u093F\u0915\u0932\u094D\u092A: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u092E\u093E\u0928\u0939\u0930\u0942 \u092E\u0927\u094D\u092F\u0947 \u090F\u0915 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0935\u093F\u0915\u0932\u094D\u092A: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 \u092E\u093E\u0928\u0939\u0930\u0942 \u092E\u0927\u094D\u092F\u0947 \u090F\u0915 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0927\u0947\u0930\u0948 \u0920\u0942\u0932\u094B: ${issue2.origin ?? "\u092E\u093E\u0928"} \u092E\u093E ${adj}${issue2.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u0927\u0947\u0930\u0948 \u0920\u0942\u0932\u094B: ${issue2.origin ?? "\u092E\u093E\u0928"} ${adj}${issue2.maximum.toString()} \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
+          return `\u0927\u0947\u0930\u0948 \u0920\u0942\u0932\u094B: ${issue3.origin ?? "\u092E\u093E\u0928"} \u092E\u093E ${adj}${issue3.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u0927\u0947\u0930\u0948 \u0920\u0942\u0932\u094B: ${issue3.origin ?? "\u092E\u093E\u0928"} ${adj}${issue3.maximum.toString()} \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0927\u0947\u0930\u0948 \u0938\u093E\u0928\u094B: ${issue2.origin} \u092E\u093E ${adj}${issue2.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u0927\u0947\u0930\u0948 \u0938\u093E\u0928\u094B: ${issue2.origin} ${adj}${issue2.minimum.toString()} \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
+          return `\u0927\u0947\u0930\u0948 \u0938\u093E\u0928\u094B: ${issue3.origin} \u092E\u093E ${adj}${issue3.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u0927\u0947\u0930\u0948 \u0938\u093E\u0928\u094B: ${issue3.origin} ${adj}${issue3.minimum.toString()} \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0919: "${_issue.prefix}" \u092C\u093E\u091F \u0938\u0941\u0930\u0941 \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
         if (_issue.format === "ends_with")
@@ -17318,22 +17318,22 @@ var error36 = () => {
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0919: "${_issue.includes}" \u0938\u092E\u093E\u0935\u0947\u0936 \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
         if (_issue.format === "regex")
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u094D\u091F\u094D\u0930\u093F\u0919: \u0922\u093E\u0901\u091A\u093E ${_issue.pattern} \u0938\u0901\u0917 \u092E\u0947\u0932 \u0916\u093E\u0928\u0941\u092A\u0930\u094D\u091B`;
-        return `\u0905\u092E\u093E\u0928\u094D\u092F ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u0902\u0916\u094D\u092F\u093E: ${issue2.divisor} \u0915\u094B \u0917\u0941\u0923\u091C \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0938\u0902\u0916\u094D\u092F\u093E: ${issue3.divisor} \u0915\u094B \u0917\u0941\u0923\u091C \u0939\u0941\u0928\u0941\u092A\u0930\u094D\u091B`;
       case "unrecognized_keys":
-        return `\u0905\u092A\u0930\u093F\u091A\u093F\u0924 \u0915\u0941\u091E\u094D\u091C\u0940${issue2.keys.length > 1 ? "\u0939\u0930\u0942" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0905\u092A\u0930\u093F\u091A\u093F\u0924 \u0915\u0941\u091E\u094D\u091C\u0940${issue3.keys.length > 1 ? "\u0939\u0930\u0942" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0915\u0941\u091E\u094D\u091C\u0940: ${issue2.origin} \u092E\u093E`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u0915\u0941\u091E\u094D\u091C\u0940: ${issue3.origin} \u092E\u093E`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u0905\u092E\u093E\u0928\u094D\u092F \u0921\u093F\u0938\u094D\u0915\u094D\u0930\u093F\u092E\u093F\u0928\u0947\u091F\u0930 \u092E\u093E\u0928: \u0905\u092A\u0947\u0915\u094D\u0937\u093F\u0924 ${opts}`;
         }
         return "\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F";
       case "invalid_element":
-        return `\u0905\u092E\u093E\u0928\u094D\u092F \u092E\u093E\u0928: ${issue2.origin} \u092E\u093E`;
+        return `\u0905\u092E\u093E\u0928\u094D\u092F \u092E\u093E\u0928: ${issue3.origin} \u092E\u093E`;
       default:
         return `\u0905\u092E\u093E\u0928\u094D\u092F \u0907\u0928\u092A\u0941\u091F`;
     }
@@ -17395,40 +17395,40 @@ var error37 = () => {
     nan: "NaN",
     number: "getal"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ongeldige invoer: verwacht instanceof ${issue2.expected}, ontving ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ongeldige invoer: verwacht instanceof ${issue3.expected}, ontving ${received}`;
         }
         return `Ongeldige invoer: verwacht ${expected}, ontving ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ongeldige invoer: verwacht ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ongeldige optie: verwacht \xE9\xE9n van ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ongeldige invoer: verwacht ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ongeldige optie: verwacht \xE9\xE9n van ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
-        const longName = issue2.origin === "date" ? "laat" : issue2.origin === "string" ? "lang" : "groot";
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
+        const longName = issue3.origin === "date" ? "laat" : issue3.origin === "string" ? "lang" : "groot";
         if (sizing)
-          return `Te ${longName}: verwacht dat ${issue2.origin ?? "waarde"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementen"} ${sizing.verb}`;
-        return `Te ${longName}: verwacht dat ${issue2.origin ?? "waarde"} ${adj}${issue2.maximum.toString()} is`;
+          return `Te ${longName}: verwacht dat ${issue3.origin ?? "waarde"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementen"} ${sizing.verb}`;
+        return `Te ${longName}: verwacht dat ${issue3.origin ?? "waarde"} ${adj}${issue3.maximum.toString()} is`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
-        const shortName = issue2.origin === "date" ? "vroeg" : issue2.origin === "string" ? "kort" : "klein";
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
+        const shortName = issue3.origin === "date" ? "vroeg" : issue3.origin === "string" ? "kort" : "klein";
         if (sizing) {
-          return `Te ${shortName}: verwacht dat ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
+          return `Te ${shortName}: verwacht dat ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
         }
-        return `Te ${shortName}: verwacht dat ${issue2.origin} ${adj}${issue2.minimum.toString()} is`;
+        return `Te ${shortName}: verwacht dat ${issue3.origin} ${adj}${issue3.minimum.toString()} is`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Ongeldige tekst: moet met "${_issue.prefix}" beginnen`;
         }
@@ -17438,18 +17438,18 @@ var error37 = () => {
           return `Ongeldige tekst: moet "${_issue.includes}" bevatten`;
         if (_issue.format === "regex")
           return `Ongeldige tekst: moet overeenkomen met patroon ${_issue.pattern}`;
-        return `Ongeldig: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ongeldig: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ongeldig getal: moet een veelvoud van ${issue2.divisor} zijn`;
+        return `Ongeldig getal: moet een veelvoud van ${issue3.divisor} zijn`;
       case "unrecognized_keys":
-        return `Onbekende key${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Onbekende key${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ongeldige key in ${issue2.origin}`;
+        return `Ongeldige key in ${issue3.origin}`;
       case "invalid_union":
         return "Ongeldige invoer";
       case "invalid_element":
-        return `Ongeldige waarde in ${issue2.origin}`;
+        return `Ongeldige waarde in ${issue3.origin}`;
       default:
         return `Ongeldige invoer`;
     }
@@ -17512,38 +17512,38 @@ var error38 = () => {
     number: "tal",
     array: "liste"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ugyldig input: forventa instanceof ${issue2.expected}, fekk ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ugyldig input: forventa instanceof ${issue3.expected}, fekk ${received}`;
         }
         return `Ugyldig input: forventa ${expected}, fekk ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ugyldig verdi: forventa ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ugyldig val: forventa eitt av ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ugyldig verdi: forventa ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ugyldig val: forventa eitt av ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `For stor(t): forventa ${issue2.origin ?? "value"} til \xE5 ha ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "element"}`;
-        return `For stor(t): forventa ${issue2.origin ?? "value"} til \xE5 ha ${adj}${issue2.maximum.toString()}`;
+          return `For stor(t): forventa ${issue3.origin ?? "value"} til \xE5 ha ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "element"}`;
+        return `For stor(t): forventa ${issue3.origin ?? "value"} til \xE5 ha ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `For lite(n): forventa ${issue2.origin} til \xE5 ha ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `For lite(n): forventa ${issue3.origin} til \xE5 ha ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `For lite(n): forventa ${issue2.origin} til \xE5 ha ${adj}${issue2.minimum.toString()}`;
+        return `For lite(n): forventa ${issue3.origin} til \xE5 ha ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Ugyldig streng: m\xE5 starte med "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -17552,18 +17552,18 @@ var error38 = () => {
           return `Ugyldig streng: m\xE5 innehalde "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Ugyldig streng: m\xE5 matche m\xF8nsteret ${_issue.pattern}`;
-        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ugyldig tal: m\xE5 vere eit multiplum av ${issue2.divisor}`;
+        return `Ugyldig tal: m\xE5 vere eit multiplum av ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Ukjende n\xF8klar" : "Ukjend n\xF8kkel"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Ukjende n\xF8klar" : "Ukjend n\xF8kkel"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ugyldig n\xF8kkel i ${issue2.origin}`;
+        return `Ugyldig n\xF8kkel i ${issue3.origin}`;
       case "invalid_union":
         return "Ugyldig input";
       case "invalid_element":
-        return `Ugyldig verdi i ${issue2.origin}`;
+        return `Ugyldig verdi i ${issue3.origin}`;
       default:
         return `Ugyldig input`;
     }
@@ -17626,38 +17626,38 @@ var error39 = () => {
     number: "tall",
     array: "liste"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ugyldig input: forventet instanceof ${issue2.expected}, fikk ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ugyldig input: forventet instanceof ${issue3.expected}, fikk ${received}`;
         }
         return `Ugyldig input: forventet ${expected}, fikk ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ugyldig verdi: forventet ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ugyldig valg: forventet en av ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ugyldig verdi: forventet ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ugyldig valg: forventet en av ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `For stor(t): forventet ${issue2.origin ?? "value"} til \xE5 ha ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementer"}`;
-        return `For stor(t): forventet ${issue2.origin ?? "value"} til \xE5 ha ${adj}${issue2.maximum.toString()}`;
+          return `For stor(t): forventet ${issue3.origin ?? "value"} til \xE5 ha ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementer"}`;
+        return `For stor(t): forventet ${issue3.origin ?? "value"} til \xE5 ha ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `For lite(n): forventet ${issue2.origin} til \xE5 ha ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `For lite(n): forventet ${issue3.origin} til \xE5 ha ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `For lite(n): forventet ${issue2.origin} til \xE5 ha ${adj}${issue2.minimum.toString()}`;
+        return `For lite(n): forventet ${issue3.origin} til \xE5 ha ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Ugyldig streng: m\xE5 starte med "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -17666,18 +17666,18 @@ var error39 = () => {
           return `Ugyldig streng: m\xE5 inneholde "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Ugyldig streng: m\xE5 matche m\xF8nsteret ${_issue.pattern}`;
-        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ugyldig ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ugyldig tall: m\xE5 v\xE6re et multiplum av ${issue2.divisor}`;
+        return `Ugyldig tall: m\xE5 v\xE6re et multiplum av ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Ukjente n\xF8kler" : "Ukjent n\xF8kkel"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Ukjente n\xF8kler" : "Ukjent n\xF8kkel"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ugyldig n\xF8kkel i ${issue2.origin}`;
+        return `Ugyldig n\xF8kkel i ${issue3.origin}`;
       case "invalid_union":
         return "Ugyldig input";
       case "invalid_element":
-        return `Ugyldig verdi i ${issue2.origin}`;
+        return `Ugyldig verdi i ${issue3.origin}`;
       default:
         return `Ugyldig input`;
     }
@@ -17741,38 +17741,38 @@ var error40 = () => {
     array: "saf",
     null: "gayb"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `F\xE2sit giren: umulan instanceof ${issue2.expected}, al\u0131nan ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `F\xE2sit giren: umulan instanceof ${issue3.expected}, al\u0131nan ${received}`;
         }
         return `F\xE2sit giren: umulan ${expected}, al\u0131nan ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `F\xE2sit giren: umulan ${stringifyPrimitive(issue2.values[0])}`;
-        return `F\xE2sit tercih: m\xFBteberler ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `F\xE2sit giren: umulan ${stringifyPrimitive(issue3.values[0])}`;
+        return `F\xE2sit tercih: m\xFBteberler ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Fazla b\xFCy\xFCk: ${issue2.origin ?? "value"}, ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elements"} sahip olmal\u0131yd\u0131.`;
-        return `Fazla b\xFCy\xFCk: ${issue2.origin ?? "value"}, ${adj}${issue2.maximum.toString()} olmal\u0131yd\u0131.`;
+          return `Fazla b\xFCy\xFCk: ${issue3.origin ?? "value"}, ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elements"} sahip olmal\u0131yd\u0131.`;
+        return `Fazla b\xFCy\xFCk: ${issue3.origin ?? "value"}, ${adj}${issue3.maximum.toString()} olmal\u0131yd\u0131.`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Fazla k\xFC\xE7\xFCk: ${issue2.origin}, ${adj}${issue2.minimum.toString()} ${sizing.unit} sahip olmal\u0131yd\u0131.`;
+          return `Fazla k\xFC\xE7\xFCk: ${issue3.origin}, ${adj}${issue3.minimum.toString()} ${sizing.unit} sahip olmal\u0131yd\u0131.`;
         }
-        return `Fazla k\xFC\xE7\xFCk: ${issue2.origin}, ${adj}${issue2.minimum.toString()} olmal\u0131yd\u0131.`;
+        return `Fazla k\xFC\xE7\xFCk: ${issue3.origin}, ${adj}${issue3.minimum.toString()} olmal\u0131yd\u0131.`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `F\xE2sit metin: "${_issue.prefix}" ile ba\u015Flamal\u0131.`;
         if (_issue.format === "ends_with")
@@ -17781,18 +17781,18 @@ var error40 = () => {
           return `F\xE2sit metin: "${_issue.includes}" ihtiv\xE2 etmeli.`;
         if (_issue.format === "regex")
           return `F\xE2sit metin: ${_issue.pattern} nak\u015F\u0131na uymal\u0131.`;
-        return `F\xE2sit ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `F\xE2sit ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `F\xE2sit say\u0131: ${issue2.divisor} kat\u0131 olmal\u0131yd\u0131.`;
+        return `F\xE2sit say\u0131: ${issue3.divisor} kat\u0131 olmal\u0131yd\u0131.`;
       case "unrecognized_keys":
-        return `Tan\u0131nmayan anahtar ${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Tan\u0131nmayan anahtar ${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} i\xE7in tan\u0131nmayan anahtar var.`;
+        return `${issue3.origin} i\xE7in tan\u0131nmayan anahtar var.`;
       case "invalid_union":
         return "Giren tan\u0131namad\u0131.";
       case "invalid_element":
-        return `${issue2.origin} i\xE7in tan\u0131nmayan k\u0131ymet var.`;
+        return `${issue3.origin} i\xE7in tan\u0131nmayan k\u0131ymet var.`;
       default:
         return `K\u0131ymet tan\u0131namad\u0131.`;
     }
@@ -17855,40 +17855,40 @@ var error41 = () => {
     number: "\u0639\u062F\u062F",
     array: "\u0627\u0631\u06D0"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0646\u0627\u0633\u0645 \u0648\u0631\u0648\u062F\u064A: \u0628\u0627\u06CC\u062F instanceof ${issue2.expected} \u0648\u0627\u06CC, \u0645\u06AB\u0631 ${received} \u062A\u0631\u0644\u0627\u0633\u0647 \u0634\u0648`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0646\u0627\u0633\u0645 \u0648\u0631\u0648\u062F\u064A: \u0628\u0627\u06CC\u062F instanceof ${issue3.expected} \u0648\u0627\u06CC, \u0645\u06AB\u0631 ${received} \u062A\u0631\u0644\u0627\u0633\u0647 \u0634\u0648`;
         }
         return `\u0646\u0627\u0633\u0645 \u0648\u0631\u0648\u062F\u064A: \u0628\u0627\u06CC\u062F ${expected} \u0648\u0627\u06CC, \u0645\u06AB\u0631 ${received} \u062A\u0631\u0644\u0627\u0633\u0647 \u0634\u0648`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1) {
-          return `\u0646\u0627\u0633\u0645 \u0648\u0631\u0648\u062F\u064A: \u0628\u0627\u06CC\u062F ${stringifyPrimitive(issue2.values[0])} \u0648\u0627\u06CC`;
+        if (issue3.values.length === 1) {
+          return `\u0646\u0627\u0633\u0645 \u0648\u0631\u0648\u062F\u064A: \u0628\u0627\u06CC\u062F ${stringifyPrimitive(issue3.values[0])} \u0648\u0627\u06CC`;
         }
-        return `\u0646\u0627\u0633\u0645 \u0627\u0646\u062A\u062E\u0627\u0628: \u0628\u0627\u06CC\u062F \u06CC\u0648 \u0644\u0647 ${joinValues(issue2.values, "|")} \u0685\u062E\u0647 \u0648\u0627\u06CC`;
+        return `\u0646\u0627\u0633\u0645 \u0627\u0646\u062A\u062E\u0627\u0628: \u0628\u0627\u06CC\u062F \u06CC\u0648 \u0644\u0647 ${joinValues(issue3.values, "|")} \u0685\u062E\u0647 \u0648\u0627\u06CC`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0689\u06CC\u0631 \u0644\u0648\u06CC: ${issue2.origin ?? "\u0627\u0631\u0632\u069A\u062A"} \u0628\u0627\u06CC\u062F ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631\u0648\u0646\u0647"} \u0648\u0644\u0631\u064A`;
+          return `\u0689\u06CC\u0631 \u0644\u0648\u06CC: ${issue3.origin ?? "\u0627\u0631\u0632\u069A\u062A"} \u0628\u0627\u06CC\u062F ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0635\u0631\u0648\u0646\u0647"} \u0648\u0644\u0631\u064A`;
         }
-        return `\u0689\u06CC\u0631 \u0644\u0648\u06CC: ${issue2.origin ?? "\u0627\u0631\u0632\u069A\u062A"} \u0628\u0627\u06CC\u062F ${adj}${issue2.maximum.toString()} \u0648\u064A`;
+        return `\u0689\u06CC\u0631 \u0644\u0648\u06CC: ${issue3.origin ?? "\u0627\u0631\u0632\u069A\u062A"} \u0628\u0627\u06CC\u062F ${adj}${issue3.maximum.toString()} \u0648\u064A`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0689\u06CC\u0631 \u06A9\u0648\u0686\u0646\u06CC: ${issue2.origin} \u0628\u0627\u06CC\u062F ${adj}${issue2.minimum.toString()} ${sizing.unit} \u0648\u0644\u0631\u064A`;
+          return `\u0689\u06CC\u0631 \u06A9\u0648\u0686\u0646\u06CC: ${issue3.origin} \u0628\u0627\u06CC\u062F ${adj}${issue3.minimum.toString()} ${sizing.unit} \u0648\u0644\u0631\u064A`;
         }
-        return `\u0689\u06CC\u0631 \u06A9\u0648\u0686\u0646\u06CC: ${issue2.origin} \u0628\u0627\u06CC\u062F ${adj}${issue2.minimum.toString()} \u0648\u064A`;
+        return `\u0689\u06CC\u0631 \u06A9\u0648\u0686\u0646\u06CC: ${issue3.origin} \u0628\u0627\u06CC\u062F ${adj}${issue3.minimum.toString()} \u0648\u064A`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0646\u0627\u0633\u0645 \u0645\u062A\u0646: \u0628\u0627\u06CC\u062F \u062F "${_issue.prefix}" \u0633\u0631\u0647 \u067E\u06CC\u0644 \u0634\u064A`;
         }
@@ -17901,18 +17901,18 @@ var error41 = () => {
         if (_issue.format === "regex") {
           return `\u0646\u0627\u0633\u0645 \u0645\u062A\u0646: \u0628\u0627\u06CC\u062F \u062F ${_issue.pattern} \u0633\u0631\u0647 \u0645\u0637\u0627\u0628\u0642\u062A \u0648\u0644\u0631\u064A`;
         }
-        return `${FormatDictionary[_issue.format] ?? issue2.format} \u0646\u0627\u0633\u0645 \u062F\u06CC`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} \u0646\u0627\u0633\u0645 \u062F\u06CC`;
       }
       case "not_multiple_of":
-        return `\u0646\u0627\u0633\u0645 \u0639\u062F\u062F: \u0628\u0627\u06CC\u062F \u062F ${issue2.divisor} \u0645\u0636\u0631\u0628 \u0648\u064A`;
+        return `\u0646\u0627\u0633\u0645 \u0639\u062F\u062F: \u0628\u0627\u06CC\u062F \u062F ${issue3.divisor} \u0645\u0636\u0631\u0628 \u0648\u064A`;
       case "unrecognized_keys":
-        return `\u0646\u0627\u0633\u0645 ${issue2.keys.length > 1 ? "\u06A9\u0644\u06CC\u0689\u0648\u0646\u0647" : "\u06A9\u0644\u06CC\u0689"}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0646\u0627\u0633\u0645 ${issue3.keys.length > 1 ? "\u06A9\u0644\u06CC\u0689\u0648\u0646\u0647" : "\u06A9\u0644\u06CC\u0689"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0646\u0627\u0633\u0645 \u06A9\u0644\u06CC\u0689 \u067E\u0647 ${issue2.origin} \u06A9\u06D0`;
+        return `\u0646\u0627\u0633\u0645 \u06A9\u0644\u06CC\u0689 \u067E\u0647 ${issue3.origin} \u06A9\u06D0`;
       case "invalid_union":
         return `\u0646\u0627\u0633\u0645\u0647 \u0648\u0631\u0648\u062F\u064A`;
       case "invalid_element":
-        return `\u0646\u0627\u0633\u0645 \u0639\u0646\u0635\u0631 \u067E\u0647 ${issue2.origin} \u06A9\u06D0`;
+        return `\u0646\u0627\u0633\u0645 \u0639\u0646\u0635\u0631 \u067E\u0647 ${issue3.origin} \u06A9\u06D0`;
       default:
         return `\u0646\u0627\u0633\u0645\u0647 \u0648\u0631\u0648\u062F\u064A`;
     }
@@ -17975,39 +17975,39 @@ var error42 = () => {
     number: "liczba",
     array: "tablica"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Nieprawid\u0142owe dane wej\u015Bciowe: oczekiwano instanceof ${issue2.expected}, otrzymano ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Nieprawid\u0142owe dane wej\u015Bciowe: oczekiwano instanceof ${issue3.expected}, otrzymano ${received}`;
         }
         return `Nieprawid\u0142owe dane wej\u015Bciowe: oczekiwano ${expected}, otrzymano ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Nieprawid\u0142owe dane wej\u015Bciowe: oczekiwano ${stringifyPrimitive(issue2.values[0])}`;
-        return `Nieprawid\u0142owa opcja: oczekiwano jednej z warto\u015Bci ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Nieprawid\u0142owe dane wej\u015Bciowe: oczekiwano ${stringifyPrimitive(issue3.values[0])}`;
+        return `Nieprawid\u0142owa opcja: oczekiwano jednej z warto\u015Bci ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Za du\u017Ca warto\u015B\u0107: oczekiwano, \u017Ce ${issue2.origin ?? "warto\u015B\u0107"} b\u0119dzie mie\u0107 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "element\xF3w"}`;
+          return `Za du\u017Ca warto\u015B\u0107: oczekiwano, \u017Ce ${issue3.origin ?? "warto\u015B\u0107"} b\u0119dzie mie\u0107 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "element\xF3w"}`;
         }
-        return `Zbyt du\u017C(y/a/e): oczekiwano, \u017Ce ${issue2.origin ?? "warto\u015B\u0107"} b\u0119dzie wynosi\u0107 ${adj}${issue2.maximum.toString()}`;
+        return `Zbyt du\u017C(y/a/e): oczekiwano, \u017Ce ${issue3.origin ?? "warto\u015B\u0107"} b\u0119dzie wynosi\u0107 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Za ma\u0142a warto\u015B\u0107: oczekiwano, \u017Ce ${issue2.origin ?? "warto\u015B\u0107"} b\u0119dzie mie\u0107 ${adj}${issue2.minimum.toString()} ${sizing.unit ?? "element\xF3w"}`;
+          return `Za ma\u0142a warto\u015B\u0107: oczekiwano, \u017Ce ${issue3.origin ?? "warto\u015B\u0107"} b\u0119dzie mie\u0107 ${adj}${issue3.minimum.toString()} ${sizing.unit ?? "element\xF3w"}`;
         }
-        return `Zbyt ma\u0142(y/a/e): oczekiwano, \u017Ce ${issue2.origin ?? "warto\u015B\u0107"} b\u0119dzie wynosi\u0107 ${adj}${issue2.minimum.toString()}`;
+        return `Zbyt ma\u0142(y/a/e): oczekiwano, \u017Ce ${issue3.origin ?? "warto\u015B\u0107"} b\u0119dzie wynosi\u0107 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Nieprawid\u0142owy ci\u0105g znak\xF3w: musi zaczyna\u0107 si\u0119 od "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -18016,18 +18016,18 @@ var error42 = () => {
           return `Nieprawid\u0142owy ci\u0105g znak\xF3w: musi zawiera\u0107 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Nieprawid\u0142owy ci\u0105g znak\xF3w: musi odpowiada\u0107 wzorcowi ${_issue.pattern}`;
-        return `Nieprawid\u0142ow(y/a/e) ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Nieprawid\u0142ow(y/a/e) ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Nieprawid\u0142owa liczba: musi by\u0107 wielokrotno\u015Bci\u0105 ${issue2.divisor}`;
+        return `Nieprawid\u0142owa liczba: musi by\u0107 wielokrotno\u015Bci\u0105 ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Nierozpoznane klucze${issue2.keys.length > 1 ? "s" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Nierozpoznane klucze${issue3.keys.length > 1 ? "s" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Nieprawid\u0142owy klucz w ${issue2.origin}`;
+        return `Nieprawid\u0142owy klucz w ${issue3.origin}`;
       case "invalid_union":
         return "Nieprawid\u0142owe dane wej\u015Bciowe";
       case "invalid_element":
-        return `Nieprawid\u0142owa warto\u015B\u0107 w ${issue2.origin}`;
+        return `Nieprawid\u0142owa warto\u015B\u0107 w ${issue3.origin}`;
       default:
         return `Nieprawid\u0142owe dane wej\u015Bciowe`;
     }
@@ -18117,35 +18117,35 @@ var error43 = () => {
     const translatedValue = TypeDictionary[type] ?? { name: `valor "${type}"`, articles: Gender.masculine };
     return `${translatedValue.articles[articleType]} ${translatedValue.name}`;
   }
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = translateOriginWithArticle(issue2.expected, "indefinite");
-        const receivedType = parsedType(issue2.input);
+        const expected = translateOriginWithArticle(issue3.expected, "indefinite");
+        const receivedType = parsedType(issue3.input);
         const received = translateOriginWithArticle(receivedType, "indefinite");
         return `Entrada inv\xE1lida: esperava ${expected}, recebeu ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Entrada inv\xE1lida: esperava ${stringifyPrimitive(issue2.values[0])}`;
-        return `Op\xE7\xE3o inv\xE1lida: esperava uma das seguintes op\xE7\xF5es: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Entrada inv\xE1lida: esperava ${stringifyPrimitive(issue3.values[0])}`;
+        return `Op\xE7\xE3o inv\xE1lida: esperava uma das seguintes op\xE7\xF5es: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Demasiado grande: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} tivesse ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "elementos"}`;
-        return `Demasiado grande: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} fosse ${adj} ${issue2.maximum.toString()}`;
+          return `Demasiado grande: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} tivesse ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "elementos"}`;
+        return `Demasiado grande: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} fosse ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Demasiado pequeno: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} tivesse ${adj} ${issue2.minimum.toString()} ${sizing.unit ?? "elementos"}`;
+          return `Demasiado pequeno: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} tivesse ${adj} ${issue3.minimum.toString()} ${sizing.unit ?? "elementos"}`;
         }
-        return `Demasiado pequeno: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} fosse ${adj} ${issue2.minimum.toString()}`;
+        return `Demasiado pequeno: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} fosse ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Texto inv\xE1lido: deve come\xE7ar por "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -18154,24 +18154,24 @@ var error43 = () => {
           return `Texto inv\xE1lido: deve incluir "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Texto inv\xE1lido: deve corresponder ao padr\xE3o ${_issue.pattern}`;
-        return `Formato d${FormatDictionary[_issue.format] ?? issue2.format} inv\xE1lido`;
+        return `Formato d${FormatDictionary[_issue.format] ?? issue3.format} inv\xE1lido`;
       }
       case "not_multiple_of":
-        return `N\xFAmero inv\xE1lido: deve ser m\xFAltiplo de ${issue2.divisor}`;
+        return `N\xFAmero inv\xE1lido: deve ser m\xFAltiplo de ${issue3.divisor}`;
       case "unrecognized_keys": {
-        const plural2 = issue2.keys.length > 1 ? "s" : "";
-        return `Chave${plural2} inv\xE1lida${plural2}: ${joinValues(issue2.keys, ", ")}`;
+        const plural2 = issue3.keys.length > 1 ? "s" : "";
+        return `Chave${plural2} inv\xE1lida${plural2}: ${joinValues(issue3.keys, ", ")}`;
       }
       case "invalid_key":
-        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue2.origin, "definite")}`;
+        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue3.origin, "definite")}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `Valor de discrimina\xE7\xE3o inv\xE1lido. Esperava ${opts}`;
         }
         return "Entrada inv\xE1lida";
       case "invalid_element":
-        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue2.origin, "definite")}`;
+        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue3.origin, "definite")}`;
       default:
         return `Entrada inv\xE1lida`;
     }
@@ -18261,35 +18261,35 @@ var error44 = () => {
     const translatedValue = TypeDictionary[type] ?? { name: `valor "${type}"`, articles: Gender.masculine };
     return `${translatedValue.articles[articleType]} ${translatedValue.name}`;
   }
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = translateOriginWithArticle(issue2.expected, "indefinite");
-        const receivedType = parsedType(issue2.input);
+        const expected = translateOriginWithArticle(issue3.expected, "indefinite");
+        const receivedType = parsedType(issue3.input);
         const received = translateOriginWithArticle(receivedType, "indefinite");
         return `Entrada inv\xE1lida: esperava ${expected}, recebeu ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Entrada inv\xE1lida: esperava ${stringifyPrimitive(issue2.values[0])}`;
-        return `Op\xE7\xE3o inv\xE1lida: esperava uma das seguintes op\xE7\xF5es: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Entrada inv\xE1lida: esperava ${stringifyPrimitive(issue3.values[0])}`;
+        return `Op\xE7\xE3o inv\xE1lida: esperava uma das seguintes op\xE7\xF5es: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Grande demais: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} tivesse ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "elementos"}`;
-        return `Grande demais: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} fosse ${adj} ${issue2.maximum.toString()}`;
+          return `Grande demais: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} tivesse ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "elementos"}`;
+        return `Grande demais: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} fosse ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Pequeno demais: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} tivesse ${adj} ${issue2.minimum.toString()} ${sizing.unit ?? "elementos"}`;
+          return `Pequeno demais: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} tivesse ${adj} ${issue3.minimum.toString()} ${sizing.unit ?? "elementos"}`;
         }
-        return `Pequeno demais: esperava que ${translateOriginWithArticle(issue2.origin, "definite")} fosse ${adj} ${issue2.minimum.toString()}`;
+        return `Pequeno demais: esperava que ${translateOriginWithArticle(issue3.origin, "definite")} fosse ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Texto inv\xE1lido: deve come\xE7ar com "${_issue.prefix}"`;
         }
@@ -18299,24 +18299,24 @@ var error44 = () => {
           return `Texto inv\xE1lido: deve incluir "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Texto inv\xE1lido: deve corresponder ao padr\xE3o ${_issue.pattern}`;
-        return `Formato d${FormatDictionary[_issue.format] ?? issue2.format} inv\xE1lido`;
+        return `Formato d${FormatDictionary[_issue.format] ?? issue3.format} inv\xE1lido`;
       }
       case "not_multiple_of":
-        return `N\xFAmero inv\xE1lido: deve ser m\xFAltiplo de ${issue2.divisor}`;
+        return `N\xFAmero inv\xE1lido: deve ser m\xFAltiplo de ${issue3.divisor}`;
       case "unrecognized_keys": {
-        const plural2 = issue2.keys.length > 1 ? "s" : "";
-        return `Chave${plural2} inv\xE1lida${plural2}: ${joinValues(issue2.keys, ", ")}`;
+        const plural2 = issue3.keys.length > 1 ? "s" : "";
+        return `Chave${plural2} inv\xE1lida${plural2}: ${joinValues(issue3.keys, ", ")}`;
       }
       case "invalid_key":
-        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue2.origin, "definite")}`;
+        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue3.origin, "definite")}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `Valor de discrimina\xE7\xE3o inv\xE1lido. Esperava ${opts}`;
         }
         return "Entrada inv\xE1lida";
       case "invalid_element":
-        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue2.origin, "definite")}`;
+        return `Entrada inv\xE1lida n${translateOriginWithArticle(issue3.origin, "definite")}`;
       default:
         return `Entrada inv\xE1lida`;
     }
@@ -18390,35 +18390,35 @@ var error45 = () => {
     map: "hart\u0103",
     set: "set"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `Intrare invalid\u0103: a\u0219teptat ${expected}, primit ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Intrare invalid\u0103: a\u0219teptat ${stringifyPrimitive(issue2.values[0])}`;
-        return `Op\u021Biune invalid\u0103: a\u0219teptat una dintre ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Intrare invalid\u0103: a\u0219teptat ${stringifyPrimitive(issue3.values[0])}`;
+        return `Op\u021Biune invalid\u0103: a\u0219teptat una dintre ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Prea mare: a\u0219teptat ca ${issue2.origin ?? "valoarea"} ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elemente"}`;
-        return `Prea mare: a\u0219teptat ca ${issue2.origin ?? "valoarea"} s\u0103 fie ${adj}${issue2.maximum.toString()}`;
+          return `Prea mare: a\u0219teptat ca ${issue3.origin ?? "valoarea"} ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elemente"}`;
+        return `Prea mare: a\u0219teptat ca ${issue3.origin ?? "valoarea"} s\u0103 fie ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Prea mic: a\u0219teptat ca ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Prea mic: a\u0219teptat ca ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Prea mic: a\u0219teptat ca ${issue2.origin} s\u0103 fie ${adj}${issue2.minimum.toString()}`;
+        return `Prea mic: a\u0219teptat ca ${issue3.origin} s\u0103 fie ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0218ir invalid: trebuie s\u0103 \xEEnceap\u0103 cu "${_issue.prefix}"`;
         }
@@ -18428,18 +18428,18 @@ var error45 = () => {
           return `\u0218ir invalid: trebuie s\u0103 includ\u0103 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u0218ir invalid: trebuie s\u0103 se potriveasc\u0103 cu modelul ${_issue.pattern}`;
-        return `Format invalid: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Format invalid: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Num\u0103r invalid: trebuie s\u0103 fie multiplu de ${issue2.divisor}`;
+        return `Num\u0103r invalid: trebuie s\u0103 fie multiplu de ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Chei nerecunoscute: ${joinValues(issue2.keys, ", ")}`;
+        return `Chei nerecunoscute: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Cheie invalid\u0103 \xEEn ${issue2.origin}`;
+        return `Cheie invalid\u0103 \xEEn ${issue3.origin}`;
       case "invalid_union":
         return "Intrare invalid\u0103";
       case "invalid_element":
-        return `Valoare invalid\u0103 \xEEn ${issue2.origin}`;
+        return `Valoare invalid\u0103 \xEEn ${issue3.origin}`;
       default:
         return `Intrare invalid\u0103`;
     }
@@ -18452,8 +18452,8 @@ function ro_default() {
 }
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
-function getRussianPlural(count2, one, few, many) {
-  const absCount = Math.abs(count2);
+function getRussianPlural(count7, one, few, many) {
+  const absCount = Math.abs(count7);
   const lastDigit = absCount % 10;
   const lastTwoDigits = absCount % 100;
   if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
@@ -18552,43 +18552,43 @@ var error46 = () => {
     number: "\u0447\u0438\u0441\u043B\u043E",
     array: "\u043C\u0430\u0441\u0441\u0438\u0432"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C instanceof ${issue2.expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043E ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C instanceof ${issue3.expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043E ${received}`;
         }
         return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C ${expected}, \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043E ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0434\u043D\u043E \u0438\u0437 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0432\u043E\u0434: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0434\u043D\u043E \u0438\u0437 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const maxValue = Number(issue2.maximum);
+          const maxValue = Number(issue3.maximum);
           const unit = getRussianPlural(maxValue, sizing.unit.one, sizing.unit.few, sizing.unit.many);
-          return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435"} \u0431\u0443\u0434\u0435\u0442 \u0438\u043C\u0435\u0442\u044C ${adj}${issue2.maximum.toString()} ${unit}`;
+          return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435"} \u0431\u0443\u0434\u0435\u0442 \u0438\u043C\u0435\u0442\u044C ${adj}${issue3.maximum.toString()} ${unit}`;
         }
-        return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435"} \u0431\u0443\u0434\u0435\u0442 ${adj}${issue2.maximum.toString()}`;
+        return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435"} \u0431\u0443\u0434\u0435\u0442 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          const minValue = Number(issue2.minimum);
+          const minValue = Number(issue3.minimum);
           const unit = getRussianPlural(minValue, sizing.unit.one, sizing.unit.few, sizing.unit.many);
-          return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0430\u043B\u0435\u043D\u044C\u043A\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue2.origin} \u0431\u0443\u0434\u0435\u0442 \u0438\u043C\u0435\u0442\u044C ${adj}${issue2.minimum.toString()} ${unit}`;
+          return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0430\u043B\u0435\u043D\u044C\u043A\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue3.origin} \u0431\u0443\u0434\u0435\u0442 \u0438\u043C\u0435\u0442\u044C ${adj}${issue3.minimum.toString()} ${unit}`;
         }
-        return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0430\u043B\u0435\u043D\u044C\u043A\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue2.origin} \u0431\u0443\u0434\u0435\u0442 ${adj}${issue2.minimum.toString()}`;
+        return `\u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0430\u043B\u0435\u043D\u044C\u043A\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435: \u043E\u0436\u0438\u0434\u0430\u043B\u043E\u0441\u044C, \u0447\u0442\u043E ${issue3.origin} \u0431\u0443\u0434\u0435\u0442 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u041D\u0435\u0432\u0435\u0440\u043D\u0430\u044F \u0441\u0442\u0440\u043E\u043A\u0430: \u0434\u043E\u043B\u0436\u043D\u0430 \u043D\u0430\u0447\u0438\u043D\u0430\u0442\u044C\u0441\u044F \u0441 "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -18597,18 +18597,18 @@ var error46 = () => {
           return `\u041D\u0435\u0432\u0435\u0440\u043D\u0430\u044F \u0441\u0442\u0440\u043E\u043A\u0430: \u0434\u043E\u043B\u0436\u043D\u0430 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u041D\u0435\u0432\u0435\u0440\u043D\u0430\u044F \u0441\u0442\u0440\u043E\u043A\u0430: \u0434\u043E\u043B\u0436\u043D\u0430 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u043E\u0432\u0430\u0442\u044C \u0448\u0430\u0431\u043B\u043E\u043D\u0443 ${_issue.pattern}`;
-        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u041D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0447\u0438\u0441\u043B\u043E: \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u043A\u0440\u0430\u0442\u043D\u044B\u043C ${issue2.divisor}`;
+        return `\u041D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0447\u0438\u0441\u043B\u043E: \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u043A\u0440\u0430\u0442\u043D\u044B\u043C ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u041D\u0435\u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u043D\u043D${issue2.keys.length > 1 ? "\u044B\u0435" : "\u044B\u0439"} \u043A\u043B\u044E\u0447${issue2.keys.length > 1 ? "\u0438" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u041D\u0435\u0440\u0430\u0441\u043F\u043E\u0437\u043D\u0430\u043D\u043D${issue3.keys.length > 1 ? "\u044B\u0435" : "\u044B\u0439"} \u043A\u043B\u044E\u0447${issue3.keys.length > 1 ? "\u0438" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u043A\u043B\u044E\u0447 \u0432 ${issue2.origin}`;
+        return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u043A\u043B\u044E\u0447 \u0432 ${issue3.origin}`;
       case "invalid_union":
         return "\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0435 \u0432\u0445\u043E\u0434\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435";
       case "invalid_element":
-        return `\u041D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0432 ${issue2.origin}`;
+        return `\u041D\u0435\u0432\u0435\u0440\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0432 ${issue3.origin}`;
       default:
         return `\u041D\u0435\u0432\u0435\u0440\u043D\u044B\u0435 \u0432\u0445\u043E\u0434\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435`;
     }
@@ -18673,39 +18673,39 @@ var error47 = () => {
     function: "funkcia",
     array: "pole"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE9 instanceof ${issue2.expected}, obdr\u017Ean\xE9 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE9 instanceof ${issue3.expected}, obdr\u017Ean\xE9 ${received}`;
         }
         return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE9 ${expected}, obdr\u017Ean\xE9 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE9 ${stringifyPrimitive(issue2.values[0])}`;
-        return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE1 jedna z hodn\xF4t ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE9 ${stringifyPrimitive(issue3.values[0])}`;
+        return `Neplatn\xFD vstup: o\u010Dak\xE1van\xE1 jedna z hodn\xF4t ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Hodnota je pr\xEDli\u0161 ve\u013Ek\xE1: ${issue2.origin ?? "hodnota"} mus\xED ma\u0165 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "prvkov"}`;
+          return `Hodnota je pr\xEDli\u0161 ve\u013Ek\xE1: ${issue3.origin ?? "hodnota"} mus\xED ma\u0165 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "prvkov"}`;
         }
-        return `Hodnota je pr\xEDli\u0161 ve\u013Ek\xE1: ${issue2.origin ?? "hodnota"} mus\xED by\u0165 ${adj}${issue2.maximum.toString()}`;
+        return `Hodnota je pr\xEDli\u0161 ve\u013Ek\xE1: ${issue3.origin ?? "hodnota"} mus\xED by\u0165 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Hodnota je pr\xEDli\u0161 mal\xE1: ${issue2.origin ?? "hodnota"} mus\xED ma\u0165 ${adj}${issue2.minimum.toString()} ${sizing.unit ?? "prvkov"}`;
+          return `Hodnota je pr\xEDli\u0161 mal\xE1: ${issue3.origin ?? "hodnota"} mus\xED ma\u0165 ${adj}${issue3.minimum.toString()} ${sizing.unit ?? "prvkov"}`;
         }
-        return `Hodnota je pr\xEDli\u0161 mal\xE1: ${issue2.origin ?? "hodnota"} mus\xED by\u0165 ${adj}${issue2.minimum.toString()}`;
+        return `Hodnota je pr\xEDli\u0161 mal\xE1: ${issue3.origin ?? "hodnota"} mus\xED by\u0165 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Neplatn\xFD re\u0165azec: mus\xED za\u010D\xEDna\u0165 na "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -18714,18 +18714,18 @@ var error47 = () => {
           return `Neplatn\xFD re\u0165azec: mus\xED obsahova\u0165 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Neplatn\xFD re\u0165azec: mus\xED zodpoveda\u0165 vzoru ${_issue.pattern}`;
-        return `Neplatn\xFD form\xE1t ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Neplatn\xFD form\xE1t ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Neplatn\xE9 \u010D\xEDslo: mus\xED by\u0165 n\xE1sobkom ${issue2.divisor}`;
+        return `Neplatn\xE9 \u010D\xEDslo: mus\xED by\u0165 n\xE1sobkom ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Nezn\xE1me kl\xFA\u010De: ${joinValues(issue2.keys, ", ")}`;
+        return `Nezn\xE1me kl\xFA\u010De: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Neplatn\xFD kl\xFA\u010D v ${issue2.origin}`;
+        return `Neplatn\xFD kl\xFA\u010D v ${issue3.origin}`;
       case "invalid_union":
         return "Neplatn\xFD vstup";
       case "invalid_element":
-        return `Neplatn\xE1 hodnota v ${issue2.origin}`;
+        return `Neplatn\xE1 hodnota v ${issue3.origin}`;
       default:
         return `Neplatn\xFD vstup`;
     }
@@ -18788,38 +18788,38 @@ var error48 = () => {
     number: "\u0161tevilo",
     array: "tabela"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Neveljaven vnos: pri\u010Dakovano instanceof ${issue2.expected}, prejeto ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Neveljaven vnos: pri\u010Dakovano instanceof ${issue3.expected}, prejeto ${received}`;
         }
         return `Neveljaven vnos: pri\u010Dakovano ${expected}, prejeto ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Neveljaven vnos: pri\u010Dakovano ${stringifyPrimitive(issue2.values[0])}`;
-        return `Neveljavna mo\u017Enost: pri\u010Dakovano eno izmed ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Neveljaven vnos: pri\u010Dakovano ${stringifyPrimitive(issue3.values[0])}`;
+        return `Neveljavna mo\u017Enost: pri\u010Dakovano eno izmed ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Preveliko: pri\u010Dakovano, da bo ${issue2.origin ?? "vrednost"} imelo ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "elementov"}`;
-        return `Preveliko: pri\u010Dakovano, da bo ${issue2.origin ?? "vrednost"} ${adj}${issue2.maximum.toString()}`;
+          return `Preveliko: pri\u010Dakovano, da bo ${issue3.origin ?? "vrednost"} imelo ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "elementov"}`;
+        return `Preveliko: pri\u010Dakovano, da bo ${issue3.origin ?? "vrednost"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Premajhno: pri\u010Dakovano, da bo ${issue2.origin} imelo ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Premajhno: pri\u010Dakovano, da bo ${issue3.origin} imelo ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Premajhno: pri\u010Dakovano, da bo ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+        return `Premajhno: pri\u010Dakovano, da bo ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Neveljaven niz: mora se za\u010Deti z "${_issue.prefix}"`;
         }
@@ -18829,18 +18829,18 @@ var error48 = () => {
           return `Neveljaven niz: mora vsebovati "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Neveljaven niz: mora ustrezati vzorcu ${_issue.pattern}`;
-        return `Neveljaven ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Neveljaven ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Neveljavno \u0161tevilo: mora biti ve\u010Dkratnik ${issue2.divisor}`;
+        return `Neveljavno \u0161tevilo: mora biti ve\u010Dkratnik ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Neprepoznan${issue2.keys.length > 1 ? "i klju\u010Di" : " klju\u010D"}: ${joinValues(issue2.keys, ", ")}`;
+        return `Neprepoznan${issue3.keys.length > 1 ? "i klju\u010Di" : " klju\u010D"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Neveljaven klju\u010D v ${issue2.origin}`;
+        return `Neveljaven klju\u010D v ${issue3.origin}`;
       case "invalid_union":
         return "Neveljaven vnos";
       case "invalid_element":
-        return `Neveljavna vrednost v ${issue2.origin}`;
+        return `Neveljavna vrednost v ${issue3.origin}`;
       default:
         return "Neveljaven vnos";
     }
@@ -18903,39 +18903,39 @@ var error49 = () => {
     number: "antal",
     array: "lista"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ogiltig inmatning: f\xF6rv\xE4ntat instanceof ${issue2.expected}, fick ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ogiltig inmatning: f\xF6rv\xE4ntat instanceof ${issue3.expected}, fick ${received}`;
         }
         return `Ogiltig inmatning: f\xF6rv\xE4ntat ${expected}, fick ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ogiltig inmatning: f\xF6rv\xE4ntat ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ogiltigt val: f\xF6rv\xE4ntade en av ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ogiltig inmatning: f\xF6rv\xE4ntat ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ogiltigt val: f\xF6rv\xE4ntade en av ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `F\xF6r stor(t): f\xF6rv\xE4ntade ${issue2.origin ?? "v\xE4rdet"} att ha ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "element"}`;
+          return `F\xF6r stor(t): f\xF6rv\xE4ntade ${issue3.origin ?? "v\xE4rdet"} att ha ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "element"}`;
         }
-        return `F\xF6r stor(t): f\xF6rv\xE4ntat ${issue2.origin ?? "v\xE4rdet"} att ha ${adj}${issue2.maximum.toString()}`;
+        return `F\xF6r stor(t): f\xF6rv\xE4ntat ${issue3.origin ?? "v\xE4rdet"} att ha ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `F\xF6r lite(t): f\xF6rv\xE4ntade ${issue2.origin ?? "v\xE4rdet"} att ha ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `F\xF6r lite(t): f\xF6rv\xE4ntade ${issue3.origin ?? "v\xE4rdet"} att ha ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `F\xF6r lite(t): f\xF6rv\xE4ntade ${issue2.origin ?? "v\xE4rdet"} att ha ${adj}${issue2.minimum.toString()}`;
+        return `F\xF6r lite(t): f\xF6rv\xE4ntade ${issue3.origin ?? "v\xE4rdet"} att ha ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `Ogiltig str\xE4ng: m\xE5ste b\xF6rja med "${_issue.prefix}"`;
         }
@@ -18945,18 +18945,18 @@ var error49 = () => {
           return `Ogiltig str\xE4ng: m\xE5ste inneh\xE5lla "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Ogiltig str\xE4ng: m\xE5ste matcha m\xF6nstret "${_issue.pattern}"`;
-        return `Ogiltig(t) ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ogiltig(t) ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ogiltigt tal: m\xE5ste vara en multipel av ${issue2.divisor}`;
+        return `Ogiltigt tal: m\xE5ste vara en multipel av ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `${issue2.keys.length > 1 ? "Ok\xE4nda nycklar" : "Ok\xE4nd nyckel"}: ${joinValues(issue2.keys, ", ")}`;
+        return `${issue3.keys.length > 1 ? "Ok\xE4nda nycklar" : "Ok\xE4nd nyckel"}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Ogiltig nyckel i ${issue2.origin ?? "v\xE4rdet"}`;
+        return `Ogiltig nyckel i ${issue3.origin ?? "v\xE4rdet"}`;
       case "invalid_union":
         return "Ogiltig input";
       case "invalid_element":
-        return `Ogiltigt v\xE4rde i ${issue2.origin ?? "v\xE4rdet"}`;
+        return `Ogiltigt v\xE4rde i ${issue3.origin ?? "v\xE4rdet"}`;
       default:
         return `Ogiltig input`;
     }
@@ -19020,39 +19020,39 @@ var error50 = () => {
     array: "\u0B85\u0BA3\u0BBF",
     null: "\u0BB5\u0BC6\u0BB1\u0BC1\u0BAE\u0BC8"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 instanceof ${issue2.expected}, \u0BAA\u0BC6\u0BB1\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 instanceof ${issue3.expected}, \u0BAA\u0BC6\u0BB1\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${received}`;
         }
         return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${expected}, \u0BAA\u0BC6\u0BB1\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BB5\u0BBF\u0BB0\u0BC1\u0BAA\u0BCD\u0BAA\u0BAE\u0BCD: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${joinValues(issue2.values, "|")} \u0B87\u0BB2\u0BCD \u0B92\u0BA9\u0BCD\u0BB1\u0BC1`;
+        if (issue3.values.length === 1)
+          return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BB5\u0BBF\u0BB0\u0BC1\u0BAA\u0BCD\u0BAA\u0BAE\u0BCD: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${joinValues(issue3.values, "|")} \u0B87\u0BB2\u0BCD \u0B92\u0BA9\u0BCD\u0BB1\u0BC1`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0BAE\u0BBF\u0B95 \u0BAA\u0BC6\u0BB0\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue2.origin ?? "\u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0B89\u0BB1\u0BC1\u0BAA\u0BCD\u0BAA\u0BC1\u0B95\u0BB3\u0BCD"} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
+          return `\u0BAE\u0BBF\u0B95 \u0BAA\u0BC6\u0BB0\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue3.origin ?? "\u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0B89\u0BB1\u0BC1\u0BAA\u0BCD\u0BAA\u0BC1\u0B95\u0BB3\u0BCD"} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
         }
-        return `\u0BAE\u0BBF\u0B95 \u0BAA\u0BC6\u0BB0\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue2.origin ?? "\u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1"} ${adj}${issue2.maximum.toString()} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
+        return `\u0BAE\u0BBF\u0B95 \u0BAA\u0BC6\u0BB0\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue3.origin ?? "\u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1"} ${adj}${issue3.maximum.toString()} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0BAE\u0BBF\u0B95\u0B9A\u0BCD \u0B9A\u0BBF\u0BB1\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
+          return `\u0BAE\u0BBF\u0B95\u0B9A\u0BCD \u0B9A\u0BBF\u0BB1\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
         }
-        return `\u0BAE\u0BBF\u0B95\u0B9A\u0BCD \u0B9A\u0BBF\u0BB1\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue2.origin} ${adj}${issue2.minimum.toString()} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
+        return `\u0BAE\u0BBF\u0B95\u0B9A\u0BCD \u0B9A\u0BBF\u0BB1\u0BBF\u0BAF\u0BA4\u0BC1: \u0B8E\u0BA4\u0BBF\u0BB0\u0BCD\u0BAA\u0BBE\u0BB0\u0BCD\u0B95\u0BCD\u0B95\u0BAA\u0BCD\u0BAA\u0B9F\u0BCD\u0B9F\u0BA4\u0BC1 ${issue3.origin} ${adj}${issue3.minimum.toString()} \u0B86\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B9A\u0BB0\u0BAE\u0BCD: "${_issue.prefix}" \u0B87\u0BB2\u0BCD \u0BA4\u0BCA\u0B9F\u0B99\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
         if (_issue.format === "ends_with")
@@ -19061,18 +19061,18 @@ var error50 = () => {
           return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B9A\u0BB0\u0BAE\u0BCD: "${_issue.includes}" \u0B90 \u0B89\u0BB3\u0BCD\u0BB3\u0B9F\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
         if (_issue.format === "regex")
           return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B9A\u0BB0\u0BAE\u0BCD: ${_issue.pattern} \u0BAE\u0BC1\u0BB1\u0BC8\u0BAA\u0BBE\u0B9F\u0BCD\u0B9F\u0BC1\u0B9F\u0BA9\u0BCD \u0BAA\u0BCA\u0BB0\u0BC1\u0BA8\u0BCD\u0BA4 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
-        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B8E\u0BA3\u0BCD: ${issue2.divisor} \u0B87\u0BA9\u0BCD \u0BAA\u0BB2\u0BAE\u0BBE\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
+        return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B8E\u0BA3\u0BCD: ${issue3.divisor} \u0B87\u0BA9\u0BCD \u0BAA\u0BB2\u0BAE\u0BBE\u0B95 \u0B87\u0BB0\u0BC1\u0B95\u0BCD\u0B95 \u0BB5\u0BC7\u0BA3\u0BCD\u0B9F\u0BC1\u0BAE\u0BCD`;
       case "unrecognized_keys":
-        return `\u0B85\u0B9F\u0BC8\u0BAF\u0BBE\u0BB3\u0BAE\u0BCD \u0BA4\u0BC6\u0BB0\u0BBF\u0BAF\u0BBE\u0BA4 \u0BB5\u0BBF\u0B9A\u0BC8${issue2.keys.length > 1 ? "\u0B95\u0BB3\u0BCD" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0B85\u0B9F\u0BC8\u0BAF\u0BBE\u0BB3\u0BAE\u0BCD \u0BA4\u0BC6\u0BB0\u0BBF\u0BAF\u0BBE\u0BA4 \u0BB5\u0BBF\u0B9A\u0BC8${issue3.keys.length > 1 ? "\u0B95\u0BB3\u0BCD" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} \u0B87\u0BB2\u0BCD \u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BB5\u0BBF\u0B9A\u0BC8`;
+        return `${issue3.origin} \u0B87\u0BB2\u0BCD \u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BB5\u0BBF\u0B9A\u0BC8`;
       case "invalid_union":
         return "\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1";
       case "invalid_element":
-        return `${issue2.origin} \u0B87\u0BB2\u0BCD \u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1`;
+        return `${issue3.origin} \u0B87\u0BB2\u0BCD \u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0BAE\u0BA4\u0BBF\u0BAA\u0BCD\u0BAA\u0BC1`;
       default:
         return `\u0BA4\u0BB5\u0BB1\u0BBE\u0BA9 \u0B89\u0BB3\u0BCD\u0BB3\u0BC0\u0B9F\u0BC1`;
     }
@@ -19138,34 +19138,34 @@ var error51 = () => {
     object: "\u043E\u0431\u044A\u0435\u043A\u0442",
     date: "\u0441\u0430\u043D\u0430"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `\u0412\u0443\u0440\u0443\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: ${expected} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442, ${received} \u0433\u0438\u0440\u0438\u0444\u0442\u0430 \u0448\u0443\u0434`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0412\u0443\u0440\u0443\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: ${stringifyPrimitive(issue2.values[0])} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442`;
-        return `\u0418\u043D\u0442\u0438\u0445\u043E\u0431\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u044F\u043A\u0435 \u0430\u0437 ${joinValues(issue2.values, "|")} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442`;
+        if (issue3.values.length === 1)
+          return `\u0412\u0443\u0440\u0443\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: ${stringifyPrimitive(issue3.values[0])} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442`;
+        return `\u0418\u043D\u0442\u0438\u0445\u043E\u0431\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u044F\u043A\u0435 \u0430\u0437 ${joinValues(issue3.values, "|")} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0425\u0435\u043B\u0435 \u043A\u0430\u043B\u043E\u043D: ${issue2.origin ?? "\u049B\u0438\u043C\u0430\u0442"} \u0431\u043E\u044F\u0434 ${adj}${issue2.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u0425\u0435\u043B\u0435 \u043A\u0430\u043B\u043E\u043D: ${issue2.origin ?? "\u049B\u0438\u043C\u0430\u0442"} \u0431\u043E\u044F\u0434 ${adj}${issue2.maximum.toString()} \u0431\u043E\u0448\u0430\u0434`;
+          return `\u0425\u0435\u043B\u0435 \u043A\u0430\u043B\u043E\u043D: ${issue3.origin ?? "\u049B\u0438\u043C\u0430\u0442"} \u0431\u043E\u044F\u0434 ${adj}${issue3.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u0425\u0435\u043B\u0435 \u043A\u0430\u043B\u043E\u043D: ${issue3.origin ?? "\u049B\u0438\u043C\u0430\u0442"} \u0431\u043E\u044F\u0434 ${adj}${issue3.maximum.toString()} \u0431\u043E\u0448\u0430\u0434`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0425\u0435\u043B\u0435 \u0445\u0443\u0440\u0434: ${issue2.origin} \u0431\u043E\u044F\u0434 ${adj}${issue2.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `\u0425\u0435\u043B\u0435 \u0445\u0443\u0440\u0434: ${issue2.origin} \u0431\u043E\u044F\u0434 ${adj}${issue2.minimum.toString()} \u0431\u043E\u0448\u0430\u0434`;
+          return `\u0425\u0435\u043B\u0435 \u0445\u0443\u0440\u0434: ${issue3.origin} \u0431\u043E\u044F\u0434 ${adj}${issue3.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `\u0425\u0435\u043B\u0435 \u0445\u0443\u0440\u0434: ${issue3.origin} \u0431\u043E\u044F\u0434 ${adj}${issue3.minimum.toString()} \u0431\u043E\u0448\u0430\u0434`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u0421\u0430\u0442\u0440\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u0431\u043E\u044F\u0434 \u0431\u043E "${_issue.prefix}" \u043E\u0493\u043E\u0437 \u0448\u0430\u0432\u0430\u0434`;
         if (_issue.format === "ends_with")
@@ -19174,22 +19174,22 @@ var error51 = () => {
           return `\u0421\u0430\u0442\u0440\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u0431\u043E\u044F\u0434 "${_issue.includes}"-\u0440\u043E \u0434\u0430\u0440 \u0431\u0430\u0440 \u0433\u0438\u0440\u0430\u0434`;
         if (_issue.format === "regex")
           return `\u0421\u0430\u0442\u0440\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u0431\u043E\u044F\u0434 \u0431\u0430 \u043D\u0430\u043C\u0443\u043D\u0430\u0438 ${_issue.pattern} \u043C\u0443\u0432\u043E\u0444\u0438\u049B\u0430\u0442 \u043A\u0443\u043D\u0430\u0434`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format}-\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format}-\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442`;
       }
       case "not_multiple_of":
-        return `\u0420\u0430\u049B\u0430\u043C\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u0431\u043E\u044F\u0434 \u0431\u0430 ${issue2.divisor} \u0431\u0435 \u0431\u0430\u049B\u0438\u044F \u0442\u0430\u049B\u0441\u0438\u043C \u0448\u0430\u0432\u0430\u0434`;
+        return `\u0420\u0430\u049B\u0430\u043C\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442: \u0431\u043E\u044F\u0434 \u0431\u0430 ${issue3.divisor} \u0431\u0435 \u0431\u0430\u049B\u0438\u044F \u0442\u0430\u049B\u0441\u0438\u043C \u0448\u0430\u0432\u0430\u0434`;
       case "unrecognized_keys":
-        return `\u041A\u0430\u043B\u0438\u0434${issue2.keys.length > 1 ? "\u04B3\u043E\u0438" : "\u0438"} \u043D\u043E\u043C\u0430\u044A\u043B\u0443\u043C: ${joinValues(issue2.keys, ", ")}`;
+        return `\u041A\u0430\u043B\u0438\u0434${issue3.keys.length > 1 ? "\u04B3\u043E\u0438" : "\u0438"} \u043D\u043E\u043C\u0430\u044A\u043B\u0443\u043C: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u041A\u0430\u043B\u0438\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442 \u0434\u0430\u0440 ${issue2.origin}`;
+        return `\u041A\u0430\u043B\u0438\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442 \u0434\u0430\u0440 ${issue3.origin}`;
       case "invalid_union":
-        if (issue2.options && Array.isArray(issue2.options) && issue2.options.length > 0) {
-          const opts = issue2.options.map((o) => `'${o}'`).join(" | ");
+        if (issue3.options && Array.isArray(issue3.options) && issue3.options.length > 0) {
+          const opts = issue3.options.map((o) => `'${o}'`).join(" | ");
           return `\u049A\u0438\u043C\u0430\u0442\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442\u0438 \u0434\u0438\u0441\u043A\u0440\u0438\u043C\u0438\u043D\u0430\u0442\u043E\u0440: ${opts} \u0438\u043D\u0442\u0438\u0437\u043E\u0440 \u043C\u0435\u0440\u0430\u0444\u0442`;
         }
         return "\u0412\u0443\u0440\u0443\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442";
       case "invalid_element":
-        return `\u049A\u0438\u043C\u0430\u0442\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442 \u0434\u0430\u0440 ${issue2.origin}`;
+        return `\u049A\u0438\u043C\u0430\u0442\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442 \u0434\u0430\u0440 ${issue3.origin}`;
       default:
         return `\u0412\u0443\u0440\u0443\u0434\u0438 \u043D\u043E\u0434\u0443\u0440\u0443\u0441\u0442`;
     }
@@ -19253,38 +19253,38 @@ var error52 = () => {
     array: "\u0E2D\u0E32\u0E23\u0E4C\u0E40\u0E23\u0E22\u0E4C (Array)",
     null: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32 (null)"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19 instanceof ${issue2.expected} \u0E41\u0E15\u0E48\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19 instanceof ${issue3.expected} \u0E41\u0E15\u0E48\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A ${received}`;
         }
         return `\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19 ${expected} \u0E41\u0E15\u0E48\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0E04\u0E48\u0E32\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19 ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u0E15\u0E31\u0E27\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E36\u0E48\u0E07\u0E43\u0E19 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0E04\u0E48\u0E32\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19 ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u0E15\u0E31\u0E27\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E04\u0E27\u0E23\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E36\u0E48\u0E07\u0E43\u0E19 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19" : "\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19" : "\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0E40\u0E01\u0E34\u0E19\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue2.origin ?? "\u0E04\u0E48\u0E32"} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "\u0E23\u0E32\u0E22\u0E01\u0E32\u0E23"}`;
-        return `\u0E40\u0E01\u0E34\u0E19\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue2.origin ?? "\u0E04\u0E48\u0E32"} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue2.maximum.toString()}`;
+          return `\u0E40\u0E01\u0E34\u0E19\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue3.origin ?? "\u0E04\u0E48\u0E32"} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "\u0E23\u0E32\u0E22\u0E01\u0E32\u0E23"}`;
+        return `\u0E40\u0E01\u0E34\u0E19\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue3.origin ?? "\u0E04\u0E48\u0E32"} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? "\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E49\u0E2D\u0E22" : "\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E49\u0E2D\u0E22" : "\u0E21\u0E32\u0E01\u0E01\u0E27\u0E48\u0E32";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue2.origin} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue3.origin} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue2.origin} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue2.minimum.toString()}`;
+        return `\u0E19\u0E49\u0E2D\u0E22\u0E01\u0E27\u0E48\u0E32\u0E01\u0E33\u0E2B\u0E19\u0E14: ${issue3.origin} \u0E04\u0E27\u0E23\u0E21\u0E35${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E02\u0E49\u0E2D\u0E04\u0E27\u0E32\u0E21\u0E15\u0E49\u0E2D\u0E07\u0E02\u0E36\u0E49\u0E19\u0E15\u0E49\u0E19\u0E14\u0E49\u0E27\u0E22 "${_issue.prefix}"`;
         }
@@ -19294,18 +19294,18 @@ var error52 = () => {
           return `\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E02\u0E49\u0E2D\u0E04\u0E27\u0E32\u0E21\u0E15\u0E49\u0E2D\u0E07\u0E21\u0E35 "${_issue.includes}" \u0E2D\u0E22\u0E39\u0E48\u0E43\u0E19\u0E02\u0E49\u0E2D\u0E04\u0E27\u0E32\u0E21`;
         if (_issue.format === "regex")
           return `\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E15\u0E49\u0E2D\u0E07\u0E15\u0E23\u0E07\u0E01\u0E31\u0E1A\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14 ${_issue.pattern}`;
-        return `\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1B\u0E47\u0E19\u0E08\u0E33\u0E19\u0E27\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E32\u0E23\u0E14\u0E49\u0E27\u0E22 ${issue2.divisor} \u0E44\u0E14\u0E49\u0E25\u0E07\u0E15\u0E31\u0E27`;
+        return `\u0E15\u0E31\u0E27\u0E40\u0E25\u0E02\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E15\u0E49\u0E2D\u0E07\u0E40\u0E1B\u0E47\u0E19\u0E08\u0E33\u0E19\u0E27\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E32\u0E23\u0E14\u0E49\u0E27\u0E22 ${issue3.divisor} \u0E44\u0E14\u0E49\u0E25\u0E07\u0E15\u0E31\u0E27`;
       case "unrecognized_keys":
-        return `\u0E1E\u0E1A\u0E04\u0E35\u0E22\u0E4C\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E23\u0E39\u0E49\u0E08\u0E31\u0E01: ${joinValues(issue2.keys, ", ")}`;
+        return `\u0E1E\u0E1A\u0E04\u0E35\u0E22\u0E4C\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E23\u0E39\u0E49\u0E08\u0E31\u0E01: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u0E04\u0E35\u0E22\u0E4C\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E43\u0E19 ${issue2.origin}`;
+        return `\u0E04\u0E35\u0E22\u0E4C\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E43\u0E19 ${issue3.origin}`;
       case "invalid_union":
         return "\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07: \u0E44\u0E21\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E1A\u0E23\u0E39\u0E1B\u0E41\u0E1A\u0E1A\u0E22\u0E39\u0E40\u0E19\u0E35\u0E22\u0E19\u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E44\u0E27\u0E49";
       case "invalid_element":
-        return `\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E43\u0E19 ${issue2.origin}`;
+        return `\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E43\u0E19 ${issue3.origin}`;
       default:
         return `\u0E02\u0E49\u0E2D\u0E21\u0E39\u0E25\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E15\u0E49\u0E2D\u0E07`;
     }
@@ -19366,34 +19366,34 @@ var error53 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
         return `N\xE4dogry baha: gara\u015Fylan ${expected} \xFDerine ${received} alyndy`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `N\xE4dogry baha: ${stringifyPrimitive(issue2.values[0])} bolmaly`;
-        return `N\xE4dogry sa\xFDlaw: a\u015Fakdakylardan biri bolmaly: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `N\xE4dogry baha: ${stringifyPrimitive(issue3.values[0])} bolmaly`;
+        return `N\xE4dogry sa\xFDlaw: a\u015Fakdakylardan biri bolmaly: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Has uly: gara\u015Fyl\xFDan ${issue2.origin ?? "baha"} ${adj} ${issue2.maximum.toString()} ${sizing.unit ?? "element"}`;
-        return `Has uly: gara\u015Fyl\xFDan ${issue2.origin ?? "baha"} ${adj} ${issue2.maximum.toString()}`;
+          return `Has uly: gara\u015Fyl\xFDan ${issue3.origin ?? "baha"} ${adj} ${issue3.maximum.toString()} ${sizing.unit ?? "element"}`;
+        return `Has uly: gara\u015Fyl\xFDan ${issue3.origin ?? "baha"} ${adj} ${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Has ki\xE7i: gara\u015Fyl\xFDan ${issue2.origin} ${adj} ${issue2.minimum.toString()} ${sizing.unit}`;
-        return `Has ki\xE7i: gara\u015Fyl\xFDan ${issue2.origin} ${adj} ${issue2.minimum.toString()}`;
+          return `Has ki\xE7i: gara\u015Fyl\xFDan ${issue3.origin} ${adj} ${issue3.minimum.toString()} ${sizing.unit}`;
+        return `Has ki\xE7i: gara\u015Fyl\xFDan ${issue3.origin} ${adj} ${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `N\xE4dogry setir: "${_issue.prefix}" bilen ba\u015Flamaly`;
         if (_issue.format === "ends_with")
@@ -19402,18 +19402,18 @@ var error53 = () => {
           return `N\xE4dogry setir: "${_issue.includes}" saklamaly`;
         if (_issue.format === "regex")
           return `N\xE4dogry setir: ${_issue.pattern} nusga la\xFDyk bolmaly`;
-        return `N\xE4dogry ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `N\xE4dogry ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `N\xE4dogry san: ${issue2.divisor} bilen galyndysyz b\xF6l\xFCnmeli`;
+        return `N\xE4dogry san: ${issue3.divisor} bilen galyndysyz b\xF6l\xFCnmeli`;
       case "unrecognized_keys":
-        return `Tanalma\xFDan a\xE7ar${issue2.keys.length > 1 ? "lar" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Tanalma\xFDan a\xE7ar${issue3.keys.length > 1 ? "lar" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} i\xE7inde n\xE4dogry a\xE7ar`;
+        return `${issue3.origin} i\xE7inde n\xE4dogry a\xE7ar`;
       case "invalid_union":
         return "N\xE4dogry baha";
       case "invalid_element":
-        return `${issue2.origin} i\xE7inde n\xE4dogry baha`;
+        return `${issue3.origin} i\xE7inde n\xE4dogry baha`;
       default:
         return `N\xE4dogry baha`;
     }
@@ -19474,37 +19474,37 @@ var error54 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Ge\xE7ersiz de\u011Fer: beklenen instanceof ${issue2.expected}, al\u0131nan ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Ge\xE7ersiz de\u011Fer: beklenen instanceof ${issue3.expected}, al\u0131nan ${received}`;
         }
         return `Ge\xE7ersiz de\u011Fer: beklenen ${expected}, al\u0131nan ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Ge\xE7ersiz de\u011Fer: beklenen ${stringifyPrimitive(issue2.values[0])}`;
-        return `Ge\xE7ersiz se\xE7enek: a\u015Fa\u011F\u0131dakilerden biri olmal\u0131: ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Ge\xE7ersiz de\u011Fer: beklenen ${stringifyPrimitive(issue3.values[0])}`;
+        return `Ge\xE7ersiz se\xE7enek: a\u015Fa\u011F\u0131dakilerden biri olmal\u0131: ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\xC7ok b\xFCy\xFCk: beklenen ${issue2.origin ?? "de\u011Fer"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\xF6\u011Fe"}`;
-        return `\xC7ok b\xFCy\xFCk: beklenen ${issue2.origin ?? "de\u011Fer"} ${adj}${issue2.maximum.toString()}`;
+          return `\xC7ok b\xFCy\xFCk: beklenen ${issue3.origin ?? "de\u011Fer"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\xF6\u011Fe"}`;
+        return `\xC7ok b\xFCy\xFCk: beklenen ${issue3.origin ?? "de\u011Fer"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\xC7ok k\xFC\xE7\xFCk: beklenen ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
-        return `\xC7ok k\xFC\xE7\xFCk: beklenen ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+          return `\xC7ok k\xFC\xE7\xFCk: beklenen ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
+        return `\xC7ok k\xFC\xE7\xFCk: beklenen ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Ge\xE7ersiz metin: "${_issue.prefix}" ile ba\u015Flamal\u0131`;
         if (_issue.format === "ends_with")
@@ -19513,18 +19513,18 @@ var error54 = () => {
           return `Ge\xE7ersiz metin: "${_issue.includes}" i\xE7ermeli`;
         if (_issue.format === "regex")
           return `Ge\xE7ersiz metin: ${_issue.pattern} desenine uymal\u0131`;
-        return `Ge\xE7ersiz ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Ge\xE7ersiz ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Ge\xE7ersiz say\u0131: ${issue2.divisor} ile tam b\xF6l\xFCnebilmeli`;
+        return `Ge\xE7ersiz say\u0131: ${issue3.divisor} ile tam b\xF6l\xFCnebilmeli`;
       case "unrecognized_keys":
-        return `Tan\u0131nmayan anahtar${issue2.keys.length > 1 ? "lar" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Tan\u0131nmayan anahtar${issue3.keys.length > 1 ? "lar" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} i\xE7inde ge\xE7ersiz anahtar`;
+        return `${issue3.origin} i\xE7inde ge\xE7ersiz anahtar`;
       case "invalid_union":
         return "Ge\xE7ersiz de\u011Fer";
       case "invalid_element":
-        return `${issue2.origin} i\xE7inde ge\xE7ersiz de\u011Fer`;
+        return `${issue3.origin} i\xE7inde ge\xE7ersiz de\u011Fer`;
       default:
         return `Ge\xE7ersiz de\u011Fer`;
     }
@@ -19587,38 +19587,38 @@ var error55 = () => {
     number: "\u0447\u0438\u0441\u043B\u043E",
     array: "\u043C\u0430\u0441\u0438\u0432"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F instanceof ${issue2.expected}, \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043E ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F instanceof ${issue3.expected}, \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043E ${received}`;
         }
         return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F ${expected}, \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043E ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0430 \u043E\u043F\u0446\u0456\u044F: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u043D\u0435 \u0437 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0430 \u043E\u043F\u0446\u0456\u044F: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F \u043E\u0434\u043D\u0435 \u0437 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u0432\u0435\u043B\u0438\u043A\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F"} ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0456\u0432"}`;
-        return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u0432\u0435\u043B\u0438\u043A\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue2.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F"} \u0431\u0443\u0434\u0435 ${adj}${issue2.maximum.toString()}`;
+          return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u0432\u0435\u043B\u0438\u043A\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F"} ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0435\u043B\u0435\u043C\u0435\u043D\u0442\u0456\u0432"}`;
+        return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u0432\u0435\u043B\u0438\u043A\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue3.origin ?? "\u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F"} \u0431\u0443\u0434\u0435 ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u043C\u0430\u043B\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u043C\u0430\u043B\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u043C\u0430\u043B\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue2.origin} \u0431\u0443\u0434\u0435 ${adj}${issue2.minimum.toString()}`;
+        return `\u0417\u0430\u043D\u0430\u0434\u0442\u043E \u043C\u0430\u043B\u0435: \u043E\u0447\u0456\u043A\u0443\u0454\u0442\u044C\u0441\u044F, \u0449\u043E ${issue3.origin} \u0431\u0443\u0434\u0435 ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 \u0440\u044F\u0434\u043E\u043A: \u043F\u043E\u0432\u0438\u043D\u0435\u043D \u043F\u043E\u0447\u0438\u043D\u0430\u0442\u0438\u0441\u044F \u0437 "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -19627,18 +19627,18 @@ var error55 = () => {
           return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 \u0440\u044F\u0434\u043E\u043A: \u043F\u043E\u0432\u0438\u043D\u0435\u043D \u043C\u0456\u0441\u0442\u0438\u0442\u0438 "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 \u0440\u044F\u0434\u043E\u043A: \u043F\u043E\u0432\u0438\u043D\u0435\u043D \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u0430\u0442\u0438 \u0448\u0430\u0431\u043B\u043E\u043D\u0443 ${_issue.pattern}`;
-        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0435 \u0447\u0438\u0441\u043B\u043E: \u043F\u043E\u0432\u0438\u043D\u043D\u043E \u0431\u0443\u0442\u0438 \u043A\u0440\u0430\u0442\u043D\u0438\u043C ${issue2.divisor}`;
+        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0435 \u0447\u0438\u0441\u043B\u043E: \u043F\u043E\u0432\u0438\u043D\u043D\u043E \u0431\u0443\u0442\u0438 \u043A\u0440\u0430\u0442\u043D\u0438\u043C ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `\u041D\u0435\u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u043D\u0438\u0439 \u043A\u043B\u044E\u0447${issue2.keys.length > 1 ? "\u0456" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `\u041D\u0435\u0440\u043E\u0437\u043F\u0456\u0437\u043D\u0430\u043D\u0438\u0439 \u043A\u043B\u044E\u0447${issue3.keys.length > 1 ? "\u0456" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 \u043A\u043B\u044E\u0447 \u0443 ${issue2.origin}`;
+        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0438\u0439 \u043A\u043B\u044E\u0447 \u0443 ${issue3.origin}`;
       case "invalid_union":
         return "\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456";
       case "invalid_element":
-        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F \u0443 ${issue2.origin}`;
+        return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u043D\u044F \u0443 ${issue3.origin}`;
       default:
         return `\u041D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u0456 \u0432\u0445\u0456\u0434\u043D\u0456 \u0434\u0430\u043D\u0456`;
     }
@@ -19707,38 +19707,38 @@ var error56 = () => {
     array: "\u0622\u0631\u06D2",
     null: "\u0646\u0644"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679: instanceof ${issue2.expected} \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627\u060C ${received} \u0645\u0648\u0635\u0648\u0644 \u06C1\u0648\u0627`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679: instanceof ${issue3.expected} \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627\u060C ${received} \u0645\u0648\u0635\u0648\u0644 \u06C1\u0648\u0627`;
         }
         return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679: ${expected} \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627\u060C ${received} \u0645\u0648\u0635\u0648\u0644 \u06C1\u0648\u0627`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679: ${stringifyPrimitive(issue2.values[0])} \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
-        return `\u063A\u0644\u0637 \u0622\u067E\u0634\u0646: ${joinValues(issue2.values, "|")} \u0645\u06CC\u06BA \u0633\u06D2 \u0627\u06CC\u06A9 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
+        if (issue3.values.length === 1)
+          return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679: ${stringifyPrimitive(issue3.values[0])} \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
+        return `\u063A\u0644\u0637 \u0622\u067E\u0634\u0646: ${joinValues(issue3.values, "|")} \u0645\u06CC\u06BA \u0633\u06D2 \u0627\u06CC\u06A9 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u0628\u06C1\u062A \u0628\u0691\u0627: ${issue2.origin ?? "\u0648\u06CC\u0644\u06CC\u0648"} \u06A9\u06D2 ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0627\u0635\u0631"} \u06C1\u0648\u0646\u06D2 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u06D2`;
-        return `\u0628\u06C1\u062A \u0628\u0691\u0627: ${issue2.origin ?? "\u0648\u06CC\u0644\u06CC\u0648"} \u06A9\u0627 ${adj}${issue2.maximum.toString()} \u06C1\u0648\u0646\u0627 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
+          return `\u0628\u06C1\u062A \u0628\u0691\u0627: ${issue3.origin ?? "\u0648\u06CC\u0644\u06CC\u0648"} \u06A9\u06D2 ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u0639\u0646\u0627\u0635\u0631"} \u06C1\u0648\u0646\u06D2 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u06D2`;
+        return `\u0628\u06C1\u062A \u0628\u0691\u0627: ${issue3.origin ?? "\u0648\u06CC\u0644\u06CC\u0648"} \u06A9\u0627 ${adj}${issue3.maximum.toString()} \u06C1\u0648\u0646\u0627 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u0628\u06C1\u062A \u0686\u06BE\u0648\u0679\u0627: ${issue2.origin} \u06A9\u06D2 ${adj}${issue2.minimum.toString()} ${sizing.unit} \u06C1\u0648\u0646\u06D2 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u06D2`;
+          return `\u0628\u06C1\u062A \u0686\u06BE\u0648\u0679\u0627: ${issue3.origin} \u06A9\u06D2 ${adj}${issue3.minimum.toString()} ${sizing.unit} \u06C1\u0648\u0646\u06D2 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u06D2`;
         }
-        return `\u0628\u06C1\u062A \u0686\u06BE\u0648\u0679\u0627: ${issue2.origin} \u06A9\u0627 ${adj}${issue2.minimum.toString()} \u06C1\u0648\u0646\u0627 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
+        return `\u0628\u06C1\u062A \u0686\u06BE\u0648\u0679\u0627: ${issue3.origin} \u06A9\u0627 ${adj}${issue3.minimum.toString()} \u06C1\u0648\u0646\u0627 \u0645\u062A\u0648\u0642\u0639 \u062A\u06BE\u0627`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u063A\u0644\u0637 \u0633\u0679\u0631\u0646\u06AF: "${_issue.prefix}" \u0633\u06D2 \u0634\u0631\u0648\u0639 \u06C1\u0648\u0646\u0627 \u0686\u0627\u06C1\u06CC\u06D2`;
         }
@@ -19748,18 +19748,18 @@ var error56 = () => {
           return `\u063A\u0644\u0637 \u0633\u0679\u0631\u0646\u06AF: "${_issue.includes}" \u0634\u0627\u0645\u0644 \u06C1\u0648\u0646\u0627 \u0686\u0627\u06C1\u06CC\u06D2`;
         if (_issue.format === "regex")
           return `\u063A\u0644\u0637 \u0633\u0679\u0631\u0646\u06AF: \u067E\u06CC\u0679\u0631\u0646 ${_issue.pattern} \u0633\u06D2 \u0645\u06CC\u0686 \u06C1\u0648\u0646\u0627 \u0686\u0627\u06C1\u06CC\u06D2`;
-        return `\u063A\u0644\u0637 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u063A\u0644\u0637 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u063A\u0644\u0637 \u0646\u0645\u0628\u0631: ${issue2.divisor} \u06A9\u0627 \u0645\u0636\u0627\u0639\u0641 \u06C1\u0648\u0646\u0627 \u0686\u0627\u06C1\u06CC\u06D2`;
+        return `\u063A\u0644\u0637 \u0646\u0645\u0628\u0631: ${issue3.divisor} \u06A9\u0627 \u0645\u0636\u0627\u0639\u0641 \u06C1\u0648\u0646\u0627 \u0686\u0627\u06C1\u06CC\u06D2`;
       case "unrecognized_keys":
-        return `\u063A\u06CC\u0631 \u062A\u0633\u0644\u06CC\u0645 \u0634\u062F\u06C1 \u06A9\u06CC${issue2.keys.length > 1 ? "\u0632" : ""}: ${joinValues(issue2.keys, "\u060C ")}`;
+        return `\u063A\u06CC\u0631 \u062A\u0633\u0644\u06CC\u0645 \u0634\u062F\u06C1 \u06A9\u06CC${issue3.keys.length > 1 ? "\u0632" : ""}: ${joinValues(issue3.keys, "\u060C ")}`;
       case "invalid_key":
-        return `${issue2.origin} \u0645\u06CC\u06BA \u063A\u0644\u0637 \u06A9\u06CC`;
+        return `${issue3.origin} \u0645\u06CC\u06BA \u063A\u0644\u0637 \u06A9\u06CC`;
       case "invalid_union":
         return "\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679";
       case "invalid_element":
-        return `${issue2.origin} \u0645\u06CC\u06BA \u063A\u0644\u0637 \u0648\u06CC\u0644\u06CC\u0648`;
+        return `${issue3.origin} \u0645\u06CC\u06BA \u063A\u0644\u0637 \u0648\u06CC\u0644\u06CC\u0648`;
       default:
         return `\u063A\u0644\u0637 \u0627\u0646 \u067E\u0679`;
     }
@@ -19822,38 +19822,38 @@ var error57 = () => {
     number: "raqam",
     array: "massiv"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `Noto\u2018g\u2018ri kirish: kutilgan instanceof ${issue2.expected}, qabul qilingan ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `Noto\u2018g\u2018ri kirish: kutilgan instanceof ${issue3.expected}, qabul qilingan ${received}`;
         }
         return `Noto\u2018g\u2018ri kirish: kutilgan ${expected}, qabul qilingan ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `Noto\u2018g\u2018ri kirish: kutilgan ${stringifyPrimitive(issue2.values[0])}`;
-        return `Noto\u2018g\u2018ri variant: quyidagilardan biri kutilgan ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `Noto\u2018g\u2018ri kirish: kutilgan ${stringifyPrimitive(issue3.values[0])}`;
+        return `Noto\u2018g\u2018ri variant: quyidagilardan biri kutilgan ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Juda katta: kutilgan ${issue2.origin ?? "qiymat"} ${adj}${issue2.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
-        return `Juda katta: kutilgan ${issue2.origin ?? "qiymat"} ${adj}${issue2.maximum.toString()}`;
+          return `Juda katta: kutilgan ${issue3.origin ?? "qiymat"} ${adj}${issue3.maximum.toString()} ${sizing.unit} ${sizing.verb}`;
+        return `Juda katta: kutilgan ${issue3.origin ?? "qiymat"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Juda kichik: kutilgan ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
+          return `Juda kichik: kutilgan ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit} ${sizing.verb}`;
         }
-        return `Juda kichik: kutilgan ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+        return `Juda kichik: kutilgan ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Noto\u2018g\u2018ri satr: "${_issue.prefix}" bilan boshlanishi kerak`;
         if (_issue.format === "ends_with")
@@ -19862,18 +19862,18 @@ var error57 = () => {
           return `Noto\u2018g\u2018ri satr: "${_issue.includes}" ni o\u2018z ichiga olishi kerak`;
         if (_issue.format === "regex")
           return `Noto\u2018g\u2018ri satr: ${_issue.pattern} shabloniga mos kelishi kerak`;
-        return `Noto\u2018g\u2018ri ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `Noto\u2018g\u2018ri ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `Noto\u2018g\u2018ri raqam: ${issue2.divisor} ning karralisi bo\u2018lishi kerak`;
+        return `Noto\u2018g\u2018ri raqam: ${issue3.divisor} ning karralisi bo\u2018lishi kerak`;
       case "unrecognized_keys":
-        return `Noma\u2019lum kalit${issue2.keys.length > 1 ? "lar" : ""}: ${joinValues(issue2.keys, ", ")}`;
+        return `Noma\u2019lum kalit${issue3.keys.length > 1 ? "lar" : ""}: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} dagi kalit noto\u2018g\u2018ri`;
+        return `${issue3.origin} dagi kalit noto\u2018g\u2018ri`;
       case "invalid_union":
         return "Noto\u2018g\u2018ri kirish";
       case "invalid_element":
-        return `${issue2.origin} da noto\u2018g\u2018ri qiymat`;
+        return `${issue3.origin} da noto\u2018g\u2018ri qiymat`;
       default:
         return `Noto\u2018g\u2018ri kirish`;
     }
@@ -19936,38 +19936,38 @@ var error58 = () => {
     number: "s\u1ED1",
     array: "m\u1EA3ng"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i instanceof ${issue2.expected}, nh\u1EADn \u0111\u01B0\u1EE3c ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i instanceof ${issue3.expected}, nh\u1EADn \u0111\u01B0\u1EE3c ${received}`;
         }
         return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i ${expected}, nh\u1EADn \u0111\u01B0\u1EE3c ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i ${stringifyPrimitive(issue2.values[0])}`;
-        return `T\xF9y ch\u1ECDn kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i m\u1ED9t trong c\xE1c gi\xE1 tr\u1ECB ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i ${stringifyPrimitive(issue3.values[0])}`;
+        return `T\xF9y ch\u1ECDn kh\xF4ng h\u1EE3p l\u1EC7: mong \u0111\u1EE3i m\u1ED9t trong c\xE1c gi\xE1 tr\u1ECB ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `Qu\xE1 l\u1EDBn: mong \u0111\u1EE3i ${issue2.origin ?? "gi\xE1 tr\u1ECB"} ${sizing.verb} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "ph\u1EA7n t\u1EED"}`;
-        return `Qu\xE1 l\u1EDBn: mong \u0111\u1EE3i ${issue2.origin ?? "gi\xE1 tr\u1ECB"} ${adj}${issue2.maximum.toString()}`;
+          return `Qu\xE1 l\u1EDBn: mong \u0111\u1EE3i ${issue3.origin ?? "gi\xE1 tr\u1ECB"} ${sizing.verb} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "ph\u1EA7n t\u1EED"}`;
+        return `Qu\xE1 l\u1EDBn: mong \u0111\u1EE3i ${issue3.origin ?? "gi\xE1 tr\u1ECB"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `Qu\xE1 nh\u1ECF: mong \u0111\u1EE3i ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `Qu\xE1 nh\u1ECF: mong \u0111\u1EE3i ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `Qu\xE1 nh\u1ECF: mong \u0111\u1EE3i ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+        return `Qu\xE1 nh\u1ECF: mong \u0111\u1EE3i ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `Chu\u1ED7i kh\xF4ng h\u1EE3p l\u1EC7: ph\u1EA3i b\u1EAFt \u0111\u1EA7u b\u1EB1ng "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -19976,18 +19976,18 @@ var error58 = () => {
           return `Chu\u1ED7i kh\xF4ng h\u1EE3p l\u1EC7: ph\u1EA3i bao g\u1ED3m "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `Chu\u1ED7i kh\xF4ng h\u1EE3p l\u1EC7: ph\u1EA3i kh\u1EDBp v\u1EDBi m\u1EABu ${_issue.pattern}`;
-        return `${FormatDictionary[_issue.format] ?? issue2.format} kh\xF4ng h\u1EE3p l\u1EC7`;
+        return `${FormatDictionary[_issue.format] ?? issue3.format} kh\xF4ng h\u1EE3p l\u1EC7`;
       }
       case "not_multiple_of":
-        return `S\u1ED1 kh\xF4ng h\u1EE3p l\u1EC7: ph\u1EA3i l\xE0 b\u1ED9i s\u1ED1 c\u1EE7a ${issue2.divisor}`;
+        return `S\u1ED1 kh\xF4ng h\u1EE3p l\u1EC7: ph\u1EA3i l\xE0 b\u1ED9i s\u1ED1 c\u1EE7a ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `Kh\xF3a kh\xF4ng \u0111\u01B0\u1EE3c nh\u1EADn d\u1EA1ng: ${joinValues(issue2.keys, ", ")}`;
+        return `Kh\xF3a kh\xF4ng \u0111\u01B0\u1EE3c nh\u1EADn d\u1EA1ng: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `Kh\xF3a kh\xF4ng h\u1EE3p l\u1EC7 trong ${issue2.origin}`;
+        return `Kh\xF3a kh\xF4ng h\u1EE3p l\u1EC7 trong ${issue3.origin}`;
       case "invalid_union":
         return "\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7";
       case "invalid_element":
-        return `Gi\xE1 tr\u1ECB kh\xF4ng h\u1EE3p l\u1EC7 trong ${issue2.origin}`;
+        return `Gi\xE1 tr\u1ECB kh\xF4ng h\u1EE3p l\u1EC7 trong ${issue3.origin}`;
       default:
         return `\u0110\u1EA7u v\xE0o kh\xF4ng h\u1EE3p l\u1EC7`;
     }
@@ -20051,38 +20051,38 @@ var error59 = () => {
     array: "\u6570\u7EC4",
     null: "\u7A7A\u503C(null)"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u65E0\u6548\u8F93\u5165\uFF1A\u671F\u671B instanceof ${issue2.expected}\uFF0C\u5B9E\u9645\u63A5\u6536 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u65E0\u6548\u8F93\u5165\uFF1A\u671F\u671B instanceof ${issue3.expected}\uFF0C\u5B9E\u9645\u63A5\u6536 ${received}`;
         }
         return `\u65E0\u6548\u8F93\u5165\uFF1A\u671F\u671B ${expected}\uFF0C\u5B9E\u9645\u63A5\u6536 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u65E0\u6548\u8F93\u5165\uFF1A\u671F\u671B ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u65E0\u6548\u9009\u9879\uFF1A\u671F\u671B\u4EE5\u4E0B\u4E4B\u4E00 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u65E0\u6548\u8F93\u5165\uFF1A\u671F\u671B ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u65E0\u6548\u9009\u9879\uFF1A\u671F\u671B\u4EE5\u4E0B\u4E4B\u4E00 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u6570\u503C\u8FC7\u5927\uFF1A\u671F\u671B ${issue2.origin ?? "\u503C"} ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u4E2A\u5143\u7D20"}`;
-        return `\u6570\u503C\u8FC7\u5927\uFF1A\u671F\u671B ${issue2.origin ?? "\u503C"} ${adj}${issue2.maximum.toString()}`;
+          return `\u6570\u503C\u8FC7\u5927\uFF1A\u671F\u671B ${issue3.origin ?? "\u503C"} ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u4E2A\u5143\u7D20"}`;
+        return `\u6570\u503C\u8FC7\u5927\uFF1A\u671F\u671B ${issue3.origin ?? "\u503C"} ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u6570\u503C\u8FC7\u5C0F\uFF1A\u671F\u671B ${issue2.origin} ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u6570\u503C\u8FC7\u5C0F\uFF1A\u671F\u671B ${issue3.origin} ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u6570\u503C\u8FC7\u5C0F\uFF1A\u671F\u671B ${issue2.origin} ${adj}${issue2.minimum.toString()}`;
+        return `\u6570\u503C\u8FC7\u5C0F\uFF1A\u671F\u671B ${issue3.origin} ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u65E0\u6548\u5B57\u7B26\u4E32\uFF1A\u5FC5\u987B\u4EE5 "${_issue.prefix}" \u5F00\u5934`;
         if (_issue.format === "ends_with")
@@ -20091,18 +20091,18 @@ var error59 = () => {
           return `\u65E0\u6548\u5B57\u7B26\u4E32\uFF1A\u5FC5\u987B\u5305\u542B "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u65E0\u6548\u5B57\u7B26\u4E32\uFF1A\u5FC5\u987B\u6EE1\u8DB3\u6B63\u5219\u8868\u8FBE\u5F0F ${_issue.pattern}`;
-        return `\u65E0\u6548${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u65E0\u6548${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u65E0\u6548\u6570\u5B57\uFF1A\u5FC5\u987B\u662F ${issue2.divisor} \u7684\u500D\u6570`;
+        return `\u65E0\u6548\u6570\u5B57\uFF1A\u5FC5\u987B\u662F ${issue3.divisor} \u7684\u500D\u6570`;
       case "unrecognized_keys":
-        return `\u51FA\u73B0\u672A\u77E5\u7684\u952E(key): ${joinValues(issue2.keys, ", ")}`;
+        return `\u51FA\u73B0\u672A\u77E5\u7684\u952E(key): ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `${issue2.origin} \u4E2D\u7684\u952E(key)\u65E0\u6548`;
+        return `${issue3.origin} \u4E2D\u7684\u952E(key)\u65E0\u6548`;
       case "invalid_union":
         return "\u65E0\u6548\u8F93\u5165";
       case "invalid_element":
-        return `${issue2.origin} \u4E2D\u5305\u542B\u65E0\u6548\u503C(value)`;
+        return `${issue3.origin} \u4E2D\u5305\u542B\u65E0\u6548\u503C(value)`;
       default:
         return `\u65E0\u6548\u8F93\u5165`;
     }
@@ -20163,38 +20163,38 @@ var error60 = () => {
   const TypeDictionary = {
     nan: "NaN"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\u7121\u6548\u7684\u8F38\u5165\u503C\uFF1A\u9810\u671F\u70BA instanceof ${issue2.expected}\uFF0C\u4F46\u6536\u5230 ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\u7121\u6548\u7684\u8F38\u5165\u503C\uFF1A\u9810\u671F\u70BA instanceof ${issue3.expected}\uFF0C\u4F46\u6536\u5230 ${received}`;
         }
         return `\u7121\u6548\u7684\u8F38\u5165\u503C\uFF1A\u9810\u671F\u70BA ${expected}\uFF0C\u4F46\u6536\u5230 ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\u7121\u6548\u7684\u8F38\u5165\u503C\uFF1A\u9810\u671F\u70BA ${stringifyPrimitive(issue2.values[0])}`;
-        return `\u7121\u6548\u7684\u9078\u9805\uFF1A\u9810\u671F\u70BA\u4EE5\u4E0B\u5176\u4E2D\u4E4B\u4E00 ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\u7121\u6548\u7684\u8F38\u5165\u503C\uFF1A\u9810\u671F\u70BA ${stringifyPrimitive(issue3.values[0])}`;
+        return `\u7121\u6548\u7684\u9078\u9805\uFF1A\u9810\u671F\u70BA\u4EE5\u4E0B\u5176\u4E2D\u4E4B\u4E00 ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `\u6578\u503C\u904E\u5927\uFF1A\u9810\u671F ${issue2.origin ?? "\u503C"} \u61C9\u70BA ${adj}${issue2.maximum.toString()} ${sizing.unit ?? "\u500B\u5143\u7D20"}`;
-        return `\u6578\u503C\u904E\u5927\uFF1A\u9810\u671F ${issue2.origin ?? "\u503C"} \u61C9\u70BA ${adj}${issue2.maximum.toString()}`;
+          return `\u6578\u503C\u904E\u5927\uFF1A\u9810\u671F ${issue3.origin ?? "\u503C"} \u61C9\u70BA ${adj}${issue3.maximum.toString()} ${sizing.unit ?? "\u500B\u5143\u7D20"}`;
+        return `\u6578\u503C\u904E\u5927\uFF1A\u9810\u671F ${issue3.origin ?? "\u503C"} \u61C9\u70BA ${adj}${issue3.maximum.toString()}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing) {
-          return `\u6578\u503C\u904E\u5C0F\uFF1A\u9810\u671F ${issue2.origin} \u61C9\u70BA ${adj}${issue2.minimum.toString()} ${sizing.unit}`;
+          return `\u6578\u503C\u904E\u5C0F\uFF1A\u9810\u671F ${issue3.origin} \u61C9\u70BA ${adj}${issue3.minimum.toString()} ${sizing.unit}`;
         }
-        return `\u6578\u503C\u904E\u5C0F\uFF1A\u9810\u671F ${issue2.origin} \u61C9\u70BA ${adj}${issue2.minimum.toString()}`;
+        return `\u6578\u503C\u904E\u5C0F\uFF1A\u9810\u671F ${issue3.origin} \u61C9\u70BA ${adj}${issue3.minimum.toString()}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with") {
           return `\u7121\u6548\u7684\u5B57\u4E32\uFF1A\u5FC5\u9808\u4EE5 "${_issue.prefix}" \u958B\u982D`;
         }
@@ -20204,18 +20204,18 @@ var error60 = () => {
           return `\u7121\u6548\u7684\u5B57\u4E32\uFF1A\u5FC5\u9808\u5305\u542B "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u7121\u6548\u7684\u5B57\u4E32\uFF1A\u5FC5\u9808\u7B26\u5408\u683C\u5F0F ${_issue.pattern}`;
-        return `\u7121\u6548\u7684 ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `\u7121\u6548\u7684 ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `\u7121\u6548\u7684\u6578\u5B57\uFF1A\u5FC5\u9808\u70BA ${issue2.divisor} \u7684\u500D\u6578`;
+        return `\u7121\u6548\u7684\u6578\u5B57\uFF1A\u5FC5\u9808\u70BA ${issue3.divisor} \u7684\u500D\u6578`;
       case "unrecognized_keys":
-        return `\u7121\u6CD5\u8B58\u5225\u7684\u9375\u503C${issue2.keys.length > 1 ? "\u5011" : ""}\uFF1A${joinValues(issue2.keys, "\u3001")}`;
+        return `\u7121\u6CD5\u8B58\u5225\u7684\u9375\u503C${issue3.keys.length > 1 ? "\u5011" : ""}\uFF1A${joinValues(issue3.keys, "\u3001")}`;
       case "invalid_key":
-        return `${issue2.origin} \u4E2D\u6709\u7121\u6548\u7684\u9375\u503C`;
+        return `${issue3.origin} \u4E2D\u6709\u7121\u6548\u7684\u9375\u503C`;
       case "invalid_union":
         return "\u7121\u6548\u7684\u8F38\u5165\u503C";
       case "invalid_element":
-        return `${issue2.origin} \u4E2D\u6709\u7121\u6548\u7684\u503C`;
+        return `${issue3.origin} \u4E2D\u6709\u7121\u6548\u7684\u503C`;
       default:
         return `\u7121\u6548\u7684\u8F38\u5165\u503C`;
     }
@@ -20278,37 +20278,37 @@ var error61 = () => {
     number: "n\u1ECD\u0301mb\xE0",
     array: "akop\u1ECD"
   };
-  return (issue2) => {
-    switch (issue2.code) {
+  return (issue3) => {
+    switch (issue3.code) {
       case "invalid_type": {
-        const expected = TypeDictionary[issue2.expected] ?? issue2.expected;
-        const receivedType = parsedType(issue2.input);
+        const expected = TypeDictionary[issue3.expected] ?? issue3.expected;
+        const receivedType = parsedType(issue3.input);
         const received = TypeDictionary[receivedType] ?? receivedType;
-        if (/^[A-Z]/.test(issue2.expected)) {
-          return `\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e: a n\xED l\xE1ti fi instanceof ${issue2.expected}, \xE0m\u1ECD\u0300 a r\xED ${received}`;
+        if (/^[A-Z]/.test(issue3.expected)) {
+          return `\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e: a n\xED l\xE1ti fi instanceof ${issue3.expected}, \xE0m\u1ECD\u0300 a r\xED ${received}`;
         }
         return `\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e: a n\xED l\xE1ti fi ${expected}, \xE0m\u1ECD\u0300 a r\xED ${received}`;
       }
       case "invalid_value":
-        if (issue2.values.length === 1)
-          return `\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e: a n\xED l\xE1ti fi ${stringifyPrimitive(issue2.values[0])}`;
-        return `\xC0\u1E63\xE0y\xE0n a\u1E63\xEC\u1E63e: yan \u1ECD\u0300kan l\xE1ra ${joinValues(issue2.values, "|")}`;
+        if (issue3.values.length === 1)
+          return `\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e: a n\xED l\xE1ti fi ${stringifyPrimitive(issue3.values[0])}`;
+        return `\xC0\u1E63\xE0y\xE0n a\u1E63\xEC\u1E63e: yan \u1ECD\u0300kan l\xE1ra ${joinValues(issue3.values, "|")}`;
       case "too_big": {
-        const adj = issue2.inclusive ? "<=" : "<";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? "<=" : "<";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `T\xF3 p\u1ECD\u0300 j\xF9: a n\xED l\xE1ti j\u1EB9\u0301 p\xE9 ${issue2.origin ?? "iye"} ${sizing.verb} ${adj}${issue2.maximum} ${sizing.unit}`;
-        return `T\xF3 p\u1ECD\u0300 j\xF9: a n\xED l\xE1ti j\u1EB9\u0301 ${adj}${issue2.maximum}`;
+          return `T\xF3 p\u1ECD\u0300 j\xF9: a n\xED l\xE1ti j\u1EB9\u0301 p\xE9 ${issue3.origin ?? "iye"} ${sizing.verb} ${adj}${issue3.maximum} ${sizing.unit}`;
+        return `T\xF3 p\u1ECD\u0300 j\xF9: a n\xED l\xE1ti j\u1EB9\u0301 ${adj}${issue3.maximum}`;
       }
       case "too_small": {
-        const adj = issue2.inclusive ? ">=" : ">";
-        const sizing = getSizing(issue2.origin);
+        const adj = issue3.inclusive ? ">=" : ">";
+        const sizing = getSizing(issue3.origin);
         if (sizing)
-          return `K\xE9r\xE9 ju: a n\xED l\xE1ti j\u1EB9\u0301 p\xE9 ${issue2.origin} ${sizing.verb} ${adj}${issue2.minimum} ${sizing.unit}`;
-        return `K\xE9r\xE9 ju: a n\xED l\xE1ti j\u1EB9\u0301 ${adj}${issue2.minimum}`;
+          return `K\xE9r\xE9 ju: a n\xED l\xE1ti j\u1EB9\u0301 p\xE9 ${issue3.origin} ${sizing.verb} ${adj}${issue3.minimum} ${sizing.unit}`;
+        return `K\xE9r\xE9 ju: a n\xED l\xE1ti j\u1EB9\u0301 ${adj}${issue3.minimum}`;
       }
       case "invalid_format": {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.format === "starts_with")
           return `\u1ECC\u0300r\u1ECD\u0300 a\u1E63\xEC\u1E63e: gb\u1ECD\u0301d\u1ECD\u0300 b\u1EB9\u0300r\u1EB9\u0300 p\u1EB9\u0300l\xFA "${_issue.prefix}"`;
         if (_issue.format === "ends_with")
@@ -20317,18 +20317,18 @@ var error61 = () => {
           return `\u1ECC\u0300r\u1ECD\u0300 a\u1E63\xEC\u1E63e: gb\u1ECD\u0301d\u1ECD\u0300 n\xED "${_issue.includes}"`;
         if (_issue.format === "regex")
           return `\u1ECC\u0300r\u1ECD\u0300 a\u1E63\xEC\u1E63e: gb\u1ECD\u0301d\u1ECD\u0300 b\xE1 \xE0p\u1EB9\u1EB9r\u1EB9 mu ${_issue.pattern}`;
-        return `A\u1E63\xEC\u1E63e: ${FormatDictionary[_issue.format] ?? issue2.format}`;
+        return `A\u1E63\xEC\u1E63e: ${FormatDictionary[_issue.format] ?? issue3.format}`;
       }
       case "not_multiple_of":
-        return `N\u1ECD\u0301mb\xE0 a\u1E63\xEC\u1E63e: gb\u1ECD\u0301d\u1ECD\u0300 j\u1EB9\u0301 \xE8y\xE0 p\xEDp\xEDn ti ${issue2.divisor}`;
+        return `N\u1ECD\u0301mb\xE0 a\u1E63\xEC\u1E63e: gb\u1ECD\u0301d\u1ECD\u0300 j\u1EB9\u0301 \xE8y\xE0 p\xEDp\xEDn ti ${issue3.divisor}`;
       case "unrecognized_keys":
-        return `B\u1ECDt\xECn\xEC \xE0\xECm\u1ECD\u0300: ${joinValues(issue2.keys, ", ")}`;
+        return `B\u1ECDt\xECn\xEC \xE0\xECm\u1ECD\u0300: ${joinValues(issue3.keys, ", ")}`;
       case "invalid_key":
-        return `B\u1ECDt\xECn\xEC a\u1E63\xEC\u1E63e n\xEDn\xFA ${issue2.origin}`;
+        return `B\u1ECDt\xECn\xEC a\u1E63\xEC\u1E63e n\xEDn\xFA ${issue3.origin}`;
       case "invalid_union":
         return "\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e";
       case "invalid_element":
-        return `Iye a\u1E63\xEC\u1E63e n\xEDn\xFA ${issue2.origin}`;
+        return `Iye a\u1E63\xEC\u1E63e n\xEDn\xFA ${issue3.origin}`;
       default:
         return "\xCCb\xE1w\u1ECDl\xE9 a\u1E63\xEC\u1E63e";
     }
@@ -20456,9 +20456,9 @@ function withParser(schema, parser) {
     installCompiledUserMethods(clone2, schema, parser);
   return clone2;
 }
-function installCompiledUserMethods(target, source2, parser) {
+function installCompiledUserMethods(target, source3, parser) {
   const targetAny = target;
-  const sourceAny = source2;
+  const sourceAny = source3;
   if (typeof sourceAny.safeParse === "function") {
     const originalSafeParse = sourceAny.safeParse;
     targetAny.safeParse = (data, params) => {
@@ -20788,8 +20788,8 @@ function generateOverwriteCheck(doc, ctx, check2, currentAccessor, newAccessor) 
 function throwAsync() {
   throw new $ZodAsyncError();
 }
-function pushIssue(issue2) {
-  this.issues.push(issue2);
+function pushIssue(issue3) {
+  this.issues.push(issue3);
 }
 function generateCustomRefineCheck(doc, ctx, check2, accessor) {
   const def = check2._zod.def;
@@ -22934,11 +22934,11 @@ function _refine(Class2, fn, _params) {
 // @__NO_SIDE_EFFECTS__
 function _superRefine(fn, params) {
   const ch = /* @__PURE__ */ _check((payload) => {
-    payload.addIssue = (issue2) => {
-      if (typeof issue2 === "string") {
-        payload.issues.push(issue(issue2, payload.value, ch._zod.def));
+    payload.addIssue = (issue3) => {
+      if (typeof issue3 === "string") {
+        payload.issues.push(issue(issue3, payload.value, ch._zod.def));
       } else {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.fatal)
           _issue.continue = false;
         _issue.code ?? (_issue.code = "custom");
@@ -23061,10 +23061,10 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 function assignProps(target, ...sources) {
-  for (const source2 of sources) {
-    for (const key of Reflect.ownKeys(source2)) {
-      if (Object.prototype.propertyIsEnumerable.call(source2, key)) {
-        assignProp(target, key, source2[key]);
+  for (const source3 of sources) {
+    for (const key of Reflect.ownKeys(source3)) {
+      if (Object.prototype.propertyIsEnumerable.call(source3, key)) {
+        assignProp(target, key, source3[key]);
       }
     }
   }
@@ -23171,26 +23171,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id4 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id4) {
-      const existing = idToSchema.get(id4);
+    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id6) {
+      const existing = idToSchema.get(id6);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id4}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id6}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id4, entry[0]);
+      idToSchema.set(id6, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id5) => id5);
+      const uriGenerator = ctx.external.uri ?? ((id7) => id7);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id4 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id4;
-      return { defId: id4, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id4)}` };
+      const id6 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id6;
+      return { defId: id6, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id6)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -23238,8 +23238,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id4 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id4) {
+    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id6) {
       extractToDef(entry);
       continue;
     }
@@ -23472,10 +23472,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id4 = ctx.external.registry.get(schema)?.id;
-    if (!id4)
+    const id6 = ctx.external.registry.get(schema)?.id;
+    if (!id6)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id4);
+    result.$id = ctx.external.uri(id6);
   }
   assignProps(result, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -24010,8 +24010,8 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   let minItems = def.items.length;
   while (minItems > 0) {
     const item = def.items[minItems - 1];
-    const optional2 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
-    if (!optional2)
+    const optional4 = ctx.io === "input" ? inputOptin(item) !== void 0 : item._zod.optout === "optional";
+    if (!optional4)
       break;
     minItems--;
   }
@@ -24081,7 +24081,7 @@ function stringifyKeyNames(bySchema, json2, visited) {
   const values = json2.enum ?? (json2.const !== void 0 ? [json2.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json2;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id4, ...rest } = json2;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id6, ...rest } = json2;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -24101,8 +24101,8 @@ function rewriteKeyNames(ctx) {
       bySchema.set(entry.schema, entry);
   }
   const rewrites = /* @__PURE__ */ new Map();
-  for (const record3 of pendingRecords.get(ctx) ?? []) {
-    const seen = ctx.seen.get(record3);
+  for (const record4 of pendingRecords.get(ctx) ?? []) {
+    const seen = ctx.seen.get(record4);
     const names = (seen?.def ?? seen?.schema)?.propertyNames;
     if (!names || names === true || rewrites.has(names))
       continue;
@@ -24659,8 +24659,8 @@ var initializer2 = (inst, issues) => {
   _installedErrorProtos.add(proto);
   _lazyMethod(proto, "format", (self) => (mapper) => formatError(self, mapper));
   _lazyMethod(proto, "flatten", (self) => (mapper) => flattenError(self, mapper));
-  _lazyMethod(proto, "addIssue", (self) => (issue2) => {
-    self.issues.push(issue2);
+  _lazyMethod(proto, "addIssue", (self) => (issue3) => {
+    self.issues.push(issue3);
     self.message = JSON.stringify(self.issues, jsonStringifyReplacer, 2);
   });
   _lazyMethod(proto, "addIssues", (self) => (issues2) => {
@@ -25837,11 +25837,11 @@ var ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def) => {
     if (_ctx.direction === "backward") {
       throw new $ZodEncodeError(inst.constructor.name);
     }
-    payload.addIssue = (issue2) => {
-      if (typeof issue2 === "string") {
-        payload.issues.push(util_exports.issue(issue2, payload.value, def));
+    payload.addIssue = (issue3) => {
+      if (typeof issue3 === "string") {
+        payload.issues.push(util_exports.issue(issue3, payload.value, def));
       } else {
-        const _issue = issue2;
+        const _issue = issue3;
         if (_issue.fatal)
           _issue.continue = false;
         _issue.code ?? (_issue.code = "custom");
@@ -27558,7 +27558,7 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
     value.cases_unverified,
     value.cases_not_run
   ];
-  return counts.every((count2) => count2 !== null) && counts.reduce((sum, count2) => sum + (count2 ?? 0), 0) === value.cases_total;
+  return counts.every((count7) => count7 !== null) && counts.reduce((sum, count7) => sum + (count7 ?? 0), 0) === value.cases_total;
 });
 var assessmentFinishedPropertiesSchema = external_exports.discriminatedUnion("outcome", [
   external_exports.strictObject({
@@ -29132,6 +29132,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -31640,7 +31641,7 @@ function createFeedbackSurface({
         }
         store = await opened;
         if (stopped || signal?.aborted) return reply(closed());
-        const { operation = "send", draftId, revision } = input3;
+        const { operation = "send", draftId, revision: revision2 } = input3;
         let draft;
         if (operation === "open")
           draft = store.create(
@@ -31656,11 +31657,11 @@ function createFeedbackSurface({
           draft = store.discardEdit(draftId, actor);
         else if (operation === "update")
           draft = store.update(
-            { draftId, revision, changes: input3.changes },
+            { draftId, revision: revision2, changes: input3.changes },
             actor
           );
         else {
-          draft = await store.send(draftId, revision, actor, {
+          draft = await store.send(draftId, revision2, actor, {
             submit(expected, feedback) {
               return forwardCore(
                 {
@@ -31967,7 +31968,7 @@ function createConfigurationSurface({ session, library, data }) {
             error: {
               code: "configuration_choice_required",
               message: "Several configurations match this application. Ask which one to use before running.",
-              configurations: matches.map(({ id: id4, name: name2 }) => ({ id: id4, name: name2 })),
+              configurations: matches.map(({ id: id6, name: name2 }) => ({ id: id6, name: name2 })),
               requestDispatched: false
             }
           };
@@ -32023,7 +32024,7 @@ function createConfigurationSurface({ session, library, data }) {
             ...params
           };
           if (Object.keys(secrets).length) {
-            const binding = await library.provisionRunnerParameters(
+            const binding2 = await library.provisionRunnerParameters(
               scope.data,
               scope.scope.id,
               { allowedHosts: chosen.allowedHosts, values: secrets }
@@ -32031,9 +32032,9 @@ function createConfigurationSurface({ session, library, data }) {
             args.privateParams = {
               ...args.privateParams,
               ...Object.fromEntries(
-                binding.fields.map((field) => [
+                binding2.fields.map((field) => [
                   field,
-                  { bindingId: binding.bindingId, field }
+                  { bindingId: binding2.bindingId, field }
                 ])
               )
             };
@@ -32120,7 +32121,7 @@ function issueUserAuthorization({
   broker,
   library,
   signal,
-  request = fetch,
+  request: request2 = fetch,
   execute = executeFile
 }) {
   async function ownerStillConnected(owner) {
@@ -32137,7 +32138,7 @@ function issueUserAuthorization({
   }
   async function metadata2(path, token) {
     signal?.throwIfAborted();
-    const response2 = await request("https://api.github.com" + path, {
+    const response2 = await request2("https://api.github.com" + path, {
       method: "GET",
       redirect: "error",
       credentials: "omit",
@@ -32178,12 +32179,12 @@ function issueUserAuthorization({
       (_key, value, context) => typeof value === "number" && !Number.isSafeInteger(value) && context?.source && /^[1-9][0-9]{0,19}$/.test(context.source) ? context.source : value
     );
   }
-  async function inspect(token, source2, expectedId) {
+  async function inspect(token, source3, expectedId) {
     if (typeof token !== "string" || !token || token.length > 8192 || /[\r\n]/.test(token))
       throw denied();
     const account = user.parse(await metadata2("/user", token));
     if (expectedId && account.id !== expectedId) throw denied();
-    const repository = external_exports.object({
+    const repository2 = external_exports.object({
       id: id3,
       full_name: external_exports.literal(kaijanIssueRepository),
       private: external_exports.literal(false),
@@ -32191,10 +32192,10 @@ function issueUserAuthorization({
     }).parse(await metadata2("/repos/" + kaijanIssueRepository, token));
     return {
       token,
-      repositoryId: repository.id,
+      repositoryId: repository2.id,
       expiresAt: null,
-      canUpload: repository.permissions.push,
-      publisher: { githubUserId: account.id, login: account.login, source: source2 }
+      canUpload: repository2.permissions.push,
+      publisher: { githubUserId: account.id, login: account.login, source: source3 }
     };
   }
   async function managed(owner, imagesRequired) {
@@ -32221,7 +32222,7 @@ function issueUserAuthorization({
     if (imagesRequired && !current.canUpload)
       return { credential: null, githubUserId: grant2.githubUserId };
     let permitted = false;
-    for (let page = 1; page <= 10; page++) {
+    for (let page2 = 1; page2 <= 10; page2++) {
       const result = external_exports.object({
         installations: external_exports.array(
           external_exports.object({
@@ -32233,7 +32234,7 @@ function issueUserAuthorization({
         )
       }).parse(
         await metadata2(
-          `/user/installations?per_page=100&page=${page}`,
+          `/user/installations?per_page=100&page=${page2}`,
           grant2.accessToken
         )
       );
@@ -32316,7 +32317,7 @@ function issueUserAuthorization({
       return library.directIssueAuthorization(
         publisher,
         () => selected(owner, publisher, imagesRequired),
-        { request, signal }
+        { request: request2, signal }
       );
     }
   };
@@ -32361,15 +32362,28 @@ function scopedIssueTransport({
   build,
   signal,
   journal,
-  request,
-  execute
+  request: request2,
+  execute,
+  publicationRoute
 }) {
   const legacy = issueTransport({ library, broker, build, signal });
+  if (publicationRoute === "github-app")
+    return {
+      requiresPublisher: false,
+      async submit(owner, input3, images, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.submit(owner, input3, images);
+      },
+      async read(owner, requestId, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.read(owner, requestId);
+      }
+    };
   const authorization = issueUserAuthorization({
     library,
     broker,
     signal,
-    request,
+    request: request2,
     execute
   });
   return {
@@ -32393,6 +32407,3078 @@ function scopedIssueTransport({
   };
 }
 
+// apps/codex-plugin/src/issue-screenshot.mjs
+import assert2 from "node:assert/strict";
+import { createHash as createHash3 } from "node:crypto";
+
+// packages/contracts/dist/report-evidence.js
+var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
+var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
+var reportedTestStatusSchema = external_exports.enum([
+  "pass",
+  "fail",
+  "blocked",
+  "skipped",
+  "not-run"
+]);
+var observedStepSchema = external_exports.strictObject({
+  id: nonempty,
+  title: nonempty,
+  status: reportedTestStatusSchema,
+  expected: nonempty,
+  actual: nonempty,
+  evidenceIds: external_exports.array(nonempty).min(1)
+});
+var reportedTestSchema = external_exports.strictObject({
+  testId: nonempty,
+  title: nonempty,
+  status: reportedTestStatusSchema,
+  expected: nonempty,
+  actual: nonempty,
+  deliberateFailure: external_exports.boolean(),
+  steps: external_exports.array(observedStepSchema).min(1),
+  code: external_exports.strictObject({
+    path: nonempty,
+    revision: nonempty,
+    language: nonempty,
+    text: nonempty,
+    sha256: digest4
+  }).nullable()
+}).superRefine((test, ctx) => {
+  if (new Set(test.steps.map((step) => step.id)).size !== test.steps.length)
+    ctx.addIssue({ code: "custom", message: "Step IDs must be unique." });
+  if (test.status === "pass" && test.steps.some((step) => step.status !== "pass"))
+    ctx.addIssue({
+      code: "custom",
+      message: "A passed test requires passed steps."
+    });
+  if (test.status === "fail" && !test.steps.some((step) => step.status === "fail"))
+    ctx.addIssue({
+      code: "custom",
+      message: "A failed test requires a failed step."
+    });
+});
+var reportPullRequestSchema = external_exports.strictObject({
+  repository,
+  number: external_exports.number().int().positive(),
+  url: external_exports.url(),
+  title: nonempty,
+  state: external_exports.enum(["open", "closed", "merged"]),
+  author: nonempty,
+  base: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  head: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  mergeCommit: revision.nullable(),
+  openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
+  capturedAt: external_exports.iso.datetime({ offset: true }),
+  files: external_exports.array(external_exports.strictObject({
+    path: nonempty,
+    status: nonempty,
+    additions: external_exports.number().int().nonnegative(),
+    deletions: external_exports.number().int().nonnegative(),
+    patch: external_exports.string().nullable()
+  })),
+  source: external_exports.strictObject({
+    kind: external_exports.literal("supplied-github-read"),
+    record: external_exports.json(),
+    sha256: digest4
+  })
+}).superRefine((pr, ctx) => {
+  if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
+    ctx.addIssue({
+      code: "custom",
+      message: "Pull request URL and identity differ."
+    });
+  if (new Set(pr.files.map((file2) => file2.path)).size !== pr.files.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Changed-file paths must be unique."
+    });
+});
+var reportVerificationSchema = external_exports.strictObject({
+  planRef: external_exports.strictObject({ answerId: digest4, resultSha256: digest4 }),
+  repository,
+  sourceRevision: revision,
+  pullRequestUrl: external_exports.url().nullable(),
+  recordedAt: external_exports.iso.datetime({ offset: true }),
+  provenance: external_exports.literal("product-terminal-checks/1"),
+  oracle: nonempty,
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest4 })).min(1),
+  tests: external_exports.array(reportedTestSchema).min(1)
+}).superRefine((run, ctx) => {
+  if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Test IDs must be unique per run."
+    });
+  const ids2 = new Set(run.evidence.map((item) => item.id));
+  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id6) => !ids2.has(id6)))))
+    ctx.addIssue({
+      code: "custom",
+      message: "Each step must reference supplied evidence."
+    });
+});
+var reportExecutionSchema = reportVerificationSchema.safeExtend({
+  runId: digest4
+});
+var reportEvidenceSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-evidence/1"),
+  pullRequests: external_exports.array(reportPullRequestSchema),
+  executions: external_exports.array(reportExecutionSchema)
+}).superRefine((input3, ctx) => {
+  if (new Set(input3.pullRequests.map((pr) => pr.url)).size !== input3.pullRequests.length || new Set(input3.executions.map((run) => run.runId)).size !== input3.executions.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "PR and run identities must be unique."
+    });
+  for (const run of input3.executions) {
+    if (run.pullRequestUrl === null)
+      continue;
+    const pr = input3.pullRequests.find((item) => item.url === run.pullRequestUrl);
+    if (!pr || pr.repository !== run.repository || !(run.sourceRevision === pr.head.sha || pr.state === "merged" && run.sourceRevision === pr.mergeCommit))
+      ctx.addIssue({
+        code: "custom",
+        message: "Run source must match the selected PR head or merge."
+      });
+  }
+});
+var reportSourcesSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-sources/1"),
+  pullRequests: external_exports.array(external_exports.strictObject({
+    capturedAt: external_exports.iso.datetime({ offset: true }),
+    record: external_exports.strictObject({
+      pullRequest: external_exports.json(),
+      files: external_exports.array(external_exports.json())
+    })
+  }))
+});
+
+// packages/contracts/dist/terminal-checks.js
+var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var terminalChecksSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.terminal-checks/1"),
+  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
+  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
+  pullRequestUrl: external_exports.url().nullable(),
+  tests: external_exports.array(external_exports.strictObject({
+    testId: nonempty2,
+    title: nonempty2,
+    deliberateFailure: external_exports.boolean().default(false),
+    checks: external_exports.array(external_exports.strictObject({
+      id: nonempty2,
+      title: nonempty2,
+      field: external_exports.enum(["text", "snapshot", "url"]),
+      operator: external_exports.enum(["contains", "not-contains", "equals"]),
+      expected: nonempty2
+    })).min(1)
+  })).min(1)
+}).superRefine((input3, ctx) => {
+  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
+    ctx.addIssue({
+      code: "custom",
+      message: "Test IDs and each test's check IDs must be unique."
+    });
+  if (input3.pullRequestUrl !== null) {
+    const prefix = `https://github.com/${input3.repository}/pull/`;
+    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
+      ctx.addIssue({
+        code: "custom",
+        message: "The PR must belong to the selected repository."
+      });
+  }
+});
+var checkedPlanReferenceSchema = external_exports.strictObject({
+  answerId: digest5,
+  resultSha256: digest5,
+  selectedTestIds: external_exports.array(nonempty2).min(1)
+});
+
+// packages/contracts/dist/report-view.js
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var groupSchema = external_exports.object({
+  key: external_exports.enum([
+    "why",
+    "method",
+    "prerequisites",
+    "steps",
+    "expected",
+    "execution-gaps",
+    "requirement-id",
+    "requirement-text",
+    "test-ids",
+    "coverage-status"
+  ]),
+  label: external_exports.string(),
+  start: external_exports.number().int().nonnegative(),
+  end: external_exports.number().int().nonnegative()
+});
+var reportItemSchema = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  role: external_exports.enum(["test", "requirement-coverage"]).optional(),
+  lines: external_exports.array(external_exports.string()),
+  groups: external_exports.array(groupSchema).optional(),
+  expected: external_exports.object({ text: external_exports.string().nullable(), authority: external_exports.string().nullable() }).optional(),
+  detail: external_exports.boolean().optional(),
+  stepCount: external_exports.number().int().nonnegative().optional(),
+  citations: external_exports.array(external_exports.object({ title: external_exports.string(), lines: external_exports.array(external_exports.string()) })).optional()
+});
+var sectionBase = external_exports.object({
+  title: external_exports.string(),
+  kind: external_exports.enum(["plan", "runner", "assessment"]),
+  sourceId: digest6,
+  sourceKind: external_exports.enum(["answer", "run"]),
+  resultSha256: digest6.nullable(),
+  operationState: external_exports.string(),
+  stopRequested: external_exports.boolean().nullable().optional(),
+  producerStatus: external_exports.object({
+    result: external_exports.string().nullable(),
+    receipt: external_exports.string().nullable(),
+    plan: external_exports.string().nullable()
+  }),
+  // Display status is never an authority for state or verdict.
+  status: external_exports.string(),
+  executionState: external_exports.string().nullable(),
+  testVerdict: external_exports.string().nullable(),
+  elapsedMs: external_exports.number().nonnegative().nullable(),
+  facts: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    label: external_exports.string(),
+    value: external_exports.string(),
+    supplied: external_exports.boolean().optional()
+  })),
+  items: external_exports.array(reportItemSchema),
+  assessedRunIds: external_exports.array(digest6).optional(),
+  localArtifacts: external_exports.object({
+    kind: external_exports.enum(["browser", "desktop", "unavailable"]),
+    message: external_exports.string(),
+    traceAvailable: external_exports.boolean(),
+    launchCommand: external_exports.string().optional(),
+    files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
+  }).optional()
+});
+var reportSectionSchema = external_exports.union([
+  sectionBase.extend({
+    kind: external_exports.literal("runner"),
+    sourceKind: external_exports.literal("run")
+  }),
+  sectionBase.extend({ kind: external_exports.enum(["plan", "assessment"]) })
+]);
+var reportViewSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-view/3"),
+  reportId: digest6,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: digest6.nullable(),
+  sections: external_exports.array(reportSectionSchema),
+  displayNotice: external_exports.string().nullable(),
+  evidenceContext: external_exports.object({
+    contextId: digest6,
+    recordSha256: digest6,
+    readTool: external_exports.literal("loki_context_get"),
+    provenance: external_exports.string()
+  }).optional(),
+  executionChecks: external_exports.array(reportExecutionSchema).optional()
+});
+var reportReadFailureSchema = external_exports.object({
+  error: external_exports.object({
+    code: external_exports.string().min(1),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false).optional(),
+    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
+  })
+});
+var reportReadOutputSchema = external_exports.union([
+  reportViewSchema,
+  reportReadFailureSchema
+]);
+
+// packages/contracts/dist/advisory-read.js
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var advisoryReadInputSchema = external_exports.strictObject({
+  family: external_exports.enum([
+    "uiModeler",
+    "prContext",
+    "changeRisk",
+    "riskFinder",
+    "testPlanning",
+    "testSupplement",
+    "suppliedEvidence"
+  ]),
+  answerId: digest7,
+  offset: external_exports.number().int().nonnegative().optional()
+}).meta({ $id: "urn:kaijan:advisory-read-input:1" });
+var advisoryReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.advisory-read/1"),
+  state: external_exports.literal("complete"),
+  answerId: digest7,
+  resultSha256: digest7,
+  resultChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: external_exports.number().int().nonnegative(),
+    text: external_exports.string().min(1).refine((text4) => text4.isWellFormed()),
+    nextOffset: external_exports.number().int().positive().nullable(),
+    totalCharacters: external_exports.number().int().positive()
+  })
+}).superRefine((value, ctx) => {
+  const chunk = value.resultChunk;
+  const end = chunk.offset + chunk.text.length;
+  if (end > chunk.totalCharacters || chunk.nextOffset !== (end === chunk.totalCharacters ? null : end))
+    ctx.addIssue({
+      code: "custom",
+      path: ["resultChunk"],
+      message: "Completed answer continuation is inconsistent."
+    });
+}).meta({ $id: "urn:kaijan:advisory-read:1" });
+var advisoryReadFailureSchema = external_exports.strictObject({
+  error: external_exports.strictObject({
+    code: external_exports.string().min(1),
+    message: external_exports.string(),
+    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
+  })
+});
+var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advisoryReadFailureSchema]).meta({ $id: "urn:kaijan:advisory-read-output:1" });
+
+// packages/contracts/dist/advisory.js
+var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var strings = external_exports.array(external_exports.string());
+var count2 = external_exports.number().int().nonnegative();
+var refs2 = external_exports.array(external_exports.strictObject({ evidence_id: external_exports.string() }));
+function preserveAdvisoryInput(schema) {
+  return external_exports.unknown().superRefine((value, context) => {
+    const result = schema.safeParse(value);
+    if (!result.success)
+      for (const issue3 of result.error.issues)
+        context.addIssue({ ...issue3 });
+  }).meta(external_exports.toJSONSchema(schema, { io: "input" }));
+}
+var planningInputSchema = external_exports.union([
+  external_exports.looseObject({
+    title: external_exports.string(),
+    body: external_exports.string(),
+    url: nonempty3,
+    map: external_exports.null().optional(),
+    version: external_exports.never().optional(),
+    sources: external_exports.never().optional()
+  }),
+  external_exports.looseObject({
+    version: external_exports.literal("pr-context-plan/3"),
+    captured_at: external_exports.string().describe("Capture time with a timezone, such as 2026-11-04T05:16:48Z or 2026-11-04T12:16:48+07:00. Use ISO 8601, not a named timezone such as UTC."),
+    work_item: external_exports.looseObject({ title: nonempty3 }),
+    sources: external_exports.array(external_exports.looseObject({
+      id: nonempty3,
+      kind: external_exports.enum(["intent", "implementation", "context"]),
+      uri: nonempty3,
+      revision: nonempty3,
+      text: nonempty3
+    })).min(1),
+    map: jsonObject.nullable().optional()
+  })
+]);
+var supplementInputSchema = external_exports.looseObject({
+  version: external_exports.literal("test-plan-supplement-input/1"),
+  context: planningInputSchema,
+  baseline: external_exports.looseObject({
+    text: nonempty3,
+    uri: nonempty3,
+    revision: nonempty3,
+    plan_path: external_exports.array(nonempty3).optional()
+  }),
+  risks: external_exports.array(external_exports.looseObject({
+    id: nonempty3,
+    text: nonempty3,
+    uri: nonempty3,
+    revision: nonempty3,
+    attribution: nonempty3
+  }))
+});
+var record3 = external_exports.looseObject({
+  id: nonempty3,
+  text: external_exports.string(),
+  provenance: jsonObject.nullable()
+});
+var assessmentImageReferenceSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.assessment-image-ref/1"),
+  reportId: digest8,
+  runId: digest8,
+  resultSha256: digest8,
+  manifestSha256: digest8,
+  artifactId: digest8,
+  sha256: digest8,
+  bytes: external_exports.number().int().positive()
+});
+var suppliedEvidenceInputSchema = external_exports.strictObject({
+  schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
+  work_item: external_exports.looseObject({
+    title: external_exports.string(),
+    body: external_exports.string(),
+    provenance: jsonObject.nullable()
+  }),
+  requirements: external_exports.array(record3).nullable(),
+  proposed_tests: external_exports.array(record3).nullable(),
+  outcomes: external_exports.array(record3.extend({
+    test_id: nonempty3.nullable(),
+    status: nonempty3,
+    evidence_ids: external_exports.array(nonempty3)
+  })),
+  evidence: external_exports.array(external_exports.looseObject({
+    id: nonempty3,
+    text: external_exports.string().nullable(),
+    bytes_base64: external_exports.string().nullable(),
+    media_type: external_exports.literal("image/png").optional(),
+    reference: jsonObject.nullable(),
+    provenance: jsonObject.nullable(),
+    sha256: digest8.optional(),
+    artifact_ref: assessmentImageReferenceSchema.optional()
+  })),
+  target: jsonObject.nullable(),
+  provenance: jsonObject.nullable()
+});
+var planningRefs = external_exports.array(external_exports.looseObject({ evidence_id: external_exports.string() }));
+var proposedPlanSchema = external_exports.looseObject({
+  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
+  objectives: external_exports.array(external_exports.looseObject({ id: external_exports.string(), text: external_exports.string(), refs: planningRefs })),
+  requirement_coverage: external_exports.array(external_exports.looseObject({
+    requirement_id: external_exports.string(),
+    status: external_exports.enum(["proposed", "gap"]),
+    test_ids: strings,
+    reason: external_exports.string()
+  })),
+  ambiguities: strings,
+  relevant_surfaces: external_exports.array(external_exports.looseObject({
+    description: external_exports.string(),
+    basis: external_exports.string(),
+    refs: planningRefs
+  })),
+  tests: external_exports.array(external_exports.looseObject({
+    title: external_exports.string().optional(),
+    // Absent only in historical saved plans.
+    method: external_exports.string(),
+    id: external_exports.string(),
+    objective_ids: strings,
+    priority: external_exports.string(),
+    reason: external_exports.string(),
+    prerequisites: strings,
+    steps: strings,
+    expected: external_exports.looseObject({
+      text: external_exports.string(),
+      authority: external_exports.string(),
+      refs: planningRefs
+    }),
+    execution_gaps: strings
+  })),
+  disagreements: strings,
+  runner_handoff: external_exports.looseObject({
+    status: external_exports.literal("proposed_only"),
+    scenario_ids: strings,
+    required_inputs: strings
+  }),
+  limitations: strings
+});
+var nativePlanningReceiptSchema = external_exports.looseObject({
+  status: external_exports.string(),
+  unknown_charge: external_exports.boolean(),
+  unknown_usage: external_exports.boolean()
+});
+var planningFailure = (schema) => external_exports.looseObject({
+  schema: external_exports.literal(schema),
+  reason: external_exports.string(),
+  receipt_directory: external_exports.string(),
+  receipt: nativePlanningReceiptSchema
+});
+var evidenceCatalog = external_exports.array(external_exports.looseObject({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  uri: external_exports.string(),
+  revision: external_exports.string(),
+  line: count2,
+  quote: external_exports.string(),
+  quote_sha256: digest8
+}));
+var nativePlanningResultSchema = external_exports.union([
+  external_exports.looseObject({
+    plan: proposedPlanSchema,
+    checks: external_exports.looseObject({
+      version: external_exports.literal("pr-context-plan-result/5"),
+      status: external_exports.enum(["structurally_valid", "structurally_valid_partial"]),
+      executed: external_exports.literal(false),
+      semantic_support: external_exports.literal("requires_review"),
+      coverage: external_exports.looseObject({ status: external_exports.enum(["complete", "partial"]) }),
+      tests: count2,
+      objectives: count2
+    }),
+    input_hash: digest8,
+    receipt_directory: external_exports.string(),
+    receipt: nativePlanningReceiptSchema,
+    evidence: evidenceCatalog
+  }),
+  planningFailure("loki.planning-failure/1")
+]);
+var nativeSupplementResultSchema = external_exports.union([
+  external_exports.looseObject({
+    schema: external_exports.literal("test-plan-supplement-result/1"),
+    method: external_exports.literal("baseline-preserving-risk-supplement/1"),
+    supplement: external_exports.strictObject({
+      status: external_exports.enum([
+        "proposed_supplement",
+        "no_additional_tests",
+        "needs_clarification"
+      ]),
+      additional_tests: external_exports.array(external_exports.strictObject({
+        id: external_exports.string(),
+        verification_kind: external_exports.string(),
+        method: external_exports.string(),
+        reason: external_exports.string(),
+        conditions: strings,
+        prerequisites: strings,
+        steps: strings,
+        expected: external_exports.strictObject({
+          text: external_exports.string(),
+          authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+          refs: refs2
+        }),
+        risk_ids: strings,
+        source_refs: refs2,
+        baseline_relation: external_exports.strictObject({
+          test_ids: strings,
+          explanation: external_exports.string()
+        }),
+        execution_gaps: strings
+      })),
+      baseline_concerns: external_exports.array(external_exports.strictObject({
+        test_ids: strings,
+        concern: external_exports.string(),
+        question: external_exports.string(),
+        risk_ids: strings,
+        refs: refs2
+      })),
+      unanswered_questions: external_exports.array(external_exports.strictObject({
+        question: external_exports.string(),
+        risk_ids: strings,
+        baseline_test_ids: strings,
+        refs: refs2
+      })),
+      limitations: strings
+    }),
+    baseline: external_exports.looseObject({
+      text: external_exports.string(),
+      uri: external_exports.string(),
+      revision: external_exports.string(),
+      sha256: digest8,
+      bytes: count2,
+      test_ids: strings
+    }),
+    checks: external_exports.looseObject({
+      version: external_exports.literal("test-plan-supplement-result/1"),
+      status: external_exports.literal("structurally_valid_supplement"),
+      executed: external_exports.literal(false),
+      semantic_support: external_exports.literal("requires_separate_review"),
+      original_baseline_sha256: digest8,
+      original_baseline_test_ids: strings
+    }),
+    input_hash: digest8,
+    receipt_directory: external_exports.string(),
+    receipt: nativePlanningReceiptSchema,
+    evidence: evidenceCatalog,
+    interpretation: external_exports.string()
+  }),
+  planningFailure("loki.supplement-failure/1")
+]);
+var nativeAssessmentResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  input_sha256: digest8,
+  request_sha256: digest8,
+  assessment: external_exports.looseObject({
+    schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+    original_candidate: jsonObject,
+    findings: external_exports.array(external_exports.looseObject({
+      id: external_exports.string(),
+      original_finding: jsonObject,
+      literal_bindings: external_exports.array(jsonObject),
+      validation_errors: strings,
+      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
+      semantic_support: external_exports.null()
+    })),
+    reported_outcomes: external_exports.array(jsonObject),
+    optional_proposal_supplied: external_exports.boolean(),
+    evidence_status: external_exports.array(jsonObject),
+    coverage: external_exports.looseObject({
+      status: external_exports.enum(["complete", "partial"]),
+      unassessed_requirement_ids: strings,
+      semantic_completeness: external_exports.null(),
+      interpretation: external_exports.string()
+    }),
+    validation_status: external_exports.enum(["partial", "complete_record_membership"]),
+    execution_authenticated: external_exports.literal(false),
+    acceptance_decision: external_exports.null()
+  }).nullable(),
+  native_receipt: nativePlanningReceiptSchema.nullable(),
+  failure: external_exports.looseObject({ reason: external_exports.string() }).nullable(),
+  native_artifact_directory: external_exports.string(),
+  complete_call_elapsed_seconds: external_exports.number().nonnegative(),
+  provider_calls_started: count2,
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count2, sha256: digest8 })),
+  result_persisted: external_exports.boolean(),
+  continuation_allowed: external_exports.boolean(),
+  limitations: external_exports.string(),
+  persistence_failure: external_exports.literal(true).optional()
+});
+var advisoryIncompleteSchema = external_exports.strictObject({
+  state: external_exports.enum(["unknown", "refused", "cancelled"]),
+  answerId: digest8.optional(),
+  retainedNativeFile: external_exports.strictObject({
+    path: external_exports.string(),
+    bytes: count2,
+    sha256: digest8,
+    semanticAssessment: external_exports.literal("not-performed")
+  }).nullable().optional(),
+  reason: external_exports.string(),
+  replayAllowed: external_exports.literal(false),
+  accounting: external_exports.union([
+    external_exports.strictObject({
+      providerEffect: external_exports.literal("unknown"),
+      knownCostUsd: external_exports.null()
+    }),
+    external_exports.strictObject({
+      providerCallsStarted: external_exports.literal(0),
+      knownCostUsd: external_exports.literal(0)
+    })
+  ])
+});
+var advisoryContextUnavailableSchema = external_exports.strictObject({
+  state: external_exports.literal("unsupported-consumption"),
+  contextId: digest8,
+  capability: external_exports.string(),
+  detail: jsonObject,
+  contextRetained: external_exports.literal(true),
+  providerCallsStarted: external_exports.literal(0)
+});
+var advisoryExecutionFailureSchema = external_exports.strictObject({
+  error: external_exports.looseObject({
+    code: nonempty3,
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false).optional(),
+    recovery: external_exports.looseObject({
+      action: external_exports.string(),
+      instruction: external_exports.string(),
+      requestKey: external_exports.string().optional()
+    }).optional()
+  })
+});
+
+// packages/contracts/dist/clarification-presentation.js
+var binding = external_exports.object({
+  sourceId: external_exports.string(),
+  quote: external_exports.string().min(1)
+});
+var ordinaryPresentation = external_exports.object({
+  kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
+  subject: binding,
+  choices: external_exports.array(binding)
+});
+var clarificationPresentationSchema = external_exports.union([
+  ordinaryPresentation,
+  external_exports.object({
+    kind: external_exports.literal("read-only-path"),
+    subject: binding,
+    control: binding,
+    choices: external_exports.array(binding).max(0)
+  })
+]);
+
+// packages/contracts/dist/runner.js
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
+var count3 = external_exports.number().int().nonnegative();
+var questions = external_exports.array(external_exports.strictObject({
+  id: external_exports.string(),
+  question: external_exports.string(),
+  kind: external_exports.string(),
+  presentation: clarificationPresentationSchema.optional()
+}));
+var progress = {
+  reason: external_exports.string(),
+  completedSteps: external_exports.array(external_exports.string()),
+  remainingSteps: external_exports.array(external_exports.string()),
+  evidence: external_exports.array(external_exports.string()),
+  questions
+};
+var legacyRunnerExecutionReportSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.execution-report/1"),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
+  ...progress,
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  basis: external_exports.literal("model-authored-unverified"),
+  responseId: external_exports.string(),
+  callId: external_exports.string()
+});
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view = { ...value };
+  if (view.effects !== "known" && view.effects !== "uncertain")
+    delete view.effects;
+  return view;
+}, external_exports.union([
+  legacyRunnerExecutionReportSchema,
+  legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
+    schema: external_exports.literal("loki.runner.execution-report/2")
+  })
+]));
+var runnerRecoverySchema = external_exports.strictObject({
+  enabled: external_exports.boolean().optional(),
+  used: external_exports.boolean(),
+  initialEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+  currentEffort: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+  transitions: external_exports.array(external_exports.strictObject({
+    responseId: external_exports.string(),
+    callId: external_exports.string(),
+    from: external_exports.enum(["low", "medium"]),
+    to: external_exports.literal("medium"),
+    reason: external_exports.string()
+  })).max(1)
+});
+var runnerClarificationSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification/1"),
+  clarificationId: external_exports.string(),
+  ...progress,
+  deadlineAt: external_exports.string(),
+  state: external_exports.enum(["live", "unknown"]),
+  redaction: external_exports.strictObject({
+    schema: external_exports.literal("loki.runner.safe-projection/1"),
+    revision: count3
+  }).optional()
+});
+var originalReference = external_exports.strictObject({
+  path: external_exports.string(),
+  sha256: digest9,
+  bytes: count3
+});
+var checkpointReference = originalReference.extend({
+  checkpointPath: external_exports.string()
+});
+var executionReportProvenance = external_exports.strictObject({
+  responseReference: originalReference.nullable(),
+  evidenceReferences: external_exports.array(checkpointReference),
+  providerCall: count3
+});
+var runnerNativeResultSchema = external_exports.looseObject({
+  correlation: external_exports.looseObject({
+    requestId: external_exports.string().min(1),
+    scenarioId: external_exports.string().min(1),
+    planRef: external_exports.json().optional()
+  }),
+  executionState: external_exports.enum([
+    "completed",
+    "incomplete",
+    "cancelled",
+    "blocked",
+    "unknown"
+  ]),
+  testVerdict: external_exports.string().min(1),
+  terminal: external_exports.looseObject({
+    executionReportProvenance: executionReportProvenance.nullable().optional()
+  }),
+  executionReport: runnerExecutionReportSchema.nullable().optional(),
+  recovery: runnerRecoverySchema.optional(),
+  effortAccounting: external_exports.strictObject({
+    low: count3,
+    medium: count3,
+    none: count3.optional(),
+    high: count3.optional(),
+    xhigh: count3.optional(),
+    max: count3.optional()
+  }).optional()
+});
+var runnerResultSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("reuse-not-executed"),
+    reason: external_exports.string().min(1),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    reuse: jsonObject2,
+    nativeDispatched: external_exports.literal(false)
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("not-executed"),
+    reason: external_exports.string().min(1),
+    scenarioId: external_exports.string().min(1),
+    unresolvedInputs: external_exports.array(external_exports.string()),
+    executionMethod: external_exports.string(),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    providerCallsStarted: external_exports.literal(0)
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("native-exception"),
+    reuse: jsonObject2.optional(),
+    nativeResult: external_exports.null(),
+    assessmentFragment: external_exports.null(),
+    effects: external_exports.literal("unknown-do-not-replay"),
+    partialHandoff: jsonObject2,
+    privateFailure: external_exports.string(),
+    workerReceipt: external_exports.string()
+  }),
+  external_exports.strictObject({
+    schema: external_exports.literal("loki.computer-runner-operation/1"),
+    status: external_exports.literal("returned"),
+    reuse: jsonObject2.optional(),
+    executionHost: external_exports.json(),
+    nativeResult: runnerNativeResultSchema,
+    executionConfig: jsonObject2,
+    assessmentFragment: external_exports.looseObject({
+      outcomes: external_exports.array(jsonObject2),
+      evidence: external_exports.array(jsonObject2),
+      target: jsonObject2,
+      provenance: jsonObject2
+    }),
+    verification: reportVerificationSchema.optional(),
+    sourceContextId: digest9.nullable().optional()
+  })
+]);
+var runnerNextActionSchema = external_exports.strictObject({
+  kind: external_exports.literal("input-required"),
+  tool: external_exports.literal("loki_runner_answer"),
+  runId: digest9,
+  clarificationId: external_exports.string().min(1),
+  deadlineAt: external_exports.string(),
+  questions,
+  instruction: external_exports.string()
+});
+var operationBase = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner-operation/1"),
+  runId: digest9,
+  state: external_exports.enum([
+    "accepted",
+    "running",
+    "finished",
+    "unknown",
+    "not-started",
+    "stopped-before-start"
+  ]),
+  replayAllowed: external_exports.literal(false),
+  pendingClarification: runnerClarificationSchema.nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  identity: jsonObject2.optional(),
+  execution: external_exports.literal("programmatic/1").optional(),
+  createdAt: external_exports.string().optional(),
+  reason: external_exports.string().optional(),
+  lastRecordedState: external_exports.enum(["accepted", "running"]).optional(),
+  stopRequested: external_exports.boolean().optional(),
+  receiptDirectory: external_exports.string().optional(),
+  providerCallsStarted: external_exports.literal(0).optional(),
+  resultValidated: external_exports.boolean().optional(),
+  resultSha256: digest9.optional(),
+  resultBytes: count3.optional(),
+  resultRecordSha256: digest9.optional(),
+  resultRecord: external_exports.json().optional(),
+  retainedNativeFile: external_exports.strictObject({
+    path: external_exports.string(),
+    bytes: count3,
+    sha256: digest9,
+    semanticAssessment: external_exports.literal("not-performed")
+  }).nullable().optional()
+});
+var resultRead = external_exports.strictObject({
+  nextOffset: external_exports.literal(0),
+  totalCharacters: external_exports.number().int().positive(),
+  instruction: external_exports.string()
+});
+var resultChunk = external_exports.strictObject({
+  encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+  offset: count3,
+  text: external_exports.string().min(1),
+  nextOffset: external_exports.number().int().positive().nullable(),
+  totalCharacters: external_exports.number().int().positive()
+});
+var finished = operationBase.extend({
+  state: external_exports.literal("finished"),
+  resultValidated: external_exports.literal(true),
+  resultSha256: digest9,
+  resultBytes: external_exports.number().int().positive()
+});
+var runnerOperationSchema = external_exports.union([
+  operationBase.extend({
+    state: external_exports.enum([
+      "accepted",
+      "running",
+      "unknown",
+      "not-started",
+      "stopped-before-start"
+    ]),
+    resultValidated: external_exports.literal(false).optional()
+  }),
+  finished.extend({ result: runnerResultSchema }),
+  finished.extend({ resultRead }),
+  finished.extend({ resultChunk })
+]);
+var runnerErrorSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner-error/1"),
+  method: external_exports.enum(["execute", "get", "stop"]),
+  runId: digest9.optional(),
+  error: external_exports.strictObject({
+    code: external_exports.enum([
+      "invalid_arguments",
+      "request_key_conflict",
+      "operation_not_found_in_scope",
+      "operation_unavailable",
+      "private_parameter_invalid",
+      "private_parameter_unavailable",
+      "private_parameter_scope_mismatch",
+      "private_parameter_target_mismatch",
+      "private_parameter_collision",
+      "private_parameter_revoked"
+    ]),
+    message: external_exports.string(),
+    // null means dispatch may have happened; failure never permits replay.
+    requestDispatched: external_exports.boolean().nullable(),
+    recovery: external_exports.strictObject({
+      action: external_exports.string(),
+      instruction: external_exports.string(),
+      requestKey: external_exports.string().optional(),
+      existingRunId: digest9.optional(),
+      existingRunScope: external_exports.string().optional()
+    })
+  })
+});
+var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
+
+// packages/contracts/dist/assessment-preparation.js
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
+var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var assessmentReceiptSchema = external_exports.looseObject({
+  id: nonempty4,
+  attribution: nonempty4,
+  content: external_exports.json()
+});
+var assessmentPreparationLimits = {
+  packetBytes: 2 * 1024 * 1024
+};
+var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
+  reportId: digest10,
+  runId: digest10,
+  view: external_exports.literal("inspection").optional(),
+  expectedResultSha256: digest10.optional(),
+  work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
+  requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
+  proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
+  receipts: external_exports.array(assessmentReceiptSchema).optional(),
+  suppliedObservations: external_exports.array(assessmentReceiptSchema).optional(),
+  preflight: assessmentReceiptSchema.nullable().optional(),
+  runtimeComparison: assessmentReceiptSchema.nullable().optional(),
+  cleanup: assessmentReceiptSchema.nullable().optional(),
+  selectedArtifactIds: external_exports.array(digest10).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+})).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
+var locator2 = external_exports.strictObject({
+  report: external_exports.strictObject({
+    tool: external_exports.literal("loki_report_get"),
+    reportId: digest10
+  }),
+  operation: external_exports.strictObject({
+    tool: external_exports.literal("loki_runner_get"),
+    runId: digest10
+  }),
+  artifacts: external_exports.strictObject({
+    tool: external_exports.literal("loki_report_artifact_read"),
+    reportId: digest10,
+    runId: digest10
+  }),
+  resultSha256: digest10.nullable()
+});
+var issue2 = external_exports.strictObject({
+  code: external_exports.string(),
+  location: external_exports.string(),
+  detail: external_exports.string(),
+  actualCount: external_exports.number().int().nonnegative().optional(),
+  maximumCount: external_exports.number().int().positive().optional()
+});
+var indexEntry = external_exports.looseObject({
+  id: external_exports.string(),
+  basis: external_exports.enum(["original-fragment", "caller-assertion", "original-artifact"]),
+  state: external_exports.enum(["supplied", "read", "opaque-uninterpreted", "unavailable"])
+});
+var submission = external_exports.strictObject({
+  compatible: external_exports.boolean(),
+  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
+  instruction: external_exports.string()
+});
+var common = {
+  schema: external_exports.literal("loki.assessment-preparation/1"),
+  submission,
+  // These describe the selected original run, never a new assessment verdict.
+  executionState: external_exports.json(),
+  nativeVerdict: external_exports.json(),
+  accounting: jsonObject3,
+  evidenceIndex: external_exports.array(indexEntry),
+  origin: locator2
+};
+var fullPreparationOutput = external_exports.union([
+  external_exports.strictObject({
+    ...common,
+    state: external_exports.enum(["prepared", "unresolved"]),
+    assessmentInput: suppliedEvidenceInputSchema.nullable(),
+    original: jsonObject3,
+    // Receipt bodies live once in assessment evidence text, addressed here as
+    // JSON pointers; inline only when no compatible assessment input exists.
+    callerAssertions: jsonObject3,
+    missingFacts: external_exports.array(issue2),
+    unresolvedReferences: external_exports.array(issue2),
+    selectedArtifacts: external_exports.array(jsonObject3),
+    unselectedArtifacts: external_exports.array(jsonObject3),
+    interpretation: external_exports.string(),
+    replayAllowed: external_exports.literal(false)
+  }),
+  external_exports.strictObject({
+    ...common,
+    state: external_exports.literal("refused"),
+    refusal: external_exports.strictObject({
+      code: external_exports.enum([
+        "selection_unavailable",
+        "selection_changed",
+        "artifact_refused",
+        "oversize"
+      ]),
+      maxBytes: external_exports.number().int().positive().optional(),
+      requiredBytes: external_exports.number().int().nonnegative().optional()
+    }),
+    assessmentInput: external_exports.null(),
+    replayAllowed: external_exports.literal(false)
+  })
+]);
+var count4 = external_exports.number().int().nonnegative();
+var assessmentInspectionLocatorSchema = external_exports.union([
+  external_exports.strictObject({
+    document: external_exports.literal("decoded-original-runner-result"),
+    pointer: external_exports.string()
+  }),
+  external_exports.strictObject({ document: external_exports.literal("request"), pointer: external_exports.string() }),
+  external_exports.strictObject({
+    document: external_exports.literal("full-preparation-packet"),
+    pointer: external_exports.string()
+  }),
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest10 })
+]);
+var section = external_exports.strictObject({
+  total: count4,
+  shown: count4,
+  omitted: count4,
+  containerLocator: assessmentInspectionLocatorSchema,
+  available: external_exports.boolean(),
+  rows: external_exports.array(jsonObject3)
+});
+var assessmentInspectionOutputSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.assessment-inspection/1"),
+  view: external_exports.literal("inspection"),
+  state: external_exports.enum(["prepared", "unresolved", "refused"]),
+  executionState: common.executionState,
+  nativeVerdict: common.nativeVerdict,
+  accounting: common.accounting,
+  origin: common.origin,
+  documents: jsonObject3,
+  factSources: jsonObject3,
+  submission: external_exports.strictObject({
+    compatible: external_exports.boolean(),
+    nextAction: external_exports.enum(["get_assessment_input", "resolve_input"]),
+    locator: assessmentInspectionLocatorSchema,
+    instruction: external_exports.string()
+  }),
+  claims: external_exports.strictObject({ outcomes: section, native: section }),
+  evidenceRecords: section,
+  callerAssertions: external_exports.strictObject({
+    preflight: jsonObject3,
+    runtimeComparison: jsonObject3,
+    cleanup: jsonObject3,
+    suppliedObservations: jsonObject3,
+    receipts: jsonObject3
+  }),
+  evidenceIndex: section,
+  selectedArtifacts: section,
+  unselectedArtifacts: section,
+  missingFacts: section,
+  unresolvedReferences: section,
+  selection: external_exports.strictObject({
+    method: external_exports.literal("mechanical-prefix-not-importance"),
+    outcomes: count4,
+    evidenceRecords: count4,
+    receiptsPerCategory: count4,
+    contentLeaves: count4,
+    contentDepth: count4,
+    stoppedSubtrees: count4,
+    stringCodePoints: count4,
+    evidenceIndex: count4,
+    selectedArtifacts: count4,
+    unselectedArtifacts: count4,
+    missingFacts: count4,
+    unresolvedReferences: count4,
+    objectKeys: external_exports.literal("UTF-16-code-unit-order"),
+    traversal: external_exports.literal("shallow-first; arrays in original index order"),
+    contentTotals: external_exports.literal("primitive and empty-container values through contentDepth; deeper leaf counts unknown"),
+    evidenceRecordOrder: external_exports.literal("original fragment order, then selected JSON artifact order; no caller receipts"),
+    reportSelection: external_exports.string(),
+    interpretation: external_exports.string()
+  }),
+  refusal: fullPreparationOutput.options[1].shape.refusal.optional(),
+  replayAllowed: external_exports.literal(false)
+});
+var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union([fullPreparationOutput, assessmentInspectionOutputSchema])).meta({ $id: "urn:kaijan:assessment-prepare-output:1" });
+
+// packages/contracts/dist/test-run.js
+var testRunResultSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  state: external_exports.string(),
+  status: external_exports.object({
+    execution: external_exports.string(),
+    assessment: external_exports.string(),
+    report: external_exports.string()
+  }),
+  // Keep recursive JSON references rooted in this output, not a nested URI.
+  execution: runnerOutputSchema.meta({ $id: void 0 }).nullable(),
+  // Default reads return literal selected fields. Full original execution and
+  // assessment records remain available through originalResult and offsets.
+  assessment: external_exports.json().nullable(),
+  preparation: external_exports.json().nullable(),
+  executionSummary: external_exports.json().nullable().optional(),
+  nextAction: runnerNextActionSchema.optional(),
+  view: external_exports.enum(["summary", "original"]).optional(),
+  originalResult: external_exports.strictObject({
+    tool: external_exports.literal("loki_test_get"),
+    arguments: external_exports.strictObject({
+      runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+      offset: external_exports.literal(0)
+    }),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultBytes: external_exports.number().int().positive().nullable(),
+    instruction: external_exports.string()
+  }).optional(),
+  report: external_exports.looseObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).nullable(),
+  replayAllowed: external_exports.literal(false)
+});
+var testRunErrorSchema = external_exports.looseObject({
+  schema: external_exports.literal("kaijan.test-run/1"),
+  runId: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  state: external_exports.literal("unavailable"),
+  replayAllowed: external_exports.literal(false),
+  error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
+});
+var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
+
+// packages/contracts/dist/customer-source-display.js
+var customerSourceDisplaySchema = external_exports.object({
+  kind: external_exports.enum(["submitted-task", "application-page", "proposed-test"]),
+  sourceTextSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  fields: external_exports.array(external_exports.object({ label: external_exports.string(), text: external_exports.string() })),
+  expectation: external_exports.object({ label: external_exports.string(), text: external_exports.string() }).optional()
+});
+
+// packages/contracts/dist/customer-assessment-presentation.js
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerCleanupFactsSchema = external_exports.object({
+  kind: external_exports.literal("browser-cleanup"),
+  scope: external_exports.literal("test-browser-resources"),
+  cleaned: external_exports.boolean(),
+  deadlineExceeded: external_exports.boolean(),
+  applicationObservation: external_exports.literal(false),
+  applicationCleanup: external_exports.literal("not-established")
+});
+var customerAssessmentQuoteSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  display: customerSourceDisplaySchema.optional(),
+  // The original quote hash stays exact. This receipt identifies the filtered
+  // display copy; serialized fields alone never grant source proof.
+  projection: external_exports.object({
+    schema: external_exports.literal("kaijan.customer-source-projection/1"),
+    sourceSha256: digest11,
+    sha256: digest11,
+    bytes: external_exports.number().int().nonnegative()
+  }).optional(),
+  state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
+  attribution: external_exports.enum([
+    "application-observation",
+    "caller-supplied",
+    "original-intent",
+    "proposed-test",
+    "resource-record",
+    "supplied-source"
+  ]).optional(),
+  text: external_exports.string().optional(),
+  sha256: digest11.optional(),
+  sourceSha256: digest11.optional(),
+  facts: customerCleanupFactsSchema.optional(),
+  notice: external_exports.string().optional()
+});
+var customerRecordedActionSchema = external_exports.object({
+  sourceId: external_exports.string(),
+  sourceSha256: digest11.optional(),
+  evidenceId: external_exports.string(),
+  index: external_exports.number().int().positive(),
+  action: external_exports.object({
+    type: external_exports.enum([
+      "click",
+      "double_click",
+      "move",
+      "scroll",
+      "keypress",
+      "type",
+      "drag",
+      "wait",
+      "screenshot"
+    ]),
+    x: external_exports.number().optional(),
+    y: external_exports.number().optional(),
+    scroll_x: external_exports.number().optional(),
+    scroll_y: external_exports.number().optional(),
+    text: external_exports.string().optional(),
+    keys: external_exports.array(external_exports.string()).optional(),
+    button: external_exports.enum(["left", "right", "middle", "back", "forward"]).optional(),
+    // Homogeneous pairs keep the same coordinate validation without emitting
+    // prefixItems/items:false, which older MCP JSON Schema validators reject.
+    path: external_exports.array(external_exports.array(external_exports.number()).length(2)).optional()
+  }),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  startedAt: external_exports.iso.datetime({ offset: true }),
+  endedAt: external_exports.iso.datetime({ offset: true }).optional(),
+  attribution: external_exports.enum(["retained-action-record", "supplied-action-record"])
+});
+var customerAssessmentStepFactsSchema = external_exports.object({
+  state: external_exports.enum(["bound", "unresolved", "supplied"]),
+  qualification: external_exports.enum([
+    "recorded_action",
+    "reported_observation",
+    "unresolved"
+  ]),
+  actions: external_exports.array(customerRecordedActionSchema),
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  notice: external_exports.string()
+});
+
+// packages/contracts/dist/report-presentation.js
+var reportExecutionRecapSchema = external_exports.object({
+  steps: external_exports.array(external_exports.string()),
+  detailsOmitted: external_exports.literal(true).optional()
+});
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count5 = external_exports.number().int().nonnegative();
+var reportExpectationAuthoritySchema = external_exports.string();
+var assessmentQuote = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  facts: true
+}).extend({ text: external_exports.string() });
+var reportTestAssessmentSchema = external_exports.object({
+  customerEvidence: external_exports.array(assessmentQuote).optional(),
+  customerRecordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  customerEvidenceIncomplete: external_exports.boolean().optional(),
+  evidenceNotice: external_exports.string().optional(),
+  customerObservedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote),
+    facts: customerAssessmentStepFactsSchema.optional()
+  })).optional(),
+  answerId: digest12,
+  resultSha256: digest12,
+  model: external_exports.string(),
+  testId: external_exports.string(),
+  additionalCheck: external_exports.literal(true).optional(),
+  scenarioTitle: external_exports.string().optional(),
+  expectationAuthority: reportExpectationAuthoritySchema.optional(),
+  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
+  expected: external_exports.string(),
+  actual: external_exports.string().nullable(),
+  reason: external_exports.string(),
+  evidence: external_exports.array(assessmentQuote),
+  observedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    facts: customerAssessmentStepFactsSchema.optional(),
+    evidence: external_exports.array(assessmentQuote)
+  }))
+});
+var nativeJson = external_exports.unknown().refine((value) => external_exports.json().safeParse(value).success);
+var configurationShape = external_exports.object({
+  executionMethod: external_exports.enum(["browser-ui", "desktop-ui"]),
+  browser: external_exports.literal("chromium").nullable(),
+  target: nativeJson,
+  automaticRetries: external_exports.literal(0),
+  trigger: external_exports.literal("explicit-tool-call")
+}).catchall(nativeJson);
+var configurationSchema = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
+var reportObservedPageSchema = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  accessibilityText: external_exports.string().optional(),
+  sourceSha256: digest12,
+  contentSha256: digest12,
+  contentState: external_exports.literal("projected-page-content")
+});
+var reportExecutionRejectionNoticeSchema = external_exports.enum([
+  "The run stopped without using the app controls. The test service rejected a request. Open View run trace to review the saved page.",
+  "The run stopped because the test service rejected a request. Open View run trace to review the saved actions.",
+  "The run stopped without using the app controls. The test service rejected a request. Ask Kaijan to read this saved result in chat.",
+  "The run stopped because the test service rejected a request. Ask Kaijan to read this saved result in chat."
+]);
+var reportOutcomeNoticeSchema = external_exports.enum([
+  "The test stopped when the app tried to open a website that was not allowed for this test.",
+  "The test stopped because it could not confirm whether the page was allowed for this test.",
+  "The test stopped because it could not reach an allowed website.",
+  "Execution did not start because its connection is not configured.",
+  "The target application is unavailable.",
+  "The connection expired. Reconnect before retrying.",
+  "The test service is temporarily unavailable. Check the saved outcome before retrying.",
+  ...reportExecutionRejectionNoticeSchema.options,
+  "The test could not finish. Review the saved observations before retrying."
+]);
+var testPlanViewSchema = external_exports.object({
+  schema: external_exports.literal("loki.test-plan-view/2"),
+  reportId: digest12,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: digest12.nullable(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: digest12,
+    resultSha256: digest12,
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
+  selectedPullRequestUrl: external_exports.string().nullable().optional(),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(digest12).optional(),
+    sourceId: digest12,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: digest12.nullable(),
+    state: external_exports.string(),
+    result: nativeJson
+  })).optional(),
+  runs: external_exports.array(external_exports.object({
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
+    state: external_exports.string(),
+    executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
+    executionLimit: external_exports.enum(["requests", "browser-actions", "time"]).optional(),
+    testVerdict: external_exports.string(),
+    planSourceId: external_exports.string(),
+    planResultSha256: external_exports.string(),
+    selectedTestIds: external_exports.array(external_exports.string()),
+    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    startedAt: external_exports.iso.datetime({ offset: true }).optional(),
+    observation: external_exports.string(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
+    executionReport: runnerExecutionReportSchema.nullable().optional(),
+    executionRecap: reportExecutionRecapSchema.optional(),
+    traceRetained: external_exports.boolean(),
+    recordedAt: external_exports.string().nullable().optional(),
+    assessments: external_exports.array(reportTestAssessmentSchema).optional(),
+    configuration: configurationSchema.nullable().optional(),
+    assertions: reportExecutionSchema.nullable().optional()
+  })),
+  pullRequests: external_exports.array(reportPullRequestSchema).optional(),
+  plans: external_exports.array(external_exports.object({
+    sourceId: digest12,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: digest12.nullable(),
+    state: external_exports.string(),
+    result: nativeJson,
+    requestTestIndexes: external_exports.array(count5)
+  }))
+});
+var reportPanelSchema = testPlanViewSchema.extend({
+  presentation: external_exports.literal("panel")
+});
+var reportLinkSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-link/1"),
+  reportId: digest12,
+  presentation: external_exports.literal("browser"),
+  previewURL: external_exports.url()
+});
+var reportCardFailedTitleLimit = 5;
+var summarySchema = external_exports.object({
+  schema: external_exports.literal("loki.test-plan-view/2"),
+  reportId: digest12,
+  title: external_exports.string(),
+  counts: external_exports.object({
+    pass: count5,
+    fail: count5,
+    blocked: count5,
+    skipped: count5,
+    "not-run": count5,
+    inconclusive: count5.default(0),
+    conflicting: count5.default(0),
+    unavailable: count5.default(0)
+  }),
+  proposedCounts: external_exports.object({ pass: count5, fail: count5 }).optional(),
+  assessmentResults: count5.optional(),
+  observation: external_exports.string().min(1).max(240).optional(),
+  failedTestTitles: external_exports.array(external_exports.string().min(1)).min(1).max(reportCardFailedTitleLimit).optional(),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  runs: external_exports.array(external_exports.object({
+    sourceId: digest12,
+    executionState: external_exports.string(),
+    stoppedByUser: external_exports.literal(true).optional(),
+    testVerdict: external_exports.string()
+  })),
+  plans: external_exports.array(external_exports.object({
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
+    requestTests: count5,
+    executedTests: external_exports.boolean().nullable(),
+    proposedTests: count5.nullable()
+  }))
+});
+var cardBase = external_exports.object({
+  mapId: digest12.nullable().optional(),
+  schema: external_exports.literal("loki.report-card/1"),
+  reportId: digest12,
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  originalResults: external_exports.array(external_exports.object({
+    kind: external_exports.enum(["plan", "runner", "assessment"]),
+    answerId: digest12.nullable(),
+    runId: digest12.nullable(),
+    resultSha256: digest12.nullable()
+  })),
+  sourceContextId: digest12.nullable(),
+  testPlanSummary: summarySchema,
+  instructions: external_exports.string()
+});
+var reportCardSchema = external_exports.union([
+  cardBase.extend({ presentation: external_exports.literal("panel") }),
+  cardBase.extend({
+    presentation: external_exports.literal("browser"),
+    previewURL: external_exports.url()
+  })
+]).refine((card) => card.testPlanSummary.plans.length > 0 || card.testPlanSummary.runs.length > 0 || Boolean(card.mapId), "A report card requires an original Plan, Run or Map.");
+var reportShowSuccessSchema = external_exports.union([
+  reportViewSchema.extend({
+    presentation: external_exports.literal("chat"),
+    instructions: external_exports.string()
+  }),
+  reportViewSchema.extend({
+    presentation: external_exports.literal("component"),
+    presentationNotice: external_exports.string(),
+    previewURL: external_exports.url()
+  }),
+  reportCardSchema
+]);
+var reportShowOutputSchema = external_exports.union([
+  reportShowSuccessSchema,
+  reportReadFailureSchema
+]);
+var reportOpenSuccessSchema = external_exports.union([
+  reportPanelSchema,
+  reportLinkSchema
+]);
+var reportOpenOutputSchema = external_exports.union([
+  reportOpenSuccessSchema,
+  reportReadFailureSchema
+]);
+var artifactsSchema = external_exports.object({
+  kind: external_exports.enum(["browser", "desktop", "unavailable"]),
+  message: external_exports.string(),
+  traceAvailable: external_exports.boolean(),
+  reason: external_exports.enum([
+    "private-inputs",
+    "protection-unavailable",
+    "customer-view-unavailable",
+    "missing",
+    "changed",
+    "unreadable",
+    "viewer-unavailable",
+    "not-recorded",
+    "not-browser"
+  ]).optional(),
+  launchCommand: external_exports.string().optional(),
+  files: external_exports.array(external_exports.object({ label: external_exports.string(), path: external_exports.string() }))
+});
+var traceIdentity = {
+  schema: external_exports.literal("loki.report-trace/1"),
+  reportId: digest12,
+  runId: digest12
+};
+var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
+  const url2 = new URL(value);
+  const prefix = url2.pathname.match(/^\/[a-f0-9]{64}\//)?.[0];
+  return url2.protocol === "http:" && url2.hostname === "127.0.0.1" && !!url2.port && !url2.username && !url2.password && !url2.hash && !!prefix && url2.pathname === `${prefix}index.html` && [...url2.searchParams.keys()].join() === (url2.searchParams.has("case") ? "trace,case" : "trace") && (!url2.searchParams.has("case") || url2.searchParams.get("case").length > 0 && url2.searchParams.get("case").length <= 600) && url2.searchParams.get("trace") === `${url2.origin}${prefix}trace.zip`;
+});
+var reportTraceResultSchema = external_exports.union([
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  external_exports.object({ ...traceIdentity, status: external_exports.literal("closed") }),
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  artifactsSchema.extend({
+    ...traceIdentity,
+    status: external_exports.literal("unavailable")
+  })
+]);
+var customerTraceArtifacts = artifactsSchema.omit({ launchCommand: true }).extend({
+  files: external_exports.array(external_exports.never()).max(0)
+});
+var customerReportTraceResultSchema = external_exports.union([
+  external_exports.strictObject({ ...traceIdentity, status: external_exports.literal("closed") }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("available"),
+    traceAvailable: external_exports.literal(true),
+    viewerState: external_exports.enum(["open", "closed"]),
+    viewerURL: reportTraceViewerURLSchema.optional()
+  }).refine((value) => value.viewerState === "open" === Boolean(value.viewerURL), { message: "Viewer state must match its live URL." }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("opened"),
+    traceAvailable: external_exports.literal(true),
+    viewerURL: reportTraceViewerURLSchema
+  }),
+  customerTraceArtifacts.extend({
+    ...traceIdentity,
+    status: external_exports.literal("unavailable"),
+    traceAvailable: external_exports.literal(false)
+  })
+]);
+var customerReportTraceOutputSchema = external_exports.union([
+  customerReportTraceResultSchema,
+  reportReadFailureSchema
+]);
+var reportTraceOutputSchema = external_exports.union([
+  reportTraceResultSchema,
+  reportReadFailureSchema
+]);
+var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
+var reportExportPreviewSchema = external_exports.object({
+  selectedKinds,
+  schema: external_exports.literal("loki.report-export-preview/1"),
+  reportId: digest12,
+  previewSha256: digest12,
+  html: external_exports.string(),
+  omitted: external_exports.array(external_exports.string()),
+  redaction: external_exports.string(),
+  included: external_exports.array(external_exports.string())
+});
+var reportExportReceiptSchema = external_exports.object({
+  selectedKinds,
+  schema: external_exports.literal("loki.report-export-receipt/1"),
+  reportId: digest12,
+  sha256: digest12,
+  path: external_exports.string(),
+  delivery: external_exports.literal("local-file-only"),
+  uploaded: external_exports.literal(false)
+});
+var reportExportPreviewOutputSchema = external_exports.union([
+  reportExportPreviewSchema,
+  reportReadFailureSchema
+]);
+var reportExportOutputSchema = external_exports.union([
+  reportExportReceiptSchema,
+  reportReadFailureSchema
+]);
+
+// packages/contracts/dist/report-artifact.js
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var count6 = external_exports.number().int().nonnegative();
+var captureTime = external_exports.iso.datetime({ offset: true });
+var pageCaptureBindingSchema = external_exports.object({
+  screenshot: external_exports.object({
+    name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
+    sha256: digest13,
+    capturedAt: captureTime
+  }),
+  afterAction: external_exports.number().int().positive().nullable(),
+  startedAt: captureTime,
+  finishedAt: captureTime
+});
+var reportArtifactProjectionSchema = external_exports.object({
+  schema: external_exports.literal("loki.report-artifact-projection/1"),
+  sourceSha256: digest13,
+  sha256: digest13,
+  bytes: count6,
+  redactionRevision: count6,
+  // Only the owning manifest reader can supply this checked association.
+  pageCapture: pageCaptureBindingSchema.optional()
+});
+var reportArtifactInputSchema = external_exports.strictObject({
+  reportId: digest13,
+  runId: digest13,
+  artifactId: digest13.optional(),
+  offset: count6.optional()
+});
+var artifact = external_exports.object({
+  artifactId: digest13,
+  name: external_exports.string(),
+  mediaType: external_exports.enum(["image/png", "application/json"]),
+  bytes: count6,
+  sha256: digest13
+});
+var provenance = {
+  schema: external_exports.literal("loki.report-artifact/1"),
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
+  manifestSha256: digest13,
+  manifestSchema: external_exports.enum([
+    "loki.computer-runner.private-evidence/1",
+    "loki.mac-computer-runner.private-evidence/1"
+  ]),
+  taskId: external_exports.string(),
+  createdAt: external_exports.string(),
+  semanticAssessment: external_exports.literal("not-performed")
+};
+var reportArtifactResultSchema = external_exports.union([
+  external_exports.object({
+    ...provenance,
+    state: external_exports.literal("listed"),
+    artifacts: external_exports.array(artifact).max(50),
+    offset: count6,
+    nextOffset: count6.nullable(),
+    totalArtifacts: count6
+  }),
+  external_exports.object({
+    ...provenance,
+    state: external_exports.literal("read"),
+    artifact,
+    content: external_exports.union([
+      external_exports.object({
+        mediaType: external_exports.literal("image/png"),
+        encoding: external_exports.literal("base64"),
+        data: external_exports.string()
+      }),
+      external_exports.object({
+        mediaType: external_exports.literal("application/json"),
+        encoding: external_exports.literal("utf-8"),
+        text: external_exports.string(),
+        offset: count6,
+        nextOffset: count6.nullable(),
+        totalCodeUnits: count6,
+        // Artifact metadata identifies the private original. This identifies
+        // the complete filtered JSON, before transport pagination.
+        projection: reportArtifactProjectionSchema.optional()
+      })
+    ])
+  })
+]);
+var reportArtifactOutputSchema = external_exports.union([
+  reportArtifactResultSchema,
+  reportReadFailureSchema
+]);
+var customerIdentity = {
+  schema: external_exports.literal("kaijan.customer-artifact/1"),
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
+  createdAt: external_exports.string(),
+  semanticAssessment: external_exports.literal("not-performed")
+};
+var customerReportArtifactResultSchema = external_exports.union([
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("listed"),
+    artifacts: external_exports.array(artifact).max(50),
+    offset: count6,
+    nextOffset: count6.nullable(),
+    totalArtifacts: count6,
+    omittedArtifacts: count6
+  }),
+  external_exports.object({
+    ...customerIdentity,
+    state: external_exports.literal("read"),
+    artifact,
+    content: external_exports.union([
+      external_exports.object({
+        mediaType: external_exports.literal("image/png"),
+        encoding: external_exports.literal("base64"),
+        data: external_exports.string()
+      }),
+      external_exports.object({
+        mediaType: external_exports.literal("application/json"),
+        encoding: external_exports.literal("utf-8"),
+        text: external_exports.string(),
+        offset: count6,
+        nextOffset: count6.nullable(),
+        totalCodeUnits: count6,
+        projection: external_exports.object({
+          schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
+          sourceSha256: digest13,
+          sha256: digest13,
+          bytes: count6
+        })
+      })
+    ])
+  })
+]);
+var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
+var customerCaseEvidenceSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-case-evidence/1"),
+  planRef: external_exports.object({ answerId: digest13, resultSha256: digest13 }),
+  selectedTestIds: external_exports.array(external_exports.string().min(1)),
+  cases: external_exports.array(external_exports.object({
+    testId: external_exports.string().min(1),
+    occurrence: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    state: external_exports.enum(["recording", "ended", "interrupted"]),
+    screenshots: external_exports.array(external_exports.object({
+      name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
+      sha256: digest13,
+      capturedAt: external_exports.string()
+    }))
+  }))
+}).superRefine((value, ctx) => {
+  const selected = new Set(value.selectedTestIds);
+  const cases = value.cases.map((row) => `${row.testId}:${row.occurrence}`);
+  const images = value.cases.flatMap((row) => row.screenshots.map((image) => image.name));
+  if (selected.size !== value.selectedTestIds.length || value.cases.some((row) => !selected.has(row.testId)) || new Set(cases).size !== cases.length || new Set(images).size !== images.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Case evidence must be uniquely selected."
+    });
+});
+
+// packages/contracts/dist/report-render.js
+var reportRenderMetadataSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.report-render/1"),
+  view_id: external_exports.uuidv4().regex(/^[a-f0-9-]+$/),
+  report_id: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  view_kind: external_exports.enum(["full_report", "test_plan_details"]),
+  presentation: external_exports.enum(["mcp_app", "loopback_url"])
+});
+var reportRenderAckSchema = reportRenderMetadataSchema.extend({
+  phase: external_exports.literal("rendered")
+});
+
+// packages/contracts/dist/case-evidence.js
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var screenshot = external_exports.object({
+  name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
+  sha256: digest14,
+  capturedAt: external_exports.string()
+});
+var browserRefresh = external_exports.object({
+  kind: external_exports.literal("browser-refresh"),
+  method: external_exports.literal("page.reload"),
+  pageId: external_exports.string().optional(),
+  urlBefore: external_exports.string(),
+  waitUntil: external_exports.literal("domcontentloaded"),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  dispatchedAt: external_exports.string().optional(),
+  urlAfter: external_exports.string().optional(),
+  response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
+  completedAt: external_exports.string().optional(),
+  error: external_exports.string().optional(),
+  completion: external_exports.literal("unverified").optional()
+});
+var action = external_exports.object({
+  index: external_exports.number().int().positive(),
+  type: external_exports.string(),
+  status: external_exports.enum(["invoked", "returned", "error"]),
+  startedAt: external_exports.string(),
+  endedAt: external_exports.string(),
+  operation: browserRefresh.optional()
+});
+var caseEvidenceSchema = external_exports.object({
+  schema: external_exports.literal("loki.runner.case-evidence/1"),
+  attribution: external_exports.literal("runner-declared-boundaries"),
+  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
+  selectedTestIds: external_exports.array(external_exports.string().min(1)),
+  cases: external_exports.array(external_exports.object({
+    testId: external_exports.string().min(1),
+    occurrence: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    state: external_exports.enum(["recording", "ended", "interrupted"]),
+    startedAt: external_exports.string(),
+    endedAt: external_exports.string().nullable(),
+    actions: external_exports.array(action),
+    screenshots: external_exports.array(screenshot)
+  })),
+  unassignedActions: external_exports.array(action),
+  unassignedScreenshots: external_exports.array(screenshot)
+}).superRefine((record4, ctx) => {
+  const ids2 = new Set(record4.selectedTestIds);
+  const occurrences = record4.cases.map((item) => `${item.testId}:${item.occurrence}`);
+  const actions = [
+    ...record4.unassignedActions,
+    ...record4.cases.flatMap((item) => item.actions)
+  ].map((item) => item.index);
+  const screenshots = [
+    ...record4.unassignedScreenshots,
+    ...record4.cases.flatMap((item) => item.screenshots)
+  ].map((item) => item.name);
+  if (ids2.size !== record4.selectedTestIds.length || record4.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
+    ctx.addIssue({
+      code: "custom",
+      message: "Case evidence identities must be unique and selected."
+    });
+});
+
+// packages/contracts/dist/customer-planning.js
+var capturedPlanningReceipt = external_exports.object({
+  body_complete: external_exports.literal(true),
+  capture_error: external_exports.null(),
+  started_calls: external_exports.number().int().positive()
+});
+var capturedPlanningFailure = external_exports.object({
+  schema: external_exports.literal("loki.planning-failure/1"),
+  receipt: capturedPlanningReceipt
+});
+var planningRejection = capturedPlanningFailure.extend({
+  reason: external_exports.literal("invalid_first_response_no_retry"),
+  receipt: capturedPlanningReceipt.extend({
+    status: external_exports.literal("http_identity_or_completion_failure"),
+    http_status: external_exports.literal(429),
+    automatic_retry: external_exports.literal(false)
+  })
+});
+var classifiedPlanningRejection = capturedPlanningFailure.extend({
+  reason: external_exports.enum([
+    "provider_auth_failed",
+    "provider_quota_exhausted",
+    "provider_rate_limited",
+    "provider_request_rejected",
+    "inference_request_rejected"
+  ]),
+  receipt: capturedPlanningReceipt.extend({
+    status: external_exports.literal("provider_http_failure"),
+    http_status: external_exports.number().int().min(100).max(599),
+    provider_http_status: external_exports.number().int().min(400).max(499).optional(),
+    automatic_retry: external_exports.literal(false)
+  })
+}).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
+var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
+
+// packages/contracts/dist/customer-risk.js
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var source2 = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  uri: external_exports.string().nullable(),
+  revision: external_exports.string().nullable(),
+  line: external_exports.number().int().nonnegative(),
+  quote: external_exports.string(),
+  quote_sha256: digest15
+});
+var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
+var unverifiedRiskNotice = "Review these questions against the source.";
+var finding = external_exports.object({
+  id: external_exports.string(),
+  observed_code_behavior: external_exports.string().optional(),
+  observed_source_statement: external_exports.string().optional(),
+  assumption_to_confirm: external_exports.string(),
+  question: external_exports.string(),
+  why_it_matters: external_exports.string(),
+  evidence_needed: external_exports.string(),
+  source_evidence: external_exports.union([external_exports.array(external_exports.string()), external_exports.array(source2)]),
+  presentationState: external_exports.enum(["bound", "unverified", "unavailable"]).optional(),
+  notice: external_exports.union([external_exports.literal(legacyRiskNotice), external_exports.literal(unverifiedRiskNotice)]).optional()
+});
+var customerRiskSchema = external_exports.object({
+  kind: external_exports.literal("risk-review"),
+  family: external_exports.enum(["changeRisk", "riskFinder"]),
+  status: external_exports.enum(["completed", "no_retained_cue", "partial", "refused"]),
+  assumptions_to_confirm: external_exports.array(finding),
+  interpretation: external_exports.literal("Questions to review against the cited sources; not verified defects, approved requirements, tests or observed behavior. An empty list does not establish safety."),
+  coverage: external_exports.literal("Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage.")
+});
+
+// packages/contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+var progress2 = external_exports.object({
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+
+// packages/contracts/dist/customer-advisory.js
+var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
+var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
+var internalCleanupExplanation = /(^|[.!?]\s+)The Runner['’]s cleanup record concerns its browser, not the host-started server\.(?=\s|$)/gi;
+function isInternalRecap(text4) {
+  if (!text4.trimStart().startsWith("{"))
+    return false;
+  try {
+    const value = JSON.parse(text4);
+    const parsed = external_exports.object({ schema: external_exports.string() }).safeParse(value);
+    return parsed.success && parsed.data.schema.startsWith("loki.runner.execution-recap/");
+  } catch {
+    return false;
+  }
+}
+function customerAuthoredText(value) {
+  if (isInternalRecap(value))
+    return customerOmittedDetail;
+  const projected = value.replace(internalCleanupExplanation, "$1The supplied cleanup record does not confirm that the application server was stopped.");
+  return diagnostic.test(projected) ? customerOmittedDetail : projected;
+}
+var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var optional2 = (schema) => schema.optional();
+var strings2 = external_exports.array(external_exports.string());
+var citation = external_exports.object({
+  source_id: optional2(external_exports.string()),
+  sourceId: optional2(external_exports.string()),
+  evidence_id: optional2(external_exports.string()),
+  from_line: optional2(external_exports.number().int()),
+  through_line: optional2(external_exports.number().int())
+});
+var boundQuote = customerAssessmentQuoteSchema;
+var bindings = external_exports.array(external_exports.unknown());
+var assessmentTest = external_exports.object({
+  test_id: external_exports.string().nullable(),
+  title: external_exports.string().optional(),
+  outcome_ids: strings2,
+  expected: external_exports.string().nullable(),
+  verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
+  actual: external_exports.string().nullable(),
+  reason: external_exports.string(),
+  evidence_ids: optional2(strings2),
+  citations: optional2(external_exports.array(citation)),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observed_steps: optional2(external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    citations: external_exports.array(citation),
+    evidenceQuotes: external_exports.array(boundQuote).optional(),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var assessmentFinding = external_exports.object({
+  id: external_exports.string(),
+  support: external_exports.enum(["requires-review", "needs-review"]),
+  requirement_ids: optional2(strings2),
+  test_ids: optional2(strings2),
+  outcome_ids: optional2(strings2),
+  kind: optional2(external_exports.string()),
+  claim: optional2(external_exports.string()),
+  citations: optional2(external_exports.array(citation)),
+  remaining_gap: optional2(external_exports.string()),
+  notice: optional2(external_exports.string()),
+  evidenceQuotes: external_exports.array(boundQuote).optional()
+});
+var reportedOutcome = external_exports.object({
+  id: external_exports.string(),
+  test_id: external_exports.string().nullable(),
+  status: external_exports.enum([
+    "pass",
+    "fail",
+    "blocked",
+    "inconclusive",
+    "reported-pass",
+    "reported-fail",
+    "not-executed",
+    "skipped",
+    "unknown"
+  ]),
+  evidence_ids: strings2
+});
+var customerAssessmentResultSchema = external_exports.object({
+  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  kind: external_exports.literal("evidence-assessment"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  tests: optional2(external_exports.array(assessmentTest)),
+  findings: optional2(external_exports.array(assessmentFinding)),
+  coverage: optional2(external_exports.object({
+    status: external_exports.enum(["complete", "partial"]),
+    unassessed_requirement_ids: strings2
+  })),
+  meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
+  acceptanceDecision: external_exports.null(),
+  message: optional2(external_exports.string())
+});
+var assessmentInput = external_exports.object({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.enum(["returned_assessment", "first_response_failure"]),
+  assessment: external_exports.object({
+    test_results: external_exports.array(assessmentTest.extend({
+      additional_check: external_exports.literal(true).optional(),
+      literal_bindings: bindings.optional(),
+      observed_steps: external_exports.array(external_exports.object({
+        description: external_exports.string(),
+        citations: external_exports.array(citation),
+        literal_bindings: bindings.optional()
+      })).optional()
+    })).optional(),
+    findings: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      status: external_exports.enum(["needs_review", "bound_model_assessment"]),
+      literal_bindings: bindings.optional(),
+      original_finding: external_exports.object({
+        requirement_ids: strings2.optional(),
+        test_ids: strings2.optional(),
+        outcome_ids: strings2.optional(),
+        kind: external_exports.string().optional(),
+        claim: external_exports.string().optional(),
+        citations: external_exports.array(citation).optional(),
+        remaining_gap: external_exports.string().optional()
+      })
+    })),
+    reported_outcomes: external_exports.array(external_exports.object({
+      id: external_exports.string(),
+      test_id: external_exports.string().nullable(),
+      status: external_exports.string(),
+      evidence_ids: strings2
+    })).optional(),
+    coverage: external_exports.object({
+      status: external_exports.enum(["complete", "partial"]),
+      unassessed_requirement_ids: strings2
+    })
+  }).nullable()
+});
+var selectedPlanBinding = external_exports.object({
+  pointer: external_exports.object({ sourceId: external_exports.string() }),
+  provenance: external_exports.object({
+    reported: external_exports.object({ source: external_exports.literal("original-selected-plan-test") })
+  })
+});
+
+// packages/contracts/dist/customer-report.js
+var strings3 = external_exports.array(external_exports.string());
+var operationState = external_exports.enum([
+  "accepted",
+  "running",
+  "finished",
+  "complete",
+  "unknown",
+  "unavailable",
+  "cancelled",
+  "refused",
+  "not-started",
+  "stopped-before-start"
+]);
+var executionState = external_exports.enum([
+  "",
+  "accepted",
+  "running",
+  "completed",
+  "incomplete",
+  "cancelled",
+  "blocked",
+  "unknown",
+  "not-executed",
+  "failed",
+  "stopped"
+]);
+var testVerdict = external_exports.enum([
+  "",
+  "unverified",
+  "pass",
+  "fail",
+  "unknown",
+  "inconclusive",
+  "not-run",
+  "unavailable"
+]);
+var reference = external_exports.object({ evidence_id: external_exports.string() });
+var refs3 = external_exports.array(reference);
+var customerPlanSchema = external_exports.object({
+  presentation: external_exports.object({
+    schema: external_exports.literal("kaijan.planning-presentation/1"),
+    state: external_exports.enum([
+      "source-bound-proposal",
+      "legacy-source-excerpts",
+      "unverified"
+    ]),
+    semantics: external_exports.literal("proposed-only"),
+    detailsAvailable: external_exports.boolean().optional()
+  }).optional(),
+  status: external_exports.enum(["proposed_plan", "needs_clarification"]),
+  objectives: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), refs: refs3 })).optional(),
+  tests: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    title: external_exports.string().optional(),
+    method: external_exports.string().optional(),
+    objective_ids: strings3.optional(),
+    priority: external_exports.string().optional(),
+    reason: external_exports.string().optional(),
+    prerequisites: strings3.optional(),
+    steps: strings3,
+    expected: external_exports.object({
+      text: external_exports.string(),
+      authority: external_exports.string(),
+      refs: refs3.optional()
+    }),
+    execution_gaps: strings3.optional()
+  })),
+  requirement_coverage: external_exports.array(external_exports.object({
+    requirement_id: external_exports.string(),
+    text: external_exports.string().optional(),
+    status: external_exports.enum(["proposed", "gap"]),
+    test_ids: strings3,
+    reason: external_exports.string().optional()
+  })).optional(),
+  ambiguities: strings3.optional(),
+  disagreements: strings3.optional(),
+  limitations: strings3.optional(),
+  relevant_surfaces: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    basis: external_exports.string(),
+    refs: refs3
+  })).optional(),
+  runner_handoff: external_exports.object({
+    status: external_exports.literal("proposed_only"),
+    scenario_ids: strings3,
+    required_inputs: strings3
+  }).optional()
+});
+var coverage2 = external_exports.object({
+  status: external_exports.enum(["complete", "partial"]),
+  unassessed_requirement_ids: strings3
+});
+var evidenceIdentity = external_exports.object({
+  id: external_exports.string(),
+  source_id: external_exports.string(),
+  uri: external_exports.string().optional(),
+  kind: external_exports.enum(["intent", "implementation", "context"]),
+  revision: external_exports.string(),
+  line: external_exports.number().int().nonnegative()
+});
+var quoteDigest = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var customerPlanEvidenceSchema = external_exports.union([
+  evidenceIdentity.extend({
+    quote: external_exports.string(),
+    quote_sha256: quoteDigest,
+    contentState: external_exports.literal("original-quote")
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("projected-risk"),
+    projection: external_exports.object({
+      kind: external_exports.literal("risk-review"),
+      text: external_exports.string(),
+      sha256: quoteDigest
+    })
+  }),
+  evidenceIdentity.extend({
+    originalQuoteSha256: quoteDigest,
+    contentState: external_exports.literal("unavailable"),
+    notice: external_exports.literal("This saved source cannot be shown in the supported view. Its original identity is retained; it is not an application observation.")
+  })
+]);
+var savedExecutionLimitReasons = {
+  requests: "The test stopped after reaching its execution limit.",
+  "browser-actions": "The test stopped after reaching its browser action limit.",
+  time: "The test stopped after reaching its time limit."
+};
+var nativeRun = testPlanViewSchema.shape.runs.element;
+var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
+  sourceId: true,
+  display: true,
+  text: true,
+  attribution: true,
+  sha256: true,
+  sourceSha256: true,
+  projection: true,
+  notice: true,
+  facts: true
+}).extend({ text: external_exports.string() });
+var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
+  answerId: true,
+  resultSha256: true,
+  testId: true,
+  additionalCheck: true,
+  scenarioTitle: true,
+  expectationAuthority: true,
+  verdict: true,
+  expected: true,
+  actual: true,
+  reason: true
+}).extend({
+  evidenceNotice: external_exports.literal("Some cited source text cannot be displayed. The assessment and source identities remain separate from an application observation.").optional(),
+  evidence: external_exports.array(assessmentQuote2),
+  recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
+  observedSteps: external_exports.array(external_exports.object({
+    description: external_exports.string(),
+    evidence: external_exports.array(assessmentQuote2),
+    facts: customerAssessmentStepFactsSchema.optional()
+  }))
+});
+var executionReport = external_exports.object({
+  reason: external_exports.string().optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
+  completedSteps: strings3.optional(),
+  remainingSteps: strings3,
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
+});
+var evidenceQuote = external_exports.object({
+  id: external_exports.string(),
+  text: external_exports.string(),
+  sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var assertionStep = external_exports.object({
+  id: external_exports.string(),
+  title: external_exports.string(),
+  status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  evidenceIds: strings3
+});
+var assertionTest = external_exports.object({
+  testId: external_exports.string(),
+  title: external_exports.string(),
+  status: assertionStep.shape.status,
+  expected: external_exports.string(),
+  actual: external_exports.string(),
+  deliberateFailure: external_exports.boolean(),
+  steps: external_exports.array(assertionStep),
+  code: external_exports.object({
+    path: external_exports.string(),
+    revision: external_exports.string(),
+    language: external_exports.string(),
+    text: external_exports.string(),
+    sha256: evidenceQuote.shape.sha256
+  }).nullable()
+});
+var assertions = external_exports.object({
+  runId: reportExecutionSchema.shape.runId,
+  repository: reportExecutionSchema.shape.repository,
+  sourceRevision: reportExecutionSchema.shape.sourceRevision,
+  pullRequestUrl: reportExecutionSchema.shape.pullRequestUrl,
+  recordedAt: reportExecutionSchema.shape.recordedAt,
+  planRef: external_exports.object({
+    answerId: evidenceQuote.shape.sha256,
+    resultSha256: evidenceQuote.shape.sha256
+  }),
+  evidence: external_exports.array(evidenceQuote),
+  tests: external_exports.array(assertionTest)
+});
+var customerReportSchema = testPlanViewSchema.pick({
+  reportId: true,
+  title: true,
+  createdAt: true,
+  mapId: true,
+  selectedPullRequestUrl: true
+}).extend({
+  schema: external_exports.literal("kaijan.customer-report/1"),
+  assessments: external_exports.array(external_exports.object({
+    assessedRunIds: external_exports.array(quoteDigest).optional(),
+    sourceId: quoteDigest,
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: quoteDigest.nullable(),
+    state: operationState,
+    result: customerAssessmentResultSchema.nullable(),
+    notice: external_exports.literal("This saved assessment cannot be shown in the supported view. Other saved results remain available.").optional()
+  })).optional(),
+  presentation: external_exports.literal("panel").optional(),
+  assessmentFailures: external_exports.array(external_exports.object({
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    reason: external_exports.enum(["service-rejected", "unavailable"])
+  })).optional(),
+  plans: external_exports.array(testPlanViewSchema.shape.plans.element.pick({
+    sourceId: true,
+    sourceKind: true,
+    resultSha256: true,
+    state: true,
+    requestTestIndexes: true
+  }).extend({
+    state: operationState,
+    plan: customerPlanSchema.nullable(),
+    planningFailure: external_exports.literal("service-rejected").optional(),
+    notice: external_exports.enum([
+      "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
+      "This saved plan is unavailable in the supported view. Other saved results remain available.",
+      unavailablePlanDetailsNotice
+    ]).optional(),
+    coverage: coverage2.optional(),
+    evidence: external_exports.array(customerPlanEvidenceSchema).optional()
+  })),
+  runs: external_exports.array(nativeRun.pick({
+    sourceId: true,
+    resultSha256: true,
+    state: true,
+    executionState: true,
+    stoppedByUser: true,
+    testVerdict: true,
+    traceRetained: true,
+    planSourceId: true,
+    planResultSha256: true,
+    selectedTestIds: true,
+    elapsedMs: true,
+    startedAt: true,
+    recordedAt: true
+  }).extend({
+    state: operationState,
+    executionState,
+    testVerdict,
+    traceRetained: external_exports.boolean().default(false),
+    interruptionNote: external_exports.literal("The test stopped before it finished. Review the recorded steps before continuing.").optional(),
+    executionLimitNotice: external_exports.enum(Object.values(savedExecutionLimitReasons)).optional(),
+    observationNotice: external_exports.literal("Some saved observations are not available in this view. This does not mean no observations were recorded.").optional(),
+    // Free-form terminal diagnostics are not an application observation source.
+    assessments: external_exports.array(customerAssessment).optional(),
+    executionReport: executionReport.nullable().optional(),
+    executionRecap: reportExecutionRecapSchema.optional(),
+    executionEvidence: customerExecutionEvidenceSchema.optional(),
+    assertions: assertions.nullable().optional(),
+    observedPages: external_exports.array(reportObservedPageSchema).optional(),
+    outcomeNotice: reportOutcomeNoticeSchema.optional(),
+    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional()
+  })),
+  pullRequests: external_exports.array(external_exports.object({
+    repository: reportPullRequestSchema.shape.repository,
+    number: reportPullRequestSchema.shape.number,
+    url: reportPullRequestSchema.shape.url,
+    title: reportPullRequestSchema.shape.title,
+    state: reportPullRequestSchema.shape.state,
+    author: reportPullRequestSchema.shape.author,
+    base: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    head: external_exports.object({
+      ref: external_exports.string(),
+      sha: external_exports.string().regex(/^[a-f0-9]{40}$/)
+    }),
+    mergeCommit: reportPullRequestSchema.shape.mergeCommit,
+    openedAt: reportPullRequestSchema.shape.openedAt,
+    capturedAt: reportPullRequestSchema.shape.capturedAt,
+    files: external_exports.array(external_exports.object({
+      path: external_exports.string(),
+      status: external_exports.string(),
+      additions: external_exports.number().int().nonnegative(),
+      deletions: external_exports.number().int().nonnegative(),
+      patch: external_exports.string().nullable()
+    })),
+    source: reportPullRequestSchema.shape.source.pick({
+      kind: true,
+      sha256: true
+    })
+  })).optional()
+});
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerReportCardSchema = panelCard.pick({
+  mapId: true,
+  schema: true,
+  reportId: true,
+  title: true,
+  createdAt: true,
+  sourceContextId: true,
+  instructions: true,
+  presentation: true
+}).extend({
+  originalResults: external_exports.array(panelCard.shape.originalResults.element.pick({
+    kind: true,
+    answerId: true,
+    runId: true,
+    resultSha256: true
+  })),
+  testPlanSummary: summary.pick({
+    schema: true,
+    reportId: true,
+    title: true,
+    assessmentResults: true,
+    observation: true,
+    failedTestTitles: true
+  }).extend({
+    counts: summary.shape.counts.pick({
+      pass: true,
+      fail: true,
+      blocked: true,
+      skipped: true,
+      "not-run": true,
+      inconclusive: true,
+      conflicting: true,
+      unavailable: true
+    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
+    proposedCounts: external_exports.object({
+      pass: external_exports.number().int().nonnegative(),
+      fail: external_exports.number().int().nonnegative()
+    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+    pullRequest: external_exports.object({
+      number: external_exports.number().int().positive(),
+      title: external_exports.string(),
+      url: external_exports.url()
+    }).nullable(),
+    plans: external_exports.array(summary.shape.plans.element.pick({
+      sourceId: true,
+      resultSha256: true,
+      requestTests: true,
+      executedTests: true,
+      proposedTests: true
+    })),
+    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+  })
+});
+var customerReportFailureSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-error/1"),
+  error: external_exports.object({
+    code: external_exports.enum([
+      "report_unavailable",
+      "report_invalid_selection",
+      "report_projection_unavailable"
+    ]),
+    message: external_exports.string(),
+    requestDispatched: external_exports.literal(false),
+    recovery: external_exports.object({
+      action: external_exports.literal("read_original_report"),
+      instruction: external_exports.string()
+    })
+  })
+});
+var customerReportReadSchema = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-report-read/1"),
+  presentation: external_exports.literal("chat").optional(),
+  assessments: customerReportSchema.shape.assessments,
+  reportId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  title: external_exports.string(),
+  createdAt: external_exports.string(),
+  mapId: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+  sections: external_exports.array(external_exports.object({
+    kind: external_exports.enum(["plan", "runner", "assessment"]),
+    sourceId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    sourceKind: external_exports.enum(["answer", "run"]),
+    resultSha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    operationState,
+    executionState: executionState.nullable(),
+    testVerdict: testVerdict.nullable(),
+    elapsedMs: external_exports.number().finite().nonnegative().nullable(),
+    stopRequested: external_exports.boolean().nullable().optional(),
+    selectedTestIds: strings3,
+    assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
+    facts: external_exports.array(external_exports.discriminatedUnion("key", [
+      external_exports.object({
+        key: external_exports.literal("proposed-checks"),
+        value: external_exports.string().regex(/^(?:[0-9]+|Unknown)$/)
+      }),
+      external_exports.object({
+        key: external_exports.literal("proposed-requirement-links"),
+        value: external_exports.string().regex(/^[0-9]+\/[0-9]+$/)
+      }),
+      external_exports.object({
+        key: external_exports.enum(["plan-run", "plan-answer"]),
+        value: external_exports.string().regex(/^[a-f0-9]{64}$/)
+      })
+    ])),
+    items: external_exports.array(reportItemSchema.pick({
+      id: true,
+      title: true,
+      lines: true,
+      stepCount: true
+    }).extend({
+      role: external_exports.enum(["test", "requirement-coverage"]),
+      groups: external_exports.array(reportItemSchema.shape.groups.unwrap().element.pick({
+        key: true,
+        label: true,
+        start: true,
+        end: true
+      })).optional(),
+      expected: external_exports.object({
+        text: external_exports.string().nullable(),
+        authority: external_exports.string().nullable()
+      }).optional()
+    })),
+    observations: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string() })),
+    detailsIncomplete: external_exports.boolean()
+  })),
+  executionChecks: external_exports.array(assertions).optional(),
+  notice: external_exports.literal("This view contains supported saved test details. Other retained details may be unavailable here. Missing details do not establish a test result.")
+});
+var customerReportOutputSchema = external_exports.union([
+  customerReportSchema,
+  customerReportCardSchema,
+  customerReportReadSchema,
+  customerReportFailureSchema
+]);
+
+// packages/contracts/dist/customer-related.js
+var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings4 = external_exports.array(external_exports.string());
+var optional3 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional3(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional3(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional3(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional3(external_exports.string()),
+    evidence_ids: optional3(strings4),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional3(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id4.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id4,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional3(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional3(external_exports.string())
+});
+
+// packages/contracts/dist/customer-supplement.js
+var strings5 = external_exports.array(external_exports.string());
+var refs4 = external_exports.array(external_exports.object({ evidence_id: external_exports.string() }));
+var tests = external_exports.array(external_exports.object({
+  id: external_exports.string(),
+  verification_kind: external_exports.string(),
+  method: external_exports.string(),
+  reason: external_exports.string(),
+  conditions: strings5,
+  prerequisites: strings5,
+  steps: strings5,
+  expected: external_exports.object({
+    text: external_exports.string(),
+    authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+    refs: refs4
+  }),
+  risk_ids: strings5,
+  source_refs: refs4,
+  baseline_relation: external_exports.object({ test_ids: strings5, explanation: external_exports.string() }),
+  execution_gaps: strings5
+}));
+var customerSupplementResultSchema = external_exports.object({
+  kind: external_exports.literal("test-supplement"),
+  status: external_exports.enum([
+    "proposed_supplement",
+    "no_additional_tests",
+    "needs_clarification",
+    "unavailable"
+  ]),
+  presentationState: external_exports.enum(["source-bound", "legacy-limited", "unavailable"]),
+  supplement: external_exports.object({
+    status: external_exports.enum([
+      "proposed_supplement",
+      "no_additional_tests",
+      "needs_clarification"
+    ]),
+    additional_tests: tests,
+    baseline_concerns: external_exports.array(external_exports.object({
+      test_ids: strings5,
+      concern: external_exports.string(),
+      question: external_exports.string(),
+      risk_ids: strings5,
+      refs: refs4
+    })),
+    unanswered_questions: external_exports.array(external_exports.object({
+      question: external_exports.string(),
+      risk_ids: strings5,
+      baseline_test_ids: strings5,
+      refs: refs4
+    })),
+    limitations: strings5
+  }).optional(),
+  baseline: external_exports.object({
+    classification: external_exports.enum([
+      "supplied-plan",
+      "generated-plan",
+      "unavailable"
+    ]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    test_ids: strings5,
+    suppliedText: external_exports.string().optional(),
+    displaySha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+    tests: external_exports.array(external_exports.object({ id: external_exports.string(), source_refs: refs4 })),
+    notice: external_exports.string()
+  }).optional(),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    source_id: external_exports.string(),
+    kind: external_exports.enum(["intent", "implementation", "context"]),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    line: external_exports.number().int().nonnegative(),
+    quote: external_exports.string(),
+    quote_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"])
+  })),
+  risks: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    sourceState: external_exports.enum(["supplied", "generated-unavailable"]),
+    text: external_exports.string().optional(),
+    uri: external_exports.string(),
+    revision: external_exports.string(),
+    attribution: external_exports.literal("supplied-unverified-risk")
+  })),
+  coverage: external_exports.object({
+    additions: external_exports.number().int().nonnegative(),
+    baselineTests: external_exports.number().int().nonnegative(),
+    baselineConcerns: external_exports.number().int().nonnegative(),
+    unansweredQuestions: external_exports.number().int().nonnegative(),
+    meaning: external_exports.literal("Proposed links and counts only; not proof of complete coverage or semantic support.")
+  }),
+  executed: external_exports.literal(false),
+  reviewRequired: external_exports.literal(true),
+  message: external_exports.string().optional()
+});
+
+// packages/contracts/dist/local.js
+var localProtocol = "loki-local-v1";
+var localCompanionVersion = "0.1.0";
+var localAdapter = "loki-ui-modeler-local-v1";
+var localLimits = {
+  messageBytes: 256 * 1024,
+  artifactChunkBytes: 128 * 1024,
+  readRequests: 8,
+  pageSize: 100,
+  inputLifetimeMs: 30 * 60 * 1e3
+};
+var id5 = external_exports.uuid();
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var localContextSchema = external_exports.strictObject({
+  coreOrigin: external_exports.url().refine((value) => {
+    const url2 = new URL(value);
+    return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
+  }),
+  userId: id5,
+  workspaceId: id5
+});
+var localAuthSchema = external_exports.strictObject({
+  bindingId: id5,
+  secret,
+  context: localContextSchema
+});
+var localInputStateSchema = external_exports.enum([
+  "selected",
+  "preparing",
+  "ready",
+  "rejected",
+  "released"
+]);
+var localRunStateSchema = external_exports.enum([
+  "accepted",
+  "preflight",
+  "running",
+  "validating",
+  "complete",
+  "partial",
+  "failed",
+  "cancelling",
+  "cancelled",
+  "interrupted"
+]);
+var localErrorCodeSchema = external_exports.enum([
+  "invalid_request",
+  "protocol_mismatch",
+  "version_mismatch",
+  "origin_denied",
+  "pairing_denied",
+  "unauthorized",
+  "scope_changed",
+  "not_found",
+  "busy",
+  "invalid_state",
+  "expired_input",
+  "source_changed",
+  "source_rejected",
+  "secret_detected",
+  "limit_exceeded",
+  "storage_full",
+  "configuration_required",
+  "runtime_unavailable",
+  "idempotency_conflict",
+  "cli_failed",
+  "invalid_output",
+  "interrupted",
+  "outcome_unknown",
+  "cancelled",
+  "internal_error"
+]);
+var localErrorSchema = external_exports.strictObject({
+  code: localErrorCodeSchema,
+  message: external_exports.string().max(500),
+  retryable: external_exports.boolean(),
+  locations: external_exports.array(external_exports.string().max(1024)).max(20).optional(),
+  cliStarted: external_exports.boolean().nullable()
+});
+var page = {
+  offset: external_exports.number().int().nonnegative().max(1e5).default(0),
+  limit: external_exports.number().int().min(1).max(localLimits.pageSize).default(50)
+};
+var request = (method, params) => external_exports.strictObject({
+  protocol: external_exports.literal(localProtocol),
+  requestId: id5,
+  method: external_exports.literal(method),
+  params,
+  auth: localAuthSchema.optional()
+});
+var localRequestSchema = external_exports.discriminatedUnion("method", [
+  request("hello", external_exports.strictObject({
+    companionVersion: external_exports.literal(localCompanionVersion),
+    context: localContextSchema
+  })),
+  request("capabilities.list", external_exports.strictObject({})),
+  request("settings.open", external_exports.strictObject({})),
+  request("input.select", external_exports.strictObject({})),
+  request("input.prepare", external_exports.strictObject({ inputId: id5 })),
+  request("input.status", external_exports.strictObject({ inputId: id5, ...page })),
+  request("input.release", external_exports.strictObject({ inputId: id5 })),
+  request("run.start", external_exports.strictObject({
+    capability: external_exports.literal("ui-modeler"),
+    version: external_exports.literal("2026.10.18-8"),
+    inputId: id5,
+    inputDigest: digest17,
+    transferAcknowledged: external_exports.literal(true),
+    idempotencyKey: id5
+  })),
+  request("run.get", external_exports.union([
+    external_exports.strictObject({ runId: id5 }),
+    external_exports.strictObject({ idempotencyKey: id5 })
+  ])),
+  request("run.list", external_exports.strictObject(page)),
+  request("run.cancel", external_exports.strictObject({ runId: id5 })),
+  request("run.events", external_exports.strictObject({
+    runId: id5,
+    afterSequence: external_exports.number().int().nonnegative(),
+    ...page
+  })),
+  request("result.read", external_exports.strictObject({
+    runId: id5,
+    section: external_exports.enum(["summary", "screens", "elements", "connections"]),
+    ...page
+  })),
+  request("artifact.read", external_exports.strictObject({
+    runId: id5,
+    artifactId: id5,
+    offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
+    length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
+  })),
+  request("run.delete", external_exports.strictObject({ runId: id5 }))
+]);
+var omission = external_exports.strictObject({
+  path: external_exports.string().max(1024),
+  reason: external_exports.string().max(100)
+});
+var localInputSchema = external_exports.strictObject({
+  inputId: id5,
+  displayName: external_exports.string().max(255),
+  state: localInputStateSchema,
+  digest: digest17.nullable(),
+  includedFiles: external_exports.number().int().nonnegative(),
+  includedBytes: external_exports.number().int().nonnegative(),
+  omissionCount: external_exports.number().int().nonnegative(),
+  omissions: external_exports.array(omission).max(localLimits.pageSize),
+  nextOffset: external_exports.number().int().nullable(),
+  createdAt: external_exports.iso.datetime(),
+  expiresAt: external_exports.iso.datetime(),
+  error: localErrorSchema.nullable()
+});
+var localEventSchema = external_exports.strictObject({
+  protocol: external_exports.literal(localProtocol),
+  runId: id5,
+  sequence: external_exports.number().int().positive(),
+  state: localRunStateSchema,
+  detail: external_exports.string().max(500),
+  at: external_exports.iso.datetime()
+});
+var localRunSchema = external_exports.strictObject({
+  runId: id5,
+  state: localRunStateSchema,
+  sequence: external_exports.number().int().nonnegative(),
+  capability: external_exports.literal("ui-modeler"),
+  cliVersion: external_exports.literal("2026.10.18-8"),
+  cliDigest: digest17,
+  adapter: external_exports.literal(localAdapter),
+  inputDigest: digest17,
+  sourcePolicy: external_exports.literal("local-source-v1"),
+  displayName: external_exports.string().max(255),
+  execution: external_exports.literal("local"),
+  basis: external_exports.literal("source_inferred"),
+  cliStarted: external_exports.boolean().nullable(),
+  stage: external_exports.enum(["accepted", "preflight", "execution", "output"]),
+  createdAt: external_exports.iso.datetime(),
+  endedAt: external_exports.iso.datetime().nullable(),
+  exitCode: external_exports.number().int().nullable(),
+  error: localErrorSchema.nullable(),
+  completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
+  usage: external_exports.literal("unknown"),
+  artifacts: external_exports.array(external_exports.strictObject({
+    artifactId: id5,
+    name: external_exports.string().max(255),
+    size: external_exports.number().int().nonnegative(),
+    sha256: digest17
+  })).max(100)
+});
+var localSetupSchema = external_exports.strictObject({
+  error: localErrorSchema.optional(),
+  credentials: external_exports.enum(["missing", "present"]),
+  runtime: external_exports.enum(["ready", "unavailable"])
+});
+var resultText = external_exports.string().max(4e3);
+var localResultSectionSchemas = {
+  summary: external_exports.strictObject({
+    status: external_exports.enum(["processed", "incomplete"]),
+    basis: external_exports.literal("source_inferred"),
+    runtimeVerified: external_exports.literal(false),
+    screens: external_exports.number().int().nonnegative(),
+    elements: external_exports.number().int().nonnegative(),
+    connections: external_exports.number().int().nonnegative(),
+    limitations: external_exports.array(resultText).max(100),
+    limitationCount: external_exports.number().int().nonnegative(),
+    issues: external_exports.number().int().nonnegative()
+  }),
+  screens: external_exports.strictObject({
+    id: resultText,
+    label: resultText,
+    extractionStatus: external_exports.enum([
+      "processed",
+      "incomplete",
+      "unsupported",
+      "failed",
+      "missing"
+    ])
+  }),
+  elements: external_exports.strictObject({
+    id: resultText,
+    pageId: resultText,
+    parentElementId: resultText.nullable(),
+    label: resultText,
+    kind: resultText,
+    displayCondition: resultText,
+    clickable: external_exports.boolean(),
+    navigationStatus: external_exports.enum([
+      "not_applicable",
+      "no_page_navigation",
+      "unknown",
+      "known"
+    ]),
+    sourceRefs: external_exports.array(resultText).max(20),
+    sourceRefCount: external_exports.number().int().nonnegative()
+  }),
+  connections: external_exports.strictObject({
+    id: resultText,
+    elementId: resultText,
+    fromPageId: resultText,
+    toPageId: resultText.nullable(),
+    routeOrUrl: resultText.nullable(),
+    condition: resultText,
+    sourceRefs: external_exports.array(resultText).max(20),
+    sourceRefCount: external_exports.number().int().nonnegative()
+  })
+};
+var resultPage = external_exports.discriminatedUnion("section", [
+  external_exports.strictObject({
+    section: external_exports.literal("summary"),
+    items: external_exports.array(localResultSectionSchemas.summary).max(1),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("screens"),
+    items: external_exports.array(localResultSectionSchemas.screens).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("elements"),
+    items: external_exports.array(localResultSectionSchemas.elements).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  }),
+  external_exports.strictObject({
+    section: external_exports.literal("connections"),
+    items: external_exports.array(localResultSectionSchemas.connections).max(100),
+    nextOffset: external_exports.number().int().nullable(),
+    total: external_exports.number().int().nonnegative()
+  })
+]);
+var localResultSchemas = {
+  hello: external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    companionVersion: external_exports.literal(localCompanionVersion),
+    bindingId: id5,
+    bindingSecret: secret.optional(),
+    context: localContextSchema,
+    setup: localSetupSchema
+  }),
+  "capabilities.list": external_exports.strictObject({
+    capabilities: external_exports.array(external_exports.strictObject({
+      id: external_exports.literal("ui-modeler"),
+      version: external_exports.literal("2026.10.18-8"),
+      inputs: external_exports.tuple([external_exports.literal("local-folder")]),
+      adapter: external_exports.literal(localAdapter)
+    })).length(1),
+    setup: localSetupSchema
+  }),
+  "settings.open": localSetupSchema,
+  "input.select": external_exports.strictObject({
+    cancelled: external_exports.boolean(),
+    input: localInputSchema.nullable()
+  }),
+  "input.prepare": localInputSchema,
+  "input.status": localInputSchema,
+  "input.release": external_exports.strictObject({ released: external_exports.literal(true) }),
+  "run.start": localRunSchema,
+  "run.get": localRunSchema,
+  "run.list": external_exports.strictObject({
+    runs: external_exports.array(localRunSchema).max(100),
+    nextOffset: external_exports.number().int().nullable()
+  }),
+  "run.cancel": localRunSchema,
+  "run.events": external_exports.strictObject({
+    events: external_exports.array(localEventSchema).max(100),
+    snapshot: localRunSchema,
+    resync: external_exports.boolean()
+  }),
+  "result.read": resultPage,
+  "artifact.read": external_exports.strictObject({
+    artifactId: id5,
+    offset: external_exports.number().int().nonnegative(),
+    base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
+    sha256: digest17,
+    totalSize: external_exports.number().int().nonnegative(),
+    eof: external_exports.boolean()
+  }),
+  "run.delete": external_exports.strictObject({ deleted: external_exports.literal(true) })
+};
+var localResponseSchema = external_exports.discriminatedUnion("ok", [
+  external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    requestId: id5,
+    ok: external_exports.literal(true),
+    result: external_exports.unknown()
+  }),
+  external_exports.strictObject({
+    protocol: external_exports.literal(localProtocol),
+    requestId: id5,
+    ok: external_exports.literal(false),
+    error: localErrorSchema
+  })
+]);
+
+// apps/codex-plugin/src/issue-screenshot.mjs
+var issueScreenshotReference = reportArtifactInputSchema.omit({ offset: true }).required({ artifactId: true });
+async function selectIssueScreenshot(reports, reference2, imageId) {
+  const input3 = issueScreenshotReference.parse(reference2);
+  assert2(reports?.customerArtifact, "Saved screenshot reads are unavailable.");
+  const value = customerReportArtifactResultSchema.parse(
+    await reports.customerArtifact(input3)
+  );
+  assert2.equal(value.reportId, input3.reportId);
+  assert2.equal(value.runId, input3.runId);
+  assert2.equal(value.state, "read");
+  assert2.equal(value.artifact.artifactId, input3.artifactId);
+  assert2.equal(value.artifact.mediaType, "image/png");
+  assert2.equal(value.content.mediaType, "image/png");
+  assert2.equal(value.content.encoding, "base64");
+  assert2(
+    value.content.data.length <= 4 * Math.ceil(issueImageLimits.fileBytes / 3)
+  );
+  const bytes = Buffer.from(value.content.data, "base64");
+  assert2.equal(bytes.length, value.artifact.bytes);
+  assert2.equal(
+    createHash3("sha256").update(bytes).digest("hex"),
+    value.artifact.sha256
+  );
+  return {
+    image: issueImageSchema.parse({
+      id: imageId,
+      name: value.artifact.name,
+      mediaType: "image/png",
+      bytes: bytes.length,
+      sha256: value.artifact.sha256
+    }),
+    bytes
+  };
+}
+
 // apps/codex-plugin/src/issues.mjs
 var viewKey2 = "kaijan/issue-view";
 var selectionKey = "kaijan/issue-selections";
@@ -32413,17 +35499,26 @@ function createIssueSurface({
   const fields = library.issueFieldsSchema;
   const textFields = fields.omit({ images: true }).partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
   const draftInput = external_exports.strictObject({
-    operation: external_exports.enum(["open", "read", "update", "discard_edit", "status"]),
+    operation: external_exports.enum([
+      "open",
+      "read",
+      "update",
+      "discard_edit",
+      "status",
+      "attach_screenshot"
+    ]),
     requestId: external_exports.uuid().optional(),
     draftId: external_exports.uuid().optional(),
     revision: external_exports.number().int().positive().optional(),
     title: fields.shape.title.optional(),
     description: fields.shape.description.optional(),
+    context: fields.shape.context,
+    screenshot: issueScreenshotReference.optional(),
     changes: textFields.optional()
   });
   const image = library.issueSelectionSchema.shape.image;
   const offset = external_exports.number().int().nonnegative().max(5 * 1024 * 1024);
-  const revision = external_exports.number().int().positive();
+  const revision2 = external_exports.number().int().positive();
   const actionBase = library.issueViewSchema;
   const actionArgs = {
     read: library.issueGetSchema.extend({
@@ -32435,22 +35530,22 @@ function createIssueSurface({
     publish: library.issuePublishSchema,
     continue_on_github: library.issuePublishSchema,
     close_review: library.issueGetSchema,
-    begin_image: library.issueGetSchema.extend({ revision, image }),
+    begin_image: library.issueGetSchema.extend({ revision: revision2, image }),
     append_image: library.issueGetSchema.extend({
-      revision,
+      revision: revision2,
       imageId: external_exports.uuid(),
       offset,
       base64: external_exports.string().min(4).max(4 * Math.ceil(256 * 1024 / 3))
     }),
     remove_image: library.issueGetSchema.extend({
-      revision,
+      revision: revision2,
       imageId: external_exports.uuid()
     }),
     read_image: library.issueGetSchema.extend({ imageId: external_exports.uuid(), offset })
   };
   const actionInput = actionBase.extend({
     operation: external_exports.enum(Object.keys(actionArgs)),
-    revision: revision.optional(),
+    revision: revision2.optional(),
     changes: library.issueChangesSchema.optional(),
     image: image.optional(),
     imageId: external_exports.uuid().optional(),
@@ -32496,12 +35591,12 @@ function createIssueSurface({
     describe3(
       "kaijan_issue_draft",
       "Review a Kaijan issue",
-      "Open or edit a Kaijan issue review in this chat. New reviews exist only in memory until closed or the plugin restarts. Closing discards unsent edits. Existing saved drafts keep their recovery path. Open requires requestId and optional title/description. Read, status and discard_edit require only draftId. Read is local; status checks only the original publication receipt. Update requires draftId, revision and nonempty text changes. Keep a refused edit and review the saved revision before applying it. New drafts are text-only. The person reviews the draft, continues on GitHub and submits there."
+      "Open or edit a report about Kaijan in this chat. Help prepare the observed failure, relevant context, expected behavior and steps from known facts. Open requires requestId and optional title, description and context. Unsent text and chosen images stay in this temporary review until Cancel or shutdown. The person reviews the text and screenshots, then confirms publication to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App, without opening GitHub. Only the confirmed submission is retained for receipt recovery. Read, status and discard_edit require draftId. Read is local; status checks only the original publication. Update requires draftId, revision and nonempty text changes. To collect a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId, and screenshot reportId/runId/artifactId from the same chat. This stages verified original PNG bytes for review and makes no public write. Never use filesystem paths or invent an artifact. The person can also choose images in the form. Keep refused edits. Earlier saved records keep their original recovery route."
     ),
     describe3(
       "kaijan_issue_publish",
       "Open Kaijan issue review",
-      "Open the existing issue form for the person to review it. For new drafts, the person continues on GitHub and submits to public katalon-studio/kaijan-marketplace. For an earlier unconfirmed publication, use status on the original draft."
+      "Open the current issue form for the person to review the exact text, context and chosen screenshots. The person confirms submission to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App. This tool does not publish or open GitHub. For an unconfirmed publication, check status on the original report."
     ),
     describe3(
       "kaijan_issue_form_action",
@@ -32521,8 +35616,14 @@ function createIssueSurface({
     else if (operation === "open") selected = library.issueOpenSchema;
     else if (operation === "update")
       selected = library.issueGetSchema.extend({
-        revision,
+        revision: revision2,
         changes: textFields
+      });
+    else if (operation === "attach_screenshot")
+      selected = library.issueGetSchema.extend({
+        revision: revision2,
+        requestId: external_exports.uuid(),
+        screenshot: issueScreenshotReference
       });
     else selected = library.issueGetSchema;
     return {
@@ -32597,10 +35698,21 @@ function createIssueSurface({
     }
     return opened;
   }
+  function publicationStore(data) {
+    let opened = stores.get(data);
+    if (!opened) {
+      opened = library.IssueDraftStore.open(data);
+      stores.set(data, opened);
+      opened.catch(() => stores.delete(data));
+    }
+    return opened;
+  }
   function temporaryStore(data) {
     let store = temporaryStores.get(data);
     if (!store) {
-      store = library.IssueDraftStore.temporary();
+      store = library.IssueDraftStore.temporary({
+        publicationRoute: "github-app"
+      });
       temporaryStores.set(data, store);
     }
     return store;
@@ -32691,7 +35803,7 @@ function createIssueSurface({
           canEdit: true,
           canPublish: appOnly
         };
-        const { operation, draftId, revision: revision2 } = input3;
+        const { operation, draftId, revision: revision3 } = input3;
         let store = temporaryStores.get(scope.data);
         if (operation === "open") {
           const historical = await existingStore(scope.data);
@@ -32704,8 +35816,10 @@ function createIssueSurface({
               );
             store = temporaryStore(scope.data);
           }
-        } else if (!store?.has(draftId)) {
-          store = await existingStore(scope.data);
+        } else {
+          const retained = await existingStore(scope.data);
+          if (retained?.has(draftId)) store = retained;
+          else if (!store?.has(draftId)) store = void 0;
           if (!store)
             throw new library.IssueDraftError(
               "not_found",
@@ -32714,11 +35828,12 @@ function createIssueSurface({
         }
         if (stopped || signal?.aborted)
           return reply(unavailable(), { appOnly });
-        const transport = () => createTransport({
+        const transport = (publicationRoute) => createTransport({
           library,
           broker,
           build,
           signal,
+          publicationRoute,
           journal: () => {
             let pending = journals.get(scope.data);
             if (!pending) {
@@ -32743,14 +35858,64 @@ function createIssueSurface({
             {
               requestId: input3.requestId,
               ...input3.title !== void 0 ? { title: input3.title } : {},
-              ...input3.description !== void 0 ? { description: input3.description } : {}
+              ...input3.description !== void 0 ? { description: input3.description } : {},
+              context: input3.context ?? [
+                ...build.pluginVersion ? [`Kaijan version: ${build.pluginVersion}`] : [],
+                "Host: Codex",
+                `Platform: ${process.platform} (${process.arch})`
+              ].join("\n")
             },
             actor,
-            "github-link"
+            "github-app"
           );
-        else if (operation === "update")
+        else if (operation === "attach_screenshot") {
+          if (current.publicationRoute !== "github-app" || current.status !== "draft")
+            throw new library.IssueDraftError(
+              "original_route_required",
+              "Keep the original report and selected images.",
+              current
+            );
+          if (current.revision !== revision3)
+            throw new library.IssueDraftError(
+              "revision_conflict",
+              "Read and review the current report before adding this screenshot.",
+              current
+            );
+          let selected;
+          try {
+            selected = await selectIssueScreenshot(
+              scope.services?.reports,
+              input3.screenshot,
+              input3.requestId
+            );
+          } catch {
+            throw new library.IssueDraftError(
+              "screenshot_unavailable",
+              "This screenshot could not be added. Choose an image or use a saved screenshot from this chat.",
+              current
+            );
+          }
+          store.beginImage(draftId, revision3, actor, selected.image);
+          for (let offset2 = 0; offset2 < selected.bytes.length; offset2 += 256 * 1024)
+            store.appendImage(
+              draftId,
+              revision3,
+              actor,
+              selected.image.id,
+              offset2,
+              selected.bytes.subarray(offset2, offset2 + 256 * 1024).toString("base64")
+            );
           draft = store.update(
-            { draftId, revision: revision2, changes: input3.changes },
+            {
+              draftId,
+              revision: revision3,
+              changes: { images: [...current.fields.images, selected.image] }
+            },
+            actor
+          );
+        } else if (operation === "update")
+          draft = store.update(
+            { draftId, revision: revision3, changes: input3.changes },
             actor
           );
         else if (operation === "close_review") {
@@ -32767,7 +35932,7 @@ function createIssueSurface({
               "Use the original publication controls for this issue.",
               current
             );
-          if (view?.reviewedRevision !== revision2 || current.revision !== revision2 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
+          if (view?.reviewedRevision !== revision3 || current.revision !== revision3 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
             throw new library.IssueDraftError(
               "review_required",
               "Save and review the current title and observed behavior before continuing.",
@@ -32782,10 +35947,10 @@ function createIssueSurface({
             );
           draft = current;
         } else if (operation === "publish" || operation === "status" && !githubLink) {
-          const publisherTransport = transport();
+          const publisherTransport = transport(current.publicationRoute);
           if (operation === "publish") {
             if (current.status === "draft") {
-              if (view?.reviewedRevision !== revision2 || current.revision !== revision2)
+              if (view?.reviewedRevision !== revision3 || current.revision !== revision3)
                 throw new library.IssueDraftError(
                   "review_required",
                   "Open Preview issue and review the current text, images and account before publishing.",
@@ -32799,26 +35964,39 @@ function createIssueSurface({
               }
             }
           }
+          if (operation === "publish" && current.temporary && current.publicationRoute === "github-app") {
+            const temporary = store;
+            const durable = await publicationStore(scope.data);
+            temporary.promoteReviewed(draftId, revision3, actor, durable);
+            store = durable;
+            if (temporary.size === 0) {
+              temporary.close();
+              temporaryStores.delete(scope.data);
+            }
+            for (const [token, granted] of cleanupViews)
+              if (granted.draftId === draftId && granted.scope === scope.scope.id)
+                cleanupViews.delete(token);
+          }
           draft = operation === "publish" ? await store.publish(
             draftId,
-            revision2,
+            revision3,
             actor,
             publisherTransport
           ) : await store.refresh(draftId, actor, publisherTransport);
         } else {
           if (operation === "begin_image")
-            store.beginImage(draftId, revision2, actor, input3.image);
+            store.beginImage(draftId, revision3, actor, input3.image);
           else if (operation === "append_image")
             store.appendImage(
               draftId,
-              revision2,
+              revision3,
               actor,
               input3.imageId,
               input3.offset,
               input3.base64
             );
           else if (operation === "remove_image")
-            store.removeImage(draftId, revision2, actor, input3.imageId);
+            store.removeImage(draftId, revision3, actor, input3.imageId);
           else if (operation === "read_image") {
             const selected = store.readImage(draftId, actor, input3.imageId);
             if (input3.offset >= selected.bytes.length || input3.offset % (256 * 1024) !== 0)
@@ -32837,7 +36015,7 @@ function createIssueSurface({
           draft = store.get(draftId, actor);
         }
         if (draft.status === "draft" && draft.publicationRoute !== "github-link" && (operation === "open" || operation === "read" && appOnly && input3.refreshPublisher === true)) {
-          const publisherTransport = transport();
+          const publisherTransport = transport(draft.publicationRoute);
           try {
             if (publisherTransport.requiresPublisher) {
               const selected = await publisherTransport.identify(owner, {
@@ -32913,12 +36091,12 @@ function pluginHost(build) {
   return host;
 }
 function claudeSessionId(environment) {
-  const id4 = environment.CLAUDE_CODE_SESSION_ID;
-  if (typeof id4 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id4))
+  const id6 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id6 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id6))
     throw Error(
       "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
     );
-  return id4;
+  return id6;
 }
 
 // apps/codex-plugin/src/installed-session.mjs
@@ -32957,15 +36135,15 @@ async function createInstalledSession(root, build, data, broker, {
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
-  const source2 = join4(root, "capabilities");
+  const source3 = join4(root, "capabilities");
   const started = performance.now();
-  const identity2 = await verifyDistribution(source2, build.capabilityDigest);
+  const identity2 = await verifyDistribution(source3, build.capabilityDigest);
   if (Object.values(identity2.manifest.files).some((member) => "symlink" in member))
     throw Error("Installed runtime must contain regular files");
   const verified = performance.now();
-  process3.env.PATH = [join4(source2, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  process3.env.PATH = [join4(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage("import_library");
-  const library = await import(pathToFileURL(join4(source2, "library/api.mjs")).href);
+  const library = await import(pathToFileURL(join4(source3, "library/api.mjs")).href);
   stage("init_services");
   if (Boolean(build.validationContext) !== Boolean(runnerValidation))
     throw Error(
@@ -33217,19 +36395,19 @@ async function main() {
   );
   const session = await createInstalledSession(root, build, selected.state);
   try {
-    const binding = args.command === "provision" ? await session.privateParameters.provision(args.threadId, {
+    const binding2 = args.command === "provision" ? await session.privateParameters.provision(args.threadId, {
       allowedHosts: args.hosts,
       values
     }) : await session.privateParameters.revoke(args.threadId, args.bindingId);
     const privateParams = args.command === "provision" ? Object.fromEntries(
-      binding.fields.map((field) => [
+      binding2.fields.map((field) => [
         field,
-        { bindingId: binding.bindingId, field }
+        { bindingId: binding2.bindingId, field }
       ])
     ) : void 0;
     process.stdout.write(
       JSON.stringify({
-        ...binding,
+        ...binding2,
         ...privateParams ? { privateParams } : {}
       }) + "\n"
     );

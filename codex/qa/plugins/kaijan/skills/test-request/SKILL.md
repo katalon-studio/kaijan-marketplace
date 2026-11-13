@@ -7,9 +7,9 @@ description: Use Kaijan to test a selected application or review a change and te
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md).
 Keep the caller's original task, selected application and any source, target and
-action constraints. A broad request to test a supplied URL provides a task and
-target. Choose useful checks within that scope and keep unknown requirements
-open. A plan-only request ends at the plan. A full test
+action constraints. Identify the testing objective using the shared guidance
+before choosing checks. Keep unknown requirements open. A plan-only request
+ends at the plan. A full test
 request with sufficient inputs can proceed through execution and report under
 the same authority.
 

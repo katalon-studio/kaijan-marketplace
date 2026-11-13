@@ -88582,6 +88582,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -97955,6 +97956,18 @@ import { DatabaseSync as DatabaseSync3 } from "node:sqlite";
 import { isDeepStrictEqual as isDeepStrictEqual3 } from "node:util";
 var chunkBytes = 256 * 1024;
 var ownerSchema = external_exports.strictObject({ userId: external_exports.uuid(), workspaceId: external_exports.uuid() });
+var issueImageTables = `CREATE TABLE IF NOT EXISTS images (
+  draft_id TEXT NOT NULL, image_id TEXT NOT NULL,
+  owner_user TEXT NOT NULL, owner_workspace TEXT NOT NULL,
+  declaration TEXT NOT NULL, received INTEGER NOT NULL DEFAULT 0 CHECK(received>=0),
+  complete INTEGER NOT NULL DEFAULT 0 CHECK(complete IN (0,1)),
+  PRIMARY KEY(draft_id,image_id)
+);
+CREATE TABLE IF NOT EXISTS chunks (
+  draft_id TEXT NOT NULL, image_id TEXT NOT NULL, offset INTEGER NOT NULL,
+  bytes BLOB NOT NULL, PRIMARY KEY(draft_id,image_id,offset),
+  FOREIGN KEY(draft_id,image_id) REFERENCES images(draft_id,image_id) ON DELETE CASCADE
+);`;
 var IssueImageError = class extends Error {
   constructor(code, message) {
     super(message);
@@ -97972,6 +97985,18 @@ var IssueImageStore = class _IssueImageStore {
   db;
   identity;
   closed = false;
+  /** Unsent selections remain private memory and create no filesystem state. */
+  static temporary() {
+    const db = new DatabaseSync3(":memory:");
+    try {
+      db.exec("PRAGMA foreign_keys=ON; PRAGMA temp_store=MEMORY;");
+      db.exec(issueImageTables);
+      return new _IssueImageStore(void 0, db, void 0);
+    } catch (error62) {
+      db.close();
+      throw error62;
+    }
+  }
   static async open(data2) {
     if (!isAbsolute7(data2))
       throw Error("Issue images need a private conversation directory.");
@@ -97994,19 +98019,10 @@ var IssueImageStore = class _IssueImageStore {
       );
     const db = new DatabaseSync3(path23, { timeout: 5e3 });
     try {
-      db.exec(`PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON;
-        CREATE TABLE IF NOT EXISTS images (
-          draft_id TEXT NOT NULL, image_id TEXT NOT NULL,
-          owner_user TEXT NOT NULL, owner_workspace TEXT NOT NULL,
-          declaration TEXT NOT NULL, received INTEGER NOT NULL DEFAULT 0 CHECK(received>=0),
-          complete INTEGER NOT NULL DEFAULT 0 CHECK(complete IN (0,1)),
-          PRIMARY KEY(draft_id,image_id)
-        );
-        CREATE TABLE IF NOT EXISTS chunks (
-          draft_id TEXT NOT NULL, image_id TEXT NOT NULL, offset INTEGER NOT NULL,
-          bytes BLOB NOT NULL, PRIMARY KEY(draft_id,image_id,offset),
-          FOREIGN KEY(draft_id,image_id) REFERENCES images(draft_id,image_id) ON DELETE CASCADE
-        );`);
+      db.exec(
+        "PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON;"
+      );
+      db.exec(issueImageTables);
       const store2 = new _IssueImageStore(path23, db, {
         dev: info.dev,
         ino: info.ino
@@ -98021,6 +98037,7 @@ var IssueImageStore = class _IssueImageStore {
   check() {
     if (this.closed)
       throw new IssueImageError("store_closed", "Reopen the selected images.");
+    if (this.path === void 0) return;
     const info = lstatSync4(this.path), directory3 = join8(this.path, "..");
     const parent = lstatSync4(directory3);
     if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.dev !== this.identity.dev || info.ino !== this.identity.ino || info.uid !== process.getuid?.() || (info.mode & 63) !== 0 || !parent.isDirectory() || parent.uid !== process.getuid?.() || (parent.mode & 63) !== 0 || realpathSync(directory3) !== resolve4(directory3))
@@ -98239,6 +98256,7 @@ var issuePublisherSchema = external_exports.strictObject({
 var issueFieldsSchema = external_exports.strictObject({
   title: external_exports.string().max(200),
   description: external_exports.string().max(5e3),
+  context: external_exports.string().max(5e3).optional(),
   expectedBehavior: external_exports.string().max(1500),
   steps: external_exports.array(external_exports.string().max(500)).max(10),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -98247,7 +98265,8 @@ var issueChangesSchema = issueFieldsSchema.partial().refine((value) => Object.ke
 var issueOpenSchema = external_exports.strictObject({
   requestId: external_exports.uuid(),
   title: issueFieldsSchema.shape.title.optional(),
-  description: issueFieldsSchema.shape.description.optional()
+  description: issueFieldsSchema.shape.description.optional(),
+  context: issueFieldsSchema.shape.context
 });
 var issueGetSchema = external_exports.strictObject({ draftId: external_exports.uuid() });
 var issueUpdateSchema = issueGetSchema.extend({
@@ -98261,13 +98280,14 @@ var issueDraftSchema = external_exports.strictObject({
   id: external_exports.uuid(),
   revision: external_exports.number().int().positive(),
   repository: external_exports.literal(kaijanIssueRepository),
-  publicationRoute: external_exports.literal("github-link").optional(),
+  publicationRoute: external_exports.enum(["github-link", "github-app"]).optional(),
   temporary: external_exports.literal(true).optional(),
   fields: issueFieldsSchema,
   publisher: issuePublisherSchema.optional(),
   origins: external_exports.strictObject({
     title: external_exports.enum(["human", "agent"]).optional(),
     description: external_exports.enum(["human", "agent"]).optional(),
+    context: external_exports.enum(["human", "agent"]).optional(),
     expectedBehavior: external_exports.enum(["human", "agent"]).optional(),
     steps: external_exports.enum(["human", "agent"]).optional(),
     images: external_exports.enum(["human", "agent"]).optional()
@@ -98282,11 +98302,17 @@ var issueDraftSchema = external_exports.strictObject({
     changes: issueChangesSchema
   }).optional()
 }).superRefine((draft, context) => {
-  if (draft.temporary && draft.publicationRoute !== "github-link")
+  if (draft.temporary && !["github-link", "github-app"].includes(draft.publicationRoute ?? ""))
     context.addIssue({
       code: "custom",
       path: ["temporary"],
-      message: "Temporary reviews use the text-only GitHub handoff."
+      message: "Keep the selected publication route for this review."
+    });
+  if (draft.publicationRoute === "github-app" && draft.publisher)
+    context.addIssue({
+      code: "custom",
+      path: ["publisher"],
+      message: "The GitHub App submits this report, not a user credential."
     });
   if (draft.publicationRoute === "github-link" && (draft.status !== "draft" || draft.publisher || draft.fields.images.length))
     context.addIssue({
@@ -98326,6 +98352,8 @@ var githubIssueUrlLimit = 4e3;
 function githubIssueDraftUrl(fields4) {
   const url2 = new URL(githubIssuePath);
   const body2 = ["## Observed behavior\n\n" + fields4.description.trim()];
+  if (fields4.context?.trim())
+    body2.push("## Context\n\n" + fields4.context.trim());
   if (fields4.expectedBehavior.trim())
     body2.push("## Expected behavior\n\n" + fields4.expectedBehavior.trim());
   if (fields4.steps.length)
@@ -98357,6 +98385,7 @@ function finalIssueInput(draft, requestId) {
     requestId,
     title: draft.fields.title,
     description: draft.fields.description,
+    ...draft.fields.context?.trim() ? { context: draft.fields.context } : {},
     ...draft.fields.expectedBehavior.trim() ? { expectedBehavior: draft.fields.expectedBehavior } : {},
     ...draft.fields.steps.length ? { steps: draft.fields.steps } : {},
     images: draft.fields.images
@@ -98411,24 +98440,34 @@ var issueDraftTables = `CREATE TABLE IF NOT EXISTS drafts (
           image_id TEXT NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY(draft_id,image_id)
         );`;
 var IssueDraftStore = class _IssueDraftStore {
-  constructor(path23, db, images, identity2) {
+  constructor(path23, db, images, identity2, temporaryRoute = "github-link") {
     this.path = path23;
     this.db = db;
     this.images = images;
     this.identity = identity2;
+    this.temporaryRoute = temporaryRoute;
   }
   path;
   db;
   images;
   identity;
+  temporaryRoute;
   closed = false;
-  /** New text-only reviews never create a directory, database file or image store. */
-  static temporary() {
+  /** Unsent reviews create no directory or database file. */
+  static temporary({
+    publicationRoute = "github-link"
+  } = {}) {
     const db = new DatabaseSync4(":memory:");
     try {
       db.exec("PRAGMA foreign_keys=ON; PRAGMA temp_store=MEMORY;");
       db.exec(issueDraftTables);
-      return new _IssueDraftStore(void 0, db, void 0, void 0);
+      return new _IssueDraftStore(
+        void 0,
+        db,
+        publicationRoute === "github-app" ? IssueImageStore.temporary() : void 0,
+        void 0,
+        publicationRoute
+      );
     } catch (error62) {
       db.close();
       throw error62;
@@ -98448,6 +98487,14 @@ var IssueDraftStore = class _IssueDraftStore {
       );
     return this.transaction(() => {
       const review = this.get(id8, actor);
+      if (review.status !== "draft")
+        throw new IssueDraftError(
+          "publication_pending",
+          "Keep the submitted report and check its status.",
+          review
+        );
+      for (const item2 of this.images?.list(this.owner(actor), id8) ?? [])
+        this.images.remove(this.owner(actor), id8, item2.image.id);
       this.db.prepare("DELETE FROM attempts WHERE draft_id=?").run(id8);
       this.db.prepare("DELETE FROM contributions WHERE draft_id=?").run(id8);
       this.db.prepare("DELETE FROM drafts WHERE id=?").run(id8);
@@ -98700,17 +98747,19 @@ var IssueDraftStore = class _IssueDraftStore {
         revision: 1,
         repository: kaijanIssueRepository,
         ...publicationRoute ? { publicationRoute } : {},
-        ...this.path === void 0 ? { temporary: true, publicationRoute: "github-link" } : {},
+        ...this.path === void 0 ? { temporary: true, publicationRoute: this.temporaryRoute } : {},
         fields: {
           title: input3.title ?? "",
           description: input3.description ?? "",
+          ...input3.context !== void 0 ? { context: input3.context } : {},
           expectedBehavior: "",
           steps: [],
           images: []
         },
         origins: {
           ...input3.title !== void 0 ? { title: actor.kind } : {},
-          ...input3.description !== void 0 ? { description: actor.kind } : {}
+          ...input3.description !== void 0 ? { description: actor.kind } : {},
+          ...input3.context !== void 0 ? { context: actor.kind } : {}
         },
         status: "draft"
       });
@@ -98861,7 +98910,7 @@ var IssueDraftStore = class _IssueDraftStore {
   listImages(id8, actor) {
     return this.transaction(() => {
       const draft = this.get(id8, actor);
-      if (this.path === void 0) return [];
+      if (!this.images) return [];
       if (draft.status === "draft")
         return this.imageStore.list(this.owner(actor), id8);
       return draft.fields.images.map((image) => {
@@ -98913,6 +98962,87 @@ var IssueDraftStore = class _IssueDraftStore {
         "The original selected image is unavailable. Its data was preserved."
       );
     return { image, bytes: row2.bytes };
+  }
+  /** Persist only after the person confirms Publish; unsent reviews stay in memory. */
+  promoteReviewed(id8, revision2, actor, destination) {
+    if (this.path !== void 0 || destination.path === void 0)
+      throw new IssueDraftError(
+        "original_route_required",
+        "Keep the original publication route."
+      );
+    const current2 = this.get(id8, actor);
+    if (current2.publicationRoute !== "github-app")
+      throw new IssueDraftError(
+        "original_route_required",
+        "Keep the original publication route.",
+        current2
+      );
+    const selected2 = this.freeze(id8, revision2, actor);
+    const original = this.db.prepare("SELECT body,open_request FROM drafts WHERE id=?").get(id8);
+    const saved = issueDraftSchema.parse(JSON.parse(original.body));
+    delete saved.temporary;
+    const { input: input3 } = dispatchInput(selected2);
+    const images = input3.images.map((image) => this.selectedImage(id8, image));
+    const contributions = this.db.prepare(
+      "SELECT revision,actor,changes FROM contributions WHERE draft_id=? ORDER BY revision"
+    ).all(id8);
+    const attempts = this.db.prepare(
+      "SELECT actor,base_revision,changes FROM attempts WHERE draft_id=?"
+    ).all(id8);
+    destination.transaction(() => {
+      if (destination.has(id8)) {
+        const previous2 = destination.get(id8, actor);
+        const dispatch = destination.dispatch(id8);
+        if (previous2.revision !== revision2 || dispatch?.request_id !== selected2.request_id || dispatch.input !== selected2.input)
+          throw new IssueDraftError(
+            "publication_conflict",
+            "Keep the original confirmed submission.",
+            current2
+          );
+        return;
+      }
+      destination.db.prepare(
+        "INSERT INTO drafts(id,owner_user,owner_workspace,open_request,revision,body) VALUES(?,?,?,?,?,?)"
+      ).run(
+        id8,
+        actor.userId,
+        actor.workspaceId,
+        original.open_request,
+        revision2,
+        JSON.stringify(saved)
+      );
+      for (const row2 of contributions)
+        destination.db.prepare(
+          "INSERT INTO contributions(draft_id,revision,actor,changes) VALUES(?,?,?,?)"
+        ).run(id8, row2.revision, row2.actor, row2.changes);
+      for (const row2 of attempts)
+        destination.db.prepare(
+          "INSERT INTO attempts(draft_id,actor,base_revision,changes) VALUES(?,?,?,?)"
+        ).run(id8, row2.actor, row2.base_revision, row2.changes);
+      destination.db.prepare(
+        "INSERT INTO dispatches(draft_id,request_id,input,reviewed_by,remote_status) VALUES(?,?,?,?,?)"
+      ).run(
+        id8,
+        selected2.request_id,
+        selected2.input,
+        actor.kind,
+        selected2.remote_status
+      );
+      for (const image of images)
+        destination.db.prepare(
+          "INSERT INTO selected_images(draft_id,image_id,bytes) VALUES(?,?,?)"
+        ).run(id8, image.image.id, image.bytes);
+    });
+    this.transaction(() => {
+      for (const item2 of this.images?.list(this.owner(actor), id8) ?? [])
+        this.images.remove(this.owner(actor), id8, item2.image.id);
+      this.db.prepare("DELETE FROM selected_images WHERE draft_id=?").run(id8);
+      this.db.prepare("DELETE FROM dispatches WHERE draft_id=?").run(id8);
+      this.db.prepare("DELETE FROM attempts WHERE draft_id=?").run(id8);
+      this.db.prepare("DELETE FROM contributions WHERE draft_id=?").run(id8);
+      this.db.prepare("DELETE FROM drafts WHERE id=?").run(id8);
+    });
+    return destination.get(id8, actor);
   }
   freeze(id8, revision2, actor) {
     if (!actor.canPublish)
@@ -99102,14 +99232,15 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath5 } from "node:url";
-var issueFormUri = "ui://kaijan/issue/form/v7.html";
+var issueFormUri = "ui://kaijan/issue/form/v8.html";
 var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v1.html",
   "ui://kaijan/issue/form/v2.html",
   "ui://kaijan/issue/form/v3.html",
   "ui://kaijan/issue/form/v4.html",
   "ui://kaijan/issue/form/v5.html",
-  "ui://kaijan/issue/form/v6.html"
+  "ui://kaijan/issue/form/v6.html",
+  "ui://kaijan/issue/form/v7.html"
 ]);
 async function readIssueForm(uri2 = issueFormUri) {
   if (uri2 !== issueFormUri && !cachedIssueFormUris.includes(uri2))
@@ -99332,6 +99463,7 @@ var asset = (value) => {
 };
 function body(input3, images) {
   const sections = ["## Observed behavior\n\n" + input3.description];
+  if (input3.context) sections.push("## Context\n\n" + input3.context);
   if (input3.expectedBehavior)
     sections.push("## Expected behavior\n\n" + input3.expectedBehavior);
   if (input3.steps?.length)

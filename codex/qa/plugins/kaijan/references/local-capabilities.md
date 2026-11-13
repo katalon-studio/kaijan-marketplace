@@ -1,5 +1,21 @@
 # Local Product MCP capabilities
 
+## Identify the testing objective
+
+Before planning or starting a new test, establish which behavior, change or
+problem the person wants checked. Reuse the current conversation, a selected
+PR or ticket, supplied test cases, or a described goal. Read a selected source
+when needed to understand that goal. A URL or repository identifies the
+application; by itself, it does not select a testing objective.
+
+If the objective is missing, ask a focused question before choosing tests.
+Offer relevant suggestions from the available context when the person needs
+help choosing, and wait for their selection. Keep the supplied target, source
+and constraints when continuing from the answer. A goal already clear from
+context needs no repeated question, formal test case or mandatory PR/ticket.
+Selected saved tests already supply an objective. Reading results, answering
+an active Run and stopping work keep their existing flow.
+
 ## Chat updates
 
 Keep routine Kaijan activity out of assistant chat. Do not narrate tool calls,

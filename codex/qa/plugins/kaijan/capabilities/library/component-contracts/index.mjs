@@ -21692,6 +21692,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
