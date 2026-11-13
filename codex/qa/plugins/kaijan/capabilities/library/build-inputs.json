@@ -145,7 +145,7 @@
     "packages/capabilities/src/assessment-source-display.ts": "679001fa98dadfe837bbe993b1c0c31dcd7d83adae33e1aa6be7aed7bf84d8df",
     "packages/capabilities/src/assessment-plan-source.ts": "6108266773af35a7746e34ed9b9d19de6f4ab591c90095972793b67fd7f6dee4",
     "packages/capabilities/src/assessment-recap-source.ts": "25fb62272442fc1be3a02dfb3e9c8296dd4002da8af2720723dc549da87f095d",
-    "packages/capabilities/src/application-url-protection.ts": "f21a994961a792eae3095f4ae2bdf837ec14d4cfc379b08fcacbf7bc69718ec5",
+    "packages/capabilities/src/application-url-protection.ts": "b0c4492080d10512128d4bb532853ef7ad84dd005f2e8fffce05be5b6bc8838b",
     "packages/capabilities/research/assessment-source-binding.mjs": "7f5c1a0be0b72791c386a021326ba0ef5232d5a0b3ef29dd96fcb4ed397384e3",
     "packages/capabilities/src/assessment-presentation.ts": "7a9e212128c10b184a095100b0ae5b7a78891761bbfc9109af7aee64d7b99d38",
     "packages/capabilities/src/note-identity-protection.ts": "bad03a59b02cd6819568efec774e7c93933b22d18179dd5ca4cd4072e687149b",
