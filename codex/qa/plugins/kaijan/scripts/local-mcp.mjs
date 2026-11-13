@@ -40607,7 +40607,7 @@ import { randomUUID as randomUUID2 } from "node:crypto";
 import { platform as platform2, release as release2, arch } from "node:os";
 function createTelemetryCollector(broker, build) {
   const host = pluginHost(build);
-  let lease = null, stopped = false;
+  let lease = null, stopped = false, ownerDiagnosticsSupported = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
     try {
@@ -40619,6 +40619,7 @@ function createTelemetryCollector(broker, build) {
         }
       );
       const health = response2.ok ? await response2.json() : null;
+      ownerDiagnosticsSupported = health?.owner_diagnostics === true;
       const parsed = telemetryIdentityEpochSchema.safeParse(health?.epoch);
       if (health?.disabled === true) lease = null;
       else if (parsed.success) lease = parsed.data;
@@ -40626,6 +40627,7 @@ function createTelemetryCollector(broker, build) {
         lease = null;
     } catch {
       lease = null;
+      ownerDiagnosticsSupported = false;
     }
   };
   const ready = refresh();
@@ -40638,6 +40640,13 @@ function createTelemetryCollector(broker, build) {
     try {
       const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
+      let supportedProperties = properties;
+      if (!ownerDiagnosticsSupported && (event2 === "Test Plan Generated" || event2 === "Test Run Finished")) {
+        supportedProperties = { ...properties };
+        if (event2 === "Test Plan Generated")
+          delete supportedProperties.transport_reason;
+        else delete supportedProperties.assessment_status;
+      }
       const clientVersion = telemetryVersionSchema.safeParse(
         observation2.clientVersion
       );
@@ -40661,7 +40670,7 @@ function createTelemetryCollector(broker, build) {
         os: ["darwin", "linux", "win32"].includes(platform2()) ? platform2() : "unknown",
         os_version: release2(),
         arch: ["arm64", "x64"].includes(arch()) ? arch() : "unknown",
-        properties
+        properties: supportedProperties
       });
       const task = channelFetch(broker.socketPath, "/telemetry/events", {
         method: "POST",
@@ -41085,7 +41094,8 @@ var planCompletion = external_exports.strictObject({
   providerHttpStatus: providerHttpStatusSchema.optional(),
   failureDiagnostics: external_exports.strictObject({
     failure_stage: planningFailureStageSchema.optional(),
-    validation_rule: planningValidationRuleSchema.optional()
+    validation_rule: planningValidationRuleSchema.optional(),
+    transport_reason: planningTransportReasonSchema.optional()
   }).optional()
 }).refine(
   (value) => value.outcome === "failed" ? value.casesTotal === null && value.casesMissingExpectedResult === null : value.casesMissingExpectedResult === null || value.casesTotal !== null && value.casesMissingExpectedResult <= value.casesTotal
@@ -41148,6 +41158,7 @@ var runCompletion = external_exports.strictObject({
   checks: terminalChecks.nullable(),
   checkSummary: checkSummary.nullable().optional(),
   blockedReason: external_exports.literal("initial_navigation_blocked").optional(),
+  assessmentStatus: runAssessmentStatusSchema.optional(),
   assessedSummary: external_exports.strictObject({
     provenance: external_exports.enum([
       "saved-report-assessments/1",
@@ -41375,6 +41386,7 @@ function createCapabilityTelemetryObserver({
           result_basis: assessed ? assessed.provenance === "saved-report-assessments/1" ? "saved_report_assessments" : "selected_test_inventory" : checks || summary3 ? "product_terminal_checks" : null,
           check_status: assessed ? assessed.provenance === "saved-report-assessments/1" ? "checked" : "unchecked" : checks || summary3 ? "checked" : "unchecked",
           ...unverifiedReason ? { unverified_reason: unverifiedReason } : {},
+          ...value.assessmentStatus ? { assessment_status: value.assessmentStatus } : {},
           ...blockedReason ? { blocked_reason: blockedReason } : {},
           evidence_items_count: checks?.evidenceCount ?? summary3?.evidenceCount ?? null,
           error_code: code,
