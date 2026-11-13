@@ -23,7 +23,19 @@ Use `kaijan_issue_draft` with `operation: open`, one UUID `requestId`, and
 any title and observed behavior you already know. A sentence is enough to
 start. Suggest a short title and describe what you observed. Include a useful
 error, version or step if known. Ask only for a missing fact that matters.
-Expected behavior and steps are optional. New reports use text only.
+Expected behavior and steps are optional. Use `context` for relevant environment
+and failure details. The review also includes the running plugin version and
+platform when available. The person can edit or remove that context.
+
+Help collect screenshots from the reported problem when authorized. For an
+existing saved Run, use its report artifact reader. Attach a selected original
+PNG with `kaijan_issue_draft`, `operation: attach_screenshot`, the current
+`draftId` and `revision`, one fresh UUID `requestId`, and `screenshot` containing
+the exact `reportId`, `runId` and `artifactId`. Keep that request ID for a retry.
+The tool reads only the selected screenshot in this chat; it does not run a test.
+Do not invent an artifact, use a filesystem path or collect unrelated evidence.
+The person can also choose images in the form. Images remain local until the
+person reviews and confirms them.
 
 New reviews are temporary. Keep the returned review ID while the form is open.
 Read it with `operation: read` before editing. Update only the selected fields
@@ -32,11 +44,13 @@ Do not say that the review was saved on the device. Closing it or restarting
 the plugin discards its unsent edits. **Cancel** closes the review.
 
 Use `kaijan_issue_publish` with the current ID and revision to open the review.
-The person selects **Preview issue** and **Continue on GitHub**. GitHub opens
-the reviewed text in a new issue for `katalon-studio/kaijan-marketplace`.
-The person checks their GitHub account and submits there. Opening the page
-returns no publication receipt. If the URL is too long, keep the open review
-and let the person shorten or copy the text.
+The person selects **Preview issue**, checks the exact text, context and images,
+then selects **Publish issue**. Kaijan submits directly to
+`katalon-studio/kaijan-marketplace` through its GitHub App. Do not open a GitHub
+create page or fall back to a personal token or local GitHub CLI.
+Only the submission confirmed by the person is retained for receipt recovery. Return the
+issue number and link only after a matching published receipt. If the reply is
+uncertain, read `operation: status` on that same report; do not create a replacement.
 
 Earlier saved drafts retain their original recovery. Read the original draft
 instead of replacing it. For an earlier unconfirmed publication, use
