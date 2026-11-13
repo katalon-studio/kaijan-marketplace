@@ -48,7 +48,7 @@
     "packages/contracts/dist/terminal-checks.js": "18529070706348022617cf526cea6dce4a1735556c96454e202948c9032a3f60",
     "packages/contracts/dist/report-view.js": "ab3dd3b6699d690f7d318d18c9e66a4080758947686d12a934c89e1753a2678c",
     "packages/contracts/dist/advisory-read.js": "164958ce73d9c83bd48f6b46abe6c64f530c6a4c4f3c54c1a69092f80e973adb",
-    "packages/contracts/dist/advisory.js": "df343cb8c2d311387672870a1e65e59709360771a1871fc644fa3bcbc7c9cb7f",
+    "packages/contracts/dist/advisory.js": "ee2e56921f2c5695290e6000d56c514cec52c74610bac360d1dfcc1bd98b2d81",
     "packages/contracts/dist/clarification-presentation.js": "9760f7b52b192b5be4a83f11d74a939ba7917d535e69bca204b87c40d86b0cdb",
     "packages/contracts/dist/runner.js": "1e5fd2c92f07ad895848b66c7357d4dcec9156341ee2a117c9a5e35ab7b7c6a4",
     "packages/contracts/dist/assessment-preparation.js": "a89df1fdd0705c9ec61aa499fe0ee570c3458eb093015b41a4f19a05caf3f247",
