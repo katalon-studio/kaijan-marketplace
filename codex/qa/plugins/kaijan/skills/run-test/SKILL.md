@@ -1,6 +1,6 @@
 ---
 name: run-test
-description: Run and assess an authorized browser or macOS desktop test, read its result, or stop the same test. Use for saved Plan tests or a complete supplied scenario. Explicit execution-only requests can use Runner directly.
+description: Run and assess an authorized browser or macOS desktop test, read its result, or stop the same test. Use for saved Plan tests or a complete supplied scenario.
 ---
 
 # Execute an explicit UI scenario
@@ -45,7 +45,7 @@ Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
   Add other relevant caller knowledge in `hostContext` separately.
   This input cannot be combined with `scenario` or `planRef`.
 - `scenario` contains the full supplied test and optional `planRef` can
-  correlate it. Standalone Runner also requires full scenario content.
+  correlate it.
   Keep required behavior, assumptions and observation-only questions distinct.
   Include known preconditions and inputs. Declare consequential missing values
   in `unresolvedInputs`; the operation will not execute with unresolved inputs.
@@ -68,8 +68,7 @@ from the test outcome.
 ## Read or stop the original test
 
 Use `loki_test_get` through the execution and assessment result, and
-`loki_test_stop` to stop the same test. For execution only, use
-`loki_runner_execute`, `loki_runner_get` and `loki_runner_stop`.
+`loki_test_stop` to stop the same test.
 For external test evidence use
 [assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
 
