@@ -6,9 +6,13 @@ description: Check a Kaijan Core connection or read an existing Work Item by its
 # Read a Kaijan Work Item
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
-and the bundled Core tools for the installed profile in
-`../../loki-build.json`. Clarify the environment when it is ambiguous.
-The profile fixes the endpoint. Use Codex's Connect and OAuth controls
+and the bundled Core tools for the selected profile. For fixed-profile packages,
+read `../../loki-build.json`. For `runtime-env/1` packages, startup
+`KAIJAN_PROFILE` accepts `qa` or `production` (`prod` is an alias). Unset uses
+Production; other values fail startup without selecting a service or falling
+back. `loki-build.json` records the default, not the running selection.
+Read the live connection result before reporting readiness. Clarify the
+environment when it is ambiguous. Use Codex's Connect and OAuth controls
 when sign-in is required. Keep credentials out of chat. A website session
 is separate from this grant.
 
