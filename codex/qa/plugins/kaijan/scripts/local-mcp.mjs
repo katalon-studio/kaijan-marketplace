@@ -50977,22 +50977,23 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
   target: jsonObject.nullable(),
   provenance: jsonObject.nullable()
 });
-var proposedPlanSchema = external_exports.strictObject({
+var planningRefs = external_exports.array(external_exports.looseObject({ evidence_id: external_exports.string() }));
+var proposedPlanSchema = external_exports.looseObject({
   status: external_exports.enum(["proposed_plan", "needs_clarification"]),
-  objectives: external_exports.array(external_exports.strictObject({ id: external_exports.string(), text: external_exports.string(), refs: refs2 })),
-  requirement_coverage: external_exports.array(external_exports.strictObject({
+  objectives: external_exports.array(external_exports.looseObject({ id: external_exports.string(), text: external_exports.string(), refs: planningRefs })),
+  requirement_coverage: external_exports.array(external_exports.looseObject({
     requirement_id: external_exports.string(),
     status: external_exports.enum(["proposed", "gap"]),
     test_ids: strings,
     reason: external_exports.string()
   })),
   ambiguities: strings,
-  relevant_surfaces: external_exports.array(external_exports.strictObject({
+  relevant_surfaces: external_exports.array(external_exports.looseObject({
     description: external_exports.string(),
     basis: external_exports.string(),
-    refs: refs2
+    refs: planningRefs
   })),
-  tests: external_exports.array(external_exports.strictObject({
+  tests: external_exports.array(external_exports.looseObject({
     title: external_exports.string().optional(),
     // Absent only in historical saved plans.
     method: external_exports.string(),
@@ -51002,15 +51003,15 @@ var proposedPlanSchema = external_exports.strictObject({
     reason: external_exports.string(),
     prerequisites: strings,
     steps: strings,
-    expected: external_exports.strictObject({
+    expected: external_exports.looseObject({
       text: external_exports.string(),
       authority: external_exports.string(),
-      refs: refs2
+      refs: planningRefs
     }),
     execution_gaps: strings
   })),
   disagreements: strings,
-  runner_handoff: external_exports.strictObject({
+  runner_handoff: external_exports.looseObject({
     status: external_exports.literal("proposed_only"),
     scenario_ids: strings,
     required_inputs: strings
