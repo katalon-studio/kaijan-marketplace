@@ -555,7 +555,7 @@
       "scope": "Exact maintained programmatic producers and relative dependency closure bundled into MCP/API. No Runner, source acquisition or execution. Preserve concise baseline and supplement behavior. Remove unsupported assessment input/request byte caps; shared native generation enforces only an explicitly supplied request-byte budget. Includes independently merged #1929 private validation diagnostics at 80795a4ac9836edf62da228784ad038f2074d1ac; those byte changes are not the cap fix. #1935 removes active source count/implicit byte admission; no new byte budget or semantic algorithm.",
       "files": {
         "experiments/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93",
-        "experiments/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0",
+        "experiments/context-finder/planning/pcf_plan.mjs": "159f9c048c4c11d37f4a08c0f30e054d598e4e156c5b0ab963fd863ecf0142cf",
         "experiments/context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770",
         "experiments/context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32",
         "experiments/context-finder/planning/pcf_provider.mjs": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0",
@@ -1908,7 +1908,7 @@
     },
     "planner-loop-source/experiments/context-finder/planning/pcf_plan.mjs": {
       "source": "packages/context-finder/planning/pcf_plan.mjs",
-      "sha256": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0",
+      "sha256": "159f9c048c4c11d37f4a08c0f30e054d598e4e156c5b0ab963fd863ecf0142cf",
       "originalSha256": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5"
     },
     "planner-loop-source/experiments/context-finder/related/json.mjs": {
@@ -2186,7 +2186,7 @@
       "originalPath": "experiments/context-finder/planning/supplement.mjs"
     },
     "packages/context-finder/planning/pcf_plan.mjs": {
-      "sha256": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0",
+      "sha256": "159f9c048c4c11d37f4a08c0f30e054d598e4e156c5b0ab963fd863ecf0142cf",
       "originalSha256": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5",
       "originalPath": "experiments/context-finder/planning/pcf_plan.mjs"
     },

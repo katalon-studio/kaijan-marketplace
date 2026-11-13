@@ -2,7 +2,7 @@
   "schema": "loki.capability-library-build/1",
   "package": "@loki/capabilities",
   "version": "0.1.0",
-  "nativeSelectionSha256": "7e4c2dd5c61f5c85c13a0e5dd2ea6748d96ec74c51cba8fd311f4b400bd92812",
+  "nativeSelectionSha256": "563f80539748e78391c9140edf0cb231a8944c885e1052b8a12946123a012620",
   "firstPartyInputs": {
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
@@ -120,7 +120,7 @@
     "packages/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
     "packages/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f",
     "packages/context-finder/planning/supplement-instructions.mjs": "a71f929802f3056490d26279928a398cc275480f15c9eb9520130753b3280e12",
-    "packages/context-finder/planning/pcf_plan.mjs": "0dc7909bfcafbb6976edb3f483d7e27d368698bdd5f69aeeef812c17db7409e0",
+    "packages/context-finder/planning/pcf_plan.mjs": "159f9c048c4c11d37f4a08c0f30e054d598e4e156c5b0ab963fd863ecf0142cf",
     "packages/context-finder/planning/supplement.mjs": "2b26838bf482dbcd795b0bc709c36446e45067832dfff1022c48d8cf3d376e93",
     "packages/work-verifier/assessment-contract.mjs": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a",
     "packages/context-finder/related/urlsplit.mjs": "859689b5b61f26a3e6a59c892cb547a08388a12bb174bf363c013c721aed7020",
