@@ -112,14 +112,9 @@ Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
 keeps its state and stays open after the run. Browser clarification and
 Playwright trace do not apply to desktop.
 
-## Authored terminal checks
+## Saved terminal observations
 
-When authorized terminal checks are needed, supply `loki.terminal-checks/1`
-in `checks` before dispatch. Use the exact Plan, digest and selected test IDs.
-For PR-bound verification, retain the original authorized PR/files reads
-through `nativeInputs.reportSources` and supply that `sourceContextId` and
-actual PR head or merged revision. Follow the
-[terminal-check/source contract](../../references/RUNNER.md#terminal-checks-and-pr-sources).
-The tool evaluates terminal observations and records its own results. These
-checks do not establish prior actions, viewport visibility or persistence.
-Preserve them alongside the original Runner record and separate assessment.
+Kaijan retains Runner observations for the normal Planner assessment and report.
+Do not supply caller-authored terminal predicates or verdicts. Old saved terminal
+verification stays readable with its original attribution; reading it does not
+execute or reassess a test.

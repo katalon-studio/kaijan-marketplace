@@ -342,17 +342,17 @@ remain separate. Missing output remains absent and linked files are not opened.
 
 ## Execution checks, PR sources and report reopening
 
-Use `loki_runner_execute` with optional `checks` (`loki.terminal-checks/1`) authored
-before dispatch and exact Plan/test references. The receiver evaluates the
-original terminal browser observation and persists separate Product verification.
-Only explicit text/snapshot/URL predicates are supported. Native Runner's verdict
-is unchanged. No supplied result flags or prepared report are accepted as an
-execution. See the [input and provenance contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
+Normal execution and assessment use `loki_test_execute` with the complete
+scenario or exact saved Plan/test references. Caller-authored terminal `checks`
+are no longer accepted. Runner observations remain available to the existing
+assessment/report route. Historical verification stays readable with its original
+attribution and bytes; it is not reevaluated.
+See the [saved-result contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
 
 Original authorized GitHub PR/files reads can be retained through
 `loki_context_submit` with `nativeInputs.reportSources` (`loki.report-sources/1`).
-Pass its `sourceContextId` to PR-bound checks and to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
-reads derive check outcomes only from the original stored operation and validate
+Pass its `sourceContextId` to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
+reads preserve historical check outcomes only from the original stored operation and validate
 source, observation, Plan/test IDs and PR head-or-merge revision associations.
 `view:"test-plan"` selects Test plan presentation in the caller's configured UI mode during initial report creation.
 The same scope-bound stores retain inputs, operations and report snapshots.

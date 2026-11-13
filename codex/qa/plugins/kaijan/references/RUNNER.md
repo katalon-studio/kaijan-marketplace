@@ -125,9 +125,9 @@ capture/cleanup; late cleanup deadline/Stop observations are separate and cannot
 reverse it. `terminal.actor` and `terminal.reason` retain the cause. Final
 prose or capture alone is insufficient. Completion and step reports are
 model-authored and unverified; returned actions do not prove steps. Independently
-observe the application outcome. `testVerdict` remains `unverified`. Independent
-caller-authored terminal checks can compare available captured fields even when
-other Run work is incomplete; they do not establish whole-task completion.
+observe the application outcome. `testVerdict` remains `unverified`. The normal
+Planner assessment uses retained observations; terminal text alone does not
+establish whole-task completion.
 
 For task intent, observations and result wording, follow the
 [caller preparation and result guidance](../skills/run-test/SKILL.md#execute-an-explicit-ui-scenario).
@@ -272,63 +272,11 @@ new store and does not establish installed-plugin acceptance.
 
 ## Terminal checks and PR sources
 
-For an authorized Expected/Actual check, add `checks` to the ordinary
-`loki_runner_execute` input before dispatch. The Product receiver compares the
-returned terminal observation with these authored predicates and persists the
-result as separate `verification` with provenance `product-terminal-checks/1`.
-It never accepts caller-supplied pass/fail flags or rewrites nativeResult.
-
-```json
-{
-  "planRef": {
-    "answerId": "<exact completed Plan answerId>",
-    "resultSha256": "<exact Plan digest>",
-    "selectedTestIds": ["<selected test ID>"]
-  },
-  "checks": {
-    "schema": "loki.terminal-checks/1",
-    "repository": "<owner/repository>",
-    "sourceRevision": "<actual 40-character source revision>",
-    "pullRequestUrl": null,
-    "tests": [
-      {
-        "testId": "<selected test ID>",
-        "title": "Read the expected terminal heading",
-        "deliberateFailure": false,
-        "checks": [
-          {
-            "id": "heading",
-            "title": "Check the terminal page text",
-            "field": "text",
-            "operator": "contains",
-            "expected": "<caller-authorized heading>"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-The snippet adds to the full scenario/params/target request above; placeholders
-must be resolved. Fields are text, snapshot or url; operators are contains,
-not-contains or equals. A scenario can have multiple authored terminal checks
-associated with exact selected Plan test IDs. These are terminal predicates, not
-claims that every proposed step or test workflow was executed independently.
-Pre-dispatch validation reads the original Plan only to verify identity and scope;
-the caller still supplies the complete execution scenario. Changing a case uses
-a new requestKey and execution. Old request/results stay unchanged.
-
-Missing observations and an explicit operator Stop block the checks, even when
-that Stop has a recorded decision time. A host Stop without a recorded decision
-also blocks; a late host Stop does not reverse a recorded non-operator decision.
-Ordinary incomplete execution does not discard an available captured field. A
-terminal match is not viewport visibility, saved application data or a general
-semantic pass. Expected/Actual and evidence hashes are retained; raw private
-traces remain private. A deliberate failing control stays labelled as such.
-`executionConfig` records the actual adapter method, browser, target, explicit
-tool trigger and zero whole-execution retries. Browser providerRetryPolicy is
-retained separately from nativeResult; it does not claim an external CI result.
+Caller-authored terminal `checks` are no longer an execution input. Normal test
+execution uses the existing Planner/Runner assessment and saved report. Runner
+still retains its terminal observations, native account and private evidence.
+Reading an old operation preserves its original `verification` and provenance;
+it does not run the removed evaluator or recompute the result.
 
 For a PR-bound case, first read the original PR and all selected changed-file
 pages through an authorized existing GitHub interface. Use `loki_context_submit`
@@ -351,11 +299,9 @@ with `nativeInputs.reportSources` set to:
 
 The placeholders denote an object and array, not literal strings. Context Intake
 derives display fields/hashes from these original source inputs and accepts no
-execution outcomes. Pass the returned sourceContextId to the Runner input, set
-checks.pullRequestUrl to that exact PR URL and use its actual head or merged
-revision. Select the same sourceContextId with the original Plan/Runner references
-in `loki_report_show` and `view:"test-plan"`. The report reads Product check results
-only from the stored execution. Reopening never dispatches a producer. A PR with
+execution outcomes. Select the returned sourceContextId with the original
+Plan/Runner references
+in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
 no associated run stays Not run. This adds no GitHub connection or write authority.
 
 To assess, explicitly combine the fragment with original `work_item`,

@@ -20616,38 +20616,6 @@ var reportSourcesSchema = external_exports.strictObject({
 // ../contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
 var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var terminalChecksSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.terminal-checks/1"),
-  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
-  pullRequestUrl: external_exports.url().nullable(),
-  tests: external_exports.array(external_exports.strictObject({
-    testId: nonempty2,
-    title: nonempty2,
-    deliberateFailure: external_exports.boolean().default(false),
-    checks: external_exports.array(external_exports.strictObject({
-      id: nonempty2,
-      title: nonempty2,
-      field: external_exports.enum(["text", "snapshot", "url"]),
-      operator: external_exports.enum(["contains", "not-contains", "equals"]),
-      expected: nonempty2
-    })).min(1)
-  })).min(1)
-}).superRefine((input2, ctx) => {
-  if (new Set(input2.tests.map((test) => test.testId)).size !== input2.tests.length || input2.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs and each test's check IDs must be unique."
-    });
-  if (input2.pullRequestUrl !== null) {
-    const prefix = `https://github.com/${input2.repository}/pull/`;
-    if (!input2.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input2.pullRequestUrl.slice(prefix.length)))
-      ctx.addIssue({
-        code: "custom",
-        message: "The PR must belong to the selected repository."
-      });
-  }
-});
 var checkedPlanReferenceSchema = external_exports.strictObject({
   answerId: digest2,
   resultSha256: digest2,
