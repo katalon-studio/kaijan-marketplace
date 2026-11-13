@@ -776,14 +776,14 @@
   "computerRunner": {
     "package": "@katalon-loki/computer-runner",
     "version": "0.1.1",
-    "sourceRevision": "af9e9b1f42a831fed5c6c5c7d83593c20be8f781",
+    "sourceRevision": "fc43d0839c6bcc2fe54ca96338e66a9c2ae7aaa3",
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "1c90e9cba0f493650c6062e997371f50fdb3f7f76c97d5a8eb8586ac4249ef8e",
-      "packages/computer-runner/src/runner.mjs": "c1d12dcc4d6e83c4dd11485ed2d295c21ecffa99f49a366d39ba865e51b687a2",
+      "packages/computer-runner/src/runner.mjs": "3d4fd9fb58aa7c9ea4c69e2ae2a3bfeb9829d5984028fea5e4106f8a4d6e6d66",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "47d717442e01364549d58dcdcb625d9def9fbbea6e6c69488807defe2842261b",
-      "packages/computer-runner/flow.md": "cab7b8d601f3bedda68be590243471296bedbd42138b7eb5b025dcd71183df26",
+      "packages/computer-runner/README.md": "f0e83e1e63629493d8a2322aa76e2de42808d9b448c594818d239a01e157a93c",
+      "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
       "packages/computer-runner/src/runner.d.mts": "f304dd6ceca1aaef88734e34b806392a7b12bff85e6f724efc3b7106fd152bb4",
       "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
       "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6",
