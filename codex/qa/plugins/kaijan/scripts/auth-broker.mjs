@@ -25759,6 +25759,17 @@ async function startBroker({
         await authorization.logout();
         return json2(200, { state: "signed_out" });
       }
+      if (req.url === "/ai/connection/observation" && req.method === "GET") {
+        if (!authorization.scope?.split(" ").includes("ai:invoke"))
+          return json2(403, { error: "operation_not_authorized" });
+        const observed = aiConnectionId.safeParse(
+          authorization.currentAIConnectionId?.()
+        );
+        return observed.success ? json2(200, {
+          schema: "kaijan.ai-connection-observation/1",
+          binding: observed.data
+        }) : json2(412, { error: "ai_connection_observation_unavailable" });
+      }
       if (req.url === "/ai/connection" && req.method === "GET") {
         if (!authorization.scope?.split(" ").includes("ai:invoke"))
           return json2(403, { error: "operation_not_authorized" });
