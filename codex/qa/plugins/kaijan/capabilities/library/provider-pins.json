@@ -780,9 +780,9 @@
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "1c90e9cba0f493650c6062e997371f50fdb3f7f76c97d5a8eb8586ac4249ef8e",
-      "packages/computer-runner/src/runner.mjs": "3d4fd9fb58aa7c9ea4c69e2ae2a3bfeb9829d5984028fea5e4106f8a4d6e6d66",
+      "packages/computer-runner/src/runner.mjs": "ea2f5012a66428dffd07c43de1b124344ec3aa8e3a8a0aa0a26efd6a630e4569",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "f0e83e1e63629493d8a2322aa76e2de42808d9b448c594818d239a01e157a93c",
+      "packages/computer-runner/README.md": "c098791b3c107b110d354c82a7114c982761e2b9483287df392377c2a3e5328b",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
       "packages/computer-runner/src/runner.d.mts": "f304dd6ceca1aaef88734e34b806392a7b12bff85e6f724efc3b7106fd152bb4",
       "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
@@ -804,8 +804,8 @@
       "packages/computer-runner/src/request-instructions.mjs": "610506c42b1656056636a202cda45513166735f7338b2b30ea4fcbbad45801a3",
       "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300",
       "packages/computer-runner/src/browser-recap.mjs": "635de4d65bf42e75dfd37c5b8265dd9001e33054f650a6cdec8e0557abfa9ea6",
-      "packages/provider-transport/responses-session.mjs": "8cefcc395aad4fed689e0ea2f5a24f96fa6fb179dbd37381caf9f087f5254c05",
-      "packages/provider-transport/responses-session.d.mts": "269fc88a0fb5a7e681498c0a751aa42af82a4927a944788883cd9721a8486137",
+      "packages/provider-transport/responses-session.mjs": "606d41414715e44a4d129d01ec86ad3584f523ef8463f9faa33b72efd73753ac",
+      "packages/provider-transport/responses-session.d.mts": "6cd362ff942e576842371ca91bf9d3abdce28fb6e8a75687a03f52faed47634c",
       "packages/provider-transport/package.json": "223fb5b41b49cc160ef83ba2742243454d1f06d197296f32c4c3e40a479d5580",
       "packages/provider-transport/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
       "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
