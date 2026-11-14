@@ -36253,6 +36253,18 @@ async function createInstalledSession(root, build, data, broker, {
   session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
   session.workspaceResults = workspaceService;
+  if (host === "claude_code") {
+    session.configurations = createConfigurationSurface({
+      session,
+      library,
+      data
+    });
+    const close = session.close.bind(session);
+    session.close = async () => {
+      await session.configurations.close();
+      await close();
+    };
+  }
   if (host === "codex") {
     session.configurations = createConfigurationSurface({
       session,
