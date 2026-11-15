@@ -1,4 +1,4 @@
-import { Agent } from "@openai/agents-core";
+import { Agent, MemorySession } from "@openai/agents-core";
 import { createRetainedAgentRunner } from "@katalon-experiments/ai-client/agents";
 import {
   providerConnection,
@@ -223,6 +223,7 @@ function outputLimit(body, max_output_tokens_limit) {
 // records; SDK finalOutput is never substituted for the verified saved plan.
 export async function generate(packet, body, root, validate, options = {}) {
   const ceiling = outputLimit(body, options.max_output_tokens_limit);
+  const session = options.session ?? new MemorySession();
   const agent = new Agent({
     name: "Planner",
     instructions: body.instructions,
@@ -238,24 +239,16 @@ export async function generate(packet, body, root, validate, options = {}) {
     model: body.model,
     store: body.store,
     dispatch: async (request) => {
-      // The SDK represents string input as a user message and supplies
-      // empty tool defaults. Verify that conversion before using the original
-      // serialization for size admission, transport and the saved receipt.
-      const expected = {
-        ...body,
-        input: [{ role: "user", content: body.input }],
-        include: body.include ?? [],
-        tools: [],
-        stream: false,
-        ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
-      };
-      if (!isDeepStrictEqual(JSON.parse(JSON.stringify(request)), expected))
-        throw new Error(
-          "Planner SDK request differs from the prepared request",
-        );
+      // Keep the first request's archived string representation for existing
+      // readers. A continuation carries the actual items assembled by the SDK.
+      const initial = [{ role: "user", content: body.input }];
+      const wireInput = JSON.parse(JSON.stringify(request.input));
+      const input = isDeepStrictEqual(wireInput, initial)
+        ? body.input
+        : wireInput;
       const completed = await dispatchPlan(
         packet,
-        body,
+        { ...body, input },
         root,
         validate,
         options,
@@ -266,7 +259,7 @@ export async function generate(packet, body, root, validate, options = {}) {
   });
   // The native dispatch owner saves the caller's Stop receipt, including
   // when Stop arrives before the first transport call.
-  await runner.run(agent, body.input, { maxTurns: 1 });
+  await runner.run(agent, body.input, { session, maxTurns: 1 });
   if (!retained) throw new Error("Planner finished without a retained plan");
   return retained;
 }
