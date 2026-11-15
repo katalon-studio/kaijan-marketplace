@@ -1,0 +1,65 @@
+{
+  "schema": "kaijan.claude-bundled-node-transport/1",
+  "generation": "26f9ecee2a675546777d0f3855e6f51027c38799058d2dbc5dd4dd97f5a8d8c0",
+  "bootstrap": {
+    "member": "runtime/node",
+    "sha256": "40196c593618973790b5e1530998d5040105e7029c5a282275ad208c387552ce",
+    "bytes": 70512,
+    "sourceSha256": "ee66791ab256b3afe6b07b3237098e3d3df6c2455956a50930aeb564a0fa1443",
+    "signature": "ad-hoc",
+    "deploymentTarget": "13.5",
+    "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)"
+  },
+  "compressed": {
+    "member": "runtime/node.gz",
+    "bytes": 36933483,
+    "sha256": "32e185522467e3e8ac385edad587b5adb81c5eda9acf03a6ab901a5c816817f3"
+  },
+  "nativeNodePreparation": {
+    "member": "runtime/NODE_BUILD.json",
+    "schema": "kaijan.node-runtime-preparation/1",
+    "original": {
+      "bytes": 122545856,
+      "sha256": "6f32069480ec14d52b6d7b1f3c7124cfbbc46203abf5ddf5c65b127435f3f329"
+    },
+    "prepared": {
+      "bytes": 98133152,
+      "sha256": "5bdfd644c01a3f027b75e6d504877e650fd77091bef5095effd2f9e012b64b67"
+    },
+    "transformation": "strip-debug-local-symbols",
+    "signature": "ad-hoc-preserved-entitlements-and-runtime-flags",
+    "notarization": "not-claimed",
+    "versions": {
+      "node": "24.22.1",
+      "undici": "7.30.1"
+    }
+  },
+  "materializedMembers": [
+    {
+      "name": "node",
+      "bytes": 98133152,
+      "sha256": "5bdfd644c01a3f027b75e6d504877e650fd77091bef5095effd2f9e012b64b67",
+      "executable": true
+    },
+    {
+      "name": "gh",
+      "bytes": 39834784,
+      "sha256": "8a4258433c81106343144857750316241759d06dcf16265cf3c4864a8f2f2ad6",
+      "executable": true
+    },
+    {
+      "name": "NODE_LICENSE",
+      "bytes": 157609,
+      "sha256": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace",
+      "executable": false
+    },
+    {
+      "name": "GITHUB_LICENSE",
+      "bytes": 1068,
+      "sha256": "6da4adc42392c8485e40b4251c7e332fc3352df1947c9ffade71dd60b14a7a4f",
+      "executable": false
+    }
+  ],
+  "materializedLogicalBytes": 138126613,
+  "storage": "Keep installed compressed bytes and private persistent materialization separately; concurrent unique staging can add another materialization per preparing process. Do not retire a generation with live child/broker users."
+}
