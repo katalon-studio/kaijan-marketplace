@@ -21145,6 +21145,14 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
+var runnerTestResultsSchema = external_exports.array(external_exports.object({
+  test_id: external_exports.string(),
+  scenario_finished: external_exports.boolean(),
+  bug_found: external_exports.boolean(),
+  actual: external_exports.string(),
+  execution_details: external_exports.string(),
+  warning: external_exports.string().nullable()
+}));
 var runnerExecutionReportSchema = external_exports.preprocess((value) => {
   if (value === null || typeof value !== "object" || Array.isArray(value))
     return value;
@@ -21155,7 +21163,8 @@ var runnerExecutionReportSchema = external_exports.preprocess((value) => {
 }, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
-    schema: external_exports.literal("loki.runner.execution-report/2")
+    schema: external_exports.literal("loki.runner.execution-report/2"),
+    test_results: runnerTestResultsSchema.optional()
   })
 ]));
 var runnerRecoverySchema = external_exports.strictObject({
@@ -21945,7 +21954,18 @@ var testPlanViewSchema = external_exports.object({
     resultSha256: digest9.nullable(),
     state: external_exports.string(),
     result: nativeJson,
-    requestTestIndexes: external_exports.array(count4)
+    requestTestIndexes: external_exports.array(count4),
+    applicationModel: external_exports.object({
+      views: external_exports.array(external_exports.object({
+        id: external_exports.string(),
+        name: external_exports.string(),
+        kind: external_exports.string(),
+        purpose: external_exports.string(),
+        controls: external_exports.array(external_exports.string()),
+        fields: external_exports.array(external_exports.string())
+      })),
+      transitions: external_exports.array(external_exports.object({ from: external_exports.string(), to: external_exports.string(), action: external_exports.string() }))
+    }).optional()
   }))
 });
 var reportPanelSchema = testPlanViewSchema.extend({
@@ -21968,6 +21988,7 @@ var summarySchema = external_exports.object({
     blocked: count4,
     skipped: count4,
     "not-run": count4,
+    incomplete: count4.optional(),
     inconclusive: count4.default(0),
     conflicting: count4.default(0),
     unavailable: count4.default(0)
@@ -22464,6 +22485,7 @@ var customerExecutionEvidenceSchema = external_exports.object({
   notice: external_exports.string()
 });
 var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
   effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
@@ -22776,6 +22798,7 @@ var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
   }))
 });
 var executionReport = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   completedSteps: strings4.optional(),
@@ -22854,7 +22877,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     sourceKind: true,
     resultSha256: true,
     state: true,
-    requestTestIndexes: true
+    requestTestIndexes: true,
+    applicationModel: true
   }).extend({
     state: operationState,
     plan: customerPlanSchema.nullable(),
@@ -22962,6 +22986,7 @@ var customerReportCardSchema = panelCard.pick({
       blocked: true,
       skipped: true,
       "not-run": true,
+      incomplete: true,
       inconclusive: true,
       conflicting: true,
       unavailable: true
