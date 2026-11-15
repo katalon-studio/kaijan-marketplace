@@ -1,4 +1,12 @@
 import { z } from "zod";
+export declare const runnerTestResultsSchema: z.ZodArray<z.ZodObject<{
+    test_id: z.ZodString;
+    scenario_finished: z.ZodBoolean;
+    bug_found: z.ZodBoolean;
+    actual: z.ZodString;
+    execution_details: z.ZodString;
+    warning: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>>;
 export declare const runnerExecutionReportSchema: z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
     effects: z.ZodOptional<z.ZodEnum<{
         known: "known";
@@ -106,6 +114,14 @@ export declare const runnerExecutionReportSchema: z.ZodPreprocess<z.ZodUnion<rea
         }, z.core.$strip>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+    test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        test_id: z.ZodString;
+        scenario_finished: z.ZodBoolean;
+        bug_found: z.ZodBoolean;
+        actual: z.ZodString;
+        execution_details: z.ZodString;
+        warning: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>>;
 }, z.core.$strict>]>, unknown>;
 export declare const runnerRecoverySchema: z.ZodObject<{
     enabled: z.ZodOptional<z.ZodBoolean>;
@@ -328,6 +344,14 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
             }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+        test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            test_id: z.ZodString;
+            scenario_finished: z.ZodBoolean;
+            bug_found: z.ZodBoolean;
+            actual: z.ZodString;
+            execution_details: z.ZodString;
+            warning: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip>>>;
     }, z.core.$strict>]>, unknown>>>;
     recovery: z.ZodOptional<z.ZodObject<{
         enabled: z.ZodOptional<z.ZodBoolean>;
@@ -539,6 +563,14 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                 }, z.core.$strip>]>>;
             }, z.core.$strict>>;
             schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+            test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                test_id: z.ZodString;
+                scenario_finished: z.ZodBoolean;
+                bug_found: z.ZodBoolean;
+                actual: z.ZodString;
+                execution_details: z.ZodString;
+                warning: z.ZodNullable<z.ZodString>;
+            }, z.core.$strip>>>;
         }, z.core.$strict>]>, unknown>>>;
         recovery: z.ZodOptional<z.ZodObject<{
             enabled: z.ZodOptional<z.ZodBoolean>;
@@ -1105,6 +1137,14 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+                test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                    test_id: z.ZodString;
+                    scenario_finished: z.ZodBoolean;
+                    bug_found: z.ZodBoolean;
+                    actual: z.ZodString;
+                    execution_details: z.ZodString;
+                    warning: z.ZodNullable<z.ZodString>;
+                }, z.core.$strip>>>;
             }, z.core.$strict>]>, unknown>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;
@@ -1917,6 +1957,14 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/2">;
+                test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                    test_id: z.ZodString;
+                    scenario_finished: z.ZodBoolean;
+                    bug_found: z.ZodBoolean;
+                    actual: z.ZodString;
+                    execution_details: z.ZodString;
+                    warning: z.ZodNullable<z.ZodString>;
+                }, z.core.$strip>>>;
             }, z.core.$strict>]>, unknown>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;

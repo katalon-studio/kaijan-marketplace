@@ -48432,6 +48432,14 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
+var runnerTestResultsSchema = external_exports.array(external_exports.object({
+  test_id: external_exports.string(),
+  scenario_finished: external_exports.boolean(),
+  bug_found: external_exports.boolean(),
+  actual: external_exports.string(),
+  execution_details: external_exports.string(),
+  warning: external_exports.string().nullable()
+}));
 var runnerExecutionReportSchema = external_exports.preprocess((value) => {
   if (value === null || typeof value !== "object" || Array.isArray(value))
     return value;
@@ -48442,7 +48450,8 @@ var runnerExecutionReportSchema = external_exports.preprocess((value) => {
 }, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
-    schema: external_exports.literal("loki.runner.execution-report/2")
+    schema: external_exports.literal("loki.runner.execution-report/2"),
+    test_results: runnerTestResultsSchema.optional()
   })
 ]));
 var runnerRecoverySchema = external_exports.strictObject({
@@ -49474,7 +49483,18 @@ var testPlanViewSchema = external_exports.object({
     resultSha256: digest12.nullable(),
     state: external_exports.string(),
     result: nativeJson,
-    requestTestIndexes: external_exports.array(count7)
+    requestTestIndexes: external_exports.array(count7),
+    applicationModel: external_exports.object({
+      views: external_exports.array(external_exports.object({
+        id: external_exports.string(),
+        name: external_exports.string(),
+        kind: external_exports.string(),
+        purpose: external_exports.string(),
+        controls: external_exports.array(external_exports.string()),
+        fields: external_exports.array(external_exports.string())
+      })),
+      transitions: external_exports.array(external_exports.object({ from: external_exports.string(), to: external_exports.string(), action: external_exports.string() }))
+    }).optional()
   }))
 });
 var reportPanelSchema = testPlanViewSchema.extend({
@@ -49497,6 +49517,7 @@ var summarySchema = external_exports.object({
     blocked: count7,
     skipped: count7,
     "not-run": count7,
+    incomplete: count7.optional(),
     inconclusive: count7.default(0),
     conflicting: count7.default(0),
     unavailable: count7.default(0)
@@ -50132,6 +50153,7 @@ function customerExecutionStatus(state2, effects, blockedReason) {
   return message + (effects === "uncertain" ? " Some action effects remain uncertain." : "");
 }
 var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
   effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
@@ -50142,6 +50164,7 @@ var progress2 = external_exports.object({
 function projectCustomerExecutionProgress(input3) {
   const value = progress2.parse(input3);
   return {
+    ...value.test_results ? { test_results: value.test_results } : {},
     ...value.status ? { status: value.status } : {},
     ...value.effects ? { effects: value.effects } : {},
     reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
@@ -50809,6 +50832,7 @@ function projectLinkedAssessment(value) {
   });
 }
 var executionReport = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   completedSteps: strings4.optional(),
@@ -50887,7 +50911,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     sourceKind: true,
     resultSha256: true,
     state: true,
-    requestTestIndexes: true
+    requestTestIndexes: true,
+    applicationModel: true
   }).extend({
     state: operationState,
     plan: customerPlanSchema.nullable(),
@@ -50995,6 +51020,7 @@ var customerReportCardSchema = panelCard.pick({
       blocked: true,
       skipped: true,
       "not-run": true,
+      incomplete: true,
       inconclusive: true,
       conflicting: true,
       unavailable: true
@@ -51187,7 +51213,8 @@ function projectCustomerTestPlanView(input3, sha256) {
       sourceKind: source3.sourceKind,
       resultSha256: source3.resultSha256,
       state: source3.state,
-      requestTestIndexes: source3.requestTestIndexes
+      requestTestIndexes: source3.requestTestIndexes,
+      ...source3.applicationModel ? { applicationModel: source3.applicationModel } : {}
     };
     if (record5(native).schema === "loki.planning-failure/1") {
       if (source3.sourceKind === "answer" && source3.state === "complete" && source3.resultSha256 && planningRejectionMessage(native) && hasCustomerPlanningSource(source3))
@@ -55829,7 +55856,14 @@ var nextAction2 = external_exports.object({
   deadlineAt: external_exports.string(),
   questions: external_exports.array(customerQuestion)
 });
+var browserTest = runnerTestResultsSchema.element.extend({
+  verdict: external_exports.enum(["pass", "fail", "incomplete"])
+});
 var assessment = customerAssessmentResultSchema.omit({ kind: true, meaning: true, acceptanceDecision: true, coverage: true }).extend({
+  tests: external_exports.union([
+    customerAssessmentResultSchema.shape.tests.unwrap(),
+    external_exports.array(browserTest)
+  ]).optional(),
   state: external_exports.enum([
     "complete",
     "unknown",
@@ -56212,7 +56246,7 @@ function executionView(value) {
     ...value.result ? { result: executionResult(value.result) } : {}
   });
 }
-function assessmentView(value, savedPlan = false, presentation, progressOnly = false) {
+function assessmentView(value, savedPlan = false, presentation, progressOnly = false, runnerSession = false) {
   if (value === null || value === void 0) return null;
   const identity4 = {
     state: value.error ? "unavailable" : value.state,
@@ -56220,6 +56254,11 @@ function assessmentView(value, savedPlan = false, presentation, progressOnly = f
     resultSha256: value.resultSha256
   };
   if (progressOnly) return assessment.parse(identity4);
+  if (runnerSession) {
+    return assessment.parse({
+      state: value.state === "complete" ? "complete" : "unavailable"
+    });
+  }
   let view2;
   try {
     view2 = presentation || value.result && !value.error ? projectCustomerAssessmentReply(value.result, presentation) : void 0;
@@ -56329,7 +56368,8 @@ function project(name, value, assessmentPresentation) {
       value.assessment,
       hasSavedPlanSelection(value.execution?.result),
       assessmentPresentation,
-      combinedStatusRead(name, value)
+      combinedStatusRead(name, value),
+      value.preparation?.source === "runner-browser-session"
     ) ?? browserAssessmentNotice(value),
     report: value.report,
     nextAction: value.nextAction ? {
@@ -56528,10 +56568,26 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       );
       let context2;
       try {
-        context2 = retained ? await retained : execution2?.state === "finished" && (projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+        context2 = retained ? await retained : execution2?.state === "finished" && (hydrated.preparation?.source === "runner-browser-session" || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
       } catch {
       }
       bindProtectedProgress(projected, execution2, context2);
+      if (hydrated.preparation?.source === "runner-browser-session" && projected.assessment) {
+        const selectedIds = new Set(
+          (hydrated.assessment?.result?.assessment?.test_results ?? []).map(
+            (row) => row.test_id
+          )
+        );
+        const rows2 = context2?.state === "ready" && context2.runId === execution2?.runId && context2.resultSha256 === execution2?.resultSha256 ? context2.protectedExecutionProgress?.test_results ?? [] : [];
+        const savedPlan = hasSavedPlanSelection(execution2?.result);
+        projected.assessment.tests = rows2.filter((row) => selectedIds.has(row.test_id)).map(
+          (row) => browserTest.parse({
+            ...row,
+            test_id: savedPlan ? planTestId(row.test_id) : row.test_id,
+            verdict: row.bug_found ? "fail" : row.scenario_finished ? "pass" : "incomplete"
+          })
+        );
+      }
       const includeExecutionEvidence = !combinedStatusRead(name, projected);
       if (execution2?.state === "finished" && includeExecutionEvidence) {
         let evidence2;
@@ -56769,7 +56825,7 @@ var cardInstructions = (summary3) => {
     [counts.blocked, "blocked"],
     [counts.skipped, "skipped"],
     [counts["not-run"], "not run"],
-    [counts.inconclusive, "incomplete"],
+    [(counts.inconclusive ?? 0) + (counts.incomplete ?? 0), "incomplete"],
     [counts.conflicting, "with different results"],
     [
       counts.unavailable,
@@ -56890,7 +56946,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
-  const resourceUri = "ui://loki/test-plan/card/v85.html";
+  const resourceUri = "ui://loki/test-plan/card/v86.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -57592,6 +57648,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v82.html",
   "ui://loki/test-plan/card/v83.html",
   "ui://loki/test-plan/card/v84.html",
+  "ui://loki/test-plan/card/v85.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
