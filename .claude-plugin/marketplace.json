@@ -3,16 +3,16 @@
   "owner": {
     "name": "Katalon"
   },
-  "description": "Kaijan for Claude Code CLI and local Desktop Code. Use QA while Production client registration is disabled.",
+  "description": "Kaijan for Claude Code CLI and local Desktop Code.",
   "plugins": [
     {
       "name": "kaijan",
-      "version": "0.5.0-rc.214",
+      "version": "0.5.0-rc.215",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/katalon-studio/kaijan-marketplace.git",
         "path": "claude/plugins/kaijan",
-        "sha": "5527f6b50c0e9dc243b6164047e697db3ecb3d9b"
+        "sha": "276ad1993766b964b4f0f42cd5cadd9cebe80fb0"
       }
     }
   ]
