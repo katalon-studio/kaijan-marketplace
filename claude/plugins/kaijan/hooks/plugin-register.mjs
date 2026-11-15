@@ -1,4 +1,6 @@
 import { register as report } from "./register.mjs";
+import { register as modDemo } from "./mod-demo/register.tsx";
+import { createQaDemoState, registerQaDemos } from "./qa-demos.mjs";
 import {
   createRunInterruptionState,
   registerRunInterruption,
@@ -15,4 +17,7 @@ export function register(on) {
     runInterruption,
   );
   report(on, runInterruption);
+  const qaDemos = createQaDemoState();
+  registerQaDemos(on, qaDemos);
+  modDemo(on, qaDemos);
 }
