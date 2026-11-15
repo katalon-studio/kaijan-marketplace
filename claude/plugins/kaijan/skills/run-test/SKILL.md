@@ -1,0 +1,125 @@
+---
+name: run-test
+description: Run and assess an authorized browser or macOS desktop test. Use directly when the caller supplied the target and complete actions, and when running selected cases from a saved Kaijan plan, including in a resumed conversation. Keep reading the same Run through execution and assessment, then reopen its final report. A running reply is progress within the requested test. Standalone Runner is for execution-only requests.
+---
+
+# Execute an explicit UI scenario
+
+Use the [shared Product MCP guidance](../../references/local-capabilities.md)
+and the [Runner contract](../../references/RUNNER.md). A full caller request
+can already authorize the selected target and actions. For testing that first
+needs a Plan, use [test-request](../test-request/SKILL.md). A plan-only request
+does not authorize execution.
+
+## Run the selected checks
+
+Check readiness for the selected action with `loki_capabilities_list`.
+Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
+for the responding package when starting AI work. Managed AI uses the Kaijan
+grant and an explicit direct-development build uses its local provider setup.
+Target application login is separate. Saved-result reads and Stop use the
+available Local tools without a new AI request.
+
+When `kaijan_configuration` is available, check for a matching Configuration
+before asking the person to repeat settings. Reuse the matching set identified
+by the task and available context. Name the selected set before Run. Ask the
+person only when the task cannot be completed without their answer.
+
+Save an ordinary value through `kaijan_configuration` only if the person asks to
+save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
+or manual login. Keep raw secrets out of chat and tool arguments. For one Run,
+use `params` for ordinary overrides and `privateParams` for scoped secret references.
+These overrides leave saved settings unchanged. The person can run without
+saving settings. Configuration selection never authorizes execution.
+
+Use `loki_test_execute` for the normal combined run, assessment and report.
+Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
+`{}`) and the authorized target. For one saved test, use its actual test ID as
+`scenarioId`. Choose one input:
+
+- `savedTests: {answerId, resultSha256, selectedTestIds}` loads the complete
+  selected Plan tests. Put the person's application actions, expected behavior,
+  permissions and changed restrictions in `guidance`, preserving their wording
+  and concrete limits even when no test steps changed. Keep the saved Plan and application
+  restrictions intact. Do not invent permission or copy the whole chat.
+  Add other relevant caller knowledge in `hostContext` separately.
+  This input cannot be combined with `scenario` or `planRef`.
+- `scenario` contains the full supplied test and optional `planRef` can
+  correlate it.
+  Keep required behavior, assumptions and observation-only questions distinct.
+  Include known preconditions and inputs. Declare consequential missing values
+  in `unresolvedInputs`; the operation will not execute with unresolved inputs.
+
+Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
+Hostname restrictions are temporarily disabled for dogfooding. Do not require
+a list of sign-in or redirect hosts. Keep any local port in the URL. Supply
+credentials through [private login parameters](../../references/private-parameters.md)
+and pass only their `privateParams` references. Browser session attachment
+and persisted browser memory are unavailable. Use `options.headless: true`
+when headless execution is requested. Optional limits can lower the advertised
+bounds. Desktop requirements are below.
+
+Keep requested in-app cleanup in the scenario. App sign-out requires an
+explicit request. Runner records cleanup of its own browser. The host owns
+cleanup of test processes it started and revocation of a temporary private
+login binding when the task no longer needs it. Verify that cleanup separately
+from the test outcome.
+
+## Keep Kaijan workflow separate from application actions
+
+The combined Kaijan operation owns assessment and saving its report. Keep requests to assess the Run, save the Kaijan report or reopen that report in your Kaijan tool workflow; do not put them in browser `guidance` as actions for the application under test. Preserve the original saved Plan, application actions, expectations, permissions and restrictions. If the person is testing the application's own report, save or export feature, keep those application checks in the scenario or `guidance`; they are real test requirements. This is a distinction by task and recipient, not a filter on words such as report or save.
+
+## Read or stop the original test
+
+For a request to run, assess and report, keep reading the same Run until execution and assessment finish or a specific blocker needs the caller. A running reply continues the requested work. Keep the interactive CLI open while the Run is active. Open the final `report.reportId` from the finished combined Run; assessment may produce a different report from the one saved during execution.
+
+Use `loki_test_get` through the execution and assessment result, and
+`loki_test_stop` to stop the same test.
+For external test evidence use
+[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+
+When `nextAction` asks for input, inspect the browser's retained clarification.
+Only a live clarification can resume. Use `loki_runner_answer` with the
+original run and clarification IDs, one answer key and the available authorized
+context. Match known questions when possible; partial answers and extra JSON
+context remain usable. Use available authorized context and suitable generated
+test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
+The original deadline still applies; a missing answer does not require
+discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
+for delivery and readback.
+
+Recover a lost reply with the same key and full original input. A new execution
+uses a fresh key only after admitted work is settled, effects are known and the
+caller scope still authorizes it. For a blocked sign-in redirect, use the
+retained blocked host and actions. A verified sign-in host can be included in
+a new authorized run when the original confirms that login did not start.
+For `runner_worker_launch_failed` with `not-executed`, retain the failed receipt,
+reconnect and verify the responding package before starting a new authorized
+run. Do not replay unknown actions or effects. Stop requires original readback
+for the actual cancellation, partial evidence and cleanup.
+
+Keep execution status, actual results, assessment and cleanup distinct.
+A combined run assesses its retained evidence internally. Open its
+`report.reportId` through [review-report](../review-report/SKILL.md), or show
+standalone execution by its exact run ID and digest. Use ordered full-result
+reads when more evidence is needed. For customer wording, follow
+[Present assessed results](../../references/assessed-result-language.md).
+Use [the saved browser trace](../review-report/SKILL.md#view-a-saved-browser-trace)
+to inspect an existing recording.
+
+## macOS desktop scenarios
+
+Use `executionMethod: "desktop-ui"` and `target.app` with the app's bundle ID.
+Set `target.launch: true` only when launch is allowed. `false` requires a
+running app. Desktop requires configured full Xcode, UI Automation and
+Accessibility permissions, an unlocked GUI and the app on the main display.
+Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
+keeps its state and stays open after the run. Browser clarification and
+Playwright trace do not apply to desktop.
+
+## Saved terminal observations
+
+Kaijan retains Runner observations for the normal Planner assessment and report.
+Do not supply caller-authored terminal predicates or verdicts. Old saved terminal
+verification stays readable with its original attribution; reading it does not
+execute or reassess a test.

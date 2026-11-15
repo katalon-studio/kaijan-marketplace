@@ -1,0 +1,51 @@
+{
+  "schema": "kaijan.claude-git-publication/1",
+  "profile": "production",
+  "build": {
+    "schemaVersion": 1,
+    "buildId": "c111a2a3-9345-47a5-8bf4-db0d33685367",
+    "builtAt": "2026-11-14T19:38:59.076Z",
+    "sourceRevision": "5627353caeb2b6bb4d08e2bbcafa3f2c8128f3a4",
+    "sourceDirty": false,
+    "profile": "production",
+    "profileMode": "runtime-env/1",
+    "coreOrigin": "https://kaijan.ai",
+    "pluginName": "kaijan",
+    "marketplaceName": "kaijan-claude",
+    "runtimeClientId": "kaijan-claude-runtime",
+    "runtimeScopes": [
+      "session:read",
+      "work-items:read",
+      "ai:invoke",
+      "github:credential"
+    ],
+    "oauthClientId": "kaijan-claude-runtime",
+    "host": "claude_code",
+    "minimumClaudeVersion": "2.1.318",
+    "platform": "darwin-arm64",
+    "authArchitecture": "shared-broker-v1",
+    "credentialStorage": "private-file-v1",
+    "runtimeLayout": "installed",
+    "capabilityDigest": "ea9b1978a02eadea5d85ee5ce3c76fdfd497dd995b770649c88f661c3a1897ba",
+    "pluginVersion": "0.5.0-rc.214",
+    "mcpUrl": "https://kaijan.ai/mcp",
+    "mcpServerName": "kaijan_core",
+    "localMcpServerName": "kaijan_local",
+    "capabilityTransport": {
+      "format": "mcpb/1",
+      "bundle": "servers/kaijan-local.mcpb",
+      "sha256": "07d0c811fdf16571bd8136ef8c9312784fe157acfb07da8aa23f5a4746628f38",
+      "privateHelperSha256": "e48480310924f737406e3ae5dac69e455e6a74d7a40182258048ce76922b6f20"
+    }
+  },
+  "source": "5627353caeb2b6bb4d08e2bbcafa3f2c8128f3a4",
+  "payloadCommit": "5527f6b50c0e9dc243b6164047e697db3ecb3d9b",
+  "candidate": {
+    "run": "43632718713",
+    "attempt": "1",
+    "digest": "c656259187387d2ca49befceeb103cededafcdfa99dffe88167e58aa7b0dd23b",
+    "artifact": "kaijan-claude-43632718713-1"
+  },
+  "archiveDigest": "6dbe1c2612377897a19fb926f5f56b9fd10d90e6112e159dfb9d724199f9b915",
+  "profileChecksumDigest": "db286e19cf78a912eb6392a5949ee0dacff312e09c5f9b86b9eed080c7fd435c"
+}
