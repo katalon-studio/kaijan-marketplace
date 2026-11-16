@@ -776,7 +776,7 @@
   "computerRunner": {
     "package": "@katalon-loki/computer-runner",
     "version": "0.1.1",
-    "sourceRevision": "fc43d0839c6bcc2fe54ca96338e66a9c2ae7aaa3",
+    "sourceRevision": "06922f3f34ecc2b37c164c119291bbe3dd8b86d4",
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20",
@@ -812,7 +812,7 @@
       "packages/computer-runner/src/browser-explorer.d.mts": "c0cb72090d3d35aba50bde36b259318110277000f77d55c84b6a5db0e636bffa",
       "packages/computer-runner/src/agent-context.mjs": "fccdd8bc7cd535d88611b19b3f597c9c7c6d1b1423cefde3f3b66f851c1322be",
       "packages/computer-runner/src/application-ui-model.mjs": "f12db2f80bb56a1b4af74c8add80ad00f78f7c040edc1753499ad193988597bf",
-      "packages/computer-runner/src/browser-explorer.mjs": "d6626ebb58fda78160017f348971c4f63633c8f603f6733ea8f26b16ad2833b4",
+      "packages/computer-runner/src/browser-explorer.mjs": "373e66c714cbb577dc338b3d35b92bc951321cd0d565a664e74b6e89e3fd337a",
       "packages/computer-runner/src/browser-inputs.mjs": "5dfec75d9392e0ae91d7fddf68fe3e4f1b3e6b9ba2373a9816420fa23a06653d",
       "packages/computer-runner/src/exploration-map.mjs": "d3bfee1373d529843ae1698fa30d142ff36b4b5e27591614e4a594f991646516"
     },
