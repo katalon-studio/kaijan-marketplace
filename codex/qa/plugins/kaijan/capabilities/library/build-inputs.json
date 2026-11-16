@@ -340,7 +340,7 @@
     "apps/core/ui/local-capabilities/test-plan/evidence.ts": "cc15ae18efe92b81f670f2d695bfe28d17af00f5e008d21a6f236a4cc8412ab3",
     "apps/core/ui/local-capabilities/test-plan/sections.ts": "369966d18add0a659ef9a73d7d7be9447e10f39566c203010656cccc190f60e5",
     "apps/core/ui/local-capabilities/test-plan/context-finder.ts": "c072014c7e824a21f481ea14617761e43d00c5f080f8b8843b94761f06a07774",
-    "apps/core/ui/local-capabilities/test-plan/views.ts": "87a66c071033b41912d318451160afe36d357b06343791e3046459d3a1454a1e",
+    "apps/core/ui/local-capabilities/test-plan/views.ts": "a2929f53369821483d1881d1f98a42e219e1750b5dee18427e3a3e08a3384de6",
     "apps/core/ui/local-capabilities/test-plan/map-view.ts": "c4fcbb68dfeafdaa5bd27372c4538a3386b7677e2adce543f734d65bcbb60ac9",
     "apps/core/ui/local-capabilities/test-plan/details.ts": "eb94ac162146ec2d7b1c6aaf81df615b204787a03285fe1bdff9f3e75e3c0547",
     "apps/core/ui/local-capabilities/test-plan/app.ts": "171629da14eed26b1ecf0acef31bdb6670fdaa749a646cc2eb6f2af2e236a725",
