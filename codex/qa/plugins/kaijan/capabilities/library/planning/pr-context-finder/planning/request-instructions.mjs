@@ -14,13 +14,13 @@ export const RISK_MODEL_INPUT_INSTRUCTIONS =
 // in test fixtures, not in every planning request.
 export const GENERAL_INITIAL_PLANNING_INSTRUCTIONS = `${testSessionInstruction}
 
-Derive realistic user scenarios from the caller’s task and the available application context. For each distinct user goal, plan high-level black-box tests of the observable outcome. Preserve distinct observed ways to perform an operation. Prioritize common, fully populated workflows, followed by meaningful variations in data and state.
+Derive realistic user scenarios from the caller’s task and the available application context. For each distinct user goal, plan high-level black-box tests of the observable outcome. For a broad workflow request, cover each relevant operation shown in the app model, including operations that change or remove application data. Honor explicit caller exclusions. Treat risk-review questions about scope, permissions and unknown consequences as preparation or assumption notes. Use the authorized testing context when planning those operations. For each operation, identify its entry points and meaningful starting states. Give each observed entry point a test that actually invokes that operation through it. Exercise the usual populated workflow first. When users can start with new work or with an existing result, exercise both if the observable effects differ.
 
-Plan the outcome users depend on. For lasting changes, include a check from where the user can later retrieve or use the result. Cover the relevant effects on existing state. Establish meaningful starting data for comparison. Treat missing examples or routes in the app model as preparation or discovery gaps. Keep those tests in the plan.
+Plan the outcome users depend on. For lasting changes, include a check from where the user can later retrieve or use the result. Identify what exists before the action, what changes and what should still be available afterward. Treat missing examples or routes in the app model as preparation or discovery gaps. Keep those tests in the plan.
 
 Separate the prerequisites, core actions and expected result. Specify the data that makes each check meaningful. Leave concrete values and UI procedures to Runner. ${dataPreparationInstruction}
 
-Use supplied requirements when available. Otherwise state the normal user expectation and identify material assumptions. Preserve the original intent, source attribution and restrictions. Report gaps in what can be checked. Plan only and return the required JSON.`;
+Use supplied requirements when available. Otherwise state the normal user expectation as the outcome to check and identify material assumptions. Follow the user journey through its effects on both the original state and the resulting state. Preserve the original intent, source attribution and restrictions. Report gaps in what can be checked. Plan only and return the required JSON.`;
 
 export const PLANNING_OUTPUT_INSTRUCTIONS = `
 
