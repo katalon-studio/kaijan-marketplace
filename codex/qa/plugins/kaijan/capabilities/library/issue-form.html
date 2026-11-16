@@ -158,6 +158,43 @@ button:hover:not(:disabled) {
   font: inherit;
   margin: 0 0 10px;
 }
+#saved-reference {
+  display: grid;
+  gap: 6px;
+}
+#copy-status {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+#technical-context {
+  color: var(--muted);
+  line-height: 1.5;
+}
+#technical-context p {
+  margin: 0;
+}
+.run-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  margin-top: 8px;
+}
+#include-run {
+  width: auto;
+}
+#run-details {
+  margin: 6px 0;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 8px;
+}
+#run-details dt,
+#run-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 
 #destination {
   margin: 0;

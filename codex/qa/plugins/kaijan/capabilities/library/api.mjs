@@ -97449,13 +97449,25 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var feedbackFieldsSchema = external_exports.strictObject({
   // An unfinished field can be empty. The existing Core input validates Send.
   title: external_exports.string().max(200),
-  description: external_exports.string().max(5e3)
+  description: external_exports.string().max(5e3),
+  includeRun: external_exports.boolean().optional()
+});
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap();
+var feedbackContextSchema = external_exports.strictObject({
+  pluginVersion: diagnostics.shape.pluginVersion.unwrap(),
+  os: diagnostics.shape.os.unwrap(),
+  run: external_exports.strictObject({
+    operationId: diagnostics.shape.operationId.unwrap(),
+    capability: diagnostics.shape.capability.unwrap(),
+    errorCode: diagnostics.shape.errorCode
+  }).optional()
 });
 var changesSchema = feedbackFieldsSchema.partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
 var feedbackDraftSchema = external_exports.strictObject({
   id: external_exports.uuid(),
   revision: external_exports.number().int().positive(),
   fields: feedbackFieldsSchema,
+  context: feedbackContextSchema.optional(),
   origins: external_exports.strictObject({
     title: external_exports.enum(["human", "agent"]).optional(),
     description: external_exports.enum(["human", "agent"]).optional()
@@ -97481,7 +97493,8 @@ var feedbackViewSchema = external_exports.strictObject({
 var feedbackOpenSchema = external_exports.strictObject({
   requestId: external_exports.uuid(),
   title: feedbackFieldsSchema.shape.title.optional(),
-  description: feedbackFieldsSchema.shape.description.optional()
+  description: feedbackFieldsSchema.shape.description.optional(),
+  runId: diagnostics.shape.operationId.optional()
 });
 var feedbackGetSchema = external_exports.strictObject({ draftId: external_exports.uuid() });
 var feedbackUpdateSchema = feedbackGetSchema.extend({
@@ -97507,7 +97520,15 @@ function finalFeedbackInput(draft, requestId) {
   return productFeedbackInputSchema.parse({
     requestId,
     kind: "feedback",
-    ...draft.fields
+    title: draft.fields.title,
+    description: draft.fields.description,
+    ...draft.context ? {
+      diagnostics: {
+        pluginVersion: draft.context.pluginVersion,
+        os: draft.context.os,
+        ...draft.fields.includeRun ? draft.context.run : {}
+      }
+    } : {}
   });
 }
 
@@ -97528,7 +97549,7 @@ var FeedbackDraftError = class extends Error {
   code;
   draft;
 };
-function reportContent(input3) {
+function reportContent(input3, selected2) {
   const content4 = {
     requestId: input3.requestId,
     kind: input3.kind,
@@ -97537,10 +97558,12 @@ function reportContent(input3) {
     ...input3.expectedBehavior !== void 0 ? { expectedBehavior: input3.expectedBehavior } : {},
     ...input3.steps !== void 0 ? { steps: input3.steps } : {}
   };
-  const diagnostics = { ...input3.diagnostics };
-  delete diagnostics.pluginVersion;
-  delete diagnostics.os;
-  if (Object.keys(diagnostics).length) content4.diagnostics = diagnostics;
+  const diagnostics2 = { ...input3.diagnostics };
+  if (!selected2.diagnostics?.pluginVersion) {
+    delete diagnostics2.pluginVersion;
+    delete diagnostics2.os;
+  }
+  if (Object.keys(diagnostics2).length) content4.diagnostics = diagnostics2;
   return content4;
 }
 var FeedbackDraftStore = class _FeedbackDraftStore {
@@ -97673,7 +97696,7 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
         base.status = row2.receipt === null ? "unconfirmed" : "saved";
         if (row2.receipt !== null) {
           const receipt4 = productFeedbackSchema.parse(JSON.parse(row2.receipt));
-          if (!isDeepStrictEqual2(reportContent(receipt4), selected2))
+          if (!isDeepStrictEqual2(reportContent(receipt4, selected2), selected2))
             throw Error("The saved receipt does not match");
           base.receipt = { id: receipt4.id, createdAt: receipt4.createdAt };
         }
@@ -97724,7 +97747,7 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
         this.db.prepare("UPDATE attempts SET changes=? WHERE draft_id=? AND actor=?").run(JSON.stringify(remaining), id8, attempt.actor);
     }
   }
-  create(value, actor) {
+  create(value, actor, context) {
     this.owner(actor);
     if (!actor.canEdit)
       throw new FeedbackDraftError(
@@ -97744,7 +97767,8 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
           ...input3.title !== void 0 ? { title: actor.kind } : {},
           ...input3.description !== void 0 ? { description: actor.kind } : {}
         },
-        status: "draft"
+        status: "draft",
+        ...context ? { context: feedbackContextSchema.parse(context) } : {}
       });
       const previous2 = this.db.prepare(
         "SELECT id FROM drafts WHERE owner_user=? AND owner_workspace=? AND open_request=?"
@@ -97763,6 +97787,18 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
       return draft;
     });
   }
+  /** Add the host's review details to an older unsent draft without changing text. */
+  prepareContext(id8, actor, context) {
+    return this.transaction(() => {
+      const draft = this.get(id8, actor);
+      if (draft.context || draft.status !== "draft") return draft;
+      draft.context = feedbackContextSchema.parse(context);
+      draft.revision++;
+      delete draft.unsavedEdit;
+      this.db.prepare("UPDATE drafts SET revision=?,body=? WHERE id=?").run(draft.revision, JSON.stringify(draft), id8);
+      return this.get(id8, actor);
+    });
+  }
   update(value, actor) {
     if (!actor.canEdit)
       throw new FeedbackDraftError(
@@ -97772,6 +97808,12 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
     const input3 = feedbackUpdateSchema.parse(value);
     const outcome = this.transaction(() => {
       const draft = this.get(input3.draftId, actor);
+      if (input3.changes.includeRun !== void 0 && (actor.kind !== "human" || input3.changes.includeRun && !draft.context?.run))
+        throw new FeedbackDraftError(
+          "context_unavailable",
+          "Choose Run details in the feedback form only when its Run is available.",
+          draft
+        );
       if (draft.status === "draft" && draft.revision !== input3.revision) {
         this.db.prepare(
           `INSERT INTO attempts(draft_id,actor,base_revision,changes) VALUES(?,?,?,?)
@@ -97807,6 +97849,14 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
         });
         draft.fields[key6] = after;
         draft.origins[key6] = actor.kind;
+      }
+      if (input3.changes.includeRun !== void 0) {
+        history.push({
+          field: "includeRun",
+          before: draft.fields.includeRun ?? false,
+          after: input3.changes.includeRun
+        });
+        draft.fields.includeRun = input3.changes.includeRun;
       }
       draft.revision++;
       delete draft.unsavedEdit;
@@ -97891,7 +97941,11 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
           name: "kaijan_submit_feedback",
           arguments: {
             ...input3,
-            diagnostics: { pluginVersion: "x".repeat(80), os: "unknown" }
+            diagnostics: {
+              ...input3.diagnostics,
+              pluginVersion: "x".repeat(80),
+              os: "unknown"
+            }
           }
         }
       };
@@ -97931,8 +97985,10 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
         this.get(id8, actor)
       );
     const receipt4 = parsed.data.feedback;
-    const actual = reportContent(receipt4);
-    const expected = JSON.parse(dispatch.input);
+    const expected = productFeedbackInputSchema.parse(
+      JSON.parse(dispatch.input)
+    );
+    const actual = reportContent(receipt4, expected);
     if (!isDeepStrictEqual2(actual, expected))
       throw new FeedbackDraftError(
         "receipt_mismatch",
@@ -97974,11 +98030,12 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath4 } from "node:url";
-var feedbackFormUri = "ui://kaijan/feedback/form/v4.html";
+var feedbackFormUri = "ui://kaijan/feedback/form/v5.html";
 var cachedFeedbackFormUris = Object.freeze([
   "ui://kaijan/feedback/form/v1.html",
   "ui://kaijan/feedback/form/v2.html",
-  "ui://kaijan/feedback/form/v3.html"
+  "ui://kaijan/feedback/form/v3.html",
+  "ui://kaijan/feedback/form/v4.html"
 ]);
 async function readFeedbackForm(uri2 = feedbackFormUri) {
   if (uri2 !== feedbackFormUri && !cachedFeedbackFormUris.includes(uri2))
@@ -120366,10 +120423,10 @@ function clarificationPrivateIdentities(protocol) {
   ].filter((v) => typeof v === "string" && Boolean(v));
 }
 function unverifiedClarificationQuestion(question3, protection, privateIdentities = []) {
-  const diagnostics = redactor2([...privateIdentities]);
+  const diagnostics2 = redactor2([...privateIdentities]);
   return {
     question: protectArtifactText(
-      diagnostics.text(question3.question),
+      diagnostics2.text(question3.question),
       protection
     ),
     kind: ["missing-value", "app-choice", "permission", "task-scope"].includes(
@@ -170548,6 +170605,7 @@ export {
   defaultAnalysisSettings,
   defaultRunnerSettings,
   directIssueAuthorization,
+  feedbackContextSchema,
   feedbackDraftSchema,
   feedbackFailureSchema,
   feedbackFieldsSchema,
