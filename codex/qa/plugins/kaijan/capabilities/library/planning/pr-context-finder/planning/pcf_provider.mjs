@@ -563,13 +563,17 @@ async function dispatchPlan(
         }
         // Give the SDK the exact text accepted by the native reader. The
         // retained response can split it across messages or omit message metadata.
+        const originalResponse = JSON.parse(
+          readBytes(path.join(root, "response.bin")).toString("utf8"),
+        );
         completedResponse = {
-          ...JSON.parse(
-            readBytes(path.join(root, "response.bin")).toString("utf8"),
-          ),
+          ...originalResponse,
           // Native validation treats empty error containers as no error.
           error: null,
           output: [
+            ...(originalResponse.output ?? []).filter(
+              (item) => item.type === "reasoning",
+            ),
             {
               type: "message",
               role: "assistant",
