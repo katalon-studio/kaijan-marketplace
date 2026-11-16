@@ -88579,6 +88579,50 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// ../contracts/dist/agent-feedback.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // ../contracts/dist/product-issue.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -96483,10 +96527,10 @@ var OperationHost = class {
   closeQueries() {
     return this.queries.close();
   }
-  path(runId) {
-    if (!/^[a-f0-9]{64}$/.test(runId))
+  path(runId2) {
+    if (!/^[a-f0-9]{64}$/.test(runId2))
       throw new Error("Invalid operation handle.");
-    return join5(this.directory, runId);
+    return join5(this.directory, runId2);
   }
   save(directory3, status2) {
     return atomicFile(
@@ -96512,9 +96556,9 @@ var OperationHost = class {
     const implementation = freeze2(
       JSON.parse(JSON.stringify(identity2))
     );
-    const runId = digest19(
+    const runId2 = digest19(
       this.scopeId ? JSON.stringify([this.scopeId, requestKey]) : requestKey
-    ), directory3 = this.path(runId);
+    ), directory3 = this.path(runId2);
     if (this.legacyDirectory) {
       try {
         await checkPrivateDirectory(
@@ -96525,22 +96569,22 @@ var OperationHost = class {
         if (!absent2(error62)) throw error62;
       }
     }
-    const pending = this.initializing.get(runId);
+    const pending = this.initializing.get(runId2);
     if (pending) await pending;
     else {
       const initialize = this.initialize(
-        runId,
+        runId2,
         directory3,
         frozen,
         implementation,
         lifecycle2,
         executionSignal
       );
-      this.initializing.set(runId, initialize);
+      this.initializing.set(runId2, initialize);
       try {
         await initialize;
       } finally {
-        this.initializing.delete(runId);
+        this.initializing.delete(runId2);
       }
     }
     await checkPrivateDirectory(directory3);
@@ -96553,17 +96597,17 @@ var OperationHost = class {
     } catch (error62) {
       if (!absent2(error62)) throw error62;
       return {
-        runId,
+        runId: runId2,
         state: "unknown",
         reason: "initialization_receipt_unavailable_do_not_replay",
         replayAllowed: false
       };
     }
     if (canonicalJson(previous2) !== canonicalJson(frozen))
-      throw new RequestKeyConflict("execution", runId);
-    return this.get(runId);
+      throw new RequestKeyConflict("execution", runId2);
+    return this.get(runId2);
   }
-  async initialize(runId, directory3, input3, identity2, lifecycle2, executionSignal) {
+  async initialize(runId2, directory3, input3, identity2, lifecycle2, executionSignal) {
     await privateDirectory(this.directory);
     try {
       await mkdir3(directory3, { mode: 448 });
@@ -96583,17 +96627,17 @@ var OperationHost = class {
       Buffer.from(JSON.stringify(identity2))
     );
     await this.save(directory3, {
-      runId,
+      runId: runId2,
       state: "accepted",
       execution: "programmatic/1",
       identity: identity2,
       createdAt: (/* @__PURE__ */ new Date()).toISOString()
     });
     const controller = new AbortController();
-    this.active.set(runId, controller);
+    this.active.set(runId2, controller);
     setImmediate(() => {
       void this.execute(
-        runId,
+        runId2,
         directory3,
         input3,
         identity2,
@@ -96601,16 +96645,16 @@ var OperationHost = class {
         lifecycle2,
         executionSignal
       ).finally(() => {
-        this.active.delete(runId);
-        this.adapter.observeSettled?.(runId);
+        this.active.delete(runId2);
+        this.adapter.observeSettled?.(runId2);
       }).catch(() => {
       });
     });
   }
-  async execute(runId, directory3, input3, identity2, controller, lifecycle2, executionSignal) {
+  async execute(runId2, directory3, input3, identity2, controller, lifecycle2, executionSignal) {
     let poll;
     let entered = false;
-    const base = { runId, identity: identity2, execution: "programmatic/1" };
+    const base = { runId: runId2, identity: identity2, execution: "programmatic/1" };
     try {
       const claim2 = await open6(join5(directory3, "WORKER-CLAIM"), "wx", 384);
       try {
@@ -96683,7 +96727,7 @@ var OperationHost = class {
         artifactDirectory,
         identity: identity2,
         lifecycle: lifecycle2,
-        owner: { id: runId, kind: "run", persisted: true }
+        owner: { id: runId2, kind: "run", persisted: true }
       });
       const original = Buffer.from(JSON.stringify(result));
       await atomicFile(directory3, "result.json", original);
@@ -96724,7 +96768,7 @@ var OperationHost = class {
             identity: identity2,
             lifecycle: lifecycle2,
             owner: {
-              id: runId,
+              id: runId2,
               kind: "run",
               persisted: true,
               resultSha256: digest19(original)
@@ -96746,8 +96790,8 @@ var OperationHost = class {
       if (poll) clearInterval(poll);
     }
   }
-  async existing(runId) {
-    const directory3 = this.path(runId);
+  async existing(runId2) {
+    const directory3 = this.path(runId2);
     try {
       await checkPrivateDirectory(directory3);
     } catch (error62) {
@@ -96756,13 +96800,13 @@ var OperationHost = class {
     }
     return directory3;
   }
-  async get(runId, offset2) {
-    const directory3 = await this.existing(runId);
+  async get(runId2, offset2) {
+    const directory3 = await this.existing(runId2);
     let status2 = record5(await json4(join5(directory3, "status.json"), 64 * 1024));
-    if (["accepted", "running"].includes(operationState2(status2.state)) && !this.active.has(runId)) {
+    if (["accepted", "running"].includes(operationState2(status2.state)) && !this.active.has(runId2)) {
       status2 = record5(await json4(join5(directory3, "status.json"), 64 * 1024));
     }
-    const observed = ["accepted", "running"].includes(operationState2(status2.state)) && !this.active.has(runId) ? {
+    const observed = ["accepted", "running"].includes(operationState2(status2.state)) && !this.active.has(runId2) ? {
       ...status2,
       state: "unknown",
       lastRecordedState: operationState2(status2.state),
@@ -96770,7 +96814,7 @@ var OperationHost = class {
     } : status2;
     const common2 = {
       ...observed,
-      runId,
+      runId: runId2,
       stopRequested: await this.stopped(directory3),
       receiptDirectory: directory3,
       replayAllowed: false
@@ -96826,8 +96870,8 @@ var OperationHost = class {
       }
     };
   }
-  async stop(runId) {
-    const directory3 = await this.existing(runId);
+  async stop(runId2) {
+    const directory3 = await this.existing(runId2);
     const status2 = record5(
       await json4(join5(directory3, "status.json"), 64 * 1024)
     );
@@ -96837,9 +96881,9 @@ var OperationHost = class {
         "STOP",
         Buffer.from("Stop requested; never replay.")
       );
-      this.active.get(runId)?.abort();
+      this.active.get(runId2)?.abort();
     }
-    return this.get(runId);
+    return this.get(runId2);
   }
 };
 
@@ -97452,14 +97496,14 @@ var feedbackFieldsSchema = external_exports.strictObject({
   description: external_exports.string().max(5e3),
   includeRun: external_exports.boolean().optional()
 });
-var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap();
+var diagnostics2 = productFeedbackInputSchema.shape.diagnostics.unwrap();
 var feedbackContextSchema = external_exports.strictObject({
-  pluginVersion: diagnostics.shape.pluginVersion.unwrap(),
-  os: diagnostics.shape.os.unwrap(),
+  pluginVersion: diagnostics2.shape.pluginVersion.unwrap(),
+  os: diagnostics2.shape.os.unwrap(),
   run: external_exports.strictObject({
-    operationId: diagnostics.shape.operationId.unwrap(),
-    capability: diagnostics.shape.capability.unwrap(),
-    errorCode: diagnostics.shape.errorCode
+    operationId: diagnostics2.shape.operationId.unwrap(),
+    capability: diagnostics2.shape.capability.unwrap(),
+    errorCode: diagnostics2.shape.errorCode
   }).optional()
 });
 var changesSchema = feedbackFieldsSchema.partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
@@ -97494,7 +97538,7 @@ var feedbackOpenSchema = external_exports.strictObject({
   requestId: external_exports.uuid(),
   title: feedbackFieldsSchema.shape.title.optional(),
   description: feedbackFieldsSchema.shape.description.optional(),
-  runId: diagnostics.shape.operationId.optional()
+  runId: diagnostics2.shape.operationId.optional()
 });
 var feedbackGetSchema = external_exports.strictObject({ draftId: external_exports.uuid() });
 var feedbackUpdateSchema = feedbackGetSchema.extend({
@@ -97558,12 +97602,12 @@ function reportContent(input3, selected2) {
     ...input3.expectedBehavior !== void 0 ? { expectedBehavior: input3.expectedBehavior } : {},
     ...input3.steps !== void 0 ? { steps: input3.steps } : {}
   };
-  const diagnostics2 = { ...input3.diagnostics };
+  const diagnostics3 = { ...input3.diagnostics };
   if (!selected2.diagnostics?.pluginVersion) {
-    delete diagnostics2.pluginVersion;
-    delete diagnostics2.os;
+    delete diagnostics3.pluginVersion;
+    delete diagnostics3.os;
   }
-  if (Object.keys(diagnostics2).length) content4.diagnostics = diagnostics2;
+  if (Object.keys(diagnostics3).length) content4.diagnostics = diagnostics3;
   return content4;
 }
 var FeedbackDraftStore = class _FeedbackDraftStore {
@@ -100403,12 +100447,12 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { BrowserTargetError } from "@katalon-loki/computer-runner/browser-hosts";
-function runnerFailure(method2, error62, requestDispatched, invalidInput = false, runId) {
+function runnerFailure(method2, error62, requestDispatched, invalidInput = false, runId2) {
   const known = error62 instanceof RequestKeyConflict || error62 instanceof OperationNotFound || error62 instanceof BrowserTargetError;
   return runnerErrorSchema.parse({
     schema: "loki.runner-error/1",
     method: method2,
-    ...runId ? { runId } : {},
+    ...runId2 ? { runId: runId2 } : {},
     error: known ? {
       code: error62.code,
       message: error62.message,
@@ -111296,8 +111340,8 @@ var TestPlanning = class {
     return this.operations.closeQueries();
   }
   get(input3) {
-    const { runId, offset: offset2 } = planningRead.parse(input3);
-    return this.operations.get(runId, offset2);
+    const { runId: runId2, offset: offset2 } = planningRead.parse(input3);
+    return this.operations.get(runId2, offset2);
   }
   stop(input3) {
     return this.operations.stop(planningHandle.parse(input3).runId);
@@ -111614,15 +111658,15 @@ var ChangeRisk = class {
       ...parsed.store === void 0 ? {} : { store: parsed.store }
     };
     await privateDirectory(this.data);
-    const runId = digest27(request3.requestKey);
-    const prior = await this.legacyStatus(runId);
+    const runId2 = digest27(request3.requestKey);
+    const prior = await this.legacyStatus(runId2);
     if (prior) {
       const original = await riskJson(
-        join16(this.data, "change-risk-runs", runId, "request.json")
+        join16(this.data, "change-risk-runs", runId2, "request.json")
       );
       if (canonicalJson(original) !== canonicalJson(request3))
         throw new Error("Request key belongs to different work.");
-      return this.get({ runId });
+      return this.get({ runId: runId2 });
     }
     const result = await this.operations.start(request3.requestKey, request3, {
       ...riskRunIdentity(request3),
@@ -111633,8 +111677,8 @@ var ChangeRisk = class {
     });
     return originalIdentity(result);
   }
-  async legacyStatus(runId) {
-    const directory3 = join16(this.data, "change-risk-runs", runId);
+  async legacyStatus(runId2) {
+    const directory3 = join16(this.data, "change-risk-runs", runId2);
     try {
       await checkPrivateDirectory(directory3);
     } catch (error62) {
@@ -111655,13 +111699,13 @@ var ChangeRisk = class {
     return status2.execution === "programmatic/1" ? void 0 : status2;
   }
   async get(input3) {
-    const { runId, offset: offset2 } = riskRead.parse(input3);
-    const status2 = await this.legacyStatus(runId);
+    const { runId: runId2, offset: offset2 } = riskRead.parse(input3);
+    const status2 = await this.legacyStatus(runId2);
     if (!status2) {
-      const result = await this.operations.get(runId, offset2);
+      const result = await this.operations.get(runId2, offset2);
       return originalIdentity(result);
     }
-    const directory3 = join16(this.data, "change-risk-runs", runId);
+    const directory3 = join16(this.data, "change-risk-runs", runId2);
     if (status2.state === "running" && typeof status2.workerPid === "number") {
       try {
         process.kill(status2.workerPid, 0);
@@ -111677,7 +111721,7 @@ var ChangeRisk = class {
     }
     const common2 = {
       ...status2,
-      runId,
+      runId: runId2,
       state: operationState2(status2.state),
       stopRequested: await stopped(directory3),
       receiptDirectory: directory3,
@@ -111719,18 +111763,18 @@ var ChangeRisk = class {
     };
   }
   async stop(input3) {
-    const { runId } = riskHandle.parse(input3);
-    const legacy = await this.legacyStatus(runId);
-    if (!legacy) return this.operations.stop(runId).then(originalIdentity);
+    const { runId: runId2 } = riskHandle.parse(input3);
+    const legacy = await this.legacyStatus(runId2);
+    if (!legacy) return this.operations.stop(runId2).then(originalIdentity);
     if (!["finished", "unknown", "not-started", "stopped-before-start"].includes(
       operationState2(legacy.state)
     ))
       await atomicFile(
-        join16(this.data, "change-risk-runs", runId),
+        join16(this.data, "change-risk-runs", runId2),
         "STOP",
         Buffer.from("Stop requested; never replay.")
       );
-    return this.get({ runId });
+    return this.get({ runId: runId2 });
   }
 };
 
@@ -112227,18 +112271,18 @@ var PrContext = class {
         ...storedContext ? { storedContext } : {}
       })
     );
-    const runId = digest29(request3.requestKey), legacy = await this.legacyStatus(runId);
+    const runId2 = digest29(request3.requestKey), legacy = await this.legacyStatus(runId2);
     if (legacy) {
       if (canonicalJson(
         await relatedJson(
-          join18(this.data, "pr-context-runs", runId, "request.json")
+          join18(this.data, "pr-context-runs", runId2, "request.json")
         )
       ) !== canonicalJson(request3))
         throw new Error("Request key belongs to different work.");
-      return this.get({ runId });
+      return this.get({ runId: runId2 });
     }
     try {
-      return await this.operationsExisting(request3, runId);
+      return await this.operationsExisting(request3, runId2);
     } catch (error62) {
       if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
         throw error62;
@@ -112259,15 +112303,15 @@ var PrContext = class {
       await this.operations.start(request3.requestKey, request3, identity2)
     );
   }
-  async operationsExisting(request3, runId) {
-    const directory3 = join18(this.data, "pr-context-runs", runId);
+  async operationsExisting(request3, runId2) {
+    const directory3 = join18(this.data, "pr-context-runs", runId2);
     await checkPrivateDirectory(directory3);
     if (canonicalJson(await relatedJson(join18(directory3, "request.json"))) !== canonicalJson(request3))
       throw new Error("Request key belongs to different work.");
-    return originalIdentity2(await this.operations.get(runId));
+    return originalIdentity2(await this.operations.get(runId2));
   }
-  async legacyStatus(runId) {
-    const directory3 = join18(this.data, "pr-context-runs", runId);
+  async legacyStatus(runId2) {
+    const directory3 = join18(this.data, "pr-context-runs", runId2);
     try {
       await checkPrivateDirectory(directory3);
       const status2 = object13(
@@ -112281,25 +112325,25 @@ var PrContext = class {
     }
   }
   async get(input3) {
-    const { runId, offset: offset2 } = relatedRead.parse(input3);
-    return await this.legacyStatus(runId) ? this.legacyGet(input3) : originalIdentity2(await this.operations.get(runId, offset2));
+    const { runId: runId2, offset: offset2 } = relatedRead.parse(input3);
+    return await this.legacyStatus(runId2) ? this.legacyGet(input3) : originalIdentity2(await this.operations.get(runId2, offset2));
   }
   async stop(input3) {
-    const { runId } = relatedHandle.parse(input3), legacy = await this.legacyStatus(runId);
-    if (!legacy) return originalIdentity2(await this.operations.stop(runId));
+    const { runId: runId2 } = relatedHandle.parse(input3), legacy = await this.legacyStatus(runId2);
+    if (!legacy) return originalIdentity2(await this.operations.stop(runId2));
     if (!["finished", "unknown", "not-started", "stopped-before-start"].includes(
       operationState2(legacy.state)
     ))
       await atomicFile(
-        join18(this.data, "pr-context-runs", runId),
+        join18(this.data, "pr-context-runs", runId2),
         "STOP",
         Buffer.from("Stop requested; never replay.")
       );
-    return this.get({ runId });
+    return this.get({ runId: runId2 });
   }
   async legacyGet(input3) {
-    const { runId, offset: offset2 } = relatedRead.parse(input3);
-    const directory3 = join18(this.data, "pr-context-runs", runId);
+    const { runId: runId2, offset: offset2 } = relatedRead.parse(input3);
+    const directory3 = join18(this.data, "pr-context-runs", runId2);
     await checkPrivateDirectory(directory3);
     const status2 = external_exports.record(external_exports.string(), external_exports.unknown()).parse(await relatedJson(join18(directory3, "status.json"), 16384));
     if (status2.state === "accepted" && typeof status2.createdAt === "string" && Date.now() - Date.parse(status2.createdAt) > 3e4) {
@@ -112633,8 +112677,8 @@ var WorkItemRisk = class {
     return this.operations.closeQueries();
   }
   get(input3) {
-    const { runId, offset: offset2 } = workItemRiskRead.parse(input3);
-    return this.operations.get(runId, offset2);
+    const { runId: runId2, offset: offset2 } = workItemRiskRead.parse(input3);
+    return this.operations.get(runId2, offset2);
   }
   stop(input3) {
     return this.operations.stop(workItemRiskHandle.parse(input3).runId);
@@ -120423,10 +120467,10 @@ function clarificationPrivateIdentities(protocol) {
   ].filter((v) => typeof v === "string" && Boolean(v));
 }
 function unverifiedClarificationQuestion(question3, protection, privateIdentities = []) {
-  const diagnostics2 = redactor2([...privateIdentities]);
+  const diagnostics3 = redactor2([...privateIdentities]);
   return {
     question: protectArtifactText(
-      diagnostics2.text(question3.question),
+      diagnostics3.text(question3.question),
       protection
     ),
     kind: ["missing-value", "app-choice", "permission", "task-scope"].includes(
@@ -121560,13 +121604,13 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { isDeepStrictEqual as isDeepStrictEqual16 } from "node:util";
 var fields2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 function selectBrowserPlannerRecap(snapshot3, selection5) {
-  const { planRef, reportId, runId, resultSha256 } = selection5;
+  const { planRef, reportId, runId: runId2, resultSha256 } = selection5;
   if (snapshot3.reportId !== reportId || !planRef.selectedTestIds.length || new Set(planRef.selectedTestIds).size !== planRef.selectedTestIds.length || !snapshot3.entries.some(
     (entry2) => entry2.kind === "plan" && entry2.answerId === planRef.answerId && entry2.resultSha256 === planRef.resultSha256
   ))
     return void 0;
   const entries = snapshot3.entries.filter(
-    (entry2) => entry2.kind === "runner" && entry2.runId === runId
+    (entry2) => entry2.kind === "runner" && entry2.runId === runId2
   );
   const [entry] = entries;
   if (entries.length !== 1 || !entry || entry.resultSha256 !== resultSha256)
@@ -121582,9 +121626,9 @@ function selectBrowserPlannerRecap(snapshot3, selection5) {
   if (!recap2 || !isDeepStrictEqual16(fields2(native2.executionRecap).steps, recap2.data.steps))
     return void 0;
   return {
-    requestKey: `kaijan.test-run:${runId}:assessment`,
+    requestKey: `kaijan.test-run:${runId2}:assessment`,
     reportId,
-    runId,
+    runId: runId2,
     resultSha256,
     planRef,
     ...Array.isArray(testResults) ? { runnerTestResults: testResults } : {},
@@ -122259,9 +122303,9 @@ var RunnerClarifications = class {
 };
 
 // src/report-protection.ts
-async function reportProtection(data2, runId) {
-  external_exports.string().regex(/^[a-f0-9]{64}$/).parse(runId);
-  const directory3 = join23(data2, "computer-runner-runs", runId);
+async function reportProtection(data2, runId2) {
+  external_exports.string().regex(/^[a-f0-9]{64}$/).parse(runId2);
+  const directory3 = join23(data2, "computer-runner-runs", runId2);
   const request3 = JSON.parse(
     (await privateFile(join23(directory3, "request.json"), 16 * 1024 * 1024)).toString("utf8")
   );
@@ -122742,9 +122786,9 @@ var nativeIdentity = external_exports.object({
     files: external_exports.number().int().nonnegative()
   })
 });
-async function readRunnerManifest(data2, runId, result) {
+async function readRunnerManifest(data2, runId2, result) {
   const nativeResult = nativeIdentity.parse(result);
-  const directory3 = join24(data2, "computer-runner-runs", runId, "artifacts");
+  const directory3 = join24(data2, "computer-runner-runs", runId2, "artifacts");
   await checkPrivateDirectory(directory3);
   if (await realpath13(directory3) !== directory3)
     throw Error("Artifact directory changed.");
@@ -122780,7 +122824,7 @@ var toolInventory = external_exports.array(
     inputSchema: external_exports.record(external_exports.string(), external_exports.unknown())
   })
 );
-async function hasInitialNavigationBlock(data2, runId, result) {
+async function hasInitialNavigationBlock(data2, runId2, result) {
   if (result.status !== "returned") return false;
   const native2 = result.nativeResult;
   if (native2.executionState !== "incomplete" || native2.terminal.actor !== "harness" || native2.terminal.effects === "uncertain" || native2.calls !== 0 || native2.attemptedRequests !== 0 || native2.returnedBrowserInputs !== 0 || native2.mcpToolRequests !== 0 || native2.executionReport !== null)
@@ -122795,7 +122839,7 @@ async function hasInitialNavigationBlock(data2, runId, result) {
   try {
     const { directory: directory3, manifest } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     if (manifest.schema !== "loki.computer-runner.private-evidence/1")
@@ -123103,12 +123147,12 @@ var protocolSchema = external_exports.object({
     executablePath: external_exports.string().optional()
   }).passthrough().optional()
 }).passthrough();
-async function readExecutionNoteProtection(data2, runId, result, evidence2) {
+async function readExecutionNoteProtection(data2, runId2, result, evidence2) {
   try {
     const { nativeResult: native2 } = producer.parse(result);
     const { directory: directory3, manifest } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     const file3 = manifest.files.find((entry) => entry.path === "protocol.json");
@@ -123136,7 +123180,7 @@ async function readExecutionNoteProtection(data2, runId, result, evidence2) {
     const scopedEvidence = evidence2 ? {
       ...evidence2,
       observations: evidence2.observations.filter(
-        (row2) => typeof row2.text === "string" && (terminalSources.get(row2.sourceId) === row2.sha256 && hash29(row2.text) === row2.sha256 || captures2 !== void 0 && row2.sourceId.startsWith(`${runId}:`) && captures2?.sha256 === row2.sourceSha256)
+        (row2) => typeof row2.text === "string" && (terminalSources.get(row2.sourceId) === row2.sha256 && hash29(row2.text) === row2.sha256 || captures2 !== void 0 && row2.sourceId.startsWith(`${runId2}:`) && captures2?.sha256 === row2.sourceSha256)
       )
     } : void 0;
     const terms = [
@@ -123160,14 +123204,14 @@ async function readExecutionNoteProtection(data2, runId, result, evidence2) {
     return void 0;
   }
 }
-async function readProtectedExecutionProgress(data2, runId, result, evidence2) {
+async function readProtectedExecutionProgress(data2, runId2, result, evidence2) {
   const parsed = producer.safeParse(result);
   if (!parsed.success) return void 0;
   if (parsed.data.nativeResult.executionReport === null || parsed.data.nativeResult.executionReport === void 0)
     return null;
   const context = await readExecutionNoteProtection(
     data2,
-    runId,
+    runId2,
     result,
     evidence2
   );
@@ -123231,8 +123275,8 @@ var ResultReadError = class extends Error {
 };
 var object28 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var positive = (value) => Number.isSafeInteger(value) && value > 0;
-async function readCompleteResult(get2, { runId, maxBytes, initial: initial2, signal, timeoutMs } = {}) {
-  if (typeof get2 !== "function" || typeof runId !== "string" || !runId || !positive(maxBytes))
+async function readCompleteResult(get2, { runId: runId2, maxBytes, initial: initial2, signal, timeoutMs } = {}) {
+  if (typeof get2 !== "function" || typeof runId2 !== "string" || !runId2 || !positive(maxBytes))
     throw new TypeError(
       "A get callback, original runId and explicit positive maxBytes are required"
     );
@@ -123252,7 +123296,7 @@ async function readCompleteResult(get2, { runId, maxBytes, initial: initial2, si
   let operation2 = null, offset2 = 0, bytesRead = 0, pagesRead = 0;
   const fail3 = (code, cause) => {
     throw new ResultReadError(code, {
-      runId,
+      runId: runId2,
       operation: operation2,
       offset: offset2,
       bytesRead,
@@ -123272,11 +123316,11 @@ async function readCompleteResult(get2, { runId, maxBytes, initial: initial2, si
     });
   };
   check3();
-  operation2 = initial2 === void 0 ? await read5({ runId }) : initial2;
+  operation2 = initial2 === void 0 ? await read5({ runId: runId2 }) : initial2;
   check3();
   if (operation2?.schema === "loki.runner-error/1")
     fail3("runner_read_failed", operation2.error);
-  if (!object28(operation2) || operation2.runId !== runId)
+  if (!object28(operation2) || operation2.runId !== runId2)
     fail3("invalid_operation_identity");
   if (operation2.state !== "finished" || operation2.resultValidated !== true)
     fail3("result_unavailable");
@@ -123298,11 +123342,11 @@ async function readCompleteResult(get2, { runId, maxBytes, initial: initial2, si
   }
   const chunks2 = [];
   for (; ; ) {
-    page4 ??= await read5({ runId, offset: offset2 });
+    page4 ??= await read5({ runId: runId2, offset: offset2 });
     check3();
     if (page4?.schema === "loki.runner-error/1")
       fail3("runner_read_failed", page4.error);
-    if (!object28(page4) || page4.runId !== runId || page4.state !== operation2.state || page4.resultValidated !== true || page4.resultSha256 !== expectedHash || page4.resultBytes !== expectedBytes)
+    if (!object28(page4) || page4.runId !== runId2 || page4.state !== operation2.state || page4.resultValidated !== true || page4.resultSha256 !== expectedHash || page4.resultBytes !== expectedBytes)
       fail3("result_identity_changed");
     const chunk = page4.resultChunk;
     if (!object28(chunk) || chunk.encoding !== "JSON text, UTF-16 offsets" || typeof chunk.text !== "string")
@@ -124348,14 +124392,14 @@ var ReportTraces = class {
   host;
   viewers = /* @__PURE__ */ new Map();
   operations = /* @__PURE__ */ new Map();
-  serial(runId, operation2) {
-    const pending = (this.operations.get(runId) ?? Promise.resolve()).then(
+  serial(runId2, operation2) {
+    const pending = (this.operations.get(runId2) ?? Promise.resolve()).then(
       operation2,
       operation2
     );
-    this.operations.set(runId, pending);
+    this.operations.set(runId2, pending);
     const done = () => {
-      if (this.operations.get(runId) === pending) this.operations.delete(runId);
+      if (this.operations.get(runId2) === pending) this.operations.delete(runId2);
     };
     void pending.then(done, done);
     return pending;
@@ -124382,8 +124426,8 @@ var ReportTraces = class {
     await validateArchive(bytes2);
     return bytes2;
   }
-  async checkProtection(runId) {
-    await reportProtection(this.data, runId).catch(() => {
+  async checkProtection(runId2) {
+    await reportProtection(this.data, runId2).catch(() => {
       throw new TraceUnavailable("protection-unavailable");
     });
   }
@@ -124515,16 +124559,16 @@ var ReportTraces = class {
       }
     });
   }
-  async stop(runId) {
-    const viewer = this.viewers.get(runId);
-    this.viewers.delete(runId);
+  async stop(runId2) {
+    const viewer = this.viewers.get(runId2);
+    this.viewers.delete(runId2);
     await viewer?.close();
   }
-  async close(runId, reportId) {
-    return this.serial(runId, async () => {
-      const viewer = this.viewers.get(runId);
+  async close(runId2, reportId) {
+    return this.serial(runId2, async () => {
+      const viewer = this.viewers.get(runId2);
       viewer?.reports.delete(reportId);
-      if (viewer && viewer.reports.size === 0) await this.stop(runId);
+      if (viewer && viewer.reports.size === 0) await this.stop(runId2);
       return { status: "closed" };
     });
   }
@@ -124532,7 +124576,7 @@ var ReportTraces = class {
     const runIds = /* @__PURE__ */ new Set([...this.viewers.keys(), ...this.operations.keys()]);
     await Promise.all(
       [...runIds].map(
-        (runId) => reportId ? this.close(runId, reportId) : this.serial(runId, () => this.stop(runId))
+        (runId2) => reportId ? this.close(runId2, reportId) : this.serial(runId2, () => this.stop(runId2))
       )
     );
   }
@@ -128803,8 +128847,8 @@ var PlannerLoop = class {
     });
   }
   get(input3) {
-    const { runId, offset: offset2 } = loopRead.parse(input3);
-    return this.operations.get(runId, offset2);
+    const { runId: runId2, offset: offset2 } = loopRead.parse(input3);
+    return this.operations.get(runId2, offset2);
   }
   stop(input3) {
     return this.operations.stop(loopHandle.parse(input3).runId);
@@ -129907,7 +129951,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash67 } from "node:crypto";
 import { join as join33 } from "node:path";
 var hash33 = (value) => createHash67("sha256").update(value).digest("hex");
-async function readExecutionPresentation(data2, runId, result, protection, cleanupEvidence) {
+async function readExecutionPresentation(data2, runId2, result, protection, cleanupEvidence) {
   const observations = projectCustomerPageObservations(result, hash33).flatMap(
     (page4) => [page4.text, page4.accessibilityText].flatMap(
       (raw, index2) => raw === void 0 || raw.length === 0 ? [] : [
@@ -129926,7 +129970,7 @@ async function readExecutionPresentation(data2, runId, result, protection, clean
     const native2 = external_exports.object({ nativeResult: external_exports.unknown() }).parse(result).nativeResult;
     const { directory: directory3, manifest } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     const file3 = manifest.files.find(
@@ -129954,7 +129998,7 @@ async function readExecutionPresentation(data2, runId, result, protection, clean
         view.page.accessibilityText
       ].join("\n");
       return retainVerifiedAssessmentSource({
-        sourceId: `${runId}:${view.id}`,
+        sourceId: `${runId2}:${view.id}`,
         sourceSha256: file3.sha256,
         state: "literal-source",
         attribution: "application-observation",
@@ -129976,7 +130020,7 @@ Observed: ${tab.observedAt}` : [
       ].join("\n");
       observations.push(
         retainVerifiedAssessmentSource({
-          sourceId: `${runId}:${tab.id}`,
+          sourceId: `${runId2}:${tab.id}`,
           sourceSha256: file3.sha256,
           state: "literal-source",
           attribution: "application-observation",
@@ -129991,7 +130035,7 @@ Observed: ${tab.observedAt}` : [
     const native2 = external_exports.object({ nativeResult: external_exports.unknown() }).parse(result).nativeResult;
     const { directory: directory3, manifest } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     const file3 = manifest.files.find((entry) => entry.path === "actions.json");
@@ -130030,7 +130074,7 @@ Observed: ${tab.observedAt}` : [
         ).optional()
       }).passthrough().parse(row2.action);
       return customerRecordedActionSchema.parse({
-        sourceId: `${runId}:actions`,
+        sourceId: `${runId2}:actions`,
         sourceSha256: file3.sha256,
         evidenceId: "actions",
         ...row2,
@@ -130064,7 +130108,7 @@ Observed: ${tab.observedAt}` : [
       })
     }).parse(cleanupEvidence.record);
     cleanup = retainVerifiedAssessmentSource({
-      sourceId: `${runId}:browser-cleanup`,
+      sourceId: `${runId2}:browser-cleanup`,
       state: "derived-facts",
       attribution: "resource-record",
       sourceSha256: record16.provenance.artifact.sha256,
@@ -130417,11 +130461,11 @@ var rowSchema = external_exports.object({
   status: external_exports.enum(["waiting", "answered", "interrupted"])
 });
 var hash35 = (value) => createHash69("sha256").update(value).digest("hex");
-async function readAssessmentClarifications(data2, runId, native2, protection, originalRequest) {
+async function readAssessmentClarifications(data2, runId2, native2, protection, originalRequest) {
   try {
     const { directory: directory3, manifest, manifestSha256 } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     const rows4 = [];
@@ -130500,7 +130544,7 @@ async function readAssessmentClarifications(data2, runId, native2, protection, o
       };
       const identity2 = {
         source: "retained-native-clarification",
-        runId,
+        runId: runId2,
         manifestSha256,
         artifact: { name: file3.path, sha256: file3.sha256, bytes: file3.bytes },
         question: "model-authored-unverified",
@@ -130614,12 +130658,12 @@ var cleanupSchema = external_exports.object({
   stopRequested: external_exports.boolean()
 });
 var hash36 = (bytes2) => createHash70("sha256").update(bytes2).digest("hex");
-async function readAssessmentCleanup(data2, runId, native2) {
+async function readAssessmentCleanup(data2, runId2, native2) {
   try {
     const { cleaned } = external_exports.object({ cleaned: external_exports.boolean() }).parse(native2);
     const { directory: directory3, manifest, manifestSha256 } = await readRunnerManifest(
       data2,
-      runId,
+      runId2,
       native2
     );
     if (manifest.schema !== "loki.computer-runner.private-evidence/1")
@@ -130654,7 +130698,7 @@ async function readAssessmentCleanup(data2, runId, native2) {
         errorCount: cleanup.errors.length,
         provenance: {
           source: "retained-native-browser-cleanup",
-          runId,
+          runId: runId2,
           manifestSha256,
           artifact: { sha256: file3.sha256, bytes: file3.bytes },
           phase: "native-final-cleanup-after-execution",
@@ -132377,17 +132421,17 @@ var RunnerReuse = class {
     const protection = configuredProtection(current2);
     const entries = [];
     const unavailable6 = [];
-    for (const runId of [...new Set(runIds)].sort()) {
+    for (const runId2 of [...new Set(runIds)].sort()) {
       signal?.throwIfAborted();
       try {
-        sha.parse(runId);
-        const operation2 = await this.dependencies.readOperation(runId);
+        sha.parse(runId2);
+        const operation2 = await this.dependencies.readOperation(runId2);
         if (operation2.state !== "finished" || operation2.resultValidated !== true)
           throw Error("Capture is not a completed retained operation");
         const directory3 = join41(
           await realpath18(this.data),
           "computer-runner-runs",
-          runId
+          runId2
         );
         await checkPrivateDirectory(directory3);
         if (await realpath18(directory3) !== directory3)
@@ -132401,7 +132445,7 @@ var RunnerReuse = class {
         const expected = hash38(
           this.scope ? JSON.stringify([this.scope, original.requestKey]) : original.requestKey
         );
-        if (expected !== runId || record13(operation2.identity).inputSha256 !== hash38(canonicalJson(raw)))
+        if (expected !== runId2 || record13(operation2.identity).inputSha256 !== hash38(canonicalJson(raw)))
           throw Error("Capture ownership or request changed");
         const artifacts = join41(directory3, "artifacts");
         await checkPrivateDirectory(artifacts);
@@ -132416,7 +132460,7 @@ var RunnerReuse = class {
         });
       } catch {
         signal?.throwIfAborted();
-        unavailable6.push({ runId, reason: "capture-unavailable-in-scope" });
+        unavailable6.push({ runId: runId2, reason: "capture-unavailable-in-scope" });
       }
     }
     const discovery = await discoverExecutions(
@@ -132560,23 +132604,23 @@ async function bindRunnerApplicationContext(binding2, context, scope, requestKey
     throw Error("Frozen application-context host identity changed");
   const root5 = join42(dirname12(context.artifactDirectory), "application-context");
   await privateDirectory(root5);
-  const callerId = scope || "host-private-connection", runId = createHash75("sha256").update(scope ? JSON.stringify([scope, requestKey]) : requestKey).digest("hex");
+  const callerId = scope || "host-private-connection", runId2 = createHash75("sha256").update(scope ? JSON.stringify([scope, requestKey]) : requestKey).digest("hex");
   const deadlineAt = new Date(Date.now() + ms).toISOString();
   const bindings2 = binding2.sources.map((source4) => ({
     ...source4,
     callerId,
-    runId
+    runId: runId2
   }));
   const service = await createApplicationContextService({
     directory: join42(root5, "service"),
     callerId,
-    runId,
+    runId: runId2,
     bindings: bindings2
   });
   const config2 = {
     directory: join42(root5, "consumer"),
     callerId,
-    runId,
+    runId: runId2,
     scenarioId,
     sourceBindingIds: bindings2.map((b) => b.bindingId),
     deadlineAt,
@@ -133401,10 +133445,10 @@ var ComputerRunner = class {
       dependencies.legacyOperationDirectory
     );
     this.clarifications = new RunnerClarifications(
-      (runId) => this.scopedGet(runId)
+      (runId2) => this.scopedGet(runId2)
     );
     this.reuse = new RunnerReuse(data2, dependencies.operationScope ?? "", {
-      readOperation: (runId) => this.operations.get(runId),
+      readOperation: (runId2) => this.operations.get(runId2),
       ...dependencies.reuseCall ? { call: dependencies.reuseCall } : {}
     });
   }
@@ -133584,7 +133628,7 @@ var ComputerRunner = class {
     let dispatched = false;
     try {
       if (privateSubmissionSha256) {
-        const runId = hash39(
+        const runId2 = hash39(
           this.dependencies.operationScope ? JSON.stringify([
             this.dependencies.operationScope,
             request3.requestKey
@@ -133593,14 +133637,14 @@ var ComputerRunner = class {
         let existing;
         dispatched = null;
         try {
-          existing = await this.scopedGet(runId);
+          existing = await this.scopedGet(runId2);
         } catch (error62) {
           if (!(error62 instanceof OperationNotFound)) throw error62;
           dispatched = false;
         }
         if (existing) {
           if (object38(existing.identity).privateSubmissionSha256 !== privateSubmissionSha256)
-            throw new RequestKeyConflict("execution", runId);
+            throw new RequestKeyConflict("execution", runId2);
           return await this.view(existing);
         }
         request3 = runnerRequest.parse(
@@ -133695,8 +133739,8 @@ var ComputerRunner = class {
       );
     }
   }
-  async scopedGet(runId, offset2) {
-    const status2 = await this.operations.get(runId, offset2);
+  async scopedGet(runId2, offset2) {
+    const status2 = await this.operations.get(runId2, offset2);
     const directory3 = external_exports.string().min(1).parse(status2.receiptDirectory);
     const request3 = retainedRunnerRequest.parse(
       JSON.parse(
@@ -133706,7 +133750,7 @@ var ComputerRunner = class {
     const scope = this.dependencies.operationScope ?? "";
     if (hash39(
       scope ? JSON.stringify([scope, request3.requestKey]) : request3.requestKey
-    ) !== runId)
+    ) !== runId2)
       throw new OperationNotFound();
     return status2;
   }
@@ -133729,8 +133773,8 @@ var ComputerRunner = class {
   async getAssessmentContext(input3) {
     let status2;
     try {
-      const { runId } = runnerHandle.parse(input3);
-      status2 = await this.scopedGet(runId);
+      const { runId: runId2 } = runnerHandle.parse(input3);
+      status2 = await this.scopedGet(runId2);
     } catch {
       return { state: "unavailable", reason: "operation-unavailable-in-scope" };
     }
@@ -133909,10 +133953,10 @@ var ComputerRunner = class {
     }
   }
   async readCustomerClarification(input3) {
-    const { runId } = runnerHandle.parse(input3);
-    const status2 = await this.scopedGet(runId);
+    const { runId: runId2 } = runnerHandle.parse(input3);
+    const status2 = await this.scopedGet(runId2);
     return {
-      runId,
+      runId: runId2,
       pendingClarification: await this.clarifications.customerPending(status2)
     };
   }
@@ -135340,7 +135384,7 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var record15 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 var sameIds = (a, b) => Array.isArray(a) && a.length === b.length && new Set(a).size === a.length && b.every((id8) => a.includes(id8));
-function selectedRunSummary(selected2, snapshot3, runId, resultSha256) {
+function selectedRunSummary(selected2, snapshot3, runId2, resultSha256) {
   if (!selected2.ids.length || new Set(selected2.ids).size !== selected2.ids.length)
     return null;
   const base = {
@@ -135354,9 +135398,9 @@ function selectedRunSummary(selected2, snapshot3, runId, resultSha256) {
     unverified: selected2.ids.length,
     notRun: 0
   };
-  if (!snapshot3 || !runId || !resultSha256) return base;
+  if (!snapshot3 || !runId2 || !resultSha256) return base;
   const runs = snapshot3.entries.filter(
-    (entry) => entry.kind === "runner" && entry.runId === runId
+    (entry) => entry.kind === "runner" && entry.runId === runId2
   );
   if (runs.length !== 1 || runs[0].resultSha256 !== resultSha256) return base;
   const native2 = record15(record15(runs[0].result).nativeResult), correlation = record15(native2.correlation), ref5 = record15(correlation.planRef);
@@ -135637,9 +135681,9 @@ var TestRun = class {
           if (!context.owner) return;
           this.completions.get(context.owner.id)?.();
         },
-        observeSettled: (runId) => {
-          this.live.delete(runId);
-          this.completions.delete(runId);
+        observeSettled: (runId2) => {
+          this.live.delete(runId2);
+          this.completions.delete(runId2);
         }
       },
       scopeId
@@ -135658,9 +135702,9 @@ var TestRun = class {
     );
   }
   async execute(request3, context) {
-    const runId = this.id(request3.requestKey);
+    const runId2 = this.id(request3.requestKey);
     const result = initial();
-    this.live.set(runId, result);
+    this.live.set(runId2, result);
     const requestedPlan = checkedPlanReferenceSchema.safeParse(
       request3.planRef
     ).data;
@@ -135686,13 +135730,13 @@ var TestRun = class {
         ...initialNavigationBlocked && terminal2.nativeExecutionState === "incomplete" ? { blockedReason: "initial_navigation_blocked" } : {}
       });
     };
-    this.completions.set(runId, () => {
+    this.completions.set(runId2, () => {
       committed = true;
       flush();
     });
     const rememberSummary = (snapshot3, resultSha256) => {
       try {
-        summary2 = selectedRunSummary(selected2, snapshot3, runId, resultSha256);
+        summary2 = selectedRunSummary(selected2, snapshot3, runId2, resultSha256);
       } catch {
       }
     };
@@ -135700,7 +135744,7 @@ var TestRun = class {
       lifecycle: {
         startedAtMs: context.lifecycle.startedAtMs,
         sink: context.lifecycle.sink ? (event2) => {
-          if (event2.kind === "run-finished" && event2.runId === runId) {
+          if (event2.kind === "run-finished" && event2.runId === runId2) {
             terminal2 = { ...event2, finishedAtMs: performance5.now() };
             if (!summary2) rememberSummary();
             flush();
@@ -135712,7 +135756,7 @@ var TestRun = class {
     let stopping;
     const stopNative = () => {
       if (nativeActive && !stopping)
-        stopping = this.services.runner.stop({ runId });
+        stopping = this.services.runner.stop({ runId: runId2 });
       void stopping?.catch(() => {
       });
     };
@@ -135725,7 +135769,7 @@ var TestRun = class {
             resultSha256: selectedPlan.resultSha256
           }
         ] : [],
-        { kind: "runner", runId, resultSha256 }
+        { kind: "runner", runId: runId2, resultSha256 }
       ];
       return {
         title: "Kaijan test run",
@@ -135736,7 +135780,7 @@ var TestRun = class {
     const stopped3 = async () => {
       result.status.assessment = "stopped";
       const execution = result.execution;
-      if (result.status.report === "not-saved" && execution?.schema === "loki.runner-operation/1" && execution.runId === runId && execution.state === "finished" && execution.resultValidated === true) {
+      if (result.status.report === "not-saved" && execution?.schema === "loki.runner-operation/1" && execution.runId === runId2 && execution.state === "finished" && execution.resultValidated === true) {
         const plan = checkedPlanReferenceSchema.safeParse(request3.planRef);
         result.status.report = "saving";
         try {
@@ -135777,7 +135821,7 @@ var TestRun = class {
           result.status.execution = "stop-requested";
           while (active(result.execution)) {
             await delay(250);
-            result.execution = await this.services.runner.get({ runId });
+            result.execution = await this.services.runner.get({ runId: runId2 });
           }
           result.status.execution = result.execution.schema === "loki.runner-operation/1" ? result.execution.state : "error";
           return await stopped3();
@@ -135785,7 +135829,7 @@ var TestRun = class {
         await delay(500, void 0, { signal: context.signal }).catch(() => {
         });
         if (context.signal.aborted) continue;
-        result.execution = await this.services.runner.get({ runId });
+        result.execution = await this.services.runner.get({ runId: runId2 });
         nativeActive = active(result.execution);
       }
       const execution = result.execution;
@@ -135796,7 +135840,7 @@ var TestRun = class {
       const complete = await readCompleteResult(
         (input4) => this.services.runner.get(input4),
         {
-          runId,
+          runId: runId2,
           initial: execution,
           maxBytes: 60 * 1024 * 1024,
           signal: context.signal
@@ -135812,7 +135856,7 @@ var TestRun = class {
         return object39(result);
       initialNavigationBlocked = await hasInitialNavigationBlock(
         this.data,
-        runId,
+        runId2,
         native2
       );
       if (initialNavigationBlocked)
@@ -135821,10 +135865,10 @@ var TestRun = class {
           blockedReason: "initial_navigation_blocked"
         };
       const original = await this.services.runner.getAssessmentContext({
-        runId
+        runId: runId2
       });
       if (context.signal.aborted) return await stopped3();
-      if (original.state !== "ready" || original.runId !== runId || original.resultSha256 !== execution.resultSha256) {
+      if (original.state !== "ready" || original.runId !== runId2 || original.resultSha256 !== execution.resultSha256) {
         result.status.assessment = "context-unavailable";
         return object39(result);
       }
@@ -135837,7 +135881,7 @@ var TestRun = class {
       result.status.report = "saved";
       if (context.signal.aborted) return await stopped3();
       if (initialNavigationBlocked) {
-        if ((await this.operations.get(runId)).stopRequested || context.signal.aborted)
+        if ((await this.operations.get(runId2)).stopRequested || context.signal.aborted)
           return await stopped3();
         return object39(result);
       }
@@ -135861,7 +135905,7 @@ var TestRun = class {
           (id8) => judgments.some((row2) => member(row2, "test_id") === id8)
         );
         result.status.assessment = complete2 ? "complete" : "input-unavailable";
-        result.preparation = { source: "runner-browser-session", runId };
+        result.preparation = { source: "runner-browser-session", runId: runId2 };
         result.assessment = {
           state: result.status.assessment,
           result: {
@@ -135879,11 +135923,11 @@ var TestRun = class {
       result.status.assessment = "preparing";
       const invocation = {
         signal: context.signal,
-        telemetryRun: { runId, planId: plan.data?.answerId ?? null }
+        telemetryRun: { runId: runId2, planId: plan.data?.answerId ?? null }
       };
       const preparation = await this.services.reports.prepareAssessment({
         reportId: result.report.reportId,
-        runId
+        runId: runId2
       });
       result.preparation = object39({
         state: preparation.state,
@@ -135902,11 +135946,11 @@ var TestRun = class {
         return object39(result);
       }
       const input3 = preparation.assessmentInput;
-      if ((await this.operations.get(runId)).stopRequested || context.signal.aborted)
+      if ((await this.operations.get(runId2)).stopRequested || context.signal.aborted)
         return await stopped3();
       result.status.assessment = "running";
       const answer = await this.services.assessment.query(
-        { requestKey: `kaijan.test-run:${runId}:assessment`, input: input3 },
+        { requestKey: `kaijan.test-run:${runId2}:assessment`, input: input3 },
         invocation
       );
       result.assessment = external_exports.json().parse(answer);
@@ -135953,23 +135997,23 @@ var TestRun = class {
       context.signal.removeEventListener("abort", stopNative);
     }
   }
-  async scopedGet(runId, offset2) {
-    const status2 = await this.operations.get(runId, offset2);
+  async scopedGet(runId2, offset2) {
+    const status2 = await this.operations.get(runId2, offset2);
     const directory3 = external_exports.string().parse(status2.receiptDirectory);
     const request3 = retainedRunnerRequest.parse(
       JSON.parse(
         (await boundedFile(join45(directory3, "request.json"))).toString("utf8")
       )
     );
-    if (this.id(request3.requestKey) !== runId) throw new OperationNotFound();
+    if (this.id(request3.requestKey) !== runId2) throw new OperationNotFound();
     return status2;
   }
   async view(status2, offset2) {
-    const runId = external_exports.string().parse(status2.runId);
-    let live = this.live.get(runId);
+    const runId2 = external_exports.string().parse(status2.runId);
+    let live = this.live.get(runId2);
     if (status2.state === "running" && !live) {
-      status2 = await this.operations.get(runId, offset2);
-      live = this.live.get(runId);
+      status2 = await this.operations.get(runId2, offset2);
+      live = this.live.get(runId2);
     }
     let result = status2.result ? object39(status2.result) : object39(live ?? initial());
     if (status2.resultValidated === true && status2.resultRead && !status2.resultChunk) {
@@ -136007,7 +136051,7 @@ var TestRun = class {
           status: { ...object39(result.status), execution: "starting" }
         };
       else if (!executionFailed || member(member(result.execution, "error"), "requestDispatched") !== false) {
-        const execution = await this.services.runner.get({ runId });
+        const execution = await this.services.runner.get({ runId: runId2 });
         if (!executionFailed || execution.schema === "loki.runner-operation/1")
           result = { ...result, execution: external_exports.json().parse(execution) };
         if (member(result.execution, "nextAction"))
@@ -136028,7 +136072,7 @@ var TestRun = class {
         const complete = await readCompleteResult(
           (input3) => this.services.runner.get(input3),
           {
-            runId,
+            runId: runId2,
             initial: object39(result.execution),
             maxBytes: 60 * 1024 * 1024
           }
@@ -136050,7 +136094,7 @@ var TestRun = class {
     }
     return {
       schema: "kaijan.test-run/1",
-      runId,
+      runId: runId2,
       state: status2.state,
       stopRequested: status2.stopRequested ?? false,
       replayAllowed: false,
@@ -136061,7 +136105,7 @@ var TestRun = class {
       ...status2.resultValidated === true ? {
         originalResult: {
           tool: "loki_test_get",
-          arguments: { runId, offset: 0 },
+          arguments: { runId: runId2, offset: 0 },
           resultSha256: status2.resultSha256,
           resultBytes: status2.resultBytes ?? null,
           instruction: "Optional full original result. Read ordered offsets only when the complete evidence and binding records are needed. The default response already contains all test verdicts, actual observations, performed steps and the report."
@@ -136070,10 +136114,10 @@ var TestRun = class {
       ...status2.resultChunk ? { resultChunk: status2.resultChunk } : {}
     };
   }
-  failure(error62, runId) {
+  failure(error62, runId2) {
     return {
       schema: "kaijan.test-run/1",
-      ...runId ? { runId } : {},
+      ...runId2 ? { runId: runId2 } : {},
       state: "unavailable",
       replayAllowed: false,
       error: error62 instanceof BrowserTargetError2 ? {
@@ -136093,7 +136137,7 @@ var TestRun = class {
   }
   async start(input3) {
     const lifecycle2 = snapshotLifecycle(this.services.lifecycle, "run");
-    let runId;
+    let runId2;
     try {
       const submitted = testRunRequest.parse(JSON.parse(JSON.stringify(input3)));
       if ("initialURL" in submitted.target)
@@ -136101,7 +136145,7 @@ var TestRun = class {
           submitted.target.initialURL,
           submitted.target.allowedHosts
         );
-      runId = this.id(submitted.requestKey);
+      runId2 = this.id(submitted.requestKey);
       let request3;
       if ("savedTests" in submitted) {
         try {
@@ -136141,7 +136185,7 @@ var TestRun = class {
         )
       );
     } catch (error62) {
-      return this.failure(error62, runId);
+      return this.failure(error62, runId2);
     }
   }
   async get(input3, signal) {
@@ -136169,9 +136213,9 @@ var TestRun = class {
   }
   async stop(input3) {
     try {
-      const { runId } = runnerHandle.parse(input3);
-      await this.scopedGet(runId);
-      return await this.view(await this.operations.stop(runId));
+      const { runId: runId2 } = runnerHandle.parse(input3);
+      await this.scopedGet(runId2);
+      return await this.view(await this.operations.stop(runId2));
     } catch (error62) {
       return this.failure(error62);
     }
@@ -169455,7 +169499,7 @@ function createCapabilityServices(data2, options2 = {}) {
       changeRisk,
       related: prContext
     }),
-    readProcedure: (runId) => computerRunner.getAssessmentContext({ runId }),
+    readProcedure: (runId2) => computerRunner.getAssessmentContext({ runId: runId2 }),
     readRiskAnswer: (family, answerId, offset2) => (family === "changeRisk" ? changeRisk : riskFinder).readQuery(
       answerId,
       offset2
@@ -169497,7 +169541,7 @@ function createCapabilityServices(data2, options2 = {}) {
     },
     (contextId) => contextIntake.consume(contextId, "reportSources"),
     {
-      runner: (runId) => computerRunner.getAssessmentContext({ runId }),
+      runner: (runId2) => computerRunner.getAssessmentContext({ runId: runId2 }),
       assessment: (reference2) => suppliedEvidence.readCustomerAssessment(reference2, "report"),
       plannerRecapRequest: (reference2, inputSha256) => suppliedEvidence.readPlannerRecapRequest(reference2, inputSha256),
       plan: (reference2) => testPlanning.getAssessmentContext(reference2),

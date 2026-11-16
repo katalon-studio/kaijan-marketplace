@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names, constants3) {
+      optimizeNames(names, constants4) {
         if (!names[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names, constants3);
+          this.rhs = optimizeExpr(this.rhs, names, constants4);
         return this;
       }
       get names() {
@@ -431,10 +431,10 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names, constants3) {
+      optimizeNames(names, constants4) {
         if (this.lhs instanceof code_1.Name && !names[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names, constants3);
+        this.rhs = optimizeExpr(this.rhs, names, constants4);
         return this;
       }
       get names() {
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names, constants3) {
-        this.code = optimizeExpr(this.code, names, constants3);
+      optimizeNames(names, constants4) {
+        this.code = optimizeExpr(this.code, names, constants4);
         return this;
       }
       get names() {
@@ -525,12 +525,12 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names, constants3) {
+      optimizeNames(names, constants4) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names, constants3))
+          if (n.optimizeNames(names, constants4))
             continue;
           subtractNames(names, n.names);
           nodes.splice(i, 1);
@@ -583,12 +583,12 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names, constants3) {
+      optimizeNames(names, constants4) {
         var _a3;
-        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants3);
-        if (!(super.optimizeNames(names, constants3) || this.else))
+        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants4);
+        if (!(super.optimizeNames(names, constants4) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names, constants3);
+        this.condition = optimizeExpr(this.condition, names, constants4);
         return this;
       }
       get names() {
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names, constants3) {
-        if (!super.optimizeNames(names, constants3))
+      optimizeNames(names, constants4) {
+        if (!super.optimizeNames(names, constants4))
           return;
-        this.iteration = optimizeExpr(this.iteration, names, constants3);
+        this.iteration = optimizeExpr(this.iteration, names, constants4);
         return this;
       }
       get names() {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names, constants3) {
-        if (!super.optimizeNames(names, constants3))
+      optimizeNames(names, constants4) {
+        if (!super.optimizeNames(names, constants4))
           return;
-        this.iterable = optimizeExpr(this.iterable, names, constants3);
+        this.iterable = optimizeExpr(this.iterable, names, constants4);
         return this;
       }
       get names() {
@@ -695,11 +695,11 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names, constants3) {
+      optimizeNames(names, constants4) {
         var _a3, _b;
-        super.optimizeNames(names, constants3);
-        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants3);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants3);
+        super.optimizeNames(names, constants4);
+        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants4);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants4);
         return this;
       }
       get names() {
@@ -1000,7 +1000,7 @@ var require_codegen = __commonJS({
     function addExprNames(names, from) {
       return from instanceof code_1._CodeOrName ? addNames(names, from.names) : names;
     }
-    function optimizeExpr(expr, names, constants3) {
+    function optimizeExpr(expr, names, constants4) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1015,14 +1015,14 @@ var require_codegen = __commonJS({
         return items;
       }, []));
       function replaceName(n) {
-        const c = constants3[n.str];
+        const c = constants4[n.str];
         if (c === void 0 || names[n.str] !== 1)
           return n;
         delete names[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants3[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants4[c.str] !== void 0);
       }
     }
     function subtractNames(names, from) {
@@ -7321,7 +7321,7 @@ function resolveRuntimeBuild(build, env = process.env) {
 // apps/codex-plugin/src/private-parameters-entry.mjs
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { join as join5, resolve as resolve2 } from "node:path";
+import { join as join6, resolve as resolve2 } from "node:path";
 
 // apps/codex-plugin/plugin/scripts/profile-state.mjs
 import { TextDecoder as TextDecoder2 } from "node:util";
@@ -29139,6 +29139,40 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// packages/contracts/dist/agent-feedback.js
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // packages/contracts/dist/product-issue.js
 var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
 var issueImageLimits = Object.freeze({
@@ -29686,6 +29720,15 @@ import process2 from "node:process";
 // packages/capability-runtime/dist/storage.js
 import { constants as constants2 } from "node:fs";
 import { mkdir as mkdir2, open as open3, lstat, rename, unlink as unlink2 } from "node:fs/promises";
+async function privateDirectory(path) {
+  await mkdir2(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The capability data directory is unsafe.");
+}
 async function boundedFile(path, maximum) {
   const file2 = await open3(path, constants2.O_RDONLY | constants2.O_NOFOLLOW | constants2.O_NONBLOCK);
   try {
@@ -31770,8 +31813,225 @@ function createFeedbackSurface({
   };
 }
 
+// apps/codex-plugin/src/agent-feedback-store.mjs
+import { constants as constants3 } from "node:fs";
+import { open as open4, link as link2, unlink as unlink3, realpath as realpath2 } from "node:fs/promises";
+import { randomUUID as randomUUID2, createHash as createHash2 } from "node:crypto";
+import { join as join3 } from "node:path";
+var bindingSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  input: agentFeedbackSubmissionSchema
+});
+var recordSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  reportSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  context: agentFeedbackContextSchema
+});
+var reportContent = (input3) => Object.fromEntries(
+  Object.entries(input3).filter(([key]) => key !== "context")
+);
+async function bindAgentFeedbackRequest(data, value) {
+  const candidate = bindingSchema.parse(value);
+  const report = reportContent(candidate.input);
+  const record4 = {
+    userId: candidate.userId,
+    workspaceId: candidate.workspaceId,
+    reportSha256: createHash2("sha256").update(JSON.stringify(report, Object.keys(report).sort())).digest("hex"),
+    context: candidate.input.context
+  };
+  const directory = join3(data, "agent-feedback");
+  await privateDirectory(directory);
+  if (await realpath2(directory) !== directory)
+    throw Error("Unsafe Agent Feedback directory");
+  const path = join3(
+    directory,
+    `${candidate.input.requestId.toLowerCase()}.json`
+  );
+  const temporary = join3(directory, `.pending-${randomUUID2()}`);
+  try {
+    const file3 = await open4(temporary, "wx", 384);
+    try {
+      await file3.writeFile(JSON.stringify(record4));
+      await file3.sync();
+    } finally {
+      await file3.close();
+    }
+    try {
+      await link2(temporary, path);
+    } catch (error62) {
+      if (error62.code !== "EEXIST") throw error62;
+    }
+  } finally {
+    await unlink3(temporary).catch((error62) => {
+      if (error62.code !== "ENOENT") throw error62;
+    });
+  }
+  const parent = await open4(
+    directory,
+    constants3.O_RDONLY | constants3.O_NOFOLLOW
+  );
+  try {
+    await parent.sync();
+  } finally {
+    await parent.close();
+  }
+  const file2 = await open4(
+    path,
+    constants3.O_RDONLY | constants3.O_NOFOLLOW | constants3.O_NONBLOCK
+  );
+  let saved;
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || info.uid !== process.getuid() || info.mode & 63)
+      throw Error("Unsafe Agent Feedback record");
+    saved = recordSchema.parse(JSON.parse(await file2.readFile("utf8")));
+  } finally {
+    await file2.close();
+  }
+  if (saved.userId !== candidate.userId || saved.workspaceId !== candidate.workspaceId || saved.reportSha256 !== record4.reportSha256)
+    throw Error(
+      "Agent Feedback recovery belongs to the original account and report"
+    );
+  return {
+    userId: saved.userId,
+    workspaceId: saved.workspaceId,
+    input: { ...candidate.input, context: saved.context }
+  };
+}
+
+// apps/codex-plugin/src/agent-feedback.mjs
+var toolName = "kaijan_agent_feedback";
+var failureSchema2 = external_exports.strictObject({
+  error: external_exports.string(),
+  message: external_exports.string(),
+  requestId: external_exports.uuid().optional()
+});
+var resultSchema = external_exports.union([agentFeedbackReceiptSchema, failureSchema2]);
+var agentFeedbackInstructions = "Agent Feedback is available for your own observations about Kaijan. Choose whether, when and what to report; it is optional and never a task prerequisite. You may report helpful behavior, friction, missing capability or a suspected defect before or after a Run without asking for a per-report user confirmation. Keep the account short, state impact and uncertainty, and exclude whole chats, raw logs, screenshots and project files. Report text stays private in Core; enabled analytics receives trend metadata only. Continue the original task even when feedback is unavailable.";
+function createAgentFeedbackSurface({ session, broker, build, data }) {
+  const lifetime = new AbortController();
+  const active = /* @__PURE__ */ new Set();
+  let closed2 = false;
+  const reply = (value) => ({
+    ...value.error ? { isError: true } : {},
+    structuredContent: resultSchema.parse(value),
+    content: [{ type: "text", text: JSON.stringify(value) }]
+  });
+  const unavailable2 = (requestId) => reply({
+    error: "agent_feedback_unconfirmed",
+    message: "Agent Feedback was not confirmed. Continue your task. Retry in the original chat and account with the same request ID and exact report.",
+    ...requestId ? { requestId } : {}
+  });
+  async function verifiedRun(scope, runId2) {
+    if (!runId2) return void 0;
+    for (const service of [
+      scope.services?.testRun,
+      scope.services?.computerRunner
+    ]) {
+      if (typeof service?.get !== "function") continue;
+      try {
+        const retained = await service.get({ runId: runId2 });
+        if (retained?.runId === runId2 && !retained.error) return runId2;
+      } catch {
+      }
+    }
+    return void 0;
+  }
+  async function execute(raw, metadata2, signal) {
+    const parsed = agentFeedbackInputSchema.safeParse(raw);
+    if (!parsed.success)
+      return reply({
+        error: "invalid_request",
+        message: "Use the advertised Agent Feedback fields. No feedback was sent; continue your task."
+      });
+    const input3 = parsed.data;
+    if (closed2 || !broker || signal?.aborted)
+      return unavailable2(input3.requestId);
+    try {
+      const selected = await session.forRequest(metadata2);
+      const connection = await forwardCore(
+        broker,
+        "loki_connection_status",
+        {},
+        signal
+      );
+      const owner = coreConnectionSchema.parse(connection.structuredContent);
+      const verifiedRunId = await verifiedRun(selected, input3.runId);
+      if (closed2 || signal?.aborted) return unavailable2(input3.requestId);
+      const bound = await bindAgentFeedbackRequest(data, {
+        userId: owner.context.user.id,
+        workspaceId: owner.context.workspace.id,
+        input: {
+          ...input3,
+          context: {
+            sessionId: selected.scope.id,
+            sessionKind: selected.scope.kind,
+            pluginVersion: build.pluginVersion,
+            os: ["darwin", "linux", "win32"].includes(process.platform) ? process.platform : "unknown",
+            ...verifiedRunId ? { verifiedRunId } : {}
+          }
+        }
+      });
+      if (closed2 || signal?.aborted) return unavailable2(input3.requestId);
+      const response2 = await broker.send("/agent-feedback", {
+        method: "POST",
+        signal,
+        body: JSON.stringify(bound)
+      });
+      if (!response2.ok) {
+        await response2.body?.cancel();
+        return unavailable2(input3.requestId);
+      }
+      const receipt2 = agentFeedbackReceiptSchema.parse(await response2.json());
+      if (receipt2.requestId.toLowerCase() !== input3.requestId.toLowerCase())
+        return unavailable2(input3.requestId);
+      return reply(receipt2);
+    } catch {
+      return unavailable2(input3.requestId);
+    }
+  }
+  return {
+    tools: [
+      {
+        name: toolName,
+        title: "Agent Feedback",
+        description: "Privately report your own observation about Kaijan: helpful behavior, friction, a missing capability or a suspected defect. You choose whether and when; no user Send or per-report confirmation is needed. Include impact and uncertainty in the short description. Run ID is optional. Keep chats, raw logs, screenshots, project files and secrets out. Core returns a feedback ID after save; analytics gets metadata only. Recover with the same requestId and exact report. Feedback never blocks the original task.",
+        inputSchema: external_exports.toJSONSchema(agentFeedbackInputSchema),
+        outputSchema: {
+          type: "object",
+          anyOf: external_exports.toJSONSchema(resultSchema).anyOf
+        },
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: false,
+          idempotentHint: true,
+          openWorldHint: true
+        }
+      }
+    ],
+    hasTool: (name) => name === toolName,
+    invoke(_name, raw, metadata2, signal) {
+      const pending = execute(
+        raw,
+        metadata2,
+        AbortSignal.any([lifetime.signal, ...signal ? [signal] : []])
+      ).finally(() => active.delete(pending));
+      active.add(pending);
+      return pending;
+    },
+    async close() {
+      if (closed2) return;
+      closed2 = true;
+      lifetime.abort();
+      await Promise.allSettled([...active]);
+    }
+  };
+}
+
 // apps/codex-plugin/src/configurations.mjs
-import { createHash as createHash2 } from "node:crypto";
+import { createHash as createHash3 } from "node:crypto";
 var cachedFormUris = /* @__PURE__ */ new Set([
   "ui://kaijan/configurations/form/v1.html",
   "ui://kaijan/configurations/form/v2.html"
@@ -31966,7 +32226,7 @@ function createConfigurationSurface({ session, library, data }) {
         const scope = await scopeFor(metadata2);
         if (typeof raw?.requestKey !== "string" || !raw.requestKey)
           throw Error("invalid_request");
-        recoveryRunId = createHash2("sha256").update(JSON.stringify([scope.scope.id, raw.requestKey])).digest("hex");
+        recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, raw.requestKey])).digest("hex");
         marked = true;
         marked = await library.configurationRunMarker(
           scope.data,
@@ -32157,7 +32417,7 @@ function createConfigurationSurface({ session, library, data }) {
 // apps/codex-plugin/src/issues.mjs
 import { randomBytes as randomBytes2 } from "node:crypto";
 import { lstat as lstat2 } from "node:fs/promises";
-import { join as join3 } from "node:path";
+import { join as join4 } from "node:path";
 
 // apps/codex-plugin/src/issue-user-authorization.mjs
 import { execFile } from "node:child_process";
@@ -32461,7 +32721,7 @@ function scopedIssueTransport({
 
 // apps/codex-plugin/src/issue-screenshot.mjs
 import assert2 from "node:assert/strict";
-import { createHash as createHash3 } from "node:crypto";
+import { createHash as createHash4 } from "node:crypto";
 
 // packages/contracts/dist/report-evidence.js
 var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -35544,7 +35804,7 @@ async function selectIssueScreenshot(reports, reference2, imageId) {
   const bytes = Buffer.from(value.content.data, "base64");
   assert2.equal(bytes.length, value.artifact.bytes);
   assert2.equal(
-    createHash3("sha256").update(bytes).digest("hex"),
+    createHash4("sha256").update(bytes).digest("hex"),
     value.artifact.sha256
   );
   return {
@@ -35767,7 +36027,7 @@ function createIssueSurface({
     let opened = stores.get(data);
     if (!opened) {
       try {
-        await lstat2(join3(data, "issue-drafts", "drafts.sqlite3"));
+        await lstat2(join4(data, "issue-drafts", "drafts.sqlite3"));
       } catch (error62) {
         if (error62?.code === "ENOENT") return void 0;
         throw error62;
@@ -36180,7 +36440,7 @@ function claudeSessionId(environment) {
 }
 
 // apps/codex-plugin/src/installed-session.mjs
-import { join as join4, delimiter } from "node:path";
+import { join as join5, delimiter } from "node:path";
 import { pathToFileURL } from "node:url";
 import process3 from "node:process";
 import { performance } from "node:perf_hooks";
@@ -36215,15 +36475,15 @@ async function createInstalledSession(root, build, data, broker, {
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
-  const source3 = join4(root, "capabilities");
+  const source3 = join5(root, "capabilities");
   const started = performance.now();
   const identity2 = await verifyDistribution(source3, build.capabilityDigest);
   if (Object.values(identity2.manifest.files).some((member) => "symlink" in member))
     throw Error("Installed runtime must contain regular files");
   const verified = performance.now();
-  process3.env.PATH = [join4(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  process3.env.PATH = [join5(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage("import_library");
-  const library = await import(pathToFileURL(join4(source3, "library/api.mjs")).href);
+  const library = await import(pathToFileURL(join5(source3, "library/api.mjs")).href);
   stage("init_services");
   if (Boolean(build.validationContext) !== Boolean(runnerValidation))
     throw Error(
@@ -36305,6 +36565,18 @@ async function createInstalledSession(root, build, data, broker, {
   session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
   session.workspaceResults = workspaceService;
+  session.agentFeedback = createAgentFeedbackSurface({
+    session,
+    broker,
+    build,
+    data
+  });
+  session.instructions += ` ${agentFeedbackInstructions}`;
+  const closeAgentFeedback = session.close.bind(session);
+  session.close = async () => {
+    await session.agentFeedback.close();
+    await closeAgentFeedback();
+  };
   if (host === "claude_code") {
     session.configurations = createConfigurationSurface({
       session,
@@ -36473,7 +36745,7 @@ async function main() {
   }
   const root = resolve2(import.meta.dirname, "..");
   const build = resolveRuntimeBuild(
-    JSON.parse(await readFile(join5(root, "loki-build.json"), "utf8"))
+    JSON.parse(await readFile(join6(root, "loki-build.json"), "utf8"))
   );
   const host = pluginHost(build);
   if (host === "claude_code" && args.threadId !== claudeSessionId(process.env))

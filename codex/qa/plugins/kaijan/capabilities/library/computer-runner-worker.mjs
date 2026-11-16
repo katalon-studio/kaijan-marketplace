@@ -24855,6 +24855,40 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// ../contracts/dist/agent-feedback.js
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // ../contracts/dist/product-issue.js
 var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
 var issueImageLimits = Object.freeze({
@@ -26752,7 +26786,7 @@ process.on("message", (message) => {
         runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
         nonce: external_exports.string().regex(/^[a-f0-9]{64}$/)
       }).safeParse(options.ownerTransition);
-      const runId = registration.success ? registration.data.runId : "";
+      const runId2 = registration.success ? registration.data.runId : "";
       const planId = typeof options.telemetryPlanId === "string" ? options.telemetryPlanId : "";
       let privateContent = Array.isArray(options.secretParameterNames) && options.secretParameterNames.length > 0;
       const selectedSender = (body, signal) => {
@@ -26764,7 +26798,7 @@ process.on("message", (message) => {
             managed ? void 0 : options.apiKey,
             managed ? {
               LOKI_AUTH_BROKER_SOCKET: options.brokerSocket,
-              LOKI_TELEMETRY_RUN_ID: runId,
+              LOKI_TELEMETRY_RUN_ID: runId2,
               LOKI_TELEMETRY_PLAN_ID: planId
             } : {}
           ),
