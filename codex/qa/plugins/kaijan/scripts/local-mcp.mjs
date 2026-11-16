@@ -46797,6 +46797,7 @@ function createFeedbackSurface({
   const stores = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map();
   let stopped = false;
   const fields = library.feedbackFieldsSchema;
+  const agentFields = fields.omit({ includeRun: true });
   const draftInput = external_exports.strictObject({
     operation: external_exports.enum(operations),
     requestId: external_exports.uuid().optional(),
@@ -46804,7 +46805,8 @@ function createFeedbackSurface({
     revision: external_exports.number().int().positive().optional(),
     title: fields.shape.title.optional(),
     description: fields.shape.description.optional(),
-    changes: fields.partial().optional()
+    runId: library.feedbackOpenSchema.shape.runId,
+    changes: agentFields.partial().optional()
   });
   const actionInput = library.feedbackViewSchema.extend({
     operation: external_exports.enum(["read", "update", "send", "discard_edit"]),
@@ -46847,7 +46849,7 @@ function createFeedbackSurface({
     describe3(
       "kaijan_feedback_draft",
       "Kaijan feedback",
-      "Open or edit one local Kaijan feedback draft in this chat. Open requires a UUID requestId and optional title/description. Read and discard_edit require only draftId. Update requires draftId, revision and nonempty changes. Retain the returned revision; review a conflict before applying another edit. Agent wording is a suggestion. A person's opinion must be supplied or adopted by that person. This tool never submits feedback to Core.",
+      "Open or edit one local Kaijan feedback draft in this chat. Open requires a UUID requestId and optional title/description. An optional known runId offers that exact Run's details for the person to review in the form; inclusion stays off until the person selects it. Read and discard_edit require only draftId. Update requires draftId, revision and nonempty changes. Retain the returned revision; review a conflict before applying another edit. Agent wording is a suggestion. A person's opinion must be supplied or adopted by that person. This tool never submits feedback to Core.",
       draftInput,
       false
     ),
@@ -46989,16 +46991,41 @@ function createFeedbackSurface({
         if (stopped || signal?.aborted) return reply(closed());
         const { operation = "send", draftId, revision: revision3 } = input3;
         let draft;
-        if (operation === "open")
+        const environment = {
+          pluginVersion: build.pluginVersion,
+          os: ["darwin", "linux", "win32"].includes(process.platform) ? process.platform : "unknown"
+        };
+        if (operation === "open") {
+          let run;
+          if (input3.runId) {
+            try {
+              const result2 = await scope.services.testRun.get({
+                runId: input3.runId
+              });
+              if (result2.schema === "kaijan.test-run/1" && result2.runId === input3.runId) {
+                const selected = library.feedbackContextSchema.shape.run.unwrap().safeParse({
+                  operationId: result2.runId,
+                  capability: "testRun",
+                  ...result2.execution?.error?.code ? { errorCode: result2.execution.error.code } : {}
+                });
+                if (selected.success) run = selected.data;
+              }
+            } catch {
+            }
+          }
+          if (stopped || signal?.aborted) return reply(closed());
           draft = store.create(
             {
               requestId: input3.requestId,
               ...input3.title !== void 0 ? { title: input3.title } : {},
               ...input3.description !== void 0 ? { description: input3.description } : {}
             },
-            actor
+            actor,
+            { ...environment, ...run ? { run } : {} }
           );
-        else if (operation === "read") draft = store.get(draftId, actor);
+          draft = store.prepareContext(draft.id, actor, environment);
+        } else if (operation === "read")
+          draft = store.prepareContext(draftId, actor, environment);
         else if (operation === "discard_edit")
           draft = store.discardEdit(draftId, actor);
         else if (operation === "update")
@@ -47026,7 +47053,7 @@ function createFeedbackSurface({
                 "kaijan_submit_feedback",
                 {
                   ...feedback,
-                  diagnostics: {
+                  diagnostics: feedback.diagnostics ?? {
                     pluginVersion: build.pluginVersion,
                     os: process.platform
                   }
