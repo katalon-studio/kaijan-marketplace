@@ -22658,7 +22658,7 @@ var BrokerAuthorization = class {
             if (onboardingTicket)
               url2.searchParams.set("onboarding_ticket", onboardingTicket);
           }
-          if (supportsReconnectContext && this.host === "codex") {
+          if (supportsReconnectContext) {
             if (reconnectContext.is_reconnect !== null)
               url2.searchParams.set(
                 "is_reconnect",
@@ -22699,12 +22699,12 @@ var BrokerAuthorization = class {
           throw Error("invalid_authorization_server");
         const url2 = new URL(input3 instanceof Request ? input3.url : input3);
         let body = init?.body;
-        if ((onboardingTicket || supportsReconnectContext && reconnectContext && this.host === "codex") && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
+        if ((onboardingTicket || supportsReconnectContext && reconnectContext) && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
           const params = new URLSearchParams(body);
           if (params.get("grant_type") === "authorization_code") {
             if (onboardingTicket)
               params.set("onboarding_ticket", onboardingTicket);
-            if (supportsReconnectContext && reconnectContext && this.host === "codex") {
+            if (supportsReconnectContext && reconnectContext) {
               if (reconnectContext.is_reconnect !== null)
                 params.set(
                   "is_reconnect",
@@ -26330,7 +26330,7 @@ async function main() {
     telemetry = openTelemetryOutbox(profile);
   } catch {
   }
-  const onboarding = telemetry && pluginHost(build) === "codex" && anonymousOnboardingEnabled() ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
+  const onboarding = telemetry && anonymousOnboardingEnabled() ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
   if (!onboarding) {
     try {
       telemetry?.clearOnboardingKey();
