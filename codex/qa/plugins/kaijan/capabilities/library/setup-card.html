@@ -1923,33 +1923,39 @@ body.light .dz-nb .f {
   flex: none;
 }
 
+.dz-wrap-app-model {
+  max-width: none;
+  height: 100dvh;
+  padding-bottom: 24px;
+}
+.dz-wrap-app-model .dz-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 .app-model {
+  flex: 1;
+  min-height: 320px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(185px, 29%);
-  background: var(--bg, #fff);
-  border: 1px solid #cbd5df;
-  border-radius: 10px;
+  grid-template-columns: minmax(0, 1fr) clamp(220px, 25%, 336px);
+  grid-template-rows: minmax(0, 1fr);
+  border: 1px solid var(--ln);
+  border-radius: 8px;
+  background: var(--pn);
   overflow: hidden;
 }
 .app-model-canvas {
-  min-height: 390px;
-  background-color: #f9fbfd;
+  height: auto;
 }
 .app-model-detail {
+  min-width: 0;
+  min-height: 0;
   padding: 16px;
-  max-height: 510px;
   overflow: auto;
-  border-inline-start: 1px solid #cbd5df;
+  border-inline-start: 1px solid var(--ln);
 }
 .app-model-detail label {
-  display: grid;
-  gap: 6px;
   font-weight: 600;
-}
-.app-model-detail select,
-.app-model-detail button {
-  font: inherit;
-  max-width: 100%;
 }
 .app-model-detail h4 {
   margin: 16px 0 5px;
@@ -1962,30 +1968,30 @@ body.light .dz-nb .f {
 .app-model-detail li {
   overflow-wrap: anywhere;
 }
-.app-model-detail button {
-  margin-top: 16px;
-}
 @media (max-width: 620px) {
+  .dz-wrap-app-model {
+    height: auto;
+    min-height: 100dvh;
+    padding-inline: 16px;
+  }
   .app-model {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
   }
   .app-model-canvas {
-    min-height: 300px;
+    height: clamp(300px, 55dvh, 500px);
   }
   .app-model-detail {
     border-inline-start: 0;
-    border-top: 1px solid #cbd5df;
+    border-block-start: 1px solid var(--ln);
   }
-}
-.app-model-canvas {
-  position: relative;
-  overflow: hidden;
 }
 .app-model-board {
   position: absolute;
   left: 0;
   top: 0;
   transform-origin: 0 0;
+  color: var(--ink3);
 }
 .app-model-node {
   position: absolute;
@@ -1997,49 +2003,29 @@ body.light .dz-nb .f {
   gap: 2px;
   padding: 4px 10px;
   text-align: left;
-  color: #213448;
-  border: 1px solid #99adbd;
+  color: var(--ink);
+  border: 1px solid var(--ln2);
   border-radius: 6px;
-  background: #fff;
+  background: var(--pn);
   font: inherit;
   cursor: pointer;
 }
 .app-model-node small {
   font-size: 10px;
-  color: #52677a;
+  color: var(--ink3);
 }
 .app-model-node span {
   font-size: 12px;
   font-weight: 600;
   line-height: 1.18;
 }
+.app-model-node:hover {
+  background: var(--pn2);
+}
 .app-model-node[aria-pressed="true"] {
-  background: #e4f0f7;
-  border-color: #28627f;
-  outline: 1px solid #28627f;
-}
-.app-model-zoom {
-  position: absolute;
-  display: flex;
-  gap: 3px;
-  bottom: 8px;
-  left: 8px;
-}
-.app-model-zoom button {
-  background: #fff;
-  color: #213448;
-  border: 1px solid #becbd5;
-  border-radius: 4px;
-  padding: 3px 8px;
-  cursor: pointer;
-}
-
-.app-model-detail {
-  min-width: 0;
-}
-.app-model-detail select {
-  width: 100%;
-  min-width: 0;
+  background: var(--pn2);
+  border-color: var(--lnk);
+  box-shadow: inset 0 0 0 1px var(--lnk);
 }
 
 /* Exact selected v3 rules; source HTML SHA256 028e5d74a4c6045a9c359ab11cbbb266ed02e4d80eda7dc2562e0160af7f7107. */
