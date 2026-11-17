@@ -30473,6 +30473,51 @@ var mcpErrorResponseSchema = external_exports.object({
     error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
   }).optional()
 });
+var toolDiagnosticReasonSchema = external_exports.enum([
+  "invalid_arguments",
+  "saved_selection_conflict",
+  "saved_selection_unavailable",
+  "saved_selection_mismatch",
+  "report_read_failed",
+  "record_file_missing",
+  "artifact_run_not_selected",
+  "artifact_manifest_changed",
+  "artifact_manifest_identity_mismatch",
+  "artifact_not_selected",
+  "artifact_changed",
+  "artifact_invalid_offset",
+  "tool_failed"
+]);
+var toolDiagnosticFieldSchema = external_exports.enum([
+  "requestKey",
+  "scenario",
+  "scenarioId",
+  "params",
+  "target",
+  "executionMethod",
+  "planRef",
+  "savedTests",
+  "answerId",
+  "resultSha256",
+  "selectedTestIds",
+  "reportId",
+  "runId",
+  "artifactId",
+  "offset",
+  "initialURL",
+  "allowedHosts",
+  "deadline_ms",
+  "unknown"
+]);
+var toolFailureDiagnosedPropertiesSchema = external_exports.strictObject({
+  tool_name: external_exports.enum([
+    "loki_test_execute",
+    "loki_runner_execute",
+    "loki_report_artifact_read"
+  ]),
+  reason: toolDiagnosticReasonSchema,
+  validation_fields: external_exports.array(toolDiagnosticFieldSchema).max(telemetryLimits.arrayEntries)
+});
 var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
 var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
   analysis_id: external_exports.uuidv4(),
@@ -30909,6 +30954,11 @@ var mcpCapture = localEnvelope.extend({
   event_version: external_exports.literal(2),
   properties: localMcpMetricsSchema
 });
+var toolFailureDiagnosedCapture = localEnvelope.extend({
+  event: external_exports.literal("Tool Failure Diagnosed"),
+  event_version: external_exports.literal(1),
+  properties: toolFailureDiagnosedPropertiesSchema
+});
 var startedCapture = localEnvelope.extend({
   event: external_exports.literal("Runtime Started"),
   event_version: external_exports.literal(1),
@@ -30988,7 +31038,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture,
   userInputRequestedCapture,
   userInputReceivedCapture,
-  assessmentFinishedCapture
+  assessmentFinishedCapture,
+  toolFailureDiagnosedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -31010,7 +31061,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture.extend(ownership),
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
-  assessmentFinishedEventSchema
+  assessmentFinishedEventSchema,
+  toolFailureDiagnosedCapture.extend(ownership)
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -31124,6 +31176,11 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
   core_request_id: external_exports.uuidv4().optional(),
   core_automatic_retry: external_exports.literal(false).optional(),
+  // Hash the opaque provider reference; never collect its raw value.
+  response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  previous_response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  request_store: external_exports.boolean().optional(),
+  request_stage: external_exports.enum(["planner_recap_assessment", "other"]).optional(),
   failure_category: inferenceFailureCategorySchema.optional(),
   provider_route: external_exports.literal("litellm"),
   input_tokens: nativeTokenCount,
