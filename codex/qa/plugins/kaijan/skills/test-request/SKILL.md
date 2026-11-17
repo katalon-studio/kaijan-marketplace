@@ -1,11 +1,37 @@
 ---
 name: test-request
-description: Use Kaijan to test a selected application or review a change and test its behavior. Also handles requests to review requirements or risks and plan tests. Covers the requested plan, run, assessment, authorized fixes and report.
+description: Help people learn what Kaijan can do and get started, or use Kaijan to plan tests, test an application or change, and report the results. Also handles review of requirements or risks, assessment, and authorized fixes.
 ---
 
 # Carry the testing request to its result
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md).
+
+## Help the person get started
+
+When the person asks what Kaijan can do or how to start, answer briefly in
+terms of the result they can get: a test plan, an executed test, or a report
+they can review. Use what they have shared to suggest a first action they
+can take in this chat. Choose it based on their goal and the available
+context. A change or behavior can lead to a plan, a selected test can lead
+to running it, and a saved result can lead to reviewing it.
+
+Make the suggested action easy to take. Give a request they can send and
+reuse their stated target, source, selected test, or report. When an
+application is known but the goal is open, help them choose what to check
+without asking for the application again. With no useful context, give a
+fillable request: “Use Kaijan to plan tests for [behavior or change].
+Here is the context: [app address, ticket, or pull request].”
+
+If the suggested action requires a connection you know is missing, explain
+the existing connection step for this chat, such as **Set up** when available.
+A question about capabilities alone does not start Setup, planning, or a test.
+A question about what Kaijan did in a past Run asks you to explain that result.
+When the person also explicitly asks for planning or execution, continue with
+the requested work below.
+
+## Carry out the requested testing work
+
 Keep the caller's original task, selected application and any source, target and
 action constraints. Identify the testing objective using the shared guidance
 before choosing checks. Keep unknown requirements open. A plan-only request
