@@ -91267,11 +91267,13 @@ var OperationNotFound = class extends Error {
 };
 var ReportReadFailure = class extends Error {
   code = "report_read_unavailable";
-  constructor(cause) {
+  diagnosticReason;
+  constructor(cause, diagnosticReason) {
     super(
       "This saved report cannot be read in the current scope or its retained record cannot be verified. Use its original report link in the same chat and workspace. Preserve the original receipt; do not rerun producers to recreate it.",
       { cause }
     );
+    this.diagnosticReason = diagnosticReason ?? (cause instanceof Error && "diagnosticReason" in cause && typeof cause.diagnosticReason === "string" ? cause.diagnosticReason : cause instanceof Error && "code" in cause && cause.code === "ENOENT" ? "record_file_missing" : "report_read_failed");
   }
 };
 var AssessmentImageFailure = class extends Error {
@@ -122862,6 +122864,9 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash56 } from "node:crypto";
 import { join as join24 } from "node:path";
 import { realpath as realpath13 } from "node:fs/promises";
+function artifactFailure(message, diagnosticReason) {
+  return Object.assign(new Error(message), { diagnosticReason });
+}
 var digest39 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var sha2562 = (value) => createHash56("sha256").update(value).digest("hex");
 var manifestSchema = external_exports.object({
@@ -122915,12 +122920,15 @@ async function readRunnerManifest(data2, runId2, result) {
     throw Error("Manifest is outside this operation.");
   const bytes2 = await privateFile(join24(directory3, "manifest.json"));
   if (sha2562(bytes2) !== nativeResult.traceManifest.sha256)
-    throw Error("Manifest changed.");
+    throw artifactFailure("Manifest changed.", "artifact_manifest_changed");
   const manifest = manifestSchema.parse(
     JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes2))
   );
   if (manifest.taskId !== nativeResult.taskId || manifest.files.length !== nativeResult.traceManifest.files || new Set(manifest.files.map((file3) => file3.path)).size !== manifest.files.length)
-    throw Error("Manifest identity differs.");
+    throw artifactFailure(
+      "Manifest identity differs.",
+      "artifact_manifest_identity_mismatch"
+    );
   return {
     directory: directory3,
     manifest,
@@ -123062,7 +123070,11 @@ async function readArtifact(data2, reportId, entry, artifactId, offset2 = 0, cus
     ] : [];
   });
   if (!artifactId) {
-    if (offset2 > artifacts.length) throw Error("Invalid evidence list offset.");
+    if (offset2 > artifacts.length)
+      throw artifactFailure(
+        "Invalid evidence list offset.",
+        "artifact_invalid_offset"
+      );
     return resultSchema.parse({
       ...identity2,
       state: "listed",
@@ -123074,12 +123086,16 @@ async function readArtifact(data2, reportId, entry, artifactId, offset2 = 0, cus
     });
   }
   const artifact2 = artifacts.find((file3) => file3.artifactId === artifactId);
-  if (!artifact2) throw Error("Evidence is not selected in this manifest.");
+  if (!artifact2)
+    throw artifactFailure(
+      "Evidence is not selected in this manifest.",
+      "artifact_not_selected"
+    );
   const sourceName = artifactSources.get(artifact2.artifactId);
   if (!sourceName) throw Error("Evidence source is unavailable.");
   const content4 = await privateFile(join24(directory3, sourceName));
   if (content4.length !== artifact2.bytes || sha2562(content4) !== artifact2.sha256)
-    throw Error("Evidence changed.");
+    throw artifactFailure("Evidence changed.", "artifact_changed");
   if (artifact2.mediaType === "image/png") {
     if (offset2 !== 0 || !content4.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])))
       throw Error("Invalid PNG evidence or offset.");
@@ -128334,7 +128350,7 @@ var Reports = class {
         (item2) => item2.kind === "runner" && item2.runId === input3.runId
       );
       if (!entry)
-        throw Error("Runner operation is not selected in this report.");
+        throw new ReportReadFailure(void 0, "artifact_run_not_selected");
       return await readReportArtifact(
         this.data,
         input3.reportId,
@@ -128354,7 +128370,7 @@ var Reports = class {
         (item2) => item2.kind === "runner" && item2.runId === input3.runId
       );
       if (!entry)
-        throw Error("The selected run is unavailable in this report.");
+        throw new ReportReadFailure(void 0, "artifact_run_not_selected");
       return await readCustomerReportArtifact(
         this.data,
         input3.reportId,
