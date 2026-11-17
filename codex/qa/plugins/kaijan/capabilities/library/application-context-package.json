@@ -3,7 +3,7 @@
   "contract": "engineering.bound-documents/1-draft1",
   "representation": "engineering-bound-documents-contract/1-draft1",
   "sourceImplementationSha256": "d01f4adf0d830f615e4313410c94b5cfc18a33334c0e0df5477836be5f491c34",
-  "packagedImplementationSha256": "2e05269581d0ae1c49f05fbd3490fbdf15752d9d6ba17513d499448f292fb222",
+  "packagedImplementationSha256": "236b9f9773e3efda46df5f89f2e3c9919cdf034ca0554e43f7a606792617089a",
   "implementationIdentityFiles": [
     "index.mjs",
     "store.mjs",
@@ -45,7 +45,7 @@
       ],
       "transformation": "esbuild ESM/node24 bundle with named re-exports and tree shaking; maintained implementations, no source rewrite; source-adapters shares staged component-contracts",
       "sourceSha256": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf",
-      "packagedSha256": "e3679aa96c905768bdcc48db3dabb33ea8b10e331b0b196f177dfe0571886ffd",
+      "packagedSha256": "1a86095ddf558178a139809ed1c6f72128cc04f9d6372317a1e91cd0ffab9892",
       "inputs": {
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js": "bb08133b11b478c8e715038fff26ebea204d7fd5443fba31fe138b142d202efb",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js": "c7ce485c97263e42568d16b11bb4a90133221c7e807498a9273d70f41ba16ef6",
@@ -160,8 +160,9 @@
         "packages/contracts/dist/product-feedback.js": "5a1fdaa5178d7839dd92947bfcb9eda6e5d9890e664dead8f5fab3d93519fb73",
         "packages/contracts/dist/agent-feedback.js": "76c524538af89b07926c1efe23546a037a8f8d38755e9cf6f105d8c0992b9b50",
         "packages/contracts/dist/product-issue.js": "b21f3a4bba3dea3497daf9e128718287a1e3794391ba0c5f88cb661cc00009e4",
+        "packages/contracts/dist/app-model.js": "e0bd0d0a569cfb6097eef32da003e69cdcd6556cb34ec6ea3732c6574af71e79",
         "packages/contracts/dist/workspace-customer.js": "6dfbc5f0e18fe2b80dbb2b194cc0ddfc1d5d1334cb2e32c8530a8f873e3d7614",
-        "packages/contracts/dist/index.js": "496bb966b22bf81753ad1e6a8abfc56aceb965e94157adbacf3e685f9a0204b0",
+        "packages/contracts/dist/index.js": "56ce4bbd10da85d9d9547aa8f55001eda2e8e5a995c7da0b0d30af405e828db2",
         "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf"
       }
     }
@@ -173,6 +174,6 @@
     "application-context-query/runner-context.mjs": "882558d158db1136724220058ca4d2556aab0970d137171b59d5e51e6e1aa077",
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "source-adapters/index.mjs": "eb0494c7d6f2c77cb848045617ca0ff5dd687802068c24fee610158c6646aa4d",
-    "component-contracts/index.mjs": "e3679aa96c905768bdcc48db3dabb33ea8b10e331b0b196f177dfe0571886ffd"
+    "component-contracts/index.mjs": "1a86095ddf558178a139809ed1c6f72128cc04f9d6372317a1e91cd0ffab9892"
   }
 }

@@ -88782,6 +88782,51 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// ../contracts/dist/app-model.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var appModelIdentitySchema = external_exports.strictObject({
+  applicationKey: external_exports.string().min(1),
+  environmentKey: external_exports.string().min(1),
+  roleKey: external_exports.string().min(1).nullable()
+});
+var appModelSnapshotSchema = external_exports.looseObject({
+  nodes: external_exports.array(external_exports.json()),
+  edges: external_exports.array(external_exports.json()),
+  uiModel: external_exports.looseObject({
+    pages: external_exports.array(external_exports.json()),
+    unknowns: external_exports.array(external_exports.string())
+  })
+});
+var appModelCollectionSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  identity: appModelIdentitySchema,
+  observation: external_exports.strictObject({
+    observedAt: external_exports.iso.datetime(),
+    status: external_exports.enum(["complete", "incomplete"]),
+    reason: external_exports.string(),
+    sourceCommit: external_exports.string().min(1).nullable()
+  }),
+  format: external_exports.literal("kaijan.explorer-map/1"),
+  snapshot: appModelSnapshotSchema,
+  // These identify the producer's retained evidence. They are not remote files
+  // or access grants. Binary upload is outside this collection contract.
+  evidence: external_exports.array(external_exports.strictObject({ id: external_exports.string().min(1), availability: external_exports.literal("local") }))
+});
+var appModelRevisionSchema = appModelCollectionSchema.extend({
+  modelId: external_exports.uuid(),
+  revisionId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime()
+});
+
 // ../contracts/dist/workspace-customer.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
