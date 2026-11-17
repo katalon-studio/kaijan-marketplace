@@ -36621,6 +36621,7 @@ async function createInstalledSession(root, build, data, broker, {
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
+        ...build.browserViewer === true ? { browserViewer: true } : {},
         mapGeneration: false,
         ...validation ? { runnerValidation: validation } : {},
         ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},

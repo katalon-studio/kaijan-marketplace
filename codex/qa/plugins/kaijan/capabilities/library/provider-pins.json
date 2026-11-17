@@ -784,20 +784,20 @@
     "sourceRevision": "06922f3f34ecc2b37c164c119291bbe3dd8b86d4",
     "integration": "public Node run(input, options)",
     "files": {
-      "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20",
-      "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229",
+      "packages/computer-runner/package.json": "3157052ad2cbf9a3f28928df16b7df8754e1931bff0309434c4eef1d6fed32d0",
+      "packages/computer-runner/src/runner.mjs": "c8e7d652572252a188d08b089eeaae84ae96401cab27f6fc36be07ed89f3fbff",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa",
+      "packages/computer-runner/README.md": "7bed906d1c5a37520adf9701b17ba4143e2a6bbb248cab8d7153f8cad6865ad0",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
-      "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef",
+      "packages/computer-runner/src/runner.d.mts": "28e935aacfbe955d21dcfbec184c093268e548fa654076edbb4bd433a8f36dc2",
       "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
       "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6",
-      "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6",
-      "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673",
-      "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8",
+      "packages/computer-runner/src/provider.mjs": "3537ef3180e07e4616bf19d9e9dae020ac9bbd4571936e72853426cf35ec193d",
+      "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190",
+      "packages/computer-runner/src/execution-status.mjs": "347eb37c0ca1dfe38f735b34c7a2cf6666c98cb7a58c781aa64b3430110bfedd",
       "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec",
       "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af",
-      "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df",
+      "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d",
       "packages/computer-runner/src/case-evidence.mjs": "95eecc9db7dba4ba0dc922477297e1fa7a7f1bc23893490677380d24d9d58a10",
       "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425",
       "packages/computer-runner/src/browser-target.mjs": "8c1eae9a9c064b90c1ceb89463c7a4b01e9fde88ce9ba5ef20470833bb0bb26e",
@@ -819,7 +819,13 @@
       "packages/computer-runner/src/application-ui-model.mjs": "f12db2f80bb56a1b4af74c8add80ad00f78f7c040edc1753499ad193988597bf",
       "packages/computer-runner/src/browser-explorer.mjs": "373e66c714cbb577dc338b3d35b92bc951321cd0d565a664e74b6e89e3fd337a",
       "packages/computer-runner/src/browser-inputs.mjs": "5dfec75d9392e0ae91d7fddf68fe3e4f1b3e6b9ba2373a9816420fa23a06653d",
-      "packages/computer-runner/src/exploration-map.mjs": "d3bfee1373d529843ae1698fa30d142ff36b4b5e27591614e4a594f991646516"
+      "packages/computer-runner/src/exploration-map.mjs": "d3bfee1373d529843ae1698fa30d142ff36b4b5e27591614e4a594f991646516",
+      "packages/computer-runner/src/browser-handoff.mjs": "a40bbb052b0c2145b21e5487de8afb27fdb4834e4e19d404e0520a061effb0af",
+      "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057",
+      "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d",
+      "packages/computer-runner/src/browser-companion.mjs": "e5ede1979554f9c294a2422c706eb8dd4574ba4ed723f72976e7ff9e1a7dc09b",
+      "packages/computer-runner/src/browser-companion.d.mts": "167d125243292dd7f044a6e9549ee5fdccd908a17010cb0378af36c5ef210e17",
+      "packages/computer-runner/src/viewer-release.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
     },
     "relocation": {
       "originalFiles": {
@@ -968,6 +974,22 @@
     "readOnlyClarificationContext": {
       "issue": 3271,
       "scope": "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope."
+    },
+    "browserViewer": {
+      "issue": 6570,
+      "decision": "https://github.com/katalon-studio/loki/issues/6570",
+      "baseline": "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b",
+      "previousFiles": {
+        "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20",
+        "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229",
+        "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa",
+        "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef",
+        "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6",
+        "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673",
+        "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8",
+        "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df"
+      },
+      "scope": "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative."
     },
     "providerRetryPolicy": {
       "maxAttempts": 3,

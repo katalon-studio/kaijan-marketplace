@@ -25806,15 +25806,29 @@ var failureFrame = external_exports.strictObject({
   clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   code: external_exports.literal("clarification_failed")
 });
-var replyFrame = external_exports.discriminatedUnion("type", [answerFrame, failureFrame]);
+var cancelledFrame = external_exports.strictObject({
+  type: external_exports.literal("runner-clarification-cancelled"),
+  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var replyFrame = external_exports.discriminatedUnion("type", [
+  answerFrame,
+  failureFrame,
+  cancelledFrame
+]);
+var browserControlCancellation = (signal) => {
+  const reason = signal.reason;
+  return signal.aborted && reason instanceof Error && "code" in reason && reason.code === "loki.runner.browser-control/1" ? reason : void 0;
+};
 function createWorkerClarification(send2, operationSignal) {
   const seen = /* @__PURE__ */ new Set();
   const pending = /* @__PURE__ */ new Map();
+  const cancellations = /* @__PURE__ */ new Map();
   let closed = false;
   const failAll = () => {
     for (const p of pending.values())
       p.reject(Error("Clarification IPC interrupted; do not replay"));
     pending.clear();
+    cancellations.clear();
   };
   operationSignal.addEventListener("abort", failAll, { once: true });
   const requestClarification = async (raw, signal) => {
@@ -25833,6 +25847,31 @@ function createWorkerClarification(send2, operationSignal) {
         reject
       });
       abort = () => {
+        const cancellation = browserControlCancellation(signal);
+        if (!operationSignal.aborted && cancellation) {
+          cancellations.set(request3.clarificationId, () => {
+            pending.delete(request3.clarificationId);
+            reject(cancellation);
+          });
+          void send2({
+            type: "runner-clarification-cancel",
+            clarificationId: request3.clarificationId
+          }).catch((cause) => {
+            cancellations.delete(request3.clarificationId);
+            pending.delete(request3.clarificationId);
+            reject(
+              Object.assign(
+                Error("Clarification cancellation was not acknowledged", {
+                  cause
+                }),
+                {
+                  code: "loki.runner.clarification-cancel-unconfirmed/1"
+                }
+              )
+            );
+          });
+          return;
+        }
         pending.delete(request3.clarificationId);
         reject(Error("Clarification wait interrupted; do not replay"));
       };
@@ -25845,7 +25884,8 @@ function createWorkerClarification(send2, operationSignal) {
       if (combined.aborted) throw Error("Clarification interrupted");
       await send2({ type: "runner-clarification-request", request: request3 });
       const answer = await response;
-      if (combined.aborted) throw Error("Clarification interrupted");
+      if (operationSignal.aborted || signal.aborted && !browserControlCancellation(signal))
+        throw Error("Clarification interrupted");
       return answer;
     } finally {
       combined.removeEventListener("abort", abort);
@@ -25856,12 +25896,30 @@ function createWorkerClarification(send2, operationSignal) {
     requestClarification,
     receive(raw) {
       const frame = replyFrame.parse(raw);
+      if (frame.type === "runner-clarification-cancelled") {
+        const cancel = cancellations.get(frame.clarificationId);
+        if (closed || operationSignal.aborted || !cancel)
+          throw Error("Late or mismatched clarification cancellation");
+        cancellations.delete(frame.clarificationId);
+        cancel();
+        return;
+      }
       const p = pending.get(frame.clarificationId);
       if (closed || operationSignal.aborted || !p)
         throw Error("Late or mismatched clarification answer");
       if (frame.type === "runner-clarification-error") {
         pending.delete(frame.clarificationId);
-        p.reject(Error("Caller clarification failed; no answer was delivered"));
+        const cancelling = cancellations.delete(frame.clarificationId);
+        p.reject(
+          cancelling ? Object.assign(
+            Error(
+              "Clarification cancellation failed; retirement was not acknowledged"
+            ),
+            {
+              code: "loki.runner.clarification-cancel-unconfirmed/1"
+            }
+          ) : Error("Caller clarification failed; no answer was delivered")
+        );
         return;
       }
       pending.delete(frame.clarificationId);
@@ -26457,7 +26515,13 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
           process.exit(1);
         }
       },
-      Math.max(0, Math.min(1e4, deadlineAt - Date.now()))
+      Math.max(
+        0,
+        Math.min(
+          1e4,
+          (typeof deadlineAt === "function" ? deadlineAt() : deadlineAt) - Date.now()
+        )
+      )
     );
   });
   return {
@@ -26775,6 +26839,9 @@ function workerRunnerReview(send2, signal) {
 }
 
 // src/computer-runner-worker.ts
+import {
+  attachBrowserViewer
+} from "@katalon-loki/computer-runner/browser-viewer";
 var controller = new AbortController();
 var reportController = new AbortController();
 controller.signal.addEventListener("abort", () => {
@@ -26846,7 +26913,7 @@ process.on("message", (message) => {
   if (!message || typeof message !== "object" || !("type" in message)) return;
   const frame = message;
   if (review.receive(frame)) return;
-  if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error") {
+  if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error" || frame.type === "runner-clarification-cancelled") {
     try {
       if (!clarification) throw Error("Unregistered clarification reply");
       clarification.receive(frame);
@@ -26886,11 +26953,13 @@ process.on("message", (message) => {
       }
       const input3 = frame.input;
       const limits = options.limits;
+      const originalWorkerDeadline = Date.now() + (limits?.ms ?? 6e5);
+      let viewerControl;
       if (input3.executionMethod !== "desktop-ui")
         failures = workerFailureBoundary(
           controller,
           options.artifactDirectory,
-          Date.now() + (limits?.ms ?? 6e5),
+          options.browserViewer === true ? () => originalWorkerDeadline + (viewerControl?.status().humanMs ?? 0) : originalWorkerDeadline,
           send
         );
       const { run } = input3.executionMethod === "desktop-ui" ? await import("@katalon-loki/mac-computer-runner") : await import("@katalon-loki/computer-runner");
@@ -26935,6 +27004,7 @@ process.on("message", (message) => {
         );
       };
       const {
+        browserViewer,
         runnerValidation,
         requestClarification: clarificationEnabled,
         applicationContext: contextRegistration,
@@ -26970,6 +27040,19 @@ process.on("message", (message) => {
       const requestClarification = clarification?.requestClarification;
       const runOptions = {
         ...nativeOptions,
+        ...browserViewer === true && input3.executionMethod !== "desktop-ui" ? {
+          onBrowserReady: (browser) => {
+            viewerControl = browser.control;
+            return attachBrowserViewer(browser, {
+              signal: controller.signal,
+              runId: runId2,
+              title: `Kaijan Run ${runId2.slice(0, 8)}`
+            });
+          },
+          onBrowserControl: (status) => {
+            void send({ type: "browser-control", status });
+          }
+        } : {},
         ...options.reviewRun === true ? { reviewRun: review.review } : {},
         managedCore: managed && !controlled,
         ...requestClarification ? {
