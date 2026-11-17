@@ -40672,7 +40672,7 @@ import { randomUUID as randomUUID2 } from "node:crypto";
 import { platform as platform2, release as release2, arch } from "node:os";
 function createTelemetryCollector(broker, build) {
   const host = pluginHost(build);
-  let lease = null, stopped = false, ownerDiagnosticsSupported = false;
+  let lease = null, stopped = false, ownerDiagnosticsSupported = false, failureDiagnosticsSupported = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
     try {
@@ -40685,6 +40685,7 @@ function createTelemetryCollector(broker, build) {
       );
       const health = response2.ok ? await response2.json() : null;
       ownerDiagnosticsSupported = health?.owner_diagnostics === true;
+      failureDiagnosticsSupported = health?.failure_diagnostics === true;
       const parsed = telemetryIdentityEpochSchema.safeParse(health?.epoch);
       if (health?.disabled === true) lease = null;
       else if (parsed.success) lease = parsed.data;
@@ -40693,6 +40694,7 @@ function createTelemetryCollector(broker, build) {
     } catch {
       lease = null;
       ownerDiagnosticsSupported = false;
+      failureDiagnosticsSupported = false;
     }
   };
   const ready = refresh();
@@ -40705,6 +40707,8 @@ function createTelemetryCollector(broker, build) {
     try {
       const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
+      if (event2 === "Tool Failure Diagnosed" && !failureDiagnosticsSupported)
+        return;
       let supportedProperties = properties;
       if (!ownerDiagnosticsSupported && (event2 === "Test Plan Generated" || event2 === "Test Run Finished")) {
         supportedProperties = { ...properties };
@@ -57064,7 +57068,8 @@ var object6 = (value) => value !== null && typeof value === "object" && !Array.i
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
-  const invalid = () => ({
+  const invalid = (diagnosticReason = "invalid_arguments") => ({
+    diagnosticReason,
     error: customerFailureOutput(name, {
       code: "invalid_arguments",
       requestDispatched: false
@@ -57074,8 +57079,10 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   const saved = args.savedTests !== void 0;
   const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
   if (!saved && !checked) return { arguments: args };
-  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0) || typeof options.resolveSelection !== "function")
-    return invalid();
+  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
+    return invalid("saved_selection_conflict");
+  if (typeof options.resolveSelection !== "function")
+    return invalid("saved_selection_unavailable");
   try {
     invocation?.signal?.throwIfAborted();
     const key = saved ? "savedTests" : "planRef";
@@ -57086,20 +57093,66 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
-      return invalid();
+      return invalid("saved_selection_mismatch");
     return {
       arguments: {
         ...args,
         [key]: selected
       }
     };
-  } catch {
-    return invalid();
+  } catch (error63) {
+    return invalid(
+      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable"
+    );
   }
 }
 
 // apps/codex-plugin/src/capability-mcp.mjs
 import process6 from "node:process";
+
+// apps/codex-plugin/src/telemetry/tool-failures.mjs
+function observeToolFailures(catalog, name, observer) {
+  if (!observer || !toolFailureDiagnosedPropertiesSchema.shape.tool_name.safeParse(name).success)
+    return { diagnose() {
+    }, catalog };
+  let recorded = false;
+  function diagnose(error63 = {}) {
+    try {
+      if (recorded || !observer) return;
+      const reason = ["invalid_params", "invalid_arguments"].includes(
+        error63.code
+      ) ? "invalid_arguments" : error63.diagnosticReason ?? "tool_failed";
+      const fields = /* @__PURE__ */ new Set();
+      if (reason === "invalid_arguments")
+        for (const issue3 of Array.isArray(error63.issues) ? error63.issues : [])
+          for (const part of Array.isArray(issue3?.path) ? issue3.path : []) {
+            const field2 = toolDiagnosticFieldSchema.safeParse(part);
+            if (field2.success) fields.add(field2.data);
+          }
+      const properties = toolFailureDiagnosedPropertiesSchema.safeParse({
+        tool_name: name,
+        reason,
+        validation_fields: [...fields]
+      });
+      if (!properties.success) return;
+      recorded = true;
+      observer.emit("Tool Failure Diagnosed", properties.data);
+    } catch {
+    }
+  }
+  const observed = Object.create(catalog);
+  Object.defineProperty(observed, "invoke", {
+    value: async (...args) => {
+      try {
+        return await catalog.invoke(...args);
+      } catch (error63) {
+        diagnose(error63);
+        throw error63;
+      }
+    }
+  });
+  return { diagnose, catalog: observed };
+}
 
 // apps/codex-plugin/src/customer-discovery-output.mjs
 var readiness = external_exports.strictObject({
@@ -58149,7 +58202,7 @@ function capabilityMcpDiscovery(tools2, setup) {
     } : tool2
   );
 }
-function createCapabilityMcpServer(session, version4, setup) {
+function createCapabilityMcpServer(session, version4, setup, telemetry) {
   const { catalog } = session;
   const { tools: tools2 } = capabilityMcpRegistration(session, setup);
   if (new Set(tools2.map((tool2) => tool2.name)).size !== tools2.length)
@@ -58247,6 +58300,11 @@ function createCapabilityMcpServer(session, version4, setup) {
     }
   });
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
+    let diagnosticOwner;
+    try {
+      diagnosticOwner = telemetry?.bind();
+    } catch {
+    }
     if (!isCustomerToolAllowed(params.name) || !tools2.some((tool2) => tool2.name === params.name))
       throw invalidParams(
         "Unknown local Kaijan tool. Use tools/list to discover supported tool names."
@@ -58306,7 +58364,12 @@ function createCapabilityMcpServer(session, version4, setup) {
       error63.message = "This chat cannot access the selected work. No new work started. Return to the original chat and retained result; do not replay work with uncertain effects.";
       throw error63;
     }
-    const scopedCatalog = selected.catalog;
+    const failureDiagnostics = observeToolFailures(
+      selected.catalog,
+      params.name,
+      diagnosticOwner
+    );
+    const scopedCatalog = failureDiagnostics.catalog;
     if (hasCustomerPreparationOutput(params.name)) {
       const result2 = await invokeCustomerPreparation(
         scopedCatalog,
@@ -58458,6 +58521,9 @@ function createCapabilityMcpServer(session, version4, setup) {
         }
       );
       if (resolved2.error) {
+        failureDiagnostics.diagnose({
+          diagnosticReason: resolved2.diagnosticReason
+        });
         return {
           isError: true,
           structuredContent: resolved2.error,
@@ -58654,12 +58720,12 @@ function createCapabilityMcpServer(session, version4, setup) {
 
 // apps/codex-plugin/src/local-mcp.mjs
 async function createLocalMcpServer(session, version4, setup, telemetry) {
-  let server = createCapabilityMcpServer(session, version4, setup);
+  let server = createCapabilityMcpServer(session, version4, setup, telemetry);
   const registration = capabilityMcpRegistration(session, setup);
   if (telemetry && !telemetry.instrument(server, registration.tools, {
     observabilityControls: registration.observabilityControls
   })) {
-    server = createCapabilityMcpServer(session, version4, setup);
+    server = createCapabilityMcpServer(session, version4, setup, telemetry);
   }
   return server;
 }
