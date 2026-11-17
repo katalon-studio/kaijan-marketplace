@@ -72,6 +72,13 @@ it. If an edit conflicts, show the current text and preserve the refused edit.
 Review both before applying another change. Never silently replace newer text.
 Keep drafts and partial content on the device. **Not now** keeps the saved draft.
 
+If this feedback concerns a known Run in this chat, Open can include its `runId`.
+The form shows the available Run reference, capability and error code. The person
+chooses **Include Run details**; it starts off. Do not choose it for them or
+collect another Run. The form also shows the plugin version and OS sent with
+the feedback. Chats, logs, screenshots and project files are not included.
+After a confirmed save, **Copy reference** copies the saved feedback ID.
+
 The person reviews the content and recipient, then selects **Send**. If the
 person explicitly asks the agent to send, use `kaijan_feedback_send` for that
 exact reviewed revision. Only complete final content goes to Kaijan. After an

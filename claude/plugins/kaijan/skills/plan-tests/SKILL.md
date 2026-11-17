@@ -8,6 +8,11 @@ description: Use when the user asks to plan tests, create a test plan, or propos
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
+When the caller wants browser-based planning for a selected web target, pass
+its URL and allowed hosts in `exploration.target`. Kaijan's Explorer builds the
+app model during planning. Pass the caller's original task and any supplied
+parameters. The testing method is already part of the agents.
+
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.
 
@@ -36,10 +41,9 @@ the plan.
   item's source URI. For multiple sources, use the complete `pr-context-plan/3`
   packet and its separate `sources` items. A simple input with `sources` or
   `version` is interpreted as a versioned packet.
-- Use `agentInstructions` for your own additional planning guidance, including
-  useful suggested steps. Planner receives it together with the original request
-  in `input`; preserve both and their authorship. You can ask the person for
-  clarification when needed.
+- If the caller requests additional host analysis, attribute it in
+  `agentInstructions`. For ordinary testing the original task, target and
+  sources suffice. Explorer discovers routes and Planner chooses scenarios.
 - Use `change` for the actual frozen change, including source identity, coverage
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
   for Git patches and provided snapshots. Kaijan prepares risk analysis and
