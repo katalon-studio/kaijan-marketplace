@@ -52853,7 +52853,6 @@ import { join as join6, delimiter } from "node:path";
 import { pathToFileURL } from "node:url";
 import process3 from "node:process";
 import { performance as performance3 } from "node:perf_hooks";
-import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
 import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
 var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
 var present = (entry) => {
@@ -52880,16 +52879,12 @@ async function createInstalledSession(root, build, data, broker, {
     } catch {
     }
   };
-  stage2("verify_payload");
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
   const source3 = join6(root, "capabilities");
   const started = performance3.now();
-  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
-  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
-    throw Error("Installed runtime must contain regular files");
-  const verified = performance3.now();
+  const artifactDigest = build.capabilityDigest;
   process3.env.PATH = [join6(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage2("import_library");
   const library = await import(pathToFileURL(join6(source3, "library/api.mjs")).href);
@@ -52899,15 +52894,15 @@ async function createInstalledSession(root, build, data, broker, {
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== artifactDigest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== artifactDigest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity4.digest
+    artifactDigest
   }) : void 0;
   const hostLibrary = {
     ...library,
@@ -52942,7 +52937,7 @@ async function createInstalledSession(root, build, data, broker, {
   const session = await createCapabilitySession({
     host,
     data,
-    payloadDigest: identity4.digest,
+    payloadDigest: artifactDigest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -53089,8 +53084,7 @@ async function createInstalledSession(root, build, data, broker, {
   process3.stderr.write(
     JSON.stringify({
       event: "kaijan.local.startup",
-      validationMs: Math.round(verified - started),
-      importMs: Math.round(imported - verified),
+      importMs: Math.round(imported - started),
       servicesMs: Math.round(initialized - imported),
       processElapsedMs: Math.round(initialized)
     }) + "\n"
@@ -58590,7 +58584,7 @@ function localStateArguments(directory) {
 // apps/codex-plugin/src/local-entry.mjs
 async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext, createHostSurface } = {}) {
   let setup, server, telemetry, startupTelemetry, session, close;
-  let startupStage = "verify_payload";
+  let startupStage = "import_library";
   const startupStarted = performance5.now();
   const root = resolve3(import.meta.dirname, "..");
   const build = resolveRuntimeBuild(

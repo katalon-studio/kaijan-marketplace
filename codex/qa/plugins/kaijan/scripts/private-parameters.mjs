@@ -36444,7 +36444,6 @@ import { join as join5, delimiter } from "node:path";
 import { pathToFileURL } from "node:url";
 import process3 from "node:process";
 import { performance } from "node:perf_hooks";
-import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
 import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
 var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
 var present = (entry) => {
@@ -36471,16 +36470,12 @@ async function createInstalledSession(root, build, data, broker, {
     } catch {
     }
   };
-  stage("verify_payload");
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
   const source3 = join5(root, "capabilities");
   const started = performance.now();
-  const identity2 = await verifyDistribution(source3, build.capabilityDigest);
-  if (Object.values(identity2.manifest.files).some((member) => "symlink" in member))
-    throw Error("Installed runtime must contain regular files");
-  const verified = performance.now();
+  const artifactDigest = build.capabilityDigest;
   process3.env.PATH = [join5(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage("import_library");
   const library = await import(pathToFileURL(join5(source3, "library/api.mjs")).href);
@@ -36490,15 +36485,15 @@ async function createInstalledSession(root, build, data, broker, {
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity2.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== artifactDigest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity2.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== artifactDigest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity2.digest
+    artifactDigest
   }) : void 0;
   const hostLibrary = {
     ...library,
@@ -36533,7 +36528,7 @@ async function createInstalledSession(root, build, data, broker, {
   const session = await createCapabilitySession({
     host,
     data,
-    payloadDigest: identity2.digest,
+    payloadDigest: artifactDigest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -36680,8 +36675,7 @@ async function createInstalledSession(root, build, data, broker, {
   process3.stderr.write(
     JSON.stringify({
       event: "kaijan.local.startup",
-      validationMs: Math.round(verified - started),
-      importMs: Math.round(imported - verified),
+      importMs: Math.round(imported - started),
       servicesMs: Math.round(initialized - imported),
       processElapsedMs: Math.round(initialized)
     }) + "\n"
