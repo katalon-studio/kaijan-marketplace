@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "buildId": "68ad8874-9839-4ab2-90ea-6684360bee41",
-  "builtAt": "2026-11-17T01:08:15.728Z",
-  "sourceRevision": "36118329cdd480cc54b38a155dec932e51c437c1",
+  "buildId": "0332b7af-f8ab-4939-ae1c-a9a7f5955a39",
+  "builtAt": "2026-11-17T01:57:05.675Z",
+  "sourceRevision": "160e1a70b83a2920979e2765aabd03b7652f0eab",
   "sourceDirty": false,
   "profile": "production",
   "profileMode": "runtime-env/1",
@@ -20,9 +20,9 @@
   ],
   "runtimeClientId": "kaijan-codex-runtime",
   "pluginName": "kaijan",
-  "pluginVersion": "2026.1117.5213",
+  "pluginVersion": "2026.1117.14123",
   "marketplaceName": "kaijan",
-  "capabilityDigest": "f5d5b330d5c2832e7287516f41e26623292024b788b62bb22e858b739ea8f563",
+  "capabilityDigest": "85f7890117a5ac6fe4032df3bc4619b28f1c12280d7fddde1673eb615d4fff81",
   "setupContract": "loki.setup-context/4",
   "runtimeLayout": "installed",
   "localMcpServerName": "kaijan_local"
