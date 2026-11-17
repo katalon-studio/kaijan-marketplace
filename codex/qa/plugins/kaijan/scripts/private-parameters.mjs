@@ -34504,8 +34504,8 @@ var customerReportTraceResultSchema = external_exports.union([
   }),
   customerTraceArtifacts.extend({
     ...traceIdentity,
-    status: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false)
+    status: external_exports.literal("unavailable")
+    // A failed browser launch can leave the admitted trace and viewer available.
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([

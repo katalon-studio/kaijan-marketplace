@@ -58,7 +58,7 @@
     "packages/contracts/dist/customer-source-display.js": "81a189c4cee5998ff1d02f01fe2533b1f2122011eef9ec8859a49ba9b8402091",
     "packages/contracts/dist/customer-assessment-presentation.js": "ae15c65accd5d43b03c7464cdcd8fff9c1c72169675a6d0d3ceffc47d0dfec51",
     "packages/contracts/dist/customer-related.js": "db0c0f10592b78763cd70b84afbdb00788bce9007bb1223bd03a0bc0c9ef2d23",
-    "packages/contracts/dist/report-presentation.js": "0aef1c7bf9e308fe527e00cef17bc39b1b4fa9daf1d09f4c2755c631adf8878b",
+    "packages/contracts/dist/report-presentation.js": "cbcd3b8e80ac59d61c655974f38a312d51904006a768e52fc3ea907a6e4b351a",
     "packages/contracts/dist/report-results.js": "cb832f7ad9bc2fd04ba5ca5f1ddf5fc009744e087a89cbfba5e2a8b3ee9e20a5",
     "packages/contracts/dist/report-artifact.js": "9f42d62dc48fdb3c782bcca89eeb8b84467102cd01aef56cc360f86cb2d9a40a",
     "packages/contracts/dist/report-render.js": "1f5df45e136301cc89ebbfd5f6e4cca30b4ad008749b0e6b9a670525d4d2355d",
