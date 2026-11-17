@@ -95180,7 +95180,15 @@ function projectReportResult(input3, sha2563, verifiedPlanningFailures) {
         }))
       } : run.assertions,
       executionEvidence: projectCustomerExecutionEvidence(run.executionEvidence),
-      executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse(projectCustomerExecutionProgress(run.executionReport)),
+      executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse({
+        ...projectCustomerExecutionProgress(run.executionReport),
+        ...run.executionReport.test_results ? {
+          test_results: run.executionReport.test_results.map((row2) => ({
+            ...row2,
+            test_id: run.planSourceId ? customerPlanningId("T", row2.test_id, sha2563, true) : row2.test_id
+          }))
+        } : {}
+      }),
       assessments: run.assessments?.map((row2) => {
         const projected = projectLinkedAssessment(row2);
         return copyAssessmentPresentationProof(projected, {
@@ -95270,6 +95278,15 @@ function projectCustomerTestPlanView(input3, sha2563) {
     runs: value.runs.map((run) => ({
       ...run,
       selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha2563)) : run.selectedTestIds,
+      executionReport: run.executionReport ? {
+        ...run.executionReport,
+        ..."test_results" in run.executionReport ? {
+          test_results: run.executionReport.test_results?.map((row2) => ({
+            ...row2,
+            test_id: run.planSourceId ? customerPlanningId("T", row2.test_id, sha2563) : row2.test_id
+          }))
+        } : {}
+      } : run.executionReport,
       assertions: run.assertions && run.planSourceId ? {
         ...run.assertions,
         tests: run.assertions.tests.map((row2) => ({
