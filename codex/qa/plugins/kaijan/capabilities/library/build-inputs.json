@@ -66,7 +66,7 @@
     "packages/contracts/dist/customer-risk.js": "8816cfe64b0e5e9d874028619caaead5497393d3aa93f61b84a82e50e8cae436",
     "packages/contracts/dist/customer-execution-presentation.js": "c66c4e0b6e7ca2fe2ee9be43982f37df2b3185e53e06134c890506478fc6ad55",
     "packages/contracts/dist/customer-advisory.js": "9885643d5ba525576ebb2f4042ad1985097f703733996b7b943c96c20f729eee",
-    "packages/contracts/dist/customer-report.js": "ef8b5274b69ce8179e05f81bc5e187f8ddb196562a71b83e39c548ac75a2860f",
+    "packages/contracts/dist/customer-report.js": "4c6e8b1bbab24a0640185441c7e9fb8716674b7de665c84b5df6ec3377f1ca04",
     "packages/contracts/dist/customer-supplement.js": "30fb1161c9ea29dc06137cd5422645f5405d8dbbea5f0c47c37f0df09fa20ea8",
     "packages/contracts/dist/local.js": "9660409b6393d68512479dcfd5b02d54ce1479af961f058eafab44f21093f838",
     "packages/capabilities/src/query.ts": "71a53c7ae4b38c0c393f008e15483189b725e08f0692ec836c00a6e28570967a",
