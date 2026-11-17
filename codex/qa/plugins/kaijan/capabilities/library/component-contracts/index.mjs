@@ -20466,6 +20466,31 @@ var inferenceFailureCategorySchema = external_exports.enum([
   "unknown"
 ]);
 var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var inferenceClientVersionSchema = external_exports.string().regex(/^\d{1,8}\.\d{1,8}\.\d{1,8}$/);
+var inferenceImageDiagnosticsSchema = external_exports.strictObject({
+  image_count: external_exports.number().int().nonnegative(),
+  invalid_image_count: external_exports.number().int().nonnegative(),
+  truncated: external_exports.boolean(),
+  // Eight small projections fit the existing event budget. No image/URL values.
+  samples: external_exports.array(external_exports.strictObject({
+    input_index: external_exports.number().int().nonnegative(),
+    content_index: external_exports.number().int().nonnegative().optional(),
+    kind: external_exports.enum(["computer_output", "input_image"]),
+    format: external_exports.enum(["data_url", "http_url", "file_id", "other", "missing"]),
+    mime_type: external_exports.enum(["image/png", "image/jpeg", "image/webp", "image/gif", "other"]).nullable(),
+    encoded_length: external_exports.number().int().nonnegative().nullable(),
+    decoded_byte_length: external_exports.number().int().nonnegative().nullable(),
+    validation: external_exports.enum([
+      "valid_syntax",
+      "empty",
+      "not_string",
+      "invalid_data_url",
+      "invalid_base64",
+      "invalid_url",
+      "unsupported_format"
+    ])
+  })).max(8)
+});
 var coreInferencePropertiesSchema = external_exports.strictObject({
   operation_id: telemetryOperationId.nullable(),
   capability: external_exports.enum(["plan", "run"]).nullable(),
@@ -20476,6 +20501,9 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   requested_model: inferenceUsageModelSchema.nullable().optional(),
   inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
   core_request_id: external_exports.uuidv4().optional(),
+  litellm_call_id: external_exports.uuid().optional(),
+  client_version: inferenceClientVersionSchema.optional(),
+  image_diagnostics: inferenceImageDiagnosticsSchema.optional(),
   core_automatic_retry: external_exports.literal(false).optional(),
   // Hash the opaque provider reference; never collect its raw value.
   response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),

@@ -24,6 +24,7 @@ function headersFor(connection, supplied = {}) {
         "authorization",
         "x-loki-plan-id",
         "x-loki-run-id",
+        "x-kaijan-client-version",
         "x-kaijan-ai-connection",
       ].includes(name.toLowerCase())
     )
