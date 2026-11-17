@@ -19,3 +19,5 @@ In local Desktop Code, enable the installed plugin through Add plugins or Manage
 The catalog installs a Git subdirectory pinned to the release's immutable payload commit. Downloadable ZIPs remain available for manual installation. Use the supported plugin update and uninstall controls; saved work and account grants are separate from the installation.
 
 Publication in this Katalon marketplace is separate from Anthropic's plugin-directory listing.
+
+Anonymous onboarding is on by default. It sends runtime and Setup starts and fixed sign-in failure codes before you connect. Set `KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS=0` to opt out. The broker reads this setting at startup; finish active work before restarting it.

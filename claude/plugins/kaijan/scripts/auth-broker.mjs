@@ -22650,7 +22650,7 @@ var BrokerAuthorization = class {
             if (onboardingTicket)
               url2.searchParams.set("onboarding_ticket", onboardingTicket);
           }
-          if (supportsReconnectContext && this.host === "codex") {
+          if (supportsReconnectContext) {
             if (reconnectContext.is_reconnect !== null)
               url2.searchParams.set(
                 "is_reconnect",
@@ -22691,12 +22691,12 @@ var BrokerAuthorization = class {
           throw Error("invalid_authorization_server");
         const url2 = new URL(input3 instanceof Request ? input3.url : input3);
         let body = init?.body;
-        if ((onboardingTicket || supportsReconnectContext && reconnectContext && this.host === "codex") && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
+        if ((onboardingTicket || supportsReconnectContext && reconnectContext) && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
           const params = new URLSearchParams(body);
           if (params.get("grant_type") === "authorization_code") {
             if (onboardingTicket)
               params.set("onboarding_ticket", onboardingTicket);
-            if (supportsReconnectContext && reconnectContext && this.host === "codex") {
+            if (supportsReconnectContext && reconnectContext) {
               if (reconnectContext.is_reconnect !== null)
                 params.set(
                   "is_reconnect",
@@ -23668,10 +23668,10 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
 }).refine((value) => {
   if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
     return false;
-  const failure5 = inferenceFailureDetails(value.transport_outcome, value.http_status, value.error_code === "provider_quota_exhausted", value.native_response_outcome);
+  const failure6 = inferenceFailureDetails(value.transport_outcome, value.http_status, value.error_code === "provider_quota_exhausted", value.native_response_outcome);
   if (value.native_response_outcome !== void 0 && value.transport_outcome !== "body_complete")
     return false;
-  if ((value.error_code !== void 0 || value.error_message !== void 0 || value.provider_http_status !== void 0) && (!failure5 || value.provider_http_status !== failure5.provider_http_status || value.error_code !== failure5.error_code || value.error_message !== failure5.error_message))
+  if ((value.error_code !== void 0 || value.error_message !== void 0 || value.provider_http_status !== void 0) && (!failure6 || value.provider_http_status !== failure6.provider_http_status || value.error_code !== failure6.error_code || value.error_message !== failure6.error_message))
     return false;
   const native = value.observation_basis === "core_inference_native_usage/1";
   if ((value.cost_basis === "provider_usage_cost" || value.cost_basis === "model_pricing_estimate") && !native)
@@ -24905,6 +24905,40 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// packages/contracts/dist/agent-feedback.js
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // packages/contracts/dist/product-issue.js
 var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
 var issueImageLimits = Object.freeze({
@@ -25421,6 +25455,86 @@ async function forwardBoundFeedback(authorization, value, signal, request = fetc
   }
 }
 
+// apps/codex-plugin/src/auth/agent-feedback-binding.mjs
+var boundInput2 = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  input: agentFeedbackSubmissionSchema
+});
+var failure3 = (status, error62) => Response.json({ error: error62 }, { status });
+async function forwardBoundAgentFeedback(authorization, value, signal, request = fetch) {
+  const parsed = boundInput2.safeParse(value);
+  if (!parsed.success) return failure3(400, "invalid_agent_feedback_request");
+  if (signal?.aborted) return failure3(409, "agent_feedback_cancelled");
+  await authorization.ensure();
+  const saved = authorization.saved;
+  const token = saved?.tokens?.access_token;
+  if (!token || authorization.blocked || authorization.loggingOut)
+    return failure3(401, "connection_required");
+  const status = await authorization.request("/api/v1/runtime/mcp", {
+    method: "POST",
+    signal,
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json, text/event-stream",
+      "mcp-protocol-version": "2025-03-26"
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: { name: "loki_connection_status", arguments: {} }
+    })
+  });
+  if (!status.ok) {
+    await status.body?.cancel();
+    return failure3(
+      [401, 403].includes(status.status) ? status.status : 503,
+      "agent_feedback_connection_unavailable"
+    );
+  }
+  let connection;
+  try {
+    const body = external_exports.object({
+      jsonrpc: external_exports.literal("2.0"),
+      id: external_exports.literal(1),
+      result: external_exports.object({
+        isError: external_exports.boolean().optional(),
+        structuredContent: external_exports.unknown().optional(),
+        content: external_exports.array(external_exports.unknown()).optional()
+      })
+    }).parse(await status.json());
+    if (body.result.isError) throw Error("Connection unavailable");
+    let selected = body.result.structuredContent;
+    if (selected === void 0 && body.result.content?.length === 1) {
+      const text4 = external_exports.object({ type: external_exports.literal("text"), text: external_exports.string() }).parse(body.result.content[0]);
+      selected = JSON.parse(text4.text);
+    }
+    connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(selected);
+  } catch {
+    return failure3(503, "agent_feedback_connection_unavailable");
+  }
+  if (connection.origin !== authorization.origin || connection.context.user.id !== parsed.data.userId || connection.context.workspace.id !== parsed.data.workspaceId)
+    return failure3(409, "agent_feedback_owner_mismatch");
+  if (authorization.saved !== saved || saved.tokens.access_token !== token || authorization.blocked || authorization.loggingOut || authorization.pending)
+    return failure3(409, "agent_feedback_connection_changed");
+  if (signal?.aborted) return failure3(409, "agent_feedback_cancelled");
+  try {
+    return await request(`${authorization.origin}/api/v1/agent-feedback`, {
+      method: "POST",
+      redirect: "error",
+      signal,
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(parsed.data.input)
+    });
+  } catch {
+    return failure3(503, "agent_feedback_unconfirmed");
+  }
+}
+
 // apps/codex-plugin/src/auth/issue-binding.mjs
 var owner = { userId: external_exports.uuid(), workspaceId: external_exports.uuid() };
 var boundIssueInput = external_exports.discriminatedUnion("operation", [
@@ -25440,17 +25554,17 @@ var boundIssueInput = external_exports.discriminatedUnion("operation", [
     requestId: external_exports.uuid().toLowerCase()
   })
 ]);
-var failure3 = (status, error62, message) => Response.json({ error: error62, message }, { status });
+var failure4 = (status, error62, message) => Response.json({ error: error62, message }, { status });
 async function forwardBoundIssue(authorization, value, signal, request = fetch) {
   const parsed = boundIssueInput.safeParse(value);
   if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data)) > 128 * 1024)
-    return failure3(
+    return failure4(
       400,
       "invalid_issue_request",
       "Use the original complete issue request."
     );
   if (signal?.aborted)
-    return failure3(
+    return failure4(
       409,
       "issue_cancelled",
       "The action was cancelled. Your selected issue is kept."
@@ -25458,7 +25572,7 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
   await authorization.ensure();
   const saved = authorization.saved, token = saved?.tokens?.access_token;
   if (!token || authorization.blocked || authorization.loggingOut)
-    return failure3(
+    return failure4(
       401,
       "connection_required",
       "Connect Kaijan before reporting an issue."
@@ -25480,7 +25594,7 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
   });
   if (!status.ok) {
     await status.body?.cancel();
-    return failure3(
+    return failure4(
       [401, 403].includes(status.status) ? status.status : 503,
       "issue_connection_unavailable",
       "Kaijan could not confirm the issue connection."
@@ -25505,26 +25619,26 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
     }
     connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(selected);
   } catch {
-    return failure3(
+    return failure4(
       503,
       "issue_connection_unavailable",
       "Kaijan could not confirm the issue connection."
     );
   }
   if (connection.origin !== authorization.origin || connection.context.user.id !== parsed.data.userId || connection.context.workspace.id !== parsed.data.workspaceId)
-    return failure3(
+    return failure4(
       409,
       "issue_owner_mismatch",
       "The connected account or workspace changed. Keep this issue and return to its original connection."
     );
   if (authorization.saved !== saved || saved.tokens.access_token !== token || authorization.blocked || authorization.loggingOut || authorization.pending)
-    return failure3(
+    return failure4(
       409,
       "issue_connection_changed",
       "The connection changed. Keep the selected issue and check the connection."
     );
   if (signal?.aborted)
-    return failure3(
+    return failure4(
       409,
       "issue_cancelled",
       "The action was cancelled. Your selected issue is kept."
@@ -25544,7 +25658,7 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
       ...input3.operation === "prepare" ? { body: JSON.stringify(input3.input) } : {}
     });
   } catch {
-    return failure3(
+    return failure4(
       503,
       "issue_transport_unavailable",
       "Core did not confirm the issue result. Keep the original selected content and request."
@@ -25555,13 +25669,13 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
 // apps/codex-plugin/src/auth/ai-binding.mjs
 var aiConnectionHeader = "x-kaijan-ai-connection";
 var aiConnectionId = external_exports.uuid();
-var failure4 = () => Response.json(
+var failure5 = () => Response.json(
   { error: "ai_connection_binding_unavailable" },
   { status: 412 }
 );
 async function captureAIConnection(authorization, signal) {
   if (typeof authorization.connectionBinding !== "function" || typeof authorization.requestBound !== "function")
-    return failure4();
+    return failure5();
   const binding = aiConnectionId.parse(
     await authorization.connectionBinding(signal)
   );
@@ -25586,7 +25700,7 @@ async function captureAIConnection(authorization, signal) {
   );
   if (!response.ok) {
     await response.body?.cancel();
-    return failure4();
+    return failure5();
   }
   try {
     const envelope = external_exports.object({
@@ -25598,7 +25712,7 @@ async function captureAIConnection(authorization, signal) {
         content: external_exports.array(external_exports.unknown()).optional()
       })
     }).parse(await response.json());
-    if (envelope.result.isError) return failure4();
+    if (envelope.result.isError) return failure5();
     let value = envelope.result.structuredContent;
     if (value === void 0 && envelope.result.content?.length === 1)
       value = JSON.parse(
@@ -25606,7 +25720,7 @@ async function captureAIConnection(authorization, signal) {
       );
     const connection = coreToolUpstreamSuccessSchemas.loki_connection_status.parse(value);
     if (connection.origin !== authorization.origin || !connection.context.permissions.includes("ai:invoke"))
-      return failure4();
+      return failure5();
     signal?.throwIfAborted();
     return Response.json({
       schema: "kaijan.ai-connection/1",
@@ -25614,7 +25728,7 @@ async function captureAIConnection(authorization, signal) {
       connection
     });
   } catch {
-    return failure4();
+    return failure5();
   }
 }
 
@@ -25795,6 +25909,33 @@ async function startBroker({
         const response2 = await captureAIConnection(
           authorization,
           AbortSignal.any([controller.signal, AbortSignal.timeout(35e3)])
+        );
+        res.writeHead(response2.status, {
+          "content-type": "application/json",
+          "cache-control": "no-store"
+        });
+        if (response2.body) await pipeline(Readable.fromWeb(response2.body), res);
+        else res.end();
+        return;
+      }
+      if (req.url === "/agent-feedback" && req.method === "POST") {
+        const chunks2 = [];
+        let size2 = 0;
+        for await (const chunk of req) {
+          size2 += chunk.length;
+          if (size2 > 65536) return json2(413, { error: "request_too_large" });
+          chunks2.push(chunk);
+        }
+        let value;
+        try {
+          value = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
+        } catch {
+          return json2(400, { error: "invalid_agent_feedback_request" });
+        }
+        const response2 = await forwardBoundAgentFeedback(
+          authorization,
+          value,
+          controller.signal
         );
         res.writeHead(response2.status, {
           "content-type": "application/json",
@@ -26322,7 +26463,7 @@ async function main() {
     telemetry = openTelemetryOutbox(profile);
   } catch {
   }
-  const onboarding = telemetry && pluginHost(build) === "codex" && anonymousOnboardingEnabled() ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
+  const onboarding = telemetry && anonymousOnboardingEnabled() ? createAnonymousOnboarding(build.coreOrigin, telemetry) : void 0;
   if (!onboarding) {
     try {
       telemetry?.clearOnboardingKey();
