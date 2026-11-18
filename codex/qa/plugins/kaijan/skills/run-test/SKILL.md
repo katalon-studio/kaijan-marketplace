@@ -1,14 +1,15 @@
 ---
 name: run-test
-description: Run and assess an authorized browser or macOS desktop test, read its result, or stop the same test. Use for saved Plan tests or a complete supplied scenario.
+description: Run and assess an authorized browser or macOS desktop test, read its result, or stop the same test. Use for saved Plan tests.
 ---
 
-# Execute an explicit UI scenario
+# Run saved Plan tests
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the [Runner contract](../../references/RUNNER.md). A full caller request
-can already authorize the selected target and actions. For testing that first
-needs a Plan, use [test-request](../test-request/SKILL.md). A plan-only request
+can already authorize the selected target and actions. Save the Plan with
+[test-request](../test-request/SKILL.md), including when the person supplies a
+complete scenario in chat. A plan-only request
 does not authorize execution.
 
 ## Run the selected checks
@@ -35,7 +36,7 @@ saving settings. Configuration selection never authorizes execution.
 Use `loki_test_execute` for the normal combined run, assessment and report.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
 `{}`) and the authorized target. For one saved test, use its actual test ID as
-`scenarioId`. Choose one input:
+`scenarioId`.
 
 - `savedTests: {answerId, resultSha256, selectedTestIds}` loads the complete
   selected Plan tests. Include the person's current request to run them and any
@@ -44,11 +45,6 @@ Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
   restrictions intact. Do not invent permission or copy the whole chat.
   Add other relevant caller knowledge in `hostContext` separately.
   This input cannot be combined with `scenario` or `planRef`.
-- `scenario` contains the full supplied test and optional `planRef` can
-  correlate it.
-  Keep required behavior, assumptions and observation-only questions distinct.
-  Include known preconditions and inputs. Declare consequential missing values
-  in `unresolvedInputs`; the operation will not execute with unresolved inputs.
 
 Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
 Hostname restrictions are temporarily disabled for dogfooding. Do not require

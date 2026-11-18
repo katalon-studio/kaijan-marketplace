@@ -48864,6 +48864,8 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()
@@ -53047,7 +53049,7 @@ async function createInstalledSession(root, build, data, broker, {
   }) : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
@@ -56513,10 +56515,17 @@ var customerOutputSchema = external_exports.union([
   }),
   projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
-function customerExecutionInput(tool2, configurations) {
+function customerExecutionInput(tool2, configurations, requireSavedPlan) {
   if (!["loki_runner_execute", "loki_test_execute"].includes(tool2.name))
     return tool2.inputSchema;
-  const input3 = structuredClone(tool2.inputSchema);
+  let input3 = structuredClone(tool2.inputSchema);
+  if (requireSavedPlan && tool2.name === "loki_test_execute") {
+    const { anyOf, ...root } = input3;
+    const saved = anyOf?.find(
+      (branch) => branch.required?.includes("savedTests")
+    );
+    if (saved) input3 = { ...root, ...saved };
+  }
   const projectRequest = (schema) => {
     if (schema?.properties?.target) {
       delete schema.properties.configurationUsed;
@@ -56538,7 +56547,7 @@ function customerExecutionInput(tool2, configurations) {
   projectRequest(input3);
   return input3;
 }
-function customerToolDefinition(tool2, { configurations = false } = {}) {
+function customerToolDefinition(tool2, { configurations = false, requireSavedPlan = true } = {}) {
   if (!isCustomerToolAllowed(tool2.name)) return null;
   if (!executionTools.has(tool2.name)) return tool2;
   const read = tool2.name.endsWith("_get");
@@ -56555,7 +56564,7 @@ function customerToolDefinition(tool2, { configurations = false } = {}) {
         ...tool2.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
-    ) : customerExecutionInput(tool2, configurations),
+    ) : customerExecutionInput(tool2, configurations, requireSavedPlan),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -57143,6 +57152,8 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
+  if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
+    return invalid();
   const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
   if (!saved && !checked) return { arguments: args };
   if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
@@ -57467,7 +57478,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
-  const resourceUri = "ui://loki/test-plan/card/v86.html";
+  const resourceUri = "ui://loki/test-plan/card/v87.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -58170,6 +58181,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v83.html",
   "ui://loki/test-plan/card/v84.html",
   "ui://loki/test-plan/card/v85.html",
+  "ui://loki/test-plan/card/v86.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
@@ -58215,7 +58227,8 @@ function capabilityMcpRegistration(session, setup) {
       const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool2, {
-        configurations: Boolean(session.configurations)
+        configurations: Boolean(session.configurations),
+        requireSavedPlan: session.identity?.host !== "claude_code"
       }));
       return tool2.name === "loki_test_evidence_assess" && definition ? {
         ...definition,
@@ -58245,7 +58258,7 @@ function capabilityMcpRegistration(session, setup) {
     ]
   };
 }
-function capabilityMcpDiscovery(tools2, setup) {
+function capabilityMcpDiscovery(tools2, setup, host) {
   const hidden = /* @__PURE__ */ new Set([
     "loki_pr_context_find_related",
     ...setup?.hiddenTools ?? []
@@ -58256,7 +58269,10 @@ function capabilityMcpDiscovery(tools2, setup) {
     "loki_assessment_prepare",
     "loki_context_finder_find_related",
     "loki_change_risk_analyze",
-    "loki_risk_finder_analyze"
+    "loki_risk_finder_analyze",
+    // Existing direct callers can recover a preview. Codex models use the
+    // ordinary Plan and Run entry points.
+    ...host === "codex" ? ["loki_runner_reuse_prepare"] : []
   ]);
   return tools2.filter((tool2) => !hidden.has(tool2.name)).map(
     (tool2) => internalPreparation.has(tool2.name) ? {
@@ -58288,7 +58304,7 @@ function createCapabilityMcpServer(session, version4, setup, telemetry) {
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools: capabilityMcpDiscovery(tools2, setup)
+    tools: capabilityMcpDiscovery(tools2, setup, session.identity?.host)
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
@@ -58594,6 +58610,7 @@ function createCapabilityMcpServer(session, version4, setup, telemetry) {
         params.arguments ?? {},
         invocation,
         {
+          requireSavedPlan: session.identity?.host !== "claude_code",
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
