@@ -19,9 +19,10 @@ Keep missing details open. A task in chat is enough to plan.
 ## Planning inputs
 
 Use one supported input form. Preserve original text, attribution and source
-roles. Put application behavior and context in `input`. Put the caller's
-instructions for carrying out the testing work in `taskInstructions`; Kaijan
-retains them with the Plan and carries them into Run. Preserve supplied source
+roles. Put application behavior and context in `input`. Include the optional
+`taskInstructions` only when the caller supplied directions for carrying out
+the testing work. Omit the field otherwise. Kaijan retains those directions
+with the Plan and carries them into Run. Preserve supplied source
 documents unchanged. Include the known execution target as context.
 Implementation, risk findings and observations can inform
 the plan.
