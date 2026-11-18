@@ -20400,6 +20400,8 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()
@@ -21425,8 +21427,8 @@ var customerReportTraceResultSchema = external_exports.union([
   }),
   customerTraceArtifacts.extend({
     ...traceIdentity,
-    status: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false)
+    status: external_exports.literal("unavailable")
+    // A failed browser launch can leave the admitted trace and viewer available.
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -23193,6 +23195,70 @@ function reportData(output2, depth = 0) {
   }
   return void 0;
 }
+var relatedRelationship = {
+  same_work: "Suggested same work",
+  explicit_fix: "Source claims a fix",
+  explicit_reference: "Source reference",
+  adjacent_capability: "Related functionality",
+  shared_vocabulary: "Shared terms",
+  unsupported: "Relationship unsupported",
+  unjudged: "Unjudged"
+};
+var relatedStatus = {
+  complete: "",
+  partial: "Related work saved a partial result. Some sources may be missing.",
+  unavailable: "Related work could not get the result.",
+  stopped: "Related work stopped before it finished.",
+  refused: "Related work could not read the requested sources."
+};
+function savedRelatedWork(view, plan) {
+  const saved = view.contextFinder?.find(
+    (entry) => entry.planSourceId === plan.sourceId && entry.planResultSha256 === plan.resultSha256
+  );
+  const title = text(record3(record3(plan.result).plan).title);
+  if (!saved || saved.state === "unavailable")
+    return {
+      title,
+      notices: [
+        saved ? "The saved Related work result is unavailable." : "No saved Related work result for this plan."
+      ],
+      sources: []
+    };
+  const { result } = saved;
+  const source2 = (item, relation, url2) => ({
+    title: item.title,
+    kind: item.kind === "pr" ? "Pull request" : "Issue",
+    relation,
+    url: reportContextFinderLinkSchema.safeParse(url2).data
+  });
+  const sources = [
+    ...result.candidates.map(
+      (item) => source2(
+        item,
+        relatedRelationship[item.relationship_type],
+        item.sourceState === "available" ? item.url : void 0
+      )
+    ),
+    ...(result.unjudged ?? []).map(
+      (item) => source2(item, "Unjudged", item.url)
+    ),
+    ...(result.uninspected ?? []).map((item) => ({
+      title: `${item.repo}#${item.number}`,
+      kind: "Unknown",
+      relation: "Not inspected",
+      url: void 0
+    }))
+  ];
+  return {
+    title,
+    notices: [
+      relatedStatus[result.status],
+      Object.values(result.sourceCoverage).some((count6) => count6 > 0) ? "Some saved sources are unavailable." : "",
+      sources.length ? "Suggested relationships need review." : "No source rows were saved."
+    ].filter(Boolean),
+    sources
+  };
+}
 function nativeReport(output2, selectedPlanId) {
   const parsed = customerReportSchema.safeParse(reportData(output2));
   if (!parsed.success) return void 0;
@@ -23278,6 +23344,8 @@ function nativeReport(output2, selectedPlanId) {
     summary: resultCounts(statuses, "could not check") || (tests2.length ? "Not run" : "No assessed test results"),
     tests: tests2,
     runs,
+    relatedWork: view.plans.map((plan2) => savedRelatedWork(view, plan2)),
+    applicationModel: source2?.applicationModel,
     plans: view.plans.map((entry) => ({ id: entry.sourceId })),
     selectedPlanId: source2?.sourceId,
     reviewNotes: [...new Set(reviewNotes)],

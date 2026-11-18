@@ -34,7 +34,7 @@ export function reportCard(elements, card, id, onPress) {
 }
 
 export function reportPane(elements, report, state) {
-  const { Box, Text, Button, Select } = elements;
+  const { Box, Text, Button, Select, Link } = elements;
   const { tab, expanded, caption, redraw } = state;
   const text = (value, props = {}) => Text({ ...props, children: [value] });
   const column = (children, props = {}) =>
@@ -215,6 +215,66 @@ export function reportPane(elements, report, state) {
         : []),
     ]),
   );
+  const tabs = [
+    ["tests", `Tests ${report.tests.length}`],
+    ["runs", `Runs ${report.runs.length}`],
+    ["related-work", "Related work"],
+  ];
+  if (report.applicationModel) tabs.push(["app-model", "App model"]);
+  const relatedWork = report.relatedWork.length
+    ? report.relatedWork.map((group, index) =>
+        column([
+          ...(report.relatedWork.length > 1
+            ? [heading(group.title || `Test plan ${index + 1}`)]
+            : []),
+          ...group.notices.map((notice) => text(notice)),
+          ...group.sources.map((source) =>
+            column(
+              [
+                source.url
+                  ? text(Link({ href: source.url, label: source.title }))
+                  : text(source.title),
+                text(`${source.kind} · ${source.relation}`, {
+                  color: "inactive",
+                }),
+              ],
+              { gap: "sm" },
+            ),
+          ),
+        ]),
+      )
+    : [text("No saved Related work result for this report.")];
+  const applicationModel = report.applicationModel;
+  const views = applicationModel
+    ? new Map(applicationModel.views.map((view) => [view.id, view]))
+    : new Map();
+  const appModel = [...views.values()].map((view) => {
+    const key = `app-model-${view.id}`;
+    const open = expanded.has(key);
+    return column([
+      Button({
+        key,
+        label: `${open ? "▾" : "▸"} ${view.name}`,
+        plain: true,
+        onPress: () => toggle(key),
+      }),
+      ...(open
+        ? [
+            ...[view.kind, view.purpose]
+              .filter(Boolean)
+              .map((value) => text(value)),
+            ...section("Page controls", view.controls),
+            ...section("Page fields", view.fields),
+            ...section(
+              "Leads to",
+              applicationModel.transitions
+                .filter((edge) => edge.from === view.id && views.has(edge.to))
+                .map((edge) => `${edge.action} → ${views.get(edge.to).name}`),
+            ),
+          ]
+        : []),
+    ]);
+  });
   return column(
     [
       Button({
@@ -227,15 +287,17 @@ export function reportPane(elements, report, state) {
       Box({
         flexDirection: "row",
         gap: "md",
-        children: ["tests", "runs"].map((name) =>
+        children: tabs.map(([name, label]) =>
           Box({
-            borderStyle: tab === name ? "quote" : undefined,
-            borderColor: "claude",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: "sm",
             paddingX: "sm",
             children: [
+              text(tab === name ? "▏" : "\u00a0", { color: "claude" }),
               Button({
                 key: "kaijan-" + name,
-                label: `${name === "tests" ? "Tests" : "Runs"} ${name === "tests" ? report.tests.length : report.runs.length}`,
+                label,
                 plain: true,
                 onPress: () => state.onTab(name),
               }),
@@ -302,14 +364,18 @@ export function reportPane(elements, report, state) {
                   ),
                 ]),
           ]
-        : runs.length
-          ? runs
-          : [
-              card([
-                heading("No test runs"),
-                text("This report contains no saved runs."),
-              ]),
-            ]),
+        : tab === "related-work"
+          ? relatedWork
+          : tab === "app-model"
+            ? appModel
+            : runs.length
+              ? runs
+              : [
+                  card([
+                    heading("No test runs"),
+                    text("This report contains no saved runs."),
+                  ]),
+                ]),
     ],
     { padding: "md", gap: "lg" },
   );

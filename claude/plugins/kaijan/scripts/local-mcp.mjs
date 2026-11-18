@@ -27491,6 +27491,51 @@ function mcpToolFailureCode(response2, errorType) {
     return "mcp_protocol_error";
   return "tool_failed";
 }
+var toolDiagnosticReasonSchema = external_exports.enum([
+  "invalid_arguments",
+  "saved_selection_conflict",
+  "saved_selection_unavailable",
+  "saved_selection_mismatch",
+  "report_read_failed",
+  "record_file_missing",
+  "artifact_run_not_selected",
+  "artifact_manifest_changed",
+  "artifact_manifest_identity_mismatch",
+  "artifact_not_selected",
+  "artifact_changed",
+  "artifact_invalid_offset",
+  "tool_failed"
+]);
+var toolDiagnosticFieldSchema = external_exports.enum([
+  "requestKey",
+  "scenario",
+  "scenarioId",
+  "params",
+  "target",
+  "executionMethod",
+  "planRef",
+  "savedTests",
+  "answerId",
+  "resultSha256",
+  "selectedTestIds",
+  "reportId",
+  "runId",
+  "artifactId",
+  "offset",
+  "initialURL",
+  "allowedHosts",
+  "deadline_ms",
+  "unknown"
+]);
+var toolFailureDiagnosedPropertiesSchema = external_exports.strictObject({
+  tool_name: external_exports.enum([
+    "loki_test_execute",
+    "loki_runner_execute",
+    "loki_report_artifact_read"
+  ]),
+  reason: toolDiagnosticReasonSchema,
+  validation_fields: external_exports.array(toolDiagnosticFieldSchema).max(telemetryLimits.arrayEntries)
+});
 var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
 var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
   analysis_id: external_exports.uuidv4(),
@@ -27949,6 +27994,11 @@ var mcpCapture = localEnvelope.extend({
   event_version: external_exports.literal(2),
   properties: localMcpMetricsSchema
 });
+var toolFailureDiagnosedCapture = localEnvelope.extend({
+  event: external_exports.literal("Tool Failure Diagnosed"),
+  event_version: external_exports.literal(1),
+  properties: toolFailureDiagnosedPropertiesSchema
+});
 var startedCapture = localEnvelope.extend({
   event: external_exports.literal("Runtime Started"),
   event_version: external_exports.literal(1),
@@ -28028,7 +28078,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture,
   userInputRequestedCapture,
   userInputReceivedCapture,
-  assessmentFinishedCapture
+  assessmentFinishedCapture,
+  toolFailureDiagnosedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -28050,7 +28101,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture.extend(ownership),
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
-  assessmentFinishedEventSchema
+  assessmentFinishedEventSchema,
+  toolFailureDiagnosedCapture.extend(ownership)
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -28153,6 +28205,31 @@ var inferenceFailureCategorySchema = external_exports.enum([
   "unknown"
 ]);
 var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var inferenceClientVersionSchema = external_exports.string().regex(/^\d{1,8}\.\d{1,8}\.\d{1,8}$/);
+var inferenceImageDiagnosticsSchema = external_exports.strictObject({
+  image_count: external_exports.number().int().nonnegative(),
+  invalid_image_count: external_exports.number().int().nonnegative(),
+  truncated: external_exports.boolean(),
+  // Eight small projections fit the existing event budget. No image/URL values.
+  samples: external_exports.array(external_exports.strictObject({
+    input_index: external_exports.number().int().nonnegative(),
+    content_index: external_exports.number().int().nonnegative().optional(),
+    kind: external_exports.enum(["computer_output", "input_image"]),
+    format: external_exports.enum(["data_url", "http_url", "file_id", "other", "missing"]),
+    mime_type: external_exports.enum(["image/png", "image/jpeg", "image/webp", "image/gif", "other"]).nullable(),
+    encoded_length: external_exports.number().int().nonnegative().nullable(),
+    decoded_byte_length: external_exports.number().int().nonnegative().nullable(),
+    validation: external_exports.enum([
+      "valid_syntax",
+      "empty",
+      "not_string",
+      "invalid_data_url",
+      "invalid_base64",
+      "invalid_url",
+      "unsupported_format"
+    ])
+  })).max(8)
+});
 var coreInferencePropertiesSchema = external_exports.strictObject({
   operation_id: telemetryOperationId.nullable(),
   capability: external_exports.enum(["plan", "run"]).nullable(),
@@ -28163,7 +28240,15 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   requested_model: inferenceUsageModelSchema.nullable().optional(),
   inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
   core_request_id: external_exports.uuidv4().optional(),
+  litellm_call_id: external_exports.uuid().optional(),
+  client_version: inferenceClientVersionSchema.optional(),
+  image_diagnostics: inferenceImageDiagnosticsSchema.optional(),
   core_automatic_retry: external_exports.literal(false).optional(),
+  // Hash the opaque provider reference; never collect its raw value.
+  response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  previous_response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  request_store: external_exports.boolean().optional(),
+  request_stage: external_exports.enum(["planner_recap_assessment", "other"]).optional(),
   failure_category: inferenceFailureCategorySchema.optional(),
   provider_route: external_exports.literal("litellm"),
   input_tokens: nativeTokenCount,
@@ -40604,7 +40689,7 @@ import { randomUUID as randomUUID2 } from "node:crypto";
 import { platform as platform2, release as release2, arch } from "node:os";
 function createTelemetryCollector(broker, build) {
   const host = pluginHost(build);
-  let lease = null, stopped = false, ownerDiagnosticsSupported = false;
+  let lease = null, stopped = false, ownerDiagnosticsSupported = false, failureDiagnosticsSupported = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
     try {
@@ -40617,6 +40702,7 @@ function createTelemetryCollector(broker, build) {
       );
       const health = response2.ok ? await response2.json() : null;
       ownerDiagnosticsSupported = health?.owner_diagnostics === true;
+      failureDiagnosticsSupported = health?.failure_diagnostics === true;
       const parsed = telemetryIdentityEpochSchema.safeParse(health?.epoch);
       if (health?.disabled === true) lease = null;
       else if (parsed.success) lease = parsed.data;
@@ -40625,6 +40711,7 @@ function createTelemetryCollector(broker, build) {
     } catch {
       lease = null;
       ownerDiagnosticsSupported = false;
+      failureDiagnosticsSupported = false;
     }
   };
   const ready = refresh();
@@ -40637,6 +40724,8 @@ function createTelemetryCollector(broker, build) {
     try {
       const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
+      if (event2 === "Tool Failure Diagnosed" && !failureDiagnosticsSupported)
+        return;
       let supportedProperties = properties;
       if (!ownerDiagnosticsSupported && (event2 === "Test Plan Generated" || event2 === "Test Run Finished")) {
         supportedProperties = { ...properties };
@@ -42836,6 +42925,41 @@ var productIssuePreparationSchema = external_exports.strictObject({
       path: ["uploads"],
       message: "Only the selected images can receive upload grants."
     });
+});
+
+// packages/contracts/dist/app-model.js
+var appModelIdentitySchema = external_exports.strictObject({
+  applicationKey: external_exports.string().min(1),
+  environmentKey: external_exports.string().min(1),
+  roleKey: external_exports.string().min(1).nullable()
+});
+var appModelSnapshotSchema = external_exports.looseObject({
+  nodes: external_exports.array(external_exports.json()),
+  edges: external_exports.array(external_exports.json()),
+  uiModel: external_exports.looseObject({
+    pages: external_exports.array(external_exports.json()),
+    unknowns: external_exports.array(external_exports.string())
+  })
+});
+var appModelCollectionSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  identity: appModelIdentitySchema,
+  observation: external_exports.strictObject({
+    observedAt: external_exports.iso.datetime(),
+    status: external_exports.enum(["complete", "incomplete"]),
+    reason: external_exports.string(),
+    sourceCommit: external_exports.string().min(1).nullable()
+  }),
+  format: external_exports.literal("kaijan.explorer-map/1"),
+  snapshot: appModelSnapshotSchema,
+  // These identify the producer's retained evidence. They are not remote files
+  // or access grants. Binary upload is outside this collection contract.
+  evidence: external_exports.array(external_exports.strictObject({ id: external_exports.string().min(1), availability: external_exports.literal("local") }))
+});
+var appModelRevisionSchema = appModelCollectionSchema.extend({
+  modelId: external_exports.uuid(),
+  revisionId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime()
 });
 
 // packages/contracts/dist/workspace-customer.js
@@ -47341,7 +47465,7 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
 }
 
 // apps/codex-plugin/src/configurations.mjs
-import { createHash as createHash3 } from "node:crypto";
+import { createHash as createHash3, randomUUID as randomUUID5 } from "node:crypto";
 var cachedFormUris = /* @__PURE__ */ new Set([
   "ui://kaijan/configurations/form/v1.html",
   "ui://kaijan/configurations/form/v2.html"
@@ -47503,7 +47627,7 @@ function createConfigurationSurface({ session, library, data }) {
         } else if (args.operation === "select") {
           configuration2 = saved.select(scopeId, args.id);
           await library.configurationPreference(scope.data, scopeId, true);
-          message = args.automatic ? "Automatic configuration matching selected." : `Configuration selected: ${configuration2.name}.`;
+          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration2.name}.`;
         }
         const enabled = await library.configurationPreference(
           scope.data,
@@ -47523,33 +47647,35 @@ function createConfigurationSurface({ session, library, data }) {
       }
     },
     async prepareExecution(name, raw, metadata2) {
-      if (!["loki_runner_execute", "loki_test_execute"].includes(name))
+      const planning = name === "loki_test_plan";
+      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration)
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
-        const args = structuredClone(raw), explicit = args?.configurationId;
+        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey2 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
         if (args && Object.hasOwn(args, "configurationUsed"))
           throw Error("host_metadata_only");
         if (args) delete args.configurationId;
         if (!metadata2?.threadId && (explicit === null || explicit === void 0))
           return { arguments: args };
         const scope = await scopeFor(metadata2);
-        if (typeof raw?.requestKey !== "string" || !raw.requestKey)
+        if (typeof requestKey2 !== "string" || !requestKey2)
           throw Error("invalid_request");
-        recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, raw.requestKey])).digest("hex");
+        if (!planning)
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey2])).digest("hex");
         marked = true;
         marked = await library.configurationRunMarker(
           scope.data,
           scope.scope.id,
           name,
-          raw.requestKey
+          requestKey2
         );
         const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
         if (!marked && (explicit === null || preference === false))
           return { arguments: args };
         if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
           return { arguments: args };
-        const canSelect = explicit !== void 0 || preference === true || Boolean(args.target?.initialURL);
+        const canSelect = explicit !== void 0 || preference === true || Boolean(execution2.target?.initialURL);
         if (!marked && !canSelect) return { arguments: args };
         const saved = await store().catch((error63) => {
           if (marked) throw error63;
@@ -47558,134 +47684,149 @@ function createConfigurationSurface({ session, library, data }) {
             "Could not read the saved configuration. Ask the person if they want to run without it."
           );
         });
-        const previous = saved.admission(
-          scope.scope.id,
-          name,
-          raw.requestKey,
-          raw
-        );
+        const previous = saved.admission(scope.scope.id, name, requestKey2, raw);
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
             scope.scope.id,
             name,
-            raw.requestKey,
+            requestKey2,
             true
           );
           return { arguments: previous };
         }
         if (marked) throw Error("configuration_admission_unavailable");
-        const runSchema = name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
         if (!runSchema.safeParse(args).success)
           throw new library.ConfigurationError(
             "configuration_run_input",
             "Check the Run inputs before starting. The saved configuration is unchanged."
           );
         if (explicit !== void 0 && explicit !== null) id2.parse(explicit);
-        const once = explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
+        const once = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
         const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
-        const matches = args.target?.initialURL ? saved.list(args.target.initialURL) : [];
-        if (selection3 === "automatic" && matches.length > 1)
-          return {
-            error: {
-              code: "configuration_choice_required",
-              message: "Several configurations match this application. Ask which one to use before running.",
-              configurations: matches.map(({ id: id8, name: name2 }) => ({ id: id8, name: name2 })),
-              requestDispatched: false
-            }
-          };
-        const selectedId = selection3 === "automatic" ? matches[0]?.id : selection3;
-        if (selectedId) {
-          const chosen = once?.execution ?? saved.execution(selectedId);
-          const callerPrivate = args.privateParams ?? {};
-          const secrets = Object.fromEntries(
-            Object.entries(chosen.secrets).filter(
-              ([key]) => !Object.hasOwn(callerPrivate, key)
-            )
-          );
-          const hasSecrets = Object.keys(secrets).length > 0;
-          if (!args.target?.initialURL && (hasSecrets || chosen.application))
+        const automatic = selection3 === "automatic";
+        const initialURL = execution2.target?.initialURL;
+        const browserURL = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL) return { arguments: args };
+        const configurations = automatic ? saved.list().map(({ id: id8 }) => saved.execution(id8)) : selection3 ? [once?.execution ?? saved.execution(selection3)] : [];
+        if (!configurations.length) return { arguments: args };
+        const callerParams = execution2.params ?? {};
+        const callerPrivate = execution2.privateParams ?? {};
+        const allowed = execution2.target?.allowedHosts ?? (execution2.target?.initialURL ? [new URL(execution2.target.initialURL).hostname] : []);
+        if (Object.keys(callerPrivate).length)
+          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
+            ...execution2,
+            target: { ...execution2.target, allowedHosts: allowed }
+          });
+        const occupied = /* @__PURE__ */ new Set([
+          ...Object.keys(callerParams),
+          ...Object.keys(callerPrivate)
+        ]);
+        const parameterName = (base) => {
+          let name2 = base;
+          while (occupied.has(name2)) name2 += "_";
+          occupied.add(name2);
+          return name2;
+        };
+        const descriptors = [];
+        const secretNames = [];
+        execution2.params = { ...callerParams };
+        execution2.privateParams = { ...callerPrivate };
+        for (const chosen of configurations) {
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
+          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
+            (key) => !Object.hasOwn(callerPrivate, key)
+          ) && !privateAllowed))
             throw new library.ConfigurationError(
               "configuration_target",
-              "This configuration uses a browser application. Choose its browser target before running."
+              "This configuration belongs to another application. Choose a configuration for the browser target."
             );
-          const url2 = args.target?.initialURL ? new URL(args.target.initialURL) : void 0;
-          const allowed = args.target?.allowedHosts ?? (url2 ? [url2.hostname] : []);
-          if (chosen.application && new URL(chosen.application).origin !== url2?.origin || hasSecrets && (!allowed.every((host) => chosen.allowedHosts.includes(host)) || !url2 || !chosen.allowedHosts.includes(url2.hostname)))
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "This configuration belongs to another application. Choose a matching configuration before running."
-            );
-          const params = args.params ?? {};
-          if (Object.keys(params).some(
-            (key) => Object.hasOwn(chosen.secrets, key)
-          ))
-            throw new library.ConfigurationError(
-              "configuration_secret_editor",
-              "Use the private login path for this Run to override a saved secret."
-            );
-          if (Object.keys(callerPrivate).length)
-            await library.resolveRunnerParameters(scope.data, scope.scope.id, {
-              ...args,
-              target: { ...args.target, allowedHosts: allowed }
-            });
-          chosen.configuration.overrides = [
+          const fields = {};
+          const secrets = {};
+          chosen.configuration.overrides = automatic ? [] : [
             .../* @__PURE__ */ new Set([
               ...once?.changed ?? [],
-              ...[...Object.keys(params), ...Object.keys(callerPrivate)].filter(
+              ...[
+                ...Object.keys(callerParams),
+                ...Object.keys(callerPrivate)
+              ].filter(
                 (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
               )
             ])
           ];
-          args.params = {
-            ...Object.fromEntries(
-              Object.entries(chosen.params).filter(
-                ([key]) => !Object.hasOwn(callerPrivate, key)
-              )
-            ),
-            ...params
-          };
+          for (const key of [
+            ...Object.keys(chosen.params),
+            ...Object.keys(chosen.secrets)
+          ]) {
+            const isSecret = Object.hasOwn(chosen.secrets, key);
+            if (automatic && isSecret && !privateAllowed) continue;
+            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
+              if (isSecret && !Object.hasOwn(callerPrivate, key))
+                throw new library.ConfigurationError(
+                  "configuration_secret_editor",
+                  "Use the private login path to override a saved secret."
+                );
+              fields[key] = key;
+              continue;
+            }
+            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
+            fields[key] = name2;
+            if (Object.hasOwn(chosen.secrets, key))
+              secrets[name2] = chosen.secrets[key];
+            else execution2.params[name2] = chosen.params[key];
+          }
+          descriptors.push({
+            id: chosen.configuration.id,
+            name: chosen.configuration.name,
+            url: chosen.application ?? null,
+            fields
+          });
           if (Object.keys(secrets).length) {
             const binding2 = await library.provisionRunnerParameters(
               scope.data,
               scope.scope.id,
               { allowedHosts: chosen.allowedHosts, values: secrets }
             );
-            args.privateParams = {
-              ...args.privateParams,
-              ...Object.fromEntries(
-                binding2.fields.map((field2) => [
-                  field2,
-                  { bindingId: binding2.bindingId, field: field2 }
-                ])
-              )
-            };
-            args.target.allowedHosts = allowed;
+            for (const field2 of binding2.fields)
+              execution2.privateParams[field2] = {
+                bindingId: binding2.bindingId,
+                field: field2
+              };
+            secretNames.push(...binding2.fields);
           }
-          args.options = {
-            ...args.options,
+        }
+        if (automatic)
+          execution2.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
+        if (Object.keys(execution2.privateParams).length) {
+          execution2.target.allowedHosts = allowed;
+          await library.resolveRunnerParameters(
+            scope.data,
+            scope.scope.id,
+            execution2
+          );
+        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
+          delete execution2.privateParams;
+        }
+        if (!planning) {
+          execution2.options = {
+            ...execution2.options,
             secretParameterNames: [
               .../* @__PURE__ */ new Set([
-                ...args.options?.secretParameterNames ?? [],
-                ...Object.keys(chosen.secrets)
+                ...execution2.options?.secretParameterNames ?? [],
+                ...secretNames
               ])
             ]
           };
-          if (Object.keys(args.privateParams ?? {}).length) {
-            args.target.allowedHosts = allowed;
-            await library.resolveRunnerParameters(
-              scope.data,
-              scope.scope.id,
-              args
-            );
-          }
-          args.configurationUsed = chosen.configuration;
+          if (!automatic)
+            args.configurationUsed = configurations[0].configuration;
         }
-        if (!selectedId) return { arguments: args };
+        if (planning) args.requestKey = requestKey2;
         const prepared = saved.admission(
           scope.scope.id,
           name,
-          raw.requestKey,
+          requestKey2,
           raw,
           args,
           once?.token
@@ -47694,7 +47835,7 @@ function createConfigurationSurface({ session, library, data }) {
           scope.data,
           scope.scope.id,
           name,
-          raw.requestKey,
+          requestKey2,
           true
         );
         if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
@@ -47709,7 +47850,7 @@ function createConfigurationSurface({ session, library, data }) {
         return {
           error: {
             code: marked && !(error63 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
-            message: marked ? "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
+            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
             requestDispatched: marked ? null : false,
             ...marked ? { existingRunId: recoveryRunId } : {}
           }
@@ -48712,6 +48853,8 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()
@@ -49936,8 +50079,8 @@ var customerReportTraceResultSchema = external_exports.union([
   }),
   customerTraceArtifacts.extend({
     ...traceIdentity,
-    status: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false)
+    status: external_exports.literal("unavailable")
+    // A failed browser launch can leave the admitted trace and viewer available.
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -52842,7 +52985,6 @@ import { join as join6, delimiter } from "node:path";
 import { pathToFileURL } from "node:url";
 import process3 from "node:process";
 import { performance as performance3 } from "node:perf_hooks";
-import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
 import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
 var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
 var present = (entry) => {
@@ -52869,16 +53011,12 @@ async function createInstalledSession(root, build, data, broker, {
     } catch {
     }
   };
-  stage2("verify_payload");
   const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
   if (build.runtimeLayout !== "installed")
     throw Error("Rebuild the installed runtime layout");
   const source3 = join6(root, "capabilities");
   const started = performance3.now();
-  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
-  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
-    throw Error("Installed runtime must contain regular files");
-  const verified = performance3.now();
+  const artifactDigest = build.capabilityDigest;
   process3.env.PATH = [join6(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
   stage2("import_library");
   const library = await import(pathToFileURL(join6(source3, "library/api.mjs")).href);
@@ -52888,22 +53026,23 @@ async function createInstalledSession(root, build, data, broker, {
       "Validation artifact requires its explicit private host binding"
     );
   const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+  if (validation && (validation.artifactDigest !== artifactDigest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
     throw Error("Validation artifact/binding mismatch");
   if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
     (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+  ) || contextSetup.artifactDigest !== artifactDigest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
     throw Error("Application-context artifact/scope binding mismatch");
   const contextBinding = contextSetup ? library.parseRunnerContextBinding({
     ...contextSetup.binding,
-    artifactDigest: identity4.digest
+    artifactDigest
   }) : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
+        ...build.browserViewer === true ? { browserViewer: true } : {},
         mapGeneration: false,
         ...validation ? { runnerValidation: validation } : {},
         ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
@@ -52931,7 +53070,7 @@ async function createInstalledSession(root, build, data, broker, {
   const session = await createCapabilitySession({
     host,
     data,
-    payloadDigest: identity4.digest,
+    payloadDigest: artifactDigest,
     packageIdentity: JSON.stringify(build),
     library: broker ? {
       ...hostLibrary,
@@ -53078,8 +53217,7 @@ async function createInstalledSession(root, build, data, broker, {
   process3.stderr.write(
     JSON.stringify({
       event: "kaijan.local.startup",
-      validationMs: Math.round(verified - started),
-      importMs: Math.round(imported - verified),
+      importMs: Math.round(imported - started),
       servicesMs: Math.round(initialized - imported),
       processElapsedMs: Math.round(initialized)
     }) + "\n"
@@ -53109,14 +53247,14 @@ async function createInstalledSession(root, build, data, broker, {
 }
 
 // apps/codex-plugin/src/setup/service.mjs
-import { randomUUID as randomUUID7 } from "node:crypto";
+import { randomUUID as randomUUID8 } from "node:crypto";
 import { performance as performance4 } from "node:perf_hooks";
 
 // apps/codex-plugin/src/setup/store.mjs
 import { DatabaseSync } from "node:sqlite";
 import { constants as constants4 } from "node:fs";
 import { mkdir as mkdir4, lstat as lstat6, realpath as realpath3, open as open4 } from "node:fs/promises";
-import { randomUUID as randomUUID5 } from "node:crypto";
+import { randomUUID as randomUUID6 } from "node:crypto";
 import process4 from "node:process";
 import { join as join7, resolve } from "node:path";
 
@@ -53496,7 +53634,7 @@ async function openSetupStore(directory) {
     CREATE TABLE IF NOT EXISTS contexts(id TEXT PRIMARY KEY, application_id TEXT NOT NULL, configuration_hash TEXT NOT NULL, value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS map_observations(context_id TEXT, digest TEXT, value TEXT NOT NULL, PRIMARY KEY(context_id,digest));
     CREATE TABLE IF NOT EXISTS commands(scope TEXT, key TEXT, digest TEXT, value TEXT, PRIMARY KEY(scope,key));`);
-  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID5());
+  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID6());
   return {
     installation: database.prepare("SELECT value FROM metadata WHERE key='installation'").get().value,
     transaction(fn) {
@@ -53582,7 +53720,7 @@ import { execFile as execFile2 } from "node:child_process";
 import { promisify as promisify3 } from "node:util";
 import { realpath as realpath4, lstat as lstat7 } from "node:fs/promises";
 import { isAbsolute as isAbsolute3 } from "node:path";
-import { randomUUID as randomUUID6 } from "node:crypto";
+import { randomUUID as randomUUID7 } from "node:crypto";
 var execute = promisify3(execFile2);
 async function resolveSourceRevision(source3, signal) {
   const git = async (args, cleanup = false) => (await execute(
@@ -53622,7 +53760,7 @@ async function resolveSourceRevision(source3, signal) {
     } catch {
     }
     if (!remote) return await git(["rev-parse", "--verify", `${ref}^{commit}`]);
-    const temporary = `refs/loki/setup/${randomUUID6()}`;
+    const temporary = `refs/loki/setup/${randomUUID7()}`;
     try {
       await git([
         "fetch",
@@ -53735,7 +53873,7 @@ async function createSetup({
       version: "application-source-configuration/1"
     }
   );
-  const owner2 = randomUUID7();
+  const owner2 = randomUUID8();
   const telemetryByContext = /* @__PURE__ */ new Map();
   const telemetryStarts = /* @__PURE__ */ new Map();
   const observe = (method, input4) => {
@@ -54433,8 +54571,8 @@ function createOnboarding(ui) {
   return {
     tool: {
       name: "kaijan_onboarding_show",
-      title: "Set up Kaijan",
-      description: "Open Kaijan's getting-started panel from post-install Set up or when the person asks to set up Kaijan. Prefill the application URL and original request when known. Opening this panel does not start a test or save credentials.",
+      title: "Legacy Kaijan onboarding panel",
+      description: "Open the legacy onboarding panel only when the person explicitly asks for that panel. Ordinary Kaijan Setup uses chat. Prefill the supplied application URL and request. Opening the panel does not save Setup or start a test.",
       inputSchema: external_exports.toJSONSchema(inputSchema2),
       outputSchema: external_exports.toJSONSchema(outputSchema2),
       annotations: {
@@ -54833,7 +54971,6 @@ async function createSetupTools({
       ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
       $id: `urn:kaijan:${name}:customer-output:1`
     },
-    ...ui ? { _meta: { ui: { resourceUri: ui.resources[0].uri } } } : {},
     annotations: {
       readOnlyHint: readOnly,
       destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
@@ -54869,14 +55006,12 @@ async function createSetupTools({
         throw new SetupFailure("setup_output_invalid");
       const wire = projectCustomerSetup(name, original2);
       return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
         structuredContent: wire,
         content: [{ type: "text", text: JSON.stringify(wire) }]
       };
     } catch (error63) {
       const result2 = customerSetupFailure(failure3(error63).code);
       return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
         isError: true,
         structuredContent: result2,
         content: [{ type: "text", text: JSON.stringify(result2) }]
@@ -55018,7 +55153,7 @@ import {
   link as link3,
   unlink as unlink5
 } from "node:fs/promises";
-import { createHash as createHash6, randomUUID as randomUUID8 } from "node:crypto";
+import { createHash as createHash6, randomUUID as randomUUID9 } from "node:crypto";
 import { dirname as dirname3, join as join8, resolve as resolve2 } from "node:path";
 async function bindProfileState(build, args, home) {
   const host = build.host ?? "codex";
@@ -55085,7 +55220,7 @@ async function bindProfileState(build, args, home) {
         );
       }
     } else {
-      const temporary = join8(dirname3(state2), `.loki-profile-${randomUUID8()}`);
+      const temporary = join8(dirname3(state2), `.loki-profile-${randomUUID9()}`);
       const created = await open5(temporary, "wx", 384);
       try {
         try {
@@ -55610,7 +55745,7 @@ var descriptions = {
   prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
   changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input, the coding agent's additional planning guidance in agentInstructions, and the caller's instructions for carrying out testing in taskInstructions. Planner uses the original request and agent guidance together. Kaijan retains those instructions for Run. Preserve original source text. Planning does not execute tests.",
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests.",
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
   suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
 };
@@ -55935,6 +56070,26 @@ async function relatedPresentation(fam, native, options) {
     original2.result,
     structuredClone(original2.result),
     options.verifyCustomerRelatedSource
+  );
+}
+function customerPlanningConfigurationFailure(value) {
+  const uncertain = value.requestDispatched !== false;
+  return finish(
+    baseSchema.parse({
+      schema: "kaijan.customer-advisory/1",
+      family: "testPlanning",
+      state: uncertain ? "unknown" : "unavailable",
+      replayAllowed: false,
+      error: {
+        code: "advisory_unavailable",
+        message: value.message,
+        requestDispatched: uncertain ? null : false
+      },
+      recovery: {
+        action: uncertain ? "read-original" : "check-readiness",
+        instruction: uncertain ? "Read the original planning answer in this chat. Keep its request and saved settings." : "Check the selected application configuration. You can also continue without saved settings."
+      }
+    })
   );
 }
 async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, options = {}) {
@@ -56346,17 +56501,24 @@ var customerOutputSchema = external_exports.union([
   }),
   projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
-function customerExecutionInput(tool3, configurations) {
+function customerExecutionInput(tool3, configurations, requireSavedPlan) {
   if (!["loki_runner_execute", "loki_test_execute"].includes(tool3.name))
     return tool3.inputSchema;
-  const input4 = structuredClone(tool3.inputSchema);
+  let input4 = structuredClone(tool3.inputSchema);
+  if (requireSavedPlan && tool3.name === "loki_test_execute") {
+    const { anyOf, ...root } = input4;
+    const saved = anyOf?.find(
+      (branch) => branch.required?.includes("savedTests")
+    );
+    if (saved) input4 = { ...root, ...saved };
+  }
   const projectRequest = (schema) => {
     if (schema?.properties?.target) {
       delete schema.properties.configurationUsed;
       if (configurations)
         schema.properties.configurationId = {
           anyOf: [{ type: "string", format: "uuid" }, { type: "null" }],
-          description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or the one matching application. Use null for no saved configuration. Explicit params override saved values only for this Run. Secret edits use the Configuration form."
+          description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or automatic delivery of saved groups. Use null for no saved configuration. Explicit params override saved values only for this Run. Secret edits use the Configuration form."
         };
     }
     const limits = schema?.properties?.options?.properties?.limits;
@@ -56371,7 +56533,7 @@ function customerExecutionInput(tool3, configurations) {
   projectRequest(input4);
   return input4;
 }
-function customerToolDefinition(tool3, { configurations = false } = {}) {
+function customerToolDefinition(tool3, { configurations = false, requireSavedPlan = true } = {}) {
   if (!isCustomerToolAllowed(tool3.name)) return null;
   if (!executionTools.has(tool3.name)) return tool3;
   const read = tool3.name.endsWith("_get");
@@ -56388,7 +56550,7 @@ function customerToolDefinition(tool3, { configurations = false } = {}) {
         ...tool3.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
-    ) : customerExecutionInput(tool3, configurations),
+    ) : customerExecutionInput(tool3, configurations, requireSavedPlan),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -56967,7 +57129,8 @@ var object6 = (value) => value !== null && typeof value === "object" && !Array.i
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
-  const invalid = () => ({
+  const invalid = (diagnosticReason = "invalid_arguments") => ({
+    diagnosticReason,
     error: customerFailureOutput(name, {
       code: "invalid_arguments",
       requestDispatched: false
@@ -56975,10 +57138,14 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
+  if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
+    return invalid();
   const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
   if (!saved && !checked) return { arguments: args };
-  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0) || typeof options.resolveSelection !== "function")
-    return invalid();
+  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
+    return invalid("saved_selection_conflict");
+  if (typeof options.resolveSelection !== "function")
+    return invalid("saved_selection_unavailable");
   try {
     invocation?.signal?.throwIfAborted();
     const key = saved ? "savedTests" : "planRef";
@@ -56989,20 +57156,66 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference3.answerId || selected.resultSha256 !== reference3.resultSha256 || selected.selectedTestIds.length !== reference3.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
-      return invalid();
+      return invalid("saved_selection_mismatch");
     return {
       arguments: {
         ...args,
         [key]: selected
       }
     };
-  } catch {
-    return invalid();
+  } catch (error63) {
+    return invalid(
+      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable"
+    );
   }
 }
 
 // apps/codex-plugin/src/capability-mcp.mjs
 import process6 from "node:process";
+
+// apps/codex-plugin/src/telemetry/tool-failures.mjs
+function observeToolFailures(catalog, name, observer) {
+  if (!observer || !toolFailureDiagnosedPropertiesSchema.shape.tool_name.safeParse(name).success)
+    return { diagnose() {
+    }, catalog };
+  let recorded = false;
+  function diagnose(error63 = {}) {
+    try {
+      if (recorded || !observer) return;
+      const reason = ["invalid_params", "invalid_arguments"].includes(
+        error63.code
+      ) ? "invalid_arguments" : error63.diagnosticReason ?? "tool_failed";
+      const fields = /* @__PURE__ */ new Set();
+      if (reason === "invalid_arguments")
+        for (const issue3 of Array.isArray(error63.issues) ? error63.issues : [])
+          for (const part of Array.isArray(issue3?.path) ? issue3.path : []) {
+            const field2 = toolDiagnosticFieldSchema.safeParse(part);
+            if (field2.success) fields.add(field2.data);
+          }
+      const properties = toolFailureDiagnosedPropertiesSchema.safeParse({
+        tool_name: name,
+        reason,
+        validation_fields: [...fields]
+      });
+      if (!properties.success) return;
+      recorded = true;
+      observer.emit("Tool Failure Diagnosed", properties.data);
+    } catch {
+    }
+  }
+  const observed2 = Object.create(catalog);
+  Object.defineProperty(observed2, "invoke", {
+    value: async (...args) => {
+      try {
+        return await catalog.invoke(...args);
+      } catch (error63) {
+        diagnose(error63);
+        throw error63;
+      }
+    }
+  });
+  return { diagnose, catalog: observed2 };
+}
 
 // apps/codex-plugin/src/customer-discovery-output.mjs
 var readiness = external_exports.strictObject({
@@ -57251,7 +57464,7 @@ function projectCustomerReport(value) {
 }
 function customerReportToolDefinition(tool3, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool3.name)) return tool3;
-  const resourceUri = "ui://loki/test-plan/card/v86.html";
+  const resourceUri = "ui://loki/test-plan/card/v87.html";
   const description = tool3.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool3.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool3.name,
@@ -57963,6 +58176,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v83.html",
   "ui://loki/test-plan/card/v84.html",
   "ui://loki/test-plan/card/v85.html",
+  "ui://loki/test-plan/card/v86.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
@@ -58008,7 +58222,8 @@ function capabilityMcpRegistration(session, setup) {
       const definition = customerDiscoveryTool(tool3) ?? customerAdvisoryToolDefinition(tool3) ?? (hasCustomerPreparationOutput(tool3.name) ? customerPreparationToolDefinition(tool3) : hasCustomerReportOutput(tool3.name) ? customerReportToolDefinition(tool3, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool3, {
-        configurations: Boolean(session.configurations)
+        configurations: Boolean(session.configurations),
+        requireSavedPlan: session.identity?.host !== "claude_code"
       }));
       return tool3.name === "loki_test_evidence_assess" && definition ? {
         ...definition,
@@ -58038,7 +58253,7 @@ function capabilityMcpRegistration(session, setup) {
     ]
   };
 }
-function capabilityMcpDiscovery(tools2, setup) {
+function capabilityMcpDiscovery(tools2, setup, host) {
   const hidden = /* @__PURE__ */ new Set([
     "loki_pr_context_find_related",
     ...setup?.hiddenTools ?? []
@@ -58049,7 +58264,10 @@ function capabilityMcpDiscovery(tools2, setup) {
     "loki_assessment_prepare",
     "loki_context_finder_find_related",
     "loki_change_risk_analyze",
-    "loki_risk_finder_analyze"
+    "loki_risk_finder_analyze",
+    // Existing direct callers can recover a preview. Codex models use the
+    // ordinary Plan and Run entry points.
+    ...host === "codex" ? ["loki_runner_reuse_prepare"] : []
   ]);
   return tools2.filter((tool3) => !hidden.has(tool3.name)).map(
     (tool3) => internalPreparation.has(tool3.name) ? {
@@ -58061,7 +58279,7 @@ function capabilityMcpDiscovery(tools2, setup) {
     } : tool3
   );
 }
-function createCapabilityMcpServer(session, version4, setup) {
+function createCapabilityMcpServer(session, version4, setup, telemetry) {
   const { catalog } = session;
   const { tools: tools2 } = capabilityMcpRegistration(session, setup);
   if (new Set(tools2.map((tool3) => tool3.name)).size !== tools2.length)
@@ -58073,7 +58291,9 @@ function createCapabilityMcpServer(session, version4, setup) {
     { name: "kaijan-local", version: version4 },
     {
       capabilities: { tools: {}, resources: {} },
-      instructions: customerInstructions
+      instructions: session.identity?.host === "claude_code" ? `Kaijan is a testing plugin.
+
+${customerInstructions}` : customerInstructions
     }
   );
   Object.defineProperty(server, "registeredToolCount", {
@@ -58081,7 +58301,7 @@ function createCapabilityMcpServer(session, version4, setup) {
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools: capabilityMcpDiscovery(tools2, setup)
+    tools: capabilityMcpDiscovery(tools2, setup, session.identity?.host)
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
@@ -58159,6 +58379,11 @@ function createCapabilityMcpServer(session, version4, setup) {
     }
   });
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
+    let diagnosticOwner;
+    try {
+      diagnosticOwner = telemetry?.bind();
+    } catch {
+    }
     if (!isCustomerToolAllowed(params.name) || !tools2.some((tool3) => tool3.name === params.name))
       throw invalidParams(
         "Unknown local Kaijan tool. Use tools/list to discover supported tool names."
@@ -58218,7 +58443,12 @@ function createCapabilityMcpServer(session, version4, setup) {
       error63.message = "This chat cannot access the selected work. No new work started. Return to the original chat and retained result; do not replay work with uncertain effects.";
       throw error63;
     }
-    const scopedCatalog = selected.catalog;
+    const failureDiagnostics = observeToolFailures(
+      selected.catalog,
+      params.name,
+      diagnosticOwner
+    );
+    const scopedCatalog = failureDiagnostics.catalog;
     if (hasCustomerPreparationOutput(params.name)) {
       const result2 = await invokeCustomerPreparation(
         scopedCatalog,
@@ -58248,10 +58478,23 @@ function createCapabilityMcpServer(session, version4, setup) {
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
+      const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
+        params.name,
+        resolved2.arguments,
+        params._meta
+      ) : resolved2;
+      if (configured2.error) {
+        const failure6 = customerPlanningConfigurationFailure(configured2.error);
+        return {
+          isError: true,
+          structuredContent: failure6,
+          content: [{ type: "text", text: JSON.stringify(failure6) }]
+        };
+      }
       const result2 = await invokeCustomerAdvisory(
         scopedCatalog,
         params.name,
-        resolved2.arguments,
+        configured2.arguments,
         invocation,
         {
           connectionOnly: selected.scope?.kind === "connection",
@@ -58364,12 +58607,16 @@ function createCapabilityMcpServer(session, version4, setup) {
         params.arguments ?? {},
         invocation,
         {
+          requireSavedPlan: session.identity?.host !== "claude_code",
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
         }
       );
       if (resolved2.error) {
+        failureDiagnostics.diagnose({
+          diagnosticReason: resolved2.diagnosticReason
+        });
         return {
           isError: true,
           structuredContent: resolved2.error,
@@ -58566,12 +58813,12 @@ function createCapabilityMcpServer(session, version4, setup) {
 
 // apps/codex-plugin/src/local-mcp.mjs
 async function createLocalMcpServer(session, version4, setup, telemetry) {
-  let server = createCapabilityMcpServer(session, version4, setup);
+  let server = createCapabilityMcpServer(session, version4, setup, telemetry);
   const registration = capabilityMcpRegistration(session, setup);
   if (telemetry && !telemetry.instrument(server, registration.tools, {
     observabilityControls: registration.observabilityControls
   })) {
-    server = createCapabilityMcpServer(session, version4, setup);
+    server = createCapabilityMcpServer(session, version4, setup, telemetry);
   }
   return server;
 }
@@ -58588,7 +58835,7 @@ function localStateArguments(directory) {
 // apps/codex-plugin/src/local-entry.mjs
 async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext, createHostSurface } = {}) {
   let setup, server, telemetry, startupTelemetry, session, close;
-  let startupStage = "verify_payload";
+  let startupStage = "import_library";
   const startupStarted = performance5.now();
   const root = resolve3(import.meta.dirname, "..");
   const build = resolveRuntimeBuild(
@@ -58761,6 +59008,7 @@ var reportTools = /* @__PURE__ */ new Set([
   "loki_report_get"
 ]);
 var decorated = /* @__PURE__ */ new WeakSet();
+var resultInstructions = "In every report summary, use the selected test's saved judgment as its result. A Run's testVerdict is an internal marker, not the test's customer result. When a matching linked assessment is available, use it. Otherwise match the browser executionReport.test_results row by test_id to the selected test: bug_found true means Failed; otherwise scenario_finished true means Passed, and scenario_finished false means Incomplete. Do not call that judged test unverified or result-not-checked in the title, status or summary. Describe its actual observation, warning and unfinished work instead. If no matching judgment is saved, keep the result unavailable; completion alone is not a Pass. This applies to ordinary summaries as well as detailed tables; it does not require another assessment or test run.";
 function useClaudeReportTransport(transport) {
   if (!transport || typeof transport.send !== "function")
     throw Error("A connected Claude Local transport is required.");
@@ -58776,6 +59024,7 @@ function useClaudeReportTransport(transport) {
           tools: tools2.map(
             (tool3) => reportTools.has(tool3.name) ? {
               ...tool3,
+              description: [tool3.description, resultInstructions].filter(Boolean).join("\n"),
               _meta: {
                 ...tool3._meta,
                 "anthropic/maxResultSizeChars": reportResultSizeChars
@@ -58968,7 +59217,7 @@ var advertisedInput = external_exports.strictObject({
 var tool2 = {
   name: toolName2,
   title: "Find saved project tests",
-  description: "List this host project's saved Kaijan Plans, Runs and reports, or read an exact listed entryId without repeating analysis, execution or assessment. Follow nextCursor for older entries. For projected evidence pages, use read with the same entryId and returned offset/projectionSha256; original-chat reader names in retained data do not grant cross-chat access. Unbound older work stays in its original chat: only there, remember with its exact reportId associates that existing report and its original references with this project. Remember changes only the local history index, never the saved report or results. Do not invent IDs or supply paths, accounts or chat identifiers.",
+  description: "List this host project's saved Kaijan Plans, Runs and reports, or read an exact listed entryId without repeating analysis, execution or assessment. Follow nextCursor for older entries. For projected evidence pages, use read with the same entryId and returned offset/projectionSha256; original-chat reader names in retained data do not grant cross-chat access. Unbound older work stays in its original chat: only there, remember with its exact reportId associates that existing report and its original references with this project. Remember changes only the local history index, never the saved report or results. Do not invent IDs or supply paths, accounts or chat identifiers. For browser results without a matching separate linked assessment, match the selected Run executionReport.test_results row by test_id: bug_found means Failed; otherwise scenario_finished means Passed, else Incomplete. Empty assessments and Run-level testVerdict do not override that row or establish missing coverage. Preserve actual observations and warnings.",
   inputSchema: external_exports.toJSONSchema(advertisedInput),
   annotations: {
     readOnlyHint: false,

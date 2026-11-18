@@ -1,6 +1,6 @@
 # Kaijan for Claude
 
-Plan application tests, run authorized checks and review saved reports in Claude.
+Kaijan is a testing plugin. Plan application tests, run authorized checks and review saved reports in Claude.
 
 Requires macOS Apple Silicon and Claude Code 2.1.318 or later. In Claude Desktop, use the Code tab and a Local session; check the embedded version with /status.
 
@@ -13,6 +13,8 @@ claude
 ```
 
 Use /kaijan:setup to connect your Kaijan account and select the application. A Kaijan account with service access is required; installing the plugin does not grant that access. Describe the checks you authorize, then use /kaijan:review-report to review the saved result.
+
+Use /kaijan:demo to try two tests on the public TodoMVC example and review their saved results.
 
 In local Desktop Code, enable the installed plugin through Add plugins or Manage plugins. Do not add a second Kaijan MCP configuration. Internal users may instead use the company-managed entry; its version and update policy are independent of this marketplace.
 

@@ -20,16 +20,19 @@ Keep missing details open. A task in chat is enough to plan.
 
 For a planning request in chat, use the caller's original wording in `input.body`, including their constraints. Keep proposed checks and assumptions separate from the caller's requirements. Leave unspecified behavior open for Kaijan to plan from the available evidence.
 
-Use one supported input form. Preserve original text, attribution and source
-roles. Put application behavior and context in `input`. Put the caller's
-application-testing directions in `taskInstructions`: application actions,
-expectations, permissions and restrictions. Kaijan retains these with the Plan
-and carries them into Run. Keep requests to assess the Run, save the Kaijan
+Keep only caller-supplied application-testing directions in `taskInstructions`: application actions,
+expectations, permissions and restrictions. Keep requests to assess the Run, save the Kaijan
 report or reopen it in your Kaijan tool workflow, rather than duplicating them
 in `taskInstructions`. Preserve the complete original request in `input.body`.
 If the task tests the application's own report, save or export feature, keep
 those application actions and expectations in the testing directions. Distinguish
-the recipient and purpose; do not filter words such as report or save. Preserve supplied source
+the recipient and purpose; do not filter words such as report or save.
+
+Use one supported input form. Preserve original text, attribution and source
+roles. Put application behavior and context in `input`. Include the optional
+`taskInstructions` only when the caller supplied directions for carrying out
+the testing work. Omit the field otherwise. Kaijan retains those directions
+with the Plan and carries them into Run. Preserve supplied source
 documents unchanged. Include the known execution target as context.
 Implementation, risk findings and observations can inform
 the plan.

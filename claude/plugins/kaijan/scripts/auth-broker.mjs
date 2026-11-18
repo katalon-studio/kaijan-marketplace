@@ -22980,6 +22980,51 @@ var mcpErrorResponseSchema = external_exports.object({
     error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
   }).optional()
 });
+var toolDiagnosticReasonSchema = external_exports.enum([
+  "invalid_arguments",
+  "saved_selection_conflict",
+  "saved_selection_unavailable",
+  "saved_selection_mismatch",
+  "report_read_failed",
+  "record_file_missing",
+  "artifact_run_not_selected",
+  "artifact_manifest_changed",
+  "artifact_manifest_identity_mismatch",
+  "artifact_not_selected",
+  "artifact_changed",
+  "artifact_invalid_offset",
+  "tool_failed"
+]);
+var toolDiagnosticFieldSchema = external_exports.enum([
+  "requestKey",
+  "scenario",
+  "scenarioId",
+  "params",
+  "target",
+  "executionMethod",
+  "planRef",
+  "savedTests",
+  "answerId",
+  "resultSha256",
+  "selectedTestIds",
+  "reportId",
+  "runId",
+  "artifactId",
+  "offset",
+  "initialURL",
+  "allowedHosts",
+  "deadline_ms",
+  "unknown"
+]);
+var toolFailureDiagnosedPropertiesSchema = external_exports.strictObject({
+  tool_name: external_exports.enum([
+    "loki_test_execute",
+    "loki_runner_execute",
+    "loki_report_artifact_read"
+  ]),
+  reason: toolDiagnosticReasonSchema,
+  validation_fields: external_exports.array(toolDiagnosticFieldSchema).max(telemetryLimits.arrayEntries)
+});
 var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
 var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
   analysis_id: external_exports.uuidv4(),
@@ -23416,6 +23461,11 @@ var mcpCapture = localEnvelope.extend({
   event_version: external_exports.literal(2),
   properties: localMcpMetricsSchema
 });
+var toolFailureDiagnosedCapture = localEnvelope.extend({
+  event: external_exports.literal("Tool Failure Diagnosed"),
+  event_version: external_exports.literal(1),
+  properties: toolFailureDiagnosedPropertiesSchema
+});
 var startedCapture = localEnvelope.extend({
   event: external_exports.literal("Runtime Started"),
   event_version: external_exports.literal(1),
@@ -23495,7 +23545,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture,
   userInputRequestedCapture,
   userInputReceivedCapture,
-  assessmentFinishedCapture
+  assessmentFinishedCapture,
+  toolFailureDiagnosedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -23517,7 +23568,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture.extend(ownership),
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
-  assessmentFinishedEventSchema
+  assessmentFinishedEventSchema,
+  toolFailureDiagnosedCapture.extend(ownership)
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -23620,6 +23672,31 @@ var inferenceFailureCategorySchema = external_exports.enum([
   "unknown"
 ]);
 var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var inferenceClientVersionSchema = external_exports.string().regex(/^\d{1,8}\.\d{1,8}\.\d{1,8}$/);
+var inferenceImageDiagnosticsSchema = external_exports.strictObject({
+  image_count: external_exports.number().int().nonnegative(),
+  invalid_image_count: external_exports.number().int().nonnegative(),
+  truncated: external_exports.boolean(),
+  // Eight small projections fit the existing event budget. No image/URL values.
+  samples: external_exports.array(external_exports.strictObject({
+    input_index: external_exports.number().int().nonnegative(),
+    content_index: external_exports.number().int().nonnegative().optional(),
+    kind: external_exports.enum(["computer_output", "input_image"]),
+    format: external_exports.enum(["data_url", "http_url", "file_id", "other", "missing"]),
+    mime_type: external_exports.enum(["image/png", "image/jpeg", "image/webp", "image/gif", "other"]).nullable(),
+    encoded_length: external_exports.number().int().nonnegative().nullable(),
+    decoded_byte_length: external_exports.number().int().nonnegative().nullable(),
+    validation: external_exports.enum([
+      "valid_syntax",
+      "empty",
+      "not_string",
+      "invalid_data_url",
+      "invalid_base64",
+      "invalid_url",
+      "unsupported_format"
+    ])
+  })).max(8)
+});
 var coreInferencePropertiesSchema = external_exports.strictObject({
   operation_id: telemetryOperationId.nullable(),
   capability: external_exports.enum(["plan", "run"]).nullable(),
@@ -23630,7 +23707,15 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   requested_model: inferenceUsageModelSchema.nullable().optional(),
   inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
   core_request_id: external_exports.uuidv4().optional(),
+  litellm_call_id: external_exports.uuid().optional(),
+  client_version: inferenceClientVersionSchema.optional(),
+  image_diagnostics: inferenceImageDiagnosticsSchema.optional(),
   core_automatic_retry: external_exports.literal(false).optional(),
+  // Hash the opaque provider reference; never collect its raw value.
+  response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  previous_response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  request_store: external_exports.boolean().optional(),
+  request_stage: external_exports.enum(["planner_recap_assessment", "other"]).optional(),
   failure_category: inferenceFailureCategorySchema.optional(),
   provider_route: external_exports.literal("litellm"),
   input_tokens: nativeTokenCount,
@@ -25031,6 +25116,41 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// packages/contracts/dist/app-model.js
+var appModelIdentitySchema = external_exports.strictObject({
+  applicationKey: external_exports.string().min(1),
+  environmentKey: external_exports.string().min(1),
+  roleKey: external_exports.string().min(1).nullable()
+});
+var appModelSnapshotSchema = external_exports.looseObject({
+  nodes: external_exports.array(external_exports.json()),
+  edges: external_exports.array(external_exports.json()),
+  uiModel: external_exports.looseObject({
+    pages: external_exports.array(external_exports.json()),
+    unknowns: external_exports.array(external_exports.string())
+  })
+});
+var appModelCollectionSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  identity: appModelIdentitySchema,
+  observation: external_exports.strictObject({
+    observedAt: external_exports.iso.datetime(),
+    status: external_exports.enum(["complete", "incomplete"]),
+    reason: external_exports.string(),
+    sourceCommit: external_exports.string().min(1).nullable()
+  }),
+  format: external_exports.literal("kaijan.explorer-map/1"),
+  snapshot: appModelSnapshotSchema,
+  // These identify the producer's retained evidence. They are not remote files
+  // or access grants. Binary upload is outside this collection contract.
+  evidence: external_exports.array(external_exports.strictObject({ id: external_exports.string().min(1), availability: external_exports.literal("local") }))
+});
+var appModelRevisionSchema = appModelCollectionSchema.extend({
+  modelId: external_exports.uuid(),
+  revisionId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime()
+});
+
 // packages/contracts/dist/workspace-customer.js
 var workspaceCustomerLimits = {
   fileBytes: 4 * 1024 * 1024,
@@ -25842,6 +25962,7 @@ async function startBroker({
       if (req.url === "/telemetry/health" && req.method === "GET")
         return json2(200, {
           owner_diagnostics: true,
+          failure_diagnostics: true,
           epoch: telemetry?.lease({
             unsettled: Boolean(
               authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut
@@ -26042,6 +26163,8 @@ async function startBroker({
       if (mcp && typeof req.headers["mcp-session-id"] === "string")
         headers["mcp-session-id"] = req.headers["mcp-session-id"];
       if (!mcp && !workspace && req.method === "POST") {
+        if (/^\d{1,8}\.\d{1,8}\.\d{1,8}$/.test(identity2.pluginVersion ?? ""))
+          headers["x-kaijan-client-version"] = identity2.pluginVersion;
         for (const name of ["x-loki-plan-id", "x-loki-run-id"])
           if (typeof req.headers[name] === "string" && /^[a-f0-9]{64}$/.test(req.headers[name]))
             headers[name] = req.headers[name];

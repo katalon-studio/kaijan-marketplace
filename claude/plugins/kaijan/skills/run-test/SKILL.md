@@ -3,12 +3,13 @@ name: run-test
 description: Run and assess an authorized browser or macOS desktop test. Use directly when the caller supplied the target and complete actions, and when running selected cases from a saved Kaijan plan, including in a resumed conversation. Keep reading the same Run through execution and assessment, then reopen its final report. A running reply is progress within the requested test. Standalone Runner is for execution-only requests.
 ---
 
-# Execute an explicit UI scenario
+# Run saved Plan tests
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the [Runner contract](../../references/RUNNER.md). A full caller request
-can already authorize the selected target and actions. For testing that first
-needs a Plan, use [test-request](../test-request/SKILL.md). A plan-only request
+can already authorize the selected target and actions. Save the Plan with
+[test-request](../test-request/SKILL.md), including when the person supplies a
+complete scenario in chat. A plan-only request
 does not authorize execution.
 
 ## Run the selected checks
@@ -20,10 +21,10 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-When `kaijan_configuration` is available, check for a matching Configuration
-before asking the person to repeat settings. Reuse the matching set identified
-by the task and available context. Name the selected set before Run. Ask the
-person only when the task cannot be completed without their answer.
+Kaijan supplies saved Configuration groups automatically when available. Use
+the application and task to select the relevant settings. Follow the person's
+explicit Configuration selection or opt-out. If several saved groups match the
+application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
@@ -35,7 +36,7 @@ saving settings. Configuration selection never authorizes execution.
 Use `loki_test_execute` for the normal combined run, assessment and report.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
 `{}`) and the authorized target. For one saved test, use its actual test ID as
-`scenarioId`. Choose one input:
+`scenarioId`.
 
 - `savedTests: {answerId, resultSha256, selectedTestIds}` loads the complete
   selected Plan tests. Put the person's application actions, expected behavior,
@@ -44,11 +45,6 @@ Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
   restrictions intact. Do not invent permission or copy the whole chat.
   Add other relevant caller knowledge in `hostContext` separately.
   This input cannot be combined with `scenario` or `planRef`.
-- `scenario` contains the full supplied test and optional `planRef` can
-  correlate it.
-  Keep required behavior, assumptions and observation-only questions distinct.
-  Include known preconditions and inputs. Declare consequential missing values
-  in `unresolvedInputs`; the operation will not execute with unresolved inputs.
 
 Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
 Hostname restrictions are temporarily disabled for dogfooding. Do not require

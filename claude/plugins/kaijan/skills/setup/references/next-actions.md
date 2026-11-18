@@ -78,16 +78,14 @@ missing prerequisites explicit as above. Project orientation and requirement
 collection can proceed from supplied task and code context. Report provider,
 browser or source-authority requirements only when the selected action needs them.
 
-Give a brief rationale before invoking the native Claude Code Question, using concrete
-action labels for those same suggestions and preserving material readiness
-conditions. Allow a custom goal. A generic open-ended
-question alone or an unchanging capability menu is insufficient. If the host lacks
-a native Question, explain that UI limit once and request the same choice as a
-text reply; do not substitute MCP elicitation or change approval settings.
+Suggest the most relevant action in the same ordinary chat reply as the saved
+Setup summary. Mention another action when it fits a distinct goal. Keep
+material readiness conditions and invite the person to reply in their own words.
+Keep this exchange in chat text.
 
 ## Continue the selected action
 
-Wait for the actual answer; a preselected or skipped choice is not a selection.
+Wait for the person's reply before taking a suggested action.
 Use the chosen task/project and original Setup context. A custom response replaces
 the suggestions with that goal; ask only genuinely missing inputs. Read the
 installed skill for that action and continue through its real APIs and prerequisites.
