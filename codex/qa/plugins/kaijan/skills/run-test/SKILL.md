@@ -20,10 +20,10 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-When `kaijan_configuration` is available, check for a matching Configuration
-before asking the person to repeat settings. Reuse the matching set identified
-by the task and available context. Name the selected set before Run. Ask the
-person only when the task cannot be completed without their answer.
+Kaijan supplies saved Configuration groups automatically when available. Use
+the application and task to select the relevant settings. Follow the person's
+explicit Configuration selection or opt-out. If several saved groups match the
+application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
