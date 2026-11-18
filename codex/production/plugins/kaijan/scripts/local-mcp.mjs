@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names2, constants5) {
+      optimizeNames(names2, constants6) {
         if (!names2[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names2, constants5);
+          this.rhs = optimizeExpr(this.rhs, names2, constants6);
         return this;
       }
       get names() {
@@ -431,10 +431,10 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names2, constants5) {
+      optimizeNames(names2, constants6) {
         if (this.lhs instanceof code_1.Name && !names2[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names2, constants5);
+        this.rhs = optimizeExpr(this.rhs, names2, constants6);
         return this;
       }
       get names() {
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names2, constants5) {
-        this.code = optimizeExpr(this.code, names2, constants5);
+      optimizeNames(names2, constants6) {
+        this.code = optimizeExpr(this.code, names2, constants6);
         return this;
       }
       get names() {
@@ -525,12 +525,12 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names2, constants5) {
+      optimizeNames(names2, constants6) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names2, constants5))
+          if (n.optimizeNames(names2, constants6))
             continue;
           subtractNames(names2, n.names);
           nodes.splice(i, 1);
@@ -583,12 +583,12 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names2, constants5) {
+      optimizeNames(names2, constants6) {
         var _a3;
-        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants5);
-        if (!(super.optimizeNames(names2, constants5) || this.else))
+        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants6);
+        if (!(super.optimizeNames(names2, constants6) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names2, constants5);
+        this.condition = optimizeExpr(this.condition, names2, constants6);
         return this;
       }
       get names() {
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names2, constants5) {
-        if (!super.optimizeNames(names2, constants5))
+      optimizeNames(names2, constants6) {
+        if (!super.optimizeNames(names2, constants6))
           return;
-        this.iteration = optimizeExpr(this.iteration, names2, constants5);
+        this.iteration = optimizeExpr(this.iteration, names2, constants6);
         return this;
       }
       get names() {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names2, constants5) {
-        if (!super.optimizeNames(names2, constants5))
+      optimizeNames(names2, constants6) {
+        if (!super.optimizeNames(names2, constants6))
           return;
-        this.iterable = optimizeExpr(this.iterable, names2, constants5);
+        this.iterable = optimizeExpr(this.iterable, names2, constants6);
         return this;
       }
       get names() {
@@ -695,11 +695,11 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names2, constants5) {
+      optimizeNames(names2, constants6) {
         var _a3, _b;
-        super.optimizeNames(names2, constants5);
-        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants5);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names2, constants5);
+        super.optimizeNames(names2, constants6);
+        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants6);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names2, constants6);
         return this;
       }
       get names() {
@@ -1000,7 +1000,7 @@ var require_codegen = __commonJS({
     function addExprNames(names2, from) {
       return from instanceof code_1._CodeOrName ? addNames(names2, from.names) : names2;
     }
-    function optimizeExpr(expr, names2, constants5) {
+    function optimizeExpr(expr, names2, constants6) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1015,14 +1015,14 @@ var require_codegen = __commonJS({
         return items;
       }, []));
       function replaceName(n) {
-        const c = constants5[n.str];
+        const c = constants6[n.str];
         if (c === void 0 || names2[n.str] !== 1)
           return n;
         delete names2[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names2[c.str] === 1 && constants5[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names2[c.str] === 1 && constants6[c.str] !== void 0);
       }
     }
     function subtractNames(names2, from) {
@@ -2235,10 +2235,10 @@ var require_resolve = __commonJS({
       }
       return count9;
     }
-    function getFullPath(resolver, id7 = "", normalize2) {
+    function getFullPath(resolver, id8 = "", normalize2) {
       if (normalize2 !== false)
-        id7 = normalizeId(id7);
-      const p = resolver.parse(id7);
+        id8 = normalizeId(id8);
+      const p = resolver.parse(id8);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2248,13 +2248,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id7) {
-      return id7 ? id7.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id8) {
+      return id8 ? id8.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id7) {
-      id7 = normalizeId(id7);
-      return resolver.resolve(baseId, id7);
+    function resolveUrl(resolver, baseId, id8) {
+      id8 = normalizeId(id8);
+      return resolver.resolve(baseId, id8);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -3024,8 +3024,8 @@ var require_compile = __commonJS({
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id7 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id7] || this.schemas[id7];
+      const id8 = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id8] || this.schemas[id8];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema2.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3036,7 +3036,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id7 === (0, resolve_1.normalizeId)(ref)) {
+      if (id8 === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -4519,15 +4519,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id7;
+        let id8;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id7 = schema[schemaId];
-          if (id7 !== void 0 && typeof id7 != "string") {
+          id8 = schema[schemaId];
+          if (id8 !== void 0 && typeof id8 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id7);
+        key = (0, resolve_1.normalizeId)(key || id8);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4606,11 +4606,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id7 = schemaKeyRef[this.opts.schemaId];
-            if (id7) {
-              id7 = (0, resolve_1.normalizeId)(id7);
-              delete this.schemas[id7];
-              delete this.refs[id7];
+            let id8 = schemaKeyRef[this.opts.schemaId];
+            if (id8) {
+              id8 = (0, resolve_1.normalizeId)(id8);
+              delete this.schemas[id8];
+              delete this.refs[id8];
             }
             return this;
           }
@@ -4717,10 +4717,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta3, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id7;
+        let id8;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id7 = schema[schemaId];
+          id8 = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4730,7 +4730,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id7 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id8 || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta: meta3, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4743,9 +4743,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id7) {
-        if (this.schemas[id7] || this.refs[id7]) {
-          throw new Error(`schema with key or id "${id7}" already exists`);
+      _checkUnique(id8) {
+        if (this.schemas[id8] || this.refs[id8]) {
+          throw new Error(`schema with key or id "${id8}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -7258,6 +7258,69 @@ var require_dist = __commonJS({
 // apps/codex-plugin/src/local-mcp-entry.mjs
 import process8 from "node:process";
 
+// apps/codex-plugin/profiles.json
+var profiles_default = {
+  local: {
+    displayName: "Kaijan \u2014 Local",
+    pluginName: "kaijan-local",
+    marketplaceName: "kaijan-local",
+    oauthClientId: "loki-codex",
+    mcpServerName: "kaijan_core_local",
+    localMcpServerName: "kaijan_local_local"
+  },
+  qa: {
+    displayName: "Kaijan \u2014 QA",
+    pluginName: "kaijan-qa",
+    marketplaceName: "kaijan-qa",
+    oauthClientId: "loki-codex",
+    coreOrigin: "https://loki-app.qa.katalon.com",
+    mcpServerName: "kaijan_core_qa",
+    localMcpServerName: "kaijan_local_qa"
+  },
+  production: {
+    displayName: "Kaijan",
+    pluginName: "kaijan",
+    marketplaceName: "kaijan",
+    coreOrigin: "https://kaijan.ai",
+    oauthClientId: "loki-codex",
+    mcpServerName: "kaijan_core",
+    localMcpServerName: "kaijan_local"
+  }
+};
+
+// apps/codex-plugin/scripts/runtime-profile.mjs
+var runtimeProfileVariable = "KAIJAN_PROFILE";
+var runtimeProfileMode = "runtime-env/1";
+var RuntimeProfileError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.code = "runtime_profile_invalid";
+  }
+};
+function resolveRuntimeBuild(build, env = process.env) {
+  if (build.profileMode !== runtimeProfileMode) return build;
+  if (build.profile !== "production" || build.authArchitecture !== "shared-broker-v1" || build.host && build.host !== "codex")
+    throw Error("Invalid runtime-profile package.");
+  const requested = env[runtimeProfileVariable];
+  const profile = requested === void 0 || requested === "prod" ? "production" : requested;
+  if (!["production", "qa"].includes(profile))
+    throw new RuntimeProfileError(
+      "Set KAIJAN_PROFILE to qa or production, or unset it for Production."
+    );
+  const selected = profiles_default[profile];
+  if (env.LOKI_CORE_ORIGIN && env.LOKI_CORE_ORIGIN !== selected.coreOrigin)
+    throw new RuntimeProfileError(
+      "KAIJAN_PROFILE and LOKI_CORE_ORIGIN differ."
+    );
+  return {
+    ...build,
+    profile,
+    coreOrigin: selected.coreOrigin,
+    mcpUrl: `${selected.coreOrigin}/mcp`,
+    oauthClientId: selected.oauthClientId
+  };
+}
+
 // apps/codex-plugin/src/auth/client.mjs
 import { spawn } from "node:child_process";
 
@@ -7327,18 +7390,26 @@ function installationPrefix(build) {
   return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
 }
 function claudeSessionId(environment) {
-  const id7 = environment.CLAUDE_CODE_SESSION_ID;
-  if (typeof id7 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id7))
+  const id8 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id8 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id8))
     throw Error(
       "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
     );
-  return id7;
+  return id8;
 }
 function bindHostSession(session, build, environment) {
   if (pluginHost(build) !== "claude_code") return session;
   const threadId = claudeSessionId(environment);
   const forRequest = session.forRequest.bind(session);
   session.forRequest = (metadata2) => forRequest({ ...metadata2, threadId });
+  if (session.configurations) {
+    const surface = session.configurations;
+    session.configurations = {
+      ...surface,
+      invoke: (name, input3, metadata2) => surface.invoke(name, input3, { ...metadata2, threadId }),
+      prepareExecution: (name, input3, metadata2) => surface.prepareExecution(name, input3, { ...metadata2, threadId })
+    };
+  }
   return session;
 }
 
@@ -7571,19 +7642,19 @@ async function connectBroker(root, build, { home, launch } = {}) {
       health = await probe();
       if (health) {
         if (brokerCompatibility(health, build) === "compatible") return;
-        const response = await channelFetch(profile.socketPath, "/upgrade", {
+        const response2 = await channelFetch(profile.socketPath, "/upgrade", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify(brokerIdentity(build)),
           signal: AbortSignal.timeout(3e3)
         });
-        const result2 = await response.json();
-        if (response.status === 409 && result2.error === "broker_busy") {
+        const result2 = await response2.json();
+        if (response2.status === 409 && result2.error === "broker_busy") {
           if (build.credentialStorage === "private-file-v1" && health.credentialStorage !== build.credentialStorage)
             throw new BrokerRestartRequiredError();
           return;
         }
-        if (!response.ok) throw Error("broker_upgrade_refused");
+        if (!response2.ok) throw Error("broker_upgrade_refused");
         for (let attempt = 0; attempt < 100 && await probe(); attempt++)
           await delay(100);
         if (await probe()) throw Error("broker_upgrade_pending");
@@ -7623,21 +7694,21 @@ async function connectBroker(root, build, { home, launch } = {}) {
     return channelFetch(profile.socketPath, path, options);
   };
   const control = async (path) => {
-    const response = await send(path, {
+    const response2 = await send(path, {
       method: "POST",
       signal: AbortSignal.timeout(2e5)
     });
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      if (response.status === 503 && body?.error === "connection_unavailable" && body?.reason === "local_credential_storage")
+    if (!response2.ok) {
+      const body = await response2.json().catch(() => null);
+      if (response2.status === 503 && body?.error === "connection_unavailable" && body?.reason === "local_credential_storage")
         throw new CredentialStorageUnavailableError("connect");
-      if (response.status === 503 && body?.error === "keychain_unavailable")
+      if (response2.status === 503 && body?.error === "keychain_unavailable")
         throw new KeychainUnavailableError();
       throw Error(
-        response.status === 401 ? "connection_required" : "broker_unavailable"
+        response2.status === 401 ? "connection_required" : "broker_unavailable"
       );
     }
-    return response.json();
+    return response2.json();
   };
   return {
     ...profile,
@@ -11269,15 +11340,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id7, k) => `
-          let ${id7}_ab = false;
-          for (let i = 0; i < ${id7}.issues.length; i++) {
-            const iss = ${id7}.issues[i];
+    const prefixStr = (id8, k) => `
+          let ${id8}_ab = false;
+          for (let i = 0; i < ${id8}.issues.length; i++) {
+            const iss = ${id8}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id7}_ab = true;
+            if (iss.continue !== true) ${id8}_ab = true;
           }
-          if (${id7}_ab && ctx && ctx.abortEarly) {
+          if (${id8}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -11291,34 +11362,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id7 = ids2[key];
+      const id8 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id7} = ${parseStr(k)};`);
+      doc.write(`const ${id8} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id7}_present` : `${id7}.value !== undefined || ${id7}_present`;
+        const assign = optin === "optional" ? `${id8}_present` : `${id8}.value !== undefined || ${id8}_present`;
         doc.write(`
-        const ${id7}_present = ${isPresent};
-        if (!${id7}.issues.length || ${id7}_present) {
-          if (${id7}.issues.length) {${prefixStr(id7, k)}
+        const ${id8}_present = ${isPresent};
+        if (!${id8}.issues.length || ${id8}_present) {
+          if (${id8}.issues.length) {${prefixStr(id8, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id7}.value;
+            newResult[${k}] = ${id8}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id7}_present = ${isPresent};
-        if (${id7}.issues.length) {${prefixStr(id7, k)}
+        const ${id8}_present = ${isPresent};
+        if (${id8}.issues.length) {${prefixStr(id8, k)}
         }
-        if (!${id7}_present && !${id7}.issues.length) {
+        if (!${id8}_present && !${id8}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -11331,22 +11402,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id7}_present) {
-          newResult[${k}] = ${id7}.value;
+        if (${id8}_present) {
+          newResult[${k}] = ${id8}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id7}.issues.length) {${prefixStr(id7, k)}
+        if (${id8}.issues.length) {${prefixStr(id8, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id7}.value;`);
+          doc.write(`newResult[${k}] = ${id8}.value;`);
         } else {
           doc.write(`
-        if (${id7}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id7}.value;
+        if (${id8}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id8}.value;
         }
       `);
         }
@@ -23374,26 +23445,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id7 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id7) {
-      const existing = idToSchema.get(id7);
+    const id8 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id8) {
+      const existing = idToSchema.get(id8);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id7}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id8}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id7, entry[0]);
+      idToSchema.set(id8, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id8) => id8);
+      const uriGenerator = ctx.external.uri ?? ((id9) => id9);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id7 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id7;
-      return { defId: id7, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id7)}` };
+      const id8 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id8;
+      return { defId: id8, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id8)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -23441,8 +23512,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id7 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id7) {
+    const id8 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id8) {
       extractToDef(entry);
       continue;
     }
@@ -23675,10 +23746,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id7 = ctx.external.registry.get(schema)?.id;
-    if (!id7)
+    const id8 = ctx.external.registry.get(schema)?.id;
+    if (!id8)
       throw new Error("Schema is missing an `id` property");
-    result2.$id = ctx.external.uri(id7);
+    result2.$id = ctx.external.uri(id8);
   }
   assignProps(result2, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -24284,7 +24355,7 @@ function stringifyKeyNames(bySchema, json3, visited) {
   const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json3;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id7, ...rest } = json3;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id8, ...rest } = json3;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -27391,6 +27462,23 @@ var toolFailureMessages = {
   mcp_protocol_error: "The tool call failed at the MCP boundary.",
   analysis_refused: "Kaijan could not accept the change risk analysis.",
   analysis_partial: "The change risk analysis did not complete.",
+  report_unavailable: "The saved report is unavailable in this chat.",
+  report_invalid_selection: "The report selection is invalid.",
+  report_projection_unavailable: "The saved report view is unavailable.",
+  report_trace_unavailable: "The saved trace is unavailable in this chat.",
+  operation_not_found_in_scope: "The saved operation is unavailable in this chat.",
+  operation_unavailable: "The operation or its saved result is unavailable.",
+  answer_conflict: "The answer key belongs to a different answer.",
+  clarification_unavailable: "The test question is no longer available.",
+  invalid_answers: "The answer does not match the pending questions.",
+  answer_effect_unestablished: "Delivery of the saved answer is not confirmed.",
+  setup_scope_unavailable: "Setup is unavailable in this chat.",
+  private_parameter_invalid: "The private login input is invalid.",
+  private_parameter_unavailable: "The saved private login is unavailable.",
+  private_parameter_scope_mismatch: "The saved private login belongs to another chat.",
+  private_parameter_target_mismatch: "The saved private login does not allow these websites.",
+  private_parameter_collision: "A private login input name is used more than once.",
+  private_parameter_revoked: "The saved private login was revoked.",
   tool_failed: "The tool call failed."
 };
 var toolFailureCodeSchema = external_exports.enum(Object.keys(toolFailureMessages));
@@ -27400,8 +27488,8 @@ var mcpErrorResponseSchema = external_exports.object({
     error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
   }).optional()
 });
-function mcpToolFailureCode(response, errorType) {
-  const result2 = mcpErrorResponseSchema.safeParse(response).data?.structuredContent;
+function mcpToolFailureCode(response2, errorType) {
+  const result2 = mcpErrorResponseSchema.safeParse(response2).data?.structuredContent;
   const code = result2?.error?.code ?? result2?.code;
   if (code === "invalid_params")
     return "invalid_arguments";
@@ -27414,6 +27502,51 @@ function mcpToolFailureCode(response, errorType) {
     return "mcp_protocol_error";
   return "tool_failed";
 }
+var toolDiagnosticReasonSchema = external_exports.enum([
+  "invalid_arguments",
+  "saved_selection_conflict",
+  "saved_selection_unavailable",
+  "saved_selection_mismatch",
+  "report_read_failed",
+  "record_file_missing",
+  "artifact_run_not_selected",
+  "artifact_manifest_changed",
+  "artifact_manifest_identity_mismatch",
+  "artifact_not_selected",
+  "artifact_changed",
+  "artifact_invalid_offset",
+  "tool_failed"
+]);
+var toolDiagnosticFieldSchema = external_exports.enum([
+  "requestKey",
+  "scenario",
+  "scenarioId",
+  "params",
+  "target",
+  "executionMethod",
+  "planRef",
+  "savedTests",
+  "answerId",
+  "resultSha256",
+  "selectedTestIds",
+  "reportId",
+  "runId",
+  "artifactId",
+  "offset",
+  "initialURL",
+  "allowedHosts",
+  "deadline_ms",
+  "unknown"
+]);
+var toolFailureDiagnosedPropertiesSchema = external_exports.strictObject({
+  tool_name: external_exports.enum([
+    "loki_test_execute",
+    "loki_runner_execute",
+    "loki_report_artifact_read"
+  ]),
+  reason: toolDiagnosticReasonSchema,
+  validation_fields: external_exports.array(toolDiagnosticFieldSchema).max(telemetryLimits.arrayEntries)
+});
 var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
 var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
   analysis_id: external_exports.uuidv4(),
@@ -27646,6 +27779,43 @@ var planningFailureMessages = {
   planning_failed: "The test plan could not be generated."
 };
 var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
+var planningFailureStageSchema = external_exports.enum([
+  "provider_request",
+  "transport",
+  "response_capture",
+  "response_parsing",
+  "response_completion",
+  "plan_validation",
+  "persistence"
+]);
+var planningValidationRuleSchema = external_exports.enum([
+  "source_relation",
+  "source_relation_shape",
+  "source_relation_kind",
+  "source_span_bound",
+  "source_relation_arity",
+  "planning_identity",
+  "output_type",
+  "output_enum",
+  "output_keys",
+  "nonempty_string",
+  "unique_ids",
+  "known_ids",
+  "nonempty_evidence",
+  "known_evidence_id",
+  "intent_authority",
+  "empty_intentions_require_clarification",
+  "nonempty_objective_ids",
+  "nonempty_steps",
+  "coverage_status_membership",
+  "complete_test_definitions"
+]);
+var planningTransportReasonSchema = external_exports.enum([
+  "caller_abort",
+  "absolute_deadline",
+  "socket_timeout",
+  "unknown"
+]);
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -27668,8 +27838,15 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   // Optional v1 additions preserve intake of published clients.
   error_code: planningFailureCodeSchema.nullable().optional(),
   error_message: external_exports.string().max(128).nullable().optional(),
-  provider_http_status: providerHttpStatusSchema.optional()
+  provider_http_status: providerHttpStatusSchema.optional(),
+  failure_stage: planningFailureStageSchema.optional(),
+  validation_rule: planningValidationRuleSchema.optional(),
+  transport_reason: planningTransportReasonSchema.optional()
 }).refine((value) => {
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0) && value.outcome !== "failed")
+    return false;
+  if (value.transport_reason !== void 0 && value.error_code !== "transport_failure_no_retry")
+    return false;
   if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
     return false;
   if (value.error_code === null || value.error_code === void 0)
@@ -27690,6 +27867,21 @@ var runStartedPropertiesSchema = external_exports.strictObject({
 });
 var runServiceRejectionCode = "native_execution_service_rejected";
 var runServiceRejectionMessage = "The test service rejected a request.";
+var runAssessmentStatusSchema = external_exports.enum([
+  "not-started",
+  "stopped",
+  "context-unavailable",
+  "input-unavailable",
+  "preparing",
+  "preparation-refused",
+  "preparation-error",
+  "running",
+  "accepted",
+  "complete",
+  "failed",
+  "unknown",
+  "error"
+]);
 var runFinishedPropertiesSchema = external_exports.strictObject({
   run_id: telemetryOperationId,
   session_id: external_exports.null(),
@@ -27715,6 +27907,7 @@ var runFinishedPropertiesSchema = external_exports.strictObject({
   ]).nullable(),
   // Additive v1 field. Absence on older captures means coverage is unknown.
   check_status: external_exports.enum(["checked", "unchecked"]).optional(),
+  assessment_status: runAssessmentStatusSchema.optional(),
   unverified_reason: external_exports.enum([
     "no_saved_assessment",
     "no_validated_checks",
@@ -27812,6 +28005,11 @@ var mcpCapture = localEnvelope.extend({
   event_version: external_exports.literal(2),
   properties: localMcpMetricsSchema
 });
+var toolFailureDiagnosedCapture = localEnvelope.extend({
+  event: external_exports.literal("Tool Failure Diagnosed"),
+  event_version: external_exports.literal(1),
+  properties: toolFailureDiagnosedPropertiesSchema
+});
 var startedCapture = localEnvelope.extend({
   event: external_exports.literal("Runtime Started"),
   event_version: external_exports.literal(1),
@@ -27891,7 +28089,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture,
   userInputRequestedCapture,
   userInputReceivedCapture,
-  assessmentFinishedCapture
+  assessmentFinishedCapture,
+  toolFailureDiagnosedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -27913,7 +28112,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   reportOpenedCapture.extend(ownership),
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
-  assessmentFinishedEventSchema
+  assessmentFinishedEventSchema,
+  toolFailureDiagnosedCapture.extend(ownership)
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -27988,7 +28188,8 @@ var coreOAuthStepPropertiesSchema = external_exports.strictObject({
   is_reconnect: external_exports.boolean().nullable(),
   ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable(),
   // Optional v1 addition. An absent legacy observation stays unknown.
-  reconnect_reason: oauthReconnectReasonSchema.optional()
+  reconnect_reason: oauthReconnectReasonSchema.optional(),
+  grant_type: external_exports.enum(["authorization_code", "refresh_token"]).optional()
 });
 var coreOAuthTelemetryCaptureSchema = external_exports.strictObject({
   event_uuid: external_exports.uuidv4(),
@@ -28003,13 +28204,63 @@ var inferenceUsageModelSchema = external_exports.enum([
   "gpt-6-astra",
   "typesafe/jev-1.13-20260917"
 ]);
+var inferenceFailureCategorySchema = external_exports.enum([
+  "authentication",
+  "quota",
+  "rate_limit",
+  "invalid_request",
+  "unavailable",
+  "connection",
+  "interrupted",
+  "cancelled",
+  "unknown"
+]);
 var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var inferenceClientVersionSchema = external_exports.string().regex(/^\d{1,8}\.\d{1,8}\.\d{1,8}$/);
+var inferenceImageDiagnosticsSchema = external_exports.strictObject({
+  image_count: external_exports.number().int().nonnegative(),
+  invalid_image_count: external_exports.number().int().nonnegative(),
+  truncated: external_exports.boolean(),
+  // Eight small projections fit the existing event budget. No image/URL values.
+  samples: external_exports.array(external_exports.strictObject({
+    input_index: external_exports.number().int().nonnegative(),
+    content_index: external_exports.number().int().nonnegative().optional(),
+    kind: external_exports.enum(["computer_output", "input_image"]),
+    format: external_exports.enum(["data_url", "http_url", "file_id", "other", "missing"]),
+    mime_type: external_exports.enum(["image/png", "image/jpeg", "image/webp", "image/gif", "other"]).nullable(),
+    encoded_length: external_exports.number().int().nonnegative().nullable(),
+    decoded_byte_length: external_exports.number().int().nonnegative().nullable(),
+    validation: external_exports.enum([
+      "valid_syntax",
+      "empty",
+      "not_string",
+      "invalid_data_url",
+      "invalid_base64",
+      "invalid_url",
+      "unsupported_format"
+    ])
+  })).max(8)
+});
 var coreInferencePropertiesSchema = external_exports.strictObject({
   operation_id: telemetryOperationId.nullable(),
   capability: external_exports.enum(["plan", "run"]).nullable(),
   plan_id: telemetryOperationId.nullable().optional(),
   run_id: telemetryOperationId.nullable().optional(),
   model: inferenceUsageModelSchema.nullable(),
+  // Optional v1 additions. Requested identity is not a native usage receipt.
+  requested_model: inferenceUsageModelSchema.nullable().optional(),
+  inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
+  core_request_id: external_exports.uuidv4().optional(),
+  litellm_call_id: external_exports.uuid().optional(),
+  client_version: inferenceClientVersionSchema.optional(),
+  image_diagnostics: inferenceImageDiagnosticsSchema.optional(),
+  core_automatic_retry: external_exports.literal(false).optional(),
+  // Hash the opaque provider reference; never collect its raw value.
+  response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  previous_response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  request_store: external_exports.boolean().optional(),
+  request_stage: external_exports.enum(["planner_recap_assessment", "other"]).optional(),
+  failure_category: inferenceFailureCategorySchema.optional(),
   provider_route: external_exports.literal("litellm"),
   input_tokens: nativeTokenCount,
   cached_input_tokens: nativeTokenCount,
@@ -28648,9 +28899,9 @@ var uuidv7obj = () => (defaultGenerator || (defaultGenerator = new V7Generator()
 var PromiseQueue = class {
   add(promise2) {
     const promiseUUID = uuidv72();
-    const id7 = ++this.nextId;
+    const id8 = ++this.nextId;
     this.promiseByIds[promiseUUID] = {
-      id: id7,
+      id: id8,
       promise: promise2
     };
     promise2.catch(() => {
@@ -29099,10 +29350,10 @@ var RetryAfterWindow = class {
     if ("too-large" === outcome3.kind) return;
     if ("retry-later" !== outcome3.kind) return void this.reset();
     if (!outcome3.retryAfterMs) return;
-    const open5 = this.isOpen();
+    const open6 = this.isOpen();
     const now = Date.now();
     const asked = Math.min(outcome3.retryAfterMs, MAX_RETRY_AFTER_MS);
-    if (!open5) {
+    if (!open6) {
       this._installedAt = now;
       this._until = now + asked;
       return;
@@ -30270,12 +30521,12 @@ var getPayloadsFromFlags = (flags) => {
   }));
 };
 var getFeatureFlagValue = (detail) => void 0 === detail ? void 0 : detail.variant ?? detail.enabled;
-var parsePayload = (response) => {
-  if ("string" != typeof response) return response;
+var parsePayload = (response2) => {
+  if ("string" != typeof response2) return response2;
   try {
-    return JSON.parse(response);
+    return JSON.parse(response2);
   } catch {
-    return response;
+    return response2;
   }
 };
 var MINIMAL_FLAG_CALLED_EVENT_CAMPAIGN_PROPERTIES = [
@@ -30426,8 +30677,8 @@ async function gzipCompress(input3, isDebug = true, options) {
 
 // node_modules/.pnpm/@posthog+core@1.61.1/node_modules/@posthog/core/dist/posthog-core-stateless.mjs
 var PostHogFetchHttpError = class extends Error {
-  constructor(response, reqByteLength, responseBodyDeadline, abortController) {
-    super("HTTP error while fetching PostHog: status=" + response.status + ", reqByteLength=" + reqByteLength), this.response = response, this.reqByteLength = reqByteLength, this.responseBodyDeadline = responseBodyDeadline, this.abortController = abortController, this.name = "PostHogFetchHttpError", this._bodyReadTimedOut = false;
+  constructor(response2, reqByteLength, responseBodyDeadline, abortController) {
+    super("HTTP error while fetching PostHog: status=" + response2.status + ", reqByteLength=" + reqByteLength), this.response = response2, this.reqByteLength = reqByteLength, this.responseBodyDeadline = responseBodyDeadline, this.abortController = abortController, this.name = "PostHogFetchHttpError", this._bodyReadTimedOut = false;
   }
   get status() {
     return this.response.status;
@@ -30777,7 +31028,7 @@ var PostHogCoreStateless = class {
     };
     return this.fetchWithRetry(url2, fetchOptions, {
       type: "required",
-      consume: (response) => response.json()
+      consume: (response2) => response2.json()
     }, {
       retryCount: 0
     }, this.remoteConfigRequestTimeoutMs).catch((error63) => {
@@ -30812,13 +31063,13 @@ var PostHogCoreStateless = class {
     this._logger.info("Flags URL", url2);
     return this.fetchWithRetry(url2, fetchOptions, {
       type: "required",
-      consume: (response) => response.json()
+      consume: (response2) => response2.json()
     }, {
       retryCount: this.featureFlagsRequestMaxRetries,
       retryCheck: isRetryableFlagsFetchError
-    }, this.featureFlagsRequestTimeoutMs).then((response) => ({
+    }, this.featureFlagsRequestTimeoutMs).then((response2) => ({
       success: true,
-      response: normalizeFlagsResponse(response)
+      response: normalizeFlagsResponse(response2)
     })).catch((error63) => {
       this._events.emit("error", error63);
       return {
@@ -30852,10 +31103,10 @@ var PostHogCoreStateless = class {
       response: void 0,
       requestId: void 0
     };
-    let response = getFeatureFlagValue(flagDetailResponse.response);
-    if (void 0 === response) response = false;
+    let response2 = getFeatureFlagValue(flagDetailResponse.response);
+    if (void 0 === response2) response2 = false;
     return {
-      response,
+      response: response2,
       requestId: flagDetailResponse.requestId
     };
   }
@@ -30879,9 +31130,9 @@ var PostHogCoreStateless = class {
       key
     ]);
     if (!payloads) return;
-    const response = payloads[key];
-    if (void 0 === response) return null;
-    return response;
+    const response2 = payloads[key];
+    if (void 0 === response2) return null;
+    return response2;
   }
   async getFeatureFlagPayloadsStateless(distinctId, groups = {}, personProperties = {}, groupProperties = {}, disableGeoip, flagKeysToEvaluate) {
     await this._initPromise;
@@ -30943,23 +31194,23 @@ var PostHogCoreStateless = class {
         "Content-Type": "application/json"
       }
     };
-    const response = await this.fetchWithRetry(url2, fetchOptions, {
+    const response2 = await this.fetchWithRetry(url2, fetchOptions, {
       type: "required",
-      consume: (response2) => {
-        if (200 !== response2.status || !response2.json) {
-          const msg = `Surveys API could not be loaded: ${response2.status}`;
+      consume: (response3) => {
+        if (200 !== response3.status || !response3.json) {
+          const msg = `Surveys API could not be loaded: ${response3.status}`;
           const error63 = new Error(msg);
           this._logger.error(error63);
           this._events.emit("error", new Error(msg));
           return Promise.resolve(void 0);
         }
-        return response2.json();
+        return response3.json();
       }
     }).catch((error63) => {
       this._logger.error("Surveys API could not be loaded", error63);
       this._events.emit("error", error63);
     });
-    const newSurveys = response?.surveys;
+    const newSurveys = response2?.surveys;
     if (newSurveys) this._logger.info("Surveys fetched from API: ", JSON.stringify(newSurveys));
     return newSurveys ?? [];
   }
@@ -34775,10 +35026,10 @@ function truncateExceptionList(error63) {
     })
   };
 }
-function truncateResponseContent(response) {
-  if (null == response || "object" != typeof response) return response;
+function truncateResponseContent(response2) {
+  if (null == response2 || "object" != typeof response2) return response2;
   const result2 = {
-    ...response
+    ...response2
   };
   if (Array.isArray(result2.content)) result2.content = result2.content.map((block) => {
     if (null != block && "object" == typeof block && "type" in block && "text" in block && block?.type === "text" && "string" == typeof block.text && block.text.length > MAX_CONTENT_TEXT_LENGTH) return {
@@ -34986,16 +35237,16 @@ function sanitizeExceptionValues(error63) {
     }))
   };
 }
-function sanitizeResponse(response) {
-  if (isRecord2(response) && Array.isArray(response.content)) {
+function sanitizeResponse(response2) {
+  if (isRecord2(response2) && Array.isArray(response2.content)) {
     const result2 = mcp_payloads_sanitizeCapturedValue({
-      ...response,
+      ...response2,
       content: []
     });
-    result2.content = response.content.map(sanitizeContentBlock);
+    result2.content = response2.content.map(sanitizeContentBlock);
     return result2;
   }
-  return mcp_payloads_sanitizeCapturedValue(response);
+  return mcp_payloads_sanitizeCapturedValue(response2);
 }
 function sanitizeContentBlock(block) {
   if (!isRecord2(block)) return mcp_payloads_sanitizeCapturedValue(block);
@@ -35743,18 +35994,18 @@ async function handleFeedback(report, options = {}, logger = log) {
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/mcp-sdk-compat.mjs
-function getToolFunction(tool) {
-  if ("handler" in tool && "function" == typeof tool.handler) return tool.handler;
-  if ("callback" in tool && "function" == typeof tool.callback) return tool.callback;
+function getToolFunction(tool2) {
+  if ("handler" in tool2 && "function" == typeof tool2.handler) return tool2.handler;
+  if ("callback" in tool2 && "function" == typeof tool2.callback) return tool2.callback;
   throw new Error("Tool has neither callback nor handler property");
 }
-function getToolFunctionKey(tool) {
-  if ("handler" in tool && "function" == typeof tool.handler) return "handler";
+function getToolFunctionKey(tool2) {
+  if ("handler" in tool2 && "function" == typeof tool2.handler) return "handler";
   return "callback";
 }
-function hasToolFunction(tool) {
-  if (!tool || "object" != typeof tool) return false;
-  const t = tool;
+function hasToolFunction(tool2) {
+  if (!tool2 || "object" != typeof tool2) return false;
+  const t = tool2;
   return "handler" in t && "function" == typeof t.handler || "callback" in t && "function" == typeof t.callback;
 }
 function createWrappedTool(originalTool, wrappedFunction) {
@@ -35834,10 +36085,10 @@ function getLiteralValue(schema) {
 var MCP_INSTRUCTIONS_KEY = "_mcp_instructions";
 var INSTRUCTIONS_FIELD_DESCRIPTION = "Server-issued metadata for this conversation.";
 var CONVERSATION_ID_FIELD_DESCRIPTION = "The server-issued conversation identifier.";
-function canDeclareOutputInstructions(outputSchema2) {
-  if (!outputSchema2 || "object" != typeof outputSchema2) return false;
-  if (isSchemaObjectLike(outputSchema2)) return false;
-  const schema = outputSchema2;
+function canDeclareOutputInstructions(outputSchema3) {
+  if (!outputSchema3 || "object" != typeof outputSchema3) return false;
+  if (isSchemaObjectLike(outputSchema3)) return false;
+  const schema = outputSchema3;
   if (schema.$ref || schema.oneOf || schema.allOf || schema.anyOf) return false;
   const { properties } = schema;
   if (void 0 !== properties && ("object" != typeof properties || null === properties || Array.isArray(properties))) return false;
@@ -35858,21 +36109,21 @@ function isSchemaObjectLike(value) {
   if (looksLikeJsonSchema(candidate)) return false;
   return Object.values(candidate).some(isZodLike);
 }
-function addInstructionsToOutputSchema(tool, logger = log) {
-  const toolName = tool.name || "unknown";
-  const original2 = tool.outputSchema;
-  if (!original2 || "object" != typeof original2) return tool;
+function addInstructionsToOutputSchema(tool2, logger = log) {
+  const toolName2 = tool2.name || "unknown";
+  const original2 = tool2.outputSchema;
+  if (!original2 || "object" != typeof original2) return tool2;
   if (!canDeclareOutputInstructions(original2)) {
     const schema = original2;
-    logger(schema.properties && Object.prototype.hasOwnProperty.call(schema.properties, MCP_INSTRUCTIONS_KEY) ? `WARN: Tool "${toolName}" already declares '${MCP_INSTRUCTIONS_KEY}' in its output schema. Leaving it alone.` : `WARN: Tool "${toolName}" has a complex output schema (oneOf/allOf/anyOf/$ref). Skipping '${MCP_INSTRUCTIONS_KEY}' declaration; its session handle stays content-only.`);
-    return tool;
+    logger(schema.properties && Object.prototype.hasOwnProperty.call(schema.properties, MCP_INSTRUCTIONS_KEY) ? `WARN: Tool "${toolName2}" already declares '${MCP_INSTRUCTIONS_KEY}' in its output schema. Leaving it alone.` : `WARN: Tool "${toolName2}" has a complex output schema (oneOf/allOf/anyOf/$ref). Skipping '${MCP_INSTRUCTIONS_KEY}' declaration; its session handle stays content-only.`);
+    return tool2;
   }
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
-  const outputSchema2 = JSON.parse(JSON.stringify(original2));
-  if (!outputSchema2.properties) outputSchema2.properties = {};
-  outputSchema2.properties[MCP_INSTRUCTIONS_KEY] = {
+  const outputSchema3 = JSON.parse(JSON.stringify(original2));
+  if (!outputSchema3.properties) outputSchema3.properties = {};
+  outputSchema3.properties[MCP_INSTRUCTIONS_KEY] = {
     type: "object",
     description: INSTRUCTIONS_FIELD_DESCRIPTION,
     properties: {
@@ -35882,11 +36133,11 @@ function addInstructionsToOutputSchema(tool, logger = log) {
       }
     }
   };
-  modifiedTool.outputSchema = outputSchema2;
+  modifiedTool.outputSchema = outputSchema3;
   return modifiedTool;
 }
 function addInstructionsToOutputSchemas(tools2, logger = log) {
-  return tools2.map((tool) => addInstructionsToOutputSchema(tool, logger));
+  return tools2.map((tool2) => addInstructionsToOutputSchema(tool2, logger));
 }
 function buildConversationInstructions(conversationId) {
   return {
@@ -35926,14 +36177,14 @@ function hasAnalyticsParameter(schema, parameterName) {
 function canInjectAnalyticsParameter(schema, parameterName) {
   return !hasAnalyticsParameter(schema, parameterName) && !schema?.$ref && !schema?.oneOf && !schema?.allOf && !schema?.anyOf;
 }
-function addAnalyticsParameterToTool(tool, parameterName, description, injectionLabel, logger = log) {
+function addAnalyticsParameterToTool(tool2, parameterName, description, injectionLabel, logger = log) {
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
-  const toolName = tool.name || "unknown";
+  const toolName2 = tool2.name || "unknown";
   const schema = modifiedTool.inputSchema;
   if (!canInjectAnalyticsParameter(schema, parameterName)) {
-    logger(hasAnalyticsParameter(schema, parameterName) ? `WARN: Tool "${toolName}" already has '${parameterName}' parameter. Skipping ${injectionLabel} injection.` : `WARN: Tool "${toolName}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping ${injectionLabel} injection.`);
+    logger(hasAnalyticsParameter(schema, parameterName) ? `WARN: Tool "${toolName2}" already has '${parameterName}' parameter. Skipping ${injectionLabel} injection.` : `WARN: Tool "${toolName2}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping ${injectionLabel} injection.`);
     return modifiedTool;
   }
   if (!modifiedTool.inputSchema) modifiedTool.inputSchema = {
@@ -35942,40 +36193,40 @@ function addAnalyticsParameterToTool(tool, parameterName, description, injection
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema = modifiedTool.inputSchema;
-  if (!inputSchema.properties) inputSchema.properties = {};
-  if (false === inputSchema.additionalProperties) inputSchema.additionalProperties = void 0;
-  inputSchema.properties[parameterName] = {
+  const inputSchema3 = modifiedTool.inputSchema;
+  if (!inputSchema3.properties) inputSchema3.properties = {};
+  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
+  inputSchema3.properties[parameterName] = {
     type: "string",
     description
   };
-  if (Array.isArray(inputSchema.required)) {
-    if (!inputSchema.required.includes(parameterName)) inputSchema.required.push(parameterName);
-  } else inputSchema.required = [
+  if (Array.isArray(inputSchema3.required)) {
+    if (!inputSchema3.required.includes(parameterName)) inputSchema3.required.push(parameterName);
+  } else inputSchema3.required = [
     parameterName
   ];
   return modifiedTool;
 }
-function analyticsOwnsParameter(inputSchema, parameterName) {
-  if (!inputSchema || "object" != typeof inputSchema) return canInjectAnalyticsParameter(void 0, parameterName);
-  if (isZodRawShapeCompat(inputSchema)) return canInjectAnalyticsParameter({
-    properties: inputSchema
+function analyticsOwnsParameter(inputSchema3, parameterName) {
+  if (!inputSchema3 || "object" != typeof inputSchema3) return canInjectAnalyticsParameter(void 0, parameterName);
+  if (isZodRawShapeCompat(inputSchema3)) return canInjectAnalyticsParameter({
+    properties: inputSchema3
   }, parameterName);
-  const shape = getObjectShape(inputSchema);
+  const shape = getObjectShape(inputSchema3);
   if (shape) return canInjectAnalyticsParameter({
     properties: shape
   }, parameterName);
-  const schema = inputSchema;
+  const schema = inputSchema3;
   if (JSON_SCHEMA_KEYWORDS.some((keyword) => Object.prototype.hasOwnProperty.call(schema, keyword))) return canInjectAnalyticsParameter(schema, parameterName);
   if ("_def" in schema || "_zod" in schema || "~standard" in schema) return canInjectAnalyticsParameter(void 0, parameterName);
   return canInjectAnalyticsParameter(schema, parameterName);
 }
-function getAnalyticsParameterOwnership(inputSchema, outputSchema2) {
+function getAnalyticsParameterOwnership(inputSchema3, outputSchema3) {
   return {
-    context: analyticsOwnsParameter(inputSchema, "context"),
-    conversationId: analyticsOwnsParameter(inputSchema, "conversation_id"),
-    llmModel: analyticsOwnsParameter(inputSchema, "llm_model"),
-    outputInstructions: canDeclareOutputInstructions(outputSchema2)
+    context: analyticsOwnsParameter(inputSchema3, "context"),
+    conversationId: analyticsOwnsParameter(inputSchema3, "conversation_id"),
+    llmModel: analyticsOwnsParameter(inputSchema3, "llm_model"),
+    outputInstructions: canDeclareOutputInstructions(outputSchema3)
   };
 }
 function stripOwnedAnalyticsArguments(args, ownership2) {
@@ -36047,11 +36298,11 @@ function isContextEnabled(context2) {
 function getContextDescription(context2) {
   return "object" == typeof context2 ? context2.description : void 0;
 }
-function addContextParameterToTool(tool, contextDescriptionOverride, logger = log) {
-  return addAnalyticsParameterToTool(tool, "context", contextDescriptionOverride || DEFAULT_CONTEXT_PARAMETER_DESCRIPTION, "context", logger);
+function addContextParameterToTool(tool2, contextDescriptionOverride, logger = log) {
+  return addAnalyticsParameterToTool(tool2, "context", contextDescriptionOverride || DEFAULT_CONTEXT_PARAMETER_DESCRIPTION, "context", logger);
 }
 function addContextParameterToTools(tools2, contextDescriptionOverride, logger = log) {
-  return tools2.map((tool) => addContextParameterToTool(tool, contextDescriptionOverride, logger));
+  return tools2.map((tool2) => addContextParameterToTool(tool2, contextDescriptionOverride, logger));
 }
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/model-parameters.mjs
@@ -36061,11 +36312,11 @@ function isCaptureModelEnabled(captureModel) {
 function getModelDescription(captureModel) {
   return "object" == typeof captureModel && null !== captureModel ? captureModel.description : void 0;
 }
-function addModelParameterToTool(tool, modelDescriptionOverride, logger = log) {
-  return addAnalyticsParameterToTool(tool, "llm_model", modelDescriptionOverride || DEFAULT_MODEL_PARAMETER_DESCRIPTION, "model", logger);
+function addModelParameterToTool(tool2, modelDescriptionOverride, logger = log) {
+  return addAnalyticsParameterToTool(tool2, "llm_model", modelDescriptionOverride || DEFAULT_MODEL_PARAMETER_DESCRIPTION, "model", logger);
 }
 function addModelParameterToTools(tools2, modelDescriptionOverride, logger = log) {
-  return tools2.map((tool) => addModelParameterToTool(tool, modelDescriptionOverride, logger));
+  return tools2.map((tool2) => addModelParameterToTool(tool2, modelDescriptionOverride, logger));
 }
 function getModelArgument(request3) {
   return normalizeModel(request3.params?.arguments?.llm_model);
@@ -36106,14 +36357,14 @@ function setEventModel(event2, model, source3 = "self_reported") {
 
 // node_modules/.pnpm/@posthog+mcp@0.25.0_@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7__p_8aefd50a5843a632a3da6b9ffd8724c4/node_modules/@posthog/mcp/dist/extensions/conversation-id.mjs
 var CONVERSATION_ID_PARAM_NAME = "conversation_id";
-function addConversationIdToTool(tool, logger = log) {
+function addConversationIdToTool(tool2, logger = log) {
   const modifiedTool = {
-    ...tool
+    ...tool2
   };
-  const toolName = tool.name || "unknown";
+  const toolName2 = tool2.name || "unknown";
   const schema = modifiedTool.inputSchema;
   if (!canInjectAnalyticsParameter(schema, CONVERSATION_ID_PARAM_NAME)) {
-    logger(hasAnalyticsParameter(schema, CONVERSATION_ID_PARAM_NAME) ? `WARN: Tool "${toolName}" already has '${CONVERSATION_ID_PARAM_NAME}' parameter. Skipping conversation_id injection.` : `WARN: Tool "${toolName}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping conversation_id injection.`);
+    logger(hasAnalyticsParameter(schema, CONVERSATION_ID_PARAM_NAME) ? `WARN: Tool "${toolName2}" already has '${CONVERSATION_ID_PARAM_NAME}' parameter. Skipping conversation_id injection.` : `WARN: Tool "${toolName2}" has complex schema (oneOf/allOf/anyOf/$ref). Skipping conversation_id injection.`);
     return modifiedTool;
   }
   if (!modifiedTool.inputSchema) modifiedTool.inputSchema = {
@@ -36122,17 +36373,17 @@ function addConversationIdToTool(tool, logger = log) {
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema = modifiedTool.inputSchema;
-  if (!inputSchema.properties) inputSchema.properties = {};
-  if (false === inputSchema.additionalProperties) inputSchema.additionalProperties = void 0;
-  inputSchema.properties[CONVERSATION_ID_PARAM_NAME] = {
+  const inputSchema3 = modifiedTool.inputSchema;
+  if (!inputSchema3.properties) inputSchema3.properties = {};
+  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
+  inputSchema3.properties[CONVERSATION_ID_PARAM_NAME] = {
     type: "string",
     description: DEFAULT_CONVERSATION_ID_DESCRIPTION
   };
   return modifiedTool;
 }
 function addConversationIdToTools(tools2, logger = log) {
-  return tools2.map((tool) => addConversationIdToTool(tool, logger));
+  return tools2.map((tool2) => addConversationIdToTool(tool2, logger));
 }
 var MINTED_CONVERSATION_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 function resolveConversationId(enabled, args) {
@@ -36322,12 +36573,12 @@ function describeAliasesUsed(aliases, input3) {
   }
   return used.sort().slice(0, MAX_INPUT_KEYS);
 }
-function getToolInputProperties(input3, inputSchema, options) {
+function getToolInputProperties(input3, inputSchema3, options) {
   try {
     if (!isRecord4(input3)) return {};
     const prototype = Object.getPrototypeOf(input3);
     if (null !== prototype && prototype !== Object.prototype) return {};
-    const properties = declaredProperties(inputSchema);
+    const properties = declaredProperties(inputSchema3);
     const known = /* @__PURE__ */ new Set([
       ...Object.keys(properties ?? {}),
       ...aliasNames(options?.inputAliases)
@@ -36366,17 +36617,17 @@ function resolveToolSchemaSessionId(data, extra) {
   if (extra?.sessionId) return deriveSessionIdFromMCPSession(extra.sessionId);
   return data.sessionId;
 }
-function resolveInputAliases(data, toolName) {
-  if (!toolName || !data.options.resolveInputAliases) return;
+function resolveInputAliases(data, toolName2) {
+  if (!toolName2 || !data.options.resolveInputAliases) return;
   try {
-    return data.options.resolveInputAliases(toolName);
+    return data.options.resolveInputAliases(toolName2);
   } catch (error63) {
-    data.logger(`Warning: resolveInputAliases failed for tool ${toolName} - ${error63}`);
+    data.logger(`Warning: resolveInputAliases failed for tool ${toolName2} - ${error63}`);
     return;
   }
 }
 async function captureToolCall(params) {
-  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
+  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema: inputSchema3, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
   const resolvedEventType = eventType ?? MCPAnalyticsEventType.mcpToolsCall;
   const isVirtualAnalyticsTool = resolvedEventType === MCPAnalyticsEventType.mcpMissingCapability || resolvedEventType === MCPAnalyticsEventType.mcpFeedback;
   const ownership2 = getActiveAnalyticsParameterOwnership(data, request3.params?.name, parameterOwnership, isVirtualAnalyticsTool);
@@ -36388,7 +36639,7 @@ async function captureToolCall(params) {
   const preparedEvent = await prepareToolCallEvent(server, data, request3, downstreamRequest, extra, startTime, conversation, ownership2, resolvedEventType, canCaptureContextIntent);
   if (preparedEvent && resolvedEventType === MCPAnalyticsEventType.mcpToolsCall) {
     const sessionSchemas = (preparedEvent.event.sessionId ? data.toolInputSchemas.get(preparedEvent.event.sessionId) : void 0) ?? data.toolInputSchemas.get(schemaSessionId);
-    const schema = inputSchema ?? sessionSchemas?.get(request3.params?.name ?? "");
+    const schema = inputSchema3 ?? sessionSchemas?.get(request3.params?.name ?? "");
     preparedEvent.event.properties = {
       ...preparedEvent.event.properties,
       ...getToolInputProperties(request3.params?.arguments ?? {}, schema, {
@@ -36423,8 +36674,8 @@ function resolveToolConversation(enabled, args, extra) {
     conversationId: void 0
   } : conversation;
 }
-function getActiveAnalyticsParameterOwnership(data, toolName, override, isVirtualAnalyticsTool) {
-  const listed = toolName ? data.toolAnalyticsParameterOwnership.get(toolName) : void 0;
+function getActiveAnalyticsParameterOwnership(data, toolName2, override, isVirtualAnalyticsTool) {
+  const listed = toolName2 ? data.toolAnalyticsParameterOwnership.get(toolName2) : void 0;
   const ownership2 = override ?? listed;
   const enabled = {
     context: !isVirtualAnalyticsTool && isContextEnabled(data.options.context),
@@ -36465,16 +36716,16 @@ async function prepareToolCallEvent(server, data, request3, downstreamRequest, e
   try {
     const sessionId = getSessionId(server, extra, conversation.conversationId);
     const sessionInfo = getSessionInfo(server, data, sessionId);
-    const toolName = request3.params?.name;
+    const toolName2 = request3.params?.name;
     const event2 = {
       sessionId,
       conversationId: conversation.conversationId,
-      resourceName: toolName || "Unknown Tool Name",
+      resourceName: toolName2 || "Unknown Tool Name",
       parameters: buildCapturedMcpParameters(downstreamRequest),
       eventType,
       timestamp: startTime,
-      toolCategory: toolName ? data.toolCategories.get(toolName) : void 0,
-      toolDescription: toolName ? data.toolDescriptions.get(toolName) : void 0
+      toolCategory: toolName2 ? data.toolCategories.get(toolName2) : void 0,
+      toolDescription: toolName2 ? data.toolDescriptions.get(toolName2) : void 0
     };
     stampClientIdentity(event2, request3, extra, server);
     stampTransportIdentity(event2, extra);
@@ -36647,18 +36898,18 @@ function patchRequestHandlers(server, patches) {
     return result2;
   };
 }
-async function isToolAdvertised(server, toolName, extra, logger) {
+async function isToolAdvertised(server, toolName2, extra, logger) {
   const listHandler = originalRequestHandlers.get(server)?.get("tools/list");
   if (!listHandler || !server._requestHandlers.has("tools/list")) return;
   try {
-    const response = await listHandler({
+    const response2 = await listHandler({
       method: "tools/list",
       params: {}
     }, extra);
-    if (!response || !Array.isArray(response.tools)) return;
-    return response.tools.some((tool) => tool?.name === toolName);
+    if (!response2 || !Array.isArray(response2.tools)) return;
+    return response2.tools.some((tool2) => tool2?.name === toolName2);
   } catch (error63) {
-    logger(`Warning: PostHog MCP analytics could not determine whether "${toolName}" is advertised; delegating to the server - ${error63}`);
+    logger(`Warning: PostHog MCP analytics could not determine whether "${toolName2}" is advertised; delegating to the server - ${error63}`);
     return;
   }
 }
@@ -36678,11 +36929,11 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
   const identity4 = data ? await handleIdentify(data, sessionId, request3, extra) : void 0;
   const requestAttribution = withIdentity(sessionInfo, identity4);
   if (data) await applyResolvedMetadata(event2, data, request3, extra);
-  const response = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
-  const tools2 = response.tools;
+  const response2 = await getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, data?.options.sendToolsListEvent !== false);
+  const tools2 = response2.tools;
   if (!data) {
     logger("Warning: PostHog MCP analytics is unable to find server tracking data. Please ensure you have called instrument(server, options) before using tool calls.");
-    return response;
+    return response2;
   }
   if (0 === tools2.length) {
     data.logger("Warning: No tools found in the original list. This is likely due to the tools not being registered before PostHog MCP analytics.instrument().");
@@ -36690,25 +36941,25 @@ async function handleListToolsRequest(server, originalListToolsHandler, request3
     event2.isError = true;
     event2.duration = Date.now() - startTime.getTime();
     if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
-    return response;
+    return response2;
   }
-  event2.response = toolsListEnvelope(response);
+  event2.response = toolsListEnvelope(response2);
   event2.listedToolNames = collectListedToolNames(tools2);
   event2.isError = false;
   event2.duration = Date.now() - startTime.getTime();
   if (false !== data.options.sendToolsListEvent) captureEvent(server, event2, data.logger, requestAttribution);
-  return response;
+  return response2;
 }
 function cacheToolAnalyticsParameterOwnership(cache, tools2) {
-  for (const tool of tools2) if (tool?.name) cache.set(tool.name, getAnalyticsParameterOwnership(tool.inputSchema, tool.outputSchema));
+  for (const tool2 of tools2) if (tool2?.name) cache.set(tool2.name, getAnalyticsParameterOwnership(tool2.inputSchema, tool2.outputSchema));
 }
 function collectListedToolNames(tools2) {
   if (!tools2 || 0 === tools2.length) return;
-  const names2 = tools2.map((tool) => tool?.name).filter((name) => "string" == typeof name);
+  const names2 = tools2.map((tool2) => tool2?.name).filter((name) => "string" == typeof name);
   return names2.length > 0 ? names2 : void 0;
 }
-function toolsListEnvelope(response) {
-  const { tools: _tools, ...envelope } = response;
+function toolsListEnvelope(response2) {
+  const { tools: _tools, ...envelope } = response2;
   return Object.keys(envelope).length > 0 ? envelope : void 0;
 }
 async function getTracedToolsList(server, originalListToolsHandler, request3, extra, event2, logger, requestAttribution, sendToolsListEvent) {
@@ -36722,7 +36973,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       cacheToolAnalyticsParameterOwnership(data.toolAnalyticsParameterOwnership, tools2);
       if (event2.sessionId) {
         const sessionSchemas = data.toolInputSchemas.get(event2.sessionId) ?? /* @__PURE__ */ new Map();
-        for (const tool of tools2) if (tool?.name) sessionSchemas.set(tool.name, tool.inputSchema);
+        for (const tool2 of tools2) if (tool2?.name) sessionSchemas.set(tool2.name, tool2.inputSchema);
         data.toolInputSchemas.set(event2.sessionId, sessionSchemas);
       }
     }
@@ -36731,7 +36982,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       const isFirstPage = request3.params?.cursor == null;
       const missingToolName = resolveMissingCapabilityToolName(data.options);
       if (data.options.reportMissing) {
-        const alreadyPresent = tools2.some((tool) => tool?.name === missingToolName);
+        const alreadyPresent = tools2.some((tool2) => tool2?.name === missingToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject missing-capability tool "${missingToolName}" because a real tool already uses that name. The real tool will not be intercepted. To keep missing-capability reports, rename the SDK's tool with the missingCapabilityToolName option.`);
         else if (isFirstPage) {
           const virtualTool = getReportMissingToolDescriptor(missingToolName);
@@ -36744,7 +36995,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
       const feedbackOptions = resolveCollectFeedbackOptions(data.options.collectFeedback);
       if (feedbackOptions) {
         const feedbackToolName = feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME;
-        const alreadyPresent = tools2.some((tool) => tool?.name === feedbackToolName);
+        const alreadyPresent = tools2.some((tool2) => tool2?.name === feedbackToolName);
         if (isFirstPage && alreadyPresent) data.logger(`Warning: Cannot inject agent-feedback tool "${feedbackToolName}" because a real tool already uses that name. The real tool will not be intercepted. To collect feedback alongside it, rename the SDK's tool with collectFeedback: { toolName: "..." }.`);
         else if (isFirstPage) {
           const virtualTool = getFeedbackToolDescriptor(feedbackOptions);
@@ -36779,7 +37030,7 @@ async function getTracedToolsList(server, originalListToolsHandler, request3, ex
 }
 function cacheToolDescriptions(cache, tools2) {
   if (!tools2) return;
-  for (const tool of tools2) if (tool?.name && "string" == typeof tool.description) cache.set(tool.name, tool.description);
+  for (const tool2 of tools2) if (tool2?.name && "string" == typeof tool2.description) cache.set(tool2.name, tool2.description);
 }
 function readToolMetaCategory(meta3) {
   const category = meta3?.category;
@@ -36787,9 +37038,9 @@ function readToolMetaCategory(meta3) {
 }
 function cacheToolCategories(cache, tools2) {
   if (!tools2) return;
-  for (const tool of tools2) {
-    const category = tool?.name ? readToolMetaCategory(tool._meta) : void 0;
-    if (category) cache.set(tool.name, category);
+  for (const tool2 of tools2) {
+    const category = tool2?.name ? readToolMetaCategory(tool2._meta) : void 0;
+    if (category) cache.set(tool2.name, category);
   }
 }
 function mintStatelessSessionOnInitialize(server, data, request3, extra) {
@@ -36930,9 +37181,9 @@ async function handleToolCallRequest(server, originalCallToolHandler, request3, 
     logger("Warning: PostHog MCP analytics is unable to find server tracking data. Please ensure you have called instrument(server, options) before using tool calls.");
     return await originalCallToolHandler?.(request3, extra);
   }
-  const toolName = request3.params?.name;
-  const isMissingCapabilityCandidate = data.options.reportMissing && toolName === resolveMissingCapabilityToolName(data.options);
-  if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
+  const toolName2 = request3.params?.name;
+  const isMissingCapabilityCandidate = data.options.reportMissing && toolName2 === resolveMissingCapabilityToolName(data.options);
+  if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName2, extra, data.logger) === false) {
     const context2 = getContextArgument2(request3) || "";
     return await captureToolCall({
       server,
@@ -36941,15 +37192,15 @@ async function handleToolCallRequest(server, originalCallToolHandler, request3, 
       extra,
       eventType: MCPAnalyticsEventType.mcpMissingCapability,
       explicitContextIntent: context2,
-      parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName).inputSchema),
+      parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName2).inputSchema),
       execute: async () => handleReportMissing({
         context: context2
       }, data.logger)
     });
   }
   const feedbackOptions = resolveCollectFeedbackOptions(data.options.collectFeedback);
-  const isFeedbackCandidate = void 0 !== feedbackOptions && toolName === (feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME);
-  if (isFeedbackCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
+  const isFeedbackCandidate = void 0 !== feedbackOptions && toolName2 === (feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME);
+  if (isFeedbackCandidate && await isToolAdvertised(server, toolName2, extra, data.logger) === false) {
     const report = parseFeedbackReport(request3.params?.arguments, feedbackOptions);
     return await captureToolCall({
       server,
@@ -36964,23 +37215,23 @@ async function handleToolCallRequest(server, originalCallToolHandler, request3, 
       execute: async () => handleFeedback(report, feedbackOptions, data.logger)
     });
   }
-  const originalTool = resolveOriginalTool(data, toolName);
+  const originalTool = resolveOriginalTool(data, toolName2);
   return await captureToolCall({
     server,
     data,
     request: request3,
     extra,
     execute: (downstreamRequest) => runOriginalToolHandler(originalCallToolHandler, downstreamRequest, extra),
-    parameterOwnership: originalTool && !(toolName && data.toolAnalyticsParameterOwnership.has(toolName)) ? getAnalyticsParameterOwnership(originalTool.inputSchema) : void 0,
+    parameterOwnership: originalTool && !(toolName2 && data.toolAnalyticsParameterOwnership.has(toolName2)) ? getAnalyticsParameterOwnership(originalTool.inputSchema) : void 0,
     inputSchema: originalTool?.inputSchema
   });
 }
-function resolveOriginalTool(data, toolName) {
-  if (!toolName || !data.options.resolveOriginalTool) return;
+function resolveOriginalTool(data, toolName2) {
+  if (!toolName2 || !data.options.resolveOriginalTool) return;
   try {
-    return data.options.resolveOriginalTool(toolName) ?? void 0;
+    return data.options.resolveOriginalTool(toolName2) ?? void 0;
   } catch (error63) {
-    data.logger(`Warning: resolveOriginalTool failed for tool ${toolName} - ${error63}`);
+    data.logger(`Warning: resolveOriginalTool failed for tool ${toolName2} - ${error63}`);
     return;
   }
 }
@@ -36996,9 +37247,9 @@ function isCallbackUpdate(value) {
   return !!value && "object" == typeof value && "callback" in value && "function" == typeof value.callback;
 }
 function addTracingToToolRegistry(tools2, server, logger) {
-  return Object.fromEntries(Object.entries(tools2).map(([name, tool]) => [
+  return Object.fromEntries(Object.entries(tools2).map(([name, tool2]) => [
     name,
-    addTracingToToolCallbackInternal(tool, name, server, () => tool.inputSchema, logger)
+    addTracingToToolCallbackInternal(tool2, name, server, () => tool2.inputSchema, logger)
   ]));
 }
 function setupListenerToRegisteredTools(server, logger) {
@@ -37060,16 +37311,16 @@ function setupListenerToRegisteredTools(server, logger) {
     logger(`Warning: Failed to setup listener for registered tools - ${error63}`);
   }
 }
-function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInputSchema, logger) {
-  const originalCallback = getToolFunction(tool);
+function addTracingToToolCallbackInternal(tool2, toolName2, server, getCurrentInputSchema, logger) {
+  const originalCallback = getToolFunction(tool2);
   const options = getServerTrackingData(server.server)?.options;
   if (wrappedCallbacks.has(originalCallback)) {
-    logger(`Tool ${toolName} callback already wrapped, skipping re-wrap`);
-    return tool;
+    logger(`Tool ${toolName2} callback already wrapped, skipping re-wrap`);
+    return tool2;
   }
-  if (tool[MCP_ANALYTICS_PROCESSED]) {
-    logger(`Tool ${toolName} already processed, skipping re-wrap`);
-    return tool;
+  if (tool2[MCP_ANALYTICS_PROCESSED]) {
+    logger(`Tool ${toolName2} already processed, skipping re-wrap`);
+    return tool2;
   }
   const wrappedCallback = async (...params) => {
     let args;
@@ -37081,11 +37332,11 @@ function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInpu
       args = void 0;
       extra = params[0];
     }
-    const inputSchema = getCurrentInputSchema();
+    const inputSchema3 = getCurrentInputSchema();
     const cleanedArgs = stripOwnedAnalyticsArguments(args, {
-      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema, "context"),
-      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema, "conversation_id"),
-      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema, "llm_model")
+      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema3, "context"),
+      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema3, "conversation_id"),
+      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema3, "llm_model")
     });
     try {
       if (void 0 === cleanedArgs) {
@@ -37101,7 +37352,7 @@ function addTracingToToolCallbackInternal(tool, toolName, server, getCurrentInpu
   };
   wrappedCallbacks.set(originalCallback, true);
   wrappedCallbacks.set(wrappedCallback, true);
-  const wrappedTool = createWrappedTool(tool, wrappedCallback);
+  const wrappedTool = createWrappedTool(tool2, wrappedCallback);
   wrappedTool[MCP_ANALYTICS_PROCESSED] = true;
   return wrappedTool;
 }
@@ -37111,9 +37362,9 @@ async function handleToolCallRequest2(highLevelServer, server, originalCallToolH
     logger("Warning: PostHog MCP analytics is unable to find server tracking data. Please ensure you have called instrument(server, options) before using tool calls.");
     return await originalCallToolHandler(request3, extra);
   }
-  const toolName = request3.params?.name;
-  const isMissingCapabilityCandidate = data.options.reportMissing && toolName === resolveMissingCapabilityToolName(data.options);
-  if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
+  const toolName2 = request3.params?.name;
+  const isMissingCapabilityCandidate = data.options.reportMissing && toolName2 === resolveMissingCapabilityToolName(data.options);
+  if (isMissingCapabilityCandidate && await isToolAdvertised(server, toolName2, extra, data.logger) === false) {
     const context2 = getContextArgument2(request3) || "";
     return await captureToolCall({
       server,
@@ -37122,15 +37373,15 @@ async function handleToolCallRequest2(highLevelServer, server, originalCallToolH
       extra,
       eventType: MCPAnalyticsEventType.mcpMissingCapability,
       explicitContextIntent: context2,
-      parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName).inputSchema),
+      parameterOwnership: getAnalyticsParameterOwnership(getReportMissingToolDescriptor(toolName2).inputSchema),
       execute: async () => handleReportMissing({
         context: context2
       }, data.logger)
     });
   }
   const feedbackOptions = resolveCollectFeedbackOptions(data.options.collectFeedback);
-  const isFeedbackCandidate = void 0 !== feedbackOptions && toolName === (feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME);
-  if (isFeedbackCandidate && await isToolAdvertised(server, toolName, extra, data.logger) === false) {
+  const isFeedbackCandidate = void 0 !== feedbackOptions && toolName2 === (feedbackOptions.toolName ?? SEND_FEEDBACK_TOOL_NAME);
+  if (isFeedbackCandidate && await isToolAdvertised(server, toolName2, extra, data.logger) === false) {
     const report = parseFeedbackReport(request3.params?.arguments, feedbackOptions);
     return await captureToolCall({
       server,
@@ -37145,7 +37396,7 @@ async function handleToolCallRequest2(highLevelServer, server, originalCallToolH
       execute: async () => handleFeedback(report, feedbackOptions, data.logger)
     });
   }
-  const registeredTool = toolName ? highLevelServer._registeredTools[toolName] : void 0;
+  const registeredTool = toolName2 ? highLevelServer._registeredTools[toolName2] : void 0;
   return await captureToolCall({
     server,
     data,
@@ -37185,11 +37436,11 @@ function instrumentHighLevelServer(server, logger) {
   }
 }
 function seedToolDescriptionsFromRegistry(cache, tools2) {
-  for (const [name, tool] of Object.entries(tools2)) if ("string" == typeof tool?.description) cache.set(name, tool.description);
+  for (const [name, tool2] of Object.entries(tools2)) if ("string" == typeof tool2?.description) cache.set(name, tool2.description);
 }
 function seedToolCategoriesFromRegistry(cache, tools2) {
-  for (const [name, tool] of Object.entries(tools2)) {
-    const category = readToolMetaCategory(tool?._meta);
+  for (const [name, tool2] of Object.entries(tools2)) {
+    const category = readToolMetaCategory(tool2?._meta);
     if (category) cache.set(name, category);
   }
 }
@@ -37596,15 +37847,15 @@ var FeatureFlagEvaluations = class _FeatureFlagEvaluations {
     if ("" === this._distinctId) return;
     if (this._isSlice && !(key in this._flags)) return;
     const flag = this._flags[key];
-    const response = void 0 === flag ? void 0 : false === flag.enabled ? false : flag.variant ?? true;
+    const response2 = void 0 === flag ? void 0 : false === flag.enabled ? false : flag.variant ?? true;
     const properties = {
       $feature_flag: key,
-      $feature_flag_response: response,
+      $feature_flag_response: response2,
       $feature_flag_id: flag?.id,
       $feature_flag_version: flag?.version,
       $feature_flag_reason: flag?.reason,
       locally_evaluated: flag?.locallyEvaluated ?? false,
-      [`$feature/${key}`]: response,
+      [`$feature/${key}`]: response2,
       $feature_flag_request_id: this._requestId,
       $feature_flag_evaluated_at: flag?.locallyEvaluated ? Date.now() : this._evaluatedAt
     };
@@ -37618,7 +37869,7 @@ var FeatureFlagEvaluations = class _FeatureFlagEvaluations {
     this._host.captureFlagCalledEventIfNeeded({
       distinctId: this._distinctId,
       key,
-      response,
+      response: response2,
       groups: this._groups,
       disableGeoip: this._disableGeoip,
       properties
@@ -37733,26 +37984,26 @@ var FeatureFlagsPoller = class {
   }
   async getFeatureFlag(key, distinctId, groups = {}, personProperties = {}, groupProperties = {}) {
     await this.loadFeatureFlags();
-    let response;
+    let response2;
     let featureFlag;
-    if (!this.loadedSuccessfullyOnce) return response;
+    if (!this.loadedSuccessfullyOnce) return response2;
     featureFlag = this.featureFlagsByKey[key];
     if (void 0 !== featureFlag) {
       const evaluationContext = this.createEvaluationContext(distinctId, groups, personProperties, groupProperties);
       try {
         const result2 = await this.computeFlagAndPayloadLocally(featureFlag, evaluationContext);
-        response = result2.value;
-        this.logMsgIfDebug(() => console.debug(`Successfully computed flag locally: ${key} -> ${response}`));
+        response2 = result2.value;
+        this.logMsgIfDebug(() => console.debug(`Successfully computed flag locally: ${key} -> ${response2}`));
       } catch (e) {
         if (e instanceof RequiresServerEvaluation || e instanceof InconclusiveMatchError) this.logMsgIfDebug(() => console.debug(`${e.name} when computing flag locally: ${key}: ${e.message}`));
         else if (e instanceof Error) this.onError?.(new Error(`Error computing flag locally: ${key}: ${e}`));
       }
     }
-    return response;
+    return response2;
   }
   async getAllFlagsAndPayloads(evaluationContext, flagKeysToExplicitlyEvaluate) {
     await this.loadFeatureFlags();
-    const response = {};
+    const response2 = {};
     const payloads = {};
     const unresolved = {};
     let fallbackToFlags = 0 == this.featureFlags.length;
@@ -37766,7 +38017,7 @@ var FeatureFlagsPoller = class {
         const { value: matchValue, payload: matchPayload } = await this.computeFlagAndPayloadLocally(flag, sharedEvaluationContext, {
           skipLoadCheck: true
         });
-        response[flag.key] = matchValue;
+        response2[flag.key] = matchValue;
         if (matchPayload) payloads[flag.key] = matchPayload;
       } catch (e) {
         if (e instanceof RequiresServerEvaluation || e instanceof InconclusiveMatchError) {
@@ -37777,7 +38028,7 @@ var FeatureFlagsPoller = class {
       }
     }));
     return {
-      response,
+      response: response2,
       payloads,
       unresolved,
       fallbackToFlags
@@ -38713,21 +38964,21 @@ var V1CaptureSender = class {
       let retryDelayMs;
       try {
         captureAttempt = await this.sendOnce(url2, payload, attempt, requestId);
-        const { response, signal } = captureAttempt;
-        const { status: status3 } = response;
+        const { response: response2, signal } = captureAttempt;
+        const { status: status3 } = response2;
         if (status3 < 200 || status3 >= 300) if (!isLastAttempt && RETRYABLE_STATUSES.has(status3)) {
-          const retryAfterMs = this.parseRetryAfter(response);
+          const retryAfterMs = this.parseRetryAfter(response2);
           await captureAttempt.waitFor(captureAttempt.cancelBody()).catch(() => {
           });
           retryDelayMs = this.backoffDelay(attempt, retryAfterMs);
         } else {
-          const httpError = await this.buildHttpError(response, status3, captureAttempt.waitFor);
+          const httpError = await this.buildHttpError(response2, status3, captureAttempt.waitFor);
           return this.surfaceBatchFailure(requestId, drops, pending, httpError);
         }
         else {
           let parsed;
           try {
-            parsed = await captureAttempt.waitFor(this.parseResponse(response));
+            parsed = await captureAttempt.waitFor(this.parseResponse(response2));
           } catch (error63) {
             if (signal.aborted) throw error63;
             return this.surfaceBatchFailure(requestId, drops, pending, new Error(`Capture V1 returned an unparseable ${status3} response body`));
@@ -38740,7 +38991,7 @@ var V1CaptureSender = class {
             retryExhausted: retryable2.map((event2) => event2.uuid)
           }));
           pending = retryable2;
-          const retryAfterMs = this.parseRetryAfter(response);
+          const retryAfterMs = this.parseRetryAfter(response2);
           retryDelayMs = this.backoffDelay(attempt, retryAfterMs);
         }
       } catch (transportError) {
@@ -38786,7 +39037,7 @@ var V1CaptureSender = class {
         if (controller.signal.aborted && !responseAccepted) this.cancelBody(lateResponse);
       }).catch(() => {
       });
-      const response = await Promise.race([
+      const response2 = await Promise.race([
         fetchPromise,
         deadline
       ]);
@@ -38794,9 +39045,9 @@ var V1CaptureSender = class {
       timeoutPhase = "while reading the response body";
       let cleanedUp = false;
       let cancellation;
-      const cancelBody = () => cancellation ??= this.cancelBody(response);
+      const cancelBody = () => cancellation ??= this.cancelBody(response2);
       return {
-        response,
+        response: response2,
         signal: controller.signal,
         waitFor: (operation) => Promise.race([
           operation,
@@ -38848,8 +39099,8 @@ var V1CaptureSender = class {
     if (void 0 === retryAfterMs) return exponential;
     return Math.max(exponential, Math.min(retryAfterMs, this.maxBackoffMs));
   }
-  parseRetryAfter(response) {
-    const raw = response.headers?.get("Retry-After");
+  parseRetryAfter(response2) {
+    const raw = response2.headers?.get("Retry-After");
     if (!raw) return;
     const trimmed = raw.trim();
     if (/^\d+$/.test(trimmed)) {
@@ -38861,8 +39112,8 @@ var V1CaptureSender = class {
     const delta = dateMs - this.now();
     return delta > 0 ? delta : void 0;
   }
-  async parseResponse(response) {
-    const text4 = await response.text();
+  async parseResponse(response2) {
+    const text4 = await response2.text();
     const parsed = JSON.parse(text4);
     if ("object" != typeof parsed || null === parsed || Array.isArray(parsed)) throw new Error("unexpected response shape");
     const results = parsed.results;
@@ -38871,10 +39122,10 @@ var V1CaptureSender = class {
       results: results ?? {}
     };
   }
-  async buildHttpError(response, status3, waitFor) {
+  async buildHttpError(response2, status3, waitFor) {
     let bodyText = "";
     try {
-      bodyText = (await waitFor(response.text())).slice(0, 512);
+      bodyText = (await waitFor(response2.text())).slice(0, 512);
     } catch {
     }
     const suffix = bodyText ? `: ${bodyText}` : "";
@@ -38895,9 +39146,9 @@ var V1CaptureSender = class {
       retryExhausted: []
     }));
   }
-  async cancelBody(response) {
+  async cancelBody(response2) {
     try {
-      await response.body?.cancel();
+      await response2.body?.cancel();
     } catch {
     }
   }
@@ -38952,9 +39203,9 @@ var WAITUNTIL_DEBOUNCE_MS = 50;
 var WAITUNTIL_MAX_WAIT_MS = 500;
 var DEFAULT_NODE_HOST = "https://us.i.posthog.com";
 var _emittedDeprecations = /* @__PURE__ */ new Set();
-function emitDeprecationWarningOnce(id7, message) {
-  if (_emittedDeprecations.has(id7)) return;
-  _emittedDeprecations.add(id7);
+function emitDeprecationWarningOnce(id8, message) {
+  if (_emittedDeprecations.has(id8)) return;
+  _emittedDeprecations.add(id8);
   console.warn(`[PostHog] ${message}`);
 }
 function normalizeApiKey(value) {
@@ -39531,15 +39782,15 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       }
     }
     if (sendFeatureFlagEvents) {
-      const response = void 0 === result2 ? void 0 : false === result2.enabled ? false : result2.variant ?? true;
+      const response2 = void 0 === result2 ? void 0 : false === result2.enabled ? false : result2.variant ?? true;
       const properties = {
         $feature_flag: key,
-        $feature_flag_response: response,
+        $feature_flag_response: response2,
         $feature_flag_id: flagId,
         $feature_flag_version: flagVersion,
         $feature_flag_reason: flagReason,
         locally_evaluated: flagWasLocallyEvaluated,
-        [`$feature/${key}`]: response,
+        [`$feature/${key}`]: response2,
         $feature_flag_request_id: requestId,
         $feature_flag_evaluated_at: flagWasLocallyEvaluated ? Date.now() : evaluatedAt
       };
@@ -39552,7 +39803,7 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       this._captureFlagCalledEventIfNeeded({
         distinctId,
         key,
-        response,
+        response: response2,
         groups,
         disableGeoip,
         properties
@@ -39595,9 +39846,9 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
   async getRemoteConfigPayload(flagKey) {
     if (this.disabled) return void this._logger.warn("The client is disabled");
     if (!this.options.personalApiKey) throw new Error("Personal API key is required for remote config payload decryption");
-    const response = await this._requestRemoteConfigPayload(flagKey);
-    if (!response) return;
-    const parsed = await response.json();
+    const response2 = await this._requestRemoteConfigPayload(flagKey);
+    if (!response2) return;
+    const parsed = await response2.json();
     if ("string" == typeof parsed) try {
       return JSON.parse(parsed);
     } catch (e) {
@@ -39621,8 +39872,8 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
       this._logger.warn("[PostHog] distinctId is required to get feature flags \u2014 pass it explicitly or use withContext()");
       return {};
     }
-    const response = await this.getAllFlagsAndPayloads(resolvedDistinctId, resolvedOptions);
-    return response.featureFlags || {};
+    const response2 = await this.getAllFlagsAndPayloads(resolvedDistinctId, resolvedOptions);
+    return response2.featureFlags || {};
   }
   async getAllFlagsAndPayloads(distinctIdOrOptions, options) {
     const { distinctId: resolvedDistinctId, options: resolvedOptions } = this._resolveDistinctId(distinctIdOrOptions, options);
@@ -39816,9 +40067,9 @@ var PostHogBackendClient = class extends PostHogCoreStateless {
     return "$feature_flag_called" === event2 && this._minimalFlagCalledEvents && false === properties.$feature_flag_has_experiment;
   }
   _captureFlagCalledEventIfNeeded(params) {
-    const { distinctId, key, response, groups, disableGeoip, properties } = params;
+    const { distinctId, key, response: response2, groups, disableGeoip, properties } = params;
     const groupSuffix = groups && Object.keys(groups).length > 0 ? `_${JSON.stringify(Object.entries(groups).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0))}` : "";
-    const featureFlagReportedKey = `${key}_${response}${groupSuffix}`;
+    const featureFlagReportedKey = `${key}_${response2}${groupSuffix}`;
     const reported = this._distinctIdHasSentFlagCalls.get(distinctId) ?? /* @__PURE__ */ new Set();
     this._distinctIdHasSentFlagCalls.delete(distinctId);
     this._distinctIdHasSentFlagCalls.set(distinctId, reported);
@@ -40449,18 +40700,20 @@ import { randomUUID as randomUUID2 } from "node:crypto";
 import { platform as platform2, release as release2, arch } from "node:os";
 function createTelemetryCollector(broker, build) {
   const host = pluginHost(build);
-  let lease = null, stopped = false;
+  let lease = null, stopped = false, ownerDiagnosticsSupported = false, failureDiagnosticsSupported = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
     try {
-      const response = await channelFetch(
+      const response2 = await channelFetch(
         broker.socketPath,
         "/telemetry/health",
         {
           signal: AbortSignal.timeout(250)
         }
       );
-      const health = response.ok ? await response.json() : null;
+      const health = response2.ok ? await response2.json() : null;
+      ownerDiagnosticsSupported = health?.owner_diagnostics === true;
+      failureDiagnosticsSupported = health?.failure_diagnostics === true;
       const parsed = telemetryIdentityEpochSchema.safeParse(health?.epoch);
       if (health?.disabled === true) lease = null;
       else if (parsed.success) lease = parsed.data;
@@ -40468,6 +40721,8 @@ function createTelemetryCollector(broker, build) {
         lease = null;
     } catch {
       lease = null;
+      ownerDiagnosticsSupported = false;
+      failureDiagnosticsSupported = false;
     }
   };
   const ready = refresh();
@@ -40480,6 +40735,15 @@ function createTelemetryCollector(broker, build) {
     try {
       const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
+      if (event2 === "Tool Failure Diagnosed" && !failureDiagnosticsSupported)
+        return;
+      let supportedProperties = properties;
+      if (!ownerDiagnosticsSupported && (event2 === "Test Plan Generated" || event2 === "Test Run Finished")) {
+        supportedProperties = { ...properties };
+        if (event2 === "Test Plan Generated")
+          delete supportedProperties.transport_reason;
+        else delete supportedProperties.assessment_status;
+      }
       const clientVersion = telemetryVersionSchema.safeParse(
         observation2.clientVersion
       );
@@ -40503,13 +40767,13 @@ function createTelemetryCollector(broker, build) {
         os: ["darwin", "linux", "win32"].includes(platform2()) ? platform2() : "unknown",
         os_version: release2(),
         arch: ["arm64", "x64"].includes(arch()) ? arch() : "unknown",
-        properties
+        properties: supportedProperties
       });
       const task = channelFetch(broker.socketPath, "/telemetry/events", {
         method: "POST",
         body: JSON.stringify({ epoch, event: capture }),
         signal: AbortSignal.timeout(250)
-      }).then((response) => response.body?.cancel()).catch(() => {
+      }).then((response2) => response2.body?.cancel()).catch(() => {
       }).finally(() => pending.delete(task));
       pending.add(task);
     } catch {
@@ -40560,10 +40824,10 @@ function createTelemetryCollector(broker, build) {
 
 // apps/codex-plugin/src/telemetry/mcp.mjs
 function changeRiskMetrics(properties, callErrorCode) {
-  const response = properties.$mcp_response?.structuredContent;
-  const review = response?.family === "changeRisk" && response.result?.kind === "risk-review" ? response.result : null;
-  const completed = !properties.$mcp_is_error && response?.state === "complete" && (review?.status === "completed" || review?.status === "no_retained_cue");
-  const errorCode = completed ? null : callErrorCode ?? (review?.status === "refused" || response?.state === "refused" ? "analysis_refused" : review?.status === "partial" ? "analysis_partial" : response?.state === "cancelled" ? "operation_cancelled" : "advisory_unavailable");
+  const response2 = properties.$mcp_response?.structuredContent;
+  const review = response2?.family === "changeRisk" && response2.result?.kind === "risk-review" ? response2.result : null;
+  const completed = !properties.$mcp_is_error && response2?.state === "complete" && (review?.status === "completed" || review?.status === "no_retained_cue");
+  const errorCode = completed ? null : callErrorCode ?? (review?.status === "refused" || response2?.state === "refused" ? "analysis_refused" : review?.status === "partial" ? "analysis_partial" : response2?.state === "cancelled" ? "operation_cancelled" : "advisory_unavailable");
   const checked = changeRiskAnalyzedPropertiesSchema.safeParse({
     analysis_id: randomUUID3(),
     outcome: completed ? "completed" : "failed",
@@ -40586,7 +40850,7 @@ function createLocalTelemetry(broker, build) {
     ...collector,
     instrument(server, tools2, { observabilityControls = [] } = {}) {
       let initializing = true, failed = false;
-      const known = new Set(tools2.map((tool) => tool.name));
+      const known = new Set(tools2.map((tool2) => tool2.name));
       const controls = new Set(
         observabilityControls.filter((name) => known.has(name))
       );
@@ -40924,7 +41188,12 @@ var planCompletion = external_exports.strictObject({
   casesTotal: count2.nullable(),
   casesMissingExpectedResult: count2.nullable(),
   errorCode: planningFailureCodeSchema.nullable().optional(),
-  providerHttpStatus: providerHttpStatusSchema.optional()
+  providerHttpStatus: providerHttpStatusSchema.optional(),
+  failureDiagnostics: external_exports.strictObject({
+    failure_stage: planningFailureStageSchema.optional(),
+    validation_rule: planningValidationRuleSchema.optional(),
+    transport_reason: planningTransportReasonSchema.optional()
+  }).optional()
 }).refine(
   (value) => value.outcome === "failed" ? value.casesTotal === null && value.casesMissingExpectedResult === null : value.casesMissingExpectedResult === null || value.casesTotal !== null && value.casesMissingExpectedResult <= value.casesTotal
 );
@@ -40986,6 +41255,7 @@ var runCompletion = external_exports.strictObject({
   checks: terminalChecks.nullable(),
   checkSummary: checkSummary.nullable().optional(),
   blockedReason: external_exports.literal("initial_navigation_blocked").optional(),
+  assessmentStatus: runAssessmentStatusSchema.optional(),
   assessedSummary: external_exports.strictObject({
     provenance: external_exports.enum([
       "saved-report-assessments/1",
@@ -41123,7 +41393,8 @@ function createCapabilityTelemetryObserver({
           groups_count: null,
           error_code: value.outcome === "failed" ? value.errorCode ?? "planning_failed" : null,
           error_message: value.outcome === "failed" ? planningFailureMessages[value.errorCode ?? "planning_failed"] : null,
-          ...value.outcome === "failed" && value.providerHttpStatus !== void 0 ? { provider_http_status: value.providerHttpStatus } : {}
+          ...value.outcome === "failed" && value.providerHttpStatus !== void 0 ? { provider_http_status: value.providerHttpStatus } : {},
+          ...value.outcome === "failed" ? value.failureDiagnostics : {}
         });
       });
     },
@@ -41212,6 +41483,7 @@ function createCapabilityTelemetryObserver({
           result_basis: assessed ? assessed.provenance === "saved-report-assessments/1" ? "saved_report_assessments" : "selected_test_inventory" : checks || summary3 ? "product_terminal_checks" : null,
           check_status: assessed ? assessed.provenance === "saved-report-assessments/1" ? "checked" : "unchecked" : checks || summary3 ? "checked" : "unchecked",
           ...unverifiedReason ? { unverified_reason: unverifiedReason } : {},
+          ...value.assessmentStatus ? { assessment_status: value.assessmentStatus } : {},
           ...blockedReason ? { blocked_reason: blockedReason } : {},
           evidence_items_count: checks?.evidenceCount ?? summary3?.evidenceCount ?? null,
           error_code: code,
@@ -41341,7 +41613,7 @@ import process7 from "node:process";
 import { performance as performance5 } from "node:perf_hooks";
 import { readFile as readFile3 } from "node:fs/promises";
 import { homedir as homedir2 } from "node:os";
-import { join as join9, resolve as resolve3 } from "node:path";
+import { join as join10, resolve as resolve3 } from "node:path";
 
 // packages/contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
@@ -42540,6 +42812,40 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// packages/contracts/dist/agent-feedback.js
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // packages/contracts/dist/product-issue.js
 var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
 var issueImageLimits = Object.freeze({
@@ -42558,6 +42864,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -42629,6 +42936,41 @@ var productIssuePreparationSchema = external_exports.strictObject({
       path: ["uploads"],
       message: "Only the selected images can receive upload grants."
     });
+});
+
+// packages/contracts/dist/app-model.js
+var appModelIdentitySchema = external_exports.strictObject({
+  applicationKey: external_exports.string().min(1),
+  environmentKey: external_exports.string().min(1),
+  roleKey: external_exports.string().min(1).nullable()
+});
+var appModelSnapshotSchema = external_exports.looseObject({
+  nodes: external_exports.array(external_exports.json()),
+  edges: external_exports.array(external_exports.json()),
+  uiModel: external_exports.looseObject({
+    pages: external_exports.array(external_exports.json()),
+    unknowns: external_exports.array(external_exports.string())
+  })
+});
+var appModelCollectionSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  identity: appModelIdentitySchema,
+  observation: external_exports.strictObject({
+    observedAt: external_exports.iso.datetime(),
+    status: external_exports.enum(["complete", "incomplete"]),
+    reason: external_exports.string(),
+    sourceCommit: external_exports.string().min(1).nullable()
+  }),
+  format: external_exports.literal("kaijan.explorer-map/1"),
+  snapshot: appModelSnapshotSchema,
+  // These identify the producer's retained evidence. They are not remote files
+  // or access grants. Binary upload is outside this collection contract.
+  evidence: external_exports.array(external_exports.strictObject({ id: external_exports.string().min(1), availability: external_exports.literal("local") }))
+});
+var appModelRevisionSchema = appModelCollectionSchema.extend({
+  modelId: external_exports.uuid(),
+  revisionId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime()
 });
 
 // packages/contracts/dist/workspace-customer.js
@@ -42807,7 +43149,9 @@ var authorizeSchema = external_exports.strictObject({
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
   scope: external_exports.string().min(1).max(200),
-  onboarding_ticket: onboardingTicketSchema.optional()
+  onboarding_ticket: onboardingTicketSchema.optional(),
+  is_reconnect: external_exports.enum(["true", "false"]).optional(),
+  reconnect_reason: oauthReconnectReasonSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -42817,7 +43161,9 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     resource: external_exports.url(),
     code: opaqueSchema,
     code_verifier: verifierSchema,
-    onboarding_ticket: onboardingTicketSchema.optional()
+    onboarding_ticket: onboardingTicketSchema.optional(),
+    is_reconnect: external_exports.enum(["true", "false"]).optional(),
+    reconnect_reason: oauthReconnectReasonSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),
@@ -43031,9 +43377,9 @@ function withModelDiscovery(catalog, broker, InvalidParams) {
         throw new InvalidParams(
           "arguments: model discovery accepts no fields."
         );
-      let response;
+      let response2;
       try {
-        response = await broker.send("/ai/v1/models", {
+        response2 = await broker.send("/ai/v1/models", {
           signal: invocation?.signal
         });
       } catch {
@@ -43042,15 +43388,15 @@ function withModelDiscovery(catalog, broker, InvalidParams) {
           "Model metadata is unavailable. Check the Core connection. Available models are unknown; no inference was requested."
         );
       }
-      if (!response.ok)
+      if (!response2.ok)
         throw new ModelDiscoveryFailure(
           "model_discovery_unavailable",
-          modelHttpGuidance(response.status),
-          response.status
+          modelHttpGuidance(response2.status),
+          response2.status
         );
       let value;
       try {
-        value = await response.json();
+        value = await response2.json();
       } catch {
         throw new ModelDiscoveryFailure(
           "model_discovery_invalid",
@@ -43082,6 +43428,15 @@ import process2 from "node:process";
 // packages/capability-runtime/dist/storage.js
 import { constants as constants2 } from "node:fs";
 import { mkdir as mkdir3, open as open2, lstat as lstat4, rename as rename2, unlink as unlink3 } from "node:fs/promises";
+async function privateDirectory(path) {
+  await mkdir3(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat4(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The capability data directory is unsafe.");
+}
 async function boundedFile(path, maximum) {
   const file2 = await open2(path, constants2.O_RDONLY | constants2.O_NOFOLLOW | constants2.O_NONBLOCK);
   try {
@@ -45045,7 +45400,7 @@ var Protocol = class {
         }
         await this.notification(notification, notificationOptions);
       },
-      sendRequest: async (r, resultSchema2, options) => {
+      sendRequest: async (r, resultSchema3, options) => {
         if (abortController.signal.aborted) {
           throw new McpError(ErrorCode.ConnectionClosed, "Request was cancelled");
         }
@@ -45057,7 +45412,7 @@ var Protocol = class {
         if (effectiveTaskId && taskStore) {
           await taskStore.updateTaskStatus(effectiveTaskId, "input_required");
         }
-        return await this.request(r, resultSchema2, requestOptions);
+        return await this.request(r, resultSchema3, requestOptions);
       },
       authInfo: extra?.authInfo,
       requestId: request3.id,
@@ -45079,7 +45434,7 @@ var Protocol = class {
       if (abortController.signal.aborted) {
         return;
       }
-      const response = {
+      const response2 = {
         result: result2,
         jsonrpc: "2.0",
         id: request3.id
@@ -45087,11 +45442,11 @@ var Protocol = class {
       if (relatedTaskId && this._taskMessageQueue) {
         await this._enqueueTaskMessage(relatedTaskId, {
           type: "response",
-          message: response,
+          message: response2,
           timestamp: Date.now()
         }, capturedTransport?.sessionId);
       } else {
-        await capturedTransport?.send(response);
+        await capturedTransport?.send(response2);
       }
     }, async (error63) => {
       if (abortController.signal.aborted) {
@@ -45144,29 +45499,29 @@ var Protocol = class {
     }
     handler(params);
   }
-  _onresponse(response) {
-    const messageId = Number(response.id);
+  _onresponse(response2) {
+    const messageId = Number(response2.id);
     const resolver = this._requestResolvers.get(messageId);
     if (resolver) {
       this._requestResolvers.delete(messageId);
-      if (isJSONRPCResultResponse(response)) {
-        resolver(response);
+      if (isJSONRPCResultResponse(response2)) {
+        resolver(response2);
       } else {
-        const error63 = new McpError(response.error.code, response.error.message, response.error.data);
+        const error63 = new McpError(response2.error.code, response2.error.message, response2.error.data);
         resolver(error63);
       }
       return;
     }
     const handler = this._responseHandlers.get(messageId);
     if (handler === void 0) {
-      this._onerror(new Error(`Received a response for an unknown message ID: ${JSON.stringify(response)}`));
+      this._onerror(new Error(`Received a response for an unknown message ID: ${JSON.stringify(response2)}`));
       return;
     }
     this._responseHandlers.delete(messageId);
     this._cleanupTimeout(messageId);
     let isTaskResponse = false;
-    if (isJSONRPCResultResponse(response) && response.result && typeof response.result === "object") {
-      const result2 = response.result;
+    if (isJSONRPCResultResponse(response2) && response2.result && typeof response2.result === "object") {
+      const result2 = response2.result;
       if (result2.task && typeof result2.task === "object") {
         const task = result2.task;
         if (typeof task.taskId === "string") {
@@ -45178,10 +45533,10 @@ var Protocol = class {
     if (!isTaskResponse) {
       this._progressHandlers.delete(messageId);
     }
-    if (isJSONRPCResultResponse(response)) {
-      handler(response);
+    if (isJSONRPCResultResponse(response2)) {
+      handler(response2);
     } else {
-      const error63 = McpError.fromError(response.error.code, response.error.message, response.error.data);
+      const error63 = McpError.fromError(response2.error.code, response2.error.message, response2.error.data);
       handler(error63);
     }
   }
@@ -45221,11 +45576,11 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.requestStream()` to access this method.
    */
-  async *requestStream(request3, resultSchema2, options) {
+  async *requestStream(request3, resultSchema3, options) {
     const { task } = options ?? {};
     if (!task) {
       try {
-        const result2 = await this.request(request3, resultSchema2, options);
+        const result2 = await this.request(request3, resultSchema3, options);
         yield { type: "result", result: result2 };
       } catch (error63) {
         yield {
@@ -45249,7 +45604,7 @@ var Protocol = class {
         yield { type: "taskStatus", task: task2 };
         if (isTerminal(task2.status)) {
           if (task2.status === "completed") {
-            const result2 = await this.getTaskResult({ taskId }, resultSchema2, options);
+            const result2 = await this.getTaskResult({ taskId }, resultSchema3, options);
             yield { type: "result", result: result2 };
           } else if (task2.status === "failed") {
             yield {
@@ -45265,7 +45620,7 @@ var Protocol = class {
           return;
         }
         if (task2.status === "input_required") {
-          const result2 = await this.getTaskResult({ taskId }, resultSchema2, options);
+          const result2 = await this.getTaskResult({ taskId }, resultSchema3, options);
           yield { type: "result", result: result2 };
           return;
         }
@@ -45285,7 +45640,7 @@ var Protocol = class {
    *
    * Do not use this method to emit notifications! Use notification() instead.
    */
-  request(request3, resultSchema2, options) {
+  request(request3, resultSchema3, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
     return new Promise((resolve4, reject) => {
       const earlyReject = (error63) => {
@@ -45353,15 +45708,15 @@ var Protocol = class {
         const error63 = reason instanceof McpError ? reason : new McpError(ErrorCode.RequestTimeout, String(reason));
         reject(error63);
       };
-      this._responseHandlers.set(messageId, (response) => {
+      this._responseHandlers.set(messageId, (response2) => {
         if (options?.signal?.aborted) {
           return;
         }
-        if (response instanceof Error) {
-          return reject(response);
+        if (response2 instanceof Error) {
+          return reject(response2);
         }
         try {
-          const parseResult = safeParse3(resultSchema2, response.result);
+          const parseResult = safeParse3(resultSchema3, response2.result);
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
@@ -45379,10 +45734,10 @@ var Protocol = class {
       this._setupTimeout(messageId, timeout, options?.maxTotalTimeout, timeoutHandler, options?.resetTimeoutOnProgress ?? false);
       const relatedTaskId = relatedTask?.taskId;
       if (relatedTaskId) {
-        const responseResolver = (response) => {
+        const responseResolver = (response2) => {
           const handler = this._responseHandlers.get(messageId);
           if (handler) {
-            handler(response);
+            handler(response2);
           } else {
             this._onerror(new Error(`Response handler missing for side-channeled request ${messageId}`));
           }
@@ -45417,8 +45772,8 @@ var Protocol = class {
    *
    * @experimental Use `client.experimental.tasks.getTaskResult()` to access this method.
    */
-  async getTaskResult(params, resultSchema2, options) {
-    return this.request({ method: "tasks/result", params }, resultSchema2, options);
+  async getTaskResult(params, resultSchema3, options) {
+    return this.request({ method: "tasks/result", params }, resultSchema3, options);
   }
   /**
    * Lists tasks, optionally starting from a pagination cursor.
@@ -45812,8 +46167,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  requestStream(request3, resultSchema2, options) {
-    return this._server.requestStream(request3, resultSchema2, options);
+  requestStream(request3, resultSchema3, options) {
+    return this._server.requestStream(request3, resultSchema3, options);
   }
   /**
    * Sends a sampling request and returns an AsyncGenerator that yields response messages.
@@ -45881,7 +46236,7 @@ var ExperimentalServerTasks = class {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id7) => toolResultIds.has(id7))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id8) => toolResultIds.has(id8))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -45978,8 +46333,8 @@ var ExperimentalServerTasks = class {
    *
    * @experimental
    */
-  async getTaskResult(taskId, resultSchema2, options) {
-    return this._server.getTaskResult({ taskId }, resultSchema2, options);
+  async getTaskResult(taskId, resultSchema3, options) {
+    return this._server.getTaskResult({ taskId }, resultSchema3, options);
   }
   /**
    * Lists tasks with optional pagination.
@@ -46306,7 +46661,7 @@ var Server = class extends Protocol {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id7) => toolResultIds.has(id7))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id8) => toolResultIds.has(id8))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -46480,9 +46835,9 @@ function invalidResponseGuidance(name, args) {
   return "Core returned a result that does not match this operation. Preserve the original request and result; do not replay work with uncertain effects.";
 }
 async function forwardCore(broker, name, args, signal) {
-  let response;
+  let response2;
   try {
-    response = await broker.send("/mcp", {
+    response2 = await broker.send("/mcp", {
       method: "POST",
       signal,
       headers: { "mcp-protocol-version": "2025-03-26" },
@@ -46502,16 +46857,16 @@ async function forwardCore(broker, name, args, signal) {
       { category: "transport" }
     );
   }
-  if (!response.ok) {
-    const body2 = await response.json().catch(() => null);
-    if (response.status === 503 && body2?.error === "connection_unavailable" && body2?.reason === "local_credential_storage") {
+  if (!response2.ok) {
+    const body2 = await response2.json().catch(() => null);
+    if (response2.status === 503 && body2?.error === "connection_unavailable" && body2?.reason === "local_credential_storage") {
       const error63 = new CredentialStorageUnavailableError("read");
       return failure2(name, args, error63.code, error63.message, {
         category: "connection",
         httpStatus: 503
       });
     }
-    if (response.status === 503 && body2?.error === "keychain_unavailable") {
+    if (response2.status === 503 && body2?.error === "keychain_unavailable") {
       const error63 = new KeychainUnavailableError();
       return failure2(name, args, error63.code, error63.message, {
         category: "connection",
@@ -46521,17 +46876,17 @@ async function forwardCore(broker, name, args, signal) {
     return failure2(
       name,
       args,
-      response.status === 401 ? "connection_required" : "core_http_error",
-      httpGuidance(response.status),
+      response2.status === 401 ? "connection_required" : "core_http_error",
+      httpGuidance(response2.status),
       {
-        category: response.status === 401 ? "connection" : "http",
-        httpStatus: response.status
+        category: response2.status === 401 ? "connection" : "http",
+        httpStatus: response2.status
       }
     );
   }
   let body;
   try {
-    body = await response.json();
+    body = await response2.json();
   } catch {
     return failure2(
       name,
@@ -46609,6 +46964,7 @@ function createFeedbackSurface({
   const stores = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map();
   let stopped = false;
   const fields = library.feedbackFieldsSchema;
+  const agentFields = fields.omit({ includeRun: true });
   const draftInput = external_exports.strictObject({
     operation: external_exports.enum(operations),
     requestId: external_exports.uuid().optional(),
@@ -46616,7 +46972,8 @@ function createFeedbackSurface({
     revision: external_exports.number().int().positive().optional(),
     title: fields.shape.title.optional(),
     description: fields.shape.description.optional(),
-    changes: fields.partial().optional()
+    runId: library.feedbackOpenSchema.shape.runId,
+    changes: agentFields.partial().optional()
   });
   const actionInput = library.feedbackViewSchema.extend({
     operation: external_exports.enum(["read", "update", "send", "discard_edit"]),
@@ -46659,7 +47016,7 @@ function createFeedbackSurface({
     describe3(
       "kaijan_feedback_draft",
       "Kaijan feedback",
-      "Open or edit one local Kaijan feedback draft in this chat. Open requires a UUID requestId and optional title/description. Read and discard_edit require only draftId. Update requires draftId, revision and nonempty changes. Retain the returned revision; review a conflict before applying another edit. Agent wording is a suggestion. A person's opinion must be supplied or adopted by that person. This tool never submits feedback to Core.",
+      "Open or edit one local Kaijan feedback draft in this chat. Open requires a UUID requestId and optional title/description. An optional known runId offers that exact Run's details for the person to review in the form; inclusion stays off until the person selects it. Read and discard_edit require only draftId. Update requires draftId, revision and nonempty changes. Retain the returned revision; review a conflict before applying another edit. Agent wording is a suggestion. A person's opinion must be supplied or adopted by that person. This tool never submits feedback to Core.",
       draftInput,
       false
     ),
@@ -46703,13 +47060,13 @@ function createFeedbackSurface({
     };
   }
   async function owner2(signal) {
-    const response = await forwardCore(
+    const response2 = await forwardCore(
       broker,
       "loki_connection_status",
       {},
       signal
     );
-    const result2 = coreConnectionSchema.safeParse(response.structuredContent);
+    const result2 = coreConnectionSchema.safeParse(response2.structuredContent);
     if (!result2.success) throw Error("connection_unavailable");
     return {
       userId: result2.data.context.user.id,
@@ -46801,16 +47158,41 @@ function createFeedbackSurface({
         if (stopped || signal?.aborted) return reply(closed());
         const { operation = "send", draftId, revision: revision3 } = input3;
         let draft;
-        if (operation === "open")
+        const environment = {
+          pluginVersion: build.pluginVersion,
+          os: ["darwin", "linux", "win32"].includes(process.platform) ? process.platform : "unknown"
+        };
+        if (operation === "open") {
+          let run;
+          if (input3.runId) {
+            try {
+              const result2 = await scope.services.testRun.get({
+                runId: input3.runId
+              });
+              if (result2.schema === "kaijan.test-run/1" && result2.runId === input3.runId) {
+                const selected = library.feedbackContextSchema.shape.run.unwrap().safeParse({
+                  operationId: result2.runId,
+                  capability: "testRun",
+                  ...result2.execution?.error?.code ? { errorCode: result2.execution.error.code } : {}
+                });
+                if (selected.success) run = selected.data;
+              }
+            } catch {
+            }
+          }
+          if (stopped || signal?.aborted) return reply(closed());
           draft = store.create(
             {
               requestId: input3.requestId,
               ...input3.title !== void 0 ? { title: input3.title } : {},
               ...input3.description !== void 0 ? { description: input3.description } : {}
             },
-            actor
+            actor,
+            { ...environment, ...run ? { run } : {} }
           );
-        else if (operation === "read") draft = store.get(draftId, actor);
+          draft = store.prepareContext(draft.id, actor, environment);
+        } else if (operation === "read")
+          draft = store.prepareContext(draftId, actor, environment);
         else if (operation === "discard_edit")
           draft = store.discardEdit(draftId, actor);
         else if (operation === "update")
@@ -46838,13 +47220,13 @@ function createFeedbackSurface({
                 "kaijan_submit_feedback",
                 {
                   ...feedback,
-                  diagnostics: {
+                  diagnostics: feedback.diagnostics ?? {
                     pluginVersion: build.pluginVersion,
                     os: process.platform
                   }
                 },
                 signal
-              ).then((response) => response.structuredContent);
+              ).then((response2) => response2.structuredContent);
             }
           });
         }
@@ -46876,18 +47258,636 @@ function createFeedbackSurface({
   };
 }
 
+// apps/codex-plugin/src/agent-feedback-store.mjs
+import { constants as constants3 } from "node:fs";
+import { open as open3, link as link2, unlink as unlink4, realpath as realpath2 } from "node:fs/promises";
+import { randomUUID as randomUUID4, createHash as createHash2 } from "node:crypto";
+import { join as join4 } from "node:path";
+var bindingSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  input: agentFeedbackSubmissionSchema
+});
+var recordSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  reportSha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  context: agentFeedbackContextSchema
+});
+var reportContent = (input3) => Object.fromEntries(
+  Object.entries(input3).filter(([key]) => key !== "context")
+);
+async function bindAgentFeedbackRequest(data, value) {
+  const candidate = bindingSchema.parse(value);
+  const report = reportContent(candidate.input);
+  const record5 = {
+    userId: candidate.userId,
+    workspaceId: candidate.workspaceId,
+    reportSha256: createHash2("sha256").update(JSON.stringify(report, Object.keys(report).sort())).digest("hex"),
+    context: candidate.input.context
+  };
+  const directory = join4(data, "agent-feedback");
+  await privateDirectory(directory);
+  if (await realpath2(directory) !== directory)
+    throw Error("Unsafe Agent Feedback directory");
+  const path = join4(
+    directory,
+    `${candidate.input.requestId.toLowerCase()}.json`
+  );
+  const temporary = join4(directory, `.pending-${randomUUID4()}`);
+  try {
+    const file3 = await open3(temporary, "wx", 384);
+    try {
+      await file3.writeFile(JSON.stringify(record5));
+      await file3.sync();
+    } finally {
+      await file3.close();
+    }
+    try {
+      await link2(temporary, path);
+    } catch (error63) {
+      if (error63.code !== "EEXIST") throw error63;
+    }
+  } finally {
+    await unlink4(temporary).catch((error63) => {
+      if (error63.code !== "ENOENT") throw error63;
+    });
+  }
+  const parent = await open3(
+    directory,
+    constants3.O_RDONLY | constants3.O_NOFOLLOW
+  );
+  try {
+    await parent.sync();
+  } finally {
+    await parent.close();
+  }
+  const file2 = await open3(
+    path,
+    constants3.O_RDONLY | constants3.O_NOFOLLOW | constants3.O_NONBLOCK
+  );
+  let saved;
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || info.uid !== process.getuid() || info.mode & 63)
+      throw Error("Unsafe Agent Feedback record");
+    saved = recordSchema.parse(JSON.parse(await file2.readFile("utf8")));
+  } finally {
+    await file2.close();
+  }
+  if (saved.userId !== candidate.userId || saved.workspaceId !== candidate.workspaceId || saved.reportSha256 !== record5.reportSha256)
+    throw Error(
+      "Agent Feedback recovery belongs to the original account and report"
+    );
+  return {
+    userId: saved.userId,
+    workspaceId: saved.workspaceId,
+    input: { ...candidate.input, context: saved.context }
+  };
+}
+
+// apps/codex-plugin/src/agent-feedback.mjs
+var toolName = "kaijan_agent_feedback";
+var failureSchema2 = external_exports.strictObject({
+  error: external_exports.string(),
+  message: external_exports.string(),
+  requestId: external_exports.uuid().optional()
+});
+var resultSchema = external_exports.union([agentFeedbackReceiptSchema, failureSchema2]);
+var agentFeedbackInstructions = "Agent Feedback is available for your own observations about Kaijan. Choose whether, when and what to report; it is optional and never a task prerequisite. You may report helpful behavior, friction, missing capability or a suspected defect before or after a Run without asking for a per-report user confirmation. Keep the account short, state impact and uncertainty, and exclude whole chats, raw logs, screenshots and project files. Report text stays private in Core; enabled analytics receives trend metadata only. Continue the original task even when feedback is unavailable.";
+function createAgentFeedbackSurface({ session, broker, build, data }) {
+  const lifetime = new AbortController();
+  const active2 = /* @__PURE__ */ new Set();
+  let closed2 = false;
+  const reply = (value) => ({
+    ...value.error ? { isError: true } : {},
+    structuredContent: resultSchema.parse(value),
+    content: [{ type: "text", text: JSON.stringify(value) }]
+  });
+  const unavailable3 = (requestId) => reply({
+    error: "agent_feedback_unconfirmed",
+    message: "Agent Feedback was not confirmed. Continue your task. Retry in the original chat and account with the same request ID and exact report.",
+    ...requestId ? { requestId } : {}
+  });
+  async function verifiedRun(scope, runId2) {
+    if (!runId2) return void 0;
+    for (const service2 of [
+      scope.services?.testRun,
+      scope.services?.computerRunner
+    ]) {
+      if (typeof service2?.get !== "function") continue;
+      try {
+        const retained = await service2.get({ runId: runId2 });
+        if (retained?.runId === runId2 && !retained.error) return runId2;
+      } catch {
+      }
+    }
+    return void 0;
+  }
+  async function execute2(raw, metadata2, signal) {
+    const parsed = agentFeedbackInputSchema.safeParse(raw);
+    if (!parsed.success)
+      return reply({
+        error: "invalid_request",
+        message: "Use the advertised Agent Feedback fields. No feedback was sent; continue your task."
+      });
+    const input3 = parsed.data;
+    if (closed2 || !broker || signal?.aborted)
+      return unavailable3(input3.requestId);
+    try {
+      const selected = await session.forRequest(metadata2);
+      const connection = await forwardCore(
+        broker,
+        "loki_connection_status",
+        {},
+        signal
+      );
+      const owner2 = coreConnectionSchema.parse(connection.structuredContent);
+      const verifiedRunId = await verifiedRun(selected, input3.runId);
+      if (closed2 || signal?.aborted) return unavailable3(input3.requestId);
+      const bound = await bindAgentFeedbackRequest(data, {
+        userId: owner2.context.user.id,
+        workspaceId: owner2.context.workspace.id,
+        input: {
+          ...input3,
+          context: {
+            sessionId: selected.scope.id,
+            sessionKind: selected.scope.kind,
+            pluginVersion: build.pluginVersion,
+            os: ["darwin", "linux", "win32"].includes(process.platform) ? process.platform : "unknown",
+            ...verifiedRunId ? { verifiedRunId } : {}
+          }
+        }
+      });
+      if (closed2 || signal?.aborted) return unavailable3(input3.requestId);
+      const response2 = await broker.send("/agent-feedback", {
+        method: "POST",
+        signal,
+        body: JSON.stringify(bound)
+      });
+      if (!response2.ok) {
+        await response2.body?.cancel();
+        return unavailable3(input3.requestId);
+      }
+      const receipt2 = agentFeedbackReceiptSchema.parse(await response2.json());
+      if (receipt2.requestId.toLowerCase() !== input3.requestId.toLowerCase())
+        return unavailable3(input3.requestId);
+      return reply(receipt2);
+    } catch {
+      return unavailable3(input3.requestId);
+    }
+  }
+  return {
+    tools: [
+      {
+        name: toolName,
+        title: "Agent Feedback",
+        description: "Privately report your own observation about Kaijan: helpful behavior, friction, a missing capability or a suspected defect. You choose whether and when; no user Send or per-report confirmation is needed. Include impact and uncertainty in the short description. Run ID is optional. Keep chats, raw logs, screenshots, project files and secrets out. Core returns a feedback ID after save; analytics gets metadata only. Recover with the same requestId and exact report. Feedback never blocks the original task.",
+        inputSchema: external_exports.toJSONSchema(agentFeedbackInputSchema),
+        outputSchema: {
+          type: "object",
+          anyOf: external_exports.toJSONSchema(resultSchema).anyOf
+        },
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: false,
+          idempotentHint: true,
+          openWorldHint: true
+        }
+      }
+    ],
+    hasTool: (name) => name === toolName,
+    invoke(_name, raw, metadata2, signal) {
+      const pending = execute2(
+        raw,
+        metadata2,
+        AbortSignal.any([lifetime.signal, ...signal ? [signal] : []])
+      ).finally(() => active2.delete(pending));
+      active2.add(pending);
+      return pending;
+    },
+    async close() {
+      if (closed2) return;
+      closed2 = true;
+      lifetime.abort();
+      await Promise.allSettled([...active2]);
+    }
+  };
+}
+
+// apps/codex-plugin/src/configurations.mjs
+import { createHash as createHash3, randomUUID as randomUUID5 } from "node:crypto";
+var cachedFormUris = /* @__PURE__ */ new Set([
+  "ui://kaijan/configurations/form/v1.html",
+  "ui://kaijan/configurations/form/v2.html"
+]);
+var id2 = external_exports.uuid();
+var inputSchema = external_exports.strictObject({
+  operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
+  id: id2.nullable().optional().describe(
+    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
+  ),
+  revision: external_exports.number().int().nonnegative().optional().describe(
+    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
+  ),
+  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
+  values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
+  name: external_exports.string().optional(),
+  automatic: external_exports.literal(true).optional()
+});
+var allowedFields = {
+  list: ["application"],
+  read: ["id"],
+  save: ["id", "revision", "name", "application", "values"],
+  delete: ["id", "revision"],
+  select: ["id", "automatic"]
+};
+var tool = {
+  name: "kaijan_configuration",
+  title: "Read or update Configurations",
+  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and use the private login path for a missing or changed secret. A saved configuration is optional and never starts a test.",
+  inputSchema: external_exports.toJSONSchema(inputSchema),
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: true,
+    openWorldHint: false
+  }
+};
+function response(value) {
+  return {
+    ...value.error ? { isError: true } : {},
+    structuredContent: value,
+    content: [{ type: "text", text: JSON.stringify(value) }]
+  };
+}
+function createConfigurationSurface({ session, library, data }) {
+  let storePromise, stopped = false;
+  const store = () => {
+    if (!storePromise) {
+      const opening = library.ConfigurationStore.open(data);
+      storePromise = opening;
+      void opening.catch(() => {
+        if (storePromise === opening) storePromise = void 0;
+      });
+    }
+    return storePromise;
+  };
+  const safeError = (error63) => {
+    const known = [
+      library.ConfigurationError,
+      library.PrivateParameterError
+    ].some((type) => typeof type === "function" && error63 instanceof type);
+    return {
+      error: known ? error63.code : "configuration_unavailable",
+      message: known ? error63.message : "Could not save or read Configurations. Read the current settings before trying again."
+    };
+  };
+  async function scopeFor(metadata2) {
+    if (stopped || typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
+      throw Error("chat_required");
+    const scope = await session.forRequest(metadata2);
+    if (!scope.scope.restartPersistent || scope.scope.kind !== "host-thread")
+      throw Error("chat_required");
+    return scope;
+  }
+  return {
+    tools: [tool],
+    hasTool: (name) => name === tool.name,
+    // Historical cards can read their resource, but this host opens no editor.
+    hasResource: (uri) => cachedFormUris.has(uri),
+    readResource: (uri) => library.readConfigurationForm(uri),
+    async invoke(name, raw, metadata2) {
+      try {
+        if (name !== tool.name) throw Error("invalid_arguments");
+        const args = inputSchema.parse(raw);
+        if (Object.keys(args).some(
+          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
+        ))
+          throw Error("invalid_arguments");
+        const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
+        if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
+          throw Error("invalid_arguments");
+        if (args.operation === "select" && args.id === null) {
+          await library.configurationPreference(scope.data, scopeId, false);
+          let configurations = [];
+          try {
+            const saved2 = await store();
+            saved2.select(scopeId, null);
+            configurations = saved2.list();
+          } catch {
+          }
+          return response({
+            configurations,
+            selectedId: null,
+            selectionMode: "none",
+            nextRunConfiguration: null,
+            message: "No configuration selected for this chat."
+          });
+        }
+        const saved = await store();
+        let configuration2;
+        let message = "";
+        if (args.operation === "read") {
+          if (!args.id) throw Error("invalid_arguments");
+          configuration2 = saved.read(args.id);
+        } else if (args.operation === "save") {
+          if (!args.id || args.revision === void 0 || !args.values)
+            throw Error("invalid_arguments");
+          const old = args.revision ? saved.read(args.id) : {
+            name: args.name,
+            application: args.application ?? "",
+            allowedHosts: [],
+            entries: []
+          };
+          const existingSecrets = old.entries.filter((entry) => entry.secret);
+          if (args.application !== void 0 && args.application !== old.application && existingSecrets.length)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "A configuration with a saved secret must keep its website."
+            );
+          if (existingSecrets.some(({ key }) => Object.hasOwn(args.values, key)))
+            throw new library.ConfigurationError(
+              "configuration_secret_editor",
+              "Saved secrets cannot be replaced through Configuration. Use the private login path for this Run."
+            );
+          const entries = old.entries.map((entry) => ({
+            key: entry.key,
+            secret: entry.secret,
+            ...entry.secret ? {} : {
+              value: Object.hasOwn(args.values, entry.key) ? args.values[entry.key] : entry.value
+            }
+          }));
+          for (const [key, value] of Object.entries(args.values))
+            if (!entries.some((entry) => entry.key === key))
+              entries.push({ key, value, secret: false });
+          configuration2 = saved.save(
+            {
+              name: args.name ?? old.name,
+              application: args.application ?? old.application,
+              allowedHosts: old.allowedHosts,
+              entries
+            },
+            args.id,
+            args.revision
+          );
+          message = "Configuration saved.";
+        } else if (args.operation === "delete") {
+          if (!args.id || !args.revision) throw Error("invalid_arguments");
+          saved.delete(args.id, args.revision);
+          message = "Configuration deleted. Existing Runs keep their saved settings.";
+        } else if (args.operation === "select") {
+          configuration2 = saved.select(scopeId, args.id);
+          await library.configurationPreference(scope.data, scopeId, true);
+          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration2.name}.`;
+        }
+        const enabled = await library.configurationPreference(
+          scope.data,
+          scopeId
+        );
+        const selected = enabled !== false ? saved.selected(scopeId) : null;
+        return response({
+          configurations: saved.list(args.application),
+          nextRunConfiguration: saved.pendingView(scopeId),
+          selectedId: selected && selected !== "automatic" ? selected : null,
+          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
+          ...configuration2 ? { configuration: configuration2 } : {},
+          message
+        });
+      } catch (error63) {
+        return response(safeError(error63));
+      }
+    },
+    async prepareExecution(name, raw, metadata2) {
+      const planning = name === "loki_test_plan";
+      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration)
+        return { arguments: raw };
+      let marked = false, recoveryRunId;
+      try {
+        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey2 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
+        if (args && Object.hasOwn(args, "configurationUsed"))
+          throw Error("host_metadata_only");
+        if (args) delete args.configurationId;
+        if (!metadata2?.threadId && (explicit === null || explicit === void 0))
+          return { arguments: args };
+        const scope = await scopeFor(metadata2);
+        if (typeof requestKey2 !== "string" || !requestKey2)
+          throw Error("invalid_request");
+        if (!planning)
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey2])).digest("hex");
+        marked = true;
+        marked = await library.configurationRunMarker(
+          scope.data,
+          scope.scope.id,
+          name,
+          requestKey2
+        );
+        const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
+        if (!marked && (explicit === null || preference === false))
+          return { arguments: args };
+        if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
+          return { arguments: args };
+        const canSelect = explicit !== void 0 || preference === true || Boolean(execution2.target?.initialURL);
+        if (!marked && !canSelect) return { arguments: args };
+        const saved = await store().catch((error63) => {
+          if (marked) throw error63;
+          throw new library.ConfigurationError(
+            "configuration_unavailable",
+            "Could not read the saved configuration. Ask the person if they want to run without it."
+          );
+        });
+        const previous = saved.admission(scope.scope.id, name, requestKey2, raw);
+        if (previous) {
+          await library.configurationRunMarker(
+            scope.data,
+            scope.scope.id,
+            name,
+            requestKey2,
+            true
+          );
+          return { arguments: previous };
+        }
+        if (marked) throw Error("configuration_admission_unavailable");
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        if (!runSchema.safeParse(args).success)
+          throw new library.ConfigurationError(
+            "configuration_run_input",
+            "Check the Run inputs before starting. The saved configuration is unchanged."
+          );
+        if (explicit !== void 0 && explicit !== null) id2.parse(explicit);
+        const once = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
+        const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
+        const automatic = selection3 === "automatic";
+        const initialURL = execution2.target?.initialURL;
+        const browserURL = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL) return { arguments: args };
+        const configurations = automatic ? saved.list().map(({ id: id8 }) => saved.execution(id8)) : selection3 ? [once?.execution ?? saved.execution(selection3)] : [];
+        if (!configurations.length) return { arguments: args };
+        const callerParams = execution2.params ?? {};
+        const callerPrivate = execution2.privateParams ?? {};
+        const allowed = execution2.target?.allowedHosts ?? (execution2.target?.initialURL ? [new URL(execution2.target.initialURL).hostname] : []);
+        if (Object.keys(callerPrivate).length)
+          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
+            ...execution2,
+            target: { ...execution2.target, allowedHosts: allowed }
+          });
+        const occupied = /* @__PURE__ */ new Set([
+          ...Object.keys(callerParams),
+          ...Object.keys(callerPrivate)
+        ]);
+        const parameterName = (base) => {
+          let name2 = base;
+          while (occupied.has(name2)) name2 += "_";
+          occupied.add(name2);
+          return name2;
+        };
+        const descriptors = [];
+        const secretNames = [];
+        execution2.params = { ...callerParams };
+        execution2.privateParams = { ...callerPrivate };
+        for (const chosen of configurations) {
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
+          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
+            (key) => !Object.hasOwn(callerPrivate, key)
+          ) && !privateAllowed))
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "This configuration belongs to another application. Choose a configuration for the browser target."
+            );
+          const fields = {};
+          const secrets = {};
+          chosen.configuration.overrides = automatic ? [] : [
+            .../* @__PURE__ */ new Set([
+              ...once?.changed ?? [],
+              ...[
+                ...Object.keys(callerParams),
+                ...Object.keys(callerPrivate)
+              ].filter(
+                (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
+              )
+            ])
+          ];
+          for (const key of [
+            ...Object.keys(chosen.params),
+            ...Object.keys(chosen.secrets)
+          ]) {
+            const isSecret = Object.hasOwn(chosen.secrets, key);
+            if (automatic && isSecret && !privateAllowed) continue;
+            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
+              if (isSecret && !Object.hasOwn(callerPrivate, key))
+                throw new library.ConfigurationError(
+                  "configuration_secret_editor",
+                  "Use the private login path to override a saved secret."
+                );
+              fields[key] = key;
+              continue;
+            }
+            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
+            fields[key] = name2;
+            if (Object.hasOwn(chosen.secrets, key))
+              secrets[name2] = chosen.secrets[key];
+            else execution2.params[name2] = chosen.params[key];
+          }
+          descriptors.push({
+            id: chosen.configuration.id,
+            name: chosen.configuration.name,
+            url: chosen.application ?? null,
+            fields
+          });
+          if (Object.keys(secrets).length) {
+            const binding2 = await library.provisionRunnerParameters(
+              scope.data,
+              scope.scope.id,
+              { allowedHosts: chosen.allowedHosts, values: secrets }
+            );
+            for (const field2 of binding2.fields)
+              execution2.privateParams[field2] = {
+                bindingId: binding2.bindingId,
+                field: field2
+              };
+            secretNames.push(...binding2.fields);
+          }
+        }
+        if (automatic)
+          execution2.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
+        if (Object.keys(execution2.privateParams).length) {
+          execution2.target.allowedHosts = allowed;
+          await library.resolveRunnerParameters(
+            scope.data,
+            scope.scope.id,
+            execution2
+          );
+        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
+          delete execution2.privateParams;
+        }
+        if (!planning) {
+          execution2.options = {
+            ...execution2.options,
+            secretParameterNames: [
+              .../* @__PURE__ */ new Set([
+                ...execution2.options?.secretParameterNames ?? [],
+                ...secretNames
+              ])
+            ]
+          };
+          if (!automatic)
+            args.configurationUsed = configurations[0].configuration;
+        }
+        if (planning) args.requestKey = requestKey2;
+        const prepared = saved.admission(
+          scope.scope.id,
+          name,
+          requestKey2,
+          raw,
+          args,
+          once?.token
+        );
+        await library.configurationRunMarker(
+          scope.data,
+          scope.scope.id,
+          name,
+          requestKey2,
+          true
+        );
+        if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
+          await library.configurationPreference(
+            scope.data,
+            scope.scope.id,
+            false
+          );
+        return { arguments: prepared };
+      } catch (error63) {
+        const value = safeError(error63);
+        return {
+          error: {
+            code: marked && !(error63 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
+            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
+            requestDispatched: marked ? null : false,
+            ...marked ? { existingRunId: recoveryRunId } : {}
+          }
+        };
+      }
+    },
+    async close() {
+      if (stopped) return;
+      stopped = true;
+      if (storePromise) (await storePromise.catch(() => null))?.close();
+    }
+  };
+}
+
 // apps/codex-plugin/src/issues.mjs
 import { randomBytes as randomBytes2 } from "node:crypto";
 import { lstat as lstat5 } from "node:fs/promises";
-import { join as join4 } from "node:path";
+import { join as join5 } from "node:path";
 
 // apps/codex-plugin/src/issue-user-authorization.mjs
 import { execFile } from "node:child_process";
 import { promisify as promisify2 } from "node:util";
 var executeFile = promisify2(execFile);
-var id2 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
+var id3 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
 var user = external_exports.object({
-  id: id2,
+  id: id3,
   login: external_exports.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/)
 });
 var denied = () => Error("issue_publishing_account_unavailable");
@@ -46912,7 +47912,7 @@ function issueUserAuthorization({
   }
   async function metadata2(path, token) {
     signal?.throwIfAborted();
-    const response = await request3("https://api.github.com" + path, {
+    const response2 = await request3("https://api.github.com" + path, {
       method: "GET",
       redirect: "error",
       credentials: "omit",
@@ -46928,11 +47928,11 @@ function issueUserAuthorization({
         "x-github-api-version": "2026-03-10"
       }
     });
-    if (!response.ok) {
-      await response.body?.cancel();
+    if (!response2.ok) {
+      await response2.body?.cancel();
       throw denied();
     }
-    const reader = response.body?.getReader();
+    const reader = response2.body?.getReader();
     if (!reader) throw denied();
     const chunks = [];
     let length = 0;
@@ -46959,7 +47959,7 @@ function issueUserAuthorization({
     const account = user.parse(await metadata2("/user", token));
     if (expectedId && account.id !== expectedId) throw denied();
     const repository2 = external_exports.object({
-      id: id2,
+      id: id3,
       full_name: external_exports.literal(kaijanIssueRepository),
       private: external_exports.literal(false),
       permissions: external_exports.object({ push: external_exports.boolean() })
@@ -46973,19 +47973,19 @@ function issueUserAuthorization({
     };
   }
   async function managed(owner2, imagesRequired) {
-    const response = await broker.send("/github/credential", {
+    const response2 = await broker.send("/github/credential", {
       method: "POST",
       body: "{}",
       headers: { "content-type": "application/json" },
       signal
     });
-    if (!response.ok) {
-      await response.body?.cancel();
-      if ([401, 403, 404].includes(response.status))
+    if (!response2.ok) {
+      await response2.body?.cancel();
+      if ([401, 403, 404].includes(response2.status))
         return { credential: null, githubUserId: null };
       throw denied();
     }
-    const grant2 = githubCredentialSchema.parse(await response.json());
+    const grant2 = githubCredentialSchema.parse(await response2.json());
     if (grant2.userId !== owner2.userId || grant2.workspaceId !== owner2.workspaceId || grant2.authority !== "github-app-user-intersection")
       throw denied();
     const current = await inspect(
@@ -47000,7 +48000,7 @@ function issueUserAuthorization({
       const result2 = external_exports.object({
         installations: external_exports.array(
           external_exports.object({
-            id: id2,
+            id: id3,
             account: external_exports.object({ login: external_exports.string() }),
             repository_selection: external_exports.enum(["all", "selected"]),
             permissions: external_exports.object({ issues: external_exports.string().optional() })
@@ -47021,7 +48021,7 @@ function issueUserAuthorization({
         }
         for (let repoPage = 1; repoPage <= 10; repoPage++) {
           const repositories = external_exports.object({
-            repositories: external_exports.array(external_exports.object({ id: id2, full_name: external_exports.string() }))
+            repositories: external_exports.array(external_exports.object({ id: id3, full_name: external_exports.string() }))
           }).parse(
             await metadata2(
               `/user/installations/${installation.id}/repositories?per_page=100&page=${repoPage}`,
@@ -47100,7 +48100,7 @@ function issueUserAuthorization({
 // apps/codex-plugin/src/issue-transport.mjs
 function issueTransport({ library, broker, build, signal }) {
   async function operation(owner2, kind, value) {
-    const response = await broker.send("/product-issues", {
+    const response2 = await broker.send("/product-issues", {
       method: "POST",
       signal,
       headers: { "content-type": "application/json" },
@@ -47112,13 +48112,13 @@ function issueTransport({ library, broker, build, signal }) {
     });
     let result2;
     try {
-      result2 = await response.json();
+      result2 = await response2.json();
     } catch {
       throw Error("issue_result_unavailable");
     }
-    if (kind === "read" && response.status === 404 && result2?.error === "not_found")
+    if (kind === "read" && response2.status === 404 && result2?.error === "not_found")
       return null;
-    if (!response.ok) throw Error("issue_result_unavailable");
+    if (!response2.ok) throw Error("issue_result_unavailable");
     return result2;
   }
   return library.createIssueDraftTransport(
@@ -47137,9 +48137,22 @@ function scopedIssueTransport({
   signal,
   journal,
   request: request3,
-  execute: execute2
+  execute: execute2,
+  publicationRoute
 }) {
   const legacy = issueTransport({ library, broker, build, signal });
+  if (publicationRoute === "github-app")
+    return {
+      requiresPublisher: false,
+      async submit(owner2, input3, images, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.submit(owner2, input3, images);
+      },
+      async read(owner2, requestId, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.read(owner2, requestId);
+      }
+    };
   const authorization = issueUserAuthorization({
     library,
     broker,
@@ -47168,2761 +48181,13 @@ function scopedIssueTransport({
   };
 }
 
-// apps/codex-plugin/src/issues.mjs
-var viewKey2 = "kaijan/issue-view";
-var selectionKey = "kaijan/issue-selections";
-var unavailable = () => ({
-  error: "issue_unavailable",
-  message: "Kaijan could not open this issue connection. Keep any visible text before starting a new report or reopening an earlier saved issue."
-});
-function createIssueSurface({
-  session,
-  library,
-  broker,
-  build,
-  now = Date.now,
-  createTransport = scopedIssueTransport
-}) {
-  const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
-  let stopped = false;
-  const fields = library.issueFieldsSchema;
-  const textFields = fields.omit({ images: true }).partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
-  const draftInput = external_exports.strictObject({
-    operation: external_exports.enum(["open", "read", "update", "discard_edit", "status"]),
-    requestId: external_exports.uuid().optional(),
-    draftId: external_exports.uuid().optional(),
-    revision: external_exports.number().int().positive().optional(),
-    title: fields.shape.title.optional(),
-    description: fields.shape.description.optional(),
-    changes: textFields.optional()
-  });
-  const image = library.issueSelectionSchema.shape.image;
-  const offset = external_exports.number().int().nonnegative().max(5 * 1024 * 1024);
-  const revision3 = external_exports.number().int().positive();
-  const actionBase = library.issueViewSchema;
-  const actionArgs = {
-    read: library.issueGetSchema.extend({
-      refreshPublisher: external_exports.literal(true).optional()
-    }),
-    update: library.issueUpdateSchema,
-    discard_edit: library.issueGetSchema,
-    status: library.issueGetSchema,
-    publish: library.issuePublishSchema,
-    continue_on_github: library.issuePublishSchema,
-    close_review: library.issueGetSchema,
-    begin_image: library.issueGetSchema.extend({ revision: revision3, image }),
-    append_image: library.issueGetSchema.extend({
-      revision: revision3,
-      imageId: external_exports.uuid(),
-      offset,
-      base64: external_exports.string().min(4).max(4 * Math.ceil(256 * 1024 / 3))
-    }),
-    remove_image: library.issueGetSchema.extend({
-      revision: revision3,
-      imageId: external_exports.uuid()
-    }),
-    read_image: library.issueGetSchema.extend({ imageId: external_exports.uuid(), offset })
-  };
-  const actionInput = actionBase.extend({
-    operation: external_exports.enum(Object.keys(actionArgs)),
-    revision: revision3.optional(),
-    changes: library.issueChangesSchema.optional(),
-    image: image.optional(),
-    imageId: external_exports.uuid().optional(),
-    offset: offset.optional(),
-    base64: actionArgs.append_image.shape.base64.optional(),
-    refreshPublisher: external_exports.literal(true).optional()
-  });
-  const schemas = {
-    kaijan_issue_draft: draftInput,
-    kaijan_issue_publish: library.issuePublishSchema,
-    kaijan_issue_form_action: actionInput
-  };
-  const resource = {
-    uri: library.issueFormUri,
-    name: "Report a Kaijan issue",
-    mimeType: "text/html;profile=mcp-app"
-  };
-  const describe3 = (name, title, description, appOnly = false) => ({
-    name,
-    title,
-    description,
-    inputSchema: external_exports.toJSONSchema(schemas[name]),
-    outputSchema: {
-      type: "object",
-      anyOf: external_exports.toJSONSchema(
-        appOnly ? library.issueAppResultSchema : library.issueResultSchema
-      ).anyOf
-    },
-    annotations: {
-      readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: name === "kaijan_issue_publish",
-      openWorldHint: true
-    },
-    _meta: {
-      ui: {
-        resourceUri: resource.uri,
-        ...appOnly ? { visibility: ["app"] } : {}
-      }
-    }
-  });
-  const tools2 = [
-    describe3(
-      "kaijan_issue_draft",
-      "Review a Kaijan issue",
-      "Open or edit a Kaijan issue review in this chat. New reviews exist only in memory until closed or the plugin restarts. Closing discards unsent edits. Existing saved drafts keep their recovery path. Open requires requestId and optional title/description. Read, status and discard_edit require only draftId. Read is local; status checks only the original publication receipt. Update requires draftId, revision and nonempty text changes. Keep a refused edit and review the saved revision before applying it. New drafts are text-only. The person reviews the draft, continues on GitHub and submits there."
-    ),
-    describe3(
-      "kaijan_issue_publish",
-      "Open Kaijan issue review",
-      "Open the existing issue form for the person to review it. For new drafts, the person continues on GitHub and submits to public katalon-studio/kaijan-marketplace. For an earlier unconfirmed publication, use status on the original draft."
-    ),
-    describe3(
-      "kaijan_issue_form_action",
-      "Edit issue form",
-      "Application-only action for the exact issue form grant in the originating chat.",
-      true
-    )
-  ];
-  function checked(name, raw) {
-    if (!Object.hasOwn(schemas, name)) throw Error("invalid_tool");
-    const input3 = schemas[name].parse(raw);
-    if (name === "kaijan_issue_publish")
-      return { operation: "read", draftId: input3.draftId };
-    const { operation, viewToken, cleanupToken, ...args } = input3;
-    let selected;
-    if (name === "kaijan_issue_form_action") selected = actionArgs[operation];
-    else if (operation === "open") selected = library.issueOpenSchema;
-    else if (operation === "update")
-      selected = library.issueGetSchema.extend({
-        revision: revision3,
-        changes: textFields
-      });
-    else selected = library.issueGetSchema;
-    return {
-      operation,
-      ...selected.parse(args),
-      ...viewToken ? { viewToken } : {},
-      ...cleanupToken ? { cleanupToken } : {}
-    };
-  }
-  async function identity4(signal) {
-    const result2 = await forwardCore(
-      broker,
-      "loki_connection_status",
-      {},
-      signal
-    );
-    const connection = coreConnectionSchema.parse(result2.structuredContent);
-    return {
-      userId: connection.context.user.id,
-      workspaceId: connection.context.workspace.id
-    };
-  }
-  function grant2(scope, owner2, draftId) {
-    for (const [key, value2] of views)
-      if (value2.until < now()) views.delete(key);
-    while (views.size >= 64) views.delete(views.keys().next().value);
-    const temporary = temporaryStores.get(scope.data)?.has(draftId);
-    const cleanup = temporary ? [...cleanupViews].find(
-      ([, value2]) => value2.scope === scope.scope.id && value2.draftId === draftId
-    ) : void 0;
-    const viewToken = randomBytes2(32).toString("hex");
-    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes2(32).toString("hex") : void 0;
-    const value = {
-      scope: scope.scope.id,
-      ...owner2,
-      draftId,
-      until: now() + 12 * 36e5
-    };
-    views.set(viewToken, value);
-    if (temporary) cleanupViews.set(cleanupToken, value);
-    return { draftId, viewToken, ...cleanupToken ? { cleanupToken } : {} };
-  }
-  function reply(value, { appOnly = false, view: view2, selections } = {}) {
-    const result2 = (appOnly ? library.issueAppResultSchema : library.issueResultSchema).parse(value);
-    return {
-      ...result2.error ? { isError: true } : {},
-      structuredContent: result2,
-      // Image bytes exist only in the granted app response, never normal text.
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            result2.chunk || result2.githubUrl ? { draft: result2.draft } : result2
-          )
-        }
-      ],
-      ...view2 ? { _meta: { [viewKey2]: view2, [selectionKey]: selections } } : {}
-    };
-  }
-  async function existingStore(data) {
-    let opened = stores.get(data);
-    if (!opened) {
-      try {
-        await lstat5(join4(data, "issue-drafts", "drafts.sqlite3"));
-      } catch (error63) {
-        if (error63?.code === "ENOENT") return void 0;
-        throw error63;
-      }
-      opened = library.IssueDraftStore.open(data);
-      stores.set(data, opened);
-      opened.catch(() => stores.delete(data));
-    }
-    return opened;
-  }
-  function temporaryStore(data) {
-    let store = temporaryStores.get(data);
-    if (!store) {
-      store = library.IssueDraftStore.temporary();
-      temporaryStores.set(data, store);
-    }
-    return store;
-  }
-  return {
-    tools: tools2,
-    resources: [resource],
-    hasResource: (uri) => uri === resource.uri || library.cachedIssueFormUris?.includes(uri) === true,
-    hasTool: (name) => Object.hasOwn(schemas, name),
-    async readResource(uri) {
-      if (stopped || uri !== resource.uri && !library.cachedIssueFormUris?.includes(uri))
-        throw Error("Unknown issue resource.");
-      return library.readIssueForm(uri);
-    },
-    async invoke(name, raw, metadata2, signal) {
-      const appOnly = name === "kaijan_issue_form_action";
-      let input3;
-      try {
-        input3 = checked(name, raw);
-      } catch {
-        return reply(
-          {
-            error: "invalid_arguments",
-            message: "Use the advertised issue fields for this action. Nothing was published."
-          },
-          { appOnly }
-        );
-      }
-      if (stopped || signal?.aborted) return reply(unavailable(), { appOnly });
-      if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
-        return reply(
-          {
-            error: "chat_required",
-            message: "Open the issue in its original chat. Nothing was published."
-          },
-          { appOnly }
-        );
-      try {
-        const scope = await session.forRequest(metadata2);
-        if (scope.scope.kind !== "host-thread" || !scope.scope.restartPersistent)
-          throw Error("invalid_scope");
-        const view2 = appOnly ? input3.operation === "close_review" && input3.cleanupToken ? cleanupViews.get(input3.cleanupToken) : views.get(input3.viewToken) : void 0;
-        if (appOnly && (!view2 || view2.until < now() && input3.operation !== "close_review" || view2.scope !== scope.scope.id || view2.draftId !== input3.draftId))
-          return reply(
-            {
-              error: "view_expired",
-              message: "Reopen this issue in its original chat. Your local draft and images are kept."
-            },
-            { appOnly }
-          );
-        if (appOnly && input3.operation === "close_review") {
-          const temporary = temporaryStores.get(scope.data);
-          if (temporary?.has(input3.draftId)) {
-            temporary.discardTemporary(input3.draftId, {
-              userId: view2.userId,
-              workspaceId: view2.workspaceId,
-              kind: "human",
-              canEdit: true,
-              canPublish: false
-            });
-            if (temporary.size === 0) {
-              temporary.close();
-              temporaryStores.delete(scope.data);
-            }
-            for (const [token, granted] of views)
-              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
-                views.delete(token);
-            for (const [token, granted] of cleanupViews)
-              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
-                cleanupViews.delete(token);
-            return reply({ closedReviewId: input3.draftId }, { appOnly: true });
-          }
-        }
-        const owner2 = await identity4(signal);
-        if (stopped || signal?.aborted)
-          return reply(unavailable(), { appOnly });
-        if (view2 && (owner2.userId !== view2.userId || owner2.workspaceId !== view2.workspaceId))
-          return reply(
-            {
-              error: "connection_changed",
-              message: "The connected account or workspace changed. Return to the original connection to use this issue."
-            },
-            { appOnly }
-          );
-        const actor = {
-          ...owner2,
-          kind: appOnly ? "human" : "agent",
-          canEdit: true,
-          canPublish: appOnly
-        };
-        const { operation, draftId, revision: revision4 } = input3;
-        let store = temporaryStores.get(scope.data);
-        if (operation === "open") {
-          const historical = await existingStore(scope.data);
-          if (historical?.findOpen(input3.requestId, actor)) store = historical;
-          else {
-            if (cleanupViews.size >= 64 && !store?.findOpen(input3.requestId, actor))
-              throw new library.IssueDraftError(
-                "review_limit",
-                "Close an open issue review before starting another."
-              );
-            store = temporaryStore(scope.data);
-          }
-        } else if (!store?.has(draftId)) {
-          store = await existingStore(scope.data);
-          if (!store)
-            throw new library.IssueDraftError(
-              "not_found",
-              "This review is closed. Start a new report."
-            );
-        }
-        if (stopped || signal?.aborted)
-          return reply(unavailable(), { appOnly });
-        const transport = () => createTransport({
-          library,
-          broker,
-          build,
-          signal,
-          journal: () => {
-            let pending = journals.get(scope.data);
-            if (!pending) {
-              pending = library.DirectIssueJournal.open(scope.data);
-              journals.set(scope.data, pending);
-              pending.catch(() => journals.delete(scope.data));
-            }
-            return pending;
-          }
-        });
-        let draft, chunk, githubUrl;
-        const current = operation === "open" ? void 0 : store.get(draftId, actor);
-        const githubLink = current?.publicationRoute === "github-link";
-        if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
-          throw new library.IssueDraftError(
-            "github_handoff_required",
-            "This report is text-only. Reopen it and select Continue on GitHub.",
-            current
-          );
-        if (operation === "open")
-          draft = store.create(
-            {
-              requestId: input3.requestId,
-              ...input3.title !== void 0 ? { title: input3.title } : {},
-              ...input3.description !== void 0 ? { description: input3.description } : {}
-            },
-            actor,
-            "github-link"
-          );
-        else if (operation === "update")
-          draft = store.update(
-            { draftId, revision: revision4, changes: input3.changes },
-            actor
-          );
-        else if (operation === "close_review") {
-          throw new library.IssueDraftError(
-            "original_route_required",
-            "This saved draft keeps its original recovery path."
-          );
-        } else if (operation === "discard_edit")
-          draft = store.discardEdit(draftId, actor);
-        else if (operation === "continue_on_github") {
-          if (!githubLink || current.status !== "draft")
-            throw new library.IssueDraftError(
-              "original_route_required",
-              "Use the original publication controls for this issue.",
-              current
-            );
-          if (view2?.reviewedRevision !== revision4 || current.revision !== revision4 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
-            throw new library.IssueDraftError(
-              "review_required",
-              "Save and review the current title and observed behavior before continuing.",
-              current
-            );
-          githubUrl = library.githubIssueDraftUrl(current.fields);
-          if (!githubUrl)
-            throw new library.IssueDraftError(
-              "github_url_too_long",
-              "This draft is too long to prefill on GitHub. Shorten it or copy the text and paste it into a new issue there. Your full draft is kept.",
-              current
-            );
-          draft = current;
-        } else if (operation === "publish" || operation === "status" && !githubLink) {
-          const publisherTransport = transport();
-          if (operation === "publish") {
-            if (current.status === "draft") {
-              if (view2?.reviewedRevision !== revision4 || current.revision !== revision4)
-                throw new library.IssueDraftError(
-                  "review_required",
-                  "Open Preview issue and review the current text, images and account before publishing.",
-                  current
-                );
-              if (publisherTransport.requiresPublisher) {
-                const selected = await publisherTransport.identify(owner2, {
-                  imagesRequired: current.fields.images.length > 0
-                });
-                store.setPublisher(draftId, actor, selected);
-              }
-            }
-          }
-          draft = operation === "publish" ? await store.publish(
-            draftId,
-            revision4,
-            actor,
-            publisherTransport
-          ) : await store.refresh(draftId, actor, publisherTransport);
-        } else {
-          if (operation === "begin_image")
-            store.beginImage(draftId, revision4, actor, input3.image);
-          else if (operation === "append_image")
-            store.appendImage(
-              draftId,
-              revision4,
-              actor,
-              input3.imageId,
-              input3.offset,
-              input3.base64
-            );
-          else if (operation === "remove_image")
-            store.removeImage(draftId, revision4, actor, input3.imageId);
-          else if (operation === "read_image") {
-            const selected = store.readImage(draftId, actor, input3.imageId);
-            if (input3.offset >= selected.bytes.length || input3.offset % (256 * 1024) !== 0)
-              throw new library.IssueDraftError(
-                "invalid_image_offset",
-                "Read the next advertised image chunk."
-              );
-            chunk = {
-              imageId: selected.image.id,
-              offset: input3.offset,
-              totalBytes: selected.image.bytes,
-              mediaType: selected.image.mediaType,
-              base64: Buffer.from(selected.bytes).subarray(input3.offset, input3.offset + 256 * 1024).toString("base64")
-            };
-          }
-          draft = store.get(draftId, actor);
-        }
-        if (draft.status === "draft" && draft.publicationRoute !== "github-link" && (operation === "open" || operation === "read" && appOnly && input3.refreshPublisher === true)) {
-          const publisherTransport = transport();
-          try {
-            if (publisherTransport.requiresPublisher) {
-              const selected = await publisherTransport.identify(owner2, {
-                imagesRequired: draft.fields.images.length > 0
-              });
-              draft = store.setPublisher(draft.id, actor, selected);
-            }
-          } catch {
-            if (operation !== "open")
-              return reply(
-                {
-                  error: "posting_account_unavailable",
-                  message: "Publishing is unavailable for the connected GitHub account. Your draft is kept.",
-                  draft
-                },
-                { appOnly }
-              );
-          }
-        }
-        const selections = store.listImages(draft.id, actor);
-        if (view2 && operation === "read" && input3.refreshPublisher === true)
-          view2.reviewedRevision = draft.revision;
-        return reply(
-          {
-            draft,
-            ...appOnly ? {
-              selections,
-              ...chunk ? { chunk } : {},
-              ...githubUrl ? { githubUrl } : {}
-            } : {}
-          },
-          {
-            appOnly,
-            ...appOnly ? {} : { view: grant2(scope, owner2, draft.id), selections }
-          }
-        );
-      } catch (error63) {
-        if (error63 instanceof library.IssueDraftError)
-          return reply(
-            {
-              error: error63.code,
-              message: error63.message,
-              ...error63.draft ? { draft: error63.draft } : {}
-            },
-            { appOnly }
-          );
-        return reply(unavailable(), { appOnly });
-      }
-    },
-    async close() {
-      stopped = true;
-      views.clear();
-      cleanupViews.clear();
-      for (const store of temporaryStores.values()) store.close();
-      temporaryStores.clear();
-      const opened = await Promise.allSettled([
-        ...stores.values(),
-        ...journals.values()
-      ]);
-      for (const value of opened)
-        if (value.status === "fulfilled") value.value.close();
-      stores.clear();
-      journals.clear();
-    }
-  };
-}
-
-// apps/codex-plugin/src/installed-session.mjs
-import { join as join5, delimiter } from "node:path";
-import { pathToFileURL } from "node:url";
-import process3 from "node:process";
-import { performance as performance3 } from "node:perf_hooks";
-import { verifyDistribution } from "../capabilities/dist/runtime/payload.js";
-import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
-var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
-var present = (entry) => {
-  if (Array.isArray(entry)) return entry.map(present);
-  if (!entry || typeof entry !== "object") return entry;
-  return Object.fromEntries(
-    Object.entries(entry).map(([key, value]) => [
-      key,
-      ["title", "description"].includes(key) ? brand(value) : present(value)
-    ])
-  );
-};
-async function createInstalledSession(root, build, data, broker, {
-  runnerValidation,
-  applicationContext,
-  onStartupStage,
-  lifecycleFactory
-} = {}) {
-  const host = pluginHost(build);
-  const stage2 = (value) => {
-    try {
-      onStartupStage?.(value);
-    } catch {
-    }
-  };
-  stage2("verify_payload");
-  const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
-  if (build.runtimeLayout !== "installed")
-    throw Error("Rebuild the installed runtime layout");
-  const source3 = join5(root, "capabilities");
-  const started = performance3.now();
-  const identity4 = await verifyDistribution(source3, build.capabilityDigest);
-  if (Object.values(identity4.manifest.files).some((member2) => "symlink" in member2))
-    throw Error("Installed runtime must contain regular files");
-  const verified = performance3.now();
-  process3.env.PATH = [join5(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
-  stage2("import_library");
-  const library = await import(pathToFileURL(join5(source3, "library/api.mjs")).href);
-  stage2("init_services");
-  if (Boolean(build.validationContext) !== Boolean(runnerValidation))
-    throw Error(
-      "Validation artifact requires its explicit private host binding"
-    );
-  const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
-  if (validation && (validation.artifactDigest !== identity4.digest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
-    throw Error("Validation artifact/binding mismatch");
-  if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
-    (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
-  ) || contextSetup.artifactDigest !== identity4.digest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
-    throw Error("Application-context artifact/scope binding mismatch");
-  const contextBinding = contextSetup ? library.parseRunnerContextBinding({
-    ...contextSetup.binding,
-    artifactDigest: identity4.digest
-  }) : void 0;
-  const hostLibrary = {
-    ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. Application maps are not part of this plugin release and are not a Setup or testing prerequisite. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not build a map or request mapping provider configuration. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Explicit loki_runner_execute requires full scenario, params and target authority; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
-    createCapabilityServices(scopedData, options) {
-      return library.createCapabilityServices(scopedData, {
-        ...options,
-        mapGeneration: false,
-        ...validation ? { runnerValidation: validation } : {},
-        ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
-        ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
-      });
-    },
-    createCapabilityCatalog(services, options) {
-      return library.createCapabilityCatalog(services, {
-        ...options,
-        mapsEnabled: false
-      });
-    }
-  };
-  if (broker) {
-    if (typeof library.bindManagedProvider !== "function")
-      throw Error("Shared-auth runtime required");
-    library.bindManagedProvider(data, broker.socketPath);
-  }
-  const imported = performance3.now();
-  const workspaceService = broker && build.workspaceResults ? new library.WorkspaceResults(
-    (path, options) => broker.send(path.slice("/api/v1".length), options),
-    build.profile === "local"
-  ) : void 0;
-  const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
-  const session = await createCapabilitySession({
-    host,
-    data,
-    payloadDigest: identity4.digest,
-    packageIdentity: JSON.stringify(build),
-    library: broker ? {
-      ...hostLibrary,
-      createCapabilityCatalog(...args) {
-        const catalog2 = hostLibrary.createCapabilityCatalog(...args);
-        return withModelDiscovery(
-          {
-            ...catalog2,
-            tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
-            async invoke(name, input3, invocation) {
-              if (workspaceResults?.tools.some((tool) => tool.name === name))
-                return workspaceResults.invoke(
-                  name,
-                  input3,
-                  invocation?.signal
-                );
-              return catalog2.invoke(name, input3, invocation);
-            }
-          },
-          broker,
-          library.CapabilityCatalogError
-        );
-      }
-    } : hostLibrary,
-    ...host === "claude_code" ? { uiEnabled: false } : {},
-    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
-    uiMode: "panel"
-  });
-  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
-  session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
-  session.workspaceResults = workspaceService;
-  if (host === "codex") {
-    session.feedback = createFeedbackSurface({
-      session,
-      library,
-      broker,
-      build
-    });
-    session.issues = createIssueSurface({ session, library, broker, build });
-    const close = session.close.bind(session);
-    session.close = async () => {
-      await session.feedback.close();
-      await session.issues.close();
-      await close();
-    };
-  }
-  session.privateParameters = {
-    async provision(threadId, input3) {
-      if (typeof threadId !== "string" || !threadId.trim())
-        throw Error("A conversation ID is required.");
-      const scope = await session.forRequest({ threadId });
-      return library.provisionRunnerParameters(
-        scope.data,
-        scope.scope.id,
-        input3
-      );
-    },
-    async revoke(threadId, bindingId) {
-      if (typeof threadId !== "string" || !threadId.trim())
-        throw Error("A conversation ID is required.");
-      const scope = await session.forRequest({ threadId });
-      return library.revokeRunnerParameters(
-        scope.data,
-        scope.scope.id,
-        bindingId
-      );
-    }
-  };
-  const originalFailure = session.failure.bind(session);
-  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
-  const initialized = performance3.now();
-  session.runtimeIdentity = Object.freeze({
-    pluginVersion: build.pluginVersion,
-    buildId: build.buildId,
-    sourceRevision: build.sourceRevision,
-    sourceDirty: build.sourceDirty,
-    capabilityDigest: build.capabilityDigest
-  });
-  session.runtimeDiscovery = () => installedRuntimeDiscovery(root, {
-    artifact: session.runtimeIdentity,
-    installation: session.identity,
-    connectionId: session.connectionId
-  });
-  session.instructions = brand(session.instructions);
-  session.providerReady = async () => library.providerConfigured(await library.providerEnvironment(data));
-  const catalog = session.catalog;
-  session.catalog = {
-    ...catalog,
-    tools: catalog.tools.map(present),
-    resources: catalog.resources.map((entry) => ({
-      ...present(entry),
-      name: brand(entry.name)
-    }))
-  };
-  process3.stderr.write(
-    JSON.stringify({
-      event: "kaijan.local.startup",
-      validationMs: Math.round(verified - started),
-      importMs: Math.round(imported - verified),
-      servicesMs: Math.round(initialized - imported),
-      processElapsedMs: Math.round(initialized)
-    }) + "\n"
-  );
-  return session;
-}
-
-// apps/codex-plugin/src/setup/service.mjs
-import { randomUUID as randomUUID6 } from "node:crypto";
-import { performance as performance4 } from "node:perf_hooks";
-
-// apps/codex-plugin/src/setup/store.mjs
-import { DatabaseSync } from "node:sqlite";
-import { constants as constants3 } from "node:fs";
-import { mkdir as mkdir4, lstat as lstat6, realpath as realpath2, open as open3 } from "node:fs/promises";
-import { randomUUID as randomUUID4 } from "node:crypto";
-import process4 from "node:process";
-import { join as join6, resolve } from "node:path";
-
-// apps/codex-plugin/src/setup/contracts.mjs
-import { createHash as createHash2 } from "node:crypto";
-import { URL as URL2 } from "node:url";
-var digest4 = (value) => createHash2("sha256").update(JSON.stringify(value)).digest("hex");
-var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
-var requestKey = external_exports.string().min(8).max(120);
-var label2 = external_exports.string().min(1).max(1e3);
-var sourceSchema = external_exports.strictObject({
-  directory: external_exports.string().min(1).max(4096),
-  revision
-});
-var targetSchema = external_exports.strictObject({
-  url: external_exports.string().url().max(4096).refine((value) => {
-    const url2 = new URL2(value);
-    return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
-  }),
-  profileId: external_exports.string().min(1).max(80),
-  profileRevision: identity3.optional()
-});
-var configurationSchema = external_exports.strictObject({
-  source: sourceSchema,
-  workItem: external_exports.string().min(1).max(1e5).optional(),
-  target: targetSchema.optional(),
-  configurationRefs: external_exports.array(
-    external_exports.strictObject({
-      kind: external_exports.enum(["source", "target", "provider"]),
-      handle: external_exports.string().min(1).max(200)
-    })
-  ).max(30).default([])
-});
-var prepareSchema = external_exports.strictObject({
-  requestKey,
-  configuration: configurationSchema.extend({
-    source: sourceSchema.extend({
-      revision: external_exports.string().min(1).max(512).default("main").describe(
-        "Use HEAD for the current checkout commit, or supply a branch, a full Git ref or an exact commit. Omit to select main."
-      )
-    })
-  })
-});
-var listSchema = external_exports.strictObject({
-  directory: external_exports.string().min(1).max(4096),
-  offset: external_exports.number().int().min(0).default(0)
-});
-var handleSchema = external_exports.strictObject({
-  applicationId: identity3,
-  contextId: identity3
-});
-var commandSchema = handleSchema.extend({ requestKey });
-var waitSchema = handleSchema.extend({
-  timeoutMs: external_exports.number().int().min(1).max(3e4).default(3e4)
-});
-var resolveSchema = handleSchema.extend({
-  expectedRevision: revision,
-  expectedProfileRevision: identity3.optional().describe(
-    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
-  )
-});
-var handoffSchema = resolveSchema.extend({ requestKey });
-var workItemReadinessScopeSchema = external_exports.strictObject({
-  kind: external_exports.literal("work-item"),
-  workItem: external_exports.string().min(1).max(1e5),
-  applicationCoverage: external_exports.literal("incomplete"),
-  evidence: external_exports.literal("source-inferred"),
-  browserObserved: external_exports.literal(false),
-  selectedPageIds: external_exports.array(label2).optional(),
-  sourceLimitations: external_exports.array(
-    external_exports.strictObject({
-      stage: external_exports.literal("global/definitions"),
-      reason: external_exports.string().min(1),
-      relevance: external_exports.literal("unknown")
-    })
-  ).optional()
-});
-var mappingSchema = external_exports.strictObject({
-  mapId: identity3,
-  pages: external_exports.array(external_exports.strictObject({ id: label2, title: label2 })).max(200),
-  pagePreviewLimit: external_exports.literal(40).optional(),
-  coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
-  readinessScope: workItemReadinessScopeSchema.optional(),
-  readinessIssues: external_exports.array(
-    external_exports.strictObject({
-      code: label2,
-      recovery: label2
-    })
-  ).optional(),
-  answerId: identity3.optional(),
-  resultSha256: identity3.optional(),
-  snapshotTree: revision.optional()
-});
-var provenanceSchema = external_exports.strictObject({
-  kind: external_exports.enum(["controlled-fixture", "unavailable", "product-adapter"]),
-  version: label2
-});
-var missingSchema = external_exports.array(label2).max(30);
-var authorizationSchema = external_exports.discriminatedUnion("kind", [
-  external_exports.strictObject({
-    kind: external_exports.literal("host-managed-tool-dispatch"),
-    host: external_exports.literal("codex"),
-    policy: external_exports.literal("host-managed"),
-    scopeId: identity3,
-    requestId: external_exports.union([external_exports.string().max(200), external_exports.number().int()]),
-    tool: external_exports.enum(["loki_setup_prepare", "loki_setup_retry"]),
-    argumentsSha256: identity3,
-    configurationSha256: identity3
-  }),
-  external_exports.strictObject({ kind: external_exports.literal("controlled-selection-only") })
-]);
-var consumerReceiptSchema = external_exports.strictObject({
-  accepted: external_exports.boolean(),
-  contextId: identity3,
-  receiptId: identity3,
-  provenance: provenanceSchema
-});
-var mapReceiptSchema = external_exports.strictObject({
-  requestKey: identity3,
-  runId: identity3,
-  sourceRevision: revision,
-  state: external_exports.enum([
-    "running",
-    "ready",
-    "incomplete",
-    "failed",
-    "stopped",
-    "uncertain"
-  ]),
-  progress: label2,
-  resultId: identity3.nullable(),
-  data: mappingSchema.nullable(),
-  provenance: provenanceSchema,
-  executionSettled: external_exports.boolean().optional()
-});
-var setupStateSchema = external_exports.enum([
-  "awaiting-authority",
-  "blocked",
-  "admitting",
-  "mapping",
-  "uncertain",
-  "stop-requested",
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var setupReceiptSchema = handleSchema.extend({
-  version: external_exports.number().int().positive(),
-  recovered: external_exports.boolean().optional(),
-  reused: external_exports.boolean().optional()
-});
-var setupSummarySchema = external_exports.strictObject({
-  state: setupStateSchema,
-  missing: missingSchema,
-  nextAction: label2,
-  provenance: provenanceSchema
-});
-var setupPreparationOutputSchema = setupReceiptSchema.extend(
-  setupSummarySchema.shape
-);
-var mappedSetupContextSchema = handleSchema.extend({
-  schema: external_exports.literal("loki.setup-context/3"),
-  version: external_exports.number().int().positive(),
-  configuration: configurationSchema.extend({
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault()
-  }),
-  configurationHash: identity3,
-  sourceIdentity: external_exports.strictObject({
-    device: external_exports.number().int(),
-    inode: external_exports.number().int()
-  }),
-  provenance: provenanceSchema,
-  state: setupStateSchema,
-  missing: missingSchema,
-  authorityRef: identity3.nullable(),
-  authorityKind: external_exports.enum(["host-managed-tool-dispatch", "controlled-selection-only"]).nullable(),
-  authority: authorizationSchema.optional(),
-  owner: external_exports.uuid(),
-  map: external_exports.strictObject({
-    requestKey: identity3,
-    runId: identity3.nullable(),
-    resultId: identity3.nullable(),
-    data: mappingSchema.nullable(),
-    sourceRevision: revision.optional(),
-    state: mapReceiptSchema.shape.state.optional(),
-    progress: label2.optional(),
-    provenance: provenanceSchema.optional(),
-    executionSettled: external_exports.boolean().optional()
-  }),
-  progress: label2,
-  error: label2.nullable(),
-  supersededBy: identity3.optional()
-});
-var setupContextSchema = external_exports.union([
-  mappedSetupContextSchema,
-  mappedSetupContextSchema.extend({
-    schema: external_exports.literal("loki.setup-context/4"),
-    map: external_exports.null(),
-    authorityRef: external_exports.null(),
-    authorityKind: external_exports.null()
-  })
-]);
-var setupListOutputSchema = external_exports.strictObject({
-  contexts: external_exports.array(
-    setupReceiptSchema.omit({ recovered: true, reused: true }).extend({
-      source: sourceSchema,
-      target: targetSchema.optional(),
-      state: setupStateSchema,
-      supersededBy: identity3.nullable(),
-      provenance: provenanceSchema
-    })
-  ).max(50),
-  nextOffset: external_exports.number().int().nonnegative().nullable()
-});
-var setupStopOutputSchema = setupReceiptSchema.extend({
-  ...setupSummarySchema.shape,
-  runId: identity3.nullable(),
-  cancellationRequested: external_exports.boolean()
-});
-var mappedResolveOutputSchema = external_exports.strictObject({
-  application: external_exports.strictObject({
-    schema: external_exports.literal("loki.application-context/2"),
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    map: external_exports.strictObject({
-      mapId: identity3,
-      runId: identity3,
-      resultId: identity3,
-      sourceRevision: revision,
-      preview: mappingSchema
-    }),
-    readiness: external_exports.strictObject({
-      state: external_exports.literal("ready"),
-      missing: external_exports.array(external_exports.never()).max(0),
-      scope: workItemReadinessScopeSchema.optional()
-    }),
-    provenance: provenanceSchema
-  }),
-  setup: handleSchema.extend({
-    version: external_exports.number().int().positive(),
-    mapRunId: identity3,
-    mapResultId: identity3,
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
-    authorityRef: identity3
-  }),
-  authority: external_exports.enum([
-    "host-managed-tool-dispatch",
-    "controlled-selection-only"
-  ])
-});
-var configuredResolveOutputSchema = external_exports.strictObject({
-  application: external_exports.strictObject({
-    schema: external_exports.literal("loki.application-context/3"),
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    workItem: external_exports.string().min(1).max(1e5).nullable(),
-    map: external_exports.null(),
-    readiness: external_exports.strictObject({
-      state: external_exports.literal("configured"),
-      missing: external_exports.array(external_exports.never()).max(0),
-      map: external_exports.literal("not-required"),
-      browserObserved: external_exports.literal(false)
-    }),
-    provenance: provenanceSchema
-  }),
-  setup: handleSchema.extend({
-    version: external_exports.number().int().positive(),
-    mapRunId: external_exports.null(),
-    mapResultId: external_exports.null(),
-    configurationRefs: configurationSchema.shape.configurationRefs.removeDefault(),
-    authorityRef: external_exports.null()
-  }),
-  authority: external_exports.literal("configuration-only")
-});
-var setupResolveOutputSchema = external_exports.union([
-  mappedResolveOutputSchema,
-  configuredResolveOutputSchema
-]);
-var handoffFields = {
-  consumer: external_exports.union([
-    external_exports.strictObject({
-      state: external_exports.literal("pending"),
-      provenance: provenanceSchema
-    }),
-    consumerReceiptSchema
-  ]),
-  recovered: external_exports.boolean().optional()
-};
-var setupHandoffOutputSchema = external_exports.union([
-  mappedResolveOutputSchema.extend(handoffFields),
-  configuredResolveOutputSchema.extend(handoffFields)
-]);
-var setupErrorOutputSchema = external_exports.strictObject({
-  error: external_exports.strictObject({
-    code: external_exports.string().regex(/^[a-z][a-z0-9_]{0,99}$/),
-    message: label2
-  })
-});
-var setupSuccessSchemas = {
-  loki_setup_list: setupListOutputSchema,
-  loki_setup_prepare: setupPreparationOutputSchema,
-  loki_setup_get: setupContextSchema,
-  loki_setup_wait: setupContextSchema,
-  loki_setup_retry: setupPreparationOutputSchema,
-  loki_setup_stop: setupStopOutputSchema,
-  loki_setup_resolve: setupResolveOutputSchema,
-  loki_setup_handoff: setupHandoffOutputSchema
-};
-var setupOutputVersion = (name) => [
-  "loki_setup_prepare",
-  "loki_setup_retry",
-  "loki_setup_stop",
-  "loki_setup_get",
-  "loki_setup_wait",
-  "loki_setup_resolve",
-  "loki_setup_handoff"
-].includes(name) ? 2 : 1;
-var setupOutputSchemas = Object.fromEntries(
-  Object.entries(setupSuccessSchemas).map(([name, schema]) => [
-    name,
-    external_exports.union([schema, setupErrorOutputSchema]).meta({ id: `urn:loki:${name}:output:${setupOutputVersion(name)}` })
-  ])
-);
-var SetupFailure = class extends Error {
-  constructor(code) {
-    super(code);
-    this.code = code;
-  }
-};
-var recoveryMessages = {
-  unknown_application_context: "Use the original conversation and application/context IDs. List retained contexts for the selected project; do not recreate unknown work.",
-  request_conflict: "This request key already records different input. Read its original receipt. Use a new key only for a separately authorized new operation, never to replay unknown effects.",
-  retry_not_required: "Read the original context. Only known blocked, failed or stopped work can be retried; uncertain or pending effects must be reconciled without replay.",
-  stale_application_context: "Use the selected context's exact source and target-profile revisions. A different source selection is a new operation.",
-  application_not_ready: "Read the original context's state and missing prerequisites. A receipt, completed wait or partial map does not establish application readiness.",
-  consumer_integration_unavailable: "No supported application consumer is ready. Retain the source-bound context and original map; do not substitute a fixture acknowledgement.",
-  setup_output_invalid: "The Setup response did not match its advertised contract. Read retained state with the original identities before recovery; do not replay an operation whose effects are unknown.",
-  setup_interrupted: "The request was interrupted. Read the original context to confirm its state and any pending Stop. Request cancellation alone does not prove producer cancellation."
-};
-function failure3(error63) {
-  const code = error63 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error63.code) ? error63.code : error63?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
-  return {
-    code,
-    message: (Object.hasOwn(recoveryMessages, code) ? recoveryMessages[code] : void 0) ?? "Read the original Setup context before retrying. Keep its application, source version and request key."
-  };
-}
-
-// apps/codex-plugin/src/setup/store.mjs
-async function openSetupStore(directory) {
-  await mkdir4(directory, { recursive: true, mode: 448 });
-  const info = await lstat6(directory);
-  if (!info.isDirectory() || info.uid !== process4.getuid?.() || info.mode & 63 || await realpath2(directory) !== resolve(directory))
-    throw new SetupFailure("unsafe_setup_state");
-  const path = join6(directory, "setup.sqlite");
-  const file2 = await open3(
-    path,
-    constants3.O_RDWR | constants3.O_CREAT | constants3.O_NOFOLLOW | constants3.O_NONBLOCK,
-    384
-  );
-  try {
-    const stat2 = await file2.stat();
-    if (!stat2.isFile() || stat2.uid !== process4.getuid?.() || stat2.mode & 63 || stat2.nlink !== 1)
-      throw new SetupFailure("unsafe_setup_state");
-  } finally {
-    await file2.close();
-  }
-  const database = new DatabaseSync(path);
-  let closed2 = false;
-  database.exec(`PRAGMA busy_timeout=5000;
-    CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS applications(id TEXT PRIMARY KEY, version INTEGER NOT NULL);
-    CREATE TABLE IF NOT EXISTS contexts(id TEXT PRIMARY KEY, application_id TEXT NOT NULL, configuration_hash TEXT NOT NULL, value TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS map_observations(context_id TEXT, digest TEXT, value TEXT NOT NULL, PRIMARY KEY(context_id,digest));
-    CREATE TABLE IF NOT EXISTS commands(scope TEXT, key TEXT, digest TEXT, value TEXT, PRIMARY KEY(scope,key));`);
-  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID4());
-  return {
-    installation: database.prepare("SELECT value FROM metadata WHERE key='installation'").get().value,
-    transaction(fn) {
-      database.exec("BEGIN IMMEDIATE");
-      try {
-        const value = fn();
-        database.exec("COMMIT");
-        return value;
-      } catch (error63) {
-        database.exec("ROLLBACK");
-        throw error63;
-      }
-    },
-    version(applicationId) {
-      database.prepare(
-        "INSERT INTO applications VALUES(?,1) ON CONFLICT(id) DO UPDATE SET version=version+1"
-      ).run(applicationId);
-      return database.prepare("SELECT version FROM applications WHERE id=?").get(applicationId).version;
-    },
-    get(applicationId, contextId) {
-      const row = database.prepare("SELECT value FROM contexts WHERE id=? AND application_id=?").get(contextId, applicationId);
-      if (!row) throw new SetupFailure("unknown_application_context");
-      return JSON.parse(row.value);
-    },
-    matching(applicationId, hash6) {
-      const rows2 = database.prepare(
-        "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
-      ).all(applicationId, hash6);
-      return rows2.length ? JSON.parse(rows2[0].value) : null;
-    },
-    list(directory2, offset) {
-      return database.prepare(
-        "SELECT value FROM contexts WHERE json_extract(value,'$.configuration.source.directory')=? ORDER BY rowid DESC LIMIT 51 OFFSET ?"
-      ).all(directory2, offset).map((row) => JSON.parse(row.value));
-    },
-    put(value) {
-      database.prepare(
-        "INSERT INTO contexts VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value"
-      ).run(
-        value.contextId,
-        value.applicationId,
-        value.configurationHash,
-        JSON.stringify(value)
-      );
-    },
-    command(scope, key, hash6) {
-      const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
-      if (!row) return null;
-      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
-      return JSON.parse(row.value);
-    },
-    receipt(scope, key, hash6, value) {
-      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
-    },
-    complete(scope, key, hash6, value) {
-      database.prepare(
-        "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
-      ).run(JSON.stringify(value), scope, key, hash6);
-    },
-    observe(contextId, value) {
-      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest4(value), JSON.stringify(value));
-    },
-    producer(key) {
-      const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
-      return row ? JSON.parse(row.value) : null;
-    },
-    retainProducer(key, value) {
-      database.prepare(
-        "INSERT INTO metadata VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value"
-      ).run(`producer:${key}`, JSON.stringify(value));
-    },
-    close: () => {
-      if (!closed2) {
-        closed2 = true;
-        database.close();
-      }
-    }
-  };
-}
-
-// apps/codex-plugin/src/setup/source.mjs
-import { execFile as execFile2 } from "node:child_process";
-import { promisify as promisify3 } from "node:util";
-import { realpath as realpath3, lstat as lstat7 } from "node:fs/promises";
-import { isAbsolute as isAbsolute3 } from "node:path";
-import { randomUUID as randomUUID5 } from "node:crypto";
-var execute = promisify3(execFile2);
-async function resolveSourceRevision(source3, signal) {
-  const git = async (args, cleanup = false) => (await execute(
-    "git",
-    [
-      "-c",
-      "core.hooksPath=/dev/null",
-      "-c",
-      "core.fsmonitor=false",
-      "-c",
-      "protocol.ext.allow=never",
-      "-C",
-      source3.directory,
-      ...args
-    ],
-    {
-      timeout: 6e4,
-      maxBuffer: 16384,
-      signal: cleanup ? void 0 : signal
-    }
-  )).stdout.trim();
-  const requested = source3.revision ?? "main";
-  if (/^[a-f0-9]{40}$/.test(requested)) {
-    await inspectSource({ ...source3, revision: requested });
-    return requested;
-  }
-  try {
-    const head = await git(["rev-parse", "--verify", "HEAD^{commit}"]);
-    await inspectSource({ ...source3, revision: head });
-    if (requested === "HEAD") return head;
-    const ref = requested.startsWith("refs/") ? requested : `refs/heads/${requested}`;
-    await git(["check-ref-format", ref]);
-    let remote = false;
-    try {
-      await git(["remote", "get-url", "origin"]);
-      remote = true;
-    } catch {
-    }
-    if (!remote) return await git(["rev-parse", "--verify", `${ref}^{commit}`]);
-    const temporary = `refs/loki/setup/${randomUUID5()}`;
-    try {
-      await git([
-        "fetch",
-        "--quiet",
-        "--no-tags",
-        "--no-recurse-submodules",
-        "--no-write-fetch-head",
-        "origin",
-        `${ref}:${temporary}`
-      ]);
-      const upstream = await git([
-        "rev-parse",
-        "--verify",
-        `${temporary}^{commit}`
-      ]);
-      let local;
-      try {
-        local = await git(["rev-parse", "--verify", `${ref}^{commit}`]);
-      } catch {
-        return upstream;
-      }
-      if (local === upstream) return local;
-      try {
-        await git(["merge-base", "--is-ancestor", local, upstream]);
-        return upstream;
-      } catch {
-      }
-      try {
-        await git(["merge-base", "--is-ancestor", upstream, local]);
-        return local;
-      } catch {
-      }
-      throw new SetupFailure("source_revision_ambiguous");
-    } finally {
-      await git(["update-ref", "-d", temporary], true);
-    }
-  } catch (error63) {
-    if (signal?.aborted) throw signal.reason;
-    if (error63 instanceof SetupFailure) throw error63;
-    if (error63.code === "ENOENT" && error63.path === "git")
-      throw new SetupFailure("git_unavailable");
-    throw new SetupFailure("source_revision_unavailable");
-  }
-}
-async function inspectSource(source3) {
-  try {
-    if (!isAbsolute3(source3.directory) || source3.directory.includes("\0") || await realpath3(source3.directory) !== source3.directory)
-      throw Error();
-    const stat2 = await lstat7(source3.directory);
-    if (!stat2.isDirectory()) throw Error();
-    const git = async (args) => (await execute(
-      "git",
-      [
-        "-c",
-        "core.hooksPath=/dev/null",
-        "-c",
-        "core.fsmonitor=false",
-        "-C",
-        source3.directory,
-        ...args
-      ],
-      {
-        timeout: 1e4,
-        maxBuffer: 16384
-      }
-    )).stdout.trim();
-    if (await git(["rev-parse", "--show-toplevel"]) !== source3.directory)
-      throw Error();
-    if (await git(["rev-parse", "--verify", `${source3.revision}^{commit}`]) !== source3.revision)
-      throw Error();
-    return { device: stat2.dev, inode: stat2.ino };
-  } catch (error63) {
-    if (error63.code === "ENOENT" && error63.path === "git")
-      throw new SetupFailure("git_unavailable");
-    throw new SetupFailure("invalid_source");
-  }
-}
-
-// apps/codex-plugin/src/setup/service.mjs
-var active = /* @__PURE__ */ new Set(["admitting", "mapping", "uncertain", "stop-requested"]);
-var terminal = /* @__PURE__ */ new Set([
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var retryable = /* @__PURE__ */ new Set([
-  "failed",
-  "stopped",
-  "blocked",
-  "awaiting-authority"
-]);
-var handle = ({ applicationId, contextId, version: version4 }) => ({
-  applicationId,
-  contextId,
-  version: version4
-});
-async function createSetup({
-  directory,
-  mapper,
-  consumer,
-  authorize,
-  createTelemetry
-}) {
-  const store = await openSetupStore(directory);
-  const provenance2 = provenanceSchema.parse(
-    mapper?.provenance ?? {
-      kind: "product-adapter",
-      version: "application-source-configuration/1"
-    }
-  );
-  const owner2 = randomUUID6();
-  const telemetryByContext = /* @__PURE__ */ new Map();
-  const telemetryStarts = /* @__PURE__ */ new Map();
-  const observe = (method, input3) => {
-    try {
-      Promise.resolve(
-        telemetryByContext.get(input3.setupId)?.[method]?.(input3)
-      ).catch(() => {
-      });
-    } catch {
-    }
-  };
-  const inheritedCapability = (contextId) => {
-    try {
-      const sink = telemetryByContext.get(contextId)?.capabilityLifecycle;
-      return typeof sink === "function" ? sink : null;
-    } catch {
-      return null;
-    }
-  };
-  const snapshotObserver = () => {
-    try {
-      const observer = createTelemetry?.();
-      if (!observer || typeof observer !== "object") return null;
-      if (typeof observer.then === "function") {
-        Promise.resolve(observer).catch(() => {
-        });
-        return null;
-      }
-      return observer;
-    } catch {
-      return null;
-    }
-  };
-  const started = (value, observer) => {
-    if (!observer || telemetryByContext.size >= 512) return;
-    telemetryByContext.set(value.contextId, observer);
-    telemetryStarts.set(value.contextId, performance4.now());
-    observe("setupStarted", {
-      transitionKey: value.contextId,
-      setupId: value.contextId,
-      transition: "fresh-admission",
-      validated: true,
-      persisted: true,
-      recovered: false,
-      reused: false,
-      sourceKind: "local_folder",
-      entry: null,
-      hasTargetUrl: Boolean(value.configuration.target)
-    });
-  };
-  const finished2 = (value, executionSettled) => observe("setupFinished", {
-    transitionKey: value.contextId,
-    setupId: value.contextId,
-    transition: "first-authoritative-terminal",
-    validated: true,
-    authoritative: true,
-    executionSettled,
-    recovered: false,
-    reused: false,
-    state: value.state,
-    missingPrerequisites: value.missing,
-    durationKnown: telemetryStarts.has(value.contextId),
-    durationMs: performance4.now() - telemetryStarts.get(value.contextId)
-  });
-  const read = (input3) => store.get(input3.applicationId, input3.contextId);
-  async function summarize(receipt2, stop = false) {
-    let value = read(receipt2);
-    if (!stop) {
-      await verify(value);
-      value = read(receipt2);
-    }
-    let nextAction3;
-    switch (value.state) {
-      case "blocked":
-      case "awaiting-authority":
-        nextAction3 = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
-        break;
-      case "admitting":
-      case "mapping":
-        nextAction3 = "Wait on this original context. A receipt does not establish application readiness.";
-        break;
-      case "uncertain":
-        nextAction3 = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
-        break;
-      case "stop-requested":
-        nextAction3 = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
-        break;
-      case "incomplete":
-        nextAction3 = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
-        break;
-      case "ready":
-        nextAction3 = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
-        if (value.map?.data?.readinessScope?.sourceLimitations?.length)
-          nextAction3 += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
-        break;
-      default:
-        nextAction3 = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
-    }
-    if (!mapper && value.map && active.has(value.state))
-      nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
-    if (stop && !receipt2.cancellationRequested) {
-      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
-    }
-    if (value.provenance.kind === "controlled-fixture")
-      nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
-    return {
-      ...receipt2,
-      state: value.state,
-      missing: [...value.missing],
-      nextAction: nextAction3,
-      provenance: value.provenance
-    };
-  }
-  const edit = (input3, fn) => store.transaction(() => {
-    const value = read(input3);
-    fn(value);
-    store.put(value);
-    return value;
-  });
-  async function verify(value) {
-    if (digest4(await inspectSource(value.configuration.source)) !== digest4(value.sourceIdentity))
-      throw new SetupFailure("source_identity_changed");
-    if (mapper && digest4(provenance2) !== digest4(value.provenance))
-      throw new SetupFailure("adapter_changed");
-  }
-  function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
-    return store.transaction(() => {
-      const hash6 = digest4(input3), previous = store.command(scope, input3.requestKey, hash6);
-      if (previous) return { receipt: { ...previous, recovered: true } };
-      const applicationId = digest4({
-        installation: store.installation,
-        directory: configuration2.source.directory,
-        sourceIdentity
-      });
-      const configurationHash = digest4({ configuration: configuration2, provenance: provenance2 });
-      const existing = store.matching(applicationId, configurationHash);
-      if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
-        const receipt3 = handle(existing);
-        store.receipt(scope, input3.requestKey, hash6, receipt3);
-        return {
-          receipt: { ...receipt3, reused: true },
-          retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
-            transitionKey: existing.contextId,
-            setupId: existing.contextId,
-            mapId: existing.map.data.mapId
-          } : null
-        };
-      }
-      const previousContext = retry ? read(input3) : null;
-      if (previousContext && !retryable.has(previousContext.state))
-        throw new SetupFailure("retry_not_required");
-      const version4 = store.version(applicationId);
-      const value = {
-        schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
-        applicationId,
-        version: version4,
-        contextId: digest4({ applicationId, version: version4, configurationHash }),
-        configuration: configuration2,
-        configurationHash,
-        sourceIdentity,
-        provenance: provenance2,
-        state: "awaiting-authority",
-        missing: [],
-        authorityRef: null,
-        authorityKind: null,
-        owner: owner2,
-        map: mapper ? { requestKey: null, runId: null, resultId: null, data: null } : null,
-        progress: mapper ? "Checking required execution prerequisites and source authority" : "Saving application source configuration",
-        error: null
-      };
-      if (value.map) value.map.requestKey = value.contextId;
-      if (previousContext?.state === "awaiting-authority") {
-        previousContext.state = "superseded";
-        previousContext.supersededBy = value.contextId;
-        previousContext.progress = "Replaced by an explicit retry; late confirmation answers are ignored";
-        store.put(previousContext);
-      }
-      store.put(value);
-      const receipt2 = handle(value);
-      store.receipt(scope, input3.requestKey, hash6, receipt2);
-      return { receipt: receipt2, value };
-    });
-  }
-  function applyMap(input3, raw) {
-    const result2 = mapReceiptSchema.parse(raw);
-    store.observe(input3.contextId, result2);
-    let firstTerminal = false;
-    const accepted = edit(input3, (value) => {
-      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest4(result2.provenance) !== digest4(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
-        throw new SetupFailure("map_scope_mismatch");
-      if (result2.state === "ready" && (!result2.data || !result2.resultId))
-        throw new SetupFailure("invalid_map_result");
-      if (terminal.has(value.state)) return;
-      value.map = { ...value.map, ...result2 };
-      if (value.state === "stop-requested" && result2.state !== "stopped") {
-        if (!result2.executionSettled) return;
-        value.state = "stopped";
-        value.progress = `Setup stopped; original map operation settled as ${result2.state}`;
-        value.missing = [];
-        firstTerminal = true;
-        return;
-      }
-      value.state = result2.state === "running" ? "mapping" : result2.state;
-      value.progress = result2.progress;
-      value.missing = [];
-      value.error = result2.state === "failed" ? "map_failed" : null;
-      firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
-        value.state
-      );
-    });
-    if (firstTerminal) finished2(accepted, result2.executionSettled === true);
-    return accepted;
-  }
-  async function initialize(value, signal, invocation) {
-    try {
-      if (read(value).state !== "awaiting-authority") return;
-      signal?.throwIfAborted();
-      if (!mapper) {
-        await verify(value);
-        signal?.throwIfAborted();
-        const configured2 = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "ready";
-          current.missing = [];
-          current.progress = "Application source and optional target configured; no map generated";
-        });
-        finished2(configured2, true);
-        return;
-      }
-      const parsed = missingSchema.safeParse(
-        await mapper.readiness(value.configuration)
-      );
-      if (!parsed.success) throw new SetupFailure("invalid_map_readiness");
-      signal?.throwIfAborted();
-      if (parsed.data.length) {
-        const blocked = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "blocked";
-          current.missing = parsed.data;
-          current.progress = "Setup needs the listed prerequisites";
-        });
-        finished2(blocked, true);
-        return;
-      }
-      if (read(value).state !== "awaiting-authority") return;
-      const authorization = await authorize(
-        value.configuration,
-        signal,
-        invocation
-      );
-      if (!authorization) {
-        const blocked = edit(value, (current) => {
-          if (current.state !== "awaiting-authority") return;
-          current.state = "blocked";
-          current.missing = ["source-authorization"];
-          current.progress = "Source or target authority was denied";
-          current.error = "authority_denied";
-        });
-        finished2(blocked, true);
-        return;
-      }
-      const parsedAuthorization = authorizationSchema.safeParse(authorization);
-      if (!parsedAuthorization.success)
-        throw new SetupFailure("invalid_source_authorization");
-      const authority = parsedAuthorization.data;
-      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest4(value.configuration))
-        throw new SetupFailure("source_authorization_scope_mismatch");
-      signal?.throwIfAborted();
-      await verify(value);
-      if (read(value).state !== "awaiting-authority") return;
-      edit(value, (current) => {
-        if (current.state !== "awaiting-authority") return;
-        current.authorityRef = digest4({
-          contextId: value.contextId,
-          owner: owner2,
-          authority
-        });
-        current.authorityKind = authority.kind;
-        current.authority = authority;
-        current.state = "admitting";
-        current.missing = [];
-        current.progress = "Starting the selected map";
-      });
-      if (read(value).state !== "admitting") return;
-      try {
-        signal?.throwIfAborted();
-        const result2 = await mapper.start(
-          { requestKey: value.contextId, ...value.configuration },
-          signal,
-          {
-            lifecycle: inheritedCapability(value.contextId),
-            setupOperationId: value.contextId
-          }
-        );
-        applyMap(value, result2);
-        if (read(value).state === "stop-requested")
-          await api.stop({
-            applicationId: value.applicationId,
-            contextId: value.contextId,
-            requestKey: `pending-stop-${value.map.requestKey}`
-          });
-      } catch {
-        edit(value, (current) => {
-          if (current.state === "admitting") {
-            current.state = "uncertain";
-            current.progress = "Map admission reply is unknown; read the original operation";
-          }
-        });
-      } finally {
-        if (signal?.aborted)
-          await api.stop({
-            applicationId: value.applicationId,
-            contextId: value.contextId,
-            requestKey: `interrupt-${value.map.requestKey}`
-          });
-      }
-    } catch (error63) {
-      const interrupted = edit(value, (current) => {
-        if (current.state === "awaiting-authority") {
-          current.state = signal?.aborted ? "stopped" : "blocked";
-          current.missing = [
-            error63 instanceof SetupFailure ? error63.code : "setup_interrupted"
-          ];
-          current.progress = "Setup confirmation or prerequisites were not completed; explicitly retry when ready";
-          current.error = error63 instanceof SetupFailure ? error63.code : "setup_interrupted";
-        }
-      });
-      if (["blocked", "stopped"].includes(interrupted.state))
-        finished2(interrupted, true);
-    }
-  }
-  const api = {
-    provenance: provenance2,
-    async prepare(raw, signal, invocation) {
-      const observer = snapshotObserver();
-      signal?.throwIfAborted();
-      const input3 = prepareSchema.parse(raw);
-      if (input3.configuration.target) {
-        input3.configuration.target.profileRevision ??= digest4({
-          url: input3.configuration.target.url,
-          profileId: input3.configuration.target.profileId
-        });
-      }
-      const previous = store.command(
-        "prepare",
-        input3.requestKey,
-        digest4(input3)
-      );
-      if (previous) return summarize({ ...previous, recovered: true });
-      const configuration2 = structuredClone(input3.configuration);
-      configuration2.source.revision = await resolveSourceRevision(
-        configuration2.source,
-        signal
-      );
-      signal?.throwIfAborted();
-      const sourceIdentity = await inspectSource(configuration2.source);
-      const reserved = reserve("prepare", input3, configuration2, sourceIdentity);
-      if (reserved.retainedSelection) {
-        try {
-          void Promise.resolve(
-            observer?.retainedMapSelected?.({
-              ...reserved.retainedSelection,
-              transition: "persisted-retained-selection",
-              persisted: true,
-              validated: true
-            })
-          ).catch(() => {
-          });
-        } catch {
-        }
-      }
-      if (reserved.value) {
-        started(reserved.value, observer);
-        await initialize(reserved.value, signal, invocation);
-      }
-      return summarize(reserved.receipt);
-    },
-    list(raw) {
-      const input3 = listSchema.parse(raw), rows2 = store.list(input3.directory, input3.offset);
-      return {
-        contexts: rows2.slice(0, 50).map((value) => ({
-          ...handle(value),
-          source: value.configuration.source,
-          target: value.configuration.target,
-          state: value.state,
-          supersededBy: value.supersededBy ?? null,
-          provenance: value.provenance
-        })),
-        nextOffset: rows2.length > 50 ? input3.offset + 50 : null
-      };
-    },
-    async get(raw) {
-      const input3 = handleSchema.parse(raw), value = read(input3);
-      await verify(value);
-      if (mapper && active.has(value.state)) {
-        let result2;
-        try {
-          result2 = await mapper.get({
-            requestKey: value.map.requestKey,
-            runId: value.map.runId
-          });
-        } catch {
-          return read(input3);
-        }
-        return applyMap(input3, result2);
-      }
-      return read(input3);
-    },
-    async wait(raw, signal) {
-      const { timeoutMs, ...input3 } = waitSchema.parse(raw);
-      const original2 = read(input3);
-      const deadline = new AbortController();
-      const bounded = AbortSignal.any([
-        deadline.signal,
-        ...signal ? [signal] : []
-      ]);
-      const timer = setTimeout(
-        () => deadline.abort(
-          new DOMException("Setup wait timed out", "TimeoutError")
-        ),
-        timeoutMs
-      );
-      let abort, stopDeadline;
-      try {
-        const result2 = await Promise.race([
-          (async () => {
-            const value = await this.get(input3);
-            bounded.throwIfAborted();
-            if (!active.has(value.state) || !mapper?.wait) return null;
-            return mapper.wait(
-              { requestKey: value.map.requestKey, runId: value.map.runId },
-              bounded
-            );
-          })(),
-          new Promise((_, reject) => {
-            abort = () => reject(bounded.reason);
-            bounded.addEventListener("abort", abort, { once: true });
-            if (bounded.aborted) abort();
-          })
-        ]);
-        return result2 ? applyMap(input3, result2) : read(input3);
-      } catch (error63) {
-        if (signal?.aborted) {
-          await Promise.race([
-            this.stop({
-              ...input3,
-              requestKey: `interrupt-${original2.map?.requestKey ?? original2.contextId}`
-            }),
-            new Promise((resolve4) => {
-              stopDeadline = () => resolve4();
-              deadline.signal.addEventListener("abort", stopDeadline, {
-                once: true
-              });
-              if (deadline.signal.aborted) stopDeadline();
-            })
-          ]);
-        } else if (!deadline.signal.aborted) throw error63;
-        return read(input3);
-      } finally {
-        clearTimeout(timer);
-        bounded.removeEventListener("abort", abort);
-        if (stopDeadline)
-          deadline.signal.removeEventListener("abort", stopDeadline);
-      }
-    },
-    async retry(raw, signal, invocation) {
-      const observer = snapshotObserver();
-      const input3 = commandSchema.parse(raw), value = read(input3);
-      await verify(value);
-      const previous = store.command("retry", input3.requestKey, digest4(input3));
-      if (previous) return summarize({ ...previous, recovered: true });
-      const reserved = reserve(
-        "retry",
-        input3,
-        value.configuration,
-        value.sourceIdentity,
-        true
-      );
-      if (reserved.retainedSelection) {
-        try {
-          void Promise.resolve(
-            observer?.retainedMapSelected?.({
-              ...reserved.retainedSelection,
-              transition: "persisted-retained-selection",
-              persisted: true,
-              validated: true
-            })
-          ).catch(() => {
-          });
-        } catch {
-        }
-      }
-      if (reserved.value) {
-        started(reserved.value, observer);
-        await initialize(reserved.value, signal, invocation);
-      }
-      return summarize(reserved.receipt);
-    },
-    async stop(raw) {
-      const input3 = commandSchema.parse(raw);
-      let stoppedBeforeAdmission = false;
-      const reserved = store.transaction(() => {
-        const hash6 = digest4(input3), previous = store.command("stop", input3.requestKey, hash6);
-        if (previous) {
-          const value2 = read(input3);
-          return {
-            receipt: { ...previous, recovered: true },
-            value: value2,
-            cancel: value2.state === "stop-requested"
-          };
-        }
-        const value = read(input3);
-        const cancel = active.has(value.state);
-        if (value.state === "awaiting-authority") {
-          value.state = "stopped";
-          value.progress = mapper ? "Stopped before map admission" : "Setup stopped before configuration completed";
-          store.put(value);
-          stoppedBeforeAdmission = true;
-        }
-        if (cancel) {
-          value.state = "stop-requested";
-          value.progress = "Stop requested for this original map";
-          store.put(value);
-        }
-        const receipt2 = {
-          ...handle(value),
-          runId: value.map?.runId ?? null,
-          cancellationRequested: cancel
-        };
-        store.receipt("stop", input3.requestKey, hash6, receipt2);
-        return { receipt: receipt2, value, cancel };
-      });
-      if (stoppedBeforeAdmission) finished2(reserved.value, true);
-      if (reserved.cancel && mapper) {
-        try {
-          applyMap(
-            input3,
-            await mapper.stop({
-              requestKey: reserved.value.map.requestKey,
-              runId: reserved.value.map.runId
-            })
-          );
-        } catch {
-        }
-      }
-      return summarize(reserved.receipt, true);
-    },
-    async resolve(raw) {
-      const input3 = resolveSchema.parse(raw), value = read(input3);
-      await verify(value);
-      if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
-        throw new SetupFailure("stale_application_context");
-      if (value.schema === "loki.setup-context/4" && value.state === "ready") {
-        const source4 = value.configuration.source;
-        const target2 = value.configuration.target ?? null;
-        const workItem = value.configuration.workItem ?? null;
-        return {
-          application: {
-            schema: "loki.application-context/3",
-            contextId: digest4({
-              source: source4,
-              target: target2,
-              workItem,
-              provenance: value.provenance
-            }),
-            source: source4,
-            target: target2,
-            workItem,
-            map: null,
-            readiness: {
-              state: "configured",
-              missing: [],
-              map: "not-required",
-              browserObserved: false
-            },
-            provenance: value.provenance
-          },
-          setup: {
-            ...handle(value),
-            mapRunId: null,
-            mapResultId: null,
-            configurationRefs: value.configuration.configurationRefs,
-            authorityRef: null
-          },
-          authority: "configuration-only"
-        };
-      }
-      if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
-        throw new SetupFailure("application_not_ready");
-      const source3 = value.configuration.source, target = value.configuration.target ?? null;
-      const map2 = {
-        mapId: value.map.data.mapId,
-        runId: value.map.runId,
-        resultId: value.map.resultId,
-        sourceRevision: source3.revision,
-        preview: value.map.data
-      };
-      const readiness2 = {
-        state: "ready",
-        missing: [],
-        ...value.map.data.readinessScope ? { scope: value.map.data.readinessScope } : {}
-      };
-      const application = {
-        schema: "loki.application-context/2",
-        contextId: digest4({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
-        source: source3,
-        target: target ?? null,
-        map: map2,
-        readiness: readiness2,
-        provenance: provenance2
-      };
-      return {
-        application,
-        setup: {
-          ...handle(value),
-          mapRunId: value.map.runId,
-          mapResultId: value.map.resultId,
-          configurationRefs: value.configuration.configurationRefs,
-          authorityRef: value.authorityRef
-        },
-        authority: value.authorityKind
-      };
-    },
-    async handoff(raw) {
-      const input3 = handoffSchema.parse(raw);
-      if (!consumer || (await consumer.readiness?.())?.length)
-        throw new SetupFailure("consumer_integration_unavailable");
-      const payload = await this.resolve({
-        applicationId: input3.applicationId,
-        contextId: input3.contextId,
-        expectedRevision: input3.expectedRevision,
-        expectedProfileRevision: input3.expectedProfileRevision
-      });
-      const hash6 = digest4(input3);
-      const reserved = store.transaction(() => {
-        const previous = store.command("handoff", input3.requestKey, hash6);
-        if (previous) return { receipt: previous, recovered: true };
-        const receipt2 = {
-          ...payload,
-          consumer: { state: "pending", provenance: provenance2 }
-        };
-        store.receipt("handoff", input3.requestKey, hash6, receipt2);
-        return { receipt: receipt2, recovered: false };
-      });
-      if (reserved.receipt.consumer.state !== "pending")
-        return { ...reserved.receipt, recovered: true };
-      const request3 = { requestKey: input3.requestKey, ...payload };
-      let rawResult;
-      try {
-        rawResult = reserved.recovered ? await consumer.get?.(request3) : await consumer.accept(request3);
-      } catch {
-        return { ...reserved.receipt, recovered: reserved.recovered };
-      }
-      if (!rawResult)
-        return { ...reserved.receipt, recovered: reserved.recovered };
-      const result2 = consumerReceiptSchema.parse(rawResult);
-      if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
-        throw new SetupFailure("consumer_scope_mismatch");
-      return store.transaction(() => {
-        const prior = store.command("handoff", input3.requestKey, hash6);
-        if (prior.consumer.state !== "pending")
-          return { ...prior, recovered: true };
-        const receipt2 = { ...payload, consumer: result2 };
-        store.complete("handoff", input3.requestKey, hash6, receipt2);
-        return receipt2;
-      });
-    },
-    close() {
-      for (const observer of telemetryByContext.values()) {
-        try {
-          observer.close?.();
-        } catch {
-        }
-      }
-      telemetryByContext.clear();
-      telemetryStarts.clear();
-      store.close();
-    }
-  };
-  return api;
-}
-
-// apps/codex-plugin/src/setup/customer-output.mjs
-var configuration = external_exports.object({
-  source: sourceSchema,
-  workItem: external_exports.string().optional(),
-  target: targetSchema.optional(),
-  configurationRefs: external_exports.array(
-    external_exports.object({
-      kind: external_exports.enum(["source", "target"]),
-      handle: external_exports.string()
-    })
-  )
-});
-var state = external_exports.enum([
-  "awaiting-confirmation",
-  "blocked",
-  "preparing",
-  "uncertain",
-  "stop-requested",
-  "ready",
-  "incomplete",
-  "failed",
-  "stopped",
-  "superseded"
-]);
-var handle2 = {
-  applicationId: identity3,
-  contextId: identity3,
-  version: external_exports.number().int().positive()
-};
-var summary = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-setup/1"),
-  ...handle2,
-  state,
-  missing: external_exports.array(external_exports.string()),
-  nextAction: external_exports.string(),
-  recovered: external_exports.boolean().optional(),
-  reused: external_exports.boolean().optional(),
-  cancellationRequested: external_exports.boolean().optional(),
-  supersededBy: identity3.optional(),
-  configuration: configuration.optional(),
-  notice: external_exports.string().optional()
-});
-var list = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-setup-list/1"),
-  contexts: external_exports.array(
-    external_exports.object({
-      ...handle2,
-      source: sourceSchema,
-      target: targetSchema.optional(),
-      state,
-      supersededBy: identity3.nullable(),
-      notice: external_exports.string().optional()
-    })
-  ),
-  nextOffset: external_exports.number().int().nonnegative().nullable()
-});
-var resolved = external_exports.object({
-  schema: external_exports.literal("kaijan.customer-application/1"),
-  application: external_exports.object({
-    contextId: identity3,
-    source: sourceSchema,
-    target: targetSchema.nullable(),
-    workItem: external_exports.string().nullable(),
-    readiness: external_exports.object({
-      state: external_exports.literal("configured"),
-      browserObserved: external_exports.literal(false),
-      applicationCoverage: external_exports.literal("not-verified")
-    })
-  }),
-  setup: external_exports.object(handle2),
-  nextAction: external_exports.string(),
-  consumer: external_exports.object({
-    state: external_exports.enum(["pending", "accepted", "refused"]),
-    accepted: external_exports.boolean().optional()
-  }).optional(),
-  recovered: external_exports.boolean().optional(),
-  notice: external_exports.string().optional()
-});
-var error62 = external_exports.object({
-  error: external_exports.object({ code: external_exports.string(), message: external_exports.string() })
-});
-var customerSetupOutputSchemas = Object.fromEntries(
-  [
-    ["loki_setup_list", list],
-    ...["prepare", "get", "wait", "retry", "stop"].map((name) => [
-      `loki_setup_${name}`,
-      summary
-    ]),
-    ["loki_setup_resolve", resolved],
-    ["loki_setup_handoff", resolved]
-  ].map(([name, success2]) => [name, external_exports.union([success2, error62])])
-);
-var statuses = {
-  "awaiting-authority": "awaiting-confirmation",
-  admitting: "preparing",
-  mapping: "preparing"
-};
-var status2 = (value) => state.parse(statuses[value] ?? value);
-var selection2 = (value) => configuration.parse({
-  ...value,
-  configurationRefs: value.configurationRefs.filter(
-    (ref) => ["source", "target"].includes(ref.kind)
-  )
-});
-var notice = (value) => value.provenance?.kind === "controlled-fixture" ? { notice: "Test data only. This does not verify the application." } : {};
-var missingLabels = {
-  "source-authorization": "Permission to read the selected source",
-  "work-item-or-mapping-question": "The work item to check",
-  "model-provider": "Kaijan sign-in and connection",
-  "admitted-map-producer": "Application setup support"
-};
-function nextAction(value) {
-  switch (value.state) {
-    case "ready":
-      return "Source context is saved. For planning, use the original work item from Setup or this chat and relevant source. Running tests needs a target and authorization. Setup does not verify application behavior.";
-    case "uncertain":
-      return "Read this original context to check what happened. Do not retry or create replacement work while its effects are unknown.";
-    case "stop-requested":
-      return "Stop is still pending. Read this original context again; do not assume the work has stopped.";
-    case "mapping":
-    case "admitting":
-      return "Preparation is unfinished. Keep this saved context and check its state. Do not start replacement work.";
-    case "blocked":
-    case "awaiting-authority":
-      return "Resolve the listed missing input or access, then retry only this known blocked setup when authorized.";
-    case "superseded":
-      return "This context has been replaced. Read the replacement context before continuing.";
-    case "incomplete":
-      return "Only part of the source context is available. Keep the saved record and resolve the missing input before continuing.";
-    default:
-      return "Setup did not complete. Keep the original context and check the selected source and access before an authorized retry.";
-  }
-}
-var failures = {
-  consumer_integration_unavailable: [
-    "application_connection_unavailable",
-    "This application connection is unavailable. Your saved source remains available for planning and testing."
-  ],
-  unknown_application_context: [
-    "setup_unavailable",
-    "This saved Setup is unavailable in this chat. Use its original chat and exact application and context IDs."
-  ],
-  request_conflict: [
-    "request_conflict",
-    "This request key belongs to different input. Read its original Setup. Use a new key only for separately authorized new work; never to recover unknown effects."
-  ],
-  retry_not_required: [
-    "retry_not_required",
-    "Read the saved Setup. Retry only known failed, stopped or blocked work after its missing input changes or when requested."
-  ],
-  stale_application_context: [
-    "stale_application_context",
-    "Use the exact source and target revisions from the saved Setup. A different source selection requires a new request."
-  ],
-  application_not_ready: [
-    "application_not_ready",
-    "Setup is not ready. Read its saved state and resolve the missing input or access."
-  ],
-  source_revision_unavailable: [
-    "source_revision_unavailable",
-    "The selected source revision is unavailable. No Setup context was saved. Check the repository and your access, then select an available branch or commit."
-  ],
-  source_revision_ambiguous: [
-    "source_revision_ambiguous",
-    "The selected source revision is ambiguous. No Setup context was saved. Supply an exact commit."
-  ],
-  invalid_source: [
-    "invalid_source",
-    "The selected source cannot be read. Check the project directory and repository access."
-  ],
-  source_identity_changed: [
-    "source_changed",
-    "The selected source has changed. Review the source selection before continuing."
-  ],
-  setup_interrupted: [
-    "setup_interrupted",
-    "The request was interrupted. Read the original Setup to check its state before continuing. Do not replay unknown effects."
-  ]
-};
-function customerSetupFailure(code) {
-  const [safeCode, message] = failures[code] ?? [
-    "setup_unavailable",
-    "Setup could not complete. Read the original saved context and check the selected source and access. Do not replay work with unknown effects."
-  ];
-  return error62.parse({ error: { code: safeCode, message } });
-}
-function projectCustomerSetup(name, value) {
-  if (value.error && typeof value.error === "object")
-    return customerSetupFailure(value.error.code);
-  if (name === "loki_setup_list")
-    return list.parse({
-      schema: "kaijan.customer-setup-list/1",
-      contexts: value.contexts.map((item) => ({
-        ...item,
-        state: status2(item.state),
-        ...notice(item)
-      })),
-      nextOffset: value.nextOffset
-    });
-  if (["loki_setup_resolve", "loki_setup_handoff"].includes(name)) {
-    const application = value.application;
-    return resolved.parse({
-      schema: "kaijan.customer-application/1",
-      application: {
-        contextId: application.contextId,
-        source: application.source,
-        target: application.target,
-        workItem: application.workItem ?? application.readiness.scope?.workItem ?? null,
-        readiness: {
-          state: "configured",
-          browserObserved: false,
-          applicationCoverage: "not-verified"
-        }
-      },
-      setup: value.setup,
-      nextAction: "For planning, use the saved work item and relevant source as input, not these Setup IDs. Setup does not create a test plan or check application behavior. Testing needs its own authorization.",
-      ...value.consumer ? {
-        consumer: value.consumer.state === "pending" ? { state: "pending" } : {
-          state: value.consumer.accepted ? "accepted" : "refused",
-          accepted: value.consumer.accepted
-        }
-      } : {},
-      ...value.recovered === void 0 ? {} : { recovered: value.recovered },
-      ...notice(application)
-    });
-  }
-  return summary.parse({
-    schema: "kaijan.customer-setup/1",
-    ...Object.fromEntries(
-      [
-        "applicationId",
-        "contextId",
-        "version",
-        "recovered",
-        "reused",
-        "supersededBy",
-        "cancellationRequested"
-      ].filter((key) => value[key] !== void 0).map((key) => [key, value[key]])
-    ),
-    state: status2(value.state),
-    missing: [
-      ...new Set(
-        value.missing.map(
-          (item) => missingLabels[item] ?? "Application setup needs attention"
-        )
-      )
-    ],
-    nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
-    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
-    ...notice(value)
-  });
-}
-var customerSetupDescriptions = {
-  loki_setup_list: "Find saved application setups for the selected project directory. This does not start tests or change the source.",
-  loki_setup_prepare: "Save the selected application's committed source revision, work item and optional test target. Resolve the selected Git ref without changing the checkout; unsaved edits are not included. Keep the same requestKey after a lost reply. This does not test application behavior.",
-  loki_setup_get: "Read the original saved application setup and its current state. Do not recreate unfinished work to recover a result.",
-  loki_setup_wait: "Read or wait for the original Setup state. Do not restart unfinished work or assume unknown effects have stopped.",
-  loki_setup_retry: "Retry only a known failed, stopped or blocked Setup after its missing input changes or the user requests it. Keep the original source selection. Do not replay work with unknown effects.",
-  loki_setup_stop: "Request Stop for this exact original Setup. Read its state afterward; a request alone does not confirm it stopped.",
-  loki_setup_resolve: "Read the configured application source, work item and optional target using the exact saved source and target revisions. Returned context IDs select application configuration, not a planning-input record. For planning, reuse the original workItem text and relevant source as input. Setup is not a test result and grants no permission to run tests.",
-  loki_setup_handoff: "Use the saved application configuration with an available connected application. Acknowledgment does not verify application behavior."
-};
-
-// apps/codex-plugin/src/setup/mcp.mjs
-var customerPrepareSchema = prepareSchema.extend({
-  configuration: prepareSchema.shape.configuration.extend({
-    configurationRefs: external_exports.array(
-      external_exports.strictObject({
-        kind: external_exports.enum(["source", "target"]),
-        handle: external_exports.string().min(1).max(200)
-      })
-    ).max(30).default([])
-  })
-});
-function invalidSetupInput(message, data) {
-  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
-  error63.message = message;
-  return error63;
-}
-async function createSetupTools({
-  directory,
-  mapper,
-  consumer,
-  createTelemetry,
-  authorize = async () => {
-    throw new SetupFailure("source_authorization_adapter_unavailable");
-  }
-}) {
-  const setup = await createSetup({
-    directory,
-    mapper,
-    consumer,
-    authorize,
-    createTelemetry
-  });
-  const definitions = [
-    [
-      "loki_setup_list",
-      "Find retained Setup contexts for the explicitly selected project directory. No source scan, mapping, provider call or authority grant.",
-      listSchema,
-      (input3) => setup.list(input3),
-      true
-    ],
-    [
-      "loki_setup_prepare",
-      "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
-      customerPrepareSchema,
-      (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
-      false
-    ],
-    [
-      "loki_setup_get",
-      "Reconcile the original map receipt and persist the updated Setup context. Progress/failure and cancellation remain explicit; this never starts another map.",
-      handleSchema,
-      (input3) => setup.get(input3),
-      false
-    ],
-    [
-      "loki_setup_wait",
-      "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
-      waitSchema,
-      (input3, signal) => setup.wait(input3, signal),
-      false
-    ],
-    [
-      "loki_setup_retry",
-      "Retry a known failed, stopped or blocked Setup after the user requests it or supplies its actual missing prerequisite. This can send the selected committed source to the configured provider within the original $10/5400-second scope. The native host applies its selected approval policy; no second mandatory form. Preserve the original revision/evidence and automatically admit the replacement when ready. Never replay uncertain effects.",
-      commandSchema,
-      (input3, signal, invocation) => setup.retry(input3, signal, invocation),
-      false
-    ],
-    [
-      "loki_setup_stop",
-      "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
-      commandSchema,
-      (input3) => setup.stop(input3),
-      false
-    ],
-    [
-      "loki_setup_resolve",
-      "Resolve a ready context with explicit expected source and target-profile revisions. Read readiness.scope: a source-inferred work-item map has incomplete application coverage and no observed browser behavior. Returns source-bound references; a handle grants no browser/source/provider access.",
-      resolveSchema,
-      (input3) => setup.resolve(input3),
-      true
-    ],
-    [
-      "loki_setup_handoff",
-      "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
-      handoffSchema,
-      (input3) => setup.handoff(input3),
-      false
-    ]
-  ];
-  const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
-    name,
-    description: customerSetupDescriptions[name],
-    inputSchema: {
-      ...external_exports.toJSONSchema(schema, { io: "input" }),
-      $id: `urn:loki:${name}:input:1`
-    },
-    outputSchema: {
-      type: "object",
-      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
-      $id: `urn:kaijan:${name}:customer-output:1`
-    },
-    annotations: {
-      readOnlyHint: readOnly,
-      destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
-        name
-      ),
-      idempotentHint: true,
-      openWorldHint: !readOnly
-    }
-  }));
-  const invoke = async (name, arguments_, signal, invocation) => {
-    const definition = definitions.find(([toolName]) => toolName === name);
-    if (!definition) throw invalidSetupInput("Unknown Setup tool");
-    const parsed = definition[2].safeParse(arguments_ ?? {});
-    if (!parsed.success) {
-      const fields = [
-        ...new Set(
-          parsed.error.issues.filter((issue3) => issue3.path.length).map((issue3) => issue3.path.join("."))
-        )
-      ];
-      throw invalidSetupInput(
-        fields.length ? `Invalid Setup input. Supply valid values for: ${fields.join(", ")}.` : "Invalid Setup input. Use the advertised schema.",
-        { code: "invalid_setup_input", fields }
-      );
-    }
-    try {
-      signal?.throwIfAborted();
-      const result2 = await definition[3](parsed.data, signal, invocation);
-      const text4 = JSON.stringify(result2);
-      const original2 = JSON.parse(text4);
-      if (!setupSuccessSchemas[name].safeParse(original2).success)
-        throw new SetupFailure("setup_output_invalid");
-      const wire = projectCustomerSetup(name, original2);
-      return {
-        structuredContent: wire,
-        content: [{ type: "text", text: JSON.stringify(wire) }]
-      };
-    } catch (error63) {
-      const result2 = customerSetupFailure(failure3(error63).code);
-      return {
-        isError: true,
-        structuredContent: result2,
-        content: [{ type: "text", text: JSON.stringify(result2) }]
-      };
-    }
-  };
-  return {
-    tools: tools2,
-    // Configuration-only Setup returns synchronously. There is no mapping job
-    // to wait for or stop, and no handoff when no consumer is connected.
-    hiddenTools: [
-      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
-      ...!consumer ? ["loki_setup_handoff"] : []
-    ],
-    invoke,
-    setup,
-    close: () => setup.close()
-  };
-}
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-import process5 from "node:process";
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
-var STDIO_DEFAULT_MAX_BUFFER_SIZE = 10 * 1024 * 1024;
-var ReadBuffer = class {
-  constructor(options) {
-    this._maxBufferSize = options?.maxBufferSize ?? STDIO_DEFAULT_MAX_BUFFER_SIZE;
-  }
-  append(chunk) {
-    const newSize = (this._buffer?.length ?? 0) + chunk.length;
-    if (newSize > this._maxBufferSize) {
-      this.clear();
-      throw new Error(`ReadBuffer exceeded maximum size of ${this._maxBufferSize} bytes`);
-    }
-    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
-  }
-  readMessage() {
-    if (!this._buffer) {
-      return null;
-    }
-    const index = this._buffer.indexOf("\n");
-    if (index === -1) {
-      return null;
-    }
-    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
-    this._buffer = this._buffer.subarray(index + 1);
-    return deserializeMessage(line);
-  }
-  clear() {
-    this._buffer = void 0;
-  }
-};
-function deserializeMessage(line) {
-  return JSONRPCMessageSchema.parse(JSON.parse(line));
-}
-function serializeMessage(message) {
-  return JSON.stringify(message) + "\n";
-}
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-var StdioServerTransport = class {
-  constructor(_stdin = process5.stdin, _stdout = process5.stdout, options) {
-    this._stdin = _stdin;
-    this._stdout = _stdout;
-    this._started = false;
-    this._ondata = (chunk) => {
-      try {
-        this._readBuffer.append(chunk);
-        this.processReadBuffer();
-      } catch (error63) {
-        this.onerror?.(error63);
-        this.close().catch(() => {
-        });
-      }
-    };
-    this._onerror = (error63) => {
-      this.onerror?.(error63);
-    };
-    this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
-  }
-  /**
-   * Starts listening for messages on stdin.
-   */
-  async start() {
-    if (this._started) {
-      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
-    }
-    this._started = true;
-    this._stdin.on("data", this._ondata);
-    this._stdin.on("error", this._onerror);
-  }
-  processReadBuffer() {
-    while (true) {
-      try {
-        const message = this._readBuffer.readMessage();
-        if (message === null) {
-          break;
-        }
-        this.onmessage?.(message);
-      } catch (error63) {
-        this.onerror?.(error63);
-      }
-    }
-  }
-  async close() {
-    this._stdin.off("data", this._ondata);
-    this._stdin.off("error", this._onerror);
-    const remainingDataListeners = this._stdin.listenerCount("data");
-    if (remainingDataListeners === 0) {
-      this._stdin.pause();
-    }
-    this._readBuffer.clear();
-    this.onclose?.();
-  }
-  send(message) {
-    return new Promise((resolve4) => {
-      const json3 = serializeMessage(message);
-      if (this._stdout.write(json3)) {
-        resolve4();
-      } else {
-        this._stdout.once("drain", resolve4);
-      }
-    });
-  }
-};
-
-// apps/codex-plugin/plugin/scripts/profile-state.mjs
-import { TextDecoder as TextDecoder2 } from "node:util";
-import { constants as constants4 } from "node:fs";
-import {
-  mkdir as mkdir5,
-  open as open4,
-  readdir,
-  realpath as realpath4,
-  stat,
-  link as link2,
-  unlink as unlink4
-} from "node:fs/promises";
-import { createHash as createHash3, randomUUID as randomUUID7 } from "node:crypto";
-import { dirname as dirname3, join as join7, resolve as resolve2 } from "node:path";
-async function bindProfileState(build, args, home) {
-  const host = build.host ?? "codex";
-  if (!["codex", "claude_code"].includes(host))
-    throw new Error("Unsupported plugin host.");
-  if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
-    throw new Error(
-      "Missing fixed plugin profile. Reinstall the selected artifact."
-    );
-  const identity4 = JSON.stringify({
-    profile: build.profile,
-    origin: build.coreOrigin,
-    client: build.oauthClientId
-  });
-  const key = createHash3("sha256").update(identity4).digest("hex").slice(0, 20);
-  let selected;
-  const forwarded = [];
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--state" || arg.startsWith("--state=")) {
-      if (selected !== void 0)
-        throw new Error("Supply one private state directory.");
-      selected = arg === "--state" ? args[++i] : arg.slice(8);
-      if (!selected || selected.startsWith("--"))
-        throw new Error("Missing private state directory.");
-    } else if (arg === "--host" || arg.startsWith("--host=")) {
-      const requested = arg === "--host" ? args[++i] : arg.slice(7);
-      if (requested !== host)
-        throw new Error(
-          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
-        );
-    } else forwarded.push(arg);
-  }
-  const state2 = resolve2(
-    selected ?? join7(home, ".local", "share", "loki", host, build.profile, key)
-  );
-  await mkdir5(state2, { recursive: true, mode: 448 });
-  if (await realpath4(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
-    throw new Error("Use a canonical private state directory with mode 0700.");
-  const path = join7(state2, "plugin-profile.json");
-  const expected = {
-    schemaVersion: 1,
-    profile: build.profile,
-    coreOrigin: build.coreOrigin,
-    oauthClientId: build.oauthClientId
-  };
-  let file2;
-  const readBinding = () => open4(
-    path,
-    constants4.O_RDONLY | constants4.O_NOFOLLOW | constants4.O_NONBLOCK
-  );
-  try {
-    file2 = await readBinding();
-  } catch (error63) {
-    if (error63.code !== "ENOENT") throw error63;
-    if ((await readdir(state2)).length) {
-      try {
-        file2 = await readBinding();
-      } catch (readError) {
-        if (readError.code !== "ENOENT") throw readError;
-        throw new Error(
-          "Unbound populated state cannot be reused. Select a fresh profile state; do not copy credentials.",
-          { cause: readError }
-        );
-      }
-    } else {
-      const temporary = join7(dirname3(state2), `.loki-profile-${randomUUID7()}`);
-      const created = await open4(temporary, "wx", 384);
-      try {
-        try {
-          await created.writeFile(JSON.stringify(expected));
-          await created.sync();
-        } finally {
-          await created.close();
-        }
-        try {
-          await link2(temporary, path);
-        } catch (linkError) {
-          if (linkError.code !== "EEXIST") throw linkError;
-        }
-      } finally {
-        await unlink4(temporary);
-      }
-      file2 = await readBinding();
-    }
-  }
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || info.size > 4096 || (info.mode & 63) !== 0)
-      throw new Error("Invalid private profile binding.");
-    const actual = JSON.parse(
-      new TextDecoder2("utf-8", { fatal: true }).decode(await file2.readFile())
-    );
-    if (JSON.stringify(actual) !== JSON.stringify(expected))
-      throw new Error(
-        "Private state belongs to a different environment. Select its own state directory."
-      );
-  } finally {
-    await file2.close();
-  }
-  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
-}
-
-// apps/codex-plugin/src/claude-tool-schema.mjs
-var alternatives = /* @__PURE__ */ new Map([
-  [
-    "loki_test_execute",
-    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
-  ],
-  [
-    "loki_report_show",
-    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
-  ]
-]);
-var sourceAlternatives = /* @__PURE__ */ new Map([
-  ["loki_pr_context_find_related", ["url", "context", "contextId"]],
-  ["loki_context_finder_find_related", ["url", "context", "contextId"]],
-  ["loki_change_risk_analyze", ["packet", "contextId"]],
-  ["loki_risk_finder_analyze", ["packet", "contextId"]],
-  ["loki_test_plan", ["input", "contextId"]],
-  ["loki_test_supplement", ["input", "contextId"]],
-  ["loki_test_evidence_assess", ["input", "contextId"]]
-]);
-function sourceDefinition(tool, fields, host = "Claude") {
-  const { oneOf, ...root } = tool.inputSchema;
-  if (root.type !== "object" || !root.properties || root.additionalProperties !== false || root.anyOf !== void 0 || root.allOf !== void 0 || !Array.isArray(oneOf) || oneOf.length !== fields.length || oneOf.some(
-    (branch, index) => !branch || Object.keys(branch).length !== 1 || !Array.isArray(branch.required) || branch.required.length !== 1 || branch.required[0] !== fields[index] || !Object.hasOwn(root.properties, fields[index])
-  ))
-    throw new Error(`Unsupported ${host} advisory source layout.`);
-  return {
-    ...tool,
-    inputSchema: root,
-    description: `${tool.description}
-Supply exactly one source: ${fields.join(", ")}. Do not combine source forms. The receiver validates the selected source before starting work.`
-  };
-}
-function codexToolDefinition(tool) {
-  const sources = tool && sourceAlternatives.get(tool.name);
-  return sources && tool.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool, sources, "Codex") : tool;
-}
-function claudeToolDefinition(tool) {
-  const sources = tool && sourceAlternatives.get(tool.name);
-  if (sources && tool.inputSchema?.oneOf !== void 0)
-    return sourceDefinition(tool, sources);
-  const guidance = tool && alternatives.get(tool.name);
-  if (!guidance || !Array.isArray(tool.inputSchema?.anyOf)) return tool;
-  const { anyOf, ...root } = tool.inputSchema;
-  if (anyOf.length < 2 || anyOf.some(
-    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
-      (key) => ![
-        "type",
-        "properties",
-        "required",
-        "additionalProperties"
-      ].includes(key)
-    )
-  ))
-    throw new Error("Unsupported Claude tool input layout.");
-  const properties = {};
-  for (const branch of anyOf)
-    for (const [name, schema] of Object.entries(branch.properties)) {
-      const previous = properties[name];
-      if (previous === void 0) properties[name] = schema;
-      else if (JSON.stringify(previous) !== JSON.stringify(schema))
-        throw new Error("Conflicting Claude tool input field.");
-    }
-  const required2 = (anyOf[0].required ?? []).filter(
-    (name) => anyOf.every((branch) => branch.required?.includes(name))
-  );
-  return {
-    ...tool,
-    inputSchema: {
-      ...root,
-      type: "object",
-      properties,
-      ...required2.length ? { required: required2 } : {},
-      additionalProperties: false
-    },
-    description: `${tool.description}
-${guidance}`
-  };
-}
-
-// apps/codex-plugin/src/customer-plan-selection.mjs
-import { isDeepStrictEqual } from "node:util";
+// apps/codex-plugin/src/issue-screenshot.mjs
+import assert2 from "node:assert/strict";
+import { createHash as createHash4 } from "node:crypto";
 
 // packages/contracts/dist/report-evidence.js
-var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
 var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
 var reportedTestStatusSchema = external_exports.enum([
@@ -49953,7 +48218,7 @@ var reportedTestSchema = external_exports.strictObject({
     revision: nonempty,
     language: nonempty,
     text: nonempty,
-    sha256: digest5
+    sha256: digest4
   }).nullable()
 }).superRefine((test, ctx) => {
   if (new Set(test.steps.map((step2) => step2.id)).size !== test.steps.length)
@@ -49976,9 +48241,9 @@ var reportPullRequestSchema = external_exports.strictObject({
   title: nonempty,
   state: external_exports.enum(["open", "closed", "merged"]),
   author: nonempty,
-  base: external_exports.strictObject({ ref: nonempty, sha: revision2 }),
-  head: external_exports.strictObject({ ref: nonempty, sha: revision2 }),
-  mergeCommit: revision2.nullable(),
+  base: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  head: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  mergeCommit: revision.nullable(),
   openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
   capturedAt: external_exports.iso.datetime({ offset: true }),
   files: external_exports.array(external_exports.strictObject({
@@ -49991,7 +48256,7 @@ var reportPullRequestSchema = external_exports.strictObject({
   source: external_exports.strictObject({
     kind: external_exports.literal("supplied-github-read"),
     record: external_exports.json(),
-    sha256: digest5
+    sha256: digest4
   })
 }).superRefine((pr, ctx) => {
   if (pr.url !== `https://github.com/${pr.repository}/pull/${pr.number}`)
@@ -50006,14 +48271,14 @@ var reportPullRequestSchema = external_exports.strictObject({
     });
 });
 var reportVerificationSchema = external_exports.strictObject({
-  planRef: external_exports.strictObject({ answerId: digest5, resultSha256: digest5 }),
+  planRef: external_exports.strictObject({ answerId: digest4, resultSha256: digest4 }),
   repository,
-  sourceRevision: revision2,
+  sourceRevision: revision,
   pullRequestUrl: external_exports.url().nullable(),
   recordedAt: external_exports.iso.datetime({ offset: true }),
   provenance: external_exports.literal("product-terminal-checks/1"),
   oracle: nonempty,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest5 })).min(1),
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest4 })).min(1),
   tests: external_exports.array(reportedTestSchema).min(1)
 }).superRefine((run, ctx) => {
   if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
@@ -50022,14 +48287,14 @@ var reportVerificationSchema = external_exports.strictObject({
       message: "Test IDs must be unique per run."
     });
   const ids2 = new Set(run.evidence.map((item) => item.id));
-  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step2) => step2.evidenceIds.some((id7) => !ids2.has(id7)))))
+  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step2) => step2.evidenceIds.some((id8) => !ids2.has(id8)))))
     ctx.addIssue({
       code: "custom",
       message: "Each step must reference supplied evidence."
     });
 });
 var reportExecutionSchema = reportVerificationSchema.safeExtend({
-  runId: digest5
+  runId: digest4
 });
 var reportEvidenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.report-evidence/1"),
@@ -50065,47 +48330,15 @@ var reportSourcesSchema = external_exports.strictObject({
 
 // packages/contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
-var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var terminalChecksSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.terminal-checks/1"),
-  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
-  pullRequestUrl: external_exports.url().nullable(),
-  tests: external_exports.array(external_exports.strictObject({
-    testId: nonempty2,
-    title: nonempty2,
-    deliberateFailure: external_exports.boolean().default(false),
-    checks: external_exports.array(external_exports.strictObject({
-      id: nonempty2,
-      title: nonempty2,
-      field: external_exports.enum(["text", "snapshot", "url"]),
-      operator: external_exports.enum(["contains", "not-contains", "equals"]),
-      expected: nonempty2
-    })).min(1)
-  })).min(1)
-}).superRefine((input3, ctx) => {
-  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs and each test's check IDs must be unique."
-    });
-  if (input3.pullRequestUrl !== null) {
-    const prefix = `https://github.com/${input3.repository}/pull/`;
-    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
-      ctx.addIssue({
-        code: "custom",
-        message: "The PR must belong to the selected repository."
-      });
-  }
-});
+var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var checkedPlanReferenceSchema = external_exports.strictObject({
-  answerId: digest6,
-  resultSha256: digest6,
+  answerId: digest5,
+  resultSha256: digest5,
   selectedTestIds: external_exports.array(nonempty2).min(1)
 });
 
 // packages/contracts/dist/report-view.js
-var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var groupSchema = external_exports.object({
   key: external_exports.enum([
     "why",
@@ -50137,9 +48370,9 @@ var reportItemSchema = external_exports.object({
 var sectionBase = external_exports.object({
   title: external_exports.string(),
   kind: external_exports.enum(["plan", "runner", "assessment"]),
-  sourceId: digest7,
+  sourceId: digest6,
   sourceKind: external_exports.enum(["answer", "run"]),
-  resultSha256: digest7.nullable(),
+  resultSha256: digest6.nullable(),
   operationState: external_exports.string(),
   stopRequested: external_exports.boolean().nullable().optional(),
   producerStatus: external_exports.object({
@@ -50159,7 +48392,7 @@ var sectionBase = external_exports.object({
     supplied: external_exports.boolean().optional()
   })),
   items: external_exports.array(reportItemSchema),
-  assessedRunIds: external_exports.array(digest7).optional(),
+  assessedRunIds: external_exports.array(digest6).optional(),
   localArtifacts: external_exports.object({
     kind: external_exports.enum(["browser", "desktop", "unavailable"]),
     message: external_exports.string(),
@@ -50177,15 +48410,15 @@ var reportSectionSchema = external_exports.union([
 ]);
 var reportViewSchema = external_exports.object({
   schema: external_exports.literal("loki.report-view/3"),
-  reportId: digest7,
+  reportId: digest6,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest7.nullable(),
+  mapId: digest6.nullable(),
   sections: external_exports.array(reportSectionSchema),
   displayNotice: external_exports.string().nullable(),
   evidenceContext: external_exports.object({
-    contextId: digest7,
-    recordSha256: digest7,
+    contextId: digest6,
+    recordSha256: digest6,
     readTool: external_exports.literal("loki_context_get"),
     provenance: external_exports.string()
   }).optional(),
@@ -50205,7 +48438,7 @@ var reportReadOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/advisory-read.js
-var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var advisoryReadInputSchema = external_exports.strictObject({
   family: external_exports.enum([
     "uiModeler",
@@ -50216,14 +48449,14 @@ var advisoryReadInputSchema = external_exports.strictObject({
     "testSupplement",
     "suppliedEvidence"
   ]),
-  answerId: digest8,
+  answerId: digest7,
   offset: external_exports.number().int().nonnegative().optional()
 }).meta({ $id: "urn:kaijan:advisory-read-input:1" });
 var advisoryReadSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.advisory-read/1"),
   state: external_exports.literal("complete"),
-  answerId: digest8,
-  resultSha256: digest8,
+  answerId: digest7,
+  resultSha256: digest7,
   resultChunk: external_exports.strictObject({
     encoding: external_exports.literal("JSON text, UTF-16 offsets"),
     offset: external_exports.number().int().nonnegative(),
@@ -50252,7 +48485,7 @@ var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advis
 
 // packages/contracts/dist/advisory.js
 var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
-var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var strings = external_exports.array(external_exports.string());
 var count4 = external_exports.number().int().nonnegative();
@@ -50312,13 +48545,13 @@ var record3 = external_exports.looseObject({
 });
 var assessmentImageReferenceSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.assessment-image-ref/1"),
-  reportId: digest9,
-  runId: digest9,
-  resultSha256: digest9,
-  manifestSha256: digest9,
-  artifactId: digest9,
-  sha256: digest9,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+  reportId: digest8,
+  runId: digest8,
+  resultSha256: digest8,
+  manifestSha256: digest8,
+  artifactId: digest8,
+  sha256: digest8,
+  bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
   schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
@@ -50341,46 +48574,47 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
     media_type: external_exports.literal("image/png").optional(),
     reference: jsonObject.nullable(),
     provenance: jsonObject.nullable(),
-    sha256: digest9.optional(),
+    sha256: digest8.optional(),
     artifact_ref: assessmentImageReferenceSchema.optional()
   })),
   target: jsonObject.nullable(),
   provenance: jsonObject.nullable()
 });
-var proposedPlanSchema = external_exports.strictObject({
+var planningRefs = external_exports.array(external_exports.looseObject({ evidence_id: external_exports.string() }));
+var proposedPlanSchema = external_exports.looseObject({
   status: external_exports.enum(["proposed_plan", "needs_clarification"]),
-  objectives: external_exports.array(external_exports.strictObject({ id: external_exports.string(), text: external_exports.string(), refs: refs2 })),
-  requirement_coverage: external_exports.array(external_exports.strictObject({
+  objectives: external_exports.array(external_exports.looseObject({ id: external_exports.string(), text: external_exports.string(), refs: planningRefs })),
+  requirement_coverage: external_exports.array(external_exports.looseObject({
     requirement_id: external_exports.string(),
     status: external_exports.enum(["proposed", "gap"]),
     test_ids: strings,
     reason: external_exports.string()
   })),
   ambiguities: strings,
-  relevant_surfaces: external_exports.array(external_exports.strictObject({
+  relevant_surfaces: external_exports.array(external_exports.looseObject({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
-    refs: refs2
+    basis: external_exports.string(),
+    refs: planningRefs
   })),
-  tests: external_exports.array(external_exports.strictObject({
-    title: nonempty3.optional(),
+  tests: external_exports.array(external_exports.looseObject({
+    title: external_exports.string().optional(),
     // Absent only in historical saved plans.
-    method: nonempty3,
+    method: external_exports.string(),
     id: external_exports.string(),
     objective_ids: strings,
-    priority: external_exports.enum(["P1", "P2", "P3"]),
+    priority: external_exports.string(),
     reason: external_exports.string(),
     prerequisites: strings,
     steps: strings,
-    expected: external_exports.strictObject({
+    expected: external_exports.looseObject({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis"]),
-      refs: refs2
+      authority: external_exports.string(),
+      refs: planningRefs
     }),
     execution_gaps: strings
   })),
   disagreements: strings,
-  runner_handoff: external_exports.strictObject({
+  runner_handoff: external_exports.looseObject({
     status: external_exports.literal("proposed_only"),
     scenario_ids: strings,
     required_inputs: strings
@@ -50406,7 +48640,7 @@ var evidenceCatalog = external_exports.array(external_exports.looseObject({
   revision: external_exports.string(),
   line: count4,
   quote: external_exports.string(),
-  quote_sha256: digest9
+  quote_sha256: digest8
 }));
 var nativePlanningResultSchema = external_exports.union([
   external_exports.looseObject({
@@ -50420,7 +48654,7 @@ var nativePlanningResultSchema = external_exports.union([
       tests: count4,
       objectives: count4
     }),
-    input_hash: digest9,
+    input_hash: digest8,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog
@@ -50477,7 +48711,7 @@ var nativeSupplementResultSchema = external_exports.union([
       text: external_exports.string(),
       uri: external_exports.string(),
       revision: external_exports.string(),
-      sha256: digest9,
+      sha256: digest8,
       bytes: count4,
       test_ids: strings
     }),
@@ -50486,10 +48720,10 @@ var nativeSupplementResultSchema = external_exports.union([
       status: external_exports.literal("structurally_valid_supplement"),
       executed: external_exports.literal(false),
       semantic_support: external_exports.literal("requires_separate_review"),
-      original_baseline_sha256: digest9,
+      original_baseline_sha256: digest8,
       original_baseline_test_ids: strings
     }),
-    input_hash: digest9,
+    input_hash: digest8,
     receipt_directory: external_exports.string(),
     receipt: nativePlanningReceiptSchema,
     evidence: evidenceCatalog,
@@ -50500,8 +48734,8 @@ var nativeSupplementResultSchema = external_exports.union([
 var nativeAssessmentResultSchema = external_exports.looseObject({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  input_sha256: digest9,
-  request_sha256: digest9,
+  input_sha256: digest8,
+  request_sha256: digest8,
   assessment: external_exports.looseObject({
     schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
     original_candidate: jsonObject,
@@ -50531,7 +48765,7 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
   native_artifact_directory: external_exports.string(),
   complete_call_elapsed_seconds: external_exports.number().nonnegative(),
   provider_calls_started: count4,
-  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest9 })),
+  native_artifacts: external_exports.array(external_exports.strictObject({ path: external_exports.string(), bytes: count4, sha256: digest8 })),
   result_persisted: external_exports.boolean(),
   continuation_allowed: external_exports.boolean(),
   limitations: external_exports.string(),
@@ -50539,11 +48773,11 @@ var nativeAssessmentResultSchema = external_exports.looseObject({
 });
 var advisoryIncompleteSchema = external_exports.strictObject({
   state: external_exports.enum(["unknown", "refused", "cancelled"]),
-  answerId: digest9.optional(),
+  answerId: digest8.optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count4,
-    sha256: digest9,
+    sha256: digest8,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional(),
   reason: external_exports.string(),
@@ -50561,7 +48795,7 @@ var advisoryIncompleteSchema = external_exports.strictObject({
 });
 var advisoryContextUnavailableSchema = external_exports.strictObject({
   state: external_exports.literal("unsupported-consumption"),
-  contextId: digest9,
+  contextId: digest8,
   capability: external_exports.string(),
   detail: jsonObject,
   contextRetained: external_exports.literal(true),
@@ -50581,18 +48815,18 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
 });
 
 // packages/contracts/dist/clarification-presentation.js
-var binding = external_exports.strictObject({
+var binding = external_exports.object({
   sourceId: external_exports.string(),
-  quote: external_exports.string().min(1).max(512)
+  quote: external_exports.string().min(1)
 });
-var ordinaryPresentation = external_exports.strictObject({
+var ordinaryPresentation = external_exports.object({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
-  choices: external_exports.array(binding).max(8)
+  choices: external_exports.array(binding)
 });
 var clarificationPresentationSchema = external_exports.union([
   ordinaryPresentation,
-  external_exports.strictObject({
+  external_exports.object({
     kind: external_exports.literal("read-only-path"),
     subject: binding,
     control: binding,
@@ -50601,7 +48835,7 @@ var clarificationPresentationSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/runner.js
-var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
 var questions = external_exports.array(external_exports.strictObject({
@@ -50621,17 +48855,35 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
   basis: external_exports.literal("model-authored-unverified"),
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
-var runnerExecutionReportSchema = external_exports.union([
+var runnerTestResultsSchema = external_exports.array(external_exports.object({
+  test_id: external_exports.string(),
+  scenario_finished: external_exports.boolean(),
+  bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
+  actual: external_exports.string(),
+  execution_details: external_exports.string(),
+  warning: external_exports.string().nullable()
+}));
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view2 = { ...value };
+  if (view2.effects !== "known" && view2.effects !== "uncertain")
+    delete view2.effects;
+  return view2;
+}, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
-    schema: external_exports.literal("loki.runner.execution-report/2")
+    schema: external_exports.literal("loki.runner.execution-report/2"),
+    test_results: runnerTestResultsSchema.optional()
   })
-]);
+]));
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -50658,7 +48910,7 @@ var runnerClarificationSchema = external_exports.strictObject({
 });
 var originalReference = external_exports.strictObject({
   path: external_exports.string(),
-  sha256: digest10,
+  sha256: digest9,
   bytes: count5
 });
 var checkpointReference = originalReference.extend({
@@ -50743,13 +48995,13 @@ var runnerResultSchema = external_exports.discriminatedUnion("status", [
       provenance: jsonObject2
     }),
     verification: reportVerificationSchema.optional(),
-    sourceContextId: digest10.nullable().optional()
+    sourceContextId: digest9.nullable().optional()
   })
 ]);
 var runnerNextActionSchema = external_exports.strictObject({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: digest10,
+  runId: digest9,
   clarificationId: external_exports.string().min(1),
   deadlineAt: external_exports.string(),
   questions,
@@ -50757,7 +49009,7 @@ var runnerNextActionSchema = external_exports.strictObject({
 });
 var operationBase = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-operation/1"),
-  runId: digest10,
+  runId: digest9,
   state: external_exports.enum([
     "accepted",
     "running",
@@ -50778,14 +49030,14 @@ var operationBase = external_exports.strictObject({
   receiptDirectory: external_exports.string().optional(),
   providerCallsStarted: external_exports.literal(0).optional(),
   resultValidated: external_exports.boolean().optional(),
-  resultSha256: digest10.optional(),
+  resultSha256: digest9.optional(),
   resultBytes: count5.optional(),
-  resultRecordSha256: digest10.optional(),
+  resultRecordSha256: digest9.optional(),
   resultRecord: external_exports.json().optional(),
   retainedNativeFile: external_exports.strictObject({
     path: external_exports.string(),
     bytes: count5,
-    sha256: digest10,
+    sha256: digest9,
     semanticAssessment: external_exports.literal("not-performed")
   }).nullable().optional()
 });
@@ -50804,7 +49056,7 @@ var resultChunk = external_exports.strictObject({
 var finished = operationBase.extend({
   state: external_exports.literal("finished"),
   resultValidated: external_exports.literal(true),
-  resultSha256: digest10,
+  resultSha256: digest9,
   resultBytes: external_exports.number().int().positive()
 });
 var runnerOperationSchema = external_exports.union([
@@ -50825,7 +49077,7 @@ var runnerOperationSchema = external_exports.union([
 var runnerErrorSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner-error/1"),
   method: external_exports.enum(["execute", "get", "stop"]),
-  runId: digest10.optional(),
+  runId: digest9.optional(),
   error: external_exports.strictObject({
     code: external_exports.enum([
       "invalid_arguments",
@@ -50846,7 +49098,7 @@ var runnerErrorSchema = external_exports.strictObject({
       action: external_exports.string(),
       instruction: external_exports.string(),
       requestKey: external_exports.string().optional(),
-      existingRunId: digest10.optional(),
+      existingRunId: digest9.optional(),
       existingRunScope: external_exports.string().optional()
     })
   })
@@ -50854,7 +49106,7 @@ var runnerErrorSchema = external_exports.strictObject({
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
 // packages/contracts/dist/assessment-preparation.js
-var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
 var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var assessmentReceiptSchema = external_exports.looseObject({
@@ -50866,10 +49118,10 @@ var assessmentPreparationLimits = {
   packetBytes: 2 * 1024 * 1024
 };
 var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strictObject({
-  reportId: digest11,
-  runId: digest11,
+  reportId: digest10,
+  runId: digest10,
   view: external_exports.literal("inspection").optional(),
-  expectedResultSha256: digest11.optional(),
+  expectedResultSha256: digest10.optional(),
   work_item: suppliedEvidenceInputSchema.shape.work_item.nullable().optional(),
   requirements: suppliedEvidenceInputSchema.shape.requirements.optional(),
   proposed_tests: suppliedEvidenceInputSchema.shape.proposed_tests.optional(),
@@ -50878,23 +49130,23 @@ var assessmentPrepareInputSchema = preserveAdvisoryInput(external_exports.strict
   preflight: assessmentReceiptSchema.nullable().optional(),
   runtimeComparison: assessmentReceiptSchema.nullable().optional(),
   cleanup: assessmentReceiptSchema.nullable().optional(),
-  selectedArtifactIds: external_exports.array(digest11).refine((ids2) => new Set(ids2).size === ids2.length).optional()
+  selectedArtifactIds: external_exports.array(digest10).refine((ids2) => new Set(ids2).size === ids2.length).optional()
 })).meta({ $id: "urn:kaijan:assessment-prepare-input:1" });
 var locator2 = external_exports.strictObject({
   report: external_exports.strictObject({
     tool: external_exports.literal("loki_report_get"),
-    reportId: digest11
+    reportId: digest10
   }),
   operation: external_exports.strictObject({
     tool: external_exports.literal("loki_runner_get"),
-    runId: digest11
+    runId: digest10
   }),
   artifacts: external_exports.strictObject({
     tool: external_exports.literal("loki_report_artifact_read"),
-    reportId: digest11,
-    runId: digest11
+    reportId: digest10,
+    runId: digest10
   }),
-  resultSha256: digest11.nullable()
+  resultSha256: digest10.nullable()
 });
 var issue2 = external_exports.strictObject({
   code: external_exports.string(),
@@ -50967,7 +49219,7 @@ var assessmentInspectionLocatorSchema = external_exports.union([
     document: external_exports.literal("full-preparation-packet"),
     pointer: external_exports.string()
   }),
-  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest11 })
+  external_exports.strictObject({ document: external_exports.literal("artifact"), artifactId: digest10 })
 ]);
 var section = external_exports.strictObject({
   total: count6,
@@ -51121,7 +49373,7 @@ function transferAssessmentPresentationProof(source3, target, verifySource) {
       transferAssessmentPresentationProof(source3[key], target[key], verifySource);
   return target;
 }
-var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest11 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var customerCleanupFactsSchema = external_exports.object({
   kind: external_exports.literal("browser-cleanup"),
   scope: external_exports.literal("test-browser-resources"),
@@ -51137,8 +49389,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
   // display copy; serialized fields alone never grant source proof.
   projection: external_exports.object({
     schema: external_exports.literal("kaijan.customer-source-projection/1"),
-    sourceSha256: digest12,
-    sha256: digest12,
+    sourceSha256: digest11,
+    sha256: digest11,
     bytes: external_exports.number().int().nonnegative()
   }).optional(),
   state: external_exports.enum(["literal-source", "derived-facts", "unavailable"]),
@@ -51151,8 +49403,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
     "supplied-source"
   ]).optional(),
   text: external_exports.string().optional(),
-  sha256: digest12.optional(),
-  sourceSha256: digest12.optional(),
+  sha256: digest11.optional(),
+  sourceSha256: digest11.optional(),
   facts: customerCleanupFactsSchema.optional(),
   notice: external_exports.string().optional()
 });
@@ -51202,7 +49454,7 @@ function presentAssessmentText(_verdict, actual, _quotes, steps, reason) {
 }
 var customerRecordedActionSchema = external_exports.object({
   sourceId: external_exports.string(),
-  sourceSha256: digest12.optional(),
+  sourceSha256: digest11.optional(),
   evidenceId: external_exports.string(),
   index: external_exports.number().int().positive(),
   action: external_exports.object({
@@ -51275,18 +49527,268 @@ function presentAssessmentFinding(kind, supported, content) {
   };
 }
 
+// packages/contracts/dist/customer-related.js
+var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings2 = external_exports.array(external_exports.string());
+var optional2 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional2(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional2(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional2(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional2(external_exports.string()),
+    evidence_ids: optional2(strings2),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional2(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id4.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id4,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional2(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional2(external_exports.string())
+});
+var proof = /* @__PURE__ */ new WeakMap();
+var object3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var rows = (value) => Array.isArray(value) ? value.filter(object3) : [];
+function retainVerifiedRelatedSource(value) {
+  proof.set(value, JSON.stringify(value));
+  return value;
+}
+function hasVerifiedRelatedSource(value) {
+  return object3(value) && proof.get(value) === JSON.stringify(value);
+}
+function transferRelatedSourceProof(source3, target, verify) {
+  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+    return target;
+  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
+    retainVerifiedRelatedSource(target);
+  for (const key of Object.keys(target))
+    if (Object.hasOwn(source3, key))
+      transferRelatedSourceProof(source3[key], target[key], verify);
+  return target;
+}
+var reasons = {
+  same_work: "Suggested shared work. Review the cited sources; this is not verified identity.",
+  explicit_fix: "A cited source claims a fix. The repair has not been verified.",
+  explicit_reference: "Suggested source reference. Review the cited sources for relevance.",
+  adjacent_capability: "Suggested related functionality. This does not establish the same requirement or failure.",
+  shared_vocabulary: "Suggested topic overlap. Shared terms do not establish the same work.",
+  unsupported: "The recorded review did not support a relationship.",
+  unjudged: "This item has not been assessed for relevance."
+};
+var links = {
+  literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
+  timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
+};
+var unavailable = "The retained source is unavailable in this view.";
+var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
+var safeRelation = (value) => {
+  if (typeof value !== "string" || !Object.hasOwn(reasons, value))
+    throw Error("Unknown related-work relationship");
+  return value;
+};
+function projectCustomerRelatedResult(input3) {
+  if (!object3(input3) || input3.schema !== "pr-context-related/1" && input3.kind !== "related-work")
+    throw Error("Unsupported related-work result");
+  const native = input3.schema === "pr-context-related/1";
+  const scope = object3(input3.scope) ? input3.scope : {};
+  const admitted = (source3, target) => hasVerifiedRelatedSource(source3) ? retainVerifiedRelatedSource(target) : target;
+  const candidate = (row) => {
+    const known = hasVerifiedRelatedSource(row);
+    const relationship = safeRelation(row.relationship_type);
+    return admitted(row, {
+      id: referenceId(row.id),
+      kind: row.kind,
+      title: known ? row.title : "Source title unavailable",
+      url: known ? row.url : "",
+      state: row.state,
+      relation: row.relation,
+      relationship_type: relationship,
+      reason: reasons[relationship],
+      evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
+      sourceState: known ? "available" : "unavailable",
+      ...!known ? { notice: unavailable } : {},
+      direct_links: (known ? rows(row.direct_links) : []).flatMap((link4) => {
+        if (!hasVerifiedRelatedSource(link4) || typeof link4.type !== "string" || !Object.hasOwn(links, link4.type))
+          return [];
+        return [
+          admitted(link4, {
+            type: link4.type,
+            source_uri: link4.source_uri,
+            explanation: links[link4.type],
+            ...link4.depth === 1 || link4.depth === 2 ? { depth: link4.depth } : {},
+            ...link4.depth === 2 ? {
+              via_issue_key: link4.via_issue_key,
+              source_evidence_id: link4.source_evidence_id
+            } : {}
+          })
+        ];
+      })
+    });
+  };
+  const evidence2 = rows(input3.evidence).map((row) => {
+    const known = hasVerifiedRelatedSource(row);
+    return admitted(row, {
+      id: referenceId(row.id),
+      text: known ? row.text : "Source excerpt unavailable",
+      source_uri: known ? row.source_uri : "",
+      revision: known ? row.revision : "",
+      sha256: known ? row.sha256 : null,
+      omitted_characters: known ? row.omitted_characters : 0,
+      sourceState: known ? "available" : "unavailable"
+    });
+  });
+  const references = rows(native ? input3.literal_references : input3.literalReferences);
+  const unjudged = rows(native ? scope.unjudged : input3.unjudged);
+  const uninspected = rows(native ? scope.uninspected_references : input3.uninspected);
+  const candidates = rows(input3.candidates).map(candidate);
+  const missing = (values) => values.filter((row) => !hasVerifiedRelatedSource(row)).length;
+  const prior = !native && object3(input3.sourceCoverage) && hasVerifiedRelatedSource(input3.sourceCoverage) ? input3.sourceCoverage : {};
+  const priorCount = (key) => Number.isSafeInteger(prior[key]) && prior[key] >= 0 ? prior[key] : 0;
+  const selected = {
+    kind: "related-work",
+    status: input3.status,
+    ...hasVerifiedRelatedSource(input3.seed) ? { seed: input3.seed } : {},
+    candidates,
+    evidence: evidence2,
+    literalReferences: references.filter(hasVerifiedRelatedSource),
+    unjudged: unjudged.filter(hasVerifiedRelatedSource),
+    uninspected: uninspected.filter(hasVerifiedRelatedSource),
+    sourceCoverage: retainVerifiedRelatedSource({
+      unavailableCandidates: candidates.filter((row) => row.sourceState === "unavailable").length,
+      unavailableExcerpts: evidence2.filter((row) => row.sourceState === "unavailable").length,
+      unavailableReferences: missing(references) + priorCount("unavailableReferences"),
+      unavailableUnjudgedItems: missing(unjudged) + priorCount("unavailableUnjudgedItems"),
+      unavailableUninspectedItems: missing(uninspected) + priorCount("unavailableUninspectedItems")
+    }),
+    reviewRequired: true,
+    message: "Relationships are suggestions, not verified fixes. Unavailable source text and unassessed items remain coverage gaps."
+  };
+  const parsed = customerRelatedResultSchema.parse(selected);
+  const copy = (source3, target) => {
+    if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
+      return;
+    if (hasVerifiedRelatedSource(source3))
+      retainVerifiedRelatedSource(target);
+    for (const key of Object.keys(target))
+      if (Object.hasOwn(source3, key))
+        copy(source3[key], target[key]);
+  };
+  copy(selected, parsed);
+  return parsed;
+}
+
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)).min(1),
+  steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
-var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
-var reportExpectationAuthoritySchema = external_exports.enum([
-  "requirement",
-  "hypothesis",
-  "unresolved"
+var related = customerRelatedResultSchema.shape;
+var contextFinderPlan = { planSourceId: digest12, planResultSha256: digest12 };
+var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
+var reportContextFinderSchema = external_exports.discriminatedUnion("state", [
+  external_exports.object({ ...contextFinderPlan, state: external_exports.literal("unavailable") }),
+  external_exports.object({
+    ...contextFinderPlan,
+    state: external_exports.literal("ready"),
+    result: external_exports.object({
+      status: related.status,
+      candidates: external_exports.array(related.candidates.element.pick({
+        kind: true,
+        title: true,
+        url: true,
+        relationship_type: true,
+        sourceState: true
+      })),
+      unjudged: related.unjudged,
+      uninspected: external_exports.array(related.uninspected.unwrap().element.pick({ repo: true, number: true })).optional(),
+      sourceCoverage: related.sourceCoverage.pick({
+        unavailableCandidates: true,
+        unavailableUnjudgedItems: true,
+        unavailableUninspectedItems: true
+      })
+    })
+  })
 ]);
+var reportExpectationAuthoritySchema = external_exports.string();
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
   display: true,
@@ -51307,8 +49809,8 @@ var reportTestAssessmentSchema = external_exports.object({
     evidence: external_exports.array(assessmentQuote),
     facts: customerAssessmentStepFactsSchema.optional()
   })).optional(),
-  answerId: digest13,
-  resultSha256: digest13,
+  answerId: digest12,
+  resultSha256: digest12,
   model: external_exports.string(),
   testId: external_exports.string(),
   additionalCheck: external_exports.literal(true).optional(),
@@ -51333,13 +49835,13 @@ var configurationShape = external_exports.object({
   automaticRetries: external_exports.literal(0),
   trigger: external_exports.literal("explicit-tool-call")
 }).catchall(nativeJson);
-var configurationSchema2 = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
+var configurationSchema = external_exports.unknown().refine((value) => configurationShape.safeParse(value).success).meta(external_exports.toJSONSchema(configurationShape));
 var reportObservedPageSchema = external_exports.object({
   id: external_exports.string(),
   text: external_exports.string(),
   accessibilityText: external_exports.string().optional(),
-  sourceSha256: digest13,
-  contentSha256: digest13,
+  sourceSha256: digest12,
+  contentSha256: digest12,
   contentState: external_exports.literal("projected-page-content")
 });
 var reportExecutionRejectionNoticeSchema = external_exports.enum([
@@ -51361,27 +49863,27 @@ var reportOutcomeNoticeSchema = external_exports.enum([
 ]);
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   createdAt: external_exports.string(),
-  mapId: digest13.nullable(),
+  mapId: digest12.nullable(),
   assessmentFailures: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13,
+    sourceId: digest12,
+    resultSha256: digest12,
     reason: external_exports.enum(["service-rejected", "unavailable"])
   })).optional(),
   selectedPullRequestUrl: external_exports.string().nullable().optional(),
   assessments: external_exports.array(external_exports.object({
-    assessedRunIds: external_exports.array(digest13).optional(),
-    sourceId: digest13,
+    assessedRunIds: external_exports.array(digest12).optional(),
+    sourceId: digest12,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest13.nullable(),
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     result: nativeJson
   })).optional(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13.nullable(),
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
@@ -51400,17 +49902,29 @@ var testPlanViewSchema = external_exports.object({
     traceRetained: external_exports.boolean(),
     recordedAt: external_exports.string().nullable().optional(),
     assessments: external_exports.array(reportTestAssessmentSchema).optional(),
-    configuration: configurationSchema2.nullable().optional(),
+    configuration: configurationSchema.nullable().optional(),
     assertions: reportExecutionSchema.nullable().optional()
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
+  contextFinder: external_exports.array(reportContextFinderSchema).optional(),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest13,
+    sourceId: digest12,
     sourceKind: external_exports.enum(["answer", "run"]),
-    resultSha256: digest13.nullable(),
+    resultSha256: digest12.nullable(),
     state: external_exports.string(),
     result: nativeJson,
-    requestTestIndexes: external_exports.array(count7)
+    requestTestIndexes: external_exports.array(count7),
+    applicationModel: external_exports.object({
+      views: external_exports.array(external_exports.object({
+        id: external_exports.string(),
+        name: external_exports.string(),
+        kind: external_exports.string(),
+        purpose: external_exports.string(),
+        controls: external_exports.array(external_exports.string()),
+        fields: external_exports.array(external_exports.string())
+      })),
+      transitions: external_exports.array(external_exports.object({ from: external_exports.string(), to: external_exports.string(), action: external_exports.string() }))
+    }).optional()
   }))
 });
 var reportPanelSchema = testPlanViewSchema.extend({
@@ -51418,14 +49932,14 @@ var reportPanelSchema = testPlanViewSchema.extend({
 });
 var reportLinkSchema = external_exports.object({
   schema: external_exports.literal("loki.report-link/1"),
-  reportId: digest13,
+  reportId: digest12,
   presentation: external_exports.literal("browser"),
   previewURL: external_exports.url()
 });
 var reportCardFailedTitleLimit = 5;
 var summarySchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   counts: external_exports.object({
     pass: count7,
@@ -51433,6 +49947,7 @@ var summarySchema = external_exports.object({
     blocked: count7,
     skipped: count7,
     "not-run": count7,
+    incomplete: count7.optional(),
     inconclusive: count7.default(0),
     conflicting: count7.default(0),
     unavailable: count7.default(0)
@@ -51447,32 +49962,32 @@ var summarySchema = external_exports.object({
     url: external_exports.url()
   }).nullable(),
   runs: external_exports.array(external_exports.object({
-    sourceId: digest13,
+    sourceId: digest12,
     executionState: external_exports.string(),
     stoppedByUser: external_exports.literal(true).optional(),
     testVerdict: external_exports.string()
   })),
   plans: external_exports.array(external_exports.object({
-    sourceId: digest13,
-    resultSha256: digest13.nullable(),
+    sourceId: digest12,
+    resultSha256: digest12.nullable(),
     requestTests: count7,
     executedTests: external_exports.boolean().nullable(),
     proposedTests: count7.nullable()
   }))
 });
 var cardBase = external_exports.object({
-  mapId: digest13.nullable().optional(),
+  mapId: digest12.nullable().optional(),
   schema: external_exports.literal("loki.report-card/1"),
-  reportId: digest13,
+  reportId: digest12,
   title: external_exports.string(),
   createdAt: external_exports.string(),
   originalResults: external_exports.array(external_exports.object({
     kind: external_exports.enum(["plan", "runner", "assessment"]),
-    answerId: digest13.nullable(),
-    runId: digest13.nullable(),
-    resultSha256: digest13.nullable()
+    answerId: digest12.nullable(),
+    runId: digest12.nullable(),
+    resultSha256: digest12.nullable()
   })),
-  sourceContextId: digest13.nullable(),
+  sourceContextId: digest12.nullable(),
   testPlanSummary: summarySchema,
   instructions: external_exports.string()
 });
@@ -51527,8 +50042,8 @@ var artifactsSchema = external_exports.object({
 });
 var traceIdentity = {
   schema: external_exports.literal("loki.report-trace/1"),
-  reportId: digest13,
-  runId: digest13
+  reportId: digest12,
+  runId: digest12
 };
 var reportTraceViewerURLSchema = external_exports.url().refine((value) => {
   const url2 = new URL(value);
@@ -51575,8 +50090,8 @@ var customerReportTraceResultSchema = external_exports.union([
   }),
   customerTraceArtifacts.extend({
     ...traceIdentity,
-    status: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false)
+    status: external_exports.literal("unavailable")
+    // A failed browser launch can leave the admitted trace and viewer available.
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -51591,8 +50106,8 @@ var selectedKinds = external_exports.array(external_exports.enum(["plan", "runne
 var reportExportPreviewSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest13,
-  previewSha256: digest13,
+  reportId: digest12,
+  previewSha256: digest12,
   html: external_exports.string(),
   omitted: external_exports.array(external_exports.string()),
   redaction: external_exports.string(),
@@ -51601,8 +50116,8 @@ var reportExportPreviewSchema = external_exports.object({
 var reportExportReceiptSchema = external_exports.object({
   selectedKinds,
   schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest13,
-  sha256: digest13,
+  reportId: digest12,
+  sha256: digest12,
   path: external_exports.string(),
   delivery: external_exports.literal("local-file-only"),
   uploaded: external_exports.literal(false)
@@ -51617,13 +50132,13 @@ var reportExportOutputSchema = external_exports.union([
 ]);
 
 // packages/contracts/dist/report-artifact.js
-var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count8 = external_exports.number().int().nonnegative();
 var captureTime = external_exports.iso.datetime({ offset: true });
 var pageCaptureBindingSchema = external_exports.object({
   screenshot: external_exports.object({
     name: external_exports.string().regex(/^screen-(?:initial|[0-9]+)\.png$/),
-    sha256: digest14,
+    sha256: digest13,
     capturedAt: captureTime
   }),
   afterAction: external_exports.number().int().positive().nullable(),
@@ -51632,32 +50147,32 @@ var pageCaptureBindingSchema = external_exports.object({
 });
 var reportArtifactProjectionSchema = external_exports.object({
   schema: external_exports.literal("loki.report-artifact-projection/1"),
-  sourceSha256: digest14,
-  sha256: digest14,
+  sourceSha256: digest13,
+  sha256: digest13,
   bytes: count8,
   redactionRevision: count8,
   // Only the owning manifest reader can supply this checked association.
   pageCapture: pageCaptureBindingSchema.optional()
 });
 var reportArtifactInputSchema = external_exports.strictObject({
-  reportId: digest14,
-  runId: digest14,
-  artifactId: digest14.optional(),
+  reportId: digest13,
+  runId: digest13,
+  artifactId: digest13.optional(),
   offset: count8.optional()
 });
 var artifact = external_exports.object({
-  artifactId: digest14,
+  artifactId: digest13,
   name: external_exports.string(),
   mediaType: external_exports.enum(["image/png", "application/json"]),
   bytes: count8,
-  sha256: digest14
+  sha256: digest13
 });
 var provenance = {
   schema: external_exports.literal("loki.report-artifact/1"),
-  reportId: digest14,
-  runId: digest14,
-  resultSha256: digest14,
-  manifestSha256: digest14,
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
+  manifestSha256: digest13,
   manifestSchema: external_exports.enum([
     "loki.computer-runner.private-evidence/1",
     "loki.mac-computer-runner.private-evidence/1"
@@ -51705,9 +50220,9 @@ var reportArtifactOutputSchema = external_exports.union([
 ]);
 var customerIdentity = {
   schema: external_exports.literal("kaijan.customer-artifact/1"),
-  reportId: digest14,
-  runId: digest14,
-  resultSha256: digest14,
+  reportId: digest13,
+  runId: digest13,
+  resultSha256: digest13,
   createdAt: external_exports.string(),
   semanticAssessment: external_exports.literal("not-performed")
 };
@@ -51740,8 +50255,8 @@ var customerReportArtifactResultSchema = external_exports.union([
         totalCodeUnits: count8,
         projection: external_exports.object({
           schema: external_exports.literal("kaijan.customer-artifact-projection/1"),
-          sourceSha256: digest14,
-          sha256: digest14,
+          sourceSha256: digest13,
+          sha256: digest13,
           bytes: count8
         })
       })
@@ -51751,7 +50266,7 @@ var customerReportArtifactResultSchema = external_exports.union([
 var customerReportArtifactOutputSchema = external_exports.union([customerReportArtifactResultSchema, reportReadFailureSchema]).meta({ $id: "urn:kaijan:customer-artifact-output:1" });
 var customerCaseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-case-evidence/1"),
-  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
+  planRef: external_exports.object({ answerId: digest13, resultSha256: digest13 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -51760,7 +50275,7 @@ var customerCaseEvidenceSchema = external_exports.object({
     state: external_exports.enum(["recording", "ended", "interrupted"]),
     screenshots: external_exports.array(external_exports.object({
       name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-      sha256: digest14,
+      sha256: digest13,
       capturedAt: external_exports.string()
     }))
   }))
@@ -51788,10 +50303,10 @@ var reportRenderAckSchema = reportRenderMetadataSchema.extend({
 });
 
 // packages/contracts/dist/case-evidence.js
-var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest14 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var screenshot = external_exports.object({
   name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest15,
+  sha256: digest14,
   capturedAt: external_exports.string()
 });
 var browserRefresh = external_exports.object({
@@ -51819,7 +50334,7 @@ var action = external_exports.object({
 var caseEvidenceSchema = external_exports.object({
   schema: external_exports.literal("loki.runner.case-evidence/1"),
   attribution: external_exports.literal("runner-declared-boundaries"),
-  planRef: external_exports.object({ answerId: digest15, resultSha256: digest15 }),
+  planRef: external_exports.object({ answerId: digest14, resultSha256: digest14 }),
   selectedTestIds: external_exports.array(external_exports.string().min(1)),
   cases: external_exports.array(external_exports.object({
     testId: external_exports.string().min(1),
@@ -51888,15 +50403,15 @@ var planningServiceRejectionNotice = "The planning service rejected the request.
 var hasCapturedPlanningFailure = (value) => capturedPlanningFailure.safeParse(value).success;
 var planningRejectionMessage = (value) => planningRejection.safeParse(value).success || classifiedPlanningRejection.safeParse(value).success ? planningServiceRejectionNotice : void 0;
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
-var proof = /* @__PURE__ */ new WeakMap();
+var proof2 = /* @__PURE__ */ new WeakMap();
 var json2 = (value) => JSON.stringify(value);
 function retainCustomerPlanningSource(value) {
   if (value !== null && typeof value === "object")
-    proof.set(value, json2(value));
+    proof2.set(value, json2(value));
   return value;
 }
 function hasCustomerPlanningSource(value) {
-  return value !== null && typeof value === "object" && proof.get(value) === json2(value);
+  return value !== null && typeof value === "object" && proof2.get(value) === json2(value);
 }
 function transferCustomerPlanningSource(source3, target, verify) {
   if (!verify || source3 === null || target === null || typeof source3 !== "object" || typeof target !== "object")
@@ -51918,7 +50433,7 @@ function customerPlanningId(kind, original2, sha256, allowPublicAlias = false) {
 }
 
 // packages/contracts/dist/customer-risk.js
-var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest15 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var source2 = external_exports.object({
   id: external_exports.string(),
   source_id: external_exports.string(),
@@ -51927,9 +50442,10 @@ var source2 = external_exports.object({
   revision: external_exports.string().nullable(),
   line: external_exports.number().int().nonnegative(),
   quote: external_exports.string(),
-  quote_sha256: digest16
+  quote_sha256: digest15
 });
 var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
+var unverifiedRiskNotice = "Review these questions against the source.";
 var finding = external_exports.object({
   id: external_exports.string(),
   observed_code_behavior: external_exports.string().optional(),
@@ -51939,8 +50455,8 @@ var finding = external_exports.object({
   why_it_matters: external_exports.string(),
   evidence_needed: external_exports.string(),
   source_evidence: external_exports.union([external_exports.array(external_exports.string()), external_exports.array(source2)]),
-  presentationState: external_exports.enum(["bound", "unavailable"]).optional(),
-  notice: external_exports.literal(legacyRiskNotice).optional()
+  presentationState: external_exports.enum(["bound", "unverified", "unavailable"]).optional(),
+  notice: external_exports.union([external_exports.literal(legacyRiskNotice), external_exports.literal(unverifiedRiskNotice)]).optional()
 });
 var customerRiskSchema = external_exports.object({
   kind: external_exports.literal("risk-review"),
@@ -51968,7 +50484,7 @@ function transferCustomerRiskProof(source3, target, verify) {
       transferCustomerRiskProof(source3[key], target[key], verify);
   return target;
 }
-var safeId = (value, index) => /^(?:review|work-item-risk)-Q[1-6]-[a-f0-9]{64}$/.test(value) ? value : `risk-Q${index + 1}`;
+var safeId = (value, index) => /^(?:review|work-item-risk)-Q[1-9][0-9]*-[a-f0-9]{64}$/.test(value) ? value : `risk-Q${index + 1}`;
 function projectCustomerRiskResult(value) {
   const parsed = customerRiskSchema.parse(value);
   const original2 = value.assumptions_to_confirm;
@@ -51981,14 +50497,15 @@ function projectCustomerRiskResult(value) {
         id: proved ? row.id : safeId(row.id, index),
         source_evidence: proved ? row.source_evidence : [],
         ...proved && row.presentationState === "bound" ? {} : {
-          observed_code_behavior: void 0,
-          observed_source_statement: void 0,
-          assumption_to_confirm: "Retained risk question needs source review.",
-          question: "Which intended application behavior applies to the available source excerpts?",
-          why_it_matters: "The original proposed consequence cannot be shown without a supported source-bound relation.",
-          evidence_needed: "Review the retained application sources and clarify the intended behavior.",
-          presentationState: "unavailable",
-          notice: legacyRiskNotice
+          // A source proof governs citations, not whether generated review
+          // wording is available. Keep that wording without upgrading it
+          // to an application observation or approved requirement.
+          presentationState: "unverified",
+          notice: unverifiedRiskNotice,
+          ...!proved ? {
+            observed_code_behavior: void 0,
+            observed_source_statement: void 0
+          } : {}
         }
       };
       return proved ? retainVerifiedRiskSource(output2) : output2;
@@ -52066,8 +50583,9 @@ function customerExecutionStatus(state2, effects, blockedReason) {
   return message + (effects === "uncertain" ? " Some action effects remain uncertain." : "");
 }
 var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
   completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
@@ -52076,6 +50594,7 @@ var progress2 = external_exports.object({
 function projectCustomerExecutionProgress(input3) {
   const value = progress2.parse(input3);
   return {
+    ...value.test_results ? { test_results: value.test_results } : {},
     ...value.status ? { status: value.status } : {},
     ...value.effects ? { effects: value.effects } : {},
     reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
@@ -52121,30 +50640,30 @@ function customerAuthoredText(value) {
   return diagnostic.test(projected) ? customerOmittedDetail : projected;
 }
 var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
-var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var optional2 = (schema) => schema.optional();
-var strings2 = external_exports.array(external_exports.string());
+var digest16 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var optional3 = (schema) => schema.optional();
+var strings3 = external_exports.array(external_exports.string());
 var citation = external_exports.object({
-  source_id: optional2(external_exports.string()),
-  sourceId: optional2(external_exports.string()),
-  evidence_id: optional2(external_exports.string()),
-  from_line: optional2(external_exports.number().int()),
-  through_line: optional2(external_exports.number().int())
+  source_id: optional3(external_exports.string()),
+  sourceId: optional3(external_exports.string()),
+  evidence_id: optional3(external_exports.string()),
+  from_line: optional3(external_exports.number().int()),
+  through_line: optional3(external_exports.number().int())
 });
 var boundQuote = customerAssessmentQuoteSchema;
 var bindings = external_exports.array(external_exports.unknown());
 var assessmentTest = external_exports.object({
   test_id: external_exports.string().nullable(),
   title: external_exports.string().optional(),
-  outcome_ids: strings2,
+  outcome_ids: strings3,
   expected: external_exports.string().nullable(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   actual: external_exports.string().nullable(),
   reason: external_exports.string(),
-  evidence_ids: optional2(strings2),
-  citations: optional2(external_exports.array(citation)),
+  evidence_ids: optional3(strings3),
+  citations: optional3(external_exports.array(citation)),
   recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
-  observed_steps: optional2(external_exports.array(external_exports.object({
+  observed_steps: optional3(external_exports.array(external_exports.object({
     description: external_exports.string(),
     citations: external_exports.array(citation),
     evidenceQuotes: external_exports.array(boundQuote).optional(),
@@ -52155,14 +50674,14 @@ var assessmentTest = external_exports.object({
 var assessmentFinding = external_exports.object({
   id: external_exports.string(),
   support: external_exports.enum(["requires-review", "needs-review"]),
-  requirement_ids: optional2(strings2),
-  test_ids: optional2(strings2),
-  outcome_ids: optional2(strings2),
-  kind: optional2(external_exports.string()),
-  claim: optional2(external_exports.string()),
-  citations: optional2(external_exports.array(citation)),
-  remaining_gap: optional2(external_exports.string()),
-  notice: optional2(external_exports.string()),
+  requirement_ids: optional3(strings3),
+  test_ids: optional3(strings3),
+  outcome_ids: optional3(strings3),
+  kind: optional3(external_exports.string()),
+  claim: optional3(external_exports.string()),
+  citations: optional3(external_exports.array(citation)),
+  remaining_gap: optional3(external_exports.string()),
+  notice: optional3(external_exports.string()),
   evidenceQuotes: external_exports.array(boundQuote).optional()
 });
 var reportedOutcome = external_exports.object({
@@ -52179,21 +50698,21 @@ var reportedOutcome = external_exports.object({
     "skipped",
     "unknown"
   ]),
-  evidence_ids: strings2
+  evidence_ids: strings3
 });
 var customerAssessmentResultSchema = external_exports.object({
-  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  reportedOutcomes: optional3(external_exports.array(reportedOutcome)),
   kind: external_exports.literal("evidence-assessment"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  tests: optional2(external_exports.array(assessmentTest)),
-  findings: optional2(external_exports.array(assessmentFinding)),
-  coverage: optional2(external_exports.object({
+  tests: optional3(external_exports.array(assessmentTest)),
+  findings: optional3(external_exports.array(assessmentFinding)),
+  coverage: optional3(external_exports.object({
     status: external_exports.enum(["complete", "partial"]),
-    unassessed_requirement_ids: strings2
+    unassessed_requirement_ids: strings3
   })),
   meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
   acceptanceDecision: external_exports.null(),
-  message: optional2(external_exports.string())
+  message: optional3(external_exports.string())
 });
 var assessmentInput = external_exports.object({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
@@ -52213,9 +50732,9 @@ var assessmentInput = external_exports.object({
       status: external_exports.enum(["needs_review", "bound_model_assessment"]),
       literal_bindings: bindings.optional(),
       original_finding: external_exports.object({
-        requirement_ids: strings2.optional(),
-        test_ids: strings2.optional(),
-        outcome_ids: strings2.optional(),
+        requirement_ids: strings3.optional(),
+        test_ids: strings3.optional(),
+        outcome_ids: strings3.optional(),
         kind: external_exports.string().optional(),
         claim: external_exports.string().optional(),
         citations: external_exports.array(citation).optional(),
@@ -52226,11 +50745,11 @@ var assessmentInput = external_exports.object({
       id: external_exports.string(),
       test_id: external_exports.string().nullable(),
       status: external_exports.string(),
-      evidence_ids: strings2
+      evidence_ids: strings3
     })).optional(),
     coverage: external_exports.object({
       status: external_exports.enum(["complete", "partial"]),
-      unassessed_requirement_ids: strings2
+      unassessed_requirement_ids: strings3
     })
   }).nullable()
 });
@@ -52385,7 +50904,7 @@ function projectCustomerAssessment(value, sources, presentation) {
 }
 
 // packages/contracts/dist/customer-report.js
-var strings3 = external_exports.array(external_exports.string());
+var strings4 = external_exports.array(external_exports.string());
 var operationState = external_exports.enum([
   "accepted",
   "running",
@@ -52440,42 +50959,42 @@ var customerPlanSchema = external_exports.object({
     id: external_exports.string(),
     title: external_exports.string().optional(),
     method: external_exports.string().optional(),
-    objective_ids: strings3.optional(),
-    priority: external_exports.enum(["P1", "P2", "P3"]).optional(),
+    objective_ids: strings4.optional(),
+    priority: external_exports.string().optional(),
     reason: external_exports.string().optional(),
-    prerequisites: strings3.optional(),
-    steps: strings3,
+    prerequisites: strings4.optional(),
+    steps: strings4,
     expected: external_exports.object({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+      authority: external_exports.string(),
       refs: refs3.optional()
     }),
-    execution_gaps: strings3.optional()
+    execution_gaps: strings4.optional()
   })),
   requirement_coverage: external_exports.array(external_exports.object({
     requirement_id: external_exports.string(),
     text: external_exports.string().optional(),
     status: external_exports.enum(["proposed", "gap"]),
-    test_ids: strings3,
+    test_ids: strings4,
     reason: external_exports.string().optional()
   })).optional(),
-  ambiguities: strings3.optional(),
-  disagreements: strings3.optional(),
-  limitations: strings3.optional(),
+  ambiguities: strings4.optional(),
+  disagreements: strings4.optional(),
+  limitations: strings4.optional(),
   relevant_surfaces: external_exports.array(external_exports.object({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
+    basis: external_exports.string(),
     refs: refs3
   })).optional(),
   runner_handoff: external_exports.object({
     status: external_exports.literal("proposed_only"),
-    scenario_ids: strings3,
-    required_inputs: strings3
+    scenario_ids: strings4,
+    required_inputs: strings4
   }).optional()
 });
 var coverage2 = external_exports.object({
   status: external_exports.enum(["complete", "partial"]),
-  unassessed_requirement_ids: strings3
+  unassessed_requirement_ids: strings4
 });
 var evidenceIdentity = external_exports.object({
   id: external_exports.string(),
@@ -52608,8 +51127,8 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
   const verified = hasCustomerPlanningSource(plan2);
   const text4 = (value, role) => value === void 0 ? void 0 : verified ? value : role === "expectation" ? "The recorded expectation needs review against the retained application sources." : role === "step" ? "This proposed step needs review against the retained application sources." : "This proposal detail needs review against the retained application sources.";
   const list3 = (values, role) => values?.map((value) => text4(value, role));
-  const id7 = (kind, value) => customerPlanningId(kind, value, sha256, !originalIds);
-  const references = (values) => values?.map((row) => ({ evidence_id: id7("E", row.evidence_id) }));
+  const id8 = (kind, value) => customerPlanningId(kind, value, sha256, !originalIds);
+  const references = (values) => values?.map((row) => ({ evidence_id: id8("E", row.evidence_id) }));
   const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, value]) => value !== void 0));
   const projected = {
     ...plan2,
@@ -52624,14 +51143,14 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     },
     objectives: plan2.objectives?.map((row) => ({
       ...row,
-      id: id7("O", row.id),
+      id: id8("O", row.id),
       text: text4(row.text, "objective"),
       refs: references(row.refs)
     })),
     tests: plan2.tests.map((row) => omitAbsent({
       ...row,
-      id: id7("T", row.id),
-      objective_ids: row.objective_ids?.map((value) => id7("O", value)),
+      id: id8("T", row.id),
+      objective_ids: row.objective_ids?.map((value) => id8("O", value)),
       title: text4(row.title, "title"),
       method: text4(row.method, "method"),
       reason: text4(row.reason, "reason"),
@@ -52646,8 +51165,8 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     })),
     requirement_coverage: plan2.requirement_coverage?.map((row) => omitAbsent({
       ...row,
-      requirement_id: id7("R", row.requirement_id),
-      test_ids: row.test_ids.map((value) => id7("T", value)),
+      requirement_id: id8("R", row.requirement_id),
+      test_ids: row.test_ids.map((value) => id8("T", value)),
       text: text4(row.text, "coverage"),
       reason: text4(row.reason, "coverage")
     })),
@@ -52666,7 +51185,7 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     })),
     runner_handoff: plan2.runner_handoff === void 0 ? void 0 : {
       ...plan2.runner_handoff,
-      scenario_ids: plan2.runner_handoff.scenario_ids.map((value) => id7("T", value)),
+      scenario_ids: plan2.runner_handoff.scenario_ids.map((value) => id8("T", value)),
       required_inputs: list3(plan2.runner_handoff.required_inputs, "required-input")
     }
   };
@@ -52743,12 +51262,13 @@ function projectLinkedAssessment(value) {
   });
 }
 var executionReport = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
-  completedSteps: strings3.optional(),
-  remainingSteps: strings3,
+  completedSteps: strings4.optional(),
+  remainingSteps: strings4,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
-  effects: external_exports.enum(["known", "uncertain"])
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
 var evidenceQuote = external_exports.object({
   id: external_exports.string(),
@@ -52761,7 +51281,7 @@ var assertionStep = external_exports.object({
   status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
   expected: external_exports.string(),
   actual: external_exports.string(),
-  evidenceIds: strings3
+  evidenceIds: strings4
 });
 var assertionTest = external_exports.object({
   testId: external_exports.string(),
@@ -52797,7 +51317,8 @@ var customerReportSchema = testPlanViewSchema.pick({
   title: true,
   createdAt: true,
   mapId: true,
-  selectedPullRequestUrl: true
+  selectedPullRequestUrl: true,
+  contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
   assessments: external_exports.array(external_exports.object({
@@ -52820,7 +51341,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     sourceKind: true,
     resultSha256: true,
     state: true,
-    requestTestIndexes: true
+    requestTestIndexes: true,
+    applicationModel: true
   }).extend({
     state: operationState,
     plan: customerPlanSchema.nullable(),
@@ -52897,7 +51419,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   })).optional()
 });
 var panelCard = reportCardSchema.options[0];
-var summary2 = panelCard.shape.testPlanSummary;
+var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -52914,7 +51436,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary2.pick({
+  testPlanSummary: summary.pick({
     schema: true,
     reportId: true,
     title: true,
@@ -52922,12 +51444,13 @@ var customerReportCardSchema = panelCard.pick({
     observation: true,
     failedTestTitles: true
   }).extend({
-    counts: summary2.shape.counts.pick({
+    counts: summary.shape.counts.pick({
       pass: true,
       fail: true,
       blocked: true,
       skipped: true,
       "not-run": true,
+      incomplete: true,
       inconclusive: true,
       conflicting: true,
       unavailable: true
@@ -52941,14 +51464,14 @@ var customerReportCardSchema = panelCard.pick({
       title: external_exports.string(),
       url: external_exports.url()
     }).nullable(),
-    plans: external_exports.array(summary2.shape.plans.element.pick({
+    plans: external_exports.array(summary.shape.plans.element.pick({
       sourceId: true,
       resultSha256: true,
       requestTests: true,
       executedTests: true,
       proposedTests: true
     })),
-    runs: external_exports.array(summary2.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
   })
 });
 var customerReportFailureSchema = external_exports.object({
@@ -52985,7 +51508,7 @@ var customerReportReadSchema = external_exports.object({
     testVerdict: testVerdict.nullable(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     stopRequested: external_exports.boolean().nullable().optional(),
-    selectedTestIds: strings3,
+    selectedTestIds: strings4,
     assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
     facts: external_exports.array(external_exports.discriminatedUnion("key", [
       external_exports.object({
@@ -53031,20 +51554,36 @@ var customerReportOutputSchema = external_exports.union([
   customerReportReadSchema,
   customerReportFailureSchema
 ]);
+var reportWithoutContextFinder = customerReportSchema.omit({
+  contextFinder: true
+});
+var reportContextFinderInput = external_exports.object({
+  contextFinder: external_exports.array(external_exports.unknown()).optional()
+});
 function projectReportResult(input3, sha256, verifiedPlanningFailures) {
-  const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, customerReportSchema.parse(input3))));
+  const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, reportWithoutContextFinder.parse(input3))));
+  const entries = reportContextFinderInput.safeParse(input3).data?.contextFinder ?? [];
+  const contextFinder = entries.flatMap((entry) => {
+    if (!hasVerifiedRelatedSource(entry))
+      return [];
+    const parsed = reportContextFinderSchema.safeParse(entry);
+    if (!parsed.success || !value.plans.some((plan2) => plan2.sourceKind === "answer" && plan2.sourceId === parsed.data.planSourceId && plan2.resultSha256 === parsed.data.planResultSha256))
+      return [];
+    return [retainVerifiedRelatedSource(parsed.data)];
+  });
   return {
     ...value,
+    ...contextFinder.length ? { contextFinder } : {},
     plans: value.plans.map((saved, index) => {
       const source3 = { ...saved };
       delete source3.planningFailure;
       const plan2 = source3.plan === null ? null : projectCustomerPlan(source3.plan, source3.evidence, sha256);
       const unavailable3 = plan2?.presentation?.detailsAvailable === false;
       const evidence2 = projectCustomerSavedPlanEvidence(source3.evidence, sha256)?.map((row) => {
-        const id7 = customerPlanningId("E", row.id, sha256, true);
-        if (id7 === row.id)
+        const id8 = customerPlanningId("E", row.id, sha256, true);
+        if (id8 === row.id)
           return row;
-        const mapped = { ...row, id: id7 };
+        const mapped = { ...row, id: id8 };
         const risk = getVerifiedCustomerRiskEvidence(row);
         return risk ? retainCustomerRiskEvidence(mapped, risk) : mapped;
       });
@@ -53054,7 +51593,7 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
         evidence: evidence2,
         coverage: source3.coverage ? {
           ...source3.coverage,
-          unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id7) => customerPlanningId("R", id7, sha256, true))
+          unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id8) => customerPlanningId("R", id8, sha256, true))
         } : source3.coverage,
         plan: unavailable3 ? null : plan2,
         ...unavailable3 ? { notice: unavailablePlanDetailsNotice } : {}
@@ -53066,7 +51605,7 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
     })),
     runs: value.runs.map((run) => ({
       ...run,
-      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id7) => customerPlanningId("T", id7, sha256, true)) : run.selectedTestIds,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256, true)) : run.selectedTestIds,
       assertions: run.assertions && run.planSourceId ? {
         ...run.assertions,
         tests: run.assertions.tests.map((row) => ({
@@ -53075,7 +51614,15 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
         }))
       } : run.assertions,
       executionEvidence: projectCustomerExecutionEvidence(run.executionEvidence),
-      executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse(projectCustomerExecutionProgress(run.executionReport)),
+      executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse({
+        ...projectCustomerExecutionProgress(run.executionReport),
+        ...run.executionReport.test_results ? {
+          test_results: run.executionReport.test_results.map((row) => ({
+            ...row,
+            test_id: run.planSourceId ? customerPlanningId("T", row.test_id, sha256, true) : row.test_id
+          }))
+        } : {}
+      }),
       assessments: run.assessments?.map((row) => {
         const projected = projectLinkedAssessment(row);
         return copyAssessmentPresentationProof(projected, {
@@ -53104,7 +51651,8 @@ function projectCustomerTestPlanView(input3, sha256) {
       sourceKind: source3.sourceKind,
       resultSha256: source3.resultSha256,
       state: source3.state,
-      requestTestIndexes: source3.requestTestIndexes
+      requestTestIndexes: source3.requestTestIndexes,
+      ...source3.applicationModel ? { applicationModel: source3.applicationModel } : {}
     };
     if (record5(native).schema === "loki.planning-failure/1") {
       if (source3.sourceKind === "answer" && source3.state === "complete" && source3.resultSha256 && planningRejectionMessage(native) && hasCustomerPlanningSource(source3))
@@ -53142,6 +51690,7 @@ function projectCustomerTestPlanView(input3, sha256) {
     createdAt: value.createdAt,
     mapId: value.mapId,
     selectedPullRequestUrl: value.selectedPullRequestUrl,
+    contextFinder: record5(input3).contextFinder,
     assessmentFailures: value.assessmentFailures,
     assessments: value.assessments?.map(({ result: result2, ...identity4 }) => {
       try {
@@ -53162,7 +51711,16 @@ function projectCustomerTestPlanView(input3, sha256) {
     plans,
     runs: value.runs.map((run) => ({
       ...run,
-      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id7) => customerPlanningId("T", id7, sha256)) : run.selectedTestIds,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256)) : run.selectedTestIds,
+      executionReport: run.executionReport ? {
+        ...run.executionReport,
+        ..."test_results" in run.executionReport ? {
+          test_results: run.executionReport.test_results?.map((row) => ({
+            ...row,
+            test_id: run.planSourceId ? customerPlanningId("T", row.test_id, sha256) : row.test_id
+          }))
+        } : {}
+      } : run.executionReport,
       assertions: run.assertions && run.planSourceId ? {
         ...run.assertions,
         tests: run.assertions.tests.map((row) => ({
@@ -53228,233 +51786,6 @@ function projectCustomerPageObservations(result2, sha256) {
       }
     ];
   });
-}
-
-// packages/contracts/dist/customer-related.js
-var id3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var strings4 = external_exports.array(external_exports.string());
-var optional3 = (value) => value.optional();
-var customerRelatedResultSchema = external_exports.object({
-  kind: external_exports.literal("related-work"),
-  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
-  seed: optional3(external_exports.object({
-    repo: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue", "supplied"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    number: optional3(external_exports.number().int())
-  })),
-  candidates: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    state: external_exports.enum(["open", "closed"]),
-    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
-    reason: optional3(external_exports.string()),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    notice: optional3(external_exports.string()),
-    evidence_ids: optional3(strings4),
-    relationship_type: external_exports.enum([
-      "same_work",
-      "explicit_fix",
-      "explicit_reference",
-      "adjacent_capability",
-      "shared_vocabulary",
-      "unsupported",
-      "unjudged"
-    ]),
-    direct_links: optional3(external_exports.array(external_exports.object({
-      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
-      source_uri: external_exports.string(),
-      explanation: external_exports.string(),
-      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
-      via_issue_key: external_exports.string().optional(),
-      source_evidence_id: external_exports.string().optional()
-    })))
-  })),
-  evidence: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    text: external_exports.string(),
-    source_uri: external_exports.string(),
-    revision: external_exports.string(),
-    sha256: id3.nullable(),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    omitted_characters: external_exports.number().int().nonnegative()
-  })),
-  literalReferences: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    retrieved: external_exports.boolean(),
-    relation: external_exports.literal("unjudged"),
-    provenance: external_exports.array(external_exports.object({
-      source_uri: external_exports.string(),
-      source_text_sha256: id3,
-      captured_at: external_exports.string()
-    }))
-  })).optional(),
-  unjudged: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    kind: external_exports.enum(["issue", "pr"]),
-    title: external_exports.string(),
-    relation: external_exports.literal("unjudged")
-  })).optional(),
-  uninspected: optional3(external_exports.array(external_exports.object({
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    source_uri: external_exports.string(),
-    reason: external_exports.enum([
-      "repository_not_authorized",
-      "global_candidate_limit",
-      "literal_fetch_limit",
-      "acquisition_unavailable",
-      "authored_intake_quarantine"
-    ])
-  }))),
-  sourceCoverage: external_exports.object({
-    unavailableCandidates: external_exports.number().int().nonnegative(),
-    unavailableExcerpts: external_exports.number().int().nonnegative(),
-    unavailableReferences: external_exports.number().int().nonnegative(),
-    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
-    unavailableUninspectedItems: external_exports.number().int().nonnegative()
-  }),
-  reviewRequired: external_exports.literal(true),
-  message: optional3(external_exports.string())
-});
-var proof2 = /* @__PURE__ */ new WeakMap();
-var object3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var rows = (value) => Array.isArray(value) ? value.filter(object3) : [];
-function retainVerifiedRelatedSource(value) {
-  proof2.set(value, JSON.stringify(value));
-  return value;
-}
-function hasVerifiedRelatedSource(value) {
-  return object3(value) && proof2.get(value) === JSON.stringify(value);
-}
-function transferRelatedSourceProof(source3, target, verify) {
-  if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
-    return target;
-  if (verify?.(source3) === true && JSON.stringify(source3) === JSON.stringify(target))
-    retainVerifiedRelatedSource(target);
-  for (const key of Object.keys(target))
-    if (Object.hasOwn(source3, key))
-      transferRelatedSourceProof(source3[key], target[key], verify);
-  return target;
-}
-var reasons = {
-  same_work: "Suggested shared work. Review the cited sources; this is not verified identity.",
-  explicit_fix: "A cited source claims a fix. The repair has not been verified.",
-  explicit_reference: "Suggested source reference. Review the cited sources for relevance.",
-  adjacent_capability: "Suggested related functionality. This does not establish the same requirement or failure.",
-  shared_vocabulary: "Suggested topic overlap. Shared terms do not establish the same work.",
-  unsupported: "The recorded review did not support a relationship.",
-  unjudged: "This item has not been assessed for relevance."
-};
-var links = {
-  literal_reference: "The cited source contains a reference. A mention does not prove relevance.",
-  timeline_cross_reference: "A source timeline records a cross-reference. This does not prove relevance or a fix."
-};
-var unavailable2 = "The retained source is unavailable in this view.";
-var referenceId = (value) => typeof value === "string" && /^[CSD][1-9][0-9]*$/.test(value) ? value : "unavailable";
-var safeRelation = (value) => {
-  if (typeof value !== "string" || !Object.hasOwn(reasons, value))
-    throw Error("Unknown related-work relationship");
-  return value;
-};
-function projectCustomerRelatedResult(input3) {
-  if (!object3(input3) || input3.schema !== "pr-context-related/1" && input3.kind !== "related-work")
-    throw Error("Unsupported related-work result");
-  const native = input3.schema === "pr-context-related/1";
-  const scope = object3(input3.scope) ? input3.scope : {};
-  const admitted = (source3, target) => hasVerifiedRelatedSource(source3) ? retainVerifiedRelatedSource(target) : target;
-  const candidate = (row) => {
-    const known = hasVerifiedRelatedSource(row);
-    const relationship = safeRelation(row.relationship_type);
-    return admitted(row, {
-      id: referenceId(row.id),
-      kind: row.kind,
-      title: known ? row.title : "Source title unavailable",
-      url: known ? row.url : "",
-      state: row.state,
-      relation: row.relation,
-      relationship_type: relationship,
-      reason: reasons[relationship],
-      evidence_ids: known && Array.isArray(row.evidence_ids) ? row.evidence_ids.filter((value) => referenceId(value) !== "unavailable") : [],
-      sourceState: known ? "available" : "unavailable",
-      ...!known ? { notice: unavailable2 } : {},
-      direct_links: (known ? rows(row.direct_links) : []).flatMap((link3) => {
-        if (!hasVerifiedRelatedSource(link3) || typeof link3.type !== "string" || !Object.hasOwn(links, link3.type))
-          return [];
-        return [
-          admitted(link3, {
-            type: link3.type,
-            source_uri: link3.source_uri,
-            explanation: links[link3.type],
-            ...link3.depth === 1 || link3.depth === 2 ? { depth: link3.depth } : {},
-            ...link3.depth === 2 ? {
-              via_issue_key: link3.via_issue_key,
-              source_evidence_id: link3.source_evidence_id
-            } : {}
-          })
-        ];
-      })
-    });
-  };
-  const evidence2 = rows(input3.evidence).map((row) => {
-    const known = hasVerifiedRelatedSource(row);
-    return admitted(row, {
-      id: referenceId(row.id),
-      text: known ? row.text : "Source excerpt unavailable",
-      source_uri: known ? row.source_uri : "",
-      revision: known ? row.revision : "",
-      sha256: known ? row.sha256 : null,
-      omitted_characters: known ? row.omitted_characters : 0,
-      sourceState: known ? "available" : "unavailable"
-    });
-  });
-  const references = rows(native ? input3.literal_references : input3.literalReferences);
-  const unjudged = rows(native ? scope.unjudged : input3.unjudged);
-  const uninspected = rows(native ? scope.uninspected_references : input3.uninspected);
-  const candidates = rows(input3.candidates).map(candidate);
-  const missing = (values) => values.filter((row) => !hasVerifiedRelatedSource(row)).length;
-  const prior = !native && object3(input3.sourceCoverage) && hasVerifiedRelatedSource(input3.sourceCoverage) ? input3.sourceCoverage : {};
-  const priorCount = (key) => Number.isSafeInteger(prior[key]) && prior[key] >= 0 ? prior[key] : 0;
-  const selected = {
-    kind: "related-work",
-    status: input3.status,
-    ...hasVerifiedRelatedSource(input3.seed) ? { seed: input3.seed } : {},
-    candidates,
-    evidence: evidence2,
-    literalReferences: references.filter(hasVerifiedRelatedSource),
-    unjudged: unjudged.filter(hasVerifiedRelatedSource),
-    uninspected: uninspected.filter(hasVerifiedRelatedSource),
-    sourceCoverage: retainVerifiedRelatedSource({
-      unavailableCandidates: candidates.filter((row) => row.sourceState === "unavailable").length,
-      unavailableExcerpts: evidence2.filter((row) => row.sourceState === "unavailable").length,
-      unavailableReferences: missing(references) + priorCount("unavailableReferences"),
-      unavailableUnjudgedItems: missing(unjudged) + priorCount("unavailableUnjudgedItems"),
-      unavailableUninspectedItems: missing(uninspected) + priorCount("unavailableUninspectedItems")
-    }),
-    reviewRequired: true,
-    message: "Relationships are suggestions, not verified fixes. Unavailable source text and unassessed items remain coverage gaps."
-  };
-  const parsed = customerRelatedResultSchema.parse(selected);
-  const copy = (source3, target) => {
-    if (!source3 || !target || typeof source3 !== "object" || typeof target !== "object")
-      return;
-    if (hasVerifiedRelatedSource(source3))
-      retainVerifiedRelatedSource(target);
-    for (const key of Object.keys(target))
-      if (Object.hasOwn(source3, key))
-        copy(source3[key], target[key]);
-  };
-  copy(selected, parsed);
-  return parsed;
 }
 
 // packages/contracts/dist/customer-supplement.js
@@ -53569,7 +51900,7 @@ function transferSupplementSourceProof(source3, target, verify) {
 }
 var supplementUnsupportedRelation = "This saved proposal relation has no verified source-bound presentation. Review the linked application sources; no action or expected result is inferred.";
 var object4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
-var list2 = (value) => Array.isArray(value) ? value : [];
+var list = (value) => Array.isArray(value) ? value : [];
 function supplementPublicId(kind, value, hash6) {
   return `${kind}-${hash6(JSON.stringify(value ?? null))}`;
 }
@@ -53579,12 +51910,12 @@ function projectCustomerSupplementResult(value, hash6) {
     return retainVerifiedSupplementSource(parsed);
   }
   const native = object4(value), body = object4(native.supplement), baseline = object4(native.baseline);
-  const id7 = (kind, v) => supplementPublicId(kind, v, hash6);
-  const links2 = (value2, kind) => list2(value2).map((v) => id7(kind, v));
-  const references = (value2) => list2(value2).map((v) => ({
-    evidence_id: id7("source", object4(v).evidence_id)
+  const id8 = (kind, v) => supplementPublicId(kind, v, hash6);
+  const links2 = (value2, kind) => list(value2).map((v) => id8(kind, v));
+  const references = (value2) => list(value2).map((v) => ({
+    evidence_id: id8("source", object4(v).evidence_id)
   }));
-  const additions = list2(body.additional_tests).map(object4), concerns = list2(body.baseline_concerns).map(object4), questions2 = list2(body.unanswered_questions).map(object4);
+  const additions = list(body.additional_tests).map(object4), concerns = list(body.baseline_concerns).map(object4), questions2 = list(body.unanswered_questions).map(object4);
   const status3 = external_exports.enum(["proposed_supplement", "no_additional_tests", "needs_clarification"]).safeParse(body.status);
   if (!status3.success) {
     const message = native.schema !== "loki.supplement-failure/1" ? "The retained supplement cannot be represented in this view. Keep its original record; do not replay it." : native.reason === "invalid_first_plan_no_repair" ? "Kaijan could not validate the proposed additional tests. Your original plan is unchanged." : "Kaijan could not add tests to the saved plan. Your original plan is unchanged.";
@@ -53614,7 +51945,7 @@ function projectCustomerSupplementResult(value, hash6) {
     supplement: {
       status: status3.data,
       additional_tests: additions.map((row) => ({
-        id: id7("addition", row.id),
+        id: id8("addition", row.id),
         verification_kind: "Proposed verification; purpose needs review",
         method: "Proposed approach needs confirmation",
         reason: text4,
@@ -53655,15 +51986,15 @@ function projectCustomerSupplementResult(value, hash6) {
       revision: "",
       sha256: null,
       test_ids: links2(baseline.test_ids, "baseline"),
-      tests: links2(baseline.test_ids, "baseline").map((id8) => ({
-        id: id8,
+      tests: links2(baseline.test_ids, "baseline").map((id9) => ({
+        id: id9,
         source_refs: []
       })),
       notice: "Original baseline retained; source presentation is unavailable and no approval is inferred."
     },
-    evidence: list2(native.evidence).map(object4).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
-      id: id7("source", row.id),
-      source_id: id7("source-document", row.source_id),
+    evidence: list(native.evidence).map(object4).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
+      id: id8("source", row.id),
+      source_id: id8("source-document", row.source_id),
       kind: row.kind,
       uri: "",
       revision: "",
@@ -53675,7 +52006,7 @@ function projectCustomerSupplementResult(value, hash6) {
     risks: [],
     coverage: {
       additions: additions.length,
-      baselineTests: list2(baseline.test_ids).length,
+      baselineTests: list(baseline.test_ids).length,
       baselineConcerns: concerns.length,
       unansweredQuestions: questions2.length,
       meaning: "Proposed links and counts only; not proof of complete coverage or semantic support."
@@ -53696,19 +52027,19 @@ var localLimits = {
   pageSize: 100,
   inputLifetimeMs: 30 * 60 * 1e3
 };
-var id4 = external_exports.uuid();
-var digest18 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id5 = external_exports.uuid();
+var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
   coreOrigin: external_exports.url().refine((value) => {
     const url2 = new URL(value);
     return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
   }),
-  userId: id4,
-  workspaceId: id4
+  userId: id5,
+  workspaceId: id5
 });
 var localAuthSchema = external_exports.strictObject({
-  bindingId: id4,
+  bindingId: id5,
   secret,
   context: localContextSchema
 });
@@ -53771,7 +52102,7 @@ var page = {
 };
 var request2 = (method, params) => external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  requestId: id4,
+  requestId: id5,
   method: external_exports.literal(method),
   params,
   auth: localAuthSchema.optional()
@@ -53784,50 +52115,50 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
   request2("capabilities.list", external_exports.strictObject({})),
   request2("settings.open", external_exports.strictObject({})),
   request2("input.select", external_exports.strictObject({})),
-  request2("input.prepare", external_exports.strictObject({ inputId: id4 })),
-  request2("input.status", external_exports.strictObject({ inputId: id4, ...page })),
-  request2("input.release", external_exports.strictObject({ inputId: id4 })),
+  request2("input.prepare", external_exports.strictObject({ inputId: id5 })),
+  request2("input.status", external_exports.strictObject({ inputId: id5, ...page })),
+  request2("input.release", external_exports.strictObject({ inputId: id5 })),
   request2("run.start", external_exports.strictObject({
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
-    inputId: id4,
-    inputDigest: digest18,
+    inputId: id5,
+    inputDigest: digest17,
     transferAcknowledged: external_exports.literal(true),
-    idempotencyKey: id4
+    idempotencyKey: id5
   })),
   request2("run.get", external_exports.union([
-    external_exports.strictObject({ runId: id4 }),
-    external_exports.strictObject({ idempotencyKey: id4 })
+    external_exports.strictObject({ runId: id5 }),
+    external_exports.strictObject({ idempotencyKey: id5 })
   ])),
   request2("run.list", external_exports.strictObject(page)),
-  request2("run.cancel", external_exports.strictObject({ runId: id4 })),
+  request2("run.cancel", external_exports.strictObject({ runId: id5 })),
   request2("run.events", external_exports.strictObject({
-    runId: id4,
+    runId: id5,
     afterSequence: external_exports.number().int().nonnegative(),
     ...page
   })),
   request2("result.read", external_exports.strictObject({
-    runId: id4,
+    runId: id5,
     section: external_exports.enum(["summary", "screens", "elements", "connections"]),
     ...page
   })),
   request2("artifact.read", external_exports.strictObject({
-    runId: id4,
-    artifactId: id4,
+    runId: id5,
+    artifactId: id5,
     offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
     length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
   })),
-  request2("run.delete", external_exports.strictObject({ runId: id4 }))
+  request2("run.delete", external_exports.strictObject({ runId: id5 }))
 ]);
 var omission = external_exports.strictObject({
   path: external_exports.string().max(1024),
   reason: external_exports.string().max(100)
 });
 var localInputSchema = external_exports.strictObject({
-  inputId: id4,
+  inputId: id5,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
-  digest: digest18.nullable(),
+  digest: digest17.nullable(),
   includedFiles: external_exports.number().int().nonnegative(),
   includedBytes: external_exports.number().int().nonnegative(),
   omissionCount: external_exports.number().int().nonnegative(),
@@ -53839,21 +52170,21 @@ var localInputSchema = external_exports.strictObject({
 });
 var localEventSchema = external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  runId: id4,
+  runId: id5,
   sequence: external_exports.number().int().positive(),
   state: localRunStateSchema,
   detail: external_exports.string().max(500),
   at: external_exports.iso.datetime()
 });
 var localRunSchema = external_exports.strictObject({
-  runId: id4,
+  runId: id5,
   state: localRunStateSchema,
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
   cliVersion: external_exports.literal("2026.10.18-8"),
-  cliDigest: digest18,
+  cliDigest: digest17,
   adapter: external_exports.literal(localAdapter),
-  inputDigest: digest18,
+  inputDigest: digest17,
   sourcePolicy: external_exports.literal("local-source-v1"),
   displayName: external_exports.string().max(255),
   execution: external_exports.literal("local"),
@@ -53867,10 +52198,10 @@ var localRunSchema = external_exports.strictObject({
   completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
   usage: external_exports.literal("unknown"),
   artifacts: external_exports.array(external_exports.strictObject({
-    artifactId: id4,
+    artifactId: id5,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
-    sha256: digest18
+    sha256: digest17
   })).max(100)
 });
 var localSetupSchema = external_exports.strictObject({
@@ -53960,7 +52291,7 @@ var localResultSchemas = {
   hello: external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
     companionVersion: external_exports.literal(localCompanionVersion),
-    bindingId: id4,
+    bindingId: id5,
     bindingSecret: secret.optional(),
     context: localContextSchema,
     setup: localSetupSchema
@@ -53996,10 +52327,10 @@ var localResultSchemas = {
   }),
   "result.read": resultPage,
   "artifact.read": external_exports.strictObject({
-    artifactId: id4,
+    artifactId: id5,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
-    sha256: digest18,
+    sha256: digest17,
     totalSize: external_exports.number().int().nonnegative(),
     eof: external_exports.boolean()
   }),
@@ -54008,20 +52339,3017 @@ var localResultSchemas = {
 var localResponseSchema = external_exports.discriminatedUnion("ok", [
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id4,
+    requestId: id5,
     ok: external_exports.literal(true),
     result: external_exports.unknown()
   }),
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id4,
+    requestId: id5,
     ok: external_exports.literal(false),
     error: localErrorSchema
   })
 ]);
 
+// apps/codex-plugin/src/issue-screenshot.mjs
+var issueScreenshotReference = reportArtifactInputSchema.omit({ offset: true }).required({ artifactId: true });
+async function selectIssueScreenshot(reports, reference2, imageId) {
+  const input3 = issueScreenshotReference.parse(reference2);
+  assert2(reports?.customerArtifact, "Saved screenshot reads are unavailable.");
+  const value = customerReportArtifactResultSchema.parse(
+    await reports.customerArtifact(input3)
+  );
+  assert2.equal(value.reportId, input3.reportId);
+  assert2.equal(value.runId, input3.runId);
+  assert2.equal(value.state, "read");
+  assert2.equal(value.artifact.artifactId, input3.artifactId);
+  assert2.equal(value.artifact.mediaType, "image/png");
+  assert2.equal(value.content.mediaType, "image/png");
+  assert2.equal(value.content.encoding, "base64");
+  assert2(
+    value.content.data.length <= 4 * Math.ceil(issueImageLimits.fileBytes / 3)
+  );
+  const bytes = Buffer.from(value.content.data, "base64");
+  assert2.equal(bytes.length, value.artifact.bytes);
+  assert2.equal(
+    createHash4("sha256").update(bytes).digest("hex"),
+    value.artifact.sha256
+  );
+  return {
+    image: issueImageSchema.parse({
+      id: imageId,
+      name: value.artifact.name,
+      mediaType: "image/png",
+      bytes: bytes.length,
+      sha256: value.artifact.sha256
+    }),
+    bytes
+  };
+}
+
+// apps/codex-plugin/src/issues.mjs
+var viewKey2 = "kaijan/issue-view";
+var selectionKey = "kaijan/issue-selections";
+var unavailable2 = () => ({
+  error: "issue_unavailable",
+  message: "Kaijan could not open this issue connection. Keep any visible text before starting a new report or reopening an earlier saved issue."
+});
+function createIssueSurface({
+  session,
+  library,
+  broker,
+  build,
+  now = Date.now,
+  createTransport = scopedIssueTransport
+}) {
+  const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
+  let stopped = false;
+  const fields = library.issueFieldsSchema;
+  const textFields = fields.omit({ images: true }).partial().refine((value) => Object.keys(value).length > 0, "Provide an edit.");
+  const draftInput = external_exports.strictObject({
+    operation: external_exports.enum([
+      "open",
+      "read",
+      "update",
+      "discard_edit",
+      "status",
+      "attach_screenshot"
+    ]),
+    requestId: external_exports.uuid().optional(),
+    draftId: external_exports.uuid().optional(),
+    revision: external_exports.number().int().positive().optional(),
+    title: fields.shape.title.optional(),
+    description: fields.shape.description.optional(),
+    context: fields.shape.context,
+    screenshot: issueScreenshotReference.optional(),
+    changes: textFields.optional()
+  });
+  const image = library.issueSelectionSchema.shape.image;
+  const offset = external_exports.number().int().nonnegative().max(5 * 1024 * 1024);
+  const revision3 = external_exports.number().int().positive();
+  const actionBase = library.issueViewSchema;
+  const actionArgs = {
+    read: library.issueGetSchema.extend({
+      refreshPublisher: external_exports.literal(true).optional()
+    }),
+    update: library.issueUpdateSchema,
+    discard_edit: library.issueGetSchema,
+    status: library.issueGetSchema,
+    publish: library.issuePublishSchema,
+    continue_on_github: library.issuePublishSchema,
+    close_review: library.issueGetSchema,
+    begin_image: library.issueGetSchema.extend({ revision: revision3, image }),
+    append_image: library.issueGetSchema.extend({
+      revision: revision3,
+      imageId: external_exports.uuid(),
+      offset,
+      base64: external_exports.string().min(4).max(4 * Math.ceil(256 * 1024 / 3))
+    }),
+    remove_image: library.issueGetSchema.extend({
+      revision: revision3,
+      imageId: external_exports.uuid()
+    }),
+    read_image: library.issueGetSchema.extend({ imageId: external_exports.uuid(), offset })
+  };
+  const actionInput = actionBase.extend({
+    operation: external_exports.enum(Object.keys(actionArgs)),
+    revision: revision3.optional(),
+    changes: library.issueChangesSchema.optional(),
+    image: image.optional(),
+    imageId: external_exports.uuid().optional(),
+    offset: offset.optional(),
+    base64: actionArgs.append_image.shape.base64.optional(),
+    refreshPublisher: external_exports.literal(true).optional()
+  });
+  const schemas = {
+    kaijan_issue_draft: draftInput,
+    kaijan_issue_publish: library.issuePublishSchema,
+    kaijan_issue_form_action: actionInput
+  };
+  const resource = {
+    uri: library.issueFormUri,
+    name: "Report a Kaijan issue",
+    mimeType: "text/html;profile=mcp-app"
+  };
+  const describe3 = (name, title, description, appOnly = false) => ({
+    name,
+    title,
+    description,
+    inputSchema: external_exports.toJSONSchema(schemas[name]),
+    outputSchema: {
+      type: "object",
+      anyOf: external_exports.toJSONSchema(
+        appOnly ? library.issueAppResultSchema : library.issueResultSchema
+      ).anyOf
+    },
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: name === "kaijan_issue_publish",
+      openWorldHint: true
+    },
+    _meta: {
+      ui: {
+        resourceUri: resource.uri,
+        ...appOnly ? { visibility: ["app"] } : {}
+      }
+    }
+  });
+  const tools2 = [
+    describe3(
+      "kaijan_issue_draft",
+      "Review a Kaijan issue",
+      "Open or edit a report about Kaijan in this chat. Help prepare the observed failure, relevant context, expected behavior and steps from known facts. Open requires requestId and optional title, description and context. Unsent text and chosen images stay in this temporary review until Cancel or shutdown. The person reviews the text and screenshots, then confirms publication to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App, without opening GitHub. Only the confirmed submission is retained for receipt recovery. Read, status and discard_edit require draftId. Read is local; status checks only the original publication. Update requires draftId, revision and nonempty text changes. To collect a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId, and screenshot reportId/runId/artifactId from the same chat. This stages verified original PNG bytes for review and makes no public write. Never use filesystem paths or invent an artifact. The person can also choose images in the form. Keep refused edits. Earlier saved records keep their original recovery route."
+    ),
+    describe3(
+      "kaijan_issue_publish",
+      "Open Kaijan issue review",
+      "Open the current issue form for the person to review the exact text, context and chosen screenshots. The person confirms submission to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App. This tool does not publish or open GitHub. For an unconfirmed publication, check status on the original report."
+    ),
+    describe3(
+      "kaijan_issue_form_action",
+      "Edit issue form",
+      "Application-only action for the exact issue form grant in the originating chat.",
+      true
+    )
+  ];
+  function checked(name, raw) {
+    if (!Object.hasOwn(schemas, name)) throw Error("invalid_tool");
+    const input3 = schemas[name].parse(raw);
+    if (name === "kaijan_issue_publish")
+      return { operation: "read", draftId: input3.draftId };
+    const { operation, viewToken, cleanupToken, ...args } = input3;
+    let selected;
+    if (name === "kaijan_issue_form_action") selected = actionArgs[operation];
+    else if (operation === "open") selected = library.issueOpenSchema;
+    else if (operation === "update")
+      selected = library.issueGetSchema.extend({
+        revision: revision3,
+        changes: textFields
+      });
+    else if (operation === "attach_screenshot")
+      selected = library.issueGetSchema.extend({
+        revision: revision3,
+        requestId: external_exports.uuid(),
+        screenshot: issueScreenshotReference
+      });
+    else selected = library.issueGetSchema;
+    return {
+      operation,
+      ...selected.parse(args),
+      ...viewToken ? { viewToken } : {},
+      ...cleanupToken ? { cleanupToken } : {}
+    };
+  }
+  async function identity4(signal) {
+    const result2 = await forwardCore(
+      broker,
+      "loki_connection_status",
+      {},
+      signal
+    );
+    const connection = coreConnectionSchema.parse(result2.structuredContent);
+    return {
+      userId: connection.context.user.id,
+      workspaceId: connection.context.workspace.id
+    };
+  }
+  function grant2(scope, owner2, draftId) {
+    for (const [key, value2] of views)
+      if (value2.until < now()) views.delete(key);
+    while (views.size >= 64) views.delete(views.keys().next().value);
+    const temporary = temporaryStores.get(scope.data)?.has(draftId);
+    const cleanup = temporary ? [...cleanupViews].find(
+      ([, value2]) => value2.scope === scope.scope.id && value2.draftId === draftId
+    ) : void 0;
+    const viewToken = randomBytes2(32).toString("hex");
+    const cleanupToken = temporary ? cleanup?.[0] ?? randomBytes2(32).toString("hex") : void 0;
+    const value = {
+      scope: scope.scope.id,
+      ...owner2,
+      draftId,
+      until: now() + 12 * 36e5
+    };
+    views.set(viewToken, value);
+    if (temporary) cleanupViews.set(cleanupToken, value);
+    return { draftId, viewToken, ...cleanupToken ? { cleanupToken } : {} };
+  }
+  function reply(value, { appOnly = false, view: view2, selections } = {}) {
+    const result2 = (appOnly ? library.issueAppResultSchema : library.issueResultSchema).parse(value);
+    return {
+      ...result2.error ? { isError: true } : {},
+      structuredContent: result2,
+      // Image bytes exist only in the granted app response, never normal text.
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            result2.chunk || result2.githubUrl ? { draft: result2.draft } : result2
+          )
+        }
+      ],
+      ...view2 ? { _meta: { [viewKey2]: view2, [selectionKey]: selections } } : {}
+    };
+  }
+  async function existingStore(data) {
+    let opened = stores.get(data);
+    if (!opened) {
+      try {
+        await lstat5(join5(data, "issue-drafts", "drafts.sqlite3"));
+      } catch (error63) {
+        if (error63?.code === "ENOENT") return void 0;
+        throw error63;
+      }
+      opened = library.IssueDraftStore.open(data);
+      stores.set(data, opened);
+      opened.catch(() => stores.delete(data));
+    }
+    return opened;
+  }
+  function publicationStore(data) {
+    let opened = stores.get(data);
+    if (!opened) {
+      opened = library.IssueDraftStore.open(data);
+      stores.set(data, opened);
+      opened.catch(() => stores.delete(data));
+    }
+    return opened;
+  }
+  function temporaryStore(data) {
+    let store = temporaryStores.get(data);
+    if (!store) {
+      store = library.IssueDraftStore.temporary({
+        publicationRoute: "github-app"
+      });
+      temporaryStores.set(data, store);
+    }
+    return store;
+  }
+  return {
+    tools: tools2,
+    resources: [resource],
+    hasResource: (uri) => uri === resource.uri || library.cachedIssueFormUris?.includes(uri) === true,
+    hasTool: (name) => Object.hasOwn(schemas, name),
+    async readResource(uri) {
+      if (stopped || uri !== resource.uri && !library.cachedIssueFormUris?.includes(uri))
+        throw Error("Unknown issue resource.");
+      return library.readIssueForm(uri);
+    },
+    async invoke(name, raw, metadata2, signal) {
+      const appOnly = name === "kaijan_issue_form_action";
+      let input3;
+      try {
+        input3 = checked(name, raw);
+      } catch {
+        return reply(
+          {
+            error: "invalid_arguments",
+            message: "Use the advertised issue fields for this action. Nothing was published."
+          },
+          { appOnly }
+        );
+      }
+      if (stopped || signal?.aborted) return reply(unavailable2(), { appOnly });
+      if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
+        return reply(
+          {
+            error: "chat_required",
+            message: "Open the issue in its original chat. Nothing was published."
+          },
+          { appOnly }
+        );
+      try {
+        const scope = await session.forRequest(metadata2);
+        if (scope.scope.kind !== "host-thread" || !scope.scope.restartPersistent)
+          throw Error("invalid_scope");
+        const view2 = appOnly ? input3.operation === "close_review" && input3.cleanupToken ? cleanupViews.get(input3.cleanupToken) : views.get(input3.viewToken) : void 0;
+        if (appOnly && (!view2 || view2.until < now() && input3.operation !== "close_review" || view2.scope !== scope.scope.id || view2.draftId !== input3.draftId))
+          return reply(
+            {
+              error: "view_expired",
+              message: "Reopen this issue in its original chat. Your local draft and images are kept."
+            },
+            { appOnly }
+          );
+        if (appOnly && input3.operation === "close_review") {
+          const temporary = temporaryStores.get(scope.data);
+          if (temporary?.has(input3.draftId)) {
+            temporary.discardTemporary(input3.draftId, {
+              userId: view2.userId,
+              workspaceId: view2.workspaceId,
+              kind: "human",
+              canEdit: true,
+              canPublish: false
+            });
+            if (temporary.size === 0) {
+              temporary.close();
+              temporaryStores.delete(scope.data);
+            }
+            for (const [token, granted] of views)
+              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
+                views.delete(token);
+            for (const [token, granted] of cleanupViews)
+              if (granted.draftId === input3.draftId && granted.scope === scope.scope.id)
+                cleanupViews.delete(token);
+            return reply({ closedReviewId: input3.draftId }, { appOnly: true });
+          }
+        }
+        const owner2 = await identity4(signal);
+        if (stopped || signal?.aborted)
+          return reply(unavailable2(), { appOnly });
+        if (view2 && (owner2.userId !== view2.userId || owner2.workspaceId !== view2.workspaceId))
+          return reply(
+            {
+              error: "connection_changed",
+              message: "The connected account or workspace changed. Return to the original connection to use this issue."
+            },
+            { appOnly }
+          );
+        const actor = {
+          ...owner2,
+          kind: appOnly ? "human" : "agent",
+          canEdit: true,
+          canPublish: appOnly
+        };
+        const { operation, draftId, revision: revision4 } = input3;
+        let store = temporaryStores.get(scope.data);
+        if (operation === "open") {
+          const historical = await existingStore(scope.data);
+          if (historical?.findOpen(input3.requestId, actor)) store = historical;
+          else {
+            if (cleanupViews.size >= 64 && !store?.findOpen(input3.requestId, actor))
+              throw new library.IssueDraftError(
+                "review_limit",
+                "Close an open issue review before starting another."
+              );
+            store = temporaryStore(scope.data);
+          }
+        } else {
+          const retained = await existingStore(scope.data);
+          if (retained?.has(draftId)) store = retained;
+          else if (!store?.has(draftId)) store = void 0;
+          if (!store)
+            throw new library.IssueDraftError(
+              "not_found",
+              "This review is closed. Start a new report."
+            );
+        }
+        if (stopped || signal?.aborted)
+          return reply(unavailable2(), { appOnly });
+        const transport = (publicationRoute) => createTransport({
+          library,
+          broker,
+          build,
+          signal,
+          publicationRoute,
+          journal: () => {
+            let pending = journals.get(scope.data);
+            if (!pending) {
+              pending = library.DirectIssueJournal.open(scope.data);
+              journals.set(scope.data, pending);
+              pending.catch(() => journals.delete(scope.data));
+            }
+            return pending;
+          }
+        });
+        let draft, chunk, githubUrl;
+        const current = operation === "open" ? void 0 : store.get(draftId, actor);
+        const githubLink = current?.publicationRoute === "github-link";
+        if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
+          throw new library.IssueDraftError(
+            "github_handoff_required",
+            "This report is text-only. Reopen it and select Continue on GitHub.",
+            current
+          );
+        if (operation === "open")
+          draft = store.create(
+            {
+              requestId: input3.requestId,
+              ...input3.title !== void 0 ? { title: input3.title } : {},
+              ...input3.description !== void 0 ? { description: input3.description } : {},
+              context: input3.context ?? [
+                ...build.pluginVersion ? [`Kaijan version: ${build.pluginVersion}`] : [],
+                "Host: Codex",
+                `Platform: ${process.platform} (${process.arch})`
+              ].join("\n")
+            },
+            actor,
+            "github-app"
+          );
+        else if (operation === "attach_screenshot") {
+          if (current.publicationRoute !== "github-app" || current.status !== "draft")
+            throw new library.IssueDraftError(
+              "original_route_required",
+              "Keep the original report and selected images.",
+              current
+            );
+          if (current.revision !== revision4)
+            throw new library.IssueDraftError(
+              "revision_conflict",
+              "Read and review the current report before adding this screenshot.",
+              current
+            );
+          let selected;
+          try {
+            selected = await selectIssueScreenshot(
+              scope.services?.reports,
+              input3.screenshot,
+              input3.requestId
+            );
+          } catch {
+            throw new library.IssueDraftError(
+              "screenshot_unavailable",
+              "This screenshot could not be added. Choose an image or use a saved screenshot from this chat.",
+              current
+            );
+          }
+          store.beginImage(draftId, revision4, actor, selected.image);
+          for (let offset2 = 0; offset2 < selected.bytes.length; offset2 += 256 * 1024)
+            store.appendImage(
+              draftId,
+              revision4,
+              actor,
+              selected.image.id,
+              offset2,
+              selected.bytes.subarray(offset2, offset2 + 256 * 1024).toString("base64")
+            );
+          draft = store.update(
+            {
+              draftId,
+              revision: revision4,
+              changes: { images: [...current.fields.images, selected.image] }
+            },
+            actor
+          );
+        } else if (operation === "update")
+          draft = store.update(
+            { draftId, revision: revision4, changes: input3.changes },
+            actor
+          );
+        else if (operation === "close_review") {
+          throw new library.IssueDraftError(
+            "original_route_required",
+            "This saved draft keeps its original recovery path."
+          );
+        } else if (operation === "discard_edit")
+          draft = store.discardEdit(draftId, actor);
+        else if (operation === "continue_on_github") {
+          if (!githubLink || current.status !== "draft")
+            throw new library.IssueDraftError(
+              "original_route_required",
+              "Use the original publication controls for this issue.",
+              current
+            );
+          if (view2?.reviewedRevision !== revision4 || current.revision !== revision4 || current.unsavedEdit || !current.fields.title.trim() || !current.fields.description.trim())
+            throw new library.IssueDraftError(
+              "review_required",
+              "Save and review the current title and observed behavior before continuing.",
+              current
+            );
+          githubUrl = library.githubIssueDraftUrl(current.fields);
+          if (!githubUrl)
+            throw new library.IssueDraftError(
+              "github_url_too_long",
+              "This draft is too long to prefill on GitHub. Shorten it or copy the text and paste it into a new issue there. Your full draft is kept.",
+              current
+            );
+          draft = current;
+        } else if (operation === "publish" || operation === "status" && !githubLink) {
+          const publisherTransport = transport(current.publicationRoute);
+          if (operation === "publish") {
+            if (current.status === "draft") {
+              if (view2?.reviewedRevision !== revision4 || current.revision !== revision4)
+                throw new library.IssueDraftError(
+                  "review_required",
+                  "Open Preview issue and review the current text, images and account before publishing.",
+                  current
+                );
+              if (publisherTransport.requiresPublisher) {
+                const selected = await publisherTransport.identify(owner2, {
+                  imagesRequired: current.fields.images.length > 0
+                });
+                store.setPublisher(draftId, actor, selected);
+              }
+            }
+          }
+          if (operation === "publish" && current.temporary && current.publicationRoute === "github-app") {
+            const temporary = store;
+            const durable = await publicationStore(scope.data);
+            temporary.promoteReviewed(draftId, revision4, actor, durable);
+            store = durable;
+            if (temporary.size === 0) {
+              temporary.close();
+              temporaryStores.delete(scope.data);
+            }
+            for (const [token, granted] of cleanupViews)
+              if (granted.draftId === draftId && granted.scope === scope.scope.id)
+                cleanupViews.delete(token);
+          }
+          draft = operation === "publish" ? await store.publish(
+            draftId,
+            revision4,
+            actor,
+            publisherTransport
+          ) : await store.refresh(draftId, actor, publisherTransport);
+        } else {
+          if (operation === "begin_image")
+            store.beginImage(draftId, revision4, actor, input3.image);
+          else if (operation === "append_image")
+            store.appendImage(
+              draftId,
+              revision4,
+              actor,
+              input3.imageId,
+              input3.offset,
+              input3.base64
+            );
+          else if (operation === "remove_image")
+            store.removeImage(draftId, revision4, actor, input3.imageId);
+          else if (operation === "read_image") {
+            const selected = store.readImage(draftId, actor, input3.imageId);
+            if (input3.offset >= selected.bytes.length || input3.offset % (256 * 1024) !== 0)
+              throw new library.IssueDraftError(
+                "invalid_image_offset",
+                "Read the next advertised image chunk."
+              );
+            chunk = {
+              imageId: selected.image.id,
+              offset: input3.offset,
+              totalBytes: selected.image.bytes,
+              mediaType: selected.image.mediaType,
+              base64: Buffer.from(selected.bytes).subarray(input3.offset, input3.offset + 256 * 1024).toString("base64")
+            };
+          }
+          draft = store.get(draftId, actor);
+        }
+        if (draft.status === "draft" && draft.publicationRoute !== "github-link" && (operation === "open" || operation === "read" && appOnly && input3.refreshPublisher === true)) {
+          const publisherTransport = transport(draft.publicationRoute);
+          try {
+            if (publisherTransport.requiresPublisher) {
+              const selected = await publisherTransport.identify(owner2, {
+                imagesRequired: draft.fields.images.length > 0
+              });
+              draft = store.setPublisher(draft.id, actor, selected);
+            }
+          } catch {
+            if (operation !== "open")
+              return reply(
+                {
+                  error: "posting_account_unavailable",
+                  message: "Publishing is unavailable for the connected GitHub account. Your draft is kept.",
+                  draft
+                },
+                { appOnly }
+              );
+          }
+        }
+        const selections = store.listImages(draft.id, actor);
+        if (view2 && operation === "read" && input3.refreshPublisher === true)
+          view2.reviewedRevision = draft.revision;
+        return reply(
+          {
+            draft,
+            ...appOnly ? {
+              selections,
+              ...chunk ? { chunk } : {},
+              ...githubUrl ? { githubUrl } : {}
+            } : {}
+          },
+          {
+            appOnly,
+            ...appOnly ? {} : { view: grant2(scope, owner2, draft.id), selections }
+          }
+        );
+      } catch (error63) {
+        if (error63 instanceof library.IssueDraftError)
+          return reply(
+            {
+              error: error63.code,
+              message: error63.message,
+              ...error63.draft ? { draft: error63.draft } : {}
+            },
+            { appOnly }
+          );
+        return reply(unavailable2(), { appOnly });
+      }
+    },
+    async close() {
+      stopped = true;
+      views.clear();
+      cleanupViews.clear();
+      for (const store of temporaryStores.values()) store.close();
+      temporaryStores.clear();
+      const opened = await Promise.allSettled([
+        ...stores.values(),
+        ...journals.values()
+      ]);
+      for (const value of opened)
+        if (value.status === "fulfilled") value.value.close();
+      stores.clear();
+      journals.clear();
+    }
+  };
+}
+
+// apps/codex-plugin/src/installed-session.mjs
+import { join as join6, delimiter } from "node:path";
+import { pathToFileURL } from "node:url";
+import process3 from "node:process";
+import { performance as performance3 } from "node:perf_hooks";
+import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
+var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
+var present = (entry) => {
+  if (Array.isArray(entry)) return entry.map(present);
+  if (!entry || typeof entry !== "object") return entry;
+  return Object.fromEntries(
+    Object.entries(entry).map(([key, value]) => [
+      key,
+      ["title", "description"].includes(key) ? brand(value) : present(value)
+    ])
+  );
+};
+async function createInstalledSession(root, build, data, broker, {
+  runnerValidation,
+  applicationContext,
+  createHostSurface,
+  onStartupStage,
+  lifecycleFactory
+} = {}) {
+  const host = pluginHost(build);
+  const stage2 = (value) => {
+    try {
+      onStartupStage?.(value);
+    } catch {
+    }
+  };
+  const contextSetup = applicationContext === void 0 ? void 0 : structuredClone(applicationContext);
+  if (build.runtimeLayout !== "installed")
+    throw Error("Rebuild the installed runtime layout");
+  const source3 = join6(root, "capabilities");
+  const started = performance3.now();
+  const artifactDigest = build.capabilityDigest;
+  process3.env.PATH = [join6(source3, "runtime"), process3.env.PATH].filter(Boolean).join(delimiter);
+  stage2("import_library");
+  const library = await import(pathToFileURL(join6(source3, "library/api.mjs")).href);
+  stage2("init_services");
+  if (Boolean(build.validationContext) !== Boolean(runnerValidation))
+    throw Error(
+      "Validation artifact requires its explicit private host binding"
+    );
+  const validation = runnerValidation ? library.parseRunnerValidationBinding(runnerValidation.binding) : void 0;
+  if (validation && (validation.artifactDigest !== artifactDigest || build.validationContext.kind !== "runner-control" || build.validationContext.planSha256 !== runnerValidation.planSha256 || build.validationContext.headless !== void 0 && typeof build.validationContext.headless !== "boolean" || (build.validationContext.headless ?? false) !== (validation.headless ?? false)))
+    throw Error("Validation artifact/binding mismatch");
+  if (contextSetup && (Object.keys(contextSetup).length !== 3 || Object.keys(contextSetup).some(
+    (key) => !["artifactDigest", "scopeId", "binding"].includes(key)
+  ) || contextSetup.artifactDigest !== artifactDigest || !/^[a-f0-9]{64}$/.test(contextSetup.scopeId)))
+    throw Error("Application-context artifact/scope binding mismatch");
+  const contextBinding = contextSetup ? library.parseRunnerContextBinding({
+    ...contextSetup.binding,
+    artifactDigest
+  }) : void 0;
+  const hostLibrary = {
+    ...library,
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    createCapabilityServices(scopedData, options) {
+      return library.createCapabilityServices(scopedData, {
+        ...options,
+        ...build.browserViewer === true ? { browserViewer: true } : {},
+        mapGeneration: false,
+        ...validation ? { runnerValidation: validation } : {},
+        ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
+        ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
+      });
+    },
+    createCapabilityCatalog(services, options) {
+      return library.createCapabilityCatalog(services, {
+        ...options,
+        mapsEnabled: false
+      });
+    }
+  };
+  if (broker) {
+    if (typeof library.bindManagedProvider !== "function")
+      throw Error("Shared-auth runtime required");
+    library.bindManagedProvider(data, broker.socketPath);
+  }
+  const imported = performance3.now();
+  const workspaceService = broker && build.workspaceResults ? new library.WorkspaceResults(
+    (path, options) => broker.send(path.slice("/api/v1".length), options),
+    build.profile === "local"
+  ) : void 0;
+  const workspaceResults = workspaceService ? library.workspaceResultTools(workspaceService) : void 0;
+  const session = await createCapabilitySession({
+    host,
+    data,
+    payloadDigest: artifactDigest,
+    packageIdentity: JSON.stringify(build),
+    library: broker ? {
+      ...hostLibrary,
+      createCapabilityCatalog(...args) {
+        const catalog2 = hostLibrary.createCapabilityCatalog(...args);
+        return withModelDiscovery(
+          {
+            ...catalog2,
+            tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
+            async invoke(name, input3, invocation) {
+              if (workspaceResults?.tools.some((tool2) => tool2.name === name))
+                return workspaceResults.invoke(
+                  name,
+                  input3,
+                  invocation?.signal
+                );
+              return catalog2.invoke(name, input3, invocation);
+            }
+          },
+          broker,
+          library.CapabilityCatalogError
+        );
+      }
+    } : hostLibrary,
+    ...host === "claude_code" ? { uiEnabled: false } : {},
+    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
+    uiMode: "panel"
+  });
+  session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
+  session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
+  session.workspaceResults = workspaceService;
+  session.agentFeedback = createAgentFeedbackSurface({
+    session,
+    broker,
+    build,
+    data
+  });
+  session.instructions += ` ${agentFeedbackInstructions}`;
+  const closeAgentFeedback = session.close.bind(session);
+  session.close = async () => {
+    await session.agentFeedback.close();
+    await closeAgentFeedback();
+  };
+  if (host === "claude_code") {
+    session.configurations = createConfigurationSurface({
+      session,
+      library,
+      data
+    });
+    const close = session.close.bind(session);
+    session.close = async () => {
+      await session.configurations.close();
+      await close();
+    };
+  }
+  if (host === "codex") {
+    session.configurations = createConfigurationSurface({
+      session,
+      library,
+      data
+    });
+    if (typeof library.readSetupCard === "function")
+      session.setupCard = {
+        resources: [
+          {
+            uri: library.setupCardUri,
+            name: "Kaijan setup",
+            mimeType: "text/html;profile=mcp-app"
+          },
+          ...library.onboardingUri ? [
+            {
+              uri: library.onboardingUri,
+              name: "Set up Kaijan",
+              mimeType: "text/html;profile=mcp-app"
+            }
+          ] : []
+        ],
+        onboardingUri: library.onboardingUri,
+        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
+      };
+    session.feedback = createFeedbackSurface({
+      session,
+      library,
+      broker,
+      build
+    });
+    session.issues = createIssueSurface({ session, library, broker, build });
+    const close = session.close.bind(session);
+    session.close = async () => {
+      await session.configurations.close();
+      await session.feedback.close();
+      await session.issues.close();
+      await close();
+    };
+  }
+  session.privateParameters = {
+    async provision(threadId, input3) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.provisionRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        input3
+      );
+    },
+    async revoke(threadId, bindingId) {
+      if (typeof threadId !== "string" || !threadId.trim())
+        throw Error("A conversation ID is required.");
+      const scope = await session.forRequest({ threadId });
+      return library.revokeRunnerParameters(
+        scope.data,
+        scope.scope.id,
+        bindingId
+      );
+    }
+  };
+  const originalFailure = session.failure.bind(session);
+  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
+  const initialized = performance3.now();
+  session.runtimeIdentity = Object.freeze({
+    pluginVersion: build.pluginVersion,
+    buildId: build.buildId,
+    sourceRevision: build.sourceRevision,
+    sourceDirty: build.sourceDirty,
+    capabilityDigest: build.capabilityDigest
+  });
+  session.runtimeDiscovery = () => installedRuntimeDiscovery(root, {
+    artifact: session.runtimeIdentity,
+    installation: session.identity,
+    connectionId: session.connectionId
+  });
+  session.instructions = brand(session.instructions);
+  session.providerReady = async () => library.providerConfigured(await library.providerEnvironment(data));
+  const catalog = session.catalog;
+  session.catalog = {
+    ...catalog,
+    tools: catalog.tools.map(present),
+    resources: catalog.resources.map((entry) => ({
+      ...present(entry),
+      name: brand(entry.name)
+    }))
+  };
+  process3.stderr.write(
+    JSON.stringify({
+      event: "kaijan.local.startup",
+      importMs: Math.round(imported - started),
+      servicesMs: Math.round(initialized - imported),
+      processElapsedMs: Math.round(initialized)
+    }) + "\n"
+  );
+  if (host === "claude_code" && createHostSurface) {
+    try {
+      session.projectHistory = await createHostSurface({
+        session,
+        library,
+        data,
+        broker,
+        build
+      });
+      const close = session.close.bind(session);
+      session.close = async () => {
+        try {
+          await session.projectHistory.close();
+        } catch {
+        } finally {
+          await close();
+        }
+      };
+    } catch {
+    }
+  }
+  return session;
+}
+
+// apps/codex-plugin/src/setup/service.mjs
+import { randomUUID as randomUUID8 } from "node:crypto";
+import { performance as performance4 } from "node:perf_hooks";
+
+// apps/codex-plugin/src/setup/store.mjs
+import { DatabaseSync } from "node:sqlite";
+import { constants as constants4 } from "node:fs";
+import { mkdir as mkdir4, lstat as lstat6, realpath as realpath3, open as open4 } from "node:fs/promises";
+import { randomUUID as randomUUID6 } from "node:crypto";
+import process4 from "node:process";
+import { join as join7, resolve } from "node:path";
+
+// apps/codex-plugin/src/setup/contracts.mjs
+import { createHash as createHash5 } from "node:crypto";
+import { URL as URL2 } from "node:url";
+var digest18 = (value) => createHash5("sha256").update(JSON.stringify(value)).digest("hex");
+var identity3 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var revision2 = external_exports.string().regex(/^[a-f0-9]{40}$/);
+var requestKey = external_exports.string().min(8).max(120);
+var label2 = external_exports.string().min(1).max(1e3);
+var sourceSchema = external_exports.strictObject({
+  directory: external_exports.string().min(1).max(4096),
+  revision: revision2
+});
+var targetSchema = external_exports.strictObject({
+  url: external_exports.string().url().max(4096).refine((value) => {
+    const url2 = new URL2(value);
+    return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
+  }),
+  profileId: external_exports.string().min(1).max(80),
+  profileRevision: identity3.optional()
+});
+var configurationSchema2 = external_exports.strictObject({
+  source: sourceSchema,
+  workItem: external_exports.string().min(1).max(1e5).optional(),
+  target: targetSchema.optional(),
+  configurationRefs: external_exports.array(
+    external_exports.strictObject({
+      kind: external_exports.enum(["source", "target", "provider"]),
+      handle: external_exports.string().min(1).max(200)
+    })
+  ).max(30).default([])
+});
+var prepareSchema = external_exports.strictObject({
+  requestKey,
+  configuration: configurationSchema2.extend({
+    source: sourceSchema.extend({
+      revision: external_exports.string().min(1).max(512).default("main").describe(
+        "Use HEAD for the current checkout commit, or supply a branch, a full Git ref or an exact commit. Omit to select main."
+      )
+    })
+  })
+});
+var listSchema = external_exports.strictObject({
+  directory: external_exports.string().min(1).max(4096),
+  offset: external_exports.number().int().min(0).default(0)
+});
+var handleSchema = external_exports.strictObject({
+  applicationId: identity3,
+  contextId: identity3
+});
+var commandSchema = handleSchema.extend({ requestKey });
+var waitSchema = handleSchema.extend({
+  timeoutMs: external_exports.number().int().min(1).max(3e4).default(3e4)
+});
+var resolveSchema = handleSchema.extend({
+  expectedRevision: revision2,
+  expectedProfileRevision: identity3.optional().describe(
+    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
+  )
+});
+var handoffSchema = resolveSchema.extend({ requestKey });
+var workItemReadinessScopeSchema = external_exports.strictObject({
+  kind: external_exports.literal("work-item"),
+  workItem: external_exports.string().min(1).max(1e5),
+  applicationCoverage: external_exports.literal("incomplete"),
+  evidence: external_exports.literal("source-inferred"),
+  browserObserved: external_exports.literal(false),
+  selectedPageIds: external_exports.array(label2).optional(),
+  sourceLimitations: external_exports.array(
+    external_exports.strictObject({
+      stage: external_exports.literal("global/definitions"),
+      reason: external_exports.string().min(1),
+      relevance: external_exports.literal("unknown")
+    })
+  ).optional()
+});
+var mappingSchema = external_exports.strictObject({
+  mapId: identity3,
+  pages: external_exports.array(external_exports.strictObject({ id: label2, title: label2 })).max(200),
+  pagePreviewLimit: external_exports.literal(40).optional(),
+  coverage: external_exports.literal("source-inferred-work-item-fragment").optional(),
+  readinessScope: workItemReadinessScopeSchema.optional(),
+  readinessIssues: external_exports.array(
+    external_exports.strictObject({
+      code: label2,
+      recovery: label2
+    })
+  ).optional(),
+  answerId: identity3.optional(),
+  resultSha256: identity3.optional(),
+  snapshotTree: revision2.optional()
+});
+var provenanceSchema = external_exports.strictObject({
+  kind: external_exports.enum(["controlled-fixture", "unavailable", "product-adapter"]),
+  version: label2
+});
+var missingSchema = external_exports.array(label2).max(30);
+var authorizationSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("host-managed-tool-dispatch"),
+    host: external_exports.literal("codex"),
+    policy: external_exports.literal("host-managed"),
+    scopeId: identity3,
+    requestId: external_exports.union([external_exports.string().max(200), external_exports.number().int()]),
+    tool: external_exports.enum(["loki_setup_prepare", "loki_setup_retry"]),
+    argumentsSha256: identity3,
+    configurationSha256: identity3
+  }),
+  external_exports.strictObject({ kind: external_exports.literal("controlled-selection-only") })
+]);
+var consumerReceiptSchema = external_exports.strictObject({
+  accepted: external_exports.boolean(),
+  contextId: identity3,
+  receiptId: identity3,
+  provenance: provenanceSchema
+});
+var mapReceiptSchema = external_exports.strictObject({
+  requestKey: identity3,
+  runId: identity3,
+  sourceRevision: revision2,
+  state: external_exports.enum([
+    "running",
+    "ready",
+    "incomplete",
+    "failed",
+    "stopped",
+    "uncertain"
+  ]),
+  progress: label2,
+  resultId: identity3.nullable(),
+  data: mappingSchema.nullable(),
+  provenance: provenanceSchema,
+  executionSettled: external_exports.boolean().optional()
+});
+var setupStateSchema = external_exports.enum([
+  "awaiting-authority",
+  "blocked",
+  "admitting",
+  "mapping",
+  "uncertain",
+  "stop-requested",
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var setupReceiptSchema = handleSchema.extend({
+  version: external_exports.number().int().positive(),
+  recovered: external_exports.boolean().optional(),
+  reused: external_exports.boolean().optional()
+});
+var setupSummarySchema = external_exports.strictObject({
+  state: setupStateSchema,
+  missing: missingSchema,
+  nextAction: label2,
+  provenance: provenanceSchema
+});
+var setupPreparationOutputSchema = setupReceiptSchema.extend(
+  setupSummarySchema.shape
+);
+var mappedSetupContextSchema = handleSchema.extend({
+  schema: external_exports.literal("loki.setup-context/3"),
+  version: external_exports.number().int().positive(),
+  configuration: configurationSchema2.extend({
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault()
+  }),
+  configurationHash: identity3,
+  sourceIdentity: external_exports.strictObject({
+    device: external_exports.number().int(),
+    inode: external_exports.number().int()
+  }),
+  provenance: provenanceSchema,
+  state: setupStateSchema,
+  missing: missingSchema,
+  authorityRef: identity3.nullable(),
+  authorityKind: external_exports.enum(["host-managed-tool-dispatch", "controlled-selection-only"]).nullable(),
+  authority: authorizationSchema.optional(),
+  owner: external_exports.uuid(),
+  map: external_exports.strictObject({
+    requestKey: identity3,
+    runId: identity3.nullable(),
+    resultId: identity3.nullable(),
+    data: mappingSchema.nullable(),
+    sourceRevision: revision2.optional(),
+    state: mapReceiptSchema.shape.state.optional(),
+    progress: label2.optional(),
+    provenance: provenanceSchema.optional(),
+    executionSettled: external_exports.boolean().optional()
+  }),
+  progress: label2,
+  error: label2.nullable(),
+  supersededBy: identity3.optional()
+});
+var setupContextSchema = external_exports.union([
+  mappedSetupContextSchema,
+  mappedSetupContextSchema.extend({
+    schema: external_exports.literal("loki.setup-context/4"),
+    map: external_exports.null(),
+    authorityRef: external_exports.null(),
+    authorityKind: external_exports.null()
+  })
+]);
+var setupListOutputSchema = external_exports.strictObject({
+  contexts: external_exports.array(
+    setupReceiptSchema.omit({ recovered: true, reused: true }).extend({
+      source: sourceSchema,
+      target: targetSchema.optional(),
+      state: setupStateSchema,
+      supersededBy: identity3.nullable(),
+      provenance: provenanceSchema
+    })
+  ).max(50),
+  nextOffset: external_exports.number().int().nonnegative().nullable()
+});
+var setupStopOutputSchema = setupReceiptSchema.extend({
+  ...setupSummarySchema.shape,
+  runId: identity3.nullable(),
+  cancellationRequested: external_exports.boolean()
+});
+var mappedResolveOutputSchema = external_exports.strictObject({
+  application: external_exports.strictObject({
+    schema: external_exports.literal("loki.application-context/2"),
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    map: external_exports.strictObject({
+      mapId: identity3,
+      runId: identity3,
+      resultId: identity3,
+      sourceRevision: revision2,
+      preview: mappingSchema
+    }),
+    readiness: external_exports.strictObject({
+      state: external_exports.literal("ready"),
+      missing: external_exports.array(external_exports.never()).max(0),
+      scope: workItemReadinessScopeSchema.optional()
+    }),
+    provenance: provenanceSchema
+  }),
+  setup: handleSchema.extend({
+    version: external_exports.number().int().positive(),
+    mapRunId: identity3,
+    mapResultId: identity3,
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault(),
+    authorityRef: identity3
+  }),
+  authority: external_exports.enum([
+    "host-managed-tool-dispatch",
+    "controlled-selection-only"
+  ])
+});
+var configuredResolveOutputSchema = external_exports.strictObject({
+  application: external_exports.strictObject({
+    schema: external_exports.literal("loki.application-context/3"),
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().min(1).max(1e5).nullable(),
+    map: external_exports.null(),
+    readiness: external_exports.strictObject({
+      state: external_exports.literal("configured"),
+      missing: external_exports.array(external_exports.never()).max(0),
+      map: external_exports.literal("not-required"),
+      browserObserved: external_exports.literal(false)
+    }),
+    provenance: provenanceSchema
+  }),
+  setup: handleSchema.extend({
+    version: external_exports.number().int().positive(),
+    mapRunId: external_exports.null(),
+    mapResultId: external_exports.null(),
+    configurationRefs: configurationSchema2.shape.configurationRefs.removeDefault(),
+    authorityRef: external_exports.null()
+  }),
+  authority: external_exports.literal("configuration-only")
+});
+var setupResolveOutputSchema = external_exports.union([
+  mappedResolveOutputSchema,
+  configuredResolveOutputSchema
+]);
+var handoffFields = {
+  consumer: external_exports.union([
+    external_exports.strictObject({
+      state: external_exports.literal("pending"),
+      provenance: provenanceSchema
+    }),
+    consumerReceiptSchema
+  ]),
+  recovered: external_exports.boolean().optional()
+};
+var setupHandoffOutputSchema = external_exports.union([
+  mappedResolveOutputSchema.extend(handoffFields),
+  configuredResolveOutputSchema.extend(handoffFields)
+]);
+var setupErrorOutputSchema = external_exports.strictObject({
+  error: external_exports.strictObject({
+    code: external_exports.string().regex(/^[a-z][a-z0-9_]{0,99}$/),
+    message: label2
+  })
+});
+var setupSuccessSchemas = {
+  loki_setup_list: setupListOutputSchema,
+  loki_setup_prepare: setupPreparationOutputSchema,
+  loki_setup_get: setupContextSchema,
+  loki_setup_wait: setupContextSchema,
+  loki_setup_retry: setupPreparationOutputSchema,
+  loki_setup_stop: setupStopOutputSchema,
+  loki_setup_resolve: setupResolveOutputSchema,
+  loki_setup_handoff: setupHandoffOutputSchema
+};
+var setupOutputVersion = (name) => [
+  "loki_setup_prepare",
+  "loki_setup_retry",
+  "loki_setup_stop",
+  "loki_setup_get",
+  "loki_setup_wait",
+  "loki_setup_resolve",
+  "loki_setup_handoff"
+].includes(name) ? 2 : 1;
+var setupOutputSchemas = Object.fromEntries(
+  Object.entries(setupSuccessSchemas).map(([name, schema]) => [
+    name,
+    external_exports.union([schema, setupErrorOutputSchema]).meta({ id: `urn:loki:${name}:output:${setupOutputVersion(name)}` })
+  ])
+);
+var SetupFailure = class extends Error {
+  constructor(code) {
+    super(code);
+    this.code = code;
+  }
+};
+var recoveryMessages = {
+  unknown_application_context: "Use the original conversation and application/context IDs. List retained contexts for the selected project; do not recreate unknown work.",
+  request_conflict: "This request key already records different input. Read its original receipt. Use a new key only for a separately authorized new operation, never to replay unknown effects.",
+  retry_not_required: "Read the original context. Only known blocked, failed or stopped work can be retried; uncertain or pending effects must be reconciled without replay.",
+  stale_application_context: "Use the selected context's exact source and target-profile revisions. A different source selection is a new operation.",
+  application_not_ready: "Read the original context's state and missing prerequisites. A receipt, completed wait or partial map does not establish application readiness.",
+  consumer_integration_unavailable: "No supported application consumer is ready. Retain the source-bound context and original map; do not substitute a fixture acknowledgement.",
+  setup_output_invalid: "The Setup response did not match its advertised contract. Read retained state with the original identities before recovery; do not replay an operation whose effects are unknown.",
+  setup_interrupted: "The request was interrupted. Read the original context to confirm its state and any pending Stop. Request cancellation alone does not prove producer cancellation."
+};
+function failure3(error63) {
+  const code = error63 instanceof SetupFailure && /^[a-z][a-z0-9_]{0,99}$/.test(error63.code) ? error63.code : error63?.name === "AbortError" ? "setup_interrupted" : "setup_operation_failed";
+  return {
+    code,
+    message: (Object.hasOwn(recoveryMessages, code) ? recoveryMessages[code] : void 0) ?? "Read the original Setup context before retrying. Keep its application, source version and request key."
+  };
+}
+
+// apps/codex-plugin/src/setup/store.mjs
+async function openSetupStore(directory) {
+  await mkdir4(directory, { recursive: true, mode: 448 });
+  const info = await lstat6(directory);
+  if (!info.isDirectory() || info.uid !== process4.getuid?.() || info.mode & 63 || await realpath3(directory) !== resolve(directory))
+    throw new SetupFailure("unsafe_setup_state");
+  const path = join7(directory, "setup.sqlite");
+  const file2 = await open4(
+    path,
+    constants4.O_RDWR | constants4.O_CREAT | constants4.O_NOFOLLOW | constants4.O_NONBLOCK,
+    384
+  );
+  try {
+    const stat2 = await file2.stat();
+    if (!stat2.isFile() || stat2.uid !== process4.getuid?.() || stat2.mode & 63 || stat2.nlink !== 1)
+      throw new SetupFailure("unsafe_setup_state");
+  } finally {
+    await file2.close();
+  }
+  const database = new DatabaseSync(path);
+  let closed2 = false;
+  database.exec(`PRAGMA busy_timeout=5000;
+    CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS applications(id TEXT PRIMARY KEY, version INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS contexts(id TEXT PRIMARY KEY, application_id TEXT NOT NULL, configuration_hash TEXT NOT NULL, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS map_observations(context_id TEXT, digest TEXT, value TEXT NOT NULL, PRIMARY KEY(context_id,digest));
+    CREATE TABLE IF NOT EXISTS commands(scope TEXT, key TEXT, digest TEXT, value TEXT, PRIMARY KEY(scope,key));`);
+  database.prepare("INSERT OR IGNORE INTO metadata VALUES('installation',?)").run(randomUUID6());
+  return {
+    installation: database.prepare("SELECT value FROM metadata WHERE key='installation'").get().value,
+    transaction(fn) {
+      database.exec("BEGIN IMMEDIATE");
+      try {
+        const value = fn();
+        database.exec("COMMIT");
+        return value;
+      } catch (error63) {
+        database.exec("ROLLBACK");
+        throw error63;
+      }
+    },
+    version(applicationId) {
+      database.prepare(
+        "INSERT INTO applications VALUES(?,1) ON CONFLICT(id) DO UPDATE SET version=version+1"
+      ).run(applicationId);
+      return database.prepare("SELECT version FROM applications WHERE id=?").get(applicationId).version;
+    },
+    get(applicationId, contextId) {
+      const row = database.prepare("SELECT value FROM contexts WHERE id=? AND application_id=?").get(contextId, applicationId);
+      if (!row) throw new SetupFailure("unknown_application_context");
+      return JSON.parse(row.value);
+    },
+    matching(applicationId, hash6) {
+      const rows2 = database.prepare(
+        "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
+      ).all(applicationId, hash6);
+      return rows2.length ? JSON.parse(rows2[0].value) : null;
+    },
+    list(directory2, offset) {
+      return database.prepare(
+        "SELECT value FROM contexts WHERE json_extract(value,'$.configuration.source.directory')=? ORDER BY rowid DESC LIMIT 51 OFFSET ?"
+      ).all(directory2, offset).map((row) => JSON.parse(row.value));
+    },
+    put(value) {
+      database.prepare(
+        "INSERT INTO contexts VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value"
+      ).run(
+        value.contextId,
+        value.applicationId,
+        value.configurationHash,
+        JSON.stringify(value)
+      );
+    },
+    command(scope, key, hash6) {
+      const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
+      if (!row) return null;
+      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
+      return JSON.parse(row.value);
+    },
+    receipt(scope, key, hash6, value) {
+      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
+    },
+    complete(scope, key, hash6, value) {
+      database.prepare(
+        "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
+      ).run(JSON.stringify(value), scope, key, hash6);
+    },
+    observe(contextId, value) {
+      database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest18(value), JSON.stringify(value));
+    },
+    producer(key) {
+      const row = database.prepare("SELECT value FROM metadata WHERE key=?").get(`producer:${key}`);
+      return row ? JSON.parse(row.value) : null;
+    },
+    retainProducer(key, value) {
+      database.prepare(
+        "INSERT INTO metadata VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value"
+      ).run(`producer:${key}`, JSON.stringify(value));
+    },
+    close: () => {
+      if (!closed2) {
+        closed2 = true;
+        database.close();
+      }
+    }
+  };
+}
+
+// apps/codex-plugin/src/setup/source.mjs
+import { execFile as execFile2 } from "node:child_process";
+import { promisify as promisify3 } from "node:util";
+import { realpath as realpath4, lstat as lstat7 } from "node:fs/promises";
+import { isAbsolute as isAbsolute3 } from "node:path";
+import { randomUUID as randomUUID7 } from "node:crypto";
+var execute = promisify3(execFile2);
+async function resolveSourceRevision(source3, signal) {
+  const git = async (args, cleanup = false) => (await execute(
+    "git",
+    [
+      "-c",
+      "core.hooksPath=/dev/null",
+      "-c",
+      "core.fsmonitor=false",
+      "-c",
+      "protocol.ext.allow=never",
+      "-C",
+      source3.directory,
+      ...args
+    ],
+    {
+      timeout: 6e4,
+      maxBuffer: 16384,
+      signal: cleanup ? void 0 : signal
+    }
+  )).stdout.trim();
+  const requested = source3.revision ?? "main";
+  if (/^[a-f0-9]{40}$/.test(requested)) {
+    await inspectSource({ ...source3, revision: requested });
+    return requested;
+  }
+  try {
+    const head = await git(["rev-parse", "--verify", "HEAD^{commit}"]);
+    await inspectSource({ ...source3, revision: head });
+    if (requested === "HEAD") return head;
+    const ref = requested.startsWith("refs/") ? requested : `refs/heads/${requested}`;
+    await git(["check-ref-format", ref]);
+    let remote = false;
+    try {
+      await git(["remote", "get-url", "origin"]);
+      remote = true;
+    } catch {
+    }
+    if (!remote) return await git(["rev-parse", "--verify", `${ref}^{commit}`]);
+    const temporary = `refs/loki/setup/${randomUUID7()}`;
+    try {
+      await git([
+        "fetch",
+        "--quiet",
+        "--no-tags",
+        "--no-recurse-submodules",
+        "--no-write-fetch-head",
+        "origin",
+        `${ref}:${temporary}`
+      ]);
+      const upstream = await git([
+        "rev-parse",
+        "--verify",
+        `${temporary}^{commit}`
+      ]);
+      let local;
+      try {
+        local = await git(["rev-parse", "--verify", `${ref}^{commit}`]);
+      } catch {
+        return upstream;
+      }
+      if (local === upstream) return local;
+      try {
+        await git(["merge-base", "--is-ancestor", local, upstream]);
+        return upstream;
+      } catch {
+      }
+      try {
+        await git(["merge-base", "--is-ancestor", upstream, local]);
+        return local;
+      } catch {
+      }
+      throw new SetupFailure("source_revision_ambiguous");
+    } finally {
+      await git(["update-ref", "-d", temporary], true);
+    }
+  } catch (error63) {
+    if (signal?.aborted) throw signal.reason;
+    if (error63 instanceof SetupFailure) throw error63;
+    if (error63.code === "ENOENT" && error63.path === "git")
+      throw new SetupFailure("git_unavailable");
+    throw new SetupFailure("source_revision_unavailable");
+  }
+}
+async function inspectSource(source3) {
+  try {
+    if (!isAbsolute3(source3.directory) || source3.directory.includes("\0") || await realpath4(source3.directory) !== source3.directory)
+      throw Error();
+    const stat2 = await lstat7(source3.directory);
+    if (!stat2.isDirectory()) throw Error();
+    const git = async (args) => (await execute(
+      "git",
+      [
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "core.fsmonitor=false",
+        "-C",
+        source3.directory,
+        ...args
+      ],
+      {
+        timeout: 1e4,
+        maxBuffer: 16384
+      }
+    )).stdout.trim();
+    if (await git(["rev-parse", "--show-toplevel"]) !== source3.directory)
+      throw Error();
+    if (await git(["rev-parse", "--verify", `${source3.revision}^{commit}`]) !== source3.revision)
+      throw Error();
+    return { device: stat2.dev, inode: stat2.ino };
+  } catch (error63) {
+    if (error63.code === "ENOENT" && error63.path === "git")
+      throw new SetupFailure("git_unavailable");
+    throw new SetupFailure("invalid_source");
+  }
+}
+
+// apps/codex-plugin/src/setup/service.mjs
+var active = /* @__PURE__ */ new Set(["admitting", "mapping", "uncertain", "stop-requested"]);
+var terminal = /* @__PURE__ */ new Set([
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var retryable = /* @__PURE__ */ new Set([
+  "failed",
+  "stopped",
+  "blocked",
+  "awaiting-authority"
+]);
+var handle = ({ applicationId, contextId, version: version4 }) => ({
+  applicationId,
+  contextId,
+  version: version4
+});
+async function createSetup({
+  directory,
+  mapper,
+  consumer,
+  authorize,
+  createTelemetry
+}) {
+  const store = await openSetupStore(directory);
+  const provenance2 = provenanceSchema.parse(
+    mapper?.provenance ?? {
+      kind: "product-adapter",
+      version: "application-source-configuration/1"
+    }
+  );
+  const owner2 = randomUUID8();
+  const telemetryByContext = /* @__PURE__ */ new Map();
+  const telemetryStarts = /* @__PURE__ */ new Map();
+  const observe = (method, input3) => {
+    try {
+      Promise.resolve(
+        telemetryByContext.get(input3.setupId)?.[method]?.(input3)
+      ).catch(() => {
+      });
+    } catch {
+    }
+  };
+  const inheritedCapability = (contextId) => {
+    try {
+      const sink = telemetryByContext.get(contextId)?.capabilityLifecycle;
+      return typeof sink === "function" ? sink : null;
+    } catch {
+      return null;
+    }
+  };
+  const snapshotObserver = () => {
+    try {
+      const observer = createTelemetry?.();
+      if (!observer || typeof observer !== "object") return null;
+      if (typeof observer.then === "function") {
+        Promise.resolve(observer).catch(() => {
+        });
+        return null;
+      }
+      return observer;
+    } catch {
+      return null;
+    }
+  };
+  const started = (value, observer) => {
+    if (!observer || telemetryByContext.size >= 512) return;
+    telemetryByContext.set(value.contextId, observer);
+    telemetryStarts.set(value.contextId, performance4.now());
+    observe("setupStarted", {
+      transitionKey: value.contextId,
+      setupId: value.contextId,
+      transition: "fresh-admission",
+      validated: true,
+      persisted: true,
+      recovered: false,
+      reused: false,
+      sourceKind: "local_folder",
+      entry: null,
+      hasTargetUrl: Boolean(value.configuration.target)
+    });
+  };
+  const finished2 = (value, executionSettled) => observe("setupFinished", {
+    transitionKey: value.contextId,
+    setupId: value.contextId,
+    transition: "first-authoritative-terminal",
+    validated: true,
+    authoritative: true,
+    executionSettled,
+    recovered: false,
+    reused: false,
+    state: value.state,
+    missingPrerequisites: value.missing,
+    durationKnown: telemetryStarts.has(value.contextId),
+    durationMs: performance4.now() - telemetryStarts.get(value.contextId)
+  });
+  const read = (input3) => store.get(input3.applicationId, input3.contextId);
+  async function summarize(receipt2, stop = false) {
+    let value = read(receipt2);
+    if (!stop) {
+      await verify(value);
+      value = read(receipt2);
+    }
+    let nextAction3;
+    switch (value.state) {
+      case "blocked":
+      case "awaiting-authority":
+        nextAction3 = value.missing.length ? "Supply the listed missing prerequisites. Retry only after the prerequisite changes or the user requests it." : "Read this context's pending authority or prerequisites before continuing.";
+        break;
+      case "admitting":
+      case "mapping":
+        nextAction3 = "Wait on this original context. A receipt does not establish application readiness.";
+        break;
+      case "uncertain":
+        nextAction3 = "Read and reconcile the original operation's unknown effects. Do not replay it or retry under a new key.";
+        break;
+      case "stop-requested":
+        nextAction3 = "Stop remains pending. Read or wait for this original map's acknowledgement; do not retry unknown effects.";
+        break;
+      case "incomplete":
+        nextAction3 = value.map.data?.readinessIssues?.length ? `${value.map.data.readinessIssues[0].code}: ${value.map.data.readinessIssues[0].recovery}` : "Read the retained partial map. Complete application readiness and consumer acceptance are not established.";
+        break;
+      case "ready":
+        nextAction3 = !value.map ? "Application source and optional target are configured. Continue the selected risk, test-planning or Runner task with its own required context and authority. No map or browser result was created." : value.map.data?.readinessScope ? "Resolve this exact work-item context for bounded source-map reads. Application coverage is incomplete; browser behavior and consumer acceptance are not established." : "Resolve this exact context with its source/profile revisions. Use only a supported consumer; map readiness is not observed browser success.";
+        if (value.map?.data?.readinessScope?.sourceLimitations?.length)
+          nextAction3 += " Read readinessScope.sourceLimitations; their work-item relevance is unknown.";
+        break;
+      default:
+        nextAction3 = "Read this retained context before selecting a next action. Preserve its original identity and any failure or Stop evidence.";
+    }
+    if (!mapper && value.map && active.has(value.state))
+      nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
+    if (stop && !receipt2.cancellationRequested) {
+      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
+    }
+    if (value.provenance.kind === "controlled-fixture")
+      nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
+    return {
+      ...receipt2,
+      state: value.state,
+      missing: [...value.missing],
+      nextAction: nextAction3,
+      provenance: value.provenance
+    };
+  }
+  const edit = (input3, fn) => store.transaction(() => {
+    const value = read(input3);
+    fn(value);
+    store.put(value);
+    return value;
+  });
+  async function verify(value) {
+    if (digest18(await inspectSource(value.configuration.source)) !== digest18(value.sourceIdentity))
+      throw new SetupFailure("source_identity_changed");
+    if (mapper && digest18(provenance2) !== digest18(value.provenance))
+      throw new SetupFailure("adapter_changed");
+  }
+  function reserve(scope, input3, configuration2, sourceIdentity, retry = false) {
+    return store.transaction(() => {
+      const hash6 = digest18(input3), previous = store.command(scope, input3.requestKey, hash6);
+      if (previous) return { receipt: { ...previous, recovered: true } };
+      const applicationId = digest18({
+        installation: store.installation,
+        directory: configuration2.source.directory,
+        sourceIdentity
+      });
+      const configurationHash = digest18({ configuration: configuration2, provenance: provenance2 });
+      const existing = store.matching(applicationId, configurationHash);
+      if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
+        const receipt3 = handle(existing);
+        store.receipt(scope, input3.requestKey, hash6, receipt3);
+        return {
+          receipt: { ...receipt3, reused: true },
+          retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
+            transitionKey: existing.contextId,
+            setupId: existing.contextId,
+            mapId: existing.map.data.mapId
+          } : null
+        };
+      }
+      const previousContext = retry ? read(input3) : null;
+      if (previousContext && !retryable.has(previousContext.state))
+        throw new SetupFailure("retry_not_required");
+      const version4 = store.version(applicationId);
+      const value = {
+        schema: mapper ? "loki.setup-context/3" : "loki.setup-context/4",
+        applicationId,
+        version: version4,
+        contextId: digest18({ applicationId, version: version4, configurationHash }),
+        configuration: configuration2,
+        configurationHash,
+        sourceIdentity,
+        provenance: provenance2,
+        state: "awaiting-authority",
+        missing: [],
+        authorityRef: null,
+        authorityKind: null,
+        owner: owner2,
+        map: mapper ? { requestKey: null, runId: null, resultId: null, data: null } : null,
+        progress: mapper ? "Checking required execution prerequisites and source authority" : "Saving application source configuration",
+        error: null
+      };
+      if (value.map) value.map.requestKey = value.contextId;
+      if (previousContext?.state === "awaiting-authority") {
+        previousContext.state = "superseded";
+        previousContext.supersededBy = value.contextId;
+        previousContext.progress = "Replaced by an explicit retry; late confirmation answers are ignored";
+        store.put(previousContext);
+      }
+      store.put(value);
+      const receipt2 = handle(value);
+      store.receipt(scope, input3.requestKey, hash6, receipt2);
+      return { receipt: receipt2, value };
+    });
+  }
+  function applyMap(input3, raw) {
+    const result2 = mapReceiptSchema.parse(raw);
+    store.observe(input3.contextId, result2);
+    let firstTerminal = false;
+    const accepted = edit(input3, (value) => {
+      if (result2.requestKey !== value.map.requestKey || result2.sourceRevision !== value.configuration.source.revision || digest18(result2.provenance) !== digest18(value.provenance) || value.map.runId && value.map.runId !== result2.runId)
+        throw new SetupFailure("map_scope_mismatch");
+      if (result2.state === "ready" && (!result2.data || !result2.resultId))
+        throw new SetupFailure("invalid_map_result");
+      if (terminal.has(value.state)) return;
+      value.map = { ...value.map, ...result2 };
+      if (value.state === "stop-requested" && result2.state !== "stopped") {
+        if (!result2.executionSettled) return;
+        value.state = "stopped";
+        value.progress = `Setup stopped; original map operation settled as ${result2.state}`;
+        value.missing = [];
+        firstTerminal = true;
+        return;
+      }
+      value.state = result2.state === "running" ? "mapping" : result2.state;
+      value.progress = result2.progress;
+      value.missing = [];
+      value.error = result2.state === "failed" ? "map_failed" : null;
+      firstTerminal = ["ready", "incomplete", "failed", "stopped"].includes(
+        value.state
+      );
+    });
+    if (firstTerminal) finished2(accepted, result2.executionSettled === true);
+    return accepted;
+  }
+  async function initialize(value, signal, invocation) {
+    try {
+      if (read(value).state !== "awaiting-authority") return;
+      signal?.throwIfAborted();
+      if (!mapper) {
+        await verify(value);
+        signal?.throwIfAborted();
+        const configured2 = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "ready";
+          current.missing = [];
+          current.progress = "Application source and optional target configured; no map generated";
+        });
+        finished2(configured2, true);
+        return;
+      }
+      const parsed = missingSchema.safeParse(
+        await mapper.readiness(value.configuration)
+      );
+      if (!parsed.success) throw new SetupFailure("invalid_map_readiness");
+      signal?.throwIfAborted();
+      if (parsed.data.length) {
+        const blocked = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "blocked";
+          current.missing = parsed.data;
+          current.progress = "Setup needs the listed prerequisites";
+        });
+        finished2(blocked, true);
+        return;
+      }
+      if (read(value).state !== "awaiting-authority") return;
+      const authorization = await authorize(
+        value.configuration,
+        signal,
+        invocation
+      );
+      if (!authorization) {
+        const blocked = edit(value, (current) => {
+          if (current.state !== "awaiting-authority") return;
+          current.state = "blocked";
+          current.missing = ["source-authorization"];
+          current.progress = "Source or target authority was denied";
+          current.error = "authority_denied";
+        });
+        finished2(blocked, true);
+        return;
+      }
+      const parsedAuthorization = authorizationSchema.safeParse(authorization);
+      if (!parsedAuthorization.success)
+        throw new SetupFailure("invalid_source_authorization");
+      const authority = parsedAuthorization.data;
+      if (authority.kind === "controlled-selection-only" !== (provenance2.kind === "controlled-fixture") || authority.kind === "host-managed-tool-dispatch" && authority.configurationSha256 !== digest18(value.configuration))
+        throw new SetupFailure("source_authorization_scope_mismatch");
+      signal?.throwIfAborted();
+      await verify(value);
+      if (read(value).state !== "awaiting-authority") return;
+      edit(value, (current) => {
+        if (current.state !== "awaiting-authority") return;
+        current.authorityRef = digest18({
+          contextId: value.contextId,
+          owner: owner2,
+          authority
+        });
+        current.authorityKind = authority.kind;
+        current.authority = authority;
+        current.state = "admitting";
+        current.missing = [];
+        current.progress = "Starting the selected map";
+      });
+      if (read(value).state !== "admitting") return;
+      try {
+        signal?.throwIfAborted();
+        const result2 = await mapper.start(
+          { requestKey: value.contextId, ...value.configuration },
+          signal,
+          {
+            lifecycle: inheritedCapability(value.contextId),
+            setupOperationId: value.contextId
+          }
+        );
+        applyMap(value, result2);
+        if (read(value).state === "stop-requested")
+          await api.stop({
+            applicationId: value.applicationId,
+            contextId: value.contextId,
+            requestKey: `pending-stop-${value.map.requestKey}`
+          });
+      } catch {
+        edit(value, (current) => {
+          if (current.state === "admitting") {
+            current.state = "uncertain";
+            current.progress = "Map admission reply is unknown; read the original operation";
+          }
+        });
+      } finally {
+        if (signal?.aborted)
+          await api.stop({
+            applicationId: value.applicationId,
+            contextId: value.contextId,
+            requestKey: `interrupt-${value.map.requestKey}`
+          });
+      }
+    } catch (error63) {
+      const interrupted = edit(value, (current) => {
+        if (current.state === "awaiting-authority") {
+          current.state = signal?.aborted ? "stopped" : "blocked";
+          current.missing = [
+            error63 instanceof SetupFailure ? error63.code : "setup_interrupted"
+          ];
+          current.progress = "Setup confirmation or prerequisites were not completed; explicitly retry when ready";
+          current.error = error63 instanceof SetupFailure ? error63.code : "setup_interrupted";
+        }
+      });
+      if (["blocked", "stopped"].includes(interrupted.state))
+        finished2(interrupted, true);
+    }
+  }
+  const api = {
+    provenance: provenance2,
+    async prepare(raw, signal, invocation) {
+      const observer = snapshotObserver();
+      signal?.throwIfAborted();
+      const input3 = prepareSchema.parse(raw);
+      if (input3.configuration.target) {
+        input3.configuration.target.profileRevision ??= digest18({
+          url: input3.configuration.target.url,
+          profileId: input3.configuration.target.profileId
+        });
+      }
+      const previous = store.command(
+        "prepare",
+        input3.requestKey,
+        digest18(input3)
+      );
+      if (previous) return summarize({ ...previous, recovered: true });
+      const configuration2 = structuredClone(input3.configuration);
+      configuration2.source.revision = await resolveSourceRevision(
+        configuration2.source,
+        signal
+      );
+      signal?.throwIfAborted();
+      const sourceIdentity = await inspectSource(configuration2.source);
+      const reserved = reserve("prepare", input3, configuration2, sourceIdentity);
+      if (reserved.retainedSelection) {
+        try {
+          void Promise.resolve(
+            observer?.retainedMapSelected?.({
+              ...reserved.retainedSelection,
+              transition: "persisted-retained-selection",
+              persisted: true,
+              validated: true
+            })
+          ).catch(() => {
+          });
+        } catch {
+        }
+      }
+      if (reserved.value) {
+        started(reserved.value, observer);
+        await initialize(reserved.value, signal, invocation);
+      }
+      return summarize(reserved.receipt);
+    },
+    list(raw) {
+      const input3 = listSchema.parse(raw), rows2 = store.list(input3.directory, input3.offset);
+      return {
+        contexts: rows2.slice(0, 50).map((value) => ({
+          ...handle(value),
+          source: value.configuration.source,
+          target: value.configuration.target,
+          state: value.state,
+          supersededBy: value.supersededBy ?? null,
+          provenance: value.provenance
+        })),
+        nextOffset: rows2.length > 50 ? input3.offset + 50 : null
+      };
+    },
+    async get(raw) {
+      const input3 = handleSchema.parse(raw), value = read(input3);
+      await verify(value);
+      if (mapper && active.has(value.state)) {
+        let result2;
+        try {
+          result2 = await mapper.get({
+            requestKey: value.map.requestKey,
+            runId: value.map.runId
+          });
+        } catch {
+          return read(input3);
+        }
+        return applyMap(input3, result2);
+      }
+      return read(input3);
+    },
+    async wait(raw, signal) {
+      const { timeoutMs, ...input3 } = waitSchema.parse(raw);
+      const original2 = read(input3);
+      const deadline = new AbortController();
+      const bounded = AbortSignal.any([
+        deadline.signal,
+        ...signal ? [signal] : []
+      ]);
+      const timer = setTimeout(
+        () => deadline.abort(
+          new DOMException("Setup wait timed out", "TimeoutError")
+        ),
+        timeoutMs
+      );
+      let abort, stopDeadline;
+      try {
+        const result2 = await Promise.race([
+          (async () => {
+            const value = await this.get(input3);
+            bounded.throwIfAborted();
+            if (!active.has(value.state) || !mapper?.wait) return null;
+            return mapper.wait(
+              { requestKey: value.map.requestKey, runId: value.map.runId },
+              bounded
+            );
+          })(),
+          new Promise((_, reject) => {
+            abort = () => reject(bounded.reason);
+            bounded.addEventListener("abort", abort, { once: true });
+            if (bounded.aborted) abort();
+          })
+        ]);
+        return result2 ? applyMap(input3, result2) : read(input3);
+      } catch (error63) {
+        if (signal?.aborted) {
+          await Promise.race([
+            this.stop({
+              ...input3,
+              requestKey: `interrupt-${original2.map?.requestKey ?? original2.contextId}`
+            }),
+            new Promise((resolve4) => {
+              stopDeadline = () => resolve4();
+              deadline.signal.addEventListener("abort", stopDeadline, {
+                once: true
+              });
+              if (deadline.signal.aborted) stopDeadline();
+            })
+          ]);
+        } else if (!deadline.signal.aborted) throw error63;
+        return read(input3);
+      } finally {
+        clearTimeout(timer);
+        bounded.removeEventListener("abort", abort);
+        if (stopDeadline)
+          deadline.signal.removeEventListener("abort", stopDeadline);
+      }
+    },
+    async retry(raw, signal, invocation) {
+      const observer = snapshotObserver();
+      const input3 = commandSchema.parse(raw), value = read(input3);
+      await verify(value);
+      const previous = store.command("retry", input3.requestKey, digest18(input3));
+      if (previous) return summarize({ ...previous, recovered: true });
+      const reserved = reserve(
+        "retry",
+        input3,
+        value.configuration,
+        value.sourceIdentity,
+        true
+      );
+      if (reserved.retainedSelection) {
+        try {
+          void Promise.resolve(
+            observer?.retainedMapSelected?.({
+              ...reserved.retainedSelection,
+              transition: "persisted-retained-selection",
+              persisted: true,
+              validated: true
+            })
+          ).catch(() => {
+          });
+        } catch {
+        }
+      }
+      if (reserved.value) {
+        started(reserved.value, observer);
+        await initialize(reserved.value, signal, invocation);
+      }
+      return summarize(reserved.receipt);
+    },
+    async stop(raw) {
+      const input3 = commandSchema.parse(raw);
+      let stoppedBeforeAdmission = false;
+      const reserved = store.transaction(() => {
+        const hash6 = digest18(input3), previous = store.command("stop", input3.requestKey, hash6);
+        if (previous) {
+          const value2 = read(input3);
+          return {
+            receipt: { ...previous, recovered: true },
+            value: value2,
+            cancel: value2.state === "stop-requested"
+          };
+        }
+        const value = read(input3);
+        const cancel = active.has(value.state);
+        if (value.state === "awaiting-authority") {
+          value.state = "stopped";
+          value.progress = mapper ? "Stopped before map admission" : "Setup stopped before configuration completed";
+          store.put(value);
+          stoppedBeforeAdmission = true;
+        }
+        if (cancel) {
+          value.state = "stop-requested";
+          value.progress = "Stop requested for this original map";
+          store.put(value);
+        }
+        const receipt2 = {
+          ...handle(value),
+          runId: value.map?.runId ?? null,
+          cancellationRequested: cancel
+        };
+        store.receipt("stop", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, value, cancel };
+      });
+      if (stoppedBeforeAdmission) finished2(reserved.value, true);
+      if (reserved.cancel && mapper) {
+        try {
+          applyMap(
+            input3,
+            await mapper.stop({
+              requestKey: reserved.value.map.requestKey,
+              runId: reserved.value.map.runId
+            })
+          );
+        } catch {
+        }
+      }
+      return summarize(reserved.receipt, true);
+    },
+    async resolve(raw) {
+      const input3 = resolveSchema.parse(raw), value = read(input3);
+      await verify(value);
+      if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
+        throw new SetupFailure("stale_application_context");
+      if (value.schema === "loki.setup-context/4" && value.state === "ready") {
+        const source4 = value.configuration.source;
+        const target2 = value.configuration.target ?? null;
+        const workItem = value.configuration.workItem ?? null;
+        return {
+          application: {
+            schema: "loki.application-context/3",
+            contextId: digest18({
+              source: source4,
+              target: target2,
+              workItem,
+              provenance: value.provenance
+            }),
+            source: source4,
+            target: target2,
+            workItem,
+            map: null,
+            readiness: {
+              state: "configured",
+              missing: [],
+              map: "not-required",
+              browserObserved: false
+            },
+            provenance: value.provenance
+          },
+          setup: {
+            ...handle(value),
+            mapRunId: null,
+            mapResultId: null,
+            configurationRefs: value.configuration.configurationRefs,
+            authorityRef: null
+          },
+          authority: "configuration-only"
+        };
+      }
+      if (value.schema !== "loki.setup-context/3" || value.state !== "ready" || !value.authorityRef)
+        throw new SetupFailure("application_not_ready");
+      const source3 = value.configuration.source, target = value.configuration.target ?? null;
+      const map2 = {
+        mapId: value.map.data.mapId,
+        runId: value.map.runId,
+        resultId: value.map.resultId,
+        sourceRevision: source3.revision,
+        preview: value.map.data
+      };
+      const readiness2 = {
+        state: "ready",
+        missing: [],
+        ...value.map.data.readinessScope ? { scope: value.map.data.readinessScope } : {}
+      };
+      const application = {
+        schema: "loki.application-context/2",
+        contextId: digest18({ source: source3, target, map: map2, readiness: readiness2, provenance: provenance2 }),
+        source: source3,
+        target: target ?? null,
+        map: map2,
+        readiness: readiness2,
+        provenance: provenance2
+      };
+      return {
+        application,
+        setup: {
+          ...handle(value),
+          mapRunId: value.map.runId,
+          mapResultId: value.map.resultId,
+          configurationRefs: value.configuration.configurationRefs,
+          authorityRef: value.authorityRef
+        },
+        authority: value.authorityKind
+      };
+    },
+    async handoff(raw) {
+      const input3 = handoffSchema.parse(raw);
+      if (!consumer || (await consumer.readiness?.())?.length)
+        throw new SetupFailure("consumer_integration_unavailable");
+      const payload = await this.resolve({
+        applicationId: input3.applicationId,
+        contextId: input3.contextId,
+        expectedRevision: input3.expectedRevision,
+        expectedProfileRevision: input3.expectedProfileRevision
+      });
+      const hash6 = digest18(input3);
+      const reserved = store.transaction(() => {
+        const previous = store.command("handoff", input3.requestKey, hash6);
+        if (previous) return { receipt: previous, recovered: true };
+        const receipt2 = {
+          ...payload,
+          consumer: { state: "pending", provenance: provenance2 }
+        };
+        store.receipt("handoff", input3.requestKey, hash6, receipt2);
+        return { receipt: receipt2, recovered: false };
+      });
+      if (reserved.receipt.consumer.state !== "pending")
+        return { ...reserved.receipt, recovered: true };
+      const request3 = { requestKey: input3.requestKey, ...payload };
+      let rawResult;
+      try {
+        rawResult = reserved.recovered ? await consumer.get?.(request3) : await consumer.accept(request3);
+      } catch {
+        return { ...reserved.receipt, recovered: reserved.recovered };
+      }
+      if (!rawResult)
+        return { ...reserved.receipt, recovered: reserved.recovered };
+      const result2 = consumerReceiptSchema.parse(rawResult);
+      if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
+        throw new SetupFailure("consumer_scope_mismatch");
+      return store.transaction(() => {
+        const prior = store.command("handoff", input3.requestKey, hash6);
+        if (prior.consumer.state !== "pending")
+          return { ...prior, recovered: true };
+        const receipt2 = { ...payload, consumer: result2 };
+        store.complete("handoff", input3.requestKey, hash6, receipt2);
+        return receipt2;
+      });
+    },
+    close() {
+      for (const observer of telemetryByContext.values()) {
+        try {
+          observer.close?.();
+        } catch {
+        }
+      }
+      telemetryByContext.clear();
+      telemetryStarts.clear();
+      store.close();
+    }
+  };
+  return api;
+}
+
+// apps/codex-plugin/src/setup/onboarding.mjs
+var inputSchema2 = external_exports.strictObject({
+  applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
+  task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
+});
+var outputSchema2 = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.onboarding/1"),
+  applicationURL: external_exports.string(),
+  task: external_exports.string()
+});
+function createOnboarding(ui) {
+  if (!ui?.onboardingUri) return void 0;
+  return {
+    tool: {
+      name: "kaijan_onboarding_show",
+      title: "Legacy Kaijan onboarding panel",
+      description: "Open the legacy onboarding panel only when the person explicitly asks for that panel. Ordinary Kaijan Setup uses chat. Prefill the supplied application URL and request. Opening the panel does not save Setup or start a test.",
+      inputSchema: external_exports.toJSONSchema(inputSchema2),
+      outputSchema: external_exports.toJSONSchema(outputSchema2),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false
+      },
+      _meta: { ui: { resourceUri: ui.onboardingUri } }
+    },
+    invoke(input3) {
+      const parsed = inputSchema2.safeParse(input3 ?? {});
+      if (!parsed.success) {
+        const message = "Invalid onboarding input. Use the advertised schema.";
+        const error63 = new McpError(ErrorCode.InvalidParams, message);
+        error63.message = message;
+        throw error63;
+      }
+      const result2 = {
+        schema: "kaijan.onboarding/1",
+        applicationURL: parsed.data.applicationURL ?? "",
+        task: parsed.data.task ?? ""
+      };
+      return {
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+  };
+}
+
+// apps/codex-plugin/src/setup/customer-output.mjs
+var configuration = external_exports.object({
+  source: sourceSchema,
+  workItem: external_exports.string().optional(),
+  target: targetSchema.optional(),
+  configurationRefs: external_exports.array(
+    external_exports.object({
+      kind: external_exports.enum(["source", "target"]),
+      handle: external_exports.string()
+    })
+  )
+});
+var state = external_exports.enum([
+  "awaiting-confirmation",
+  "blocked",
+  "preparing",
+  "uncertain",
+  "stop-requested",
+  "ready",
+  "incomplete",
+  "failed",
+  "stopped",
+  "superseded"
+]);
+var handle2 = {
+  applicationId: identity3,
+  contextId: identity3,
+  version: external_exports.number().int().positive()
+};
+var summary2 = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup/1"),
+  ...handle2,
+  state,
+  missing: external_exports.array(external_exports.string()),
+  nextAction: external_exports.string(),
+  recovered: external_exports.boolean().optional(),
+  reused: external_exports.boolean().optional(),
+  cancellationRequested: external_exports.boolean().optional(),
+  supersededBy: identity3.optional(),
+  configuration: configuration.optional(),
+  notice: external_exports.string().optional()
+});
+var list2 = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-setup-list/1"),
+  contexts: external_exports.array(
+    external_exports.object({
+      ...handle2,
+      source: sourceSchema,
+      target: targetSchema.optional(),
+      state,
+      supersededBy: identity3.nullable(),
+      notice: external_exports.string().optional()
+    })
+  ),
+  nextOffset: external_exports.number().int().nonnegative().nullable()
+});
+var resolved = external_exports.object({
+  schema: external_exports.literal("kaijan.customer-application/1"),
+  application: external_exports.object({
+    contextId: identity3,
+    source: sourceSchema,
+    target: targetSchema.nullable(),
+    workItem: external_exports.string().nullable(),
+    readiness: external_exports.object({
+      state: external_exports.literal("configured"),
+      browserObserved: external_exports.literal(false),
+      applicationCoverage: external_exports.literal("not-verified")
+    })
+  }),
+  setup: external_exports.object(handle2),
+  nextAction: external_exports.string(),
+  consumer: external_exports.object({
+    state: external_exports.enum(["pending", "accepted", "refused"]),
+    accepted: external_exports.boolean().optional()
+  }).optional(),
+  recovered: external_exports.boolean().optional(),
+  notice: external_exports.string().optional()
+});
+var error62 = external_exports.object({
+  error: external_exports.object({ code: external_exports.string(), message: external_exports.string() })
+});
+var customerSetupOutputSchemas = Object.fromEntries(
+  [
+    ["loki_setup_list", list2],
+    ...["prepare", "get", "wait", "retry", "stop"].map((name) => [
+      `loki_setup_${name}`,
+      summary2
+    ]),
+    ["loki_setup_resolve", resolved],
+    ["loki_setup_handoff", resolved]
+  ].map(([name, success2]) => [name, external_exports.union([success2, error62])])
+);
+var statuses = {
+  "awaiting-authority": "awaiting-confirmation",
+  admitting: "preparing",
+  mapping: "preparing"
+};
+var status2 = (value) => state.parse(statuses[value] ?? value);
+var selection2 = (value) => configuration.parse({
+  ...value,
+  configurationRefs: value.configurationRefs.filter(
+    (ref) => ["source", "target"].includes(ref.kind)
+  )
+});
+var notice = (value) => value.provenance?.kind === "controlled-fixture" ? { notice: "Test data only. This does not verify the application." } : {};
+var missingLabels = {
+  "source-authorization": "Permission to read the selected source",
+  "work-item-or-mapping-question": "The work item to check",
+  "model-provider": "Kaijan sign-in and connection",
+  "admitted-map-producer": "Application setup support"
+};
+function nextAction(value) {
+  switch (value.state) {
+    case "ready":
+      return "Source context is saved. For planning, use the original work item from Setup or this chat and relevant source. Running tests needs a target and authorization. Setup does not verify application behavior.";
+    case "uncertain":
+      return "Read this original context to check what happened. Do not retry or create replacement work while its effects are unknown.";
+    case "stop-requested":
+      return "Stop is still pending. Read this original context again; do not assume the work has stopped.";
+    case "mapping":
+    case "admitting":
+      return "Preparation is unfinished. Keep this saved context and check its state. Do not start replacement work.";
+    case "blocked":
+    case "awaiting-authority":
+      return "Resolve the listed missing input or access, then retry only this known blocked setup when authorized.";
+    case "superseded":
+      return "This context has been replaced. Read the replacement context before continuing.";
+    case "incomplete":
+      return "Only part of the source context is available. Keep the saved record and resolve the missing input before continuing.";
+    default:
+      return "Setup did not complete. Keep the original context and check the selected source and access before an authorized retry.";
+  }
+}
+var failures = {
+  consumer_integration_unavailable: [
+    "application_connection_unavailable",
+    "This application connection is unavailable. Your saved source remains available for planning and testing."
+  ],
+  unknown_application_context: [
+    "setup_unavailable",
+    "This saved Setup is unavailable in this chat. Use its original chat and exact application and context IDs."
+  ],
+  request_conflict: [
+    "request_conflict",
+    "This request key belongs to different input. Read its original Setup. Use a new key only for separately authorized new work; never to recover unknown effects."
+  ],
+  retry_not_required: [
+    "retry_not_required",
+    "Read the saved Setup. Retry only known failed, stopped or blocked work after its missing input changes or when requested."
+  ],
+  stale_application_context: [
+    "stale_application_context",
+    "Use the exact source and target revisions from the saved Setup. A different source selection requires a new request."
+  ],
+  application_not_ready: [
+    "application_not_ready",
+    "Setup is not ready. Read its saved state and resolve the missing input or access."
+  ],
+  source_revision_unavailable: [
+    "source_revision_unavailable",
+    "The selected source revision is unavailable. No Setup context was saved. Check the repository and your access, then select an available branch or commit."
+  ],
+  source_revision_ambiguous: [
+    "source_revision_ambiguous",
+    "The selected source revision is ambiguous. No Setup context was saved. Supply an exact commit."
+  ],
+  invalid_source: [
+    "invalid_source",
+    "The selected source cannot be read. Check the project directory and repository access."
+  ],
+  source_identity_changed: [
+    "source_changed",
+    "The selected source has changed. Review the source selection before continuing."
+  ],
+  setup_interrupted: [
+    "setup_interrupted",
+    "The request was interrupted. Read the original Setup to check its state before continuing. Do not replay unknown effects."
+  ]
+};
+function customerSetupFailure(code) {
+  const [safeCode, message] = failures[code] ?? [
+    "setup_unavailable",
+    "Setup could not complete. Read the original saved context and check the selected source and access. Do not replay work with unknown effects."
+  ];
+  return error62.parse({ error: { code: safeCode, message } });
+}
+function projectCustomerSetup(name, value) {
+  if (value.error && typeof value.error === "object")
+    return customerSetupFailure(value.error.code);
+  if (name === "loki_setup_list")
+    return list2.parse({
+      schema: "kaijan.customer-setup-list/1",
+      contexts: value.contexts.map((item) => ({
+        ...item,
+        state: status2(item.state),
+        ...notice(item)
+      })),
+      nextOffset: value.nextOffset
+    });
+  if (["loki_setup_resolve", "loki_setup_handoff"].includes(name)) {
+    const application = value.application;
+    return resolved.parse({
+      schema: "kaijan.customer-application/1",
+      application: {
+        contextId: application.contextId,
+        source: application.source,
+        target: application.target,
+        workItem: application.workItem ?? application.readiness.scope?.workItem ?? null,
+        readiness: {
+          state: "configured",
+          browserObserved: false,
+          applicationCoverage: "not-verified"
+        }
+      },
+      setup: value.setup,
+      nextAction: "For planning, use the saved work item and relevant source as input, not these Setup IDs. Setup does not create a test plan or check application behavior. Testing needs its own authorization.",
+      ...value.consumer ? {
+        consumer: value.consumer.state === "pending" ? { state: "pending" } : {
+          state: value.consumer.accepted ? "accepted" : "refused",
+          accepted: value.consumer.accepted
+        }
+      } : {},
+      ...value.recovered === void 0 ? {} : { recovered: value.recovered },
+      ...notice(application)
+    });
+  }
+  return summary2.parse({
+    schema: "kaijan.customer-setup/1",
+    ...Object.fromEntries(
+      [
+        "applicationId",
+        "contextId",
+        "version",
+        "recovered",
+        "reused",
+        "supersededBy",
+        "cancellationRequested"
+      ].filter((key) => value[key] !== void 0).map((key) => [key, value[key]])
+    ),
+    state: status2(value.state),
+    missing: [
+      ...new Set(
+        value.missing.map(
+          (item) => missingLabels[item] ?? "Application setup needs attention"
+        )
+      )
+    ],
+    nextAction: (value.cancellationRequested === false ? "No Stop was requested. " : "") + nextAction(value),
+    ...value.configuration ? { configuration: selection2(value.configuration) } : {},
+    ...notice(value)
+  });
+}
+var customerSetupDescriptions = {
+  loki_setup_list: "Find saved application setups for the selected project directory. This does not start tests or change the source.",
+  loki_setup_prepare: "Save the selected application's committed source revision, work item and optional test target. Resolve the selected Git ref without changing the checkout; unsaved edits are not included. Keep the same requestKey after a lost reply. This does not test application behavior.",
+  loki_setup_get: "Read the original saved application setup and its current state. Do not recreate unfinished work to recover a result.",
+  loki_setup_wait: "Read or wait for the original Setup state. Do not restart unfinished work or assume unknown effects have stopped.",
+  loki_setup_retry: "Retry only a known failed, stopped or blocked Setup after its missing input changes or the user requests it. Keep the original source selection. Do not replay work with unknown effects.",
+  loki_setup_stop: "Request Stop for this exact original Setup. Read its state afterward; a request alone does not confirm it stopped.",
+  loki_setup_resolve: "Read the configured application source, work item and optional target using the exact saved source and target revisions. Returned context IDs select application configuration, not a planning-input record. For planning, reuse the original workItem text and relevant source as input. Setup is not a test result and grants no permission to run tests.",
+  loki_setup_handoff: "Use the saved application configuration with an available connected application. Acknowledgment does not verify application behavior."
+};
+
+// apps/codex-plugin/src/setup/mcp.mjs
+var customerPrepareSchema = prepareSchema.extend({
+  configuration: prepareSchema.shape.configuration.extend({
+    configurationRefs: external_exports.array(
+      external_exports.strictObject({
+        kind: external_exports.enum(["source", "target"]),
+        handle: external_exports.string().min(1).max(200)
+      })
+    ).max(30).default([])
+  })
+});
+function invalidSetupInput(message, data) {
+  const error63 = new McpError(ErrorCode.InvalidParams, message, data);
+  error63.message = message;
+  return error63;
+}
+async function createSetupTools({
+  directory,
+  mapper,
+  consumer,
+  createTelemetry,
+  ui,
+  authorize = async () => {
+    throw new SetupFailure("source_authorization_adapter_unavailable");
+  }
+}) {
+  const setup = await createSetup({
+    directory,
+    mapper,
+    consumer,
+    authorize,
+    createTelemetry
+  });
+  const definitions = [
+    [
+      "loki_setup_list",
+      "Find retained Setup contexts for the explicitly selected project directory. No source scan, mapping, provider call or authority grant.",
+      listSchema,
+      (input3) => setup.list(input3),
+      true
+    ],
+    [
+      "loki_setup_prepare",
+      "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
+      customerPrepareSchema,
+      (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
+      false
+    ],
+    [
+      "loki_setup_get",
+      "Reconcile the original map receipt and persist the updated Setup context. Progress/failure and cancellation remain explicit; this never starts another map.",
+      handleSchema,
+      (input3) => setup.get(input3),
+      false
+    ],
+    [
+      "loki_setup_wait",
+      "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
+      waitSchema,
+      (input3, signal) => setup.wait(input3, signal),
+      false
+    ],
+    [
+      "loki_setup_retry",
+      "Retry a known failed, stopped or blocked Setup after the user requests it or supplies its actual missing prerequisite. This can send the selected committed source to the configured provider within the original $10/5400-second scope. The native host applies its selected approval policy; no second mandatory form. Preserve the original revision/evidence and automatically admit the replacement when ready. Never replay uncertain effects.",
+      commandSchema,
+      (input3, signal, invocation) => setup.retry(input3, signal, invocation),
+      false
+    ],
+    [
+      "loki_setup_stop",
+      "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
+      commandSchema,
+      (input3) => setup.stop(input3),
+      false
+    ],
+    [
+      "loki_setup_resolve",
+      "Resolve a ready context with explicit expected source and target-profile revisions. Read readiness.scope: a source-inferred work-item map has incomplete application coverage and no observed browser behavior. Returns source-bound references; a handle grants no browser/source/provider access.",
+      resolveSchema,
+      (input3) => setup.resolve(input3),
+      true
+    ],
+    [
+      "loki_setup_handoff",
+      "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
+      handoffSchema,
+      (input3) => setup.handoff(input3),
+      false
+    ]
+  ];
+  const onboarding = createOnboarding(ui);
+  const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
+    name,
+    description: customerSetupDescriptions[name],
+    inputSchema: {
+      ...external_exports.toJSONSchema(schema, { io: "input" }),
+      $id: `urn:loki:${name}:input:1`
+    },
+    outputSchema: {
+      type: "object",
+      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
+      $id: `urn:kaijan:${name}:customer-output:1`
+    },
+    annotations: {
+      readOnlyHint: readOnly,
+      destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
+        name
+      ),
+      idempotentHint: true,
+      openWorldHint: !readOnly
+    }
+  }));
+  if (onboarding) tools2.push(onboarding.tool);
+  const invoke = async (name, arguments_, signal, invocation) => {
+    if (name === onboarding?.tool.name) return onboarding.invoke(arguments_);
+    const definition = definitions.find(([toolName2]) => toolName2 === name);
+    if (!definition) throw invalidSetupInput("Unknown Setup tool");
+    const parsed = definition[2].safeParse(arguments_ ?? {});
+    if (!parsed.success) {
+      const fields = [
+        ...new Set(
+          parsed.error.issues.filter((issue3) => issue3.path.length).map((issue3) => issue3.path.join("."))
+        )
+      ];
+      throw invalidSetupInput(
+        fields.length ? `Invalid Setup input. Supply valid values for: ${fields.join(", ")}.` : "Invalid Setup input. Use the advertised schema.",
+        { code: "invalid_setup_input", fields }
+      );
+    }
+    try {
+      signal?.throwIfAborted();
+      const result2 = await definition[3](parsed.data, signal, invocation);
+      const text4 = JSON.stringify(result2);
+      const original2 = JSON.parse(text4);
+      if (!setupSuccessSchemas[name].safeParse(original2).success)
+        throw new SetupFailure("setup_output_invalid");
+      const wire = projectCustomerSetup(name, original2);
+      return {
+        structuredContent: wire,
+        content: [{ type: "text", text: JSON.stringify(wire) }]
+      };
+    } catch (error63) {
+      const result2 = customerSetupFailure(failure3(error63).code);
+      return {
+        isError: true,
+        structuredContent: result2,
+        content: [{ type: "text", text: JSON.stringify(result2) }]
+      };
+    }
+  };
+  return {
+    tools: tools2,
+    resources: ui?.resources ?? [],
+    readResource: ui?.readResource,
+    // Configuration-only Setup returns synchronously. There is no mapping job
+    // to wait for or stop, and no handoff when no consumer is connected.
+    hiddenTools: [
+      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
+      ...!consumer ? ["loki_setup_handoff"] : []
+    ],
+    invoke,
+    setup,
+    close: () => setup.close()
+  };
+}
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+import process5 from "node:process";
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
+var STDIO_DEFAULT_MAX_BUFFER_SIZE = 10 * 1024 * 1024;
+var ReadBuffer = class {
+  constructor(options) {
+    this._maxBufferSize = options?.maxBufferSize ?? STDIO_DEFAULT_MAX_BUFFER_SIZE;
+  }
+  append(chunk) {
+    const newSize = (this._buffer?.length ?? 0) + chunk.length;
+    if (newSize > this._maxBufferSize) {
+      this.clear();
+      throw new Error(`ReadBuffer exceeded maximum size of ${this._maxBufferSize} bytes`);
+    }
+    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
+  }
+  readMessage() {
+    if (!this._buffer) {
+      return null;
+    }
+    const index = this._buffer.indexOf("\n");
+    if (index === -1) {
+      return null;
+    }
+    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
+    this._buffer = this._buffer.subarray(index + 1);
+    return deserializeMessage(line);
+  }
+  clear() {
+    this._buffer = void 0;
+  }
+};
+function deserializeMessage(line) {
+  return JSONRPCMessageSchema.parse(JSON.parse(line));
+}
+function serializeMessage(message) {
+  return JSON.stringify(message) + "\n";
+}
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
+var StdioServerTransport = class {
+  constructor(_stdin = process5.stdin, _stdout = process5.stdout, options) {
+    this._stdin = _stdin;
+    this._stdout = _stdout;
+    this._started = false;
+    this._ondata = (chunk) => {
+      try {
+        this._readBuffer.append(chunk);
+        this.processReadBuffer();
+      } catch (error63) {
+        this.onerror?.(error63);
+        this.close().catch(() => {
+        });
+      }
+    };
+    this._onerror = (error63) => {
+      this.onerror?.(error63);
+    };
+    this._readBuffer = new ReadBuffer({ maxBufferSize: options?.maxBufferSize });
+  }
+  /**
+   * Starts listening for messages on stdin.
+   */
+  async start() {
+    if (this._started) {
+      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
+    }
+    this._started = true;
+    this._stdin.on("data", this._ondata);
+    this._stdin.on("error", this._onerror);
+  }
+  processReadBuffer() {
+    while (true) {
+      try {
+        const message = this._readBuffer.readMessage();
+        if (message === null) {
+          break;
+        }
+        this.onmessage?.(message);
+      } catch (error63) {
+        this.onerror?.(error63);
+      }
+    }
+  }
+  async close() {
+    this._stdin.off("data", this._ondata);
+    this._stdin.off("error", this._onerror);
+    const remainingDataListeners = this._stdin.listenerCount("data");
+    if (remainingDataListeners === 0) {
+      this._stdin.pause();
+    }
+    this._readBuffer.clear();
+    this.onclose?.();
+  }
+  send(message) {
+    return new Promise((resolve4) => {
+      const json3 = serializeMessage(message);
+      if (this._stdout.write(json3)) {
+        resolve4();
+      } else {
+        this._stdout.once("drain", resolve4);
+      }
+    });
+  }
+};
+
+// apps/codex-plugin/plugin/scripts/profile-state.mjs
+import { TextDecoder as TextDecoder2 } from "node:util";
+import { constants as constants5 } from "node:fs";
+import {
+  mkdir as mkdir5,
+  open as open5,
+  readdir,
+  realpath as realpath5,
+  stat,
+  link as link3,
+  unlink as unlink5
+} from "node:fs/promises";
+import { createHash as createHash6, randomUUID as randomUUID9 } from "node:crypto";
+import { dirname as dirname3, join as join8, resolve as resolve2 } from "node:path";
+async function bindProfileState(build, args, home) {
+  const host = build.host ?? "codex";
+  if (!["codex", "claude_code"].includes(host))
+    throw new Error("Unsupported plugin host.");
+  if (!["local", "qa", "production"].includes(build.profile) || typeof build.coreOrigin !== "string" || typeof build.oauthClientId !== "string")
+    throw new Error(
+      "Missing fixed plugin profile. Reinstall the selected artifact."
+    );
+  const identity4 = JSON.stringify({
+    profile: build.profile,
+    origin: build.coreOrigin,
+    client: build.oauthClientId
+  });
+  const key = createHash6("sha256").update(identity4).digest("hex").slice(0, 20);
+  let selected;
+  const forwarded = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--state" || arg.startsWith("--state=")) {
+      if (selected !== void 0)
+        throw new Error("Supply one private state directory.");
+      selected = arg === "--state" ? args[++i] : arg.slice(8);
+      if (!selected || selected.startsWith("--"))
+        throw new Error("Missing private state directory.");
+    } else if (arg === "--host" || arg.startsWith("--host=")) {
+      const requested = arg === "--host" ? args[++i] : arg.slice(7);
+      if (requested !== host)
+        throw new Error(
+          host === "codex" ? "This package belongs to the Codex host." : "This package belongs to the Claude Code host."
+        );
+    } else forwarded.push(arg);
+  }
+  const state2 = resolve2(
+    selected ?? join8(home, ".local", "share", "loki", host, build.profile, key)
+  );
+  await mkdir5(state2, { recursive: true, mode: 448 });
+  if (await realpath5(state2) !== state2 || ((await stat(state2)).mode & 63) !== 0)
+    throw new Error("Use a canonical private state directory with mode 0700.");
+  const path = join8(state2, "plugin-profile.json");
+  const expected = {
+    schemaVersion: 1,
+    profile: build.profile,
+    coreOrigin: build.coreOrigin,
+    oauthClientId: build.oauthClientId
+  };
+  let file2;
+  const readBinding = () => open5(
+    path,
+    constants5.O_RDONLY | constants5.O_NOFOLLOW | constants5.O_NONBLOCK
+  );
+  try {
+    file2 = await readBinding();
+  } catch (error63) {
+    if (error63.code !== "ENOENT") throw error63;
+    if ((await readdir(state2)).length) {
+      try {
+        file2 = await readBinding();
+      } catch (readError) {
+        if (readError.code !== "ENOENT") throw readError;
+        throw new Error(
+          "Unbound populated state cannot be reused. Select a fresh profile state; do not copy credentials.",
+          { cause: readError }
+        );
+      }
+    } else {
+      const temporary = join8(dirname3(state2), `.loki-profile-${randomUUID9()}`);
+      const created = await open5(temporary, "wx", 384);
+      try {
+        try {
+          await created.writeFile(JSON.stringify(expected));
+          await created.sync();
+        } finally {
+          await created.close();
+        }
+        try {
+          await link3(temporary, path);
+        } catch (linkError) {
+          if (linkError.code !== "EEXIST") throw linkError;
+        }
+      } finally {
+        await unlink5(temporary);
+      }
+      file2 = await readBinding();
+    }
+  }
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || info.size > 4096 || (info.mode & 63) !== 0)
+      throw new Error("Invalid private profile binding.");
+    const actual = JSON.parse(
+      new TextDecoder2("utf-8", { fatal: true }).decode(await file2.readFile())
+    );
+    if (JSON.stringify(actual) !== JSON.stringify(expected))
+      throw new Error(
+        "Private state belongs to a different environment. Select its own state directory."
+      );
+  } finally {
+    await file2.close();
+  }
+  return { state: state2, args: [...forwarded, "--host", host, "--state", state2] };
+}
+
+// apps/codex-plugin/src/claude-tool-schema.mjs
+var alternatives = /* @__PURE__ */ new Map([
+  [
+    "loki_test_execute",
+    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
+  ],
+  [
+    "loki_report_show",
+    "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
+  ]
+]);
+var sourceAlternatives = /* @__PURE__ */ new Map([
+  ["loki_pr_context_find_related", ["url", "context", "contextId"]],
+  ["loki_context_finder_find_related", ["url", "context", "contextId"]],
+  ["loki_change_risk_analyze", ["packet", "contextId"]],
+  ["loki_risk_finder_analyze", ["packet", "contextId"]],
+  ["loki_test_plan", ["input", "contextId"]],
+  ["loki_test_supplement", ["input", "contextId"]],
+  ["loki_test_evidence_assess", ["input", "contextId"]]
+]);
+function sourceDefinition(tool2, fields, host = "Claude") {
+  const { oneOf, ...root } = tool2.inputSchema;
+  if (root.type !== "object" || !root.properties || root.additionalProperties !== false || root.anyOf !== void 0 || root.allOf !== void 0 || !Array.isArray(oneOf) || oneOf.length !== fields.length || oneOf.some(
+    (branch, index) => !branch || Object.keys(branch).length !== 1 || !Array.isArray(branch.required) || branch.required.length !== 1 || branch.required[0] !== fields[index] || !Object.hasOwn(root.properties, fields[index])
+  ))
+    throw new Error(`Unsupported ${host} advisory source layout.`);
+  return {
+    ...tool2,
+    inputSchema: root,
+    description: `${tool2.description}
+Supply exactly one source: ${fields.join(", ")}. Do not combine source forms. The receiver validates the selected source before starting work.`
+  };
+}
+function codexToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  return sources && tool2.inputSchema?.oneOf !== void 0 ? sourceDefinition(tool2, sources, "Codex") : tool2;
+}
+function claudeToolDefinition(tool2) {
+  const sources = tool2 && sourceAlternatives.get(tool2.name);
+  if (sources && tool2.inputSchema?.oneOf !== void 0)
+    return sourceDefinition(tool2, sources);
+  const guidance = tool2 && alternatives.get(tool2.name);
+  if (!guidance || !Array.isArray(tool2.inputSchema?.anyOf)) return tool2;
+  const { anyOf, ...root } = tool2.inputSchema;
+  if (anyOf.length < 2 || anyOf.some(
+    (branch) => branch.type !== "object" || !branch.properties || branch.additionalProperties !== false || Object.keys(branch).some(
+      (key) => ![
+        "type",
+        "properties",
+        "required",
+        "additionalProperties"
+      ].includes(key)
+    )
+  ))
+    throw new Error("Unsupported Claude tool input layout.");
+  const properties = {};
+  for (const branch of anyOf)
+    for (const [name, schema] of Object.entries(branch.properties)) {
+      const previous = properties[name];
+      if (previous === void 0) properties[name] = schema;
+      else if (JSON.stringify(previous) !== JSON.stringify(schema))
+        throw new Error("Conflicting Claude tool input field.");
+    }
+  const required2 = (anyOf[0].required ?? []).filter(
+    (name) => anyOf.every((branch) => branch.required?.includes(name))
+  );
+  return {
+    ...tool2,
+    inputSchema: {
+      ...root,
+      type: "object",
+      properties,
+      ...required2.length ? { required: required2 } : {},
+      additionalProperties: false
+    },
+    description: `${tool2.description}
+${guidance}`
+  };
+}
+
 // apps/codex-plugin/src/customer-output.mjs
-import { createHash as createHash6 } from "node:crypto";
+import { createHash as createHash9 } from "node:crypto";
 
 // apps/codex-plugin/src/completed-test-reply.mjs
 function completedTestReply(value) {
@@ -54109,8 +55437,8 @@ function restoreVerifiedAssessmentRejection(view2, report) {
 }
 
 // apps/codex-plugin/src/customer-proposal-source.mjs
-import { createHash as createHash4 } from "node:crypto";
-var hash2 = (text4) => createHash4("sha256").update(text4).digest("hex");
+import { createHash as createHash7 } from "node:crypto";
+var hash2 = (text4) => createHash7("sha256").update(text4).digest("hex");
 async function readCustomerProposalSource(family2, native, options) {
   if (native?.state !== "complete") return void 0;
   if (family2 === "testPlanning" && native.result?.schema === "loki.planning-failure/1" || family2 === "testSupplement" && native.result?.schema === "loki.supplement-failure/1")
@@ -54173,8 +55501,8 @@ async function readCustomerProposalEvidence(evidence2, options) {
 }
 
 // apps/codex-plugin/src/customer-advisory-output.mjs
-import { createHash as createHash5 } from "node:crypto";
-import { join as join8 } from "node:path";
+import { createHash as createHash8 } from "node:crypto";
+import { join as join9 } from "node:path";
 
 // apps/codex-plugin/src/customer-input-corrections.mjs
 var object5 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -54241,7 +55569,7 @@ function field(root, path) {
 function customerInputCorrections(catalog, name, error63) {
   if (error63?.code !== "invalid_params" || error63?.requestDispatched !== false || !Array.isArray(error63.issues))
     return [];
-  const root = catalog.tools?.find((tool) => tool.name === name)?.inputSchema;
+  const root = catalog.tools?.find((tool2) => tool2.name === name)?.inputSchema;
   if (!object5(root)) return [];
   const result2 = /* @__PURE__ */ new Map();
   for (const issue3 of error63.issues) {
@@ -54278,8 +55606,8 @@ function planningTemporaryFailureGuidance(answer) {
 }
 
 // apps/codex-plugin/src/customer-advisory-output.mjs
-var hash3 = (value) => createHash5("sha256").update(value).digest("hex");
-var id5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var hash3 = (value) => createHash8("sha256").update(value).digest("hex");
+var id6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional4 = (value) => value.optional();
 var advisoryFamilies = {
   loki_pr_context_find_related: "prContext",
@@ -54323,7 +55651,7 @@ var planResult = external_exports.object({
   preparation: optional4(preparation),
   message: optional4(external_exports.string())
 });
-var resultSchema = external_exports.union([
+var resultSchema2 = external_exports.union([
   customerRiskSchema,
   planResult,
   customerSupplementResultSchema,
@@ -54352,10 +55680,10 @@ var baseSchema = external_exports.object({
     "unsupported-consumption",
     "unavailable"
   ]),
-  answerId: optional4(id5),
-  resultSha256: optional4(id5),
-  result: optional4(resultSchema),
-  contextId: optional4(id5),
+  answerId: optional4(id6),
+  resultSha256: optional4(id6),
+  result: optional4(resultSchema2),
+  contextId: optional4(id6),
   replayAllowed: external_exports.literal(false),
   message: optional4(external_exports.string()),
   recovery: optional4(recovery),
@@ -54394,17 +55722,17 @@ var baseSchema = external_exports.object({
 });
 var readInput = external_exports.strictObject({
   family,
-  answerId: id5,
+  answerId: id6,
   offset: external_exports.number().int().nonnegative().default(0),
-  projectionSha256: optional4(id5),
-  resultSha256: optional4(id5)
+  projectionSha256: optional4(id6),
+  resultSha256: optional4(id6)
 });
 var pageSchema3 = external_exports.object({
   schema: external_exports.literal("kaijan.customer-advisory-page/1"),
   family,
-  answerId: id5,
-  resultSha256: id5,
-  projectionSha256: id5,
+  answerId: id6,
+  resultSha256: id6,
+  projectionSha256: id6,
   encoding: external_exports.literal("JSON text, UTF-16 offsets"),
   offset: external_exports.number().int().nonnegative(),
   text: external_exports.string(),
@@ -54414,7 +55742,7 @@ var pageSchema3 = external_exports.object({
 });
 var customerAdvisoryOutputSchema = external_exports.union([
   baseSchema.extend({
-    projectionSha256: id5,
+    projectionSha256: id6,
     resultRead: optional4(
       external_exports.object({
         tool: external_exports.literal("loki_advisory_result_read"),
@@ -54428,28 +55756,28 @@ var descriptions = {
   prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
   changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the application task and sources in input, and the caller's instructions for carrying out testing in taskInstructions. Kaijan retains those instructions for Run. Preserve original source text. Planning does not execute tests.",
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests.",
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
   suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
 };
-function customerAdvisoryToolDefinition(tool) {
-  if (!hasCustomerAdvisoryOutput(tool.name)) return void 0;
+function customerAdvisoryToolDefinition(tool2) {
+  if (!hasCustomerAdvisoryOutput(tool2.name)) return void 0;
   return {
-    name: tool.name,
-    title: tool.title,
-    description: tool.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool.name]],
-    inputSchema: tool.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool),
+    name: tool2.name,
+    title: tool2.title,
+    description: tool2.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool2.name]],
+    inputSchema: tool2.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool2),
     outputSchema: {
       ...external_exports.toJSONSchema(customerAdvisoryOutputSchema, { io: "input" }),
       type: "object"
     },
-    annotations: tool.annotations
+    annotations: tool2.annotations
   };
 }
-function customerAdvisoryInput(tool) {
-  if (advisoryFamilies[tool.name] !== "prContext") return tool.inputSchema;
-  const original2 = tool.inputSchema.properties?.options;
-  if (!original2?.properties) return tool.inputSchema;
+function customerAdvisoryInput(tool2) {
+  if (advisoryFamilies[tool2.name] !== "prContext") return tool2.inputSchema;
+  const original2 = tool2.inputSchema.properties?.options;
+  if (!original2?.properties) return tool2.inputSchema;
   const keys = [
     "repositories",
     "timeout",
@@ -54461,9 +55789,9 @@ function customerAdvisoryInput(tool) {
     "sourcePrivacy"
   ];
   return {
-    ...tool.inputSchema,
+    ...tool2.inputSchema,
     properties: {
-      ...tool.inputSchema.properties,
+      ...tool2.inputSchema.properties,
       options: {
         type: "object",
         additionalProperties: false,
@@ -54499,20 +55827,22 @@ function preparationView(value) {
   });
 }
 function planningConnectionGuidance(native) {
-  if (native?.schema !== "loki.planning-failure/1" || native.receipt?.status !== "not_started" || native.receipt.unknown_charge !== false || native.receipt.unknown_usage !== false)
+  const prepared = native?.receipt?.status === "preparation_complete" && native.preparation?.schema === "kaijan.planning-preparation/1" && typeof native.receipt.unknown_charge === "boolean" && typeof native.receipt.unknown_usage === "boolean";
+  if (native?.schema !== "loki.planning-failure/1" || !prepared && (native.receipt?.status !== "not_started" || native.receipt.unknown_charge !== false || native.receipt.unknown_usage !== false))
     return void 0;
-  const message = native.reason === "keychain_unavailable" ? "Kaijan could not access the saved connection. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_required" ? "Kaijan needs a connection before it can plan tests. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_unavailable" ? "Kaijan could not check the connection. No test plan was produced. Check Kaijan connection readiness." : void 0;
+  const needsUpdate = native.reason === "connection_unavailable" && native.receipt.connection_operation_unavailable === true;
+  const message = native.reason === "keychain_unavailable" ? "Kaijan could not access the saved connection. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_required" ? "Kaijan needs a connection before it can plan tests. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_unavailable" ? needsUpdate ? prepared ? "Kaijan's connection needs an update before planning can continue. Keep this answer and its saved preparation. Update Kaijan and its connection together." : "Kaijan's connection needs an update before planning can start. Keep this answer. Update Kaijan and its connection together." : prepared ? "Kaijan could not check the connection to produce the test plan. Keep this answer and its saved preparation. Check Kaijan connection readiness." : "Kaijan could not check the connection. No test plan was produced. Check Kaijan connection readiness." : void 0;
   return message ? {
     message,
     recovery: {
       action: "check-readiness",
-      instruction: "Use loki_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
+      instruction: needsUpdate ? "Update Kaijan and its connection together. Keep this answer and any saved preparation. Do not replay uncertain work." : "Use loki_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
     }
   } : void 0;
 }
 function projectCustomerAssessmentReply(native, presentation) {
   const result2 = presentation ? projectCustomerAssessmentResult(presentation) : projectCustomerAssessment(native);
-  return result2.status === "first_response_failure" && hasCapturedAssessmentRejection(native, join8) ? { ...result2, message: assessmentServiceRejectionNotice } : result2;
+  return result2.status === "first_response_failure" && hasCapturedAssessmentRejection(native, join9) ? { ...result2, message: assessmentServiceRejectionNotice } : result2;
 }
 function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) {
   if (fam === "changeRisk" || fam === "riskFinder")
@@ -54534,8 +55864,8 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
       external_exports.array(external_exports.unknown()).parse(proposalEvidence ?? native.evidence),
       hash3
     ).map((row) => {
-      const id7 = customerPlanningId("E", row.id, hash3, true);
-      return id7 === row.id ? row : { ...row, id: id7 };
+      const id8 = customerPlanningId("E", row.id, hash3, true);
+      return id8 === row.id ? row : { ...row, id: id8 };
     });
     return planResult.parse({
       kind: "test-plan",
@@ -54591,7 +55921,7 @@ function failure4(fam, code = "advisory_unavailable", answerId, dispatched = nul
     schema: "kaijan.customer-advisory/1",
     family: fam,
     state: "unavailable",
-    ...id5.safeParse(answerId).success ? { answerId } : {},
+    ...id6.safeParse(answerId).success ? { answerId } : {},
     replayAllowed: false,
     error: {
       code: safe,
@@ -54693,7 +56023,7 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
         code: value.error.code
       });
     const chunk = value.resultChunk;
-    if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id5.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
+    if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id6.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
       throw Error("Invalid saved answer");
     digest21 ??= value.resultSha256;
     total ??= chunk.totalCharacters;
@@ -54753,6 +56083,26 @@ async function relatedPresentation(fam, native, options) {
     options.verifyCustomerRelatedSource
   );
 }
+function customerPlanningConfigurationFailure(value) {
+  const uncertain = value.requestDispatched !== false;
+  return finish(
+    baseSchema.parse({
+      schema: "kaijan.customer-advisory/1",
+      family: "testPlanning",
+      state: uncertain ? "unknown" : "unavailable",
+      replayAllowed: false,
+      error: {
+        code: "advisory_unavailable",
+        message: value.message,
+        requestDispatched: uncertain ? null : false
+      },
+      recovery: {
+        action: uncertain ? "read-original" : "check-readiness",
+        instruction: uncertain ? "Read the original planning answer in this chat. Keep its request and saved settings." : "Check the selected application configuration. You can also continue without saved settings."
+      }
+    })
+  );
+}
 async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, options = {}) {
   const customerView = async (family2, native) => {
     let presentation;
@@ -54771,7 +56121,7 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
       }
     }
     const proposal = await readCustomerProposalSource(family2, native, options);
-    return view(
+    const dto = view(
       family2,
       native,
       presentation,
@@ -54782,6 +56132,12 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         options
       ) : void 0
     );
+    if (options.connectionOnly === true && family2 === "testPlanning" && dto.result?.status === "proposed_plan")
+      return baseSchema.parse({
+        ...dto,
+        message: "The host did not identify this chat. This Plan is available only through this connection. Keep this connection open to review and run the same saved Plan. It cannot be reopened after reconnecting. Do not create another Plan to recover it."
+      });
+    return dto;
   };
   let fam = advisoryFamilies[name] ?? (family.safeParse(args.family).success ? args.family : "testPlanning"), answerId = args.answerId;
   try {
@@ -54837,7 +56193,7 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
       });
     }
     const native = await catalog.invoke(name, args, invocation);
-    if (id5.safeParse(native?.answerId).success) answerId = native.answerId;
+    if (id6.safeParse(native?.answerId).success) answerId = native.answerId;
     catalog.validateOutput?.(name, native);
     const verified = native?.state === "complete" ? {
       ...native,
@@ -54924,7 +56280,7 @@ var executionTools = /* @__PURE__ */ new Set([
   "loki_runner_stop",
   "loki_runner_answer"
 ]);
-var customerInstructions = "Follow the caller-authorized task and selected application. Preserve customer tests, source citations, observations, coverage limits and separate execution and assessment results. Planning does not authorize execution. Ask for missing task inputs. Keep implementation details, model and reasoning settings, provider receipts, usage and accounting private, including when diagnostics are requested. Explain actual failures and useful recovery in product terms. Read or Stop the original operation after uncertain effects; never replay it or start replacement work to recover a result. If the caller explicitly asks to rerun a failed test, read the original Run first. After it has ended with known effects, start a separate Run with a fresh request key within the authorized target and actions. Keep the original Run and result. A finished operation is not a passed test.";
+var customerInstructions = "Follow the caller-authorized task and selected application. Preserve customer tests, source citations, observations, coverage limits and separate execution and assessment results. Planning does not authorize execution. Ask the person only when the task cannot be completed without their answer. Keep implementation details, model and reasoning settings, provider receipts, usage and accounting private, including when diagnostics are requested. Explain actual failures and useful recovery in product terms. Read or Stop the original operation after uncertain effects; never replay it or start replacement work to recover a result. If the caller explicitly asks to rerun a failed test, read the original Run first. After it has ended with known effects, start a separate Run with a fresh request key within the authorized target and actions. Keep the original Run and result. A finished operation is not a passed test.";
 var hasCustomerExecutionOutput = (name) => executionTools.has(name);
 var developmentTools = /* @__PURE__ */ new Set([
   "kaijan_ai_models",
@@ -54932,8 +56288,8 @@ var developmentTools = /* @__PURE__ */ new Set([
   "loki_report_export"
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
-var hash4 = (value) => createHash6("sha256").update(value).digest("hex");
-var id6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var hash4 = (value) => createHash9("sha256").update(value).digest("hex");
+var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings6 = external_exports.array(external_exports.string());
 var optional5 = (schema) => schema.optional();
 var generatedText = external_exports.string();
@@ -54952,26 +56308,33 @@ var progress3 = external_exports.object({
   effects: optional5(external_exports.enum(["known", "uncertain"]))
 });
 var customerQuestion = external_exports.strictObject({
-  id: id6,
+  id: id7,
   question: external_exports.string(),
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"])
 });
 var clarification = progress3.extend({
   questions: external_exports.array(customerQuestion),
-  bindingState: external_exports.enum(["bound", "unavailable"]),
-  clarificationId: id6,
+  bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
+  clarificationId: id7,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"])
 });
 var nextAction2 = external_exports.object({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: id6,
-  clarificationId: id6,
+  runId: id7,
+  clarificationId: id7,
   deadlineAt: external_exports.string(),
   questions: external_exports.array(customerQuestion)
 });
+var browserTest = runnerTestResultsSchema.element.extend({
+  verdict: external_exports.enum(["pass", "fail", "incomplete"])
+});
 var assessment = customerAssessmentResultSchema.omit({ kind: true, meaning: true, acceptanceDecision: true, coverage: true }).extend({
+  tests: external_exports.union([
+    customerAssessmentResultSchema.shape.tests.unwrap(),
+    external_exports.array(browserTest)
+  ]).optional(),
   state: external_exports.enum([
     "complete",
     "unknown",
@@ -54979,8 +56342,8 @@ var assessment = customerAssessmentResultSchema.omit({ kind: true, meaning: true
     "cancelled",
     "unavailable"
   ]),
-  answerId: optional5(id6),
-  resultSha256: optional5(id6),
+  answerId: optional5(id7),
+  resultSha256: optional5(id7),
   status: customerAssessmentResultSchema.shape.status.optional(),
   coverage: customerAssessmentResultSchema.shape.coverage.unwrap().extend({ meaning: customerAssessmentResultSchema.shape.meaning }).optional()
 });
@@ -55003,7 +56366,7 @@ var verification = external_exports.object({
       steps: external_exports.array(step)
     })
   ),
-  evidence: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), sha256: id6 }))
+  evidence: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), sha256: id7 }))
 });
 var result = external_exports.object({
   status: external_exports.enum([
@@ -55035,12 +56398,12 @@ var lifecycle = external_exports.enum([
   "unavailable"
 ]);
 var execution = external_exports.object({
-  runId: id6,
+  runId: id7,
   state: lifecycle,
   replayAllowed: external_exports.literal(false),
   stopRequested: optional5(external_exports.boolean()),
   createdAt: optional5(external_exports.string()),
-  resultSha256: optional5(id6),
+  resultSha256: optional5(id7),
   result: optional5(result),
   pendingClarification: optional5(clarification.nullable()),
   nextAction: optional5(nextAction2)
@@ -55094,7 +56457,7 @@ var failure5 = external_exports.object({
     action: external_exports.string(),
     instruction: external_exports.string(),
     requestKey: optional5(external_exports.string()),
-    existingRunId: optional5(id6)
+    existingRunId: optional5(id7)
   })
 });
 var customerExecutionSchema = external_exports.strictObject({
@@ -55102,31 +56465,31 @@ var customerExecutionSchema = external_exports.strictObject({
   kind: external_exports.enum(["test", "execution", "answer"]),
   browserCleanup: customerBrowserCleanupSchema.optional(),
   executionEvidence: customerExecutionEvidenceSchema.optional(),
-  runId: optional5(id6),
+  runId: optional5(id7),
   state: lifecycle,
   replayAllowed: external_exports.literal(false),
   stopRequested: optional5(external_exports.boolean()),
   createdAt: optional5(external_exports.string()),
-  resultSha256: optional5(id6),
+  resultSha256: optional5(id7),
   result: optional5(result),
   execution: optional5(execution.nullable()),
   status: optional5(
     external_exports.object({ execution: stage, assessment: stage, report: stage })
   ),
   assessment: optional5(assessment.nullable()),
-  report: optional5(external_exports.object({ reportId: id6 }).nullable()),
+  report: optional5(external_exports.object({ reportId: id7 }).nullable()),
   pendingClarification: optional5(clarification.nullable()),
   nextAction: optional5(nextAction2),
-  clarificationId: optional5(id6),
+  clarificationId: optional5(id7),
   answerKey: optional5(external_exports.string()),
   answerStatus: optional5(external_exports.literal("retained")),
   error: optional5(failure5)
 });
 var projection2 = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-execution-page/1"),
-  runId: id6,
-  resultSha256: id6.optional(),
-  projectionSha256: id6,
+  runId: id7,
+  resultSha256: id7.optional(),
+  projectionSha256: id7,
   encoding: external_exports.literal("JSON text, UTF-16 offsets"),
   offset: external_exports.number().int().nonnegative(),
   text: external_exports.string(),
@@ -55137,23 +56500,38 @@ var projection2 = external_exports.strictObject({
 var readHint = external_exports.strictObject({
   tool: external_exports.enum(["loki_test_get", "loki_runner_get"]),
   arguments: external_exports.strictObject({
-    runId: id6,
+    runId: id7,
     offset: external_exports.literal(0),
-    projectionSha256: id6
+    projectionSha256: id7
   })
 });
 var customerOutputSchema = external_exports.union([
   customerExecutionSchema.extend({
-    projectionSha256: id6,
+    projectionSha256: id7,
     resultRead: readHint.optional()
   }),
   projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
-function customerExecutionInput(tool) {
-  if (!["loki_runner_execute", "loki_test_execute"].includes(tool.name))
-    return tool.inputSchema;
-  const input3 = structuredClone(tool.inputSchema);
+function customerExecutionInput(tool2, configurations, requireSavedPlan) {
+  if (!["loki_runner_execute", "loki_test_execute"].includes(tool2.name))
+    return tool2.inputSchema;
+  let input3 = structuredClone(tool2.inputSchema);
+  if (requireSavedPlan && tool2.name === "loki_test_execute") {
+    const { anyOf, ...root } = input3;
+    const saved = anyOf?.find(
+      (branch) => branch.required?.includes("savedTests")
+    );
+    if (saved) input3 = { ...root, ...saved };
+  }
   const projectRequest = (schema) => {
+    if (schema?.properties?.target) {
+      delete schema.properties.configurationUsed;
+      if (configurations)
+        schema.properties.configurationId = {
+          anyOf: [{ type: "string", format: "uuid" }, { type: "null" }],
+          description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or automatic delivery of saved groups. Use null for no saved configuration. Explicit params override saved values only for this Run. Secret edits use the Configuration form."
+        };
+    }
     const limits = schema?.properties?.options?.properties?.limits;
     if (limits?.properties && Object.hasOwn(limits.properties, "calls")) {
       delete limits.properties.calls;
@@ -55166,24 +56544,24 @@ function customerExecutionInput(tool) {
   projectRequest(input3);
   return input3;
 }
-function customerToolDefinition(tool) {
-  if (!isCustomerToolAllowed(tool.name)) return null;
-  if (!executionTools.has(tool.name)) return tool;
-  const read = tool.name.endsWith("_get");
+function customerToolDefinition(tool2, { configurations = false, requireSavedPlan = true } = {}) {
+  if (!isCustomerToolAllowed(tool2.name)) return null;
+  if (!executionTools.has(tool2.name)) return tool2;
+  const read = tool2.name.endsWith("_get");
   return {
-    name: tool.name,
-    title: tool.title,
-    annotations: tool.annotations,
-    description: tool.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    name: tool2.name,
+    title: tool2.title,
+    annotations: tool2.annotations,
+    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
     inputSchema: read ? external_exports.toJSONSchema(
       external_exports.strictObject({
-        runId: id6,
+        runId: id7,
         offset: external_exports.number().int().nonnegative().optional(),
-        projectionSha256: id6.optional(),
-        ...tool.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
+        projectionSha256: id7.optional(),
+        ...tool2.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
-    ) : customerExecutionInput(tool),
+    ) : customerExecutionInput(tool2, configurations, requireSavedPlan),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -55240,7 +56618,7 @@ var errorMessages = {
     "Read this same run again at offset zero. Do not rerun the test."
   ]
 };
-function customerFailure(name, value = {}, runId) {
+function customerFailure(name, value = {}, runId2) {
   const native = value?.error ?? value;
   const privateLogin = native?.requestDispatched === false && Object.hasOwn(privateParameterMessages, native?.code);
   let code = privateLogin || Object.hasOwn(errorMessages, native?.code) ? native.code : "operation_unavailable";
@@ -55262,7 +56640,7 @@ function customerFailure(name, value = {}, runId) {
   return customerExecutionSchema.parse({
     schema: "kaijan.customer-execution/1",
     kind: name.startsWith("loki_test_") ? "test" : name.endsWith("_answer") ? "answer" : "execution",
-    ...id6.safeParse(runId ?? value?.runId).success ? { runId: runId ?? value.runId } : {},
+    ...id7.safeParse(runId2 ?? value?.runId).success ? { runId: runId2 ?? value.runId } : {},
     state: "unavailable",
     replayAllowed: false,
     error: {
@@ -55273,7 +56651,7 @@ function customerFailure(name, value = {}, runId) {
         action: action2,
         instruction,
         ...code === "request_key_conflict" && typeof native?.recovery?.requestKey === "string" ? { requestKey: native.recovery.requestKey } : {},
-        ...id6.safeParse(native?.recovery?.existingRunId).success ? { existingRunId: native.recovery.existingRunId } : {}
+        ...id7.safeParse(native?.recovery?.existingRunId).success ? { existingRunId: native.recovery.existingRunId } : {}
       }
     }
   });
@@ -55289,7 +56667,7 @@ function hasSavedPlanSelection(value) {
   }).success)
     return true;
   const checks = value?.verification;
-  return checks?.provenance === "product-terminal-checks/1" && id6.safeParse(checks.planRef?.answerId).success && id6.safeParse(checks.planRef?.resultSha256).success;
+  return checks?.provenance === "product-terminal-checks/1" && id7.safeParse(checks.planRef?.answerId).success && id7.safeParse(checks.planRef?.resultSha256).success;
 }
 var planTestId = (value) => customerPlanningId("T", value, hash4);
 function executionResult(value, blockedReason) {
@@ -55346,7 +56724,7 @@ function executionView(value) {
     ...value.result ? { result: executionResult(value.result) } : {}
   });
 }
-function assessmentView(value, savedPlan = false, presentation, progressOnly = false) {
+function assessmentView(value, savedPlan = false, presentation, progressOnly = false, runnerSession = false) {
   if (value === null || value === void 0) return null;
   const identity4 = {
     state: value.error ? "unavailable" : value.state,
@@ -55354,6 +56732,11 @@ function assessmentView(value, savedPlan = false, presentation, progressOnly = f
     resultSha256: value.resultSha256
   };
   if (progressOnly) return assessment.parse(identity4);
+  if (runnerSession) {
+    return assessment.parse({
+      state: value.state === "complete" ? "complete" : "unavailable"
+    });
+  }
   let view2;
   try {
     view2 = presentation || value.result && !value.error ? projectCustomerAssessmentReply(value.result, presentation) : void 0;
@@ -55389,7 +56772,7 @@ function assessmentView(value, savedPlan = false, presentation, progressOnly = f
 }
 async function readAssessmentPresentation(value, options, invocation) {
   const reference2 = value?.schema === "kaijan.test-run/1" ? value.assessment : void 0;
-  if (reference2?.state !== "complete" || reference2.error || !id6.safeParse(reference2.answerId).success || !id6.safeParse(reference2.resultSha256).success || typeof options.readAssessmentPresentation !== "function")
+  if (reference2?.state !== "complete" || reference2.error || !id7.safeParse(reference2.answerId).success || !id7.safeParse(reference2.resultSha256).success || typeof options.readAssessmentPresentation !== "function")
     return void 0;
   try {
     const source3 = await options.readAssessmentPresentation(
@@ -55411,7 +56794,7 @@ function combinedStatusRead(name, value) {
   return name === "loki_test_get" && ["accepted", "running"].includes(value?.state);
 }
 function browserAssessmentNotice(value) {
-  if (value.state !== "finished" || value.assessment !== null || value.status?.report !== "saved" || !id6.safeParse(value.report?.reportId).success || !value.preparation || value.preparation.state !== value.status.assessment)
+  if (value.state !== "finished" || value.assessment !== null || value.status?.report !== "saved" || !id7.safeParse(value.report?.reportId).success || !value.preparation || value.preparation.state !== value.status.assessment)
     return null;
   const { state: state2, reason } = value.preparation;
   let message;
@@ -55463,7 +56846,8 @@ function project(name, value, assessmentPresentation) {
       value.assessment,
       hasSavedPlanSelection(value.execution?.result),
       assessmentPresentation,
-      combinedStatusRead(name, value)
+      combinedStatusRead(name, value),
+      value.preparation?.source === "runner-browser-session"
     ) ?? browserAssessmentNotice(value),
     report: value.report,
     nextAction: value.nextAction ? {
@@ -55473,15 +56857,15 @@ function project(name, value, assessmentPresentation) {
     ...value.execution?.error ? { error: customerFailure(name, value.execution).error } : {}
   });
 }
-async function original(catalog, tool, first, invocation) {
-  const runId = id6.parse(first.runId), expected = id6.parse(first.resultSha256);
+async function original(catalog, tool2, first, invocation) {
+  const runId2 = id7.parse(first.runId), expected = id7.parse(first.resultSha256);
   let offset = 0, text4 = "", total;
   for (let pages = 0; pages < 4096; pages++) {
     invocation?.signal?.throwIfAborted();
-    const page2 = await catalog.invoke(tool, { runId, offset }, invocation);
-    catalog.validateOutput?.(tool, page2);
+    const page2 = await catalog.invoke(tool2, { runId: runId2, offset }, invocation);
+    catalog.validateOutput?.(tool2, page2);
     const chunk = page2.resultChunk;
-    if (page2.runId !== runId || page2.resultSha256 !== expected || !chunk || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 60 * 1024 * 1024 || total !== void 0 && total !== chunk.totalCharacters)
+    if (page2.runId !== runId2 || page2.resultSha256 !== expected || !chunk || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 60 * 1024 * 1024 || total !== void 0 && total !== chunk.totalCharacters)
       throw Error("Invalid retained page");
     total = chunk.totalCharacters;
     text4 += chunk.text;
@@ -55526,15 +56910,38 @@ async function hydrate(catalog, name, value, invocation) {
     };
   return value;
 }
-function customerFailureOutput(name, value, runId) {
-  const dto = customerFailure(name, value, runId);
+function customerFailureOutput(name, value, runId2) {
+  const dto = customerFailure(name, value, runId2);
+  return { ...dto, projectionSha256: hash4(JSON.stringify(dto)) };
+}
+function customerConfigurationFailure(name, value) {
+  if (value.requestDispatched === false && Object.hasOwn(privateParameterMessages, value.code))
+    return customerFailureOutput(name, value);
+  const unknown3 = value.requestDispatched !== false;
+  const dto = customerExecutionSchema.parse({
+    schema: "kaijan.customer-execution/1",
+    kind: name === "loki_test_execute" ? "test" : "execution",
+    state: unknown3 ? "unknown" : "not-started",
+    replayAllowed: false,
+    ...value.existingRunId ? { runId: value.existingRunId } : {},
+    error: {
+      code: value.code,
+      message: value.message,
+      requestDispatched: unknown3 ? null : false,
+      recovery: {
+        action: unknown3 ? "read_original_run" : "choose_configuration",
+        instruction: unknown3 ? "Read the original Run in this chat. Do not replay work with unknown effects." : "Check the selected configuration, or choose no configuration to continue without saved settings.",
+        ...value.existingRunId ? { existingRunId: value.existingRunId } : {}
+      }
+    }
+  });
   return { ...dto, projectionSha256: hash4(JSON.stringify(dto)) };
 }
 var customerPending = external_exports.strictObject({
-  clarificationId: id6,
+  clarificationId: id7,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"]),
-  bindingState: external_exports.enum(["bound", "unavailable"]),
+  bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
   reason: external_exports.enum([
     "The test needs the following task or application information.",
     "The test needs a read-only way to view the requested information.",
@@ -55576,7 +56983,7 @@ async function bindPendingQuestions(value, read) {
   return {
     ...value,
     pendingClarification: safe,
-    nextAction: safe.state === "live" && safe.bindingState === "bound" && safe.questions.length ? {
+    nextAction: safe.state === "live" && safe.bindingState !== "unavailable" && safe.questions.length ? {
       kind: "input-required",
       tool: "loki_runner_answer",
       runId: value.runId,
@@ -55601,7 +57008,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
   let retainedRunId = args?.runId;
   try {
     const paging = name.endsWith("_get") && args.offset !== void 0;
-    if (paging && (!Number.isSafeInteger(args.offset) || args.offset < 0 || args.offset > 0 && !id6.safeParse(args.projectionSha256).success) || !paging && args.projectionSha256 !== void 0)
+    if (paging && (!Number.isSafeInteger(args.offset) || args.offset < 0 || args.offset > 0 && !id7.safeParse(args.projectionSha256).success) || !paging && args.projectionSha256 !== void 0)
       return customerFailureOutput(
         name,
         { code: "customer_read_restart", requestDispatched: false },
@@ -55612,14 +57019,14 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       delete input3.offset;
       if (name === "loki_test_get") delete input3.waitMs;
     }
-    if (name === "loki_runner_answer" && (!catalog.tools?.some((tool) => tool.name === name) || typeof options.answerCustomerClarification !== "function"))
+    if (name === "loki_runner_answer" && (!catalog.tools?.some((tool2) => tool2.name === name) || typeof options.answerCustomerClarification !== "function"))
       return customerFailureOutput(
         name,
         { code: "clarification_unavailable", requestDispatched: false },
         retainedRunId
       );
     const native = name === "loki_runner_answer" ? await options.answerCustomerClarification(input3, invocation) : await catalog.invoke(name, input3, invocation);
-    if (id6.safeParse(native?.runId).success) retainedRunId = native.runId;
+    if (id7.safeParse(native?.runId).success) retainedRunId = native.runId;
     catalog.validateOutput?.(name, native);
     const hydrated = await hydrate(catalog, name, native, invocation);
     const projected = project(
@@ -55639,10 +57046,26 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       );
       let context2;
       try {
-        context2 = retained ? await retained : execution2?.state === "finished" && (projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+        context2 = retained ? await retained : execution2?.state === "finished" && (hydrated.preparation?.source === "runner-browser-session" || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
       } catch {
       }
       bindProtectedProgress(projected, execution2, context2);
+      if (hydrated.preparation?.source === "runner-browser-session" && projected.assessment) {
+        const selectedIds = new Set(
+          (hydrated.assessment?.result?.assessment?.test_results ?? []).map(
+            (row) => row.test_id
+          )
+        );
+        const rows2 = context2?.state === "ready" && context2.runId === execution2?.runId && context2.resultSha256 === execution2?.resultSha256 ? context2.protectedExecutionProgress?.test_results ?? [] : [];
+        const savedPlan = hasSavedPlanSelection(execution2?.result);
+        projected.assessment.tests = rows2.filter((row) => selectedIds.has(row.test_id)).map(
+          (row) => browserTest.parse({
+            ...row,
+            test_id: savedPlan ? planTestId(row.test_id) : row.test_id,
+            verdict: row.bug_found ? "fail" : row.scenario_finished ? "pass" : "incomplete"
+          })
+        );
+      }
       const includeExecutionEvidence = !combinedStatusRead(name, projected);
       if (execution2?.state === "finished" && includeExecutionEvidence) {
         let evidence2;
@@ -55715,17 +57138,10 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
 var executions = /* @__PURE__ */ new Set(["loki_test_execute", "loki_runner_execute"]);
 var object6 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
-var omitTestIds = (checks) => ({
-  ...checks,
-  tests: checks.tests.map((test) => {
-    const copy = { ...test };
-    delete copy.testId;
-    return copy;
-  })
-});
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
-  const invalid = () => ({
+  const invalid = (diagnosticReason = "invalid_arguments") => ({
+    diagnosticReason,
     error: customerFailureOutput(name, {
       code: "invalid_arguments",
       requestDispatched: false
@@ -55733,50 +57149,84 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
-  const checked = args.planRef !== void 0 && (args.checks !== void 0 || object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key)));
-  if (!saved && !checked)
-    return args.checks === void 0 ? { arguments: args } : invalid();
-  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0) || typeof options.resolveSelection !== "function")
+  if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
     return invalid();
+  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
+  if (!saved && !checked) return { arguments: args };
+  if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
+    return invalid("saved_selection_conflict");
+  if (typeof options.resolveSelection !== "function")
+    return invalid("saved_selection_unavailable");
   try {
     invocation?.signal?.throwIfAborted();
     const key = saved ? "savedTests" : "planRef";
     const reference2 = checkedPlanReferenceSchema.parse(args[key]);
-    const input3 = {
-      reference: reference2,
-      ...args.checks === void 0 ? {} : { checks: structuredClone(args.checks) }
-    };
-    const resolved2 = await options.resolveSelection(structuredClone(input3));
+    const resolved2 = await options.resolveSelection({
+      reference: structuredClone(reference2)
+    });
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
-      return invalid();
-    if (args.checks === void 0) {
-      if (resolved2.checks !== void 0) return invalid();
-    } else {
-      if (!object6(resolved2.checks) || !Array.isArray(resolved2.checks.tests) || !object6(args.checks) || !Array.isArray(args.checks.tests) || !isDeepStrictEqual(
-        omitTestIds(args.checks),
-        omitTestIds(resolved2.checks)
-      ))
-        return invalid();
-      const ids2 = resolved2.checks.tests.map((test) => test.testId);
-      if (ids2.length !== selected.selectedTestIds.length || new Set(ids2).size !== ids2.length || ids2.some((id7) => !selected.selectedTestIds.includes(id7)))
-        return invalid();
-    }
+      return invalid("saved_selection_mismatch");
     return {
       arguments: {
         ...args,
-        [key]: selected,
-        ...args.checks === void 0 ? {} : { checks: resolved2.checks }
+        [key]: selected
       }
     };
-  } catch {
-    return invalid();
+  } catch (error63) {
+    return invalid(
+      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable"
+    );
   }
 }
 
 // apps/codex-plugin/src/capability-mcp.mjs
 import process6 from "node:process";
+
+// apps/codex-plugin/src/telemetry/tool-failures.mjs
+function observeToolFailures(catalog, name, observer) {
+  if (!observer || !toolFailureDiagnosedPropertiesSchema.shape.tool_name.safeParse(name).success)
+    return { diagnose() {
+    }, catalog };
+  let recorded = false;
+  function diagnose(error63 = {}) {
+    try {
+      if (recorded || !observer) return;
+      const reason = ["invalid_params", "invalid_arguments"].includes(
+        error63.code
+      ) ? "invalid_arguments" : error63.diagnosticReason ?? "tool_failed";
+      const fields = /* @__PURE__ */ new Set();
+      if (reason === "invalid_arguments")
+        for (const issue3 of Array.isArray(error63.issues) ? error63.issues : [])
+          for (const part of Array.isArray(issue3?.path) ? issue3.path : []) {
+            const field2 = toolDiagnosticFieldSchema.safeParse(part);
+            if (field2.success) fields.add(field2.data);
+          }
+      const properties = toolFailureDiagnosedPropertiesSchema.safeParse({
+        tool_name: name,
+        reason,
+        validation_fields: [...fields]
+      });
+      if (!properties.success) return;
+      recorded = true;
+      observer.emit("Tool Failure Diagnosed", properties.data);
+    } catch {
+    }
+  }
+  const observed = Object.create(catalog);
+  Object.defineProperty(observed, "invoke", {
+    value: async (...args) => {
+      try {
+        return await catalog.invoke(...args);
+      } catch (error63) {
+        diagnose(error63);
+        throw error63;
+      }
+    }
+  });
+  return { diagnose, catalog: observed };
+}
 
 // apps/codex-plugin/src/customer-discovery-output.mjs
 var readiness = external_exports.strictObject({
@@ -55809,10 +57259,10 @@ function service(value, setupRequired, unavailable3) {
     return value.providerConfigured === true ? configured() : value.providerConfigured === false ? setupRequired : unavailable3;
   return value?.state === "unconfigured" ? setupRequired : unavailable3;
 }
-function customerDiscoveryTool(tool) {
-  if (tool.name !== "loki_capabilities_list") return null;
+function customerDiscoveryTool(tool2) {
+  if (tool2.name !== "loki_capabilities_list") return null;
   return {
-    name: tool.name,
+    name: tool2.name,
     title: "Check Kaijan readiness",
     description: "Check available Kaijan actions and connection readiness. This does not perform analysis, run a test, verify application access or prove that an existing result passed. Keep original requests after uncertain effects; do not repeat work to recover a result.",
     inputSchema: external_exports.toJSONSchema(customerDiscoveryInputSchema),
@@ -55886,7 +57336,7 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
 }
 
 // apps/codex-plugin/src/customer-report-output.mjs
-import { createHash as createHash7 } from "node:crypto";
+import { createHash as createHash10 } from "node:crypto";
 var tools = /* @__PURE__ */ new Set([
   "loki_report_get",
   "loki_report_open",
@@ -55904,7 +57354,7 @@ var cardInstructions = (summary3) => {
     [counts.blocked, "blocked"],
     [counts.skipped, "skipped"],
     [counts["not-run"], "not run"],
-    [counts.inconclusive, "incomplete"],
+    [(counts.inconclusive ?? 0) + (counts.incomplete ?? 0), "incomplete"],
     [counts.conflicting, "with different results"],
     [
       counts.unavailable,
@@ -56016,25 +57466,25 @@ function projectCustomerReport(value) {
       return customerReportFailure();
     const projected = projectCustomerTestPlanView(
       value,
-      (text4) => createHash7("sha256").update(text4).digest("hex")
+      (text4) => createHash10("sha256").update(text4).digest("hex")
     );
     return restoreVerifiedAssessmentRejection(value, projected);
   } catch {
     return customerReportFailure();
   }
 }
-function customerReportToolDefinition(tool, { presentation } = {}) {
-  if (!hasCustomerReportOutput(tool.name)) return tool;
-  const resourceUri = "ui://loki/test-plan/card/v74.html";
-  const description = tool.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
+function customerReportToolDefinition(tool2, { presentation } = {}) {
+  if (!hasCustomerReportOutput(tool2.name)) return tool2;
+  const resourceUri = "ui://loki/test-plan/card/v87.html";
+  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
-    name: tool.name,
-    title: tool.title,
-    annotations: tool.annotations,
-    inputSchema: tool.inputSchema,
-    ...presentation !== "chat" && tool.name === "loki_report_show" && tool._meta?.ui?.resourceUri === resourceUri ? {
+    name: tool2.name,
+    title: tool2.title,
+    annotations: tool2.annotations,
+    inputSchema: tool2.inputSchema,
+    ...presentation !== "chat" && tool2.name === "loki_report_show" && tool2._meta?.ui?.resourceUri === resourceUri ? {
       _meta: { ui: { resourceUri }, "openai/outputTemplate": resourceUri }
-    } : presentation !== "chat" && tool.name === "loki_report_open" ? {
+    } : presentation !== "chat" && tool2.name === "loki_report_open" ? {
       _meta: {
         ui: { visibility: ["app"] },
         "openai/widgetAccessible": true
@@ -56064,6 +57514,11 @@ function retainedCustomerEvidenceView(value, options) {
     value,
     clone3,
     options.verifyCustomerRiskEvidence
+  );
+  transferRelatedSourceProof(
+    value.contextFinder,
+    clone3.contextFinder,
+    options.verifyCustomerRelatedSource
   );
   return clone3;
 }
@@ -56191,9 +57646,9 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
 }
 
 // apps/codex-plugin/src/customer-preparation-output.mjs
-import { createHash as createHash8 } from "node:crypto";
+import { createHash as createHash11 } from "node:crypto";
 var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var hash5 = (value) => createHash8("sha256").update(JSON.stringify(value)).digest("hex");
+var hash5 = (value) => createHash11("sha256").update(JSON.stringify(value)).digest("hex");
 var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var clone2 = (value) => JSON.parse(JSON.stringify(value));
 var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
@@ -56428,7 +57883,7 @@ function callerObservations(request3) {
 function applicationPageObservations(input3, packet) {
   return (input3?.evidence ?? []).flatMap((item) => {
     const provenance2 = item.provenance;
-    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash8("sha256").update(item.text).digest("hex") !== item.sha256)
+    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash11("sha256").update(item.text).digest("hex") !== item.sha256)
       return [];
     try {
       const page2 = external_exports.object({
@@ -56507,7 +57962,7 @@ function projectCustomerAssessmentPreparation(packet, request3) {
         ...[
           ...projectCustomerPageObservations(
             { assessmentFragment: input3 },
-            (text4) => createHash8("sha256").update(text4).digest("hex")
+            (text4) => createHash11("sha256").update(text4).digest("hex")
           ),
           ...applicationPageObservations(input3, packet)
         ].map((observation2) => ({
@@ -56567,15 +58022,15 @@ function projectCustomerReusePreparation(value) {
     return customerPreparationFailure();
   }
 }
-function extendCustomerAssessmentInputSchema(inputSchema) {
-  if (!object8(inputSchema?.properties?.input))
+function extendCustomerAssessmentInputSchema(inputSchema3) {
+  if (!object8(inputSchema3?.properties?.input))
     throw Error("Assessment input schema unavailable");
   return {
-    ...inputSchema,
+    ...inputSchema3,
     $id: "urn:kaijan:customer-assessment-request:1",
     properties: {
-      ...inputSchema.properties,
-      input: { anyOf: [inputSchema.properties.input, selectorJson] }
+      ...inputSchema3.properties,
+      input: { anyOf: [inputSchema3.properties.input, selectorJson] }
     }
   };
 }
@@ -56601,10 +58056,10 @@ function schemaWithoutProse(value, propertyMap = false) {
     ])
   );
 }
-function preparationInputSchema(tool) {
-  if (tool.name === "loki_assessment_prepare")
+function preparationInputSchema(tool2) {
+  if (tool2.name === "loki_assessment_prepare")
     return external_exports.toJSONSchema(assessmentPrepareInputSchema, { io: "input" });
-  const schema = schemaWithoutProse(tool.inputSchema);
+  const schema = schemaWithoutProse(tool2.inputSchema);
   const limits = schema?.properties?.current?.properties?.options?.properties?.limits;
   if (limits?.properties) {
     limits.properties = Object.fromEntries(
@@ -56613,22 +58068,22 @@ function preparationInputSchema(tool) {
   }
   return schema;
 }
-function customerPreparationToolDefinition(tool) {
-  if (!hasCustomerPreparationOutput(tool.name)) return tool;
+function customerPreparationToolDefinition(tool2) {
+  if (!hasCustomerPreparationOutput(tool2.name)) return tool2;
   return {
-    name: tool.name,
-    title: tool.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
+    name: tool2.name,
+    title: tool2.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
       openWorldHint: false
     },
-    inputSchema: preparationInputSchema(tool),
+    inputSchema: preparationInputSchema(tool2),
     outputSchema: {
       ...external_exports.toJSONSchema(customerPreparationOutputSchema),
       type: "object"
     },
-    description: tool.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
+    description: tool2.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
   };
 }
 async function invokeCustomerPreparation(catalog, name, args, invocation) {
@@ -56708,9 +58163,25 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v65.html",
   "ui://loki/test-plan/card/v66.html",
   "ui://loki/test-plan/card/v67.html",
+  "ui://loki/test-plan/card/v68.html",
+  "ui://loki/test-plan/card/v69.html",
+  "ui://loki/test-plan/card/v70.html",
   "ui://loki/test-plan/card/v71.html",
   "ui://loki/test-plan/card/v72.html",
-  "ui://loki/test-plan/card/v73.html"
+  "ui://loki/test-plan/card/v73.html",
+  "ui://loki/test-plan/card/v74.html",
+  "ui://loki/test-plan/card/v75.html",
+  "ui://loki/test-plan/card/v76.html",
+  "ui://loki/test-plan/card/v77.html",
+  "ui://loki/test-plan/card/v78.html",
+  "ui://loki/test-plan/card/v82.html",
+  "ui://loki/test-plan/card/v83.html",
+  "ui://loki/test-plan/card/v84.html",
+  "ui://loki/test-plan/card/v85.html",
+  "ui://loki/test-plan/card/v86.html",
+  "ui://loki/test-plan/card/v81.html",
+  "ui://loki/test-plan/card/v80.html",
+  "ui://loki/test-plan/card/v79.html"
 ]);
 function invalidParams(message, data) {
   const error63 = new McpError(ErrorCode.InvalidParams, message, data);
@@ -56744,13 +58215,19 @@ function capabilityMcpRegistration(session, setup) {
       ...session.catalog.tools,
       ...setup?.tools ?? [],
       ...session.feedback?.tools ?? [],
+      ...session.agentFeedback?.tools ?? [],
       ...session.issues?.tools ?? [],
+      ...session.configurations?.tools ?? [],
+      ...session.projectHistory?.tools ?? [],
       ...controls
-    ].map((tool) => {
-      const definition = customerDiscoveryTool(tool) ?? customerAdvisoryToolDefinition(tool) ?? (hasCustomerPreparationOutput(tool.name) ? customerPreparationToolDefinition(tool) : hasCustomerReportOutput(tool.name) ? customerReportToolDefinition(tool, {
+    ].map((tool2) => {
+      const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
-      }) : customerToolDefinition(tool));
-      return tool.name === "loki_test_evidence_assess" && definition ? {
+      }) : customerToolDefinition(tool2, {
+        configurations: Boolean(session.configurations),
+        requireSavedPlan: session.identity?.host !== "claude_code"
+      }));
+      return tool2.name === "loki_test_evidence_assess" && definition ? {
         ...definition,
         inputSchema: extendCustomerAssessmentInputSchema(
           definition.inputSchema
@@ -56764,18 +58241,21 @@ function capabilityMcpRegistration(session, setup) {
         }
       } : definition;
     }).filter(Boolean).map(
-      (tool) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool) : session.identity?.host === "codex" ? codexToolDefinition(tool) : tool
+      (tool2) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool2) : session.identity?.host === "codex" ? codexToolDefinition(tool2) : tool2
     ),
     // Draft activity stays local. Core's existing completed-feedback event is
     // the feedback record; do not upload autosave/progress metrics from forms.
     observabilityControls: [
-      ...controls.map((tool) => tool.name),
-      ...session.feedback?.tools.map((tool) => tool.name) ?? [],
-      ...session.issues?.tools.map((tool) => tool.name) ?? []
+      ...controls.map((tool2) => tool2.name),
+      ...session.feedback?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.agentFeedback?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.issues?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.configurations?.tools.map((tool2) => tool2.name) ?? [],
+      ...session.projectHistory?.tools.map((tool2) => tool2.name) ?? []
     ]
   };
 }
-function capabilityMcpDiscovery(tools2, setup) {
+function capabilityMcpDiscovery(tools2, setup, host) {
   const hidden = /* @__PURE__ */ new Set([
     "loki_pr_context_find_related",
     ...setup?.hiddenTools ?? []
@@ -56786,22 +58266,25 @@ function capabilityMcpDiscovery(tools2, setup) {
     "loki_assessment_prepare",
     "loki_context_finder_find_related",
     "loki_change_risk_analyze",
-    "loki_risk_finder_analyze"
+    "loki_risk_finder_analyze",
+    // Existing direct callers can recover a preview. Codex models use the
+    // ordinary Plan and Run entry points.
+    ...host === "codex" ? ["loki_runner_reuse_prepare"] : []
   ]);
-  return tools2.filter((tool) => !hidden.has(tool.name)).map(
-    (tool) => internalPreparation.has(tool.name) ? {
-      ...tool,
+  return tools2.filter((tool2) => !hidden.has(tool2.name)).map(
+    (tool2) => internalPreparation.has(tool2.name) ? {
+      ...tool2,
       _meta: {
-        ...tool._meta,
-        ui: { ...tool._meta?.ui, visibility: ["app"] }
+        ...tool2._meta,
+        ui: { ...tool2._meta?.ui, visibility: ["app"] }
       }
-    } : tool
+    } : tool2
   );
 }
-function createCapabilityMcpServer(session, version4, setup) {
+function createCapabilityMcpServer(session, version4, setup, telemetry) {
   const { catalog } = session;
   const { tools: tools2 } = capabilityMcpRegistration(session, setup);
-  if (new Set(tools2.map((tool) => tool.name)).size !== tools2.length)
+  if (new Set(tools2.map((tool2) => tool2.name)).size !== tools2.length)
     throw new Error("Duplicate local tool registration");
   const lifetime = new AbortController();
   const pendingSetup = /* @__PURE__ */ new Set();
@@ -56818,18 +58301,47 @@ function createCapabilityMcpServer(session, version4, setup) {
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools: capabilityMcpDiscovery(tools2, setup)
+    tools: capabilityMcpDiscovery(tools2, setup, session.identity?.host)
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
       ...catalog.resources,
+      ...setup?.resources ?? [],
       ...session.feedback?.resources ?? [],
       ...session.issues?.resources ?? []
     ]
   }));
-  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool) => tool.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
+  const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool2) => tool2.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
+    const setupResource = setup?.resources?.find(
+      (resource) => resource.uri === params.uri || params.uri === "ui://kaijan/setup/card/v1.html" && resource.uri === "ui://kaijan/setup/card/v2.html"
+    );
+    if (setupResource) {
+      try {
+        const result2 = await setup.readResource(setupResource.uri);
+        return setupResource.uri === params.uri ? result2 : {
+          ...result2,
+          contents: result2.contents.map((content) => ({
+            ...content,
+            uri: params.uri
+          }))
+        };
+      } catch {
+        throw invalidParams(
+          "The Setup card could not be read. Continue setup in this chat."
+        );
+      }
+    }
     const uri = cachedReportCardUris.has(params.uri) ? reportCardUri ?? params.uri : params.uri;
+    if (session.configurations?.hasResource(uri)) {
+      try {
+        return await session.configurations.readResource(uri);
+      } catch {
+        throw invalidParams(
+          "Ask Kaijan in this chat to view or update your saved configurations."
+        );
+      }
+    }
     if (session.feedback?.hasResource?.(uri) || session.feedback?.resources.some((resource) => resource.uri === uri)) {
       try {
         return await session.feedback.readResource(uri);
@@ -56867,7 +58379,12 @@ function createCapabilityMcpServer(session, version4, setup) {
     }
   });
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
-    if (!isCustomerToolAllowed(params.name) || !tools2.some((tool) => tool.name === params.name))
+    let diagnosticOwner;
+    try {
+      diagnosticOwner = telemetry?.bind();
+    } catch {
+    }
+    if (!isCustomerToolAllowed(params.name) || !tools2.some((tool2) => tool2.name === params.name))
       throw invalidParams(
         "Unknown local Kaijan tool. Use tools/list to discover supported tool names."
       );
@@ -56878,11 +58395,29 @@ function createCapabilityMcpServer(session, version4, setup) {
         params._meta,
         AbortSignal.any([extra.signal, lifetime.signal])
       );
+    if (session.agentFeedback?.hasTool(params.name))
+      return session.agentFeedback.invoke(
+        params.name,
+        params.arguments ?? {},
+        params._meta,
+        AbortSignal.any([extra.signal, lifetime.signal])
+      );
+    if (session.configurations?.hasTool(params.name))
+      return session.configurations.invoke(
+        params.name,
+        params.arguments ?? {},
+        params._meta
+      );
     if (session.issues?.hasTool(params.name))
       return session.issues.invoke(
         params.name,
         params.arguments ?? {},
         params._meta,
+        AbortSignal.any([extra.signal, lifetime.signal])
+      );
+    if (session.projectHistory?.hasTool(params.name))
+      return session.projectHistory.invoke(
+        params.arguments ?? {},
         AbortSignal.any([extra.signal, lifetime.signal])
       );
     if (params.name === "loki_report_rendered" && session.forRequest && (typeof params._meta?.threadId !== "string" || !params._meta.threadId.trim())) {
@@ -56908,7 +58443,12 @@ function createCapabilityMcpServer(session, version4, setup) {
       error63.message = "This chat cannot access the selected work. No new work started. Return to the original chat and retained result; do not replay work with uncertain effects.";
       throw error63;
     }
-    const scopedCatalog = selected.catalog;
+    const failureDiagnostics = observeToolFailures(
+      selected.catalog,
+      params.name,
+      diagnosticOwner
+    );
+    const scopedCatalog = failureDiagnostics.catalog;
     if (hasCustomerPreparationOutput(params.name)) {
       const result2 = await invokeCustomerPreparation(
         scopedCatalog,
@@ -56938,12 +58478,26 @@ function createCapabilityMcpServer(session, version4, setup) {
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
+      const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
+        params.name,
+        resolved2.arguments,
+        params._meta
+      ) : resolved2;
+      if (configured2.error) {
+        const failure6 = customerPlanningConfigurationFailure(configured2.error);
+        return {
+          isError: true,
+          structuredContent: failure6,
+          content: [{ type: "text", text: JSON.stringify(failure6) }]
+        };
+      }
       const result2 = await invokeCustomerAdvisory(
         scopedCatalog,
         params.name,
-        resolved2.arguments,
+        configured2.arguments,
         invocation,
         {
+          connectionOnly: selected.scope?.kind === "connection",
           proposalReaders: Object.fromEntries(
             [
               [
@@ -57004,6 +58558,9 @@ function createCapabilityMcpServer(session, version4, setup) {
           verifyCustomerRiskEvidence: selected.services?.reports?.verifyCustomerRiskEvidence?.bind(
             selected.services.reports
           ),
+          verifyCustomerRelatedSource: selected.services?.reports?.verifyCustomerRelatedSource?.bind(
+            selected.services.reports
+          ),
           readReportView: typeof selected.services?.reports?.readTestPlanView === "function" ? (reportId, invocation) => selected.services.reports.readTestPlanView(
             reportId,
             invocation?.signal
@@ -57038,6 +58595,10 @@ function createCapabilityMcpServer(session, version4, setup) {
       };
     }
     if (hasCustomerExecutionOutput(params.name)) {
+      if (!session.configurations && ["loki_runner_execute", "loki_test_execute"].includes(params.name) && Object.hasOwn(params.arguments ?? {}, "configurationUsed"))
+        throw invalidParams(
+          "configurationUsed is internal Run metadata. Omit it from this request."
+        );
       const invocation = {
         signal: AbortSignal.any([extra.signal, lifetime.signal])
       };
@@ -57046,22 +58607,42 @@ function createCapabilityMcpServer(session, version4, setup) {
         params.arguments ?? {},
         invocation,
         {
+          requireSavedPlan: session.identity?.host !== "claude_code",
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
         }
       );
       if (resolved2.error) {
+        failureDiagnostics.diagnose({
+          diagnosticReason: resolved2.diagnosticReason
+        });
         return {
           isError: true,
           structuredContent: resolved2.error,
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
+      const configured2 = session.configurations ? await session.configurations.prepareExecution(
+        params.name,
+        resolved2.arguments,
+        params._meta
+      ) : resolved2;
+      if (configured2.error) {
+        const failure6 = customerConfigurationFailure(
+          params.name,
+          configured2.error
+        );
+        return {
+          isError: true,
+          structuredContent: failure6,
+          content: [{ type: "text", text: JSON.stringify(failure6) }]
+        };
+      }
       const result2 = await invokeCustomerExecution(
         scopedCatalog,
         params.name,
-        resolved2.arguments,
+        configured2.arguments,
         invocation,
         {
           readAssessmentPresentation: selected.services?.suppliedEvidence?.readCustomerAssessment?.bind(
@@ -57114,12 +58695,12 @@ function createCapabilityMcpServer(session, version4, setup) {
     };
     let scopedSetup;
     try {
-      scopedSetup = setup?.tools.some((tool) => tool.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
+      scopedSetup = setup?.tools.some((tool2) => tool2.name === params.name) ? setup.forScope ? await setup.forScope(selected) : setup : void 0;
     } catch {
       return setupFailure();
     }
     if (scopedSetup) setupInstances.add(scopedSetup);
-    if (scopedSetup?.tools.some((tool) => tool.name === params.name)) {
+    if (scopedSetup?.tools.some((tool2) => tool2.name === params.name)) {
       let pending;
       try {
         pending = scopedSetup.invoke(
@@ -57130,7 +58711,7 @@ function createCapabilityMcpServer(session, version4, setup) {
             origin: "codex-local-mcp",
             requestId: extra.requestId,
             tool: params.name,
-            argumentsSha256: digest4(params.arguments ?? {}),
+            argumentsSha256: digest18(params.arguments ?? {}),
             scope: selected.scope
           }
         );
@@ -57232,12 +58813,12 @@ function createCapabilityMcpServer(session, version4, setup) {
 
 // apps/codex-plugin/src/local-mcp.mjs
 async function createLocalMcpServer(session, version4, setup, telemetry) {
-  let server = createCapabilityMcpServer(session, version4, setup);
+  let server = createCapabilityMcpServer(session, version4, setup, telemetry);
   const registration = capabilityMcpRegistration(session, setup);
   if (telemetry && !telemetry.instrument(server, registration.tools, {
     observabilityControls: registration.observabilityControls
   })) {
-    server = createCapabilityMcpServer(session, version4, setup);
+    server = createCapabilityMcpServer(session, version4, setup, telemetry);
   }
   return server;
 }
@@ -57252,13 +58833,13 @@ function localStateArguments(directory) {
 }
 
 // apps/codex-plugin/src/local-entry.mjs
-async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext } = {}) {
+async function installedLocalMcp(createSetupPorts, { runnerValidation, applicationContext, createHostSurface } = {}) {
   let setup, server, telemetry, startupTelemetry, session, close;
-  let startupStage = "verify_payload";
+  let startupStage = "import_library";
   const startupStarted = performance5.now();
   const root = resolve3(import.meta.dirname, "..");
-  const build = JSON.parse(
-    await readFile3(join9(root, "loki-build.json"), "utf8")
+  const build = resolveRuntimeBuild(
+    JSON.parse(await readFile3(join10(root, "loki-build.json"), "utf8"))
   );
   const host = pluginHost(build);
   if (host === "claude_code") claudeSessionId(process7.env);
@@ -57290,6 +58871,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
       {
         runnerValidation,
         applicationContext,
+        ...createHostSurface ? { createHostSurface } : {},
         lifecycleFactory: () => createBoundLifecycle(telemetry).observe,
         onStartupStage: (stage2) => {
           startupStage = stage2;
@@ -57303,13 +58885,14 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
       let pending = setupByScope.get(scope.data);
       if (pending) return pending;
       pending = (async () => {
-        const directory = join9(scope.data, "setup");
+        const directory = join10(scope.data, "setup");
         const ports = createSetupPorts ? await createSetupPorts(directory) : {};
         let scopedSetup;
         try {
           scopedSetup = await createSetupTools({
             directory,
             ...ports,
+            ui: session.setupCard,
             createTelemetry: () => createBoundLifecycle(telemetry).setup
           });
         } catch (error63) {
@@ -57419,7 +59002,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
 
 // apps/codex-plugin/src/local-mcp-entry.mjs
 installedLocalMcp().catch((error63) => {
-  const failure6 = error63 instanceof BrokerRestartRequiredError ? { code: error63.code, message: error63.message } : {
+  const failure6 = error63 instanceof BrokerRestartRequiredError || error63?.code === "runtime_profile_invalid" ? { code: error63.code, message: error63.message } : {
     code: "local_mcp_unavailable",
     message: "The fixed plugin profile, payload or private state could not be validated."
   };

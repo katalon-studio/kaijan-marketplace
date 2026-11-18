@@ -161,7 +161,9 @@ export async function assessPreparedSuppliedEvidence(
     result_persisted: false,
     continuation_allowed: false,
     limitations:
-      "Supplied reports and evidence are unauthenticated. Exact citations and record membership do not establish semantic truth, target execution or acceptance. Internal native transport labels retain historical planner wording.",
+      prepared.assessment_instructions_version >= 14
+        ? "Pass reports no incorrect behavior found in the checks performed. Fail reports incorrect behavior found. Unrun checks and coverage limits remain separate. Internal native transport labels retain historical planner wording."
+        : "Supplied reports and evidence are unauthenticated. Exact citations and record membership do not establish semantic truth, target execution or acceptance. Internal native transport labels retain historical planner wording.",
   };
   try {
     if (calls) {

@@ -44,13 +44,14 @@ export interface HostBinding {
 export interface BoundDocument {
   sourceId: string;
   text: string;
-  uri: string | null;
-  revision: string | null;
-  capturedAt: string | null;
-  attribution: string;
-  provenance: { [key: string]: Json };
+  /** Supplied metadata is optional; exact text and its source ID are retained. */
+  uri?: string | null;
+  revision?: string | null;
+  capturedAt?: string | null;
+  attribution?: string;
+  provenance?: { [key: string]: Json };
   /** Optional historical/raw artifact identity; null means unknown. */
-  rawArtifactSha256: string | null;
+  rawArtifactSha256?: string | null;
 }
 export interface UnavailableDocument {
   sourceId: string;

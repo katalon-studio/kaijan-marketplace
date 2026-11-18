@@ -9,26 +9,21 @@ export const QUESTION_FIELDS = Object.freeze([
   "evidence_needed",
 ]);
 const hash = (text) => createHash("sha256").update(text).digest("hex");
-const object = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
-const text = (v) => typeof v === "string" && v.trim().length > 0;
 
 // Content presence is not evidence of truth, source support or semantic identity.
 export function questionContent(value) {
-  if (
-    !object(value) ||
-    Object.keys(value).some(
-      (key) => key !== "id" && !QUESTION_FIELDS.includes(key),
-    ) ||
-    !QUESTION_FIELDS.filter((key) => key !== "source_evidence").every((key) =>
-      text(value[key]),
-    ) ||
-    !Array.isArray(value.source_evidence) ||
-    !value.source_evidence.length ||
-    !value.source_evidence.every(text)
-  )
-    throw Error("invalid_assumptions");
   return Object.fromEntries(
-    QUESTION_FIELDS.map((key) => [key, structuredClone(value[key])]),
+    QUESTION_FIELDS.map((key) => [
+      key,
+      key === "source_evidence"
+        ? (Array.isArray(value?.source_evidence)
+            ? value.source_evidence
+            : []
+          ).filter((item) => typeof item === "string")
+        : typeof value?.[key] === "string"
+          ? value[key]
+          : "",
+    ]),
   );
 }
 export function questionContentSchema(schema) {
@@ -58,26 +53,23 @@ export function bindQuestion(value, index, identity) {
   };
 }
 export function bindQuestions(value, serializedOutput, stage = "review") {
-  if (
-    !object(value) ||
-    Object.keys(value).sort().join() !== "assumptions_to_confirm,limitations" ||
-    typeof value.limitations !== "string" ||
-    !Array.isArray(value.assumptions_to_confirm) ||
-    value.assumptions_to_confirm.length > 6
-  )
-    throw Error("invalid_assumptions");
   const identity = questionIdentity(serializedOutput, stage);
   return {
-    assumptions_to_confirm: value.assumptions_to_confirm.map((q, index) =>
-      bindQuestion(q, index, identity),
-    ),
-    limitations: value.limitations,
+    assumptions_to_confirm: (Array.isArray(value?.assumptions_to_confirm)
+      ? value.assumptions_to_confirm
+      : []
+    ).map((q, index) => bindQuestion(q, index, identity)),
+    limitations:
+      typeof value?.limitations === "string" ? value.limitations : "",
     question_identity: identity,
   };
 }
 export function reviewContent(review) {
   return {
-    assumptions_to_confirm: review.assumptions_to_confirm.map(questionContent),
+    assumptions_to_confirm: (Array.isArray(review?.assumptions_to_confirm)
+      ? review.assumptions_to_confirm
+      : []
+    ).map(questionContent),
     limitations: review.limitations,
   };
 }

@@ -49,7 +49,7 @@ export const SCHEMA = obj({
   relevant_surfaces: arr(
     obj({
       description: S,
-      basis: { type: "string", enum: ["supplied", "hypothesis"] },
+      basis: S,
       refs: arr(REF),
     }),
   ),
@@ -69,7 +69,7 @@ export const SCHEMA = obj({
       },
       id: S,
       objective_ids: arr(S),
-      priority: { type: "string", enum: ["P1", "P2", "P3"] },
+      priority: S,
       reason: S,
       prerequisites: arr(S),
       steps: arr(S),

@@ -2,8 +2,8 @@
   "schema": "loki.application-context-package/1",
   "contract": "engineering.bound-documents/1-draft1",
   "representation": "engineering-bound-documents-contract/1-draft1",
-  "sourceImplementationSha256": "0f9f14e15e861884981fb66756d933369a27d476ce1cc46abb4423ca82e297de",
-  "packagedImplementationSha256": "acb4254ef6ee452a3c0d3ffbf19aa5b7463aa4f134fa9a71b0a0beac60e3c5ee",
+  "sourceImplementationSha256": "d01f4adf0d830f615e4313410c94b5cfc18a33334c0e0df5477836be5f491c34",
+  "packagedImplementationSha256": "9700c3a6aee4b53a759993822f528199050f26c95b428a653178770bceaa2588",
   "implementationIdentityFiles": [
     "index.mjs",
     "store.mjs",
@@ -12,10 +12,10 @@
     "../component-contracts/index.mjs"
   ],
   "sourceInputs": {
-    "packages/application-context-query/index.mjs": "7b10bdaa367ac76d0b5a73158e5646b8873aa4ca9334688bfc9a9456b4b59c93",
+    "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
-    "packages/application-context-query/index.d.mts": "bb37a3f0f489e19c74c67ba0a9b008585be40360ccefbcc818f0a43167b45484",
-    "packages/application-context-query/runner-context.mjs": "b68149483091e6f44c3d56fee9530128c4e77889a387d45c280e5cf74a08b990",
+    "packages/application-context-query/index.d.mts": "495e4bf50f0cd65f620195c6adaf4490d46da2cbcae1eeb8219317ade1fd7c6f",
+    "packages/application-context-query/runner-context.mjs": "882558d158db1136724220058ca4d2556aab0970d137171b59d5e51e6e1aa077",
     "packages/application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "packages/source-adapters/index.mjs": "857b44d2be5e993d6c7589246bf4d3d53bfc1324a6081047a3886fec9b7280e8",
     "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf"
@@ -45,7 +45,7 @@
       ],
       "transformation": "esbuild ESM/node24 bundle with named re-exports and tree shaking; maintained implementations, no source rewrite; source-adapters shares staged component-contracts",
       "sourceSha256": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf",
-      "packagedSha256": "b320fa5cf7260fe48f1da6816ace273049c34a60ca2b59427e3745cd44256bf3",
+      "packagedSha256": "e4ec20ae80d337b122098e874aa6db90efe02bb2c1a3e3611f557910930ff7c0",
       "inputs": {
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js": "bb08133b11b478c8e715038fff26ebea204d7fd5443fba31fe138b142d202efb",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js": "c7ce485c97263e42568d16b11bb4a90133221c7e807498a9273d70f41ba16ef6",
@@ -142,6 +142,7 @@
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/coerce.js": "fb2efe3b6eacc475c77cbb571b5fb8650d92a10f316dc869e49b722973d83c3c",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/external.js": "c6b584ae70ba4e7132b2cd78c23ea4ecedc9828abf999edee312372e1fb453d6",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/index.js": "32e7efd49a94a765f6d10a1a0a3c02c50c246def17c80c6f0225f85525d98505",
+        "packages/contracts/dist/telemetry.js": "8c903b5a44238238f8d208fa5b93091a848de3d730a2e13ffd922cc09d8c6a0f",
         "packages/contracts/dist/recording.js": "a84199595edeeeccd78dca485f097d1d493b391f660314a8327eb66dc0639480",
         "packages/contracts/dist/work-items.js": "4c69340cb5d3fee434dc8e00aa88c205163393a2c943143c85849ac74fd66c22",
         "packages/contracts/dist/source.js": "f4b9a54f454a3705f20f016b0d26b58d9b1193a747a0a87ac7d4cf9a491f0b57",
@@ -157,20 +158,22 @@
         "packages/contracts/dist/recording-upload.js": "e9a3dffc8aed130e0fc41015b301818a3f10696fea37388a74961342e4b9d81c",
         "packages/contracts/dist/github.js": "49abb0537efc6c87164a0c3fe7f61929a587aac6d4c5f22fbc93e2b78400bc19",
         "packages/contracts/dist/product-feedback.js": "5a1fdaa5178d7839dd92947bfcb9eda6e5d9890e664dead8f5fab3d93519fb73",
-        "packages/contracts/dist/product-issue.js": "2421a483b5ce6714871f28e33e989cd7f3f79ce8e8e421164939630858e53dd1",
+        "packages/contracts/dist/agent-feedback.js": "76c524538af89b07926c1efe23546a037a8f8d38755e9cf6f105d8c0992b9b50",
+        "packages/contracts/dist/product-issue.js": "b21f3a4bba3dea3497daf9e128718287a1e3794391ba0c5f88cb661cc00009e4",
+        "packages/contracts/dist/app-model.js": "e0bd0d0a569cfb6097eef32da003e69cdcd6556cb34ec6ea3732c6574af71e79",
         "packages/contracts/dist/workspace-customer.js": "6dfbc5f0e18fe2b80dbb2b194cc0ddfc1d5d1334cb2e32c8530a8f873e3d7614",
-        "packages/contracts/dist/index.js": "679197f055b6ecb415eac8449fd6d042b460b384a9350db39814d54a0bdb229b",
+        "packages/contracts/dist/index.js": "56ce4bbd10da85d9d9547aa8f55001eda2e8e5a995c7da0b0d30af405e828db2",
         "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf"
       }
     }
   ],
   "files": {
-    "application-context-query/index.mjs": "7b10bdaa367ac76d0b5a73158e5646b8873aa4ca9334688bfc9a9456b4b59c93",
+    "application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
-    "application-context-query/index.d.mts": "bb37a3f0f489e19c74c67ba0a9b008585be40360ccefbcc818f0a43167b45484",
-    "application-context-query/runner-context.mjs": "b68149483091e6f44c3d56fee9530128c4e77889a387d45c280e5cf74a08b990",
+    "application-context-query/index.d.mts": "495e4bf50f0cd65f620195c6adaf4490d46da2cbcae1eeb8219317ade1fd7c6f",
+    "application-context-query/runner-context.mjs": "882558d158db1136724220058ca4d2556aab0970d137171b59d5e51e6e1aa077",
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "source-adapters/index.mjs": "eb0494c7d6f2c77cb848045617ca0ff5dd687802068c24fee610158c6646aa4d",
-    "component-contracts/index.mjs": "b320fa5cf7260fe48f1da6816ace273049c34a60ca2b59427e3745cd44256bf3"
+    "component-contracts/index.mjs": "e4ec20ae80d337b122098e874aa6db90efe02bb2c1a3e3611f557910930ff7c0"
   }
 }

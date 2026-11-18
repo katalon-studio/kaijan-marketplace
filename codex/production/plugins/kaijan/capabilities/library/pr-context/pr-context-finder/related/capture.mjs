@@ -418,7 +418,7 @@ export async function capture(
     max_depth: 2,
     max_additional_literal_fetches: 2,
     ambiguous: false,
-    selection: "native_jev_opt_in",
+    selection: "native_decisions_opt_in",
     selection_limits: PARENT_LIMITS,
     judgments: [],
     omitted: [],
@@ -1174,7 +1174,7 @@ export async function capture(
         key: item.key,
         repo: item.repo,
         number: item.number,
-        match_basis: "native_jev_same_work_candidate",
+        match_basis: "native_decisions_same_work_candidate",
         identity_verified: false,
       });
       parents.push({ item, kept, events, evidenceId });

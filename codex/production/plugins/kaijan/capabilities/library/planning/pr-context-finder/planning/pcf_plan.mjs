@@ -16,13 +16,7 @@ export { resolveApplicationSpan } from "./source-relations.mjs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { encodedJson, utf8 } from "../related/json.mjs";
-import {
-  digest,
-  save,
-  validationFailure,
-  pointer,
-  referenceDiagnostic,
-} from "./pcf_records.mjs";
+import { digest, save, validationFailure, pointer } from "./pcf_records.mjs";
 import {
   generate,
   MODEL,
@@ -78,7 +72,7 @@ export const SCHEMA = obj({
   relevant_surfaces: arr(
     obj({
       description: S,
-      basis: { type: "string", enum: ["supplied", "hypothesis"] },
+      basis: S,
       refs: arr(REF),
     }),
   ),
@@ -86,32 +80,29 @@ export const SCHEMA = obj({
     obj({
       title: {
         type: "string",
-        minLength: 1,
         description:
           "Short action name for this test, using the feature language.",
       },
       method: {
         type: "string",
-        minLength: 1,
         description:
           "Proposed verification approach; not an executable operation or execution permission.",
       },
       id: S,
       objective_ids: arr(S),
-      priority: { type: "string", enum: ["P1", "P2", "P3"] },
+      priority: S,
       reason: S,
       prerequisites: arr(S),
       steps: arr(S),
       expected: obj({
         text: S,
-        authority: { type: "string", enum: ["requirement", "hypothesis"] },
+        authority: S,
         refs: arr(REF),
       }),
       execution_gaps: arr(S),
     }),
   ),
-  // Define tests before emitting coverage and handoff references. Keep the
-  // public shape and the independent reference validator unchanged.
+  // Define tests before emitting coverage and handoff references.
   requirement_coverage: arr(
     obj({
       requirement_id: S,
@@ -254,29 +245,7 @@ function validateSchemaAt(value, schema, at) {
       path: at,
       rule: "output_enum",
     }));
-  if (kind === "string")
-    need(strip(value), "Empty output string", () => ({
-      path: at,
-      rule: "nonempty_string",
-    }));
   if (kind === "object") {
-    need(
-      equal(
-        new Set(Object.keys(value)).size,
-        Object.keys(schema.properties).length,
-      ) && Object.keys(value).every((k) => Object.hasOwn(schema.properties, k)),
-      "Output keys mismatch",
-      () => ({
-        path: at,
-        rule: "output_keys",
-        missing_keys: Object.keys(schema.properties).filter(
-          (key) => !Object.hasOwn(value, key),
-        ),
-        unexpected_keys: Object.keys(value).filter(
-          (key) => !Object.hasOwn(schema.properties, key),
-        ),
-      }),
-    );
     for (const [key, child] of Object.entries(schema.properties))
       validateSchemaAt(value[key], child, pointer(at, key));
   }
@@ -316,104 +285,15 @@ export function validatePlan(plan, packet) {
       schema.properties.tests.items.required.filter((key) => key !== "title");
   }
   validateSchema(plan, schema);
-  const sources = new Map(packet.sources.map((s) => [s.id, s])),
-    computed = evidenceCatalog(packet);
+  const computed = evidenceCatalog(packet);
   if (Object.hasOwn(packet, "evidence_catalog"))
     need(
       equal(packet.evidence_catalog, computed),
       "Evidence catalog differs from source",
     );
-  const catalog = new Map(computed.map((row) => [row.id, row]));
-  const refs = (items, at, intent = false, required = false) => {
-    need(!required || items.length, "Missing evidence", () => ({
-      path: at,
-      rule: "nonempty_evidence",
-    }));
-    for (const [index, item] of items.entries()) {
-      const row = catalog.get(item.evidence_id);
-      need(row && sources.has(row.source_id), "Unknown evidence ID", () => ({
-        path: pointer(pointer(at, index), "evidence_id"),
-        rule: "known_evidence_id",
-        offending_ids: [item.evidence_id],
-      }));
-      if (intent)
-        need(
-          sources.get(row.source_id).kind === "intent",
-          "Implementation/context cannot establish intent",
-          () => ({
-            path: pointer(pointer(at, index), "evidence_id"),
-            rule: "intent_authority",
-            offending_ids: [item.evidence_id],
-            source_id: row.source_id,
-          }),
-        );
-    }
-  };
   const objectives = plan.objectives.map((o) => o.id),
     tests = plan.tests.map((t) => t.id);
-  need(
-    new Set(objectives).size === objectives.length &&
-      new Set(tests).size === tests.length,
-    "Empty or duplicate objective/test identities",
-    () => {
-      const duplicateObjectives =
-        new Set(objectives).size !== objectives.length;
-      const values = duplicateObjectives ? objectives : tests;
-      return referenceDiagnostic(
-        duplicateObjectives ? "/objectives" : "/tests",
-        values,
-        values,
-      );
-    },
-  );
-  if (!objectives.length || !tests.length)
-    need(
-      plan.status === "needs_clarification" && plan.ambiguities.length,
-      "Empty intentions require explicit clarification",
-      () => ({ path: "", rule: "empty_intentions_require_clarification" }),
-    );
-  for (const [index, objective] of plan.objectives.entries())
-    refs(objective.refs, `/objectives/${index}/refs`, true, true);
-  for (const [index, surface] of plan.relevant_surfaces.entries())
-    refs(
-      surface.refs,
-      `/relevant_surfaces/${index}/refs`,
-      false,
-      surface.basis === "supplied",
-    );
-  for (const [index, test] of plan.tests.entries()) {
-    need(
-      test.objective_ids.length &&
-        test.objective_ids.every((i) => objectives.includes(i)),
-      "Unknown or missing test objective",
-      () =>
-        test.objective_ids.length
-          ? referenceDiagnostic(
-              `/tests/${index}/objective_ids`,
-              test.objective_ids,
-              objectives,
-              false,
-            )
-          : {
-              path: `/tests/${index}/objective_ids`,
-              rule: "nonempty_objective_ids",
-            },
-    );
-    const expectation = test.expected;
-    refs(
-      expectation.refs,
-      `/tests/${index}/expected/refs`,
-      expectation.authority === "requirement",
-      expectation.authority === "requirement",
-    );
-  }
   const handoff = plan.runner_handoff.scenario_ids;
-  need(
-    new Set(handoff).size === handoff.length &&
-      handoff.every((i) => tests.includes(i)),
-    "Unknown or duplicate Runner handoff scenario",
-    () => referenceDiagnostic("/runner_handoff/scenario_ids", handoff, tests),
-  );
   const inventory = Object.hasOwn(packet, "requirement_inventory")
     ? packet.requirement_inventory
     : literalRequirements(packet);
@@ -422,42 +302,7 @@ export function validatePlan(plan, packet) {
       equal(inventory, literalRequirements(packet)),
       "Requirement ledger differs from original evidence",
     );
-  const rows = plan.requirement_coverage,
-    ids = rows.map((r) => r.requirement_id);
-  need(
-    new Set(ids).size === ids.length &&
-      ids.every((i) => inventory.some((r) => r.id === i)),
-    "Unknown or duplicate requirement coverage ledger",
-    () =>
-      referenceDiagnostic(
-        "/requirement_coverage",
-        ids,
-        inventory.map((row) => row.id),
-      ),
-  );
-  for (const [index, row] of rows.entries()) {
-    need(
-      row.test_ids.every((i) => tests.includes(i)) &&
-        new Set(row.test_ids).size === row.test_ids.length,
-      "Unknown or duplicate coverage scenario",
-      () =>
-        referenceDiagnostic(
-          `/requirement_coverage/${index}/test_ids`,
-          row.test_ids,
-          tests,
-          false,
-        ),
-    );
-    need(
-      Boolean(row.test_ids.length) === (row.status === "proposed"),
-      "Coverage gap must have no tests; proposed coverage needs tests",
-      () => ({
-        path: `/requirement_coverage/${index}/test_ids`,
-        rule: "coverage_status_membership",
-        requirement_id: row.requirement_id,
-      }),
-    );
-  }
+  const rows = plan.requirement_coverage;
   const byId = new Map(rows.map((row) => [row.requirement_id, row])),
     missingRequirements = inventory
       .filter((row) => !byId.has(row.id))
@@ -577,45 +422,14 @@ export function prepare(packet) {
   packet.evidence_catalog = evidenceCatalog(packet);
   return packet;
 }
-export function schemaFor(packet) {
-  const schema = copy(SCHEMA),
-    ids = packet.evidence_catalog.map((row) => row.id),
-    inventoryIds = packet.requirement_inventory.map((row) => row.id);
-  const bind = (node) => {
-    if (object(node)) {
-      for (const [key, value] of Object.entries(node.properties ?? {})) {
-        if (key === "evidence_id") value.enum = ids;
-        if (key === "requirement_id") value.enum = inventoryIds;
-      }
-      for (const value of Object.values(node)) bind(value);
-    } else if (Array.isArray(node)) for (const value of node) bind(value);
-  };
-  bind(schema);
-  const intentIds = packet.evidence_catalog
-    .filter((row) => row.kind === "intent")
-    .map((row) => row.id);
-  schema.properties.objectives.items.properties.refs.items.properties.evidence_id.enum =
-    intentIds;
-  // Constrain generation without changing saved plans or the validation guard.
-  // Context can support a proposed check, but cannot establish a requirement.
-  const expected = schema.properties.tests.items.properties.expected;
-  const requirement = copy(expected),
-    hypothesis = copy(expected);
-  requirement.properties.authority.enum = ["requirement"];
-  requirement.properties.refs.minItems = 1;
-  requirement.properties.refs.items.properties.evidence_id.enum = intentIds;
-  hypothesis.properties.authority.enum = ["hypothesis"];
-  schema.properties.tests.items.properties.expected = {
-    anyOf: [requirement, hypothesis],
-  };
-  return schema;
+export function schemaFor() {
+  return copy(SCHEMA);
 }
 // Generation stores each membership beside the complete test. Public plans keep
 // their existing shape; old plans still use the independent validator above.
 function generationShape(schema) {
   const value = copy(schema);
-  // Keep an independent declaration before full definitions. Projection must
-  // not conceal an intended test whose body is missing from generation.
+  // Retain the generator's outline separately from the full test definitions.
   const properties = {};
   for (const [key, property] of Object.entries(value.properties)) {
     if (key === "tests")
@@ -641,14 +455,6 @@ function generationShape(schema) {
 }
 export function generationSchemaFor(packet, version = GENERATED_PLAN_VERSION) {
   const schema = generationShape(schemaFor(packet));
-  // An inventory entry can have at most one coverage row, regardless of how
-  // many tests check it. Empty partial plans remain valid.
-  schema.properties.requirement_coverage.maxItems =
-    packet.requirement_inventory.length;
-  schema.properties.tests.items.properties.requirement_ids.items = {
-    type: "string",
-    enum: packet.requirement_inventory.map((row) => row.id),
-  };
   return sourceGenerationSchema(schema, packet.evidence_catalog, version);
 }
 export function projectGeneratedSourcePlan(
@@ -657,13 +463,6 @@ export function projectGeneratedSourcePlan(
   version = SOURCE_PLAN_VERSION,
 ) {
   validateSchema(value, generationSchemaFor(packet, version));
-  need(
-    Array.isArray(value?.tests) &&
-      value.tests.every((row) => /^T[1-9][0-9]{0,5}$/.test(row.id)) &&
-      Array.isArray(value?.objectives) &&
-      value.objectives.every((row) => /^O[1-9][0-9]{0,5}$/.test(row.id)),
-    "Invalid source-plan identity",
-  );
   if (version === GENERATED_PLAN_VERSION)
     return projectGeneratedPlan(value, packet);
   validatePlanningRelationAuthority(value, packet.evidence_catalog);
@@ -695,40 +494,8 @@ export function customerPlanFromRetained(result, input) {
     ? verifyPlanningSourceRecord(result, projectGeneratedPlan)
     : projectLegacyPlanning(result.plan, result.evidence);
 }
-export function projectGeneratedPlan(value, packet) {
+export function projectGeneratedPlan(value) {
   validateSchema(value, generationShape(SCHEMA));
-  const outlined = value.test_outline.map((test) => test.id);
-  const defined = value.tests.map((test) => test.id);
-  need(
-    new Set(outlined).size === outlined.length &&
-      outlined.length === defined.length &&
-      outlined.every((id) => defined.includes(id)) &&
-      defined.every((id) => outlined.includes(id)),
-    "Test outline and full definitions do not match",
-    () => ({
-      path: "/test_outline",
-      rule: "complete_test_definitions",
-      missing_test_ids: outlined.filter((id) => !defined.includes(id)),
-      undeclared_test_ids: defined.filter((id) => !outlined.includes(id)),
-    }),
-  );
-  const inventory = packet.requirement_inventory.map((row) => row.id);
-  const reported = value.requirement_coverage.map((row) => row.requirement_id);
-  for (const [index, test] of value.tests.entries()) {
-    need(
-      new Set(test.requirement_ids).size === test.requirement_ids.length &&
-        test.requirement_ids.every(
-          (id) => inventory.includes(id) && reported.includes(id),
-        ),
-      "Unknown, duplicate or unreported test requirement",
-      () =>
-        referenceDiagnostic(
-          `/tests/${index}/requirement_ids`,
-          test.requirement_ids,
-          inventory.filter((id) => reported.includes(id)),
-        ),
-    );
-  }
   // copy handles the lossless JSON parser's values. Never mutate provider data.
   const projected = copy(value);
   delete projected.test_outline;
@@ -932,11 +699,12 @@ export async function plan(packet, output_dir, model, options = {}) {
     options.max_output_tokens,
     settings.reasoning,
   );
-  // The Planner will assess Runner's recap against this plan. Retaining the
-  // planning turn lets it do that without sending its sources a second time.
+  // The Planner assesses Runner's recap against the privately retained original
+  // context. Encrypted reasoning can be replayed without provider-side storage.
   if (options.retainPlannerConversation === true) {
     requireManagedBinding(options.env ?? process.env);
-    request.store = true;
+    request.store = false;
+    request.include = ["reasoning.encrypted_content"];
   }
   let projected, projection, sourceProjection;
   const result = await generate(

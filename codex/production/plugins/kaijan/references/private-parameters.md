@@ -21,8 +21,7 @@ or a chat message. If the approved environment is not available, report that
 login setup is needed; do not search unrelated credentials.
 
 The command prints `privateParams` references and host/field metadata only. Pass
-the returned `privateParams` unchanged to `loki_test_execute` or
-`loki_runner_execute`. Keep nonsecret inputs in `params`. Do not supply the same
+the returned `privateParams` unchanged to `loki_test_execute`. Keep nonsecret inputs in `params`. Do not supply the same
 name in both. Set `target.allowedHosts` to the approved app and sign-in hosts.
 The initial URL and all target hosts must be in the saved binding.
 

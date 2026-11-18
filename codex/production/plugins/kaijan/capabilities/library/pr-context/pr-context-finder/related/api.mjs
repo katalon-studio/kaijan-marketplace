@@ -344,13 +344,16 @@ async function runEngine(
                 "unknown_cost_calls",
               ])
                 coverage[key] += row[key];
-              coverage.content_classification = coverage.pending_records
-                ? "incomplete"
-                : coverage.jev_classified_records
-                  ? "native_jev"
-                  : coverage.records_examined
-                    ? "deterministic_only"
-                    : "not_started";
+              coverage.content_classification =
+                coverage.batches.some(
+                  (batch) => batch.content_classification === "incomplete",
+                ) || coverage.pending_records
+                  ? "incomplete"
+                  : coverage.jev_classified_records
+                    ? "native_decisions"
+                    : coverage.records_examined
+                      ? "deterministic_only"
+                      : "not_started";
               check(
                 !row.unknown_cost_calls &&
                   !row.unknown_usage_calls &&
@@ -716,6 +719,7 @@ async function runEngine(
       result.comment_filter?.batches.some(
         (b) =>
           b.uncertain ||
+          b.content_classification === "incomplete" ||
           b.unknown_authors ||
           b.unknown_cost_calls ||
           b.unknown_usage_calls,

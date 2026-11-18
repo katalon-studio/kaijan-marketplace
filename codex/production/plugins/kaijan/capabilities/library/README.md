@@ -79,14 +79,12 @@ returns `assessment_image_unavailable` with `requestDispatched: false`, includin
 when an earlier answer is cached. No path or URL can select an image. Direct
 caller-supplied image bytes remain supported. The full native input stays in
 private assessment artifacts. Inspection itself is not submission input.
-The 2 MiB preparation limit applies to the compact packet, including all text
-and metadata. It does not count the base64 copies of retained PNGs. Each PNG
-still has a 2 MiB limit, and assessment accepts at most 256 images. Preparation
-validates the complete native input before returning a compatible packet.
-The complete serialized provider request also has a 32 MiB limit. These are
-local assessment bounds, not provider capacity claims. They allow normal
-Runner sequences beyond 32 screenshots without sending unbounded payloads.
-Preparation does not resize, sample or discard images to meet these limits.
+Preparation, selected-artifact reads and assessment construction retain complete
+input without the former local packet, request, image-count or PNG-size caps.
+Retained-image references stay compact; the assessor resolves their original
+bytes. It does not resize, sample or discard images. Actual provider errors stay
+in their original records. Application/privacy projections, source selection
+and existing malformed-input handling are unchanged by this size cleanup.
 
 Preparation performs no inference, dispatch, new persistence or automatic
 acceptance. It preserves original requirements rather than deriving them from
@@ -107,14 +105,9 @@ For an explicit override, the full packet lists other report-readable PNGs in
 exact artifact selectors. Case capture links keep their original Runner
 attribution. These descriptors do not supply omitted pixels. Normal automatic
 preparation includes the complete supported public artifact sequence. Protected
-pixels and private manifest members stay unavailable. Assessment accepts at
-most 256 PNGs, including original embedded images, and retains packet and provider
-limits. Larger inputs return an explicit incompatibility without sampling or
-dropping evidence. Do not replay the browser to resolve this limit. A smaller
-explicit selection is a separate scoped assessment with explicit omissions;
-complete assessment of arbitrary long Runs is not supported.
-Missing facts and reference/citation failures remain unresolved. Oversized
-packets are explicitly refused rather than truncated; original results remain
+pixels and private manifest members stay unavailable. This size cleanup does not
+claim provider acceptance or complete scenario coverage. Missing facts and
+reference/citation failures remain explicit; original results remain
 available through the returned existing readers. Plugin/runtime identity and
 application identity remain distinct.
 
@@ -203,13 +196,17 @@ correlation only. Runner retains its separate process, native API and traces.
 username/password, including caller-authorized local development targets.
 Provider transport remains HTTPS and browser certificate verification is unchanged.
 
-OpenAI Responses use only `https://api.openai.com/v1/responses` and
-`OPENAI_API_KEY`. This includes Luna medium analysis and Terra low browser/desktop Runner.
-JEV alone uses native OpenRouter System One with `LOKI_OPENROUTER_API_KEY`
-(or `OPENROUTER_API_KEY`); its endpoint is `https://openrouter.ai/api/v1/systemone`.
-The legacy `LOKI_MODEL_PROVIDER=openrouter` selector applies only to JEV.
-OpenAI models never use OpenRouter or LiteLLM; legacy gateway settings cannot
-redirect these calls. Credentials stay separate in the private provider profile.
+OpenAI Responses and Decisions use `OPENAI_API_KEY` for the direct profile.
+Analysis retains Luna medium and Runner keeps its separately selected settings;
+code-owned selection uses `gpt-6-luna` at `/v1/decisions`. Managed calls use the
+existing private broker/Core/LiteLLM connection. Old OpenRouter settings remain
+on disk but no longer configure or reject these calls. Legacy gateway flags
+cannot redirect the native endpoints. System One routes remain for older
+installed packages; fresh selection uses Decisions.
+The optional reuse selector preserves native refusals and provider errors with
+their original response bytes. It does not turn an unavailable answer into a
+`NONE` selection or silently trim offered procedures to the native API's
+255-choice limit.
 `adoptProviderEnvironment(data)` explicitly saves trusted host configuration;
 the library does not invoke it on import. Scoped services resolve the shared
 host profile without copying secrets. No credentials belong in tool arguments.
@@ -219,7 +216,7 @@ receipts; missing usage and uncertain dispatch remain unknown and non-replayable
 ## Source folder maps
 
 `loki_ui_modeler_build_map` accepts an explicit local `folder` and `workItem`.
-It captures plain folders or current Git working-tree contents, uses native JEV
+It captures plain folders or current Git working-tree contents, uses native Decisions
 for path/question relevance before submitting source text, follows relevant source
 and material connections, and awaits the canonical Node producer. Lower-scored and
 uncertain paths remain eligible; there is no application-specific exclusion.
@@ -277,23 +274,85 @@ skill migration. Historical transport tests/docs were deleted under [#2200](http
 Runner IPC, result-reader and Unicode checks remain under `test/` for the
 parent's focused final validation. No new live acceptance is implied by a move.
 
+### Per-question clarification failures
+
+Saved clarification assessment reads retain all selected, hash-bound exchanges.
+Their combined size no longer makes the entire context unavailable at 2 MiB.
+Compose this reader with the complete-input assessment preparation and image
+contract; updating only the first reader leaves the later packet veto in place.
+The exported `assessmentPreparationLimits.packetBytes` remains a historical
+constant for older consumers, not a current full-preparation size guarantee.
+Historical oversize refusals remain readable. Inspection still returns explicit
+excerpts and locators to the complete retained source, not a shortened assessment
+input. Caller answers remain caller context rather than application observations.
+Live pending questions and saved clarification readback preserve the original
+model-authored question with existing secret and private-diagnostic protection.
+A legacy presentation hint cannot replace that wording with a task-excerpt or
+captured-text template. The public view labels the wording unverified; it does
+not assert an application quote or successful navigation. Private-file checks,
+original request identity, saved manifest hashes, question aliases, deadlines
+and same-Run answer delivery remain. The legacy hint and original records stay
+unchanged in private storage. No model instruction or question schema changes.
+
+The parent and Product worker return a correlated private clarification error
+when a live callback fails. They do not turn that one question into an operator
+Stop, abort native work or discard a result the worker returned. An unusable
+reply rejects only its matching pending question. Foreign, duplicate and late
+frames cannot answer another question or cancel its work. Failed callbacks are
+not repeated. Actual Stop, the original deadline and lost-channel outcomes keep
+their separate paths.
+
+Original callback errors and invalid requests are retained in the Run's private
+`runner-clarification-errors.json`; invalid reply frames are retained in
+`runner-clarification-reply-errors.json`. These files use private permissions and
+are not model answers. Diagnostic write failure cannot become a new continuation
+gate. The worker receipt reports whether parent diagnostics were stored.
+
+The private `runner-clarification-error` frame requires the parent, worker and
+clarification bridge from the same package. Notify integration consumers before
+replacing this pair: an older worker cannot handle the per-question error frame.
+This changes no public MCP schema, card identity or automatic retry behavior.
+The next #4529 source increment accepts partial and extended string answers
+through the public answer contract, manager, alias adapter, worker and saved
+protection/assessment readers. Unknown answer labels remain context; missing
+answers are explicit in the native continuation. Extra callback context is
+preserved without forwarding host Run/receipt identifiers. Existing marked
+values remain protected, including unmatched answers. An older consumer can
+still reject or hide these records, so compose these consumers together. No
+new card/resource identity or automatic callback retry is introduced. The
+transition-dependent parse path and remaining full audit are still open.
+
+Context-query reply sends keep the original invocation identity separately from
+the callback's returned value. If IPC cannot send that value, the parent records
+the failure against the original query and sends its existing unresolved error
+while the channel is live. An undefined or unserializable reply cannot leave
+that query waiting after the host callback has returned. The callback is not
+repeated, and independent progress and actual Stop/deadline handling stay intact.
+
 ## Awaited advisory queries
 
 The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Use a fresh requestKey for a distinct read-only attempt after a failure; retain original receipts and unknown charges. A conflict reports request_key_conflict, no dispatch, and a fresh suggested key. Same-key retries recover only their original attempt. Browser/desktop effects retain their independent no-replay boundary. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Live related-work queries reacquire GitHub data by default; an explicit correlation key reads the original receipt, never fresh data. Normal public tools expose only these queries and the completed-answer reader. Direct library start/get/stop APIs remain private compatibility entrypoints. Cancellation of the final coalesced caller aborts native work and waits for settlement; another active caller retains ownership. A process loss preserves a fence for that advisory request identity, with no automatic takeover. A distinct correlation or changed provider configuration can start a separate read-only attempt; it does not rewrite or resolve the original charge. Old input-wide fences are retained as historical artifacts, not global bans on future analysis.
 
+The private retained-output fallback used by operation/query errors preserves a
+complete regular `result.json` reference without the former 256 MiB cutoff. It
+streams the full byte count and SHA-256 through 64 KiB chunks, including growth
+after the initial file stat. The reference explicitly carries
+`semanticAssessment: "not-performed"`; unknown/error state and replay behavior
+remain separate. Missing output remains absent and linked files are not opened.
+
 ## Execution checks, PR sources and report reopening
 
-Use `loki_runner_execute` with optional `checks` (`loki.terminal-checks/1`) authored
-before dispatch and exact Plan/test references. The receiver evaluates the
-original terminal browser observation and persists separate Product verification.
-Only explicit text/snapshot/URL predicates are supported. Native Runner's verdict
-is unchanged. No supplied result flags or prepared report are accepted as an
-execution. See the [input and provenance contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
+Normal execution and assessment use `loki_test_execute` with the complete
+scenario or exact saved Plan/test references. Caller-authored terminal `checks`
+are no longer accepted. Runner observations remain available to the existing
+assessment/report route. Historical verification stays readable with its original
+attribution and bytes; it is not reevaluated.
+See the [saved-result contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
 
 Original authorized GitHub PR/files reads can be retained through
 `loki_context_submit` with `nativeInputs.reportSources` (`loki.report-sources/1`).
-Pass its `sourceContextId` to PR-bound checks and to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
-reads derive check outcomes only from the original stored operation and validate
+Pass its `sourceContextId` to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
+reads preserve historical check outcomes only from the original stored operation and validate
 source, observation, Plan/test IDs and PR head-or-merge revision associations.
 `view:"test-plan"` selects Test plan presentation in the caller's configured UI mode during initial report creation.
 The same scope-bound stores retain inputs, operations and report snapshots.
@@ -325,7 +384,7 @@ prose is not automatically safe, and original capture permission does not grant
 permission to disclose it to a provider.
 
 Inspect the complete preview and approve only if authorized to disclose its text
-to OpenRouter native System One JEV (`typesafe/jev-1.13-20260917`) and execute
+to OpenAI Decisions (`gpt-6-luna`) and execute
 the fresh task. Pass the exact preview IDs and hash with the unchanged current
 request. The binding is checked again against the exact source and current
 request. Full current parameters, target and authorization remain fresh; the
@@ -363,18 +422,18 @@ if (result.schema === "loki.runner-operation/1") {
 ```
 
 The shared catalog exposes the same flow through
-`loki_runner_reuse_prepare`, then `loki_runner_execute`, `loki_runner_get` and
-`loki_runner_stop`. Pass the same objects to `catalog.invoke`. Native browser
-execution uses OpenAI direct Responses with Terra low; JEV selection uses its
-separate OpenRouter provider. A NONE selection, unavailable or stale approved
+`loki_runner_reuse_prepare`, then `loki_test_execute`, `loki_test_get` and
+`loki_test_stop`. The test tools include assessment and a saved report. Pass the same fresh supplied-scenario request to `catalog.invoke`. Native browser
+execution uses OpenAI direct Responses with Terra low; selection uses OpenAI Decisions through the same connection. A NONE selection, unavailable or stale approved
 material, or selector/provider failure retains `reuse-not-executed` with
 `nativeDispatched: false`; there is no fallback execution. A malformed or
 missing approval inside `reuse` fails argument validation before dispatch; omitting
 `reuse` entirely requests ordinary execution. Same key and identical input
 recover the original operation after a lost reply. Never replay an unknown
 operation. Stop covers selection and native execution, but a request to stop does
-not confirm cancellation. The native verdict remains `unverified`; independently
-verify the result. This is a bounded library/catalog integration, with no UI,
+not confirm cancellation. Keep the native execution label separate from the assessment returned by the
+test flow. A direct Node-only execution still requires separately requested verification.
+This is a bounded library/catalog integration, with no UI,
 index, global history or new store, and does not establish installed-plugin
 acceptance.
 

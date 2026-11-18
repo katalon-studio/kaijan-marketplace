@@ -87,7 +87,11 @@ export async function generateWithAgent(
   // The native owner observes Stop even before dispatch and saves its receipt.
   // An SDK-level abort would return early without that record.
   const input = Array.isArray(request.input)
-    ? request.input.map((item) => ({ type: "unknown", providerData: item }))
+    ? request.input.map((item) => ({
+        type: "unknown",
+        providerData: item,
+        ...(item.id ? { id: item.id } : {}),
+      }))
     : request.input;
   await runner.run(agent, input, {
     maxTurns: 1,

@@ -1,12 +1,14 @@
 // Host setup only. Provider secrets are never MCP tool arguments.
 import process from "node:process";
 import { constants } from "node:fs";
-import { open, readFile } from "node:fs/promises";
+import { open } from "node:fs/promises";
 import { homedir } from "node:os";
 import { isAbsolute, join, resolve } from "node:path";
 import { parseEnv, TextDecoder } from "node:util";
 import { pathToFileURL } from "node:url";
 import { bindProfileState } from "./profile-state.mjs";
+
+const packageRoot = resolve(import.meta.dirname, "..");
 
 async function readEnvironment(file) {
   const handle = await open(
@@ -26,15 +28,36 @@ async function readEnvironment(file) {
   }
 }
 
+async function readPackageBuild() {
+  const file = await open(
+    join(packageRoot, "loki-build.json"),
+    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
+  );
+  try {
+    const info = await file.stat();
+    if (!info.isFile() || info.size > 64 * 1024)
+      throw Error("Invalid package build record");
+    return JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(await file.readFile()),
+    );
+  } finally {
+    await file.close();
+  }
+}
+
 export async function providerSettingsCommand(
   root,
   args,
   home = homedir(),
   environment = process.env,
 ) {
-  const build = JSON.parse(
-    await readFile(join(root, "loki-build.json"), "utf8"),
-  );
+  if (resolve(root) !== packageRoot)
+    throw Error("Use this installed package root.");
+  let build = await readPackageBuild();
+  if (build.profileMode === "runtime-env/1") {
+    const { resolveRuntimeBuild } = await import("./runtime-profile.mjs");
+    build = resolveRuntimeBuild(build, environment);
+  }
   if (
     environment.LOKI_CORE_ORIGIN &&
     environment.LOKI_CORE_ORIGIN !== build.coreOrigin
@@ -86,10 +109,10 @@ export async function providerSettingsCommand(
   return {
     route: "direct-openai",
     configuration: diagnostic,
-    jev: {
-      configured: Boolean(provider.LOKI_OPENROUTER_API_KEY),
+    decisions: {
+      configured: Boolean(provider.OPENAI_API_KEY),
       requiredFor:
-        "JEV only; not browser execution or ordinary OpenAI planning",
+        "Optional source selection; uses the same OpenAI credential as planning and browser execution",
     },
     saved: command === "configure",
     connectionTested: false,
