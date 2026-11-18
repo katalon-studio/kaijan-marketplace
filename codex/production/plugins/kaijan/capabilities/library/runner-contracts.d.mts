@@ -1,9 +1,23 @@
 import { z } from "zod";
-export declare const runnerExecutionReportSchema: z.ZodUnion<readonly [z.ZodObject<{
-    effects: z.ZodEnum<{
+export declare const runnerTestResultsSchema: z.ZodArray<z.ZodObject<{
+    test_id: z.ZodString;
+    scenario_finished: z.ZodBoolean;
+    bug_found: z.ZodBoolean;
+    bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+        yes: "yes";
+        no: "no";
+        no_expected_behavior: "no_expected_behavior";
+    }>>;
+    bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+    actual: z.ZodString;
+    execution_details: z.ZodString;
+    warning: z.ZodNullable<z.ZodString>;
+}, z.core.$strip>>;
+export declare const runnerExecutionReportSchema: z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
+    effects: z.ZodOptional<z.ZodEnum<{
         known: "known";
         uncertain: "uncertain";
-    }>;
+    }>>;
     basis: z.ZodLiteral<"model-authored-unverified">;
     responseId: z.ZodString;
     callId: z.ZodString;
@@ -25,26 +39,26 @@ export declare const runnerExecutionReportSchema: z.ZodUnion<readonly [z.ZodObje
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>, z.ZodObject<{
+            }, z.core.$strip>>;
+        }, z.core.$strip>, z.ZodObject<{
             kind: z.ZodLiteral<"read-only-path">;
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             control: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>]>>;
+            }, z.core.$strip>>;
+        }, z.core.$strip>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.execution-report/1">;
     status: z.ZodEnum<{
@@ -63,10 +77,10 @@ export declare const runnerExecutionReportSchema: z.ZodUnion<readonly [z.ZodObje
     }>;
     evidence: z.ZodArray<z.ZodString>;
     basis: z.ZodLiteral<"model-authored-unverified">;
-    effects: z.ZodEnum<{
+    effects: z.ZodOptional<z.ZodEnum<{
         known: "known";
         uncertain: "uncertain";
-    }>;
+    }>>;
     responseId: z.ZodString;
     callId: z.ZodString;
     remainingSteps: z.ZodArray<z.ZodString>;
@@ -84,29 +98,43 @@ export declare const runnerExecutionReportSchema: z.ZodUnion<readonly [z.ZodObje
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>, z.ZodObject<{
+            }, z.core.$strip>>;
+        }, z.core.$strip>, z.ZodObject<{
             kind: z.ZodLiteral<"read-only-path">;
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             control: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>]>>;
+            }, z.core.$strip>>;
+        }, z.core.$strip>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.execution-report/2">;
-}, z.core.$strict>]>;
+    test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        test_id: z.ZodString;
+        scenario_finished: z.ZodBoolean;
+        bug_found: z.ZodBoolean;
+        bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+            yes: "yes";
+            no: "no";
+            no_expected_behavior: "no_expected_behavior";
+        }>>;
+        bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+        actual: z.ZodString;
+        execution_details: z.ZodString;
+        warning: z.ZodNullable<z.ZodString>;
+    }, z.core.$strip>>>;
+}, z.core.$strict>]>, unknown>;
 export declare const runnerRecoverySchema: z.ZodObject<{
     enabled: z.ZodOptional<z.ZodBoolean>;
     used: z.ZodBoolean;
@@ -165,26 +193,26 @@ export declare const runnerClarificationSchema: z.ZodObject<{
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>, z.ZodObject<{
+            }, z.core.$strip>>;
+        }, z.core.$strip>, z.ZodObject<{
             kind: z.ZodLiteral<"read-only-path">;
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             control: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>]>>;
+            }, z.core.$strip>>;
+        }, z.core.$strip>]>>;
     }, z.core.$strict>>;
     schema: z.ZodLiteral<"loki.runner.clarification/1">;
     clarificationId: z.ZodString;
@@ -221,11 +249,11 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
             providerCall: z.ZodNumber;
         }, z.core.$strict>>>;
     }, z.core.$loose>;
-    executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
-        effects: z.ZodEnum<{
+    executionReport: z.ZodOptional<z.ZodNullable<z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
+        effects: z.ZodOptional<z.ZodEnum<{
             known: "known";
             uncertain: "uncertain";
-        }>;
+        }>>;
         basis: z.ZodLiteral<"model-authored-unverified">;
         responseId: z.ZodString;
         callId: z.ZodString;
@@ -247,26 +275,26 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.execution-report/1">;
         status: z.ZodEnum<{
@@ -285,10 +313,10 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
         }>;
         evidence: z.ZodArray<z.ZodString>;
         basis: z.ZodLiteral<"model-authored-unverified">;
-        effects: z.ZodEnum<{
+        effects: z.ZodOptional<z.ZodEnum<{
             known: "known";
             uncertain: "uncertain";
-        }>;
+        }>>;
         responseId: z.ZodString;
         callId: z.ZodString;
         remainingSteps: z.ZodArray<z.ZodString>;
@@ -306,29 +334,43 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.execution-report/2">;
-    }, z.core.$strict>]>>>;
+        test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            test_id: z.ZodString;
+            scenario_finished: z.ZodBoolean;
+            bug_found: z.ZodBoolean;
+            bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+                yes: "yes";
+                no: "no";
+                no_expected_behavior: "no_expected_behavior";
+            }>>;
+            bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+            actual: z.ZodString;
+            execution_details: z.ZodString;
+            warning: z.ZodNullable<z.ZodString>;
+        }, z.core.$strip>>>;
+    }, z.core.$strict>]>, unknown>>>;
     recovery: z.ZodOptional<z.ZodObject<{
         enabled: z.ZodOptional<z.ZodBoolean>;
         used: z.ZodBoolean;
@@ -432,11 +474,11 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                 providerCall: z.ZodNumber;
             }, z.core.$strict>>>;
         }, z.core.$loose>;
-        executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
-            effects: z.ZodEnum<{
+        executionReport: z.ZodOptional<z.ZodNullable<z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
+            effects: z.ZodOptional<z.ZodEnum<{
                 known: "known";
                 uncertain: "uncertain";
-            }>;
+            }>>;
             basis: z.ZodLiteral<"model-authored-unverified">;
             responseId: z.ZodString;
             callId: z.ZodString;
@@ -458,26 +500,26 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                     subject: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     choices: z.ZodArray<z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>>;
-                }, z.core.$strict>, z.ZodObject<{
+                    }, z.core.$strip>>;
+                }, z.core.$strip>, z.ZodObject<{
                     kind: z.ZodLiteral<"read-only-path">;
                     subject: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     control: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     choices: z.ZodArray<z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>>;
-                }, z.core.$strict>]>>;
+                    }, z.core.$strip>>;
+                }, z.core.$strip>]>>;
             }, z.core.$strict>>;
             schema: z.ZodLiteral<"loki.runner.execution-report/1">;
             status: z.ZodEnum<{
@@ -496,10 +538,10 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
             }>;
             evidence: z.ZodArray<z.ZodString>;
             basis: z.ZodLiteral<"model-authored-unverified">;
-            effects: z.ZodEnum<{
+            effects: z.ZodOptional<z.ZodEnum<{
                 known: "known";
                 uncertain: "uncertain";
-            }>;
+            }>>;
             responseId: z.ZodString;
             callId: z.ZodString;
             remainingSteps: z.ZodArray<z.ZodString>;
@@ -517,29 +559,43 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                     subject: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     choices: z.ZodArray<z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>>;
-                }, z.core.$strict>, z.ZodObject<{
+                    }, z.core.$strip>>;
+                }, z.core.$strip>, z.ZodObject<{
                     kind: z.ZodLiteral<"read-only-path">;
                     subject: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     control: z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>;
+                    }, z.core.$strip>;
                     choices: z.ZodArray<z.ZodObject<{
                         sourceId: z.ZodString;
                         quote: z.ZodString;
-                    }, z.core.$strict>>;
-                }, z.core.$strict>]>>;
+                    }, z.core.$strip>>;
+                }, z.core.$strip>]>>;
             }, z.core.$strict>>;
             schema: z.ZodLiteral<"loki.runner.execution-report/2">;
-        }, z.core.$strict>]>>>;
+            test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                test_id: z.ZodString;
+                scenario_finished: z.ZodBoolean;
+                bug_found: z.ZodBoolean;
+                bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+                    yes: "yes";
+                    no: "no";
+                    no_expected_behavior: "no_expected_behavior";
+                }>>;
+                bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                actual: z.ZodString;
+                execution_details: z.ZodString;
+                warning: z.ZodNullable<z.ZodString>;
+            }, z.core.$strip>>>;
+        }, z.core.$strict>]>, unknown>>>;
         recovery: z.ZodOptional<z.ZodObject<{
             enabled: z.ZodOptional<z.ZodBoolean>;
             used: z.ZodBoolean;
@@ -662,26 +718,26 @@ export declare const runnerNextActionSchema: z.ZodObject<{
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>, z.ZodObject<{
+            }, z.core.$strip>>;
+        }, z.core.$strip>, z.ZodObject<{
             kind: z.ZodLiteral<"read-only-path">;
             subject: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             control: z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>;
+            }, z.core.$strip>;
             choices: z.ZodArray<z.ZodObject<{
                 sourceId: z.ZodString;
                 quote: z.ZodString;
-            }, z.core.$strict>>;
-        }, z.core.$strict>]>>;
+            }, z.core.$strip>>;
+        }, z.core.$strip>]>>;
     }, z.core.$strict>>;
     instruction: z.ZodString;
 }, z.core.$strict>;
@@ -717,26 +773,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -761,26 +817,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -845,26 +901,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -889,26 +945,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -998,11 +1054,11 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     providerCall: z.ZodNumber;
                 }, z.core.$strict>>>;
             }, z.core.$loose>;
-            executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
-                effects: z.ZodEnum<{
+            executionReport: z.ZodOptional<z.ZodNullable<z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
+                effects: z.ZodOptional<z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
-                }>;
+                }>>;
                 basis: z.ZodLiteral<"model-authored-unverified">;
                 responseId: z.ZodString;
                 callId: z.ZodString;
@@ -1024,26 +1080,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>, z.ZodObject<{
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>, z.ZodObject<{
                         kind: z.ZodLiteral<"read-only-path">;
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         control: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>]>>;
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
@@ -1062,10 +1118,10 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 }>;
                 evidence: z.ZodArray<z.ZodString>;
                 basis: z.ZodLiteral<"model-authored-unverified">;
-                effects: z.ZodEnum<{
+                effects: z.ZodOptional<z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
-                }>;
+                }>>;
                 responseId: z.ZodString;
                 callId: z.ZodString;
                 remainingSteps: z.ZodArray<z.ZodString>;
@@ -1083,29 +1139,43 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>, z.ZodObject<{
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>, z.ZodObject<{
                         kind: z.ZodLiteral<"read-only-path">;
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         control: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>]>>;
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/2">;
-            }, z.core.$strict>]>>>;
+                test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                    test_id: z.ZodString;
+                    scenario_finished: z.ZodBoolean;
+                    bug_found: z.ZodBoolean;
+                    bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+                        yes: "yes";
+                        no: "no";
+                        no_expected_behavior: "no_expected_behavior";
+                    }>>;
+                    bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                    actual: z.ZodString;
+                    execution_details: z.ZodString;
+                    warning: z.ZodNullable<z.ZodString>;
+                }, z.core.$strip>>>;
+            }, z.core.$strict>]>, unknown>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;
                 used: z.ZodBoolean;
@@ -1238,26 +1308,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1282,26 +1352,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1365,26 +1435,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1409,26 +1479,26 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1529,26 +1599,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1573,26 +1643,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1657,26 +1727,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -1701,26 +1771,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -1810,11 +1880,11 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     providerCall: z.ZodNumber;
                 }, z.core.$strict>>>;
             }, z.core.$loose>;
-            executionReport: z.ZodOptional<z.ZodNullable<z.ZodUnion<readonly [z.ZodObject<{
-                effects: z.ZodEnum<{
+            executionReport: z.ZodOptional<z.ZodNullable<z.ZodPreprocess<z.ZodUnion<readonly [z.ZodObject<{
+                effects: z.ZodOptional<z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
-                }>;
+                }>>;
                 basis: z.ZodLiteral<"model-authored-unverified">;
                 responseId: z.ZodString;
                 callId: z.ZodString;
@@ -1836,26 +1906,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>, z.ZodObject<{
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>, z.ZodObject<{
                         kind: z.ZodLiteral<"read-only-path">;
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         control: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>]>>;
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/1">;
                 status: z.ZodEnum<{
@@ -1874,10 +1944,10 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 }>;
                 evidence: z.ZodArray<z.ZodString>;
                 basis: z.ZodLiteral<"model-authored-unverified">;
-                effects: z.ZodEnum<{
+                effects: z.ZodOptional<z.ZodEnum<{
                     known: "known";
                     uncertain: "uncertain";
-                }>;
+                }>>;
                 responseId: z.ZodString;
                 callId: z.ZodString;
                 remainingSteps: z.ZodArray<z.ZodString>;
@@ -1895,29 +1965,43 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>, z.ZodObject<{
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>, z.ZodObject<{
                         kind: z.ZodLiteral<"read-only-path">;
                         subject: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         control: z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>;
+                        }, z.core.$strip>;
                         choices: z.ZodArray<z.ZodObject<{
                             sourceId: z.ZodString;
                             quote: z.ZodString;
-                        }, z.core.$strict>>;
-                    }, z.core.$strict>]>>;
+                        }, z.core.$strip>>;
+                    }, z.core.$strip>]>>;
                 }, z.core.$strict>>;
                 schema: z.ZodLiteral<"loki.runner.execution-report/2">;
-            }, z.core.$strict>]>>>;
+                test_results: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                    test_id: z.ZodString;
+                    scenario_finished: z.ZodBoolean;
+                    bug_found: z.ZodBoolean;
+                    bug_found_against_expected: z.ZodOptional<z.ZodEnum<{
+                        yes: "yes";
+                        no: "no";
+                        no_expected_behavior: "no_expected_behavior";
+                    }>>;
+                    bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                    actual: z.ZodString;
+                    execution_details: z.ZodString;
+                    warning: z.ZodNullable<z.ZodString>;
+                }, z.core.$strip>>>;
+            }, z.core.$strict>]>, unknown>>>;
             recovery: z.ZodOptional<z.ZodObject<{
                 enabled: z.ZodOptional<z.ZodBoolean>;
                 used: z.ZodBoolean;
@@ -2050,26 +2134,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -2094,26 +2178,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;
@@ -2177,26 +2261,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         schema: z.ZodLiteral<"loki.runner.clarification/1">;
         clarificationId: z.ZodString;
@@ -2221,26 +2305,26 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>, z.ZodObject<{
+                }, z.core.$strip>>;
+            }, z.core.$strip>, z.ZodObject<{
                 kind: z.ZodLiteral<"read-only-path">;
                 subject: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 control: z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>;
+                }, z.core.$strip>;
                 choices: z.ZodArray<z.ZodObject<{
                     sourceId: z.ZodString;
                     quote: z.ZodString;
-                }, z.core.$strict>>;
-            }, z.core.$strict>]>>;
+                }, z.core.$strip>>;
+            }, z.core.$strip>]>>;
         }, z.core.$strict>>;
         instruction: z.ZodString;
     }, z.core.$strict>>;

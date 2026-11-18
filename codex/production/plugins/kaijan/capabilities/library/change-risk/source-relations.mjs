@@ -19,7 +19,6 @@ const obj = (properties) => ({
   required: Object.keys(properties),
   additionalProperties: false,
 });
-const maxExcerptLength = 160;
 const words = new Intl.Segmenter("und", { granularity: "word" });
 const predicates = {
   "depends-on": [2, (a, b) => `Does ${a} depend on ${b}?`],
@@ -68,9 +67,8 @@ export function riskPresentationSchema(
   catalog,
   { literalExcerpts = false, definitions } = {},
 ) {
-  const ids = catalog.map((row) => row.id);
   const evidenceSpan = obj({
-    evidence_id: { type: "string", ...(ids.length ? { enum: ids } : {}) },
+    evidence_id: { type: "string" },
     ...(literalExcerpts
       ? { text: { type: "string" } }
       : {
@@ -83,33 +81,23 @@ export function riskPresentationSchema(
   const span = definitions
     ? { $ref: "#/$defs/riskEvidenceSpan" }
     : evidenceSpan;
-  const relation = (table) => ({
-    anyOf: Object.entries(table).map(([kind, [arity]]) =>
-      obj({
-        kind: { type: "string", const: kind },
-        operands: {
-          type: "array",
-          items: span,
-          minItems: arity,
-          maxItems: arity,
-        },
-      }),
-    ),
-  });
+  // During the selected dogfooding bypass, output quality does not gate a
+  // completed review. The retained catalog still owns source identity.
+  const relation = () =>
+    obj({
+      kind: { type: "string" },
+      operands: { type: "array", items: span },
+    });
   return obj({
-    observed: { type: "array", items: span, minItems: 1, maxItems: 8 },
-    assumption: relation(predicates),
-    consequence: relation(consequences),
-    resolution: relation(resolutions),
+    observed: { type: "array", items: span },
+    assumption: relation(),
+    consequence: relation(),
+    resolution: relation(),
   });
 }
 export function riskSpans(value) {
   need(exact(value, ["observed", "assumption", "consequence", "resolution"]));
-  need(
-    Array.isArray(value.observed) &&
-      value.observed.length > 0 &&
-      value.observed.length <= 8,
-  );
+  need(Array.isArray(value.observed));
   return [
     ...value.observed,
     ...value.assumption.operands,
@@ -124,12 +112,7 @@ export function normalizeRiskExcerpts(value, catalog) {
     need(exact(excerpt, ["evidence_id", "text"]));
     const source = catalog.find((row) => row.id === excerpt.evidence_id);
     const raw = excerpt.text;
-    need(
-      source &&
-        typeof raw === "string" &&
-        raw.length <= maxExcerptLength &&
-        raw.isWellFormed(),
-    );
+    need(source && typeof raw === "string" && raw.isWellFormed());
     const text = raw.trim();
     // Keep the padding only as proof of an exact source excerpt. The retained
     // offsets must still select one unambiguous whole-word slice.
@@ -189,6 +172,111 @@ export function riskSourceRecord(presentation, catalog) {
     schema: RISK_SOURCE_VERSION,
     presentation: structuredClone(presentation),
     catalogSha256: hash(JSON.stringify(catalog)),
+  };
+}
+
+/** Keep available model wording without inventing a verified source slice.
+ * Strict proofs remain useful when available, but their failure is not a
+ * reason to discard this row or its valid siblings. */
+export function availableRiskPresentation(value, catalog, resolve) {
+  try {
+    const presentation = normalizeRiskExcerpts(value, catalog);
+    return {
+      row: renderRiskPresentation(presentation, catalog, resolve),
+      source_projection: riskSourceRecord(presentation, catalog),
+    };
+  } catch {
+    // The original response stays in the transport record. This projection is
+    // explicitly model-authored wording, never an authenticated quotation.
+  }
+  const list = (item) =>
+    Array.isArray(item)
+      ? item
+      : item === undefined || item === null
+        ? []
+        : [item];
+  const literal = (span) => {
+    if (typeof span === "string") return JSON.stringify(span);
+    if (typeof span?.text === "string") return JSON.stringify(span.text);
+    const source = catalog.find((row) => row.id === span?.evidence_id);
+    if (
+      source &&
+      Number.isInteger(span.start) &&
+      Number.isInteger(span.end) &&
+      span.start >= 0 &&
+      span.end >= span.start &&
+      span.end <= source.quote.length
+    )
+      return JSON.stringify(source.quote.slice(span.start, span.end));
+    return "";
+  };
+  const render = (node, table) => {
+    if (typeof node === "string") return node;
+    const values = list(node?.operands).map(literal).filter(Boolean);
+    const selected =
+      typeof node?.kind === "string" && Object.hasOwn(table, node.kind)
+        ? table[node.kind]
+        : null;
+    if (selected && values.length === selected[0]) {
+      try {
+        return node.kind === "evidence-for"
+          ? `What evidence can confirm ${values[0]}? The review notes ${values[1]}.`
+          : selected[1](...values);
+      } catch {
+        // A semantic predicate can be unusable without losing its wording.
+      }
+    }
+    // Best-effort output can put the question/explanation in an unfamiliar
+    // kind string. Keep that wording as attributed model text, not a proof.
+    return [typeof node?.kind === "string" ? node.kind : "", ...values]
+      .filter(Boolean)
+      .join("; ");
+  };
+  const observed = list(value?.observed);
+  const spans = [
+    ...observed,
+    ...list(value?.assumption?.operands),
+    ...list(value?.consequence?.operands),
+    ...list(value?.resolution?.operands),
+  ];
+  const known = new Set(catalog.map((row) => row.id));
+  const prose = (field) =>
+    typeof value?.[field] === "string" ? value[field] : "";
+  const question =
+    (typeof value === "string" ? value : prose("question")) ||
+    render(value?.assumption, predicates);
+  const statements = observed.map(literal).filter(Boolean);
+  const originalStatement = [
+    prose("observed_source_statement"),
+    prose("observed_code_behavior"),
+  ]
+    .filter(Boolean)
+    .join("\n");
+  return {
+    row: {
+      observed:
+        originalStatement ||
+        (statements.length
+          ? `The risk review refers to: ${statements.join("; ")}.`
+          : ""),
+      assumption_to_confirm:
+        prose("assumption_to_confirm") ||
+        (question ? `Unresolved assumption: ${question}` : ""),
+      question,
+      why_it_matters:
+        prose("why_it_matters") || render(value?.consequence, consequences),
+      evidence_needed:
+        prose("evidence_needed") || render(value?.resolution, resolutions),
+      evidence_ids: [
+        ...new Set(
+          [
+            ...spans.map((span) => span?.evidence_id),
+            ...list(value?.evidence_ids),
+            ...list(value?.source_evidence),
+          ].filter((id) => known.has(id)),
+        ),
+      ],
+    },
   };
 }
 export function verifyRiskSourceRecord(

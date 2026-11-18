@@ -98,9 +98,8 @@ export function sourceGenerationSchema(
   );
   const output = clone(schema);
   if (version === GENERATED_PLAN_VERSION) {
-    output.properties.tests.items.properties.id.pattern = "^T[1-9][0-9]{0,5}$";
-    output.properties.objectives.items.properties.id.pattern =
-      "^O[1-9][0-9]{0,5}$";
+    output.properties.tests.items.properties.id.pattern = "^T[1-9][0-9]*$";
+    output.properties.objectives.items.properties.id.pattern = "^O[1-9][0-9]*$";
     return output;
   }
   const text = (

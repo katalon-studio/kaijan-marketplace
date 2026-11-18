@@ -1,3 +1,4 @@
+import { decisionAnswers } from "@katalon-experiments/ai-client";
 import { buildIndex } from "../core.mjs";
 import { check, hash } from "./records.mjs";
 
@@ -56,7 +57,7 @@ function source(item) {
 export function parentRequest(seed, nominees) {
   check(nominees.length <= PARENT_LIMITS.nominees, "parent_nomination_bound");
   const body = {
-    model: "jev-latest",
+    model: "gpt-6-luna",
     state: { caller_work: source(seed), issues: {} },
     questions: {},
   };
@@ -86,56 +87,28 @@ export function parentModelRequest(prepared) {
 }
 
 export function selectParents(raw, prepared) {
-  check(
-    raw &&
-      ["jev-latest", "typesafe/jev-1.14-20261014"].includes(raw.model) &&
-      !raw.error,
-    "parent_provider_identity",
-  );
-  const answers = raw.answers;
-  check(
-    answers &&
-      typeof answers === "object" &&
-      !Array.isArray(answers) &&
-      Object.keys(answers).sort().join() ===
-        prepared.inputs
-          .map((i) => i.id)
-          .sort()
-          .join(),
-    "parent_answer_set",
-  );
+  const answers = decisionAnswers(raw, prepared.body.questions);
   const choices = Object.keys(parentCriteria);
   const judgments = prepared.inputs.map(({ id, item }) => {
-    const a = answers[id],
-      p = a?.probabilities;
-    check(
-      a?.type === "choice" &&
-        choices.includes(a.choice) &&
-        p &&
-        typeof p === "object" &&
-        !Array.isArray(p) &&
-        Object.keys(p).sort().join() === [...choices].sort().join() &&
-        Object.values(p).every(
-          (n) =>
-            typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1,
-        ) &&
-        Math.abs(Object.values(p).reduce((s, n) => s + n, 0) - 1) <= 0.020001 &&
-        p[a.choice] >= Math.max(...Object.values(p)) - 0.000001 &&
-        (a.confidence === undefined ||
-          (typeof a.confidence === "number" &&
-            Number.isFinite(a.confidence) &&
-            a.confidence >= 0 &&
-            a.confidence <= 1)),
-      "parent_invalid_choice",
-    );
+    const answer = answers?.[id];
+    const choice = choices.includes(answer?.choice) ? answer.choice : null;
     return {
       id,
       key: item.key,
-      choice: a.choice,
-      probabilities: p,
+      choice,
+      ...(answer?.probabilities === undefined
+        ? {}
+        : { probabilities: answer.probabilities }),
+      ...(choice === null
+        ? {
+            reason: "answer_unavailable",
+            ...(answer === undefined ? {} : { answer }),
+          }
+        : {}),
       source_sha256: prepared.body.state.issues[id].sha256,
     };
   });
+  const unresolved = judgments.some((row) => row.choice === null);
   const plausible = judgments.filter((j) =>
     ["same_work", "uncertain"].includes(j.choice),
   );
@@ -150,14 +123,18 @@ export function selectParents(raw, prepared) {
     matches,
     selected: plausible.length <= 2 ? matches : [],
     ambiguous:
-      plausible.length > 1 || plausible.some((j) => j.choice === "uncertain"),
+      unresolved ||
+      plausible.length > 1 ||
+      plausible.some((j) => j.choice === "uncertain"),
     status:
       plausible.length > 2
         ? "ambiguous_many_matches"
-        : matches.length
-          ? "semantic_candidates"
-          : plausible.length
-            ? "unresolved_parent_evidence"
-            : "no_supported_parent_in_batch",
+        : unresolved
+          ? "unresolved_parent_evidence"
+          : matches.length
+            ? "semantic_candidates"
+            : plausible.length
+              ? "unresolved_parent_evidence"
+              : "no_supported_parent_in_batch",
   };
 }

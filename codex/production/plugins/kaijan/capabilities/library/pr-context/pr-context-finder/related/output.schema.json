@@ -7,8 +7,12 @@
     {
       "if": {
         "anyOf": [
-          { "required": ["query_selection"] },
-          { "required": ["contribution_selection"] }
+          {
+            "required": ["query_selection"]
+          },
+          {
+            "required": ["contribution_selection"]
+          }
         ]
       },
       "else": {
@@ -24,18 +28,38 @@
       }
     },
     {
-      "if": { "not": { "required": ["contribution_selection"] } },
+      "if": {
+        "not": {
+          "required": ["contribution_selection"]
+        }
+      },
       "then": {
         "properties": {
-          "accounting": { "properties": { "calls": { "maximum": 2 } } }
+          "accounting": {
+            "properties": {
+              "calls": {
+                "maximum": 2
+              }
+            }
+          }
         }
       }
     },
     {
-      "if": { "not": { "required": ["query_selection"] } },
+      "if": {
+        "not": {
+          "required": ["query_selection"]
+        }
+      },
       "then": {
         "properties": {
-          "accounting": { "properties": { "calls": { "maximum": 2 } } }
+          "accounting": {
+            "properties": {
+              "calls": {
+                "maximum": 2
+              }
+            }
+          }
         }
       }
     }
@@ -45,7 +69,9 @@
       "type": "object",
       "required": ["method", "status", "accounting"],
       "properties": {
-        "method": { "const": "context-contributions/1" },
+        "method": {
+          "const": "context-contributions/1"
+        },
         "status": {
           "enum": [
             "not_started",
@@ -56,7 +82,9 @@
             "stopped"
           ]
         },
-        "accounting": { "$ref": "#/properties/ranking_accounting" }
+        "accounting": {
+          "$ref": "#/properties/ranking_accounting"
+        }
       },
       "additionalProperties": false
     },
@@ -916,8 +944,7 @@
         },
         "calls": {
           "type": "integer",
-          "minimum": 0,
-          "maximum": 4
+          "minimum": 0
         },
         "known_cost_usd": {
           "type": "number",
@@ -942,7 +969,8 @@
             "not_started",
             "deterministic_only",
             "native_jev",
-            "incomplete"
+            "incomplete",
+            "native_decisions"
           ]
         },
         "authorship_proven": {

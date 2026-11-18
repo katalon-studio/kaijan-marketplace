@@ -5072,7 +5072,7 @@ var recursive = /* @__PURE__ */ new WeakMap();
 var NONE = 0;
 var ASSUMED = 1;
 var PROVEN = 2;
-function isRecursive(inst, stack, resolve) {
+function isRecursive(inst, stack, resolve2) {
   const cached2 = recursive.get(inst);
   if (cached2 !== void 0)
     return cached2 ? PROVEN : NONE;
@@ -5082,7 +5082,7 @@ function isRecursive(inst, stack, resolve) {
   let result = NONE;
   const check2 = (child) => {
     if (result !== PROVEN && child?._zod) {
-      const answer = isRecursive(child, stack, resolve);
+      const answer = isRecursive(child, stack, resolve2);
       if (answer > result)
         result = answer;
     }
@@ -5093,7 +5093,7 @@ function isRecursive(inst, stack, resolve) {
       const desc = Object.getOwnPropertyDescriptor(sh, key);
       if (spread && !desc.enumerable)
         continue;
-      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve) : NONE;
+      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve2) : NONE;
       if (child > answer)
         answer = child;
     }
@@ -5157,7 +5157,7 @@ function isRecursive(inst, stack, resolve) {
       break;
     // `$ZodLazy` caches its inner on the def, so a resolved edge is followed exactly
     case "lazy": {
-      const inner = def._cachedInner ?? (resolve ? inst._zod.innerType : void 0);
+      const inner = def._cachedInner ?? (resolve2 ? inst._zod.innerType : void 0);
       merge2(inner ? isRecursive(inner, stack, false) : ASSUMED);
       break;
     }
@@ -19722,6 +19722,98 @@ function date4(params) {
   return _coercedDate(ZodDate, params);
 }
 
+// src/computer-runner-worker.ts
+import { dirname as dirname5 } from "node:path";
+
+// src/storage.ts
+import { constants } from "node:fs";
+import { mkdir, open as open2, lstat, realpath, rename, unlink } from "node:fs/promises";
+import { randomUUID, createHash } from "node:crypto";
+import { dirname, join, resolve } from "node:path";
+async function privateDirectory(path) {
+  await mkdir(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The plugin data directory is unsafe.");
+}
+async function regularFile(path, maximum, privateRecord = false) {
+  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
+    throw new Error("The selected file read limit is invalid.");
+  const file2 = await open2(
+    path,
+    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
+  );
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
+      throw new Error("The selected file is not a bounded regular file.");
+    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
+      throw new Error("The private file is unsafe.");
+    if (maximum === void 0) return await file2.readFile();
+    const chunks = [];
+    let length = 0;
+    while (length <= maximum) {
+      const bytes2 = Buffer.allocUnsafeSlow(
+        Math.min(64 * 1024, maximum + 1 - length)
+      );
+      const result = await file2.read(bytes2, 0, bytes2.length, null);
+      if (!result.bytesRead) break;
+      length += result.bytesRead;
+      if (length > maximum)
+        throw new Error("The selected file exceeds its limit.");
+      chunks.push(bytes2.subarray(0, result.bytesRead));
+    }
+    const bytes = Buffer.allocUnsafeSlow(length);
+    let offset = 0;
+    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
+    return bytes;
+  } finally {
+    await file2.close();
+  }
+}
+function boundedFile(path, maximum) {
+  return regularFile(path, maximum);
+}
+async function atomicFile(directory, name, bytes) {
+  await privateDirectory(directory);
+  try {
+    const current = await lstat(join(directory, name));
+    if (!current.isFile() || current.uid !== process.getuid?.() || current.mode & 63)
+      throw new Error("The saved data file is unsafe; it has been preserved.");
+  } catch (error62) {
+    if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
+      throw error62;
+  }
+  const temporary = join(directory, `.pending-${randomUUID()}`);
+  try {
+    const file2 = await open2(temporary, "wx", 384);
+    try {
+      await file2.writeFile(bytes);
+      await file2.sync();
+    } finally {
+      await file2.close();
+    }
+    await rename(temporary, join(directory, name));
+    const parent = await open2(
+      directory,
+      constants.O_RDONLY | constants.O_NOFOLLOW
+    );
+    try {
+      await parent.sync();
+    } finally {
+      await parent.close();
+    }
+  } finally {
+    await unlink(temporary).catch((error62) => {
+      if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
+        throw error62;
+    });
+  }
+}
+
 // ../contracts/dist/report-evidence.js
 var digest = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
@@ -19868,38 +19960,6 @@ var reportSourcesSchema = external_exports.strictObject({
 // ../contracts/dist/terminal-checks.js
 var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
 var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var terminalChecksSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.terminal-checks/1"),
-  repository: external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/),
-  sourceRevision: external_exports.string().regex(/^[a-f0-9]{40}$/),
-  pullRequestUrl: external_exports.url().nullable(),
-  tests: external_exports.array(external_exports.strictObject({
-    testId: nonempty2,
-    title: nonempty2,
-    deliberateFailure: external_exports.boolean().default(false),
-    checks: external_exports.array(external_exports.strictObject({
-      id: nonempty2,
-      title: nonempty2,
-      field: external_exports.enum(["text", "snapshot", "url"]),
-      operator: external_exports.enum(["contains", "not-contains", "equals"]),
-      expected: nonempty2
-    })).min(1)
-  })).min(1)
-}).superRefine((input3, ctx) => {
-  if (new Set(input3.tests.map((test) => test.testId)).size !== input3.tests.length || input3.tests.some((test) => new Set(test.checks.map((check2) => check2.id)).size !== test.checks.length))
-    ctx.addIssue({
-      code: "custom",
-      message: "Test IDs and each test's check IDs must be unique."
-    });
-  if (input3.pullRequestUrl !== null) {
-    const prefix = `https://github.com/${input3.repository}/pull/`;
-    if (!input3.pullRequestUrl.startsWith(prefix) || !/^[1-9][0-9]*$/.test(input3.pullRequestUrl.slice(prefix.length)))
-      ctx.addIssue({
-        code: "custom",
-        message: "The PR must belong to the selected repository."
-      });
-  }
-});
 var checkedPlanReferenceSchema = external_exports.strictObject({
   answerId: digest2,
   resultSha256: digest2,
@@ -20120,7 +20180,7 @@ var assessmentImageReferenceSchema = external_exports.strictObject({
   manifestSha256: digest5,
   artifactId: digest5,
   sha256: digest5,
-  bytes: external_exports.number().int().positive().max(2 * 1024 * 1024)
+  bytes: external_exports.number().int().positive()
 });
 var suppliedEvidenceInputSchema = external_exports.strictObject({
   schema: external_exports.literal("work-verifier/supplied-test-evidence/1"),
@@ -20149,40 +20209,41 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
   target: jsonObject.nullable(),
   provenance: jsonObject.nullable()
 });
-var proposedPlanSchema = external_exports.strictObject({
+var planningRefs = external_exports.array(external_exports.looseObject({ evidence_id: external_exports.string() }));
+var proposedPlanSchema = external_exports.looseObject({
   status: external_exports.enum(["proposed_plan", "needs_clarification"]),
-  objectives: external_exports.array(external_exports.strictObject({ id: external_exports.string(), text: external_exports.string(), refs })),
-  requirement_coverage: external_exports.array(external_exports.strictObject({
+  objectives: external_exports.array(external_exports.looseObject({ id: external_exports.string(), text: external_exports.string(), refs: planningRefs })),
+  requirement_coverage: external_exports.array(external_exports.looseObject({
     requirement_id: external_exports.string(),
     status: external_exports.enum(["proposed", "gap"]),
     test_ids: strings,
     reason: external_exports.string()
   })),
   ambiguities: strings,
-  relevant_surfaces: external_exports.array(external_exports.strictObject({
+  relevant_surfaces: external_exports.array(external_exports.looseObject({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
-    refs
+    basis: external_exports.string(),
+    refs: planningRefs
   })),
-  tests: external_exports.array(external_exports.strictObject({
-    title: nonempty3.optional(),
+  tests: external_exports.array(external_exports.looseObject({
+    title: external_exports.string().optional(),
     // Absent only in historical saved plans.
-    method: nonempty3,
+    method: external_exports.string(),
     id: external_exports.string(),
     objective_ids: strings,
-    priority: external_exports.enum(["P1", "P2", "P3"]),
+    priority: external_exports.string(),
     reason: external_exports.string(),
     prerequisites: strings,
     steps: strings,
-    expected: external_exports.strictObject({
+    expected: external_exports.looseObject({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis"]),
-      refs
+      authority: external_exports.string(),
+      refs: planningRefs
     }),
     execution_gaps: strings
   })),
   disagreements: strings,
-  runner_handoff: external_exports.strictObject({
+  runner_handoff: external_exports.looseObject({
     status: external_exports.literal("proposed_only"),
     scenario_ids: strings,
     required_inputs: strings
@@ -20383,18 +20444,18 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
 });
 
 // ../contracts/dist/clarification-presentation.js
-var binding = external_exports.strictObject({
+var binding = external_exports.object({
   sourceId: external_exports.string(),
-  quote: external_exports.string().min(1).max(512)
+  quote: external_exports.string().min(1)
 });
-var ordinaryPresentation = external_exports.strictObject({
+var ordinaryPresentation = external_exports.object({
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"]),
   subject: binding,
-  choices: external_exports.array(binding).max(8)
+  choices: external_exports.array(binding)
 });
 var clarificationPresentationSchema = external_exports.union([
   ordinaryPresentation,
-  external_exports.strictObject({
+  external_exports.object({
     kind: external_exports.literal("read-only-path"),
     subject: binding,
     control: binding,
@@ -20423,17 +20484,35 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.execution-report/1"),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
   ...progress,
-  effects: external_exports.enum(["known", "uncertain"]),
+  effects: external_exports.enum(["known", "uncertain"]).optional(),
   basis: external_exports.literal("model-authored-unverified"),
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
-var runnerExecutionReportSchema = external_exports.union([
+var runnerTestResultsSchema = external_exports.array(external_exports.object({
+  test_id: external_exports.string(),
+  scenario_finished: external_exports.boolean(),
+  bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
+  actual: external_exports.string(),
+  execution_details: external_exports.string(),
+  warning: external_exports.string().nullable()
+}));
+var runnerExecutionReportSchema = external_exports.preprocess((value) => {
+  if (value === null || typeof value !== "object" || Array.isArray(value))
+    return value;
+  const view = { ...value };
+  if (view.effects !== "known" && view.effects !== "uncertain")
+    delete view.effects;
+  return view;
+}, external_exports.union([
   legacyRunnerExecutionReportSchema,
   legacyRunnerExecutionReportSchema.omit({ completedSteps: true }).extend({
-    schema: external_exports.literal("loki.runner.execution-report/2")
+    schema: external_exports.literal("loki.runner.execution-report/2"),
+    test_results: runnerTestResultsSchema.optional()
   })
-]);
+]));
 var runnerRecoverySchema = external_exports.strictObject({
   enabled: external_exports.boolean().optional(),
   used: external_exports.boolean(),
@@ -20965,18 +21044,138 @@ var customerAssessmentStepFactsSchema = external_exports.object({
   notice: external_exports.string()
 });
 
+// ../contracts/dist/customer-related.js
+var id = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var strings2 = external_exports.array(external_exports.string());
+var optional2 = (value) => value.optional();
+var customerRelatedResultSchema = external_exports.object({
+  kind: external_exports.literal("related-work"),
+  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
+  seed: optional2(external_exports.object({
+    repo: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue", "supplied"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    number: optional2(external_exports.number().int())
+  })),
+  candidates: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    kind: external_exports.enum(["pr", "issue"]),
+    title: external_exports.string(),
+    url: external_exports.string(),
+    state: external_exports.enum(["open", "closed"]),
+    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
+    reason: optional2(external_exports.string()),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    notice: optional2(external_exports.string()),
+    evidence_ids: optional2(strings2),
+    relationship_type: external_exports.enum([
+      "same_work",
+      "explicit_fix",
+      "explicit_reference",
+      "adjacent_capability",
+      "shared_vocabulary",
+      "unsupported",
+      "unjudged"
+    ]),
+    direct_links: optional2(external_exports.array(external_exports.object({
+      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
+      source_uri: external_exports.string(),
+      explanation: external_exports.string(),
+      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
+      via_issue_key: external_exports.string().optional(),
+      source_evidence_id: external_exports.string().optional()
+    })))
+  })),
+  evidence: external_exports.array(external_exports.object({
+    id: external_exports.string(),
+    text: external_exports.string(),
+    source_uri: external_exports.string(),
+    revision: external_exports.string(),
+    sha256: id.nullable(),
+    sourceState: external_exports.enum(["available", "unavailable"]),
+    omitted_characters: external_exports.number().int().nonnegative()
+  })),
+  literalReferences: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    retrieved: external_exports.boolean(),
+    relation: external_exports.literal("unjudged"),
+    provenance: external_exports.array(external_exports.object({
+      source_uri: external_exports.string(),
+      source_text_sha256: id,
+      captured_at: external_exports.string()
+    }))
+  })).optional(),
+  unjudged: external_exports.array(external_exports.object({
+    key: external_exports.string(),
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    url: external_exports.string(),
+    kind: external_exports.enum(["issue", "pr"]),
+    title: external_exports.string(),
+    relation: external_exports.literal("unjudged")
+  })).optional(),
+  uninspected: optional2(external_exports.array(external_exports.object({
+    repo: external_exports.string(),
+    number: external_exports.number().int(),
+    source_uri: external_exports.string(),
+    reason: external_exports.enum([
+      "repository_not_authorized",
+      "global_candidate_limit",
+      "literal_fetch_limit",
+      "acquisition_unavailable",
+      "authored_intake_quarantine"
+    ])
+  }))),
+  sourceCoverage: external_exports.object({
+    unavailableCandidates: external_exports.number().int().nonnegative(),
+    unavailableExcerpts: external_exports.number().int().nonnegative(),
+    unavailableReferences: external_exports.number().int().nonnegative(),
+    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
+    unavailableUninspectedItems: external_exports.number().int().nonnegative()
+  }),
+  reviewRequired: external_exports.literal(true),
+  message: optional2(external_exports.string())
+});
+
 // ../contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
-  steps: external_exports.array(external_exports.string().min(1)).min(1),
+  steps: external_exports.array(external_exports.string()),
   detailsOmitted: external_exports.literal(true).optional()
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
-var reportExpectationAuthoritySchema = external_exports.enum([
-  "requirement",
-  "hypothesis",
-  "unresolved"
+var related = customerRelatedResultSchema.shape;
+var contextFinderPlan = { planSourceId: digest9, planResultSha256: digest9 };
+var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
+var reportContextFinderSchema = external_exports.discriminatedUnion("state", [
+  external_exports.object({ ...contextFinderPlan, state: external_exports.literal("unavailable") }),
+  external_exports.object({
+    ...contextFinderPlan,
+    state: external_exports.literal("ready"),
+    result: external_exports.object({
+      status: related.status,
+      candidates: external_exports.array(related.candidates.element.pick({
+        kind: true,
+        title: true,
+        url: true,
+        relationship_type: true,
+        sourceState: true
+      })),
+      unjudged: related.unjudged,
+      uninspected: external_exports.array(related.uninspected.unwrap().element.pick({ repo: true, number: true })).optional(),
+      sourceCoverage: related.sourceCoverage.pick({
+        unavailableCandidates: true,
+        unavailableUnjudgedItems: true,
+        unavailableUninspectedItems: true
+      })
+    })
+  })
 ]);
+var reportExpectationAuthoritySchema = external_exports.string();
 var assessmentQuote = customerAssessmentQuoteSchema.pick({
   sourceId: true,
   display: true,
@@ -21094,13 +21293,25 @@ var testPlanViewSchema = external_exports.object({
     assertions: reportExecutionSchema.nullable().optional()
   })),
   pullRequests: external_exports.array(reportPullRequestSchema).optional(),
+  contextFinder: external_exports.array(reportContextFinderSchema).optional(),
   plans: external_exports.array(external_exports.object({
     sourceId: digest9,
     sourceKind: external_exports.enum(["answer", "run"]),
     resultSha256: digest9.nullable(),
     state: external_exports.string(),
     result: nativeJson,
-    requestTestIndexes: external_exports.array(count4)
+    requestTestIndexes: external_exports.array(count4),
+    applicationModel: external_exports.object({
+      views: external_exports.array(external_exports.object({
+        id: external_exports.string(),
+        name: external_exports.string(),
+        kind: external_exports.string(),
+        purpose: external_exports.string(),
+        controls: external_exports.array(external_exports.string()),
+        fields: external_exports.array(external_exports.string())
+      })),
+      transitions: external_exports.array(external_exports.object({ from: external_exports.string(), to: external_exports.string(), action: external_exports.string() }))
+    }).optional()
   }))
 });
 var reportPanelSchema = testPlanViewSchema.extend({
@@ -21123,6 +21334,7 @@ var summarySchema = external_exports.object({
     blocked: count4,
     skipped: count4,
     "not-run": count4,
+    incomplete: count4.optional(),
     inconclusive: count4.default(0),
     conflicting: count4.default(0),
     unavailable: count4.default(0)
@@ -21265,8 +21477,8 @@ var customerReportTraceResultSchema = external_exports.union([
   }),
   customerTraceArtifacts.extend({
     ...traceIdentity,
-    status: external_exports.literal("unavailable"),
-    traceAvailable: external_exports.literal(false)
+    status: external_exports.literal("unavailable")
+    // A failed browser launch can leave the admitted trace and viewer available.
   })
 ]);
 var customerReportTraceOutputSchema = external_exports.union([
@@ -21589,6 +21801,7 @@ var source = external_exports.object({
   quote_sha256: digest12
 });
 var legacyRiskNotice = "This retained risk question lacks a supported source-bound relation. Review its available source excerpts; no question meaning, consequence or requirement is inferred. The original analysis is retained; do not replay it.";
+var unverifiedRiskNotice = "Review these questions against the source.";
 var finding = external_exports.object({
   id: external_exports.string(),
   observed_code_behavior: external_exports.string().optional(),
@@ -21598,8 +21811,8 @@ var finding = external_exports.object({
   why_it_matters: external_exports.string(),
   evidence_needed: external_exports.string(),
   source_evidence: external_exports.union([external_exports.array(external_exports.string()), external_exports.array(source)]),
-  presentationState: external_exports.enum(["bound", "unavailable"]).optional(),
-  notice: external_exports.literal(legacyRiskNotice).optional()
+  presentationState: external_exports.enum(["bound", "unverified", "unavailable"]).optional(),
+  notice: external_exports.union([external_exports.literal(legacyRiskNotice), external_exports.literal(unverifiedRiskNotice)]).optional()
 });
 var customerRiskSchema = external_exports.object({
   kind: external_exports.literal("risk-review"),
@@ -21618,8 +21831,9 @@ var customerExecutionEvidenceSchema = external_exports.object({
   notice: external_exports.string()
 });
 var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
   reason: external_exports.string().optional(),
   completedSteps: external_exports.array(external_exports.string()).optional(),
   remainingSteps: external_exports.array(external_exports.string()).optional(),
@@ -21649,29 +21863,29 @@ function customerAuthoredText(value) {
 }
 var customerAuthoredTextSchema = external_exports.string().transform(customerAuthoredText);
 var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var optional2 = (schema) => schema.optional();
-var strings2 = external_exports.array(external_exports.string());
+var optional3 = (schema) => schema.optional();
+var strings3 = external_exports.array(external_exports.string());
 var citation = external_exports.object({
-  source_id: optional2(external_exports.string()),
-  sourceId: optional2(external_exports.string()),
-  evidence_id: optional2(external_exports.string()),
-  from_line: optional2(external_exports.number().int()),
-  through_line: optional2(external_exports.number().int())
+  source_id: optional3(external_exports.string()),
+  sourceId: optional3(external_exports.string()),
+  evidence_id: optional3(external_exports.string()),
+  from_line: optional3(external_exports.number().int()),
+  through_line: optional3(external_exports.number().int())
 });
 var boundQuote = customerAssessmentQuoteSchema;
 var bindings = external_exports.array(external_exports.unknown());
 var assessmentTest = external_exports.object({
   test_id: external_exports.string().nullable(),
   title: external_exports.string().optional(),
-  outcome_ids: strings2,
+  outcome_ids: strings3,
   expected: external_exports.string().nullable(),
   verdict: external_exports.enum(["pass", "fail", "inconclusive"]),
   actual: external_exports.string().nullable(),
   reason: external_exports.string(),
-  evidence_ids: optional2(strings2),
-  citations: optional2(external_exports.array(citation)),
+  evidence_ids: optional3(strings3),
+  citations: optional3(external_exports.array(citation)),
   recordedActions: external_exports.array(customerRecordedActionSchema).optional(),
-  observed_steps: optional2(external_exports.array(external_exports.object({
+  observed_steps: optional3(external_exports.array(external_exports.object({
     description: external_exports.string(),
     citations: external_exports.array(citation),
     evidenceQuotes: external_exports.array(boundQuote).optional(),
@@ -21682,14 +21896,14 @@ var assessmentTest = external_exports.object({
 var assessmentFinding = external_exports.object({
   id: external_exports.string(),
   support: external_exports.enum(["requires-review", "needs-review"]),
-  requirement_ids: optional2(strings2),
-  test_ids: optional2(strings2),
-  outcome_ids: optional2(strings2),
-  kind: optional2(external_exports.string()),
-  claim: optional2(external_exports.string()),
-  citations: optional2(external_exports.array(citation)),
-  remaining_gap: optional2(external_exports.string()),
-  notice: optional2(external_exports.string()),
+  requirement_ids: optional3(strings3),
+  test_ids: optional3(strings3),
+  outcome_ids: optional3(strings3),
+  kind: optional3(external_exports.string()),
+  claim: optional3(external_exports.string()),
+  citations: optional3(external_exports.array(citation)),
+  remaining_gap: optional3(external_exports.string()),
+  notice: optional3(external_exports.string()),
   evidenceQuotes: external_exports.array(boundQuote).optional()
 });
 var reportedOutcome = external_exports.object({
@@ -21706,21 +21920,21 @@ var reportedOutcome = external_exports.object({
     "skipped",
     "unknown"
   ]),
-  evidence_ids: strings2
+  evidence_ids: strings3
 });
 var customerAssessmentResultSchema = external_exports.object({
-  reportedOutcomes: optional2(external_exports.array(reportedOutcome)),
+  reportedOutcomes: optional3(external_exports.array(reportedOutcome)),
   kind: external_exports.literal("evidence-assessment"),
   status: external_exports.enum(["returned_assessment", "first_response_failure"]),
-  tests: optional2(external_exports.array(assessmentTest)),
-  findings: optional2(external_exports.array(assessmentFinding)),
-  coverage: optional2(external_exports.object({
+  tests: optional3(external_exports.array(assessmentTest)),
+  findings: optional3(external_exports.array(assessmentFinding)),
+  coverage: optional3(external_exports.object({
     status: external_exports.enum(["complete", "partial"]),
-    unassessed_requirement_ids: strings2
+    unassessed_requirement_ids: strings3
   })),
   meaning: external_exports.literal("Record coverage only; not proof that all requirements were tested or passed."),
   acceptanceDecision: external_exports.null(),
-  message: optional2(external_exports.string())
+  message: optional3(external_exports.string())
 });
 var assessmentInput = external_exports.object({
   schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
@@ -21740,9 +21954,9 @@ var assessmentInput = external_exports.object({
       status: external_exports.enum(["needs_review", "bound_model_assessment"]),
       literal_bindings: bindings.optional(),
       original_finding: external_exports.object({
-        requirement_ids: strings2.optional(),
-        test_ids: strings2.optional(),
-        outcome_ids: strings2.optional(),
+        requirement_ids: strings3.optional(),
+        test_ids: strings3.optional(),
+        outcome_ids: strings3.optional(),
         kind: external_exports.string().optional(),
         claim: external_exports.string().optional(),
         citations: external_exports.array(citation).optional(),
@@ -21753,11 +21967,11 @@ var assessmentInput = external_exports.object({
       id: external_exports.string(),
       test_id: external_exports.string().nullable(),
       status: external_exports.string(),
-      evidence_ids: strings2
+      evidence_ids: strings3
     })).optional(),
     coverage: external_exports.object({
       status: external_exports.enum(["complete", "partial"]),
-      unassessed_requirement_ids: strings2
+      unassessed_requirement_ids: strings3
     })
   }).nullable()
 });
@@ -21769,7 +21983,7 @@ var selectedPlanBinding = external_exports.object({
 });
 
 // ../contracts/dist/customer-report.js
-var strings3 = external_exports.array(external_exports.string());
+var strings4 = external_exports.array(external_exports.string());
 var operationState = external_exports.enum([
   "accepted",
   "running",
@@ -21824,42 +22038,42 @@ var customerPlanSchema = external_exports.object({
     id: external_exports.string(),
     title: external_exports.string().optional(),
     method: external_exports.string().optional(),
-    objective_ids: strings3.optional(),
-    priority: external_exports.enum(["P1", "P2", "P3"]).optional(),
+    objective_ids: strings4.optional(),
+    priority: external_exports.string().optional(),
     reason: external_exports.string().optional(),
-    prerequisites: strings3.optional(),
-    steps: strings3,
+    prerequisites: strings4.optional(),
+    steps: strings4,
     expected: external_exports.object({
       text: external_exports.string(),
-      authority: external_exports.enum(["requirement", "hypothesis", "unresolved"]),
+      authority: external_exports.string(),
       refs: refs2.optional()
     }),
-    execution_gaps: strings3.optional()
+    execution_gaps: strings4.optional()
   })),
   requirement_coverage: external_exports.array(external_exports.object({
     requirement_id: external_exports.string(),
     text: external_exports.string().optional(),
     status: external_exports.enum(["proposed", "gap"]),
-    test_ids: strings3,
+    test_ids: strings4,
     reason: external_exports.string().optional()
   })).optional(),
-  ambiguities: strings3.optional(),
-  disagreements: strings3.optional(),
-  limitations: strings3.optional(),
+  ambiguities: strings4.optional(),
+  disagreements: strings4.optional(),
+  limitations: strings4.optional(),
   relevant_surfaces: external_exports.array(external_exports.object({
     description: external_exports.string(),
-    basis: external_exports.enum(["supplied", "hypothesis"]),
+    basis: external_exports.string(),
     refs: refs2
   })).optional(),
   runner_handoff: external_exports.object({
     status: external_exports.literal("proposed_only"),
-    scenario_ids: strings3,
-    required_inputs: strings3
+    scenario_ids: strings4,
+    required_inputs: strings4
   }).optional()
 });
 var coverage = external_exports.object({
   status: external_exports.enum(["complete", "partial"]),
-  unassessed_requirement_ids: strings3
+  unassessed_requirement_ids: strings4
 });
 var evidenceIdentity = external_exports.object({
   id: external_exports.string(),
@@ -21930,12 +22144,13 @@ var customerAssessment = nativeRun.shape.assessments.unwrap().element.pick({
   }))
 });
 var executionReport = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
   reason: external_exports.string().optional(),
   status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]),
-  completedSteps: strings3.optional(),
-  remainingSteps: strings3,
+  completedSteps: strings4.optional(),
+  remainingSteps: strings4,
   questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })),
-  effects: external_exports.enum(["known", "uncertain"])
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0)
 });
 var evidenceQuote = external_exports.object({
   id: external_exports.string(),
@@ -21948,7 +22163,7 @@ var assertionStep = external_exports.object({
   status: external_exports.enum(["pass", "fail", "blocked", "skipped", "not-run"]),
   expected: external_exports.string(),
   actual: external_exports.string(),
-  evidenceIds: strings3
+  evidenceIds: strings4
 });
 var assertionTest = external_exports.object({
   testId: external_exports.string(),
@@ -21984,7 +22199,8 @@ var customerReportSchema = testPlanViewSchema.pick({
   title: true,
   createdAt: true,
   mapId: true,
-  selectedPullRequestUrl: true
+  selectedPullRequestUrl: true,
+  contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
   assessments: external_exports.array(external_exports.object({
@@ -22007,7 +22223,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     sourceKind: true,
     resultSha256: true,
     state: true,
-    requestTestIndexes: true
+    requestTestIndexes: true,
+    applicationModel: true
   }).extend({
     state: operationState,
     plan: customerPlanSchema.nullable(),
@@ -22115,6 +22332,7 @@ var customerReportCardSchema = panelCard.pick({
       blocked: true,
       skipped: true,
       "not-run": true,
+      incomplete: true,
       inconclusive: true,
       conflicting: true,
       unavailable: true
@@ -22172,7 +22390,7 @@ var customerReportReadSchema = external_exports.object({
     testVerdict: testVerdict.nullable(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     stopRequested: external_exports.boolean().nullable().optional(),
-    selectedTestIds: strings3,
+    selectedTestIds: strings4,
     assessedRunIds: external_exports.array(external_exports.string().regex(/^[a-f0-9]{64}$/)),
     facts: external_exports.array(external_exports.discriminatedUnion("key", [
       external_exports.object({
@@ -22218,102 +22436,11 @@ var customerReportOutputSchema = external_exports.union([
   customerReportReadSchema,
   customerReportFailureSchema
 ]);
-
-// ../contracts/dist/customer-related.js
-var id = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var strings4 = external_exports.array(external_exports.string());
-var optional3 = (value) => value.optional();
-var customerRelatedResultSchema = external_exports.object({
-  kind: external_exports.literal("related-work"),
-  status: external_exports.enum(["complete", "partial", "unavailable", "stopped", "refused"]),
-  seed: optional3(external_exports.object({
-    repo: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue", "supplied"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    number: optional3(external_exports.number().int())
-  })),
-  candidates: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    kind: external_exports.enum(["pr", "issue"]),
-    title: external_exports.string(),
-    url: external_exports.string(),
-    state: external_exports.enum(["open", "closed"]),
-    relation: external_exports.enum(["specific", "broad", "unsupported", "unjudged"]),
-    reason: optional3(external_exports.string()),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    notice: optional3(external_exports.string()),
-    evidence_ids: optional3(strings4),
-    relationship_type: external_exports.enum([
-      "same_work",
-      "explicit_fix",
-      "explicit_reference",
-      "adjacent_capability",
-      "shared_vocabulary",
-      "unsupported",
-      "unjudged"
-    ]),
-    direct_links: optional3(external_exports.array(external_exports.object({
-      type: external_exports.enum(["literal_reference", "timeline_cross_reference"]),
-      source_uri: external_exports.string(),
-      explanation: external_exports.string(),
-      depth: external_exports.union([external_exports.literal(1), external_exports.literal(2)]).optional(),
-      via_issue_key: external_exports.string().optional(),
-      source_evidence_id: external_exports.string().optional()
-    })))
-  })),
-  evidence: external_exports.array(external_exports.object({
-    id: external_exports.string(),
-    text: external_exports.string(),
-    source_uri: external_exports.string(),
-    revision: external_exports.string(),
-    sha256: id.nullable(),
-    sourceState: external_exports.enum(["available", "unavailable"]),
-    omitted_characters: external_exports.number().int().nonnegative()
-  })),
-  literalReferences: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    retrieved: external_exports.boolean(),
-    relation: external_exports.literal("unjudged"),
-    provenance: external_exports.array(external_exports.object({
-      source_uri: external_exports.string(),
-      source_text_sha256: id,
-      captured_at: external_exports.string()
-    }))
-  })).optional(),
-  unjudged: external_exports.array(external_exports.object({
-    key: external_exports.string(),
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    url: external_exports.string(),
-    kind: external_exports.enum(["issue", "pr"]),
-    title: external_exports.string(),
-    relation: external_exports.literal("unjudged")
-  })).optional(),
-  uninspected: optional3(external_exports.array(external_exports.object({
-    repo: external_exports.string(),
-    number: external_exports.number().int(),
-    source_uri: external_exports.string(),
-    reason: external_exports.enum([
-      "repository_not_authorized",
-      "global_candidate_limit",
-      "literal_fetch_limit",
-      "acquisition_unavailable",
-      "authored_intake_quarantine"
-    ])
-  }))),
-  sourceCoverage: external_exports.object({
-    unavailableCandidates: external_exports.number().int().nonnegative(),
-    unavailableExcerpts: external_exports.number().int().nonnegative(),
-    unavailableReferences: external_exports.number().int().nonnegative(),
-    unavailableUnjudgedItems: external_exports.number().int().nonnegative(),
-    unavailableUninspectedItems: external_exports.number().int().nonnegative()
-  }),
-  reviewRequired: external_exports.literal(true),
-  message: optional3(external_exports.string())
+var reportWithoutContextFinder = customerReportSchema.omit({
+  contextFinder: true
+});
+var reportContextFinderInput = external_exports.object({
+  contextFinder: external_exports.array(external_exports.unknown()).optional()
 });
 
 // ../contracts/dist/customer-supplement.js
@@ -22754,6 +22881,869 @@ import {
   parseClarificationSourceId,
   renderClarificationPresentation
 } from "@katalon-loki/computer-runner/clarification-presentation";
+import { redactor } from "@katalon-loki/computer-runner/redaction";
+
+// ../contracts/dist/telemetry.js
+var telemetryLimits = {
+  eventBytes: 4096,
+  batchBytes: 128 * 1024,
+  batchEvents: 25,
+  localEvents: 1024,
+  retentionMs: 7 * 24 * 60 * 60 * 1e3,
+  textCharacters: 1e3,
+  arrayEntries: 50
+};
+var telemetryVersionSchema = external_exports.string().max(128).regex(/^\d+(?:\.\d+){0,3}(?:[-+][a-zA-Z0-9.-]+)?$/);
+var telemetryIdentityEpochSchema = external_exports.uuidv4();
+var toolFailureMessages = {
+  invalid_arguments: "The tool arguments did not pass validation.",
+  request_key_conflict: "The request key already belongs to another request.",
+  answer_unavailable: "The saved answer is unavailable.",
+  answer_integrity_failed: "The saved answer could not be verified.",
+  customer_read_restart: "The saved result could not be read in this session.",
+  advisory_unavailable: "The advisory operation is unavailable.",
+  operation_cancelled: "The tool call was cancelled.",
+  mcp_protocol_error: "The tool call failed at the MCP boundary.",
+  analysis_refused: "Kaijan could not accept the change risk analysis.",
+  analysis_partial: "The change risk analysis did not complete.",
+  report_unavailable: "The saved report is unavailable in this chat.",
+  report_invalid_selection: "The report selection is invalid.",
+  report_projection_unavailable: "The saved report view is unavailable.",
+  report_trace_unavailable: "The saved trace is unavailable in this chat.",
+  operation_not_found_in_scope: "The saved operation is unavailable in this chat.",
+  operation_unavailable: "The operation or its saved result is unavailable.",
+  answer_conflict: "The answer key belongs to a different answer.",
+  clarification_unavailable: "The test question is no longer available.",
+  invalid_answers: "The answer does not match the pending questions.",
+  answer_effect_unestablished: "Delivery of the saved answer is not confirmed.",
+  setup_scope_unavailable: "Setup is unavailable in this chat.",
+  private_parameter_invalid: "The private login input is invalid.",
+  private_parameter_unavailable: "The saved private login is unavailable.",
+  private_parameter_scope_mismatch: "The saved private login belongs to another chat.",
+  private_parameter_target_mismatch: "The saved private login does not allow these websites.",
+  private_parameter_collision: "A private login input name is used more than once.",
+  private_parameter_revoked: "The saved private login was revoked.",
+  tool_failed: "The tool call failed."
+};
+var toolFailureCodeSchema = external_exports.enum(Object.keys(toolFailureMessages));
+var mcpErrorResponseSchema = external_exports.object({
+  structuredContent: external_exports.object({
+    code: external_exports.unknown().optional(),
+    error: external_exports.object({ code: external_exports.unknown().optional() }).optional()
+  }).optional()
+});
+var toolDiagnosticReasonSchema = external_exports.enum([
+  "invalid_arguments",
+  "saved_selection_conflict",
+  "saved_selection_unavailable",
+  "saved_selection_mismatch",
+  "report_read_failed",
+  "record_file_missing",
+  "artifact_run_not_selected",
+  "artifact_manifest_changed",
+  "artifact_manifest_identity_mismatch",
+  "artifact_not_selected",
+  "artifact_changed",
+  "artifact_invalid_offset",
+  "tool_failed"
+]);
+var toolDiagnosticFieldSchema = external_exports.enum([
+  "requestKey",
+  "scenario",
+  "scenarioId",
+  "params",
+  "target",
+  "executionMethod",
+  "planRef",
+  "savedTests",
+  "answerId",
+  "resultSha256",
+  "selectedTestIds",
+  "reportId",
+  "runId",
+  "artifactId",
+  "offset",
+  "initialURL",
+  "allowedHosts",
+  "deadline_ms",
+  "unknown"
+]);
+var toolFailureDiagnosedPropertiesSchema = external_exports.strictObject({
+  tool_name: external_exports.enum([
+    "loki_test_execute",
+    "loki_runner_execute",
+    "loki_report_artifact_read"
+  ]),
+  reason: toolDiagnosticReasonSchema,
+  validation_fields: external_exports.array(toolDiagnosticFieldSchema).max(telemetryLimits.arrayEntries)
+});
+var changeRiskCount = external_exports.number().int().nonnegative().max(1e5);
+var changeRiskAnalyzedPropertiesSchema = external_exports.strictObject({
+  analysis_id: external_exports.uuidv4(),
+  outcome: external_exports.enum(["completed", "failed"]),
+  duration_ms: external_exports.number().finite().nonnegative(),
+  files_changed_count: changeRiskCount.nullable(),
+  findings_count: changeRiskCount.nullable(),
+  findings_by_severity: external_exports.partialRecord(external_exports.enum(["critical", "high", "medium", "low", "info"]), changeRiskCount).nullable(),
+  questions_count: changeRiskCount.nullable(),
+  error_code: toolFailureCodeSchema.nullable(),
+  error_message: external_exports.string().max(128).nullable()
+}).refine((value) => value.outcome === "completed" ? value.error_code === null && value.error_message === null : value.error_code !== null && value.error_message === toolFailureMessages[value.error_code]);
+var localMcpMetricsSchema = external_exports.strictObject({
+  $mcp_tool_name: external_exports.union([
+    external_exports.literal("unknown"),
+    external_exports.string().max(80).regex(/^(?:loki|kaijan)_[a-z_]+$/)
+  ]),
+  $mcp_is_error: external_exports.boolean(),
+  $mcp_duration_ms: external_exports.number().finite().nonnegative(),
+  $mcp_server_name: external_exports.literal("kaijan-local"),
+  $mcp_server_version: telemetryVersionSchema,
+  invoked_by: external_exports.enum(["user_request", "codex_initiated", "unknown"]),
+  // Optional additions. Core saves both events from the same accepted receipt.
+  error_code: toolFailureCodeSchema.optional(),
+  change_risk: changeRiskAnalyzedPropertiesSchema.optional()
+}).refine((value) => (value.error_code === void 0 || value.$mcp_is_error && value.$mcp_tool_name.startsWith("loki_")) && (value.change_risk === void 0 || value.$mcp_tool_name === "loki_change_risk_analyze" && value.change_risk.duration_ms === value.$mcp_duration_ms && (!value.$mcp_is_error || value.change_risk.error_code === value.error_code)));
+var runtimeStartedPropertiesSchema = external_exports.strictObject({
+  is_first_run: external_exports.boolean().nullable(),
+  installed_at: external_exports.iso.datetime().nullable(),
+  ms_since_installed: external_exports.number().finite().nonnegative().nullable(),
+  startup_ms: external_exports.number().finite().nonnegative(),
+  tools_registered_count: external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  previous_plugin_version: telemetryVersionSchema.nullable()
+});
+var runtimeStartFailedPropertiesSchema = external_exports.discriminatedUnion("stage", [
+  external_exports.strictObject({
+    stage: external_exports.literal("verify_payload"),
+    error_code: external_exports.literal("payload_verification_failed"),
+    error_message: external_exports.literal("Payload verification failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("import_library"),
+    error_code: external_exports.literal("library_import_failed"),
+    error_message: external_exports.literal("Library import failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("init_services"),
+    error_code: external_exports.literal("service_initialization_failed"),
+    error_message: external_exports.literal("Service initialization failed.")
+  }),
+  external_exports.strictObject({
+    stage: external_exports.literal("register_tools"),
+    error_code: external_exports.literal("tool_registration_failed"),
+    error_message: external_exports.literal("Tool registration failed.")
+  })
+]);
+var telemetryOperationId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var setupStartedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId,
+  entry: external_exports.enum(["onboarding_offer", "manual_setup", "from_task"]).nullable(),
+  source_kind: external_exports.enum(["local_folder", "github_repo", "pr_link"]).nullable(),
+  repo_full_name: external_exports.null(),
+  source_ref_kind: external_exports.null(),
+  ref_name: external_exports.null(),
+  commit_sha: external_exports.null(),
+  has_target_url: external_exports.boolean().nullable(),
+  target_host: external_exports.null(),
+  user_goal_text: external_exports.null()
+});
+var setupFinishedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId,
+  outcome: external_exports.enum([
+    "ready",
+    "ready_partial",
+    "needs_input",
+    "failed",
+    "stopped"
+  ]),
+  missing_prerequisites: external_exports.array(external_exports.enum([
+    "admitted-map-producer",
+    "work-item-or-mapping-question",
+    "model-provider",
+    "source-authorization",
+    "admitted-application-consumer",
+    "source_identity_changed",
+    "adapter_changed",
+    "invalid_map_readiness",
+    "invalid_source_authorization",
+    "source_authorization_scope_mismatch",
+    "setup_interrupted",
+    "git_unavailable",
+    "invalid_source",
+    "unknown"
+  ])).max(30).nullable(),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  permissions_requested_count: external_exports.null(),
+  user_inputs_count: external_exports.null(),
+  user_wait_ms: external_exports.null(),
+  machine_ms: external_exports.null()
+});
+var metricCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var generatedMapStartedPropertiesSchema = external_exports.strictObject({
+  setup_id: telemetryOperationId.nullable(),
+  map_id: external_exports.null(),
+  mode: external_exports.literal("generate"),
+  repo_full_name: external_exports.null(),
+  commit_sha: external_exports.null(),
+  source_files_count: metricCount,
+  repo_size_bucket: external_exports.enum(["<1k", "1k-10k", ">10k files"]).nullable()
+});
+var mapStartedPropertiesSchema = external_exports.discriminatedUnion("mode", [
+  generatedMapStartedPropertiesSchema,
+  generatedMapStartedPropertiesSchema.extend({
+    mode: external_exports.literal("reuse_retained"),
+    map_id: telemetryOperationId
+  })
+]);
+var elementKindCounts = external_exports.strictObject({
+  button: metricCount.optional(),
+  link: metricCount.optional(),
+  input: metricCount.optional(),
+  select: metricCount.optional(),
+  tab: metricCount.optional(),
+  table: metricCount.optional(),
+  list: metricCount.optional(),
+  text: metricCount.optional(),
+  image: metricCount.optional(),
+  menu: metricCount.optional(),
+  dialog: metricCount.optional(),
+  section: metricCount.optional(),
+  other: metricCount.optional()
+}).nullable();
+var mapFinishedPropertiesSchema = external_exports.strictObject({
+  map_id: telemetryOperationId.nullable(),
+  outcome: external_exports.enum(["completed", "partial", "failed", "stopped"]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  pages_count: metricCount,
+  elements_count: metricCount,
+  navigation_edges_count: metricCount,
+  element_kinds: elementKindCounts,
+  pages: external_exports.null(),
+  issues_count: metricCount,
+  unavailable_citation_count: metricCount,
+  source_test_clues_count: external_exports.null(),
+  error_code: external_exports.null(),
+  error_message: external_exports.null()
+});
+var providerFailureMessages = {
+  provider_auth_failed: "The AI provider rejected its credentials.",
+  provider_quota_exhausted: "The AI provider quota is exhausted.",
+  provider_rate_limited: "The AI provider is rate limiting requests.",
+  provider_unavailable: "The AI provider is unavailable.",
+  provider_request_rejected: "The AI provider rejected the request."
+};
+var providerHttpStatusSchema = external_exports.number().int().min(100).max(599);
+function providerFailureCode(status, quotaExhausted = false) {
+  if (status === 401 || status === 403)
+    return "provider_auth_failed";
+  if (status === 402 || status === 429 && quotaExhausted)
+    return "provider_quota_exhausted";
+  if (status === 429)
+    return "provider_rate_limited";
+  if (status >= 500 && status <= 599)
+    return "provider_unavailable";
+  return "provider_request_rejected";
+}
+var inferenceFailureMessages = {
+  ...providerFailureMessages,
+  provider_connection_failed: "Kaijan could not connect to the AI provider.",
+  provider_response_interrupted: "The AI provider response ended before it was complete.",
+  provider_response_missing: "The AI provider returned no response body.",
+  provider_response_failed: "The AI provider reported that the request failed.",
+  provider_response_incomplete: "The AI provider could not finish the response.",
+  provider_output_limit: "The AI provider reached its output limit.",
+  inference_cancelled: "The AI request was cancelled before completion.",
+  inference_outcome_unknown: "Kaijan could not determine the AI request outcome."
+};
+var inferenceNativeOutcomeSchema = external_exports.enum([
+  "completed",
+  "failed",
+  "incomplete",
+  "output_limit",
+  "unknown"
+]);
+function inferenceFailureDetails(outcome, httpStatus, quotaExhausted = false, nativeOutcome) {
+  const errorCode = outcome === "upstream_rejected" && httpStatus !== null ? providerFailureCode(httpStatus, quotaExhausted) : outcome === "transport_error" ? "provider_connection_failed" : outcome === "stream_error" ? "provider_response_interrupted" : outcome === "body_absent" ? "provider_response_missing" : outcome === "cancelled" ? "inference_cancelled" : outcome === "unknown" ? "inference_outcome_unknown" : outcome === "body_complete" && nativeOutcome === "failed" ? "provider_response_failed" : outcome === "body_complete" && nativeOutcome === "incomplete" ? "provider_response_incomplete" : outcome === "body_complete" && nativeOutcome === "output_limit" ? "provider_output_limit" : outcome === "body_complete" && nativeOutcome === "unknown" ? "inference_outcome_unknown" : void 0;
+  return errorCode ? {
+    error_code: errorCode,
+    error_message: inferenceFailureMessages[errorCode],
+    ...outcome === "upstream_rejected" && httpStatus !== null ? { provider_http_status: httpStatus } : {}
+  } : void 0;
+}
+var planningFailureMessages = {
+  ...providerFailureMessages,
+  inference_request_rejected: "Kaijan could not send the request to the AI provider.",
+  provider_output_limit_no_retry: "The provider reached its output limit.",
+  transport_failure_no_retry: "The provider request did not complete.",
+  incomplete_capture_no_retry: "The provider response was incomplete.",
+  invalid_outer_response_no_retry: "The provider response could not be read.",
+  invalid_first_response_no_retry: "The provider returned an invalid planning response.",
+  invalid_first_plan_no_repair: "The proposed plan did not pass validation.",
+  persistence_failure_no_retry: "The planning result could not be saved.",
+  receipt_persistence_failure_no_retry: "The planning receipt could not be saved.",
+  risk_analysis_not_complete: "Required risk analysis was not complete.",
+  keychain_unavailable: "Kaijan could not access the login Keychain.",
+  connection_required: "A Kaijan connection is required.",
+  connection_unavailable: "The Kaijan connection could not be checked.",
+  planning_failed: "The test plan could not be generated."
+};
+var planningFailureCodeSchema = external_exports.enum(Object.keys(planningFailureMessages));
+var planningFailureStageSchema = external_exports.enum([
+  "provider_request",
+  "transport",
+  "response_capture",
+  "response_parsing",
+  "response_completion",
+  "plan_validation",
+  "persistence"
+]);
+var planningValidationRuleSchema = external_exports.enum([
+  "source_relation",
+  "source_relation_shape",
+  "source_relation_kind",
+  "source_span_bound",
+  "source_relation_arity",
+  "planning_identity",
+  "output_type",
+  "output_enum",
+  "output_keys",
+  "nonempty_string",
+  "unique_ids",
+  "known_ids",
+  "nonempty_evidence",
+  "known_evidence_id",
+  "intent_authority",
+  "empty_intentions_require_clarification",
+  "nonempty_objective_ids",
+  "nonempty_steps",
+  "coverage_status_membership",
+  "complete_test_definitions"
+]);
+var planningTransportReasonSchema = external_exports.enum([
+  "caller_abort",
+  "absolute_deadline",
+  "socket_timeout",
+  "unknown"
+]);
+var planGeneratedPropertiesSchema = external_exports.strictObject({
+  session_id: external_exports.null(),
+  plan_id: telemetryOperationId,
+  plan_version: external_exports.null(),
+  is_revision: external_exports.null(),
+  outcome: external_exports.enum(["proposed_plan", "needs_clarification", "failed"]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  cases_total: metricCount,
+  cases_functional: external_exports.null(),
+  cases_change_impact: external_exports.null(),
+  cases_existing_repo: external_exports.null(),
+  existing_tests_found: external_exports.null(),
+  existing_tests_selected: external_exports.null(),
+  components_covered_count: external_exports.null(),
+  components_covered: external_exports.null(),
+  map_components_total: external_exports.null(),
+  cases_without_component: external_exports.null(),
+  cases_missing_expected_result: metricCount,
+  groups_count: external_exports.null(),
+  // Optional v1 additions preserve intake of published clients.
+  error_code: planningFailureCodeSchema.nullable().optional(),
+  error_message: external_exports.string().max(128).nullable().optional(),
+  provider_http_status: providerHttpStatusSchema.optional(),
+  failure_stage: planningFailureStageSchema.optional(),
+  validation_rule: planningValidationRuleSchema.optional(),
+  transport_reason: planningTransportReasonSchema.optional()
+}).refine((value) => {
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0) && value.outcome !== "failed")
+    return false;
+  if (value.transport_reason !== void 0 && value.error_code !== "transport_failure_no_retry")
+    return false;
+  if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
+    return false;
+  if (value.error_code === null || value.error_code === void 0)
+    return value.error_message === null || value.error_message === void 0;
+  return value.outcome === "failed" && value.error_message === planningFailureMessages[value.error_code];
+});
+var runStartedPropertiesSchema = external_exports.strictObject({
+  session_id: external_exports.null(),
+  run_id: telemetryOperationId,
+  plan_id: telemetryOperationId.nullable(),
+  execution_mode: external_exports.literal("kaijan_runner"),
+  trigger: external_exports.null(),
+  cases_total: metricCount,
+  cases_by_category: external_exports.null(),
+  is_retest: external_exports.null(),
+  prior_run_id: external_exports.null(),
+  target_host: external_exports.enum(["browser-ui", "desktop-ui"])
+});
+var runServiceRejectionCode = "native_execution_service_rejected";
+var runServiceRejectionMessage = "The test service rejected a request.";
+var runAssessmentStatusSchema = external_exports.enum([
+  "not-started",
+  "stopped",
+  "context-unavailable",
+  "input-unavailable",
+  "preparing",
+  "preparation-refused",
+  "preparation-error",
+  "running",
+  "accepted",
+  "complete",
+  "failed",
+  "unknown",
+  "error"
+]);
+var runFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  session_id: external_exports.null(),
+  outcome: external_exports.enum([
+    "completed",
+    "partial",
+    "stopped",
+    "failed",
+    "interrupted"
+  ]),
+  duration_ms: external_exports.number().finite().nonnegative().nullable(),
+  cases_passed: metricCount,
+  cases_failed: metricCount,
+  cases_blocked: metricCount,
+  cases_unverified: metricCount,
+  cases_not_run: metricCount,
+  cases_total: metricCount.optional(),
+  results_by_category: external_exports.null(),
+  result_basis: external_exports.enum([
+    "product_terminal_checks",
+    "saved_report_assessments",
+    "selected_test_inventory"
+  ]).nullable(),
+  // Additive v1 field. Absence on older captures means coverage is unknown.
+  check_status: external_exports.enum(["checked", "unchecked"]).optional(),
+  assessment_status: runAssessmentStatusSchema.optional(),
+  unverified_reason: external_exports.enum([
+    "no_saved_assessment",
+    "no_validated_checks",
+    "missing_or_conflicting_evidence"
+  ]).optional(),
+  blocked_reason: external_exports.enum(["initial_navigation_blocked", "native_blocked"]).optional(),
+  evidence_items_count: metricCount,
+  recap_failure: external_exports.literal("service_rejected").optional(),
+  error_code: external_exports.enum([
+    "native_execution_failed",
+    "native_execution_blocked",
+    runServiceRejectionCode
+  ]).nullable(),
+  error_message: external_exports.enum([
+    "Native execution did not return a validated result.",
+    "Native execution was blocked.",
+    runServiceRejectionMessage
+  ]).nullable()
+}).refine((value) => value.error_code === runServiceRejectionCode ? ["partial", "interrupted"].includes(value.outcome) && value.error_message === runServiceRejectionMessage : value.error_message !== runServiceRejectionMessage).refine((value) => !value.recap_failure || ["completed", "partial"].includes(value.outcome) && value.error_code === null && value.error_message === null).refine((value) => {
+  if (value.blocked_reason === "native_blocked" && value.error_code !== "native_execution_blocked" || value.blocked_reason === "initial_navigation_blocked" && value.outcome !== "partial" || value.unverified_reason === "missing_or_conflicting_evidence" && (value.result_basis !== "saved_report_assessments" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_saved_assessment" && (value.result_basis !== "selected_test_inventory" || !(value.cases_unverified && value.cases_unverified > 0)) || value.unverified_reason === "no_validated_checks" && (value.check_status !== "unchecked" || value.result_basis !== null))
+    return false;
+  if (value.cases_total === void 0 || value.cases_total === null)
+    return true;
+  const counts = [
+    value.cases_passed,
+    value.cases_failed,
+    value.cases_blocked,
+    value.cases_unverified,
+    value.cases_not_run
+  ];
+  return counts.every((count7) => count7 !== null) && counts.reduce((sum, count7) => sum + (count7 ?? 0), 0) === value.cases_total;
+});
+var assessmentFinishedPropertiesSchema = external_exports.discriminatedUnion("outcome", [
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("completed"),
+    error_code: external_exports.null()
+  }),
+  external_exports.strictObject({
+    assessment_id: telemetryOperationId,
+    outcome: external_exports.literal("failed"),
+    error_code: external_exports.enum([
+      "assessment_service_rejected",
+      "assessment_result_unavailable"
+    ])
+  })
+]);
+var reportOpenedPropertiesSchema = external_exports.strictObject({
+  report_id: telemetryOperationId,
+  session_id: external_exports.null(),
+  source: external_exports.null(),
+  view_duration_ms: external_exports.null(),
+  has_plan: external_exports.boolean().nullable(),
+  has_results: external_exports.boolean().nullable(),
+  has_map: external_exports.boolean().nullable(),
+  view_kind: external_exports.enum(["full_report", "test_plan_details"]),
+  presentation: external_exports.enum(["mcp_app", "loopback_url"]),
+  surface: external_exports.enum(["mcp_app", "browser_panel", "loopback_url"]).nullable(),
+  observation_basis: external_exports.literal("owned_visible_render/1")
+});
+var userInputRequestedPropertiesSchema = external_exports.strictObject({
+  input_kind: external_exports.literal("clarification"),
+  request_key: telemetryOperationId,
+  question_text: external_exports.null(),
+  options: external_exports.null(),
+  observation_basis: external_exports.literal("server_live_clarification_request/1")
+});
+var userInputReceivedPropertiesSchema = external_exports.strictObject({
+  input_kind: external_exports.literal("clarification"),
+  request_key: telemetryOperationId,
+  answer: external_exports.null(),
+  wait_ms: external_exports.number().finite().nonnegative().nullable(),
+  observation_basis: external_exports.literal("server_live_answer_delivery/1")
+});
+var localEnvelope = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  component: external_exports.literal("local_runtime"),
+  plugin_version: telemetryVersionSchema,
+  release: external_exports.string().max(256).regex(/^loki@[a-zA-Z0-9.+_-]+$/),
+  install_channel: external_exports.enum(["dev", "qa", "early_access", "unknown"]),
+  cohort: external_exports.null(),
+  host: external_exports.enum(["codex", "claude_code", "unknown"]),
+  host_version: telemetryVersionSchema.nullable(),
+  host_surface: external_exports.literal("unknown"),
+  host_thread_id: external_exports.null(),
+  session_id: external_exports.null(),
+  step: external_exports.null(),
+  os: external_exports.enum(["darwin", "linux", "win32", "unknown"]),
+  os_version: telemetryVersionSchema,
+  arch: external_exports.enum(["arm64", "x64", "unknown"])
+});
+var mcpCapture = localEnvelope.extend({
+  event: external_exports.literal("$mcp_tool_call"),
+  event_version: external_exports.literal(2),
+  properties: localMcpMetricsSchema
+});
+var toolFailureDiagnosedCapture = localEnvelope.extend({
+  event: external_exports.literal("Tool Failure Diagnosed"),
+  event_version: external_exports.literal(1),
+  properties: toolFailureDiagnosedPropertiesSchema
+});
+var startedCapture = localEnvelope.extend({
+  event: external_exports.literal("Runtime Started"),
+  event_version: external_exports.literal(1),
+  properties: runtimeStartedPropertiesSchema
+});
+var failedCapture = localEnvelope.extend({
+  event: external_exports.literal("Runtime Start Failed"),
+  event_version: external_exports.literal(1),
+  properties: runtimeStartFailedPropertiesSchema
+});
+var setupStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Setup Started"),
+  event_version: external_exports.literal(1),
+  properties: setupStartedPropertiesSchema
+});
+var setupFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Setup Finished"),
+  event_version: external_exports.literal(1),
+  properties: setupFinishedPropertiesSchema
+});
+var mapStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Map Build Started"),
+  event_version: external_exports.literal(1),
+  properties: mapStartedPropertiesSchema
+});
+var mapFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Map Build Finished"),
+  event_version: external_exports.literal(1),
+  properties: mapFinishedPropertiesSchema
+});
+var planGeneratedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Plan Generated"),
+  event_version: external_exports.literal(1),
+  properties: planGeneratedPropertiesSchema
+});
+var runStartedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Run Started"),
+  event_version: external_exports.literal(1),
+  properties: runStartedPropertiesSchema
+});
+var runFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: runFinishedPropertiesSchema
+});
+var assessmentFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Test Assessment Finished"),
+  event_version: external_exports.literal(1),
+  properties: assessmentFinishedPropertiesSchema
+});
+var reportOpenedCapture = localEnvelope.extend({
+  event: external_exports.literal("Report Opened"),
+  event_version: external_exports.literal(1),
+  properties: reportOpenedPropertiesSchema
+});
+var userInputRequestedCapture = localEnvelope.extend({
+  event: external_exports.literal("User Input Requested"),
+  event_version: external_exports.literal(1),
+  properties: userInputRequestedPropertiesSchema
+});
+var userInputReceivedCapture = localEnvelope.extend({
+  event: external_exports.literal("User Input Received"),
+  event_version: external_exports.literal(1),
+  properties: userInputReceivedPropertiesSchema
+});
+var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
+  mcpCapture,
+  startedCapture,
+  failedCapture,
+  setupStartedCapture,
+  setupFinishedCapture,
+  mapStartedCapture,
+  mapFinishedCapture,
+  planGeneratedCapture,
+  runStartedCapture,
+  runFinishedCapture,
+  reportOpenedCapture,
+  userInputRequestedCapture,
+  userInputReceivedCapture,
+  assessmentFinishedCapture,
+  toolFailureDiagnosedCapture
+]);
+var ownership = {
+  install_id: external_exports.uuidv4(),
+  identity_epoch: telemetryIdentityEpochSchema,
+  seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
+};
+var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var telemetryEventSchema = external_exports.discriminatedUnion("event", [
+  mcpCapture.extend(ownership),
+  startedCapture.extend(ownership),
+  failedCapture.extend(ownership),
+  setupStartedCapture.extend(ownership),
+  setupFinishedCapture.extend(ownership),
+  mapStartedCapture.extend(ownership),
+  mapFinishedCapture.extend(ownership),
+  planGeneratedCapture.extend(ownership),
+  runStartedCapture.extend(ownership),
+  runFinishedCapture.extend(ownership),
+  reportOpenedCapture.extend(ownership),
+  userInputRequestedCapture.extend(ownership),
+  userInputReceivedCapture.extend(ownership),
+  assessmentFinishedEventSchema,
+  toolFailureDiagnosedCapture.extend(ownership)
+]);
+var telemetryBatchSchema = external_exports.strictObject({
+  events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
+}).refine((batch) => batch.events.every((event2) => event2.event !== "$mcp_tool_call" || event2.properties.change_risk?.analysis_id.toLowerCase() !== event2.event_uuid.toLowerCase()), {
+  path: ["events"],
+  message: "A change risk event needs a distinct event ID."
+});
+var telemetryReceiptSchema = external_exports.strictObject({
+  accepted: external_exports.array(external_exports.strictObject({
+    event_uuid: external_exports.uuidv4(),
+    received_at: external_exports.iso.datetime()
+  })).min(1).max(telemetryLimits.batchEvents)
+});
+var anonymousOnboardingKeySchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
+var anonymousOnboardingIdSchema = external_exports.string().regex(/^core-anon-v1-[a-f0-9]{64}$/);
+var onboardingFailureMessages = {
+  github_callback_error: "GitHub sign-in did not complete.",
+  state_mismatch: "The sign-in callback did not match the current request.",
+  token_exchange_failed: "Kaijan could not issue a sign-in token.",
+  account_not_allowed: "This account could not sign in to Kaijan.",
+  keychain_unavailable: "Kaijan could not save the sign-in credentials."
+};
+var onboardingFailureCodeSchema = external_exports.enum(Object.keys(onboardingFailureMessages));
+var anonymousOnboardingRequestSchema = external_exports.discriminatedUnion("kind", [
+  external_exports.strictObject({
+    kind: external_exports.literal("ticket"),
+    key: anonymousOnboardingKeySchema,
+    challenge: anonymousOnboardingKeySchema,
+    state: anonymousOnboardingKeySchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("lifecycle"),
+    key: anonymousOnboardingKeySchema,
+    event: external_exports.enum(["Runtime Started", "Setup Started"]),
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    plugin_version: telemetryVersionSchema
+  }),
+  external_exports.strictObject({
+    kind: external_exports.literal("failure"),
+    key: anonymousOnboardingKeySchema,
+    event_uuid: external_exports.uuidv4(),
+    client_ts: external_exports.iso.datetime(),
+    error_code: external_exports.enum(["state_mismatch", "keychain_unavailable"])
+  })
+]);
+var oauthReconnectReasonSchema = external_exports.enum([
+  "token_expired",
+  "refresh_failed",
+  "revoked",
+  "new_install",
+  "unknown"
+]);
+var oauthReconnectContextSchema = external_exports.object({
+  is_reconnect: external_exports.boolean().nullable(),
+  reconnect_reason: oauthReconnectReasonSchema
+});
+var coreOAuthStepPropertiesSchema = external_exports.strictObject({
+  oauth_step: external_exports.enum([
+    "authorize_requested",
+    "sign_in_started",
+    "sign_in_completed",
+    "consent_shown",
+    "consent_granted",
+    "consent_denied",
+    "token_issued",
+    "refresh_failed",
+    "revoked"
+  ]),
+  client_kind: external_exports.enum(["codex", "claude", "runtime"]),
+  identity_provider: external_exports.enum(["google", "github"]).nullable(),
+  is_reconnect: external_exports.boolean().nullable(),
+  ms_since_authorize_requested: external_exports.number().finite().nonnegative().nullable(),
+  // Optional v1 addition. An absent legacy observation stays unknown.
+  reconnect_reason: oauthReconnectReasonSchema.optional(),
+  grant_type: external_exports.enum(["authorization_code", "refresh_token"]).optional()
+});
+var coreOAuthTelemetryCaptureSchema = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  event: external_exports.literal("Core OAuth Step"),
+  event_version: external_exports.literal(1),
+  properties: coreOAuthStepPropertiesSchema
+});
+var inferenceUsageModelSchema = external_exports.enum([
+  "gpt-6-luna",
+  "gpt-6.1-terra",
+  "gpt-6-astra",
+  "typesafe/jev-1.13-20260917"
+]);
+var inferenceFailureCategorySchema = external_exports.enum([
+  "authentication",
+  "quota",
+  "rate_limit",
+  "invalid_request",
+  "unavailable",
+  "connection",
+  "interrupted",
+  "cancelled",
+  "unknown"
+]);
+var nativeTokenCount = external_exports.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable();
+var inferenceClientVersionSchema = external_exports.string().regex(/^\d{1,8}\.\d{1,8}\.\d{1,8}$/);
+var inferenceImageDiagnosticsSchema = external_exports.strictObject({
+  image_count: external_exports.number().int().nonnegative(),
+  invalid_image_count: external_exports.number().int().nonnegative(),
+  truncated: external_exports.boolean(),
+  // Eight small projections fit the existing event budget. No image/URL values.
+  samples: external_exports.array(external_exports.strictObject({
+    input_index: external_exports.number().int().nonnegative(),
+    content_index: external_exports.number().int().nonnegative().optional(),
+    kind: external_exports.enum(["computer_output", "input_image"]),
+    format: external_exports.enum(["data_url", "http_url", "file_id", "other", "missing"]),
+    mime_type: external_exports.enum(["image/png", "image/jpeg", "image/webp", "image/gif", "other"]).nullable(),
+    encoded_length: external_exports.number().int().nonnegative().nullable(),
+    decoded_byte_length: external_exports.number().int().nonnegative().nullable(),
+    validation: external_exports.enum([
+      "valid_syntax",
+      "empty",
+      "not_string",
+      "invalid_data_url",
+      "invalid_base64",
+      "invalid_url",
+      "unsupported_format"
+    ])
+  })).max(8)
+});
+var coreInferencePropertiesSchema = external_exports.strictObject({
+  operation_id: telemetryOperationId.nullable(),
+  capability: external_exports.enum(["plan", "run"]).nullable(),
+  plan_id: telemetryOperationId.nullable().optional(),
+  run_id: telemetryOperationId.nullable().optional(),
+  model: inferenceUsageModelSchema.nullable(),
+  // Optional v1 additions. Requested identity is not a native usage receipt.
+  requested_model: inferenceUsageModelSchema.nullable().optional(),
+  inference_route: external_exports.enum(["responses", "decisions", "systemOne"]).optional(),
+  core_request_id: external_exports.uuidv4().optional(),
+  litellm_call_id: external_exports.uuid().optional(),
+  client_version: inferenceClientVersionSchema.optional(),
+  image_diagnostics: inferenceImageDiagnosticsSchema.optional(),
+  core_automatic_retry: external_exports.literal(false).optional(),
+  // Hash the opaque provider reference; never collect its raw value.
+  response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  previous_response_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional(),
+  request_store: external_exports.boolean().optional(),
+  request_stage: external_exports.enum(["planner_recap_assessment", "other"]).optional(),
+  failure_category: inferenceFailureCategorySchema.optional(),
+  provider_route: external_exports.literal("litellm"),
+  input_tokens: nativeTokenCount,
+  cached_input_tokens: nativeTokenCount,
+  output_tokens: nativeTokenCount,
+  reasoning_tokens: nativeTokenCount,
+  cost_usd: external_exports.number().finite().nonnegative().max(Number.MAX_SAFE_INTEGER).nullable(),
+  // Additive v1 provenance. Older captures keep their explicit unknown cost.
+  cost_basis: external_exports.enum([
+    "litellm_response_header",
+    "provider_usage_cost",
+    "model_pricing_estimate"
+  ]).optional(),
+  outcome: external_exports.null(),
+  latency_ms: external_exports.number().finite().nonnegative(),
+  http_status: providerHttpStatusSchema.nullable(),
+  // Optional v1 additions. Older producers retain the legacy transport state.
+  native_response_outcome: inferenceNativeOutcomeSchema.optional(),
+  provider_http_status: providerHttpStatusSchema.optional(),
+  error_code: external_exports.enum(Object.keys(inferenceFailureMessages)).optional(),
+  error_message: external_exports.string().max(128).optional(),
+  transport_outcome: external_exports.enum([
+    "body_complete",
+    "body_absent",
+    "upstream_rejected",
+    "transport_error",
+    "stream_error",
+    "cancelled",
+    "unknown"
+  ]),
+  observation_basis: external_exports.enum([
+    "core_inference_transport/1",
+    "core_inference_native_usage/1"
+  ])
+}).refine((value) => {
+  if (value.cost_usd !== null !== (value.cost_basis !== void 0) || value.cost_usd !== null && value.http_status === null)
+    return false;
+  const failure2 = inferenceFailureDetails(value.transport_outcome, value.http_status, value.error_code === "provider_quota_exhausted", value.native_response_outcome);
+  if (value.native_response_outcome !== void 0 && value.transport_outcome !== "body_complete")
+    return false;
+  if ((value.error_code !== void 0 || value.error_message !== void 0 || value.provider_http_status !== void 0) && (!failure2 || value.provider_http_status !== failure2.provider_http_status || value.error_code !== failure2.error_code || value.error_message !== failure2.error_message))
+    return false;
+  const native = value.observation_basis === "core_inference_native_usage/1";
+  if ((value.cost_basis === "provider_usage_cost" || value.cost_basis === "model_pricing_estimate") && !native)
+    return false;
+  const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
+  if (native !== hasUsage)
+    return false;
+  if (native && (value.transport_outcome !== "body_complete" || value.http_status === null || value.http_status < 200 || value.http_status >= 300))
+    return false;
+  if (!native && [
+    value.model,
+    value.input_tokens,
+    value.output_tokens,
+    value.cached_input_tokens,
+    value.reasoning_tokens
+  ].some((item) => item !== null))
+    return false;
+  if (value.cached_input_tokens !== null && value.cached_input_tokens > (value.input_tokens ?? -1))
+    return false;
+  if (value.reasoning_tokens !== null && value.reasoning_tokens > (value.output_tokens ?? -1))
+    return false;
+  const plan = value.plan_id ?? null, run = value.run_id ?? null;
+  return value.operation_id === (run ?? plan) && value.capability === (run ? "run" : plan ? "plan" : null);
+}, "Native usage and operation attribution must be coherent.");
+var coreInferenceTelemetryCaptureSchema = external_exports.strictObject({
+  event_uuid: external_exports.uuidv4(),
+  client_ts: external_exports.iso.datetime(),
+  event: external_exports.literal("AI Usage Recorded"),
+  event_version: external_exports.literal(1),
+  properties: coreInferencePropertiesSchema
+});
+var coreTelemetryActorSchema = external_exports.strictObject({
+  user_id: external_exports.uuid(),
+  workspace_id: external_exports.uuid()
+});
 
 // ../contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
@@ -23952,6 +24942,40 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
   status: external_exports.literal("saved")
 });
 
+// ../contracts/dist/agent-feedback.js
+var diagnostics = productFeedbackInputSchema.shape.diagnostics.unwrap().shape;
+var runId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var agentFeedbackInputSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  feedbackType: external_exports.enum([
+    "helpful",
+    "friction",
+    "missing_capability",
+    "suspected_defect"
+  ]),
+  description: productFeedbackInputSchema.shape.description,
+  capability: diagnostics.capability,
+  errorCode: diagnostics.errorCode,
+  runId: runId.optional()
+});
+var agentFeedbackContextSchema = external_exports.strictObject({
+  sessionId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  sessionKind: external_exports.enum(["host-thread", "connection"]),
+  pluginVersion: diagnostics.pluginVersion,
+  os: diagnostics.os,
+  verifiedRunId: runId.optional()
+});
+var agentFeedbackSubmissionSchema = agentFeedbackInputSchema.extend({
+  context: agentFeedbackContextSchema
+});
+var agentFeedbackReceiptSchema = external_exports.strictObject({
+  feedbackId: external_exports.uuid(),
+  requestId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime(),
+  status: external_exports.literal("saved"),
+  runReference: external_exports.enum(["verified", "unavailable"]).optional()
+});
+
 // ../contracts/dist/product-issue.js
 var kaijanIssueRepository = "katalon-studio/kaijan-marketplace";
 var issueImageLimits = Object.freeze({
@@ -23970,6 +24994,7 @@ var productIssueInputSchema = external_exports.strictObject({
   requestId: external_exports.uuid().toLowerCase(),
   title: external_exports.string().trim().min(1).max(200),
   description: external_exports.string().trim().min(1).max(5e3),
+  context: external_exports.string().trim().min(1).max(5e3).optional(),
   expectedBehavior: external_exports.string().trim().min(1).max(1500).optional(),
   steps: external_exports.array(external_exports.string().trim().min(1).max(500)).max(10).optional(),
   images: external_exports.array(issueImageSchema).max(issueImageLimits.files)
@@ -24041,6 +25066,41 @@ var productIssuePreparationSchema = external_exports.strictObject({
       path: ["uploads"],
       message: "Only the selected images can receive upload grants."
     });
+});
+
+// ../contracts/dist/app-model.js
+var appModelIdentitySchema = external_exports.strictObject({
+  applicationKey: external_exports.string().min(1),
+  environmentKey: external_exports.string().min(1),
+  roleKey: external_exports.string().min(1).nullable()
+});
+var appModelSnapshotSchema = external_exports.looseObject({
+  nodes: external_exports.array(external_exports.json()),
+  edges: external_exports.array(external_exports.json()),
+  uiModel: external_exports.looseObject({
+    pages: external_exports.array(external_exports.json()),
+    unknowns: external_exports.array(external_exports.string())
+  })
+});
+var appModelCollectionSchema = external_exports.strictObject({
+  requestId: external_exports.uuid(),
+  identity: appModelIdentitySchema,
+  observation: external_exports.strictObject({
+    observedAt: external_exports.iso.datetime(),
+    status: external_exports.enum(["complete", "incomplete"]),
+    reason: external_exports.string(),
+    sourceCommit: external_exports.string().min(1).nullable()
+  }),
+  format: external_exports.literal("kaijan.explorer-map/1"),
+  snapshot: appModelSnapshotSchema,
+  // These identify the producer's retained evidence. They are not remote files
+  // or access grants. Binary upload is outside this collection contract.
+  evidence: external_exports.array(external_exports.strictObject({ id: external_exports.string().min(1), availability: external_exports.literal("local") }))
+});
+var appModelRevisionSchema = appModelCollectionSchema.extend({
+  modelId: external_exports.uuid(),
+  revisionId: external_exports.uuid(),
+  createdAt: external_exports.iso.datetime()
 });
 
 // ../contracts/dist/workspace-customer.js
@@ -24219,7 +25279,9 @@ var authorizeSchema = external_exports.strictObject({
   state: external_exports.string().min(16).max(512),
   resource: external_exports.url(),
   scope: external_exports.string().min(1).max(200),
-  onboarding_ticket: onboardingTicketSchema.optional()
+  onboarding_ticket: onboardingTicketSchema.optional(),
+  is_reconnect: external_exports.enum(["true", "false"]).optional(),
+  reconnect_reason: oauthReconnectReasonSchema.optional()
 });
 var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
   external_exports.strictObject({
@@ -24229,7 +25291,9 @@ var tokenRequestSchema = external_exports.discriminatedUnion("grant_type", [
     resource: external_exports.url(),
     code: opaqueSchema,
     code_verifier: verifierSchema,
-    onboarding_ticket: onboardingTicketSchema.optional()
+    onboarding_ticket: onboardingTicketSchema.optional(),
+    is_reconnect: external_exports.enum(["true", "false"]).optional(),
+    reconnect_reason: oauthReconnectReasonSchema.optional()
   }),
   external_exports.strictObject({
     grant_type: external_exports.literal("refresh_token"),
@@ -24433,17 +25497,17 @@ var families = Object.freeze({
 // ../provider-transport/broker-channel.mjs
 import { request as request2 } from "node:http";
 import { Readable } from "node:stream";
-import { lstat } from "node:fs/promises";
-import { dirname } from "node:path";
+import { lstat as lstat2 } from "node:fs/promises";
+import { dirname as dirname2 } from "node:path";
 async function checkChannel(socketPath) {
-  const directory = await lstat(dirname(socketPath));
-  const socket = await lstat(socketPath);
+  const directory = await lstat2(dirname2(socketPath));
+  const socket = await lstat2(socketPath);
   if (!directory.isDirectory() || directory.isSymbolicLink() || directory.mode & 63 || directory.uid !== process.getuid() || !socket.isSocket() || socket.mode & 63 || socket.uid !== process.getuid())
     throw Error("unsafe_broker_channel");
 }
 async function channelFetch(socketPath, path, options = {}) {
   await checkChannel(socketPath);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve2, reject) => {
     const req = request2(
       {
         socketPath,
@@ -24463,7 +25527,7 @@ async function channelFetch(socketPath, path, options = {}) {
           if (typeof res.headers[name] === "string")
             headers.set(name, res.headers[name]);
         }
-        resolve(
+        resolve2(
           new Response(
             [204, 205, 304].includes(res.statusCode) ? null : Readable.toWeb(res),
             { status: res.statusCode, headers }
@@ -24503,19 +25567,17 @@ function providerConnection(nativeUrl, key, env = {}) {
     throw new AiClientError("managed_count_binding_required");
   const openai = native.origin === "https://api.openai.com" && [
     "/v1/responses",
+    "/v1/decisions",
     "/v1/responses/input_tokens",
     "/v1/models/gpt-6-luna"
   ].includes(native.pathname);
-  const jev = native.origin === "https://openrouter.ai" && (native.pathname === "/api/v1/systemone" || /^\/api\/v1\/models\/typesafe\/jev[^?#]*\/endpoints$/.test(
-    native.pathname
-  ));
-  if (!openai && !jev) throw new AiClientError("unsupported_native_route");
+  if (!openai) throw new AiClientError("unsupported_native_route");
   if (env.LOKI_AUTH_BROKER_SOCKET) {
     if (env.LOKI_AI_CONNECTION_BINDING !== void 0)
       requireManagedBinding(env);
     if (typeof env.LOKI_AUTH_BROKER_SOCKET !== "string" || !env.LOKI_AUTH_BROKER_SOCKET.startsWith("/") || env.LOKI_AUTH_BROKER_SOCKET.length > 103)
       throw new AiClientError("invalid_broker_channel");
-    const path = native.pathname === "/v1/responses" ? "/v1/responses" : openai ? `/openai_passthrough${native.pathname}` : `/openrouter${native.pathname.slice(4)}`;
+    const path = ["/v1/responses", "/v1/decisions"].includes(native.pathname) ? native.pathname : `/openai_passthrough${native.pathname}`;
     return {
       url: `http://localhost/${env.LOKI_AI_CONNECTION_BINDING ? "ai-bound" : "ai"}${path}`,
       headers: Object.fromEntries(
@@ -24547,6 +25609,7 @@ function headersFor(connection, supplied = {}) {
       "authorization",
       "x-loki-plan-id",
       "x-loki-run-id",
+      "x-kaijan-client-version",
       "x-kaijan-ai-connection"
     ].includes(name.toLowerCase()))
       delete headers[name];
@@ -24570,66 +25633,9 @@ function sendFetch(connection, options, transport = globalThis.fetch) {
   });
 }
 
-// src/storage.ts
-import { constants } from "node:fs";
-import { mkdir, open as open2, lstat as lstat2, realpath, rename, unlink } from "node:fs/promises";
-async function privateDirectory(path) {
-  await mkdir(path, { recursive: true, mode: 448 });
-  await checkPrivateDirectory(path);
-}
-async function checkPrivateDirectory(path) {
-  const info = await lstat2(path);
-  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
-    throw new Error("The plugin data directory is unsafe.");
-}
-async function regularFile(path, maximum, privateRecord = false) {
-  if (maximum !== void 0 && (!Number.isSafeInteger(maximum) || maximum < 0))
-    throw new Error("The selected file read limit is invalid.");
-  const file2 = await open2(
-    path,
-    constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
-  );
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || maximum !== void 0 && info.size > maximum)
-      throw new Error("The selected file is not a bounded regular file.");
-    if (privateRecord && (info.uid !== process.getuid?.() || info.mode & 63 || info.nlink !== 1))
-      throw new Error("The private file is unsafe.");
-    if (maximum === void 0) return await file2.readFile();
-    const chunks = [];
-    let length = 0;
-    while (length <= maximum) {
-      const bytes2 = Buffer.allocUnsafeSlow(
-        Math.min(64 * 1024, maximum + 1 - length)
-      );
-      const result = await file2.read(bytes2, 0, bytes2.length, null);
-      if (!result.bytesRead) break;
-      length += result.bytesRead;
-      if (length > maximum)
-        throw new Error("The selected file exceeds its limit.");
-      chunks.push(bytes2.subarray(0, result.bytesRead));
-    }
-    const bytes = Buffer.allocUnsafeSlow(length);
-    let offset = 0;
-    for (const chunk of chunks) offset += chunk.copy(bytes, offset);
-    return bytes;
-  } finally {
-    await file2.close();
-  }
-}
-function boundedFile(path, maximum) {
-  return regularFile(path, maximum);
-}
-
 // src/provider.ts
 var keySchema = external_exports.string().min(1).max(8192);
-var providerSchema2 = external_exports.strictObject({
-  OPENAI_API_KEY: keySchema,
-  LOKI_OPENROUTER_API_KEY: keySchema.optional(),
-  LOKI_OPENROUTER_BASE_URL: external_exports.literal("https://openrouter.ai/api/v1").optional(),
-  // This legacy selector now applies only to native JEV, never Luna routing.
-  LOKI_MODEL_PROVIDER: external_exports.literal("openrouter").optional()
-});
+var providerSchema2 = external_exports.strictObject({ OPENAI_API_KEY: keySchema });
 var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
   external_exports.strictObject({
     model: external_exports.literal("gpt-6.1-terra"),
@@ -24684,9 +25690,9 @@ var object2 = external_exports.record(external_exports.string(), external_export
 var maxResponseBytes = 16 * 1024 * 1024;
 
 // src/query.ts
-import { createHash, createHmac, randomBytes, randomUUID } from "node:crypto";
+import { createHash as createHash2, createHmac, randomBytes, randomUUID as randomUUID2 } from "node:crypto";
 import { fileURLToPath } from "node:url";
-var digest18 = (value) => createHash("sha256").update(value).digest("hex");
+var digest18 = (value) => createHash2("sha256").update(value).digest("hex");
 var integrationIdentity = boundedFile(fileURLToPath(import.meta.url)).then(
   digest18
 );
@@ -24701,23 +25707,24 @@ function canonicalJson(value) {
 
 // src/runner-clarification.ts
 import {
-  redactor,
+  redactor as redactor2,
+  clarificationAnswerSecrets,
   projectClarification,
   RunnerProjectionError
 } from "@katalon-loki/computer-runner/redaction";
-import { createHash as createHash2 } from "node:crypto";
+import { createHash as createHash3 } from "node:crypto";
 
 // src/runner-answer-contracts.ts
 var nonempty5 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var runnerAnswer = external_exports.strictObject({
+var runnerAnswer = external_exports.looseObject({
   runId: hashId,
   clarificationId: hashId,
   answerKey: nonempty5,
-  answers: external_exports.record(external_exports.string(), nonempty5),
+  answers: external_exports.record(external_exports.string(), external_exports.unknown()),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
-var runnerAnswerReceipt = external_exports.strictObject({
+var runnerAnswerReceipt = external_exports.object({
   schema: external_exports.literal("loki.runner.clarification-answer/1"),
   runId: hashId,
   clarificationId: hashId,
@@ -24748,50 +25755,82 @@ var runnerAnswerOutput = external_exports.union([
 // src/runner-clarification.ts
 var nonempty6 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var question = external_exports.strictObject({
-  id: nonempty6,
+var supportingStrings = external_exports.preprocess(
+  (value) => Array.isArray(value) ? value.filter((item) => typeof item === "string") : [],
+  external_exports.array(external_exports.string())
+);
+var question = external_exports.object({
+  id: external_exports.string(),
   question: nonempty6,
-  kind: nonempty6,
-  presentation: clarificationPresentationSchema.optional()
+  kind: nonempty6.catch("task-scope"),
+  presentation: clarificationPresentationSchema.optional().catch(void 0)
+}).transform((value) => {
+  if (value.presentation === void 0) delete value.presentation;
+  return value;
 });
-var clarificationRequestSchema = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification/1"),
+var identityFields = {
   clarificationId: hashId2,
   providerResponseId: nonempty6,
-  callId: nonempty6,
-  reason: nonempty6,
-  completedSteps: external_exports.array(nonempty6),
-  remainingSteps: external_exports.array(nonempty6),
-  evidence: external_exports.array(nonempty6),
-  questions: external_exports.array(question).min(1),
-  provenance: external_exports.literal("model-authored-unverified")
-}).superRefine((v, ctx) => {
-  if (new Set(v.questions.map((q) => q.id)).size !== v.questions.length || v.clarificationId !== digest19(v.providerResponseId + "\0" + v.callId))
+  callId: nonempty6
+};
+var checkCorrelation = (value, ctx) => {
+  if (value.clarificationId !== digest19(value.providerResponseId + "\0" + value.callId))
     ctx.addIssue({
       code: "custom",
-      message: "Invalid clarification correlation or duplicate questions"
+      message: "Invalid clarification correlation"
     });
-});
-var digest19 = (text5) => createHash2("sha256").update(text5).digest("hex");
+};
+var originalRequestIdentity = external_exports.object(identityFields).superRefine(checkCorrelation);
+var clarificationRequestSchema = external_exports.object({
+  schema: external_exports.literal("loki.runner.clarification/1").catch("loki.runner.clarification/1"),
+  ...identityFields,
+  reason: external_exports.string().catch(""),
+  completedSteps: supportingStrings,
+  remainingSteps: supportingStrings,
+  evidence: supportingStrings,
+  questions: external_exports.preprocess(
+    (value) => Array.isArray(value) ? value.filter((q) => question.safeParse(q).success) : value,
+    external_exports.array(question).min(1)
+  ),
+  provenance: external_exports.literal("model-authored-unverified").catch("model-authored-unverified")
+}).superRefine(checkCorrelation);
+var digest19 = (text5) => createHash3("sha256").update(text5).digest("hex");
 
 // src/runner-clarification-worker.ts
-var answerFrame = external_exports.strictObject({
+var answerFrame = external_exports.looseObject({
   type: external_exports.literal("runner-clarification-answer"),
   clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
-  answers: external_exports.record(
-    external_exports.string(),
-    external_exports.string().refine((v) => Boolean(v.trim()))
-  )
+  answers: external_exports.record(external_exports.string(), external_exports.unknown())
 });
+var failureFrame = external_exports.strictObject({
+  type: external_exports.literal("runner-clarification-error"),
+  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
+  code: external_exports.literal("clarification_failed")
+});
+var cancelledFrame = external_exports.strictObject({
+  type: external_exports.literal("runner-clarification-cancelled"),
+  clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/)
+});
+var replyFrame = external_exports.discriminatedUnion("type", [
+  answerFrame,
+  failureFrame,
+  cancelledFrame
+]);
+var browserControlCancellation = (signal) => {
+  const reason = signal.reason;
+  return signal.aborted && reason instanceof Error && "code" in reason && reason.code === "loki.runner.browser-control/1" ? reason : void 0;
+};
 function createWorkerClarification(send2, operationSignal) {
   const seen = /* @__PURE__ */ new Set();
   const pending = /* @__PURE__ */ new Map();
+  const cancellations = /* @__PURE__ */ new Map();
   let closed = false;
   const failAll = () => {
     for (const p of pending.values())
       p.reject(Error("Clarification IPC interrupted; do not replay"));
     pending.clear();
+    cancellations.clear();
   };
   operationSignal.addEventListener("abort", failAll, { once: true });
   const requestClarification = async (raw, signal) => {
@@ -24804,13 +25843,37 @@ function createWorkerClarification(send2, operationSignal) {
     const combined = AbortSignal.any([operationSignal, signal]);
     let abort = () => {
     };
-    const response = new Promise((resolve, reject) => {
+    const response = new Promise((resolve2, reject) => {
       pending.set(request3.clarificationId, {
-        ids: request3.questions.map((q) => q.id),
-        resolve,
+        resolve: resolve2,
         reject
       });
       abort = () => {
+        const cancellation = browserControlCancellation(signal);
+        if (!operationSignal.aborted && cancellation) {
+          cancellations.set(request3.clarificationId, () => {
+            pending.delete(request3.clarificationId);
+            reject(cancellation);
+          });
+          void send2({
+            type: "runner-clarification-cancel",
+            clarificationId: request3.clarificationId
+          }).catch((cause) => {
+            cancellations.delete(request3.clarificationId);
+            pending.delete(request3.clarificationId);
+            reject(
+              Object.assign(
+                Error("Clarification cancellation was not acknowledged", {
+                  cause
+                }),
+                {
+                  code: "loki.runner.clarification-cancel-unconfirmed/1"
+                }
+              )
+            );
+          });
+          return;
+        }
         pending.delete(request3.clarificationId);
         reject(Error("Clarification wait interrupted; do not replay"));
       };
@@ -24823,7 +25886,8 @@ function createWorkerClarification(send2, operationSignal) {
       if (combined.aborted) throw Error("Clarification interrupted");
       await send2({ type: "runner-clarification-request", request: request3 });
       const answer = await response;
-      if (combined.aborted) throw Error("Clarification interrupted");
+      if (operationSignal.aborted || signal.aborted && !browserControlCancellation(signal))
+        throw Error("Clarification interrupted");
       return answer;
     } finally {
       combined.removeEventListener("abort", abort);
@@ -24833,19 +25897,53 @@ function createWorkerClarification(send2, operationSignal) {
   return {
     requestClarification,
     receive(raw) {
-      const frame = answerFrame.parse(raw);
+      const frame = replyFrame.parse(raw);
+      if (frame.type === "runner-clarification-cancelled") {
+        const cancel = cancellations.get(frame.clarificationId);
+        if (closed || operationSignal.aborted || !cancel)
+          throw Error("Late or mismatched clarification cancellation");
+        cancellations.delete(frame.clarificationId);
+        cancel();
+        return;
+      }
       const p = pending.get(frame.clarificationId);
-      if (closed || operationSignal.aborted || !p || Object.keys(frame.answers).length !== p.ids.length || p.ids.some((id4) => !Object.hasOwn(frame.answers, id4)))
+      if (closed || operationSignal.aborted || !p)
         throw Error("Late or mismatched clarification answer");
-      if (frame.sensitiveQuestionIds && (new Set(frame.sensitiveQuestionIds).size !== frame.sensitiveQuestionIds.length || frame.sensitiveQuestionIds.some(
-        (id4) => !Object.hasOwn(frame.answers, id4)
-      )))
-        throw Error("Invalid sensitive question IDs");
+      if (frame.type === "runner-clarification-error") {
+        pending.delete(frame.clarificationId);
+        const cancelling = cancellations.delete(frame.clarificationId);
+        p.reject(
+          cancelling ? Object.assign(
+            Error(
+              "Clarification cancellation failed; retirement was not acknowledged"
+            ),
+            {
+              code: "loki.runner.clarification-cancel-unconfirmed/1"
+            }
+          ) : Error("Caller clarification failed; no answer was delivered")
+        );
+        return;
+      }
       pending.delete(frame.clarificationId);
+      const answer = Object.fromEntries(
+        Object.entries(frame).filter(
+          ([key]) => !["type", "clarificationId", "sensitiveQuestionIds"].includes(key)
+        )
+      );
       p.resolve({
+        ...answer,
         answers: frame.answers,
         ...frame.sensitiveQuestionIds === void 0 ? {} : { sensitiveQuestionIds: frame.sensitiveQuestionIds }
       });
+    },
+    reject(raw) {
+      const identity2 = external_exports.object({ clarificationId: external_exports.string() }).safeParse(raw);
+      if (!identity2.success) return false;
+      const p = pending.get(identity2.data.clarificationId);
+      if (!p) return false;
+      pending.delete(identity2.data.clarificationId);
+      p.reject(Error("Clarification reply could not be used"));
+      return true;
     },
     close() {
       closed = true;
@@ -24936,8 +26034,8 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
       ]);
       let abort = () => {
       };
-      const response = new Promise((resolve, reject) => {
-        pending.set(frame.invocationId, { resolve, reject });
+      const response = new Promise((resolve2, reject) => {
+        pending.set(frame.invocationId, { resolve: resolve2, reject });
         abort = () => {
           pending.delete(frame.invocationId);
           reject(Error("Application-context wait interrupted; do not replay"));
@@ -24952,8 +26050,6 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
         await send2(frame);
         const reply = await response;
         if (combined.aborted) throw Error("Operator Stop");
-        if (reply.type === "application-context-error" && reply.disposition === "unresolved")
-          throw Error("Application-context effect unresolved; do not replay");
         const output2 = reply.type === "application-context-result" ? reply.resultJson : JSON.stringify(reply);
         completed.set(frame.invocationId, {
           frameJson: JSON.stringify(frame),
@@ -24969,6 +26065,15 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
   return {
     tool,
     receive,
+    reject(frame) {
+      if (!frame || typeof frame !== "object" || !("invocationId" in frame) || typeof frame.invocationId !== "string")
+        return false;
+      const entry = pending.get(frame.invocationId);
+      if (!entry) return false;
+      pending.delete(frame.invocationId);
+      entry.reject(Error("Application context reply could not be used"));
+      return true;
+    },
     close: () => {
       closed = true;
       operationSignal.removeEventListener("abort", failAll);
@@ -24978,10 +26083,10 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
 }
 
 // src/runner-validation.ts
-import { createHash as createHash3 } from "node:crypto";
+import { createHash as createHash4 } from "node:crypto";
 import { appendFile } from "node:fs/promises";
-import { dirname as dirname2, join } from "node:path";
-var digest20 = (value) => createHash3("sha256").update(value).digest("hex");
+import { dirname as dirname3, join as join2 } from "node:path";
+var digest20 = (value) => createHash4("sha256").update(value).digest("hex");
 var sha = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var selector = external_exports.union([
   external_exports.strictObject({ call: external_exports.number().int().min(1).max(80) }),
@@ -25073,13 +26178,13 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
     throw Error("Controlled worker route mismatch; no dispatch");
   if (plan.requestKey !== input3.requestId || plan.nativeInputSha256 !== digest20(canonicalJson(input3)) || plan.route !== route || plan.headless !== headless)
     throw Error("Validation worker binding mismatch; no dispatch");
-  const directory = dirname2(artifacts);
+  const directory = dirname3(artifacts);
   await privateDirectory(directory);
   let writes = Promise.resolve();
   const record5 = (event2) => {
     writes = writes.then(
       () => appendFile(
-        join(directory, "runner-validation.jsonl"),
+        join2(directory, "runner-validation.jsonl"),
         JSON.stringify({
           schema: "loki.runner-validation-event/1",
           at: (/* @__PURE__ */ new Date()).toISOString(),
@@ -25104,7 +26209,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
   async function readRows(name, schema) {
     try {
       return schema.parse(
-        JSON.parse((await boundedFile(join(artifacts, name))).toString("utf8"))
+        JSON.parse((await boundedFile(join2(artifacts, name))).toString("utf8"))
       );
     } catch (error62) {
       if (error62 instanceof Error && "code" in error62 && error62.code === "ENOENT")
@@ -25144,7 +26249,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         output: external_exports.array(external_exports.object({ call_id: external_exports.string().optional() }))
       }).parse(
         JSON.parse(
-          (await boundedFile(join(artifacts, `response-${call}.json`))).toString("utf8")
+          (await boundedFile(join2(artifacts, `response-${call}.json`))).toString("utf8")
         )
       );
       const order = new Map(
@@ -25351,7 +26456,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
 
 // src/runner-worker-failure.ts
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname as dirname3, join as join2 } from "node:path";
+import { dirname as dirname4, join as join3 } from "node:path";
 import { inspect } from "node:util";
 function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2) {
   let failed = false;
@@ -25378,10 +26483,10 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
         maxArrayLength: 50,
         maxStringLength: 4096
       });
-      const directory = dirname3(artifactDirectory);
+      const directory = dirname4(artifactDirectory);
       mkdirSync(directory, { recursive: true, mode: 448 });
       writeFileSync(
-        join2(directory, "runner-worker-failure.json"),
+        join3(directory, "runner-worker-failure.json"),
         JSON.stringify({
           schema: "loki.runner.worker-failure/1",
           event: "unhandledRejection",
@@ -25412,7 +26517,13 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
           process.exit(1);
         }
       },
-      Math.max(0, Math.min(1e4, deadlineAt - Date.now()))
+      Math.max(
+        0,
+        Math.min(
+          1e4,
+          (typeof deadlineAt === "function" ? deadlineAt() : deadlineAt) - Date.now()
+        )
+      )
     );
   });
   return {
@@ -25429,12 +26540,12 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
 // research/execution-reuse.mjs
 import { Buffer as Buffer2 } from "node:buffer";
 import { TextDecoder as TextDecoder2 } from "node:util";
-import { createHash as createHash4 } from "node:crypto";
+import { createHash as createHash5 } from "node:crypto";
 import { constants as constants2 } from "node:fs";
 import { open as open3, realpath as realpath2 } from "node:fs/promises";
-import { isAbsolute, join as join3 } from "node:path";
+import { isAbsolute, join as join4 } from "node:path";
 var evidenceSchema = "loki.computer-runner.private-evidence/1";
-var hash2 = (bytes) => createHash4("sha256").update(bytes).digest("hex");
+var hash2 = (bytes) => createHash5("sha256").update(bytes).digest("hex");
 var record4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var text4 = (value) => typeof value === "string" && value.trim().length > 0;
 var ReuseError = class extends Error {
@@ -25518,7 +26629,7 @@ async function regularRead(path, signal, { metadata: metadata2 = false } = {}) {
     const stat = await handle.stat();
     insist(stat.isFile(), "nonregular-source-member");
     insist(!metadata2 || stat.size <= maxMetadataBytes, "source-capacity");
-    const digest21 = createHash4("sha256");
+    const digest21 = createHash5("sha256");
     const buffer = Buffer2.alloc(readChunkBytes);
     const chunks = [];
     let size = 0;
@@ -25554,7 +26665,7 @@ async function regularBytes(path, signal) {
 async function sourceAt(directory, signal) {
   const canonicalDirectory = await realpath2(directory);
   const manifestBytes = await regularBytes(
-    join3(canonicalDirectory, "manifest.json"),
+    join4(canonicalDirectory, "manifest.json"),
     signal
   );
   const manifestSha256 = hash2(manifestBytes);
@@ -25572,7 +26683,7 @@ async function sourceAt(directory, signal) {
     );
     names.add(member.path);
     const memberRead = await regularRead(
-      join3(canonicalDirectory, member.path),
+      join4(canonicalDirectory, member.path),
       signal
     );
     insist(
@@ -25587,7 +26698,7 @@ async function sourceAt(directory, signal) {
   }
   insist(names.has("protocol.json"), "source-material-unavailable");
   const resultBytes = await regularBytes(
-    join3(canonicalDirectory, "result.json"),
+    join4(canonicalDirectory, "result.json"),
     signal
   );
   const result = json3(resultBytes);
@@ -25597,7 +26708,7 @@ async function sourceAt(directory, signal) {
   );
   insist(
     hash2(
-      await regularBytes(join3(canonicalDirectory, "manifest.json"), signal)
+      await regularBytes(join4(canonicalDirectory, "manifest.json"), signal)
     ) === manifestSha256,
     "source-drift"
   );
@@ -25644,7 +26755,95 @@ async function verifyExecutionSource(binding2, { signal } = {}) {
   stopped(signal);
 }
 
+// src/runner-review-channel.ts
+import { randomUUID as randomUUID3 } from "node:crypto";
+function replies(signal) {
+  const pending = /* @__PURE__ */ new Map();
+  const close = () => {
+    for (const item of pending.values())
+      item.reject(new Error("Runner review connection closed"));
+    pending.clear();
+  };
+  signal.addEventListener("abort", close, { once: true });
+  return {
+    request(send2, frame) {
+      signal.throwIfAborted();
+      const id4 = randomUUID3();
+      const result = new Promise(
+        (resolve2, reject) => pending.set(id4, { resolve: resolve2, reject })
+      );
+      const failed = (error62) => {
+        pending.get(id4)?.reject(error62 instanceof Error ? error62 : new Error(String(error62)));
+        pending.delete(id4);
+      };
+      try {
+        void Promise.resolve(send2({ ...frame, id: id4 })).catch(failed);
+      } catch (error62) {
+        failed(error62);
+      }
+      return result;
+    },
+    receive(frame) {
+      if (typeof frame.id !== "string") return false;
+      const item = pending.get(frame.id);
+      if (!item) return false;
+      pending.delete(frame.id);
+      if (typeof frame.error === "string") item.reject(new Error(frame.error));
+      else item.resolve(frame.result ?? null);
+      return true;
+    },
+    close() {
+      signal.removeEventListener("abort", close);
+      close();
+    }
+  };
+}
+function workerRunnerReview(send2, signal) {
+  const waiting = replies(signal);
+  let inspect2;
+  return {
+    review: async (info, runInspection) => {
+      inspect2 = runInspection;
+      try {
+        return await waiting.request(send2, { type: "runner-review", info });
+      } finally {
+        inspect2 = void 0;
+      }
+    },
+    receive(frame) {
+      if (frame.type === "runner-review-result") return waiting.receive(frame);
+      if (frame.type !== "runner-review-inspect" || typeof frame.id !== "string")
+        return false;
+      const current = inspect2;
+      void (async () => {
+        try {
+          signal.throwIfAborted();
+          if (!current)
+            throw new Error("Runner browser inspection is no longer available");
+          const result = await current(frame.request);
+          await send2({
+            type: "runner-review-inspection",
+            id: frame.id,
+            result
+          });
+        } catch (error62) {
+          await send2({
+            type: "runner-review-inspection",
+            id: frame.id,
+            error: String(error62)
+          });
+        }
+      })();
+      return true;
+    },
+    close: () => waiting.close()
+  };
+}
+
 // src/computer-runner-worker.ts
+import {
+  attachBrowserViewer
+} from "@katalon-loki/computer-runner/browser-viewer";
 var controller = new AbortController();
 var reportController = new AbortController();
 controller.signal.addEventListener("abort", () => {
@@ -25654,20 +26853,59 @@ controller.signal.addEventListener("abort", () => {
 });
 var started = false;
 var applicationContext;
-var applicationContextProtocolFailure = false;
 var clarification;
-var clarificationProtocolFailure = false;
-var send = (message) => new Promise((resolve) => {
+var clarificationDirectory;
+var clarificationReplyErrors = [];
+var clarificationReplyWrites = Promise.resolve();
+var retainClarificationReplyError = (frame, error62) => {
+  clarificationReplyErrors.push({ frame, error: String(error62) });
+  if (clarificationDirectory) {
+    const directory = clarificationDirectory;
+    clarificationReplyWrites = clarificationReplyWrites.then(
+      () => atomicFile(
+        directory,
+        "runner-clarification-reply-errors.json",
+        Buffer.from(JSON.stringify({ errors: clarificationReplyErrors }))
+      )
+    ).catch(() => {
+    });
+  }
+};
+var contextDirectory;
+var contextReplyErrors = [];
+var contextReplyWrites = Promise.resolve();
+var retainContextReplyError = (frame, error62) => {
+  let text5;
+  try {
+    text5 = String(error62);
+  } catch {
+    text5 = "Unprintable context reply failure";
+  }
+  contextReplyErrors.push({ frame, error: text5 });
+  if (contextDirectory) {
+    const directory = contextDirectory;
+    contextReplyWrites = contextReplyWrites.then(
+      () => atomicFile(
+        directory,
+        "runner-context-reply-errors.json",
+        Buffer.from(JSON.stringify({ errors: contextReplyErrors }))
+      )
+    ).catch(() => {
+    });
+  }
+};
+var send = (message) => new Promise((resolve2) => {
   if (!process.connected || !process.send) {
-    resolve();
+    resolve2();
     return;
   }
   try {
-    process.send(message, () => resolve());
+    process.send(message, () => resolve2());
   } catch {
-    resolve();
+    resolve2();
   }
 });
+var review = workerRunnerReview(send, reportController.signal);
 process.on("disconnect", () => {
   controller.abort();
   reportController.abort();
@@ -25676,17 +26914,14 @@ process.on("disconnect", () => {
 process.on("message", (message) => {
   if (!message || typeof message !== "object" || !("type" in message)) return;
   const frame = message;
-  if (frame.type === "runner-clarification-answer") {
+  if (review.receive(frame)) return;
+  if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error" || frame.type === "runner-clarification-cancelled") {
     try {
       if (!clarification) throw Error("Unregistered clarification reply");
       clarification.receive(frame);
-    } catch {
-      clarificationProtocolFailure = true;
-      controller.abort(
-        Object.assign(Error("Clarification IPC failure"), {
-          code: "loki.runner.clarification-failure/1"
-        })
-      );
+    } catch (error62) {
+      retainClarificationReplyError(frame, error62);
+      clarification?.reject(frame);
     }
     return;
   }
@@ -25694,18 +26929,16 @@ process.on("message", (message) => {
     try {
       if (!applicationContext?.receive(frame))
         throw Error("Unregistered context reply");
-    } catch {
-      applicationContextProtocolFailure = true;
-      controller.abort();
+    } catch (error62) {
+      retainContextReplyError(frame, error62);
+      applicationContext?.reject(frame);
     }
     return;
   }
   if (frame.type === "stop") {
     if (frame.reason !== "deadline") reportController.abort();
     controller.abort(
-      frame.reason === "deadline" ? Object.assign(Error("Time limit"), { code: "loki.runner.deadline/1" }) : frame.reason === "clarification-failure" ? Object.assign(Error("Clarification IPC failure"), {
-        code: "loki.runner.clarification-failure/1"
-      }) : void 0
+      frame.reason === "deadline" ? Object.assign(Error("Time limit"), { code: "loki.runner.deadline/1" }) : void 0
     );
     return;
   }
@@ -25716,13 +26949,19 @@ process.on("message", (message) => {
     let nativeDispatched = false;
     try {
       const options = frame.options;
+      if (typeof options.artifactDirectory === "string") {
+        clarificationDirectory = dirname5(options.artifactDirectory);
+        contextDirectory = clarificationDirectory;
+      }
       const input3 = frame.input;
       const limits = options.limits;
+      const originalWorkerDeadline = Date.now() + (limits?.ms ?? 6e5);
+      let viewerControl;
       if (input3.executionMethod !== "desktop-ui")
         failures = workerFailureBoundary(
           controller,
           options.artifactDirectory,
-          Date.now() + (limits?.ms ?? 6e5),
+          options.browserViewer === true ? () => originalWorkerDeadline + (viewerControl?.status().humanMs ?? 0) : originalWorkerDeadline,
           send
         );
       const { run } = input3.executionMethod === "desktop-ui" ? await import("@katalon-loki/mac-computer-runner") : await import("@katalon-loki/computer-runner");
@@ -25739,8 +26978,9 @@ process.on("message", (message) => {
         runId: external_exports.string().regex(/^[a-f0-9]{64}$/),
         nonce: external_exports.string().regex(/^[a-f0-9]{64}$/)
       }).safeParse(options.ownerTransition);
-      const runId = registration.success ? registration.data.runId : "";
+      const runId2 = registration.success ? registration.data.runId : "";
       const planId = typeof options.telemetryPlanId === "string" ? options.telemetryPlanId : "";
+      let privateContent = Array.isArray(options.secretParameterNames) && options.secretParameterNames.length > 0;
       const selectedSender = (body, signal) => {
         if (controlled)
           throw Error("Controlled provider cannot dispatch upstream");
@@ -25750,7 +26990,7 @@ process.on("message", (message) => {
             managed ? void 0 : options.apiKey,
             managed ? {
               LOKI_AUTH_BROKER_SOCKET: options.brokerSocket,
-              LOKI_TELEMETRY_RUN_ID: runId,
+              LOKI_TELEMETRY_RUN_ID: runId2,
               LOKI_TELEMETRY_PLAN_ID: planId
             } : {}
           ),
@@ -25758,11 +26998,15 @@ process.on("message", (message) => {
             method: "POST",
             body: JSON.stringify(body),
             signal,
-            headers: { "content-type": "application/json" }
+            headers: {
+              "content-type": "application/json",
+              ...managed && privateContent ? { "x-kaijan-ai-content": "omit" } : {}
+            }
           }
         );
       };
       const {
+        browserViewer,
         runnerValidation,
         requestClarification: clarificationEnabled,
         applicationContext: contextRegistration,
@@ -25795,10 +27039,31 @@ process.on("message", (message) => {
         selectedSender,
         { headless: nativeOptions.headless }
       );
+      const requestClarification = clarification?.requestClarification;
       const runOptions = {
         ...nativeOptions,
+        ...browserViewer === true && input3.executionMethod !== "desktop-ui" ? {
+          onBrowserReady: (browser) => {
+            viewerControl = browser.control;
+            return attachBrowserViewer(browser, {
+              signal: controller.signal,
+              runId: runId2,
+              title: `Kaijan Run ${runId2.slice(0, 8)}`
+            });
+          },
+          onBrowserControl: (status) => {
+            void send({ type: "browser-control", status });
+          }
+        } : {},
+        ...options.reviewRun === true ? { reviewRun: review.review } : {},
         managedCore: managed && !controlled,
-        ...clarification ? { requestClarification: clarification.requestClarification } : {},
+        ...requestClarification ? {
+          requestClarification: async (...args) => {
+            const answer = await requestClarification(...args);
+            if (answer.sensitiveQuestionIds?.length) privateContent = true;
+            return answer;
+          }
+        } : {},
         ...applicationContext ? { applicationContext: applicationContext.tool } : {},
         ...validation ? {
           requestAI: (body, signal) => validation.send(body, signal)
@@ -25827,13 +27092,10 @@ process.on("message", (message) => {
         throw Error(
           "Background worker failure; effects unknown, do not replay"
         );
-      if (clarificationProtocolFailure)
-        throw Error("Clarification IPC failed; effects unknown, do not replay");
-      if (applicationContextProtocolFailure)
-        throw Error(
-          "Application-context IPC failed; effects are unknown, do not replay"
-        );
+      await clarificationReplyWrites;
+      await contextReplyWrites;
       await send({ type: "result", result });
+      review.close();
       if (failures?.failed)
         throw Error("Background worker failure during result handoff");
       clarification?.close();
@@ -25842,6 +27104,8 @@ process.on("message", (message) => {
     } catch (error62) {
       clarification?.close();
       applicationContext?.close();
+      await clarificationReplyWrites;
+      await contextReplyWrites;
       await send({
         type: "error",
         nativeDispatched,

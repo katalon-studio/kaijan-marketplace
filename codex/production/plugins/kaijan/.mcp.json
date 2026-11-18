@@ -7,6 +7,10 @@
         "./scripts/core-mcp.mjs"
       ],
       "cwd": ".",
+      "env_vars": [
+        "KAIJAN_PROFILE",
+        "KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS"
+      ],
       "tool_timeout_sec": 240
     },
     "kaijan_local": {
@@ -18,7 +22,10 @@
       "cwd": ".",
       "startup_timeout_sec": 90,
       "tool_timeout_sec": 5520,
-      "env_vars": []
+      "env_vars": [
+        "KAIJAN_PROFILE",
+        "KAIJAN_ANONYMOUS_ONBOARDING_ANALYTICS"
+      ]
     }
   }
 }

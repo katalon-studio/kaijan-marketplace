@@ -1,4 +1,4 @@
-# Explicit standalone Runner integration
+# Runner integration
 
 The plugin calls the public Node `run(input, options)` API of
 `@katalon-loki/computer-runner` for browser execution and
@@ -6,23 +6,16 @@ The plugin calls the public Node `run(input, options)` API of
 selected official Playwright MCP tools, browser lifecycle, Stop and traces. The
 plugin invokes that API in one isolated Node process per execution, so native
 cleanup owns only that invocation’s browser/MCP children. It never invokes the
-component CLI or implements browser actions. Planning remains a proposal; only `loki_runner_execute` starts execution.
+component CLI or implements browser actions. Planning remains a proposal. Use `loki_test_execute` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
 
 ```json
 {
   "requestKey": "one-authorized-execution",
   "scenarioId": "T1",
-  "scenario": {
-    "id": "T1",
-    "method": "browser UI observation",
-    "prerequisites": [],
-    "steps": ["Read the page heading without changing anything."],
-    "expected": {
-      "text": "The heading is visible",
-      "authority": "hypothesis",
-      "refs": []
-    },
-    "execution_gaps": []
+  "savedTests": {
+    "answerId": "<saved Plan answer ID>",
+    "resultSha256": "<saved Plan result SHA-256>",
+    "selectedTestIds": ["T1"]
   },
   "params": {},
   "target": {
@@ -30,24 +23,21 @@ component CLI or implements browser actions. Planning remains a proposal; only `
     "allowedHosts": ["example.com"]
   },
   "executionMethod": "browser-ui",
-  "unresolvedInputs": [],
-  "options": { "limits": { "calls": 3, "browserInputs": 5, "ms": 60000 } }
+  "options": { "limits": { "browserInputs": 5, "ms": 60000 } }
 }
 ```
 
-Every call supplies complete scenario content and explicit friendly scalar
-`params`, including `{}`. `scenarioId` identifies the complete selected scenario. A string
-scenario is also supported. Supply the complete structured test to retain
-proposed expectations, authority, hypotheses, prerequisites and execution gaps.
-`planRef` is optional JSON provenance. IDs, saved context and plan references
-never substitute for content or resolve missing execution inputs. Original
-scenario/params stay in the private frozen operation request. The adapter does
-not interpret a proposed `method` description as permission or an executable
-method. `executionMethod` defaults to `browser-ui`; a method other than `browser-ui` or `desktop-ui`, or
-nonempty `unresolvedInputs` returns `not-executed` with zero provider calls.
+Codex callers provide `savedTests` from the exact saved Plan in this chat and
+explicit friendly scalar `params`, including `{}`. Copy the answer ID, result
+digest and selected test IDs from the saved Plan. If the caller supplied a full
+test in chat, save it as a Plan first. The service loads the complete recorded
+test and freezes its scenario and parameters privately before execution.
+Resolve missing execution inputs before starting. `executionMethod` defaults to
+`browser-ui` and also supports `desktop-ui`. The native Node Runner API uses
+the complete scenario produced by the host.
 
 For headless browser execution, set `options.headless: true` on
-`loki_runner_execute`. Omission keeps the headed default; `false` selects headed
+`loki_test_execute`. Omission keeps the headed default; `false` selects headed
 execution. The option passes to the isolated Runner host, stays in the frozen
 request identity and appears in `executionConfig.headless` and
 `executionHost.headless`. It does not change the native scenario input. Desktop
@@ -125,8 +115,9 @@ capture/cleanup; late cleanup deadline/Stop observations are separate and cannot
 reverse it. `terminal.actor` and `terminal.reason` retain the cause. Final
 prose or capture alone is insufficient. Completion and step reports are
 model-authored and unverified; returned actions do not prove steps. Independently
-observe the application outcome. `testVerdict` remains `unverified`, and Product
-terminal checks cannot pass an incomplete run.
+observe the application outcome. `testVerdict` remains `unverified`. The normal
+Planner assessment uses retained observations; terminal text alone does not
+establish whole-task completion.
 
 For task intent, observations and result wording, follow the
 [caller preparation and result guidance](../skills/run-test/SKILL.md#execute-an-explicit-ui-scenario).
@@ -151,17 +142,23 @@ A live clarification also returns top-level `nextAction` with `kind: input-requi
 safe projected `questions` and an `instruction`. This requires caller action, not
 repeated polling. Combined `loki_test_get` exposes the same next action at the top
 level and sets `status.execution: waiting-for-input`. Answer from known authorized
-context or ask the user now. If no answer can arrive within the deadline, stop the
-same run and keep partial results. Unknown, stopped or expired requests do not
+context or suitable generated test data. Ask the person only when the task cannot
+be completed without their answer. Supply the available context even if another
+answer is missing; do not stop independent work merely because the answer is
+partial. The original deadline still applies. Unknown, stopped or expired requests do not
 return a next action that authorizes an answer.
 
 For a live request, submit `loki_runner_answer({runId, clarificationId, answerKey,
 answers, sensitiveQuestionIds})`: runId and clarificationId are hex64 strings, answerKey is a nonempty
-string, and `answers: Record<string, string>` has nonempty values for the exact
-question IDs. Optional `sensitiveQuestionIds` lists unique exact answered IDs
-whose full unchanged values are newly sensitive. Omission adds no sensitivities;
+string, and `answers: Record<string, unknown>` carries the available JSON values.
+It may cover some questions and include unmatched or additional context. Null or
+empty rows remain in the private original and leave those questions unanswered;
+other usable values continue. Optional `sensitiveQuestionIds` marks supplied
+values, including structured context. Repeated or missing labels do not discard
+other answers. Omission adds no sensitivities;
 declaration metadata/order is part of exact receipt identity. Native and host
-redactors register declared values before continuation, and reconstruct public
+redactors register declared primitive/key echoes before continuation, mask marked
+structured values in saved assessment views, and reconstruct public
 protection from immutable parameters and retained declarations after restart.
 Public reason/steps/question/report/UI prose is projected; IDs/enums/hashes and
 evidence references are preserved. Unsafe model-authored identities or missing or
@@ -180,143 +177,38 @@ browser and provider history through the tool-call response. Waiting consumes th
 original deadline.
 
 Node hosts use `options.requestClarification(request, signal): Promise<{answers:
-Record<string, string>}>`. Its request has `schema: 'loki.runner.clarification/1'`,
+Record<string, unknown>, sensitiveQuestionIds?: string[]}>`. Its request has `schema: 'loki.runner.clarification/1'`,
 `clarificationId`, `providerResponseId`, `callId`, `reason`, string arrays
 `completedSteps`, `remainingSteps`, `evidence`, `questions: {id, question, kind}[]`,
 and `provenance: 'model-authored-unverified'`. The IDs and question fields are
 strings; clarificationId is SHA-256 of the response ID, a NUL separator and the
 call ID.
-The callback is a host function, not execute input; unavailable callback means
-incomplete. It carries no source grants or authorization.
+The callback is a host function, not execute input. An unavailable or failed
+callback returns its correlated error while preserving the original question and
+progress; it does not itself cancel the Run. Actual Stop/deadline remains separate.
+It carries no source grants or authorization.
 
-A `blocked` report ends the run incomplete without escalation. Use it for a task
-restriction, a prohibited transition, denied access or an unavailable service
-that reasoning cannot resolve. Preserve the reason and remaining checks. Missing
-caller information uses `needs_input`; navigation or reasoning difficulty uses
-`stuck`. The host uses the explicit status, not keyword guesses about the reason.
+Treat `blocked`, `stuck` and uncertain effects as the model's retained report,
+not an instruction for the host to end the Run, force a permission/observation
+step or require an effort change. Keep the reason, completed and remaining work,
+and original errors. The model can choose the next authorized action from the
+available context. Return an error with available progress when work cannot
+continue; a status label alone does not establish that condition.
 
-The first `stuck` with known effects raises Luna effort low to medium for one
-recovery phase within original limits. A second `stuck` terminates with reason and
-completed and remaining steps; missing input does not consume escalation. Errors,
-uncertain effects, safety, Stop, deadline and exhausted limits never auto-recover
-or replay. `effortAccounting` counts provider attempts, including retries, by
-low and medium effort. Native `executionReport` and its evidence references retain
-model-authored claims and original saved bytes, not independent semantic proof.
-
-## Reuse a retained browser execution
-
-For an authorized fresh browser task, call `loki_runner_reuse_prepare` with
-`{ current, runIds? }`. `current` is the complete fresh
-`loki_runner_execute` request without `reuse`. If IDs are omitted, the host
-discovers completed, validated browser captures in the existing private Runner
-operation store and the same scope; explicit IDs select prior Runner receipts.
-There is no global history mining or new store. External experimental capture
-directories are not supported by this normal tool path. Preparation dispatches
-neither a provider nor a browser.
-Discovery excludes operations without retained captures without making other
-eligible captures unavailable. Auxiliary host receipts are stored beside the
-native capture directory, not inside it.
-
-The `loki.runner-reuse-preview/1` response reports `approval-required`,
-`unavailable`, or `invalid-arguments`. A complete preview includes `runIds`,
-`query`, `candidates`, `approvalSha256` and binding to the exact source and
-current request; unavailable or invalid responses can omit those fields. The
-host uses the native redactor on all known parameter values and targets to create
-projections of authored intent only, with no observations or final claim. Current configured sensitivities also protect historical authored prose before
-the disclosure hash is computed. A retained `finished` operation is not proof of
-native completion or successful work; history remains advisory provenance. The
-preview itself is private source material: arbitrary prose is not automatically
-safe, and permission to capture does not authorize provider disclosure.
-
-Inspect all preview text and proceed only with authorization to disclose it to
-OpenRouter native System One JEV (`typesafe/jev-1.13-20260917`) and execute the
-fresh task. Call `loki_runner_execute` with the identical `current` fields plus
-`reuse: { runIds: preview.runIds, approvalSha256: preview.approvalSha256 }`.
-The host checks the binding again, then makes an advisory selection. Current
-params, target and authorization stay fresh; historical text is untrusted.
-Callers do not construct directories, projections or provider callbacks.
-
-Use `loki_runner_get` to read the original operation and `loki_runner_stop` to
-request Stop during selection or native execution. NONE, unavailable or stale
-approved material, and provider errors return retained `reuse-not-executed` with
-`nativeDispatched: false`; there is no fallback. An incomplete `reuse` object
-fails argument validation before dispatch; omitting `reuse` entirely requests
-ordinary execution. Repeat the same key and input to recover a lost reply; never
-replay an unknown operation. Stop is a request, not confirmation. Native verdicts
-remain `unverified` and need independent verification.
-The selector retains a complete response up to 8 MiB. If reading fails or the
-response exceeds that capacity, its receipt retains an incomplete prefix and
-remaining fees are unknown; a valid-looking prefix is not final accounting.
-`nativeDispatched: false` does not imply zero selector calls or fees. Public reuse
-and retained-selection prose, including `currentTask` and selector message text,
-uses the same configured/declared-sensitive protection as current execution.
-Derived content can carry `redaction: {schema: "loki.runner.safe-projection/1",
-revision: number}`; IDs, enums, hashes and accounting remain exact. Raw selector,
-selection, approval and current-request originals stay private. Unsafe identities
-or unavailable required protection inputs withhold public content rather than
-fall back to raw bytes, including for selector-bearing native-null refusals.
-
-Node callers can use the same flow with `ComputerRunner.prepareReuse`, `start`,
-`get`, `stop` and live clarification `answer` from `@loki/capabilities/runner`.
-This bounded library and catalog integration adds no UI, index, global history or
-new store and does not establish installed-plugin acceptance.
+Actual Stop, the original deadline and existing task/access boundaries remain
+separate. Do not automatically replay an application action whose effects are
+unknown. Another reasoning attempt or read is distinct from repeating that
+action. Provider-attempt accounting and native report/evidence references remain
+recorded boundaries and model claims, not independent semantic proof or a reason
+to discard usable work.
 
 ## Terminal checks and PR sources
 
-For an authorized Expected/Actual check, add `checks` to the ordinary
-`loki_runner_execute` input before dispatch. The Product receiver compares the
-returned terminal observation with these authored predicates and persists the
-result as separate `verification` with provenance `product-terminal-checks/1`.
-It never accepts caller-supplied pass/fail flags or rewrites nativeResult.
-
-```json
-{
-  "planRef": {
-    "answerId": "<exact completed Plan answerId>",
-    "resultSha256": "<exact Plan digest>",
-    "selectedTestIds": ["<selected test ID>"]
-  },
-  "checks": {
-    "schema": "loki.terminal-checks/1",
-    "repository": "<owner/repository>",
-    "sourceRevision": "<actual 40-character source revision>",
-    "pullRequestUrl": null,
-    "tests": [
-      {
-        "testId": "<selected test ID>",
-        "title": "Read the expected terminal heading",
-        "deliberateFailure": false,
-        "checks": [
-          {
-            "id": "heading",
-            "title": "Check the terminal page text",
-            "field": "text",
-            "operator": "contains",
-            "expected": "<caller-authorized heading>"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-The snippet adds to the full scenario/params/target request above; placeholders
-must be resolved. Fields are text, snapshot or url; operators are contains,
-not-contains or equals. A scenario can have multiple authored terminal checks
-associated with exact selected Plan test IDs. These are terminal predicates, not
-claims that every proposed step or test workflow was executed independently.
-Pre-dispatch validation reads the original Plan only to verify identity and scope;
-the caller still supplies the complete execution scenario. Changing a case uses
-a new requestKey and execution. Old request/results stay unchanged.
-
-Missing observations, Stop before the terminal decision or incomplete native execution block the checks. A
-terminal match is not viewport visibility, saved application data or a general
-semantic pass. Expected/Actual and evidence hashes are retained; raw private
-traces remain private. A deliberate failing control stays labelled as such.
-`executionConfig` records the actual adapter method, browser, target, explicit
-tool trigger and zero whole-execution retries. Browser providerRetryPolicy is
-retained separately from nativeResult; it does not claim an external CI result.
+Caller-authored terminal `checks` are no longer an execution input. Normal test
+execution uses the existing Planner/Runner assessment and saved report. Runner
+still retains its terminal observations, native account and private evidence.
+Reading an old operation preserves its original `verification` and provenance;
+it does not run the removed evaluator or recompute the result.
 
 For a PR-bound case, first read the original PR and all selected changed-file
 pages through an authorized existing GitHub interface. Use `loki_context_submit`
@@ -339,11 +231,9 @@ with `nativeInputs.reportSources` set to:
 
 The placeholders denote an object and array, not literal strings. Context Intake
 derives display fields/hashes from these original source inputs and accepts no
-execution outcomes. Pass the returned sourceContextId to the Runner input, set
-checks.pullRequestUrl to that exact PR URL and use its actual head or merged
-revision. Select the same sourceContextId with the original Plan/Runner references
-in `loki_report_show` and `view:"test-plan"`. The report reads Product check results
-only from the stored execution. Reopening never dispatches a producer. A PR with
+execution outcomes. Select the returned sourceContextId with the original
+Plan/Runner references
+in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
 no associated run stays Not run. This adds no GitHub connection or write authority.
 
 To assess, explicitly combine the fragment with original `work_item`,
@@ -407,7 +297,7 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 ## Local macOS desktop execution
 
-`loki_runner_execute` also accepts `executionMethod: "desktop-ui"`, a full scenario,
+`loki_test_execute` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
 explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
 Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
 on the main display. The same get/Stop tools retain their durable run lifecycle.
@@ -461,7 +351,7 @@ credential presence and tool discovery cannot.
 ## Host validation
 
 An ordinary installation has no fault plan. The existing public
-`loki_runner_execute`, `get` and `stop` arguments are unchanged; the answer
+`loki_test_execute`, `loki_test_get` and `loki_test_stop` arguments are unchanged; the answer
 interface is described above. No tool argument selects faults, endpoints, models
 or credentials. The following interface is only for a sealed, isolated
 host control. It is not a provider readiness check or a production fault API.

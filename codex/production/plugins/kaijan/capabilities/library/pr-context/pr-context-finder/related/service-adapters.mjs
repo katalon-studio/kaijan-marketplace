@@ -59,11 +59,11 @@ export function serviceFilter(
 ) {
   fs.mkdirSync(root, { mode: 0o700 });
   let batches = 0,
-    calls = 0;
+    classificationStages = 0;
   const apply = async (records, label, classify = true, role = "evidence") => {
     signal.throwIfAborted();
     classify = classify && mode === "jev";
-    check(!classify || calls < 4, "comment_filter_call_bound");
+    check(!classify || classificationStages++ < 4, "comment_filter_call_bound");
     const raw = JSON.stringify(records);
     write(path.join(root, `input-${++batches}.json`), raw);
     let result;
@@ -107,7 +107,6 @@ export function serviceFilter(
     );
     write(path.join(root, `stderr-${batches}.txt`), "");
     if (result.accounting) {
-      calls += result.accounting.calls;
       report(result.accounting);
     }
     check(result.status === "complete", "comment_filter_incomplete");

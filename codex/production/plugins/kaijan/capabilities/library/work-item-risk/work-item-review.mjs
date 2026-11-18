@@ -2,12 +2,7 @@ import { Agent } from "@openai/agents-core";
 import { createRetainedAgentRunner } from "@katalon-experiments/ai-client/agents";
 import { isDeepStrictEqual } from "node:util";
 import { renderWorkItemInstructions } from "./work-item-instructions.mjs";
-import {
-  riskPresentationSchema,
-  normalizeRiskExcerpts,
-  renderRiskPresentation,
-  riskSourceRecord,
-} from "./source-relations.mjs";
+import { availableRiskPresentation } from "./source-relations.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -225,7 +220,6 @@ export function createWorkItemRisk(dependencies) {
 
   const instructions = renderWorkItemInstructions({
     questionLimit: LIMITS.questions,
-    sourceBound: Boolean(dependencies.resolveApplicationSpan),
   });
 
   function prepare(packet) {
@@ -255,7 +249,7 @@ export function createWorkItemRisk(dependencies) {
           key === "evidence_ids"
             ? {
                 type: "array",
-                items: { type: "string", enum: catalog.map((row) => row.id) },
+                items: { type: "string" },
               }
             : str,
         ]),
@@ -266,7 +260,6 @@ export function createWorkItemRisk(dependencies) {
       properties: {
         assumptions_to_confirm: {
           type: "array",
-          maxItems: LIMITS.questions,
           items: {
             type: "object",
             additionalProperties: false,
@@ -278,13 +271,6 @@ export function createWorkItemRisk(dependencies) {
       },
       required: ["assumptions_to_confirm", "limitations"],
     };
-    if (dependencies.resolveApplicationSpan) {
-      schema.$defs = {};
-      schema.properties.assumptions_to_confirm.items = riskPresentationSchema(
-        catalog,
-        { literalExcerpts: true, definitions: schema.$defs },
-      );
-    }
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },
@@ -293,7 +279,7 @@ export function createWorkItemRisk(dependencies) {
         format: {
           type: "json_schema",
           name: "work_item_uncertainties",
-          strict: true,
+          strict: false,
           schema,
         },
       },
@@ -346,111 +332,71 @@ export function createWorkItemRisk(dependencies) {
     const text = dependencies.responseText(body),
       candidate = JSON.parse(text);
     diagnose?.("work_item_response_validation");
-    responseCheck(
-      exactKeys(candidate, ["assumptions_to_confirm", "limitations"]) &&
-        Array.isArray(candidate.assumptions_to_confirm) &&
-        candidate.assumptions_to_confirm.length <= LIMITS.questions &&
-        typeof candidate.limitations === "string",
-      "invalid_work_item_output",
-      () => ({ path: "", rule: "work_item_output_shape" }),
-    );
+    const rows = Array.isArray(candidate?.assumptions_to_confirm)
+      ? candidate.assumptions_to_confirm
+      : [];
     const offered = new Map(prepared.catalog.map((row) => [row.id, row]));
     const identity = dependencies.questionIdentity(text, "work-item-risk");
-    const questions = candidate.assumptions_to_confirm.map(
-      (question, index) => {
-        const at = `/assumptions_to_confirm/${index}`;
-        if (dependencies.resolveApplicationSpan) {
-          const presentation = normalizeRiskExcerpts(
-            question,
-            prepared.catalog,
-          );
-          const row = renderRiskPresentation(
-            presentation,
-            prepared.catalog,
-            dependencies.resolveApplicationSpan,
-          );
-          return {
-            id: `work-item-risk-Q${index + 1}-${identity.output_sha256}`,
-            observed_source_statement: row.observed,
-            assumption_to_confirm: row.assumption_to_confirm,
-            question: row.question,
-            why_it_matters: row.why_it_matters,
-            evidence_needed: row.evidence_needed,
-            source_evidence: row.evidence_ids.map((id) => ({
-              ...offered.get(id),
-              semantic_support: "not_verified",
-            })),
-            source_projection: riskSourceRecord(presentation, prepared.catalog),
-          };
-        }
-        responseCheck(
-          exactKeys(question, fields) &&
-            fields.every((key) => Object.hasOwn(question, key)),
-          "unexpected_work_item_question_field",
-          () => ({ path: at, rule: "question_fields" }),
+    let unverified = 0;
+    const questions = rows.map((question, index) => {
+      if (dependencies.resolveApplicationSpan) {
+        const projection = availableRiskPresentation(
+          question,
+          prepared.catalog,
+          dependencies.resolveApplicationSpan,
         );
-        responseCheck(
-          fields
-            .filter((key) => key !== "evidence_ids")
-            .every((key) => nonempty(question[key])),
-          "missing_work_item_question_content",
-          () => ({
-            path:
-              at +
-              "/" +
-              fields.find(
-                (key) => key !== "evidence_ids" && !nonempty(question[key]),
-              ),
-            rule: "nonempty_question_content",
-          }),
-        );
-        responseCheck(
-          Array.isArray(question.evidence_ids) &&
-            question.evidence_ids.length > 0 &&
-            new Set(question.evidence_ids).size ===
-              question.evidence_ids.length &&
-            question.evidence_ids.every((id) => offered.has(id)),
-          "invalid_work_item_passage_reference",
-          () => {
-            const values = question.evidence_ids;
-            if (!Array.isArray(values))
-              return { path: at + "/evidence_ids", rule: "reference_array" };
-            if (!values.length)
-              return { path: at + "/evidence_ids", rule: "nonempty_evidence" };
-            const duplicates = values.filter(
-              (id, ordinal) => values.indexOf(id) !== ordinal,
-            );
-            return {
-              path: at + "/evidence_ids",
-              rule: duplicates.length ? "unique_ids" : "known_ids",
-              offending_ids: [
-                ...new Set(
-                  duplicates.length
-                    ? duplicates
-                    : values.filter((id) => !offered.has(id)),
-                ),
-              ].filter((id) => typeof id === "string"),
-            };
-          },
-        );
+        const row = projection.row;
+        if (!projection.source_projection) unverified++;
         return {
           id: `work-item-risk-Q${index + 1}-${identity.output_sha256}`,
-          observed_source_statement: question.observed_source_statement,
-          assumption_to_confirm: question.assumption_to_confirm,
-          question: question.question,
-          why_it_matters: question.why_it_matters,
-          source_evidence: question.evidence_ids.map((id) => ({
+          observed_source_statement: row.observed,
+          assumption_to_confirm: row.assumption_to_confirm,
+          question: row.question,
+          why_it_matters: row.why_it_matters,
+          evidence_needed: row.evidence_needed,
+          source_evidence: row.evidence_ids.map((id) => ({
             ...offered.get(id),
             semantic_support: "not_verified",
           })),
-          evidence_needed: question.evidence_needed,
+          ...(projection.source_projection
+            ? { source_projection: projection.source_projection }
+            : {}),
         };
-      },
-    );
+      }
+      const string = (key) =>
+        typeof question?.[key] === "string" ? question[key] : "";
+      return {
+        id: `work-item-risk-Q${index + 1}-${identity.output_sha256}`,
+        observed_source_statement: string("observed_source_statement"),
+        assumption_to_confirm: string("assumption_to_confirm"),
+        question: string("question"),
+        why_it_matters: string("why_it_matters"),
+        source_evidence: (Array.isArray(question?.evidence_ids)
+          ? question.evidence_ids
+          : []
+        )
+          .filter((id) => offered.has(id))
+          .map((id) => ({
+            ...offered.get(id),
+            semantic_support: "not_verified",
+          })),
+        evidence_needed: string("evidence_needed"),
+      };
+    });
     return {
       questions,
       question_identity: identity,
-      model_limitations: candidate.limitations,
+      model_limitations: [
+        typeof candidate?.limitations === "string" ? candidate.limitations : "",
+        unverified
+          ? "Some risk wording is not verified against the supplied sources."
+          : "",
+        !Array.isArray(candidate?.assumptions_to_confirm)
+          ? "The response did not contain a readable risk-question list; inspect the original response."
+          : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
       candidate,
     };
   }

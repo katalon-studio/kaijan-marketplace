@@ -91,9 +91,13 @@ if (
 ) {
   try {
     const root = resolve(import.meta.dirname, "..");
-    const build = JSON.parse(
+    let build = JSON.parse(
       await readFile(join(root, "loki-build.json"), "utf8"),
     );
+    if (build.profileMode === "runtime-env/1") {
+      const { resolveRuntimeBuild } = await import("./runtime-profile.mjs");
+      build = resolveRuntimeBuild(build);
+    }
     if (
       process.env.LOKI_CORE_ORIGIN &&
       process.env.LOKI_CORE_ORIGIN !== build.coreOrigin

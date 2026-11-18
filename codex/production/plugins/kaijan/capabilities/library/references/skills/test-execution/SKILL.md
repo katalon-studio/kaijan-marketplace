@@ -1,31 +1,32 @@
 ---
 name: test-execution
-description: Execute a complete caller-authorized browser scenario through standalone Runner, read original outcomes and evidence, or Stop that execution. Use only with explicit target/action authority; not for proposing tests or non-browser verification.
+description: Run and assess a complete caller-authorized browser scenario, read its saved result, or Stop the same test. Use only with explicit target/action authority; planning remains separate.
 ---
 
-# Execute an explicit browser scenario
+# Run and assess an explicit browser scenario
 
 1. Check `loki_capabilities_list` for computerRunner provisioning. Resolve the
    authorized initial URL, actions and actual friendly parameter values. Planning
    grants no execution permission. Existing sessions, memory and credential
    references are unsupported. Do not inspect unrelated profiles or histories.
-2. Call `loki_runner_execute` with one stable `requestKey`, exact `scenarioId`,
+2. Call `loki_test_execute` with one stable `requestKey`, exact `scenarioId`,
    full `scenario`, explicit `params` ({} when empty), and `target.initialURL`.
    Prefer the complete structured test so its prerequisites, steps, expected
    authority/hypotheses and execution gaps stay intact. IDs and optional planRef
    are correlation only. Declare unresolvedInputs rather than dispatch missing
    values. Browser UI is the supported executionMethod; other methods return
    not-executed. See RUNNER.md in the plugin root for the full contract.
-3. Read `loki_runner_get` until the operation settles. Follow ordered resultRead
-   chunks to recover exact JSON. Preserve nativeResult, including executionState,
-   unverified testVerdict, terminal reason, fees, unknown usage and cleanup.
+3. Read `loki_test_get` until execution and assessment settle. Follow ordered resultRead
+   chunks when needed to recover exact JSON. Keep the original Runner execution
+   separate from its assessment and saved report. Preserve nativeResult, including executionState,
+   unverified testVerdict, terminal reason, private accounting and cleanup.
    Finished is a retained receipt; a model claim is not an independently verified
    pass. Raw traces/provider requests/browser state remain private references.
 4. Use a fresh UUID for a new execution. A lost reply reuses the same key and full input.
    On request_key_conflict the rejected call did not dispatch. Inspect the
    existingRunId when resuming; use the suggested fresh key only for a separate
    authorized execution. Reconnect/get never execute.
-   Never replace or replay unknown effects. Honor Stop with `loki_runner_stop`,
+   Never replace or replay unknown effects. Honor Stop with `loki_test_stop`,
    then read actual cancellation, partial evidence and cleanup. Stop requested
    does not prove remote computation or billing ended.
    Browser provider transient HTTP responses retry quietly within the same request
@@ -33,12 +34,11 @@ description: Execute a complete caller-authorized browser scenario through stand
    waits and body reads. Keep every attempt's original usage/unknown charges;
    never restart the run or repeat browser actions to recover a provider failure.
    Uncertain transport, incomplete bodies and invalid/auth errors do not retry.
-5. For requested assessment, explicitly combine assessmentFragment with original
-   work_item, requirements and proposed_tests (or null) under
-   work-verifier/supplied-test-evidence/1, then use the test-evidence skill.
-   Reference-only traces remain unresolved. Retain the native unverified label;
-   do not invent pass/fail, expected results, authenticated provenance or missing
-   artifact content. Execution and assessment are separate explicit operations.
+5. Read the assessment and saved report returned by this same test flow.
+   Do not start a separate assessment to recover its result. Reference-only
+   traces remain unresolved. Keep the native execution label separate from the
+   assessment; do not invent pass/fail, expected results or missing artifacts.
+   Use the test-evidence skill only for a separate request to review external evidence.
 
 For detailed local review, Runner tracing is on by default. If trace.saved is
 true, open nativeResult.trace.path from the package root with its pinned tools:

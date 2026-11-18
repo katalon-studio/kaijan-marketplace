@@ -8,15 +8,21 @@ description: Propose practical tests for the caller's task and available applica
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
+When the caller wants browser-based planning for a selected web target, pass
+its URL and allowed hosts in `exploration.target`. Kaijan's Explorer builds the
+app model during planning. Pass the caller's original task and any supplied
+parameters. The testing method is already part of the agents.
+
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.
 
 ## Planning inputs
 
 Use one supported input form. Preserve original text, attribution and source
-roles. Put application behavior and context in `input`. Put the caller's
-instructions for carrying out the testing work in `taskInstructions`; Kaijan
-retains them with the Plan and carries them into Run. Preserve supplied source
+roles. Put application behavior and context in `input`. Include the optional
+`taskInstructions` only when the caller supplied directions for carrying out
+the testing work. Omit the field otherwise. Kaijan retains those directions
+with the Plan and carries them into Run. Preserve supplied source
 documents unchanged. Include the known execution target as context.
 Implementation, risk findings and observations can inform
 the plan.
@@ -28,6 +34,9 @@ the plan.
   item's source URI. For multiple sources, use the complete `pr-context-plan/3`
   packet and its separate `sources` items. A simple input with `sources` or
   `version` is interpreted as a versioned packet.
+- If the caller requests additional host analysis, attribute it in
+  `agentInstructions`. For ordinary testing the original task, target and
+  sources suffice. Explorer discovers routes and Planner chooses scenarios.
 - Use `change` for the actual frozen change, including source identity, coverage
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
   for Git patches and provided snapshots. Kaijan prepares risk analysis and

@@ -8,7 +8,7 @@ export async function selectParent(body, output_dir, options = {}) {
   try {
     if (
       !object(body) ||
-      body.model !== "jev-latest" ||
+      !["gpt-6-luna", "jev-latest"].includes(body.model) ||
       !object(body.questions) ||
       Object.keys(body.questions).length < 1 ||
       Object.keys(body.questions).length > 12

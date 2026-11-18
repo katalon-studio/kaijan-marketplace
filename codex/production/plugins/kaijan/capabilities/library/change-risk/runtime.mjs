@@ -1,8 +1,13 @@
 import {
   AiClientError,
   responsesUsageEstimate,
+  decisionsRequest,
+  decisionAnswers,
+  decisionsEndpoint,
+  decisionsUsageEstimate,
   providerConnection,
   sendFetch,
+  zdrRequest,
 } from "@katalon-experiments/ai-client";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -178,13 +183,7 @@ export async function runWithMethod(
       result.coverage_details.source_context = "supplied_snapshot_contents";
     }
     diagnosticStage = "provider_configuration";
-    if (
-      (!env.LOKI_AUTH_BROKER_SOCKET && !key) ||
-      (selected.mode !== "direct" &&
-        selected.mode !== "work-item" &&
-        !env.LOKI_AUTH_BROKER_SOCKET &&
-        !(env.LOKI_OPENROUTER_API_KEY ?? env.OPENROUTER_API_KEY))
-    )
+    if (!env.LOKI_AUTH_BROKER_SOCKET && !key)
       throw new RiskError("provider_not_configured");
     diagnosticStage = "input_archive";
     await save("packet.json", packet);
@@ -195,22 +194,33 @@ export async function runWithMethod(
       template,
       limits: LIMITS,
       retries: 0,
+      max_calls_basis:
+        "logical method stages; Decisions batches retain separate native ledger rows",
     });
-    const call = async (stage, route, request) => {
+    const callOne = async (stage, route, request) => {
+      const nativeUrl = {
+        responses: BASE_URL + "/responses",
+        decisions: decisionsEndpoint,
+      }[route];
+      if (!nativeUrl) throw new RiskError("unsupported_analysis_route");
+      const namedQuestions =
+        route === "decisions" ? request.questions : undefined;
+      request =
+        route === "decisions"
+          ? decisionsRequest(request)
+          : zdrRequest(request, "openai");
       if (
         route === "responses" &&
         (!["gpt-6-luna", "gpt-6.1-terra"].includes(request.model) ||
           !["low", "medium"].includes(request.reasoning?.effort))
       )
         throw new RiskError("unsupported_analysis_model_settings");
-      if (ledger.length >= selected.max_calls)
-        throw new RiskError("call_limit");
       if (signal?.aborted) throw new RiskError("cancelled");
       const wire = JSON.stringify(request);
       await save(stage + ".request.json", wire);
       const row = {
         stage,
-        provider: route === "systemone" ? "openrouter" : "openai",
+        provider: "openai",
         route: "/" + route,
         requested_model: request.model,
         ...(request.reasoning
@@ -239,14 +249,7 @@ export async function runWithMethod(
         nativeOperation: {
           try {
             diagnosticStage = "provider_dispatch";
-            const target =
-              route === "systemone"
-                ? providerConnection(
-                    "https://openrouter.ai/api/v1/systemone",
-                    env.LOKI_OPENROUTER_API_KEY ?? env.OPENROUTER_API_KEY,
-                    env,
-                  )
-                : providerConnection(BASE_URL + "/responses", key, env);
+            const target = providerConnection(nativeUrl, key, env);
             requestDeadline = AbortSignal.timeout(120000);
             const requestOptions = {
               method: "POST",
@@ -312,6 +315,24 @@ export async function runWithMethod(
               row.usage = body?.usage ?? null;
               if (Number.isFinite(body?.usage?.cost) && body.usage.cost >= 0)
                 row.cost_usd = body.usage.cost;
+              const headerCost = response.headers.get(
+                "x-litellm-response-cost",
+              );
+              if (
+                row.cost_usd === null &&
+                headerCost !== null &&
+                headerCost.trim() !== "" &&
+                Number.isFinite(Number(headerCost)) &&
+                Number(headerCost) >= 0
+              ) {
+                row.cost_usd = Number(headerCost);
+                row.cost_basis = "Native LiteLLM response header";
+              }
+              if (route === "decisions" && row.cost_usd === null) {
+                row.cost_usd = decisionsUsageEstimate(body?.usage);
+                row.cost_basis =
+                  "OpenAI Decisions standard-tier input/cache usage estimate, not a billing receipt";
+              }
               if (
                 route === "responses" &&
                 row.cost_usd === null &&
@@ -364,7 +385,10 @@ export async function runWithMethod(
             if (!body) throw new RiskError("provider_invalid_json");
             diagnosticStage = "method_evaluation";
             {
-              nativeOperationValue = body;
+              nativeOperationValue =
+                route === "decisions"
+                  ? { ...body, answers: decisionAnswers(body, namedQuestions) }
+                  : body;
               break nativeOperation;
             }
           } catch (failure) {
@@ -421,6 +445,40 @@ export async function runWithMethod(
       }
       if (nativeOperationFailed) throw nativeOperationFailure;
       return nativeOperationValue;
+    };
+    let logicalCalls = 0;
+    const call = async (stage, route, request) => {
+      if (logicalCalls++ >= selected.max_calls)
+        throw new RiskError("call_limit");
+      if (route !== "decisions") return callOne(stage, route, request);
+      const entries = Object.entries(request.questions);
+      // The provider accepts 400 questions per native request. Carry the full
+      // shared input in every batch, retaining one actual receipt per request.
+      const responses = [];
+      for (let offset = 0; offset < entries.length; offset += 400) {
+        responses.push(
+          await callOne(
+            entries.length > 400
+              ? stage + ".batch-" + (offset / 400 + 1)
+              : stage,
+            route,
+            {
+              ...request,
+              questions: Object.fromEntries(
+                entries.slice(offset, offset + 400),
+              ),
+            },
+          ),
+        );
+      }
+      if (responses.length === 1) return responses[0];
+      return {
+        answers: Object.assign(
+          {},
+          ...responses.map((response) => response.answers),
+        ),
+        batches: responses,
+      };
     };
     diagnosticStage = "method_evaluation";
     const output = await method.evaluate(packet, {

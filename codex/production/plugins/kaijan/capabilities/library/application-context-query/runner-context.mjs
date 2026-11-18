@@ -106,8 +106,11 @@ export function validateApplicationContextArguments(value) {
   exact(v, ["kind", "question", "sourceIds", "cursor"]);
   if (
     !["documentation", "risk", "map"].includes(v.kind) ||
-    !text(v.question) ||
-    !(v.sourceIds === null || ids(v.sourceIds)) ||
+    typeof v.question !== "string" ||
+    !(
+      v.sourceIds === null ||
+      (Array.isArray(v.sourceIds) && v.sourceIds.every(text))
+    ) ||
     !(v.cursor === null || text(v.cursor))
   )
     fail("invalid_context_arguments");
