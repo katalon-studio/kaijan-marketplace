@@ -58293,7 +58293,9 @@ function createCapabilityMcpServer(session, version4, setup, telemetry) {
     { name: "kaijan-local", version: version4 },
     {
       capabilities: { tools: {}, resources: {} },
-      instructions: customerInstructions
+      instructions: session.identity?.host === "claude_code" ? `Kaijan is a testing plugin.
+
+${customerInstructions}` : customerInstructions
     }
   );
   Object.defineProperty(server, "registeredToolCount", {
