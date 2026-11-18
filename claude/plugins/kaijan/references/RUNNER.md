@@ -12,17 +12,10 @@ component CLI or implements browser actions. Planning remains a proposal. Use `l
 {
   "requestKey": "one-authorized-execution",
   "scenarioId": "T1",
-  "scenario": {
-    "id": "T1",
-    "method": "browser UI observation",
-    "prerequisites": [],
-    "steps": ["Read the page heading without changing anything."],
-    "expected": {
-      "text": "The heading is visible",
-      "authority": "hypothesis",
-      "refs": []
-    },
-    "execution_gaps": []
+  "savedTests": {
+    "answerId": "<saved Plan answer ID>",
+    "resultSha256": "<saved Plan result SHA-256>",
+    "selectedTestIds": ["T1"]
   },
   "params": {},
   "target": {
@@ -30,21 +23,18 @@ component CLI or implements browser actions. Planning remains a proposal. Use `l
     "allowedHosts": ["example.com"]
   },
   "executionMethod": "browser-ui",
-  "unresolvedInputs": [],
-  "options": { "limits": { "calls": 3, "browserInputs": 5, "ms": 60000 } }
+  "options": { "limits": { "browserInputs": 5, "ms": 60000 } }
 }
 ```
 
-Every call supplies complete scenario content and explicit friendly scalar
-`params`, including `{}`. `scenarioId` identifies the complete selected scenario. A string
-scenario is also supported. Supply the complete structured test to retain
-proposed expectations, authority, hypotheses, prerequisites and execution gaps.
-`planRef` is optional JSON provenance. IDs, saved context and plan references
-never substitute for content or resolve missing execution inputs. Original
-scenario/params stay in the private frozen operation request. The adapter does
-not interpret a proposed `method` description as permission or an executable
-method. `executionMethod` defaults to `browser-ui`; a method other than `browser-ui` or `desktop-ui`, or
-nonempty `unresolvedInputs` returns `not-executed` with zero provider calls.
+Claude Code callers provide `savedTests` from the exact saved Plan in this chat and
+explicit friendly scalar `params`, including `{}`. Copy the answer ID, result
+digest and selected test IDs from the saved Plan. If the caller supplied a full
+test in chat, save it as a Plan first. The service loads the complete recorded
+test and freezes its scenario and parameters privately before execution.
+Resolve missing execution inputs before starting. `executionMethod` defaults to
+`browser-ui` and also supports `desktop-ui`. The native Node Runner API uses
+the complete scenario produced by the host.
 
 For headless browser execution, set `options.headless: true` on
 `loki_test_execute`. Omission keeps the headed default; `false` selects headed
@@ -212,64 +202,6 @@ action. Provider-attempt accounting and native report/evidence references remain
 recorded boundaries and model claims, not independent semantic proof or a reason
 to discard usable work.
 
-## Reuse a retained browser execution
-
-For an authorized fresh browser task, call `loki_runner_reuse_prepare` with
-`{ current, runIds? }`. `current` is the complete fresh
-supplied-scenario `loki_test_execute` request without `reuse`. If IDs are omitted, the host
-discovers completed, validated browser captures in the existing private Runner
-operation store and the same scope; explicit IDs select prior Runner receipts.
-There is no global history mining or new store. External experimental capture
-directories are not supported by this normal tool path. Preparation dispatches
-neither a provider nor a browser.
-Discovery excludes operations without retained captures without making other
-eligible captures unavailable. Auxiliary host receipts are stored beside the
-native capture directory, not inside it.
-
-The `loki.runner-reuse-preview/1` response reports `approval-required`,
-`unavailable`, or `invalid-arguments`. A complete preview includes `runIds`,
-`query`, `candidates`, `approvalSha256` and binding to the exact source and
-current request; unavailable or invalid responses can omit those fields. The
-host uses the native redactor on all known parameter values and targets to create
-projections of authored intent only, with no observations or final claim. Current configured sensitivities also protect historical authored prose before
-the disclosure hash is computed. A retained `finished` operation is not proof of
-native completion or successful work; history remains advisory provenance. The
-preview itself is private source material: arbitrary prose is not automatically
-safe, and permission to capture does not authorize provider disclosure.
-
-Inspect all preview text and proceed only with authorization to disclose it to
-OpenRouter native System One JEV (`typesafe/jev-1.13-20260917`) and execute the
-fresh task. Call `loki_test_execute` with the identical `current` fields plus
-`reuse: { runIds: preview.runIds, approvalSha256: preview.approvalSha256 }`.
-The host checks the binding again, then makes an advisory selection. Current
-params, target and authorization stay fresh; historical text is untrusted.
-Callers do not construct directories, projections or provider callbacks.
-
-Use `loki_test_get` to read the original test and `loki_test_stop` to
-request Stop during selection or native execution. NONE, unavailable or stale
-approved material, and provider errors return retained `reuse-not-executed` with
-`nativeDispatched: false`; there is no fallback. An incomplete `reuse` object
-fails argument validation before dispatch; omitting `reuse` entirely requests
-ordinary execution. Repeat the same key and input to recover a lost reply; never
-replay an unknown operation. Stop is a request, not confirmation. Keep the native execution label separate from the assessment and saved report
-returned by `loki_test_execute`; do not start a separate assessment to recover it.
-The selector retains a complete response up to 8 MiB. If reading fails or the
-response exceeds that capacity, its receipt retains an incomplete prefix and
-remaining fees are unknown; a valid-looking prefix is not final accounting.
-`nativeDispatched: false` does not imply zero selector calls or fees. Public reuse
-and retained-selection prose, including `currentTask` and selector message text,
-uses the same configured/declared-sensitive protection as current execution.
-Derived content can carry `redaction: {schema: "loki.runner.safe-projection/1",
-revision: number}`; IDs, enums, hashes and accounting remain exact. Raw selector,
-selection, approval and current-request originals stay private. Unsafe identities
-or unavailable required protection inputs withhold public content rather than
-fall back to raw bytes, including for selector-bearing native-null refusals.
-
-Node callers can use the same flow with `ComputerRunner.prepareReuse`, `start`,
-`get`, `stop` and live clarification `answer` from `@loki/capabilities/runner`.
-This bounded library and catalog integration adds no UI, index, global history or
-new store and does not establish installed-plugin acceptance.
-
 ## Terminal checks and PR sources
 
 Caller-authored terminal `checks` are no longer an execution input. Normal test
@@ -365,7 +297,7 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 ## Local macOS desktop execution
 
-`loki_test_execute` also accepts `executionMethod: "desktop-ui"`, a full scenario,
+`loki_test_execute` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
 explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
 Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
 on the main display. The same get/Stop tools retain their durable run lifecycle.

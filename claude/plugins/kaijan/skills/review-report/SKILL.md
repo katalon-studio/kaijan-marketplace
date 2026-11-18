@@ -28,7 +28,10 @@ Use the exact retained reportId or original answer/run IDs from this chat.
 Call `loki_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
 The plugin's native report card shows the saved result. **Show details** opens
-the same report in Claude's **Kaijan report** pane, with **Tests** and **Runs**.
+the same report in Claude's **Kaijan report** pane. **Tests** shows the selected Plan and latest saved outcomes. **Runs**
+shows the individual Run records. **Related work** shows saved sources for the
+report Plans. When a Plan includes an observed **App model**, that tab lists
+its views, controls, fields and navigation.
 Use its test rows to review expected behavior and saved observations. Pane
 navigation does not send a prompt or start a test, assessment or sign-in. When
 Claude truncates a large tool result, Kaijan reads the same saved report through
@@ -48,6 +51,23 @@ A proposed check is not an approved requirement. A finished run is not a pass.
 Keep inconclusive, failed, stopped and partial results distinct. Missing details
 stay missing; never invent a result to fill the report. A standalone Run has no
 invented Plan: its results stay in Runs.
+
+Read the selected test's saved result before calling its judgment unavailable.
+Browser judgments are in the selected Run's
+`executionReport.test_results`, matched by `test_id` to `selectedTestIds`.
+When no separate linked assessment takes precedence, `bug_found: true` means
+Failed; otherwise `scenario_finished: true` means Passed, and an unfinished
+scenario means Incomplete. Keep its `actual`, `execution_details` and `warning`.
+Empty `assessments` lists and the Run-level `testVerdict: "unverified"` do not
+erase those per-test judgments. Do not report a missing saved verdict from
+those fields alone or list the absence of a separate review as missing work.
+Use these test results in ordinary summaries as well as detailed tables.
+Do not replace a judged test's result with the Run-internal `unverified` label
+in the heading, status or summary. State **Incomplete** and the unfinished work
+when its saved browser row says the scenario did not finish and found no bug.
+A Run with no matching judgment still has only its supported
+observations; execution completion alone is not a Pass. Follow the same rule
+for original-chat reads and project-history reads.
 
 Read selected saved artifacts with `loki_report_artifact_read` when useful.
 Retain their source attribution and original identities. Text retrieval is not

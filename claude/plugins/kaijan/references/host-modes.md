@@ -3,13 +3,10 @@
 One Kaijan plugin serves the Claude Code CLI and the **local Code tab** in
 Claude Desktop on macOS Apple Silicon. Both use the bundled native runtime,
 stdio Core/Local servers and the same managed Claude client. The normal package
-has the same nine skills as Claude Code. The separately built `kaijan-qa` variant is
-fixed to QA and adds `demo` and `mod-demo`; their files/handler are absent from
-the normal package. Existing company rc.175 and public legacy installs retain
-their original inventory until a separately selected update.
-The QA-only `demo` skill adds an explicitly requested online TodoMVC
-Plan → Run → assessment → report walkthrough. It does not change Claude Code's skill
-inventory or automatically run after installation.
+has the same nine skills as Claude Code and adds `demo`. The fixed-QA variant
+uses the same inventory. Demo runs only when requested, using the selected
+service. It plans and runs two real TodoMVC cases and opens their saved report.
+Prior installed versions keep their original inventory until updated.
 Desktop Code is the first Desktop target. A recorded QA trial completed the
 workflow in local Code and reopened the saved report after an update. See the
 [recorded QA checks](#recorded-qa-checks) for the versions and limits.
@@ -17,8 +14,7 @@ workflow in local Code and reopened the saved report after an update. See the
 ## Run in the local Code tab
 
 1. Add the public Git marketplace and install `kaijan@kaijan-claude` at user
-   scope with the CLI commands in `README.md`. The catalog downloads the release
-   ZIP. A local extracted marketplace remains a supported development route.
+   scope with the CLI commands in `README.md`. The catalog installs a Git subdirectory pinned to a release commit. A local extracted marketplace remains a supported development route.
 2. Select QA or Production before starting the local Code engine. For persistent
    QA, merge `"env": { "KAIJAN_PROFILE": "qa" }` into
    `~/.claude/settings.json`, or `.claude/settings.local.json` for one project.

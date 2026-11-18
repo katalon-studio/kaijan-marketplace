@@ -5,7 +5,7 @@ description: Set up Kaijan in Claude Code CLI or the local Desktop Code tab and 
 
 # Set up Kaijan
 
-Welcome a new user briefly. Reuse the current project, work item and target.
+Welcome a new user briefly. Introduce Kaijan as a testing plugin. Reuse the current project, work item and target.
 Ask only for missing task inputs. Application setup needs no map.
 
 Use the installed Kaijan Core and Local tools. With a missing connection, call
@@ -19,10 +19,9 @@ target. Use `test-request` for a complete testing request, `plan-tests` for a
 plan-only request and `run-test` only with target/action authority. Planning
 does not authorize execution. Preserve the user's approval mode.
 
-This package presents saved reports as text in the current CLI or Desktop Code
-conversation. Use [host modes](../../references/host-modes.md) for local Desktop
-installation, version checks and other surface limits.
-Use `review-report`; do not request a report panel or a browser report preview.
+Use `review-report` for saved results. In a supported interactive session,
+offer the native report. Other sessions can read the result in the conversation.
+See [host modes](../../references/host-modes.md) for surface limits.
 For an update, follow [update recovery](references/update-recovery.md).
 
 Use the exact result, `isError`, original IDs and supported next action.
