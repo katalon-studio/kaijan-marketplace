@@ -125394,7 +125394,7 @@ function customerReportHtmlSections(view, text16, selectedKinds2 = ["plan", "run
         row2.execution_details,
         ...row2.warning ? ["Needs confirmation \u2014 " + row2.warning] : []
       ])
-    ).join("") + lines(execution.questions.map((question3) => question3.question)) + (!run.executionRecap && !hasExecutionSteps && execution.reason?.trim() ? details("Saved execution details", paragraph(execution.reason)) : "") : "";
+    ).join("") + lines(execution.questions.map((question3) => question3.question)) + (!run.executionRecap && !hasExecutionSteps && execution.reason?.trim() ? "<h3>Execution reason</h3>" + paragraph(execution.reason) : "") : "";
     const interruptionNote = run.executionLimitNotice ?? run.interruptionNote;
     const body2 = lines([
       savedRunProgressCaption(run.executionState) ?? label3(run.executionState || "unknown"),
