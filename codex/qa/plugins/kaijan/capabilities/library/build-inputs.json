@@ -379,7 +379,7 @@
     "packages/capabilities/ui/map.css": "dd0428c0279ad6296615acc58a53b0bffeb295fbd24e08fae5ec44d9553e623a",
     "packages/capabilities/provider-pins.json": "93e6ad28666a4e48db82cc64dd343063ffdac07de4090544866eb8940a152faf",
     "packages/capabilities/scripts/build.mjs": "82b37771ead1f320e990686267c18e6e85b25f90f1114238cbccffc841e5ac1a",
-    "packages/capabilities/scripts/runner-declarations.mjs": "78d853ed4b89815a29bb8b1a8e25265463f5ff9f3aae5786a6334a8fd5445474",
+    "packages/capabilities/scripts/runner-declarations.mjs": "0ecb617b2d6cb61912b090a865a966cd3aa47a6855f57c85a655a0dcb4d85e31",
     "packages/capabilities/src/runner-public.ts": "07b7dfdc8404a2d384d5c5a96070225e494595f02f973ccf677e4da28c5d04a8",
     "packages/capabilities/scripts/package-computer-runner.mjs": "d53b640560afb8e97e0e929781f35cd9f7a09b6db61c552528feee23522094b4",
     "packages/computer-runner/scripts/prepare-dashboard.mjs": "6f6f8b0bfe035fbce28c7645d75a09241d7acd7ed8571dffde6f0d2d7791d88b",
