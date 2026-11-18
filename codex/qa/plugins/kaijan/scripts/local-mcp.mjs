@@ -54582,8 +54582,8 @@ function createOnboarding(ui) {
   return {
     tool: {
       name: "kaijan_onboarding_show",
-      title: "Set up Kaijan",
-      description: "Open Kaijan's getting-started panel from post-install Set up or when the person asks to set up Kaijan. Prefill the application URL and original request when known. Opening this panel does not start a test or save credentials.",
+      title: "Legacy Kaijan onboarding panel",
+      description: "Open the legacy onboarding panel only when the person explicitly asks for that panel. Ordinary Kaijan Setup uses chat. Prefill the supplied application URL and request. Opening the panel does not save Setup or start a test.",
       inputSchema: external_exports.toJSONSchema(inputSchema2),
       outputSchema: external_exports.toJSONSchema(outputSchema2),
       annotations: {
@@ -54982,7 +54982,6 @@ async function createSetupTools({
       ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
       $id: `urn:kaijan:${name}:customer-output:1`
     },
-    ...ui ? { _meta: { ui: { resourceUri: ui.resources[0].uri } } } : {},
     annotations: {
       readOnlyHint: readOnly,
       destructiveHint: Boolean(mapper) && ["loki_setup_prepare", "loki_setup_wait", "loki_setup_retry"].includes(
@@ -55018,14 +55017,12 @@ async function createSetupTools({
         throw new SetupFailure("setup_output_invalid");
       const wire = projectCustomerSetup(name, original2);
       return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
         structuredContent: wire,
         content: [{ type: "text", text: JSON.stringify(wire) }]
       };
     } catch (error63) {
       const result2 = customerSetupFailure(failure3(error63).code);
       return {
-        ...ui ? { _meta: { "kaijan/setup-card": 1 } } : {},
         isError: true,
         structuredContent: result2,
         content: [{ type: "text", text: JSON.stringify(result2) }]
