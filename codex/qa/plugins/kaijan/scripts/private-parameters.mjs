@@ -32151,7 +32151,7 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
 }
 
 // apps/codex-plugin/src/configurations.mjs
-import { createHash as createHash3 } from "node:crypto";
+import { createHash as createHash3, randomUUID as randomUUID3 } from "node:crypto";
 var cachedFormUris = /* @__PURE__ */ new Set([
   "ui://kaijan/configurations/form/v1.html",
   "ui://kaijan/configurations/form/v2.html"
@@ -32313,7 +32313,7 @@ function createConfigurationSurface({ session, library, data }) {
         } else if (args.operation === "select") {
           configuration = saved.select(scopeId, args.id);
           await library.configurationPreference(scope.data, scopeId, true);
-          message = args.automatic ? "Automatic configuration matching selected." : `Configuration selected: ${configuration.name}.`;
+          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration.name}.`;
         }
         const enabled = await library.configurationPreference(
           scope.data,
@@ -32333,33 +32333,35 @@ function createConfigurationSurface({ session, library, data }) {
       }
     },
     async prepareExecution(name, raw, metadata2) {
-      if (!["loki_runner_execute", "loki_test_execute"].includes(name))
+      const planning = name === "loki_test_plan";
+      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration)
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
-        const args = structuredClone(raw), explicit = args?.configurationId;
+        const args = structuredClone(raw), explicit = args?.configurationId, execution = planning ? args.exploration : args, requestKey = planning && raw?.requestKey === void 0 ? randomUUID3() : raw?.requestKey;
         if (args && Object.hasOwn(args, "configurationUsed"))
           throw Error("host_metadata_only");
         if (args) delete args.configurationId;
         if (!metadata2?.threadId && (explicit === null || explicit === void 0))
           return { arguments: args };
         const scope = await scopeFor(metadata2);
-        if (typeof raw?.requestKey !== "string" || !raw.requestKey)
+        if (typeof requestKey !== "string" || !requestKey)
           throw Error("invalid_request");
-        recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, raw.requestKey])).digest("hex");
+        if (!planning)
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey])).digest("hex");
         marked = true;
         marked = await library.configurationRunMarker(
           scope.data,
           scope.scope.id,
           name,
-          raw.requestKey
+          requestKey
         );
         const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
         if (!marked && (explicit === null || preference === false))
           return { arguments: args };
         if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
           return { arguments: args };
-        const canSelect = explicit !== void 0 || preference === true || Boolean(args.target?.initialURL);
+        const canSelect = explicit !== void 0 || preference === true || Boolean(execution.target?.initialURL);
         if (!marked && !canSelect) return { arguments: args };
         const saved = await store().catch((error62) => {
           if (marked) throw error62;
@@ -32368,134 +32370,149 @@ function createConfigurationSurface({ session, library, data }) {
             "Could not read the saved configuration. Ask the person if they want to run without it."
           );
         });
-        const previous = saved.admission(
-          scope.scope.id,
-          name,
-          raw.requestKey,
-          raw
-        );
+        const previous = saved.admission(scope.scope.id, name, requestKey, raw);
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
             scope.scope.id,
             name,
-            raw.requestKey,
+            requestKey,
             true
           );
           return { arguments: previous };
         }
         if (marked) throw Error("configuration_admission_unavailable");
-        const runSchema = name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
         if (!runSchema.safeParse(args).success)
           throw new library.ConfigurationError(
             "configuration_run_input",
             "Check the Run inputs before starting. The saved configuration is unchanged."
           );
         if (explicit !== void 0 && explicit !== null) id2.parse(explicit);
-        const once = explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
+        const once = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
         const selection2 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
-        const matches = args.target?.initialURL ? saved.list(args.target.initialURL) : [];
-        if (selection2 === "automatic" && matches.length > 1)
-          return {
-            error: {
-              code: "configuration_choice_required",
-              message: "Several configurations match this application. Ask which one to use before running.",
-              configurations: matches.map(({ id: id6, name: name2 }) => ({ id: id6, name: name2 })),
-              requestDispatched: false
-            }
-          };
-        const selectedId = selection2 === "automatic" ? matches[0]?.id : selection2;
-        if (selectedId) {
-          const chosen = once?.execution ?? saved.execution(selectedId);
-          const callerPrivate = args.privateParams ?? {};
-          const secrets = Object.fromEntries(
-            Object.entries(chosen.secrets).filter(
-              ([key]) => !Object.hasOwn(callerPrivate, key)
-            )
-          );
-          const hasSecrets = Object.keys(secrets).length > 0;
-          if (!args.target?.initialURL && (hasSecrets || chosen.application))
+        const automatic = selection2 === "automatic";
+        const initialURL = execution.target?.initialURL;
+        const browserURL = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL) return { arguments: args };
+        const configurations = automatic ? saved.list().map(({ id: id6 }) => saved.execution(id6)) : selection2 ? [once?.execution ?? saved.execution(selection2)] : [];
+        if (!configurations.length) return { arguments: args };
+        const callerParams = execution.params ?? {};
+        const callerPrivate = execution.privateParams ?? {};
+        const allowed = execution.target?.allowedHosts ?? (execution.target?.initialURL ? [new URL(execution.target.initialURL).hostname] : []);
+        if (Object.keys(callerPrivate).length)
+          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
+            ...execution,
+            target: { ...execution.target, allowedHosts: allowed }
+          });
+        const occupied = /* @__PURE__ */ new Set([
+          ...Object.keys(callerParams),
+          ...Object.keys(callerPrivate)
+        ]);
+        const parameterName = (base) => {
+          let name2 = base;
+          while (occupied.has(name2)) name2 += "_";
+          occupied.add(name2);
+          return name2;
+        };
+        const descriptors = [];
+        const secretNames = [];
+        execution.params = { ...callerParams };
+        execution.privateParams = { ...callerPrivate };
+        for (const chosen of configurations) {
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
+          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
+            (key) => !Object.hasOwn(callerPrivate, key)
+          ) && !privateAllowed))
             throw new library.ConfigurationError(
               "configuration_target",
-              "This configuration uses a browser application. Choose its browser target before running."
+              "This configuration belongs to another application. Choose a configuration for the browser target."
             );
-          const url2 = args.target?.initialURL ? new URL(args.target.initialURL) : void 0;
-          const allowed = args.target?.allowedHosts ?? (url2 ? [url2.hostname] : []);
-          if (chosen.application && new URL(chosen.application).origin !== url2?.origin || hasSecrets && (!allowed.every((host) => chosen.allowedHosts.includes(host)) || !url2 || !chosen.allowedHosts.includes(url2.hostname)))
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "This configuration belongs to another application. Choose a matching configuration before running."
-            );
-          const params = args.params ?? {};
-          if (Object.keys(params).some(
-            (key) => Object.hasOwn(chosen.secrets, key)
-          ))
-            throw new library.ConfigurationError(
-              "configuration_secret_editor",
-              "Use the private login path for this Run to override a saved secret."
-            );
-          if (Object.keys(callerPrivate).length)
-            await library.resolveRunnerParameters(scope.data, scope.scope.id, {
-              ...args,
-              target: { ...args.target, allowedHosts: allowed }
-            });
-          chosen.configuration.overrides = [
+          const fields = {};
+          const secrets = {};
+          chosen.configuration.overrides = automatic ? [] : [
             .../* @__PURE__ */ new Set([
               ...once?.changed ?? [],
-              ...[...Object.keys(params), ...Object.keys(callerPrivate)].filter(
+              ...[
+                ...Object.keys(callerParams),
+                ...Object.keys(callerPrivate)
+              ].filter(
                 (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
               )
             ])
           ];
-          args.params = {
-            ...Object.fromEntries(
-              Object.entries(chosen.params).filter(
-                ([key]) => !Object.hasOwn(callerPrivate, key)
-              )
-            ),
-            ...params
-          };
+          for (const key of [
+            ...Object.keys(chosen.params),
+            ...Object.keys(chosen.secrets)
+          ]) {
+            const isSecret = Object.hasOwn(chosen.secrets, key);
+            if (automatic && isSecret && !privateAllowed) continue;
+            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
+              if (isSecret && !Object.hasOwn(callerPrivate, key))
+                throw new library.ConfigurationError(
+                  "configuration_secret_editor",
+                  "Use the private login path to override a saved secret."
+                );
+              fields[key] = key;
+              continue;
+            }
+            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
+            fields[key] = name2;
+            if (Object.hasOwn(chosen.secrets, key))
+              secrets[name2] = chosen.secrets[key];
+            else execution.params[name2] = chosen.params[key];
+          }
+          descriptors.push({
+            id: chosen.configuration.id,
+            name: chosen.configuration.name,
+            url: chosen.application ?? null,
+            fields
+          });
           if (Object.keys(secrets).length) {
             const binding2 = await library.provisionRunnerParameters(
               scope.data,
               scope.scope.id,
               { allowedHosts: chosen.allowedHosts, values: secrets }
             );
-            args.privateParams = {
-              ...args.privateParams,
-              ...Object.fromEntries(
-                binding2.fields.map((field) => [
-                  field,
-                  { bindingId: binding2.bindingId, field }
-                ])
-              )
-            };
-            args.target.allowedHosts = allowed;
+            for (const field of binding2.fields)
+              execution.privateParams[field] = {
+                bindingId: binding2.bindingId,
+                field
+              };
+            secretNames.push(...binding2.fields);
           }
-          args.options = {
-            ...args.options,
+        }
+        if (automatic)
+          execution.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
+        if (Object.keys(execution.privateParams).length) {
+          execution.target.allowedHosts = allowed;
+          await library.resolveRunnerParameters(
+            scope.data,
+            scope.scope.id,
+            execution
+          );
+        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
+          delete execution.privateParams;
+        }
+        if (!planning) {
+          execution.options = {
+            ...execution.options,
             secretParameterNames: [
               .../* @__PURE__ */ new Set([
-                ...args.options?.secretParameterNames ?? [],
-                ...Object.keys(chosen.secrets)
+                ...execution.options?.secretParameterNames ?? [],
+                ...secretNames
               ])
             ]
           };
-          if (Object.keys(args.privateParams ?? {}).length) {
-            args.target.allowedHosts = allowed;
-            await library.resolveRunnerParameters(
-              scope.data,
-              scope.scope.id,
-              args
-            );
-          }
-          args.configurationUsed = chosen.configuration;
+          if (!automatic)
+            args.configurationUsed = configurations[0].configuration;
         }
-        if (!selectedId) return { arguments: args };
+        if (planning) args.requestKey = requestKey;
         const prepared = saved.admission(
           scope.scope.id,
           name,
-          raw.requestKey,
+          requestKey,
           raw,
           args,
           once?.token
@@ -32504,7 +32521,7 @@ function createConfigurationSurface({ session, library, data }) {
           scope.data,
           scope.scope.id,
           name,
-          raw.requestKey,
+          requestKey,
           true
         );
         if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
@@ -32519,7 +32536,7 @@ function createConfigurationSurface({ session, library, data }) {
         return {
           error: {
             code: marked && !(error62 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
-            message: marked ? "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
+            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
             requestDispatched: marked ? null : false,
             ...marked ? { existingRunId: recoveryRunId } : {}
           }
