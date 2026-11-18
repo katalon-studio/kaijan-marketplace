@@ -387,7 +387,7 @@
     "packages/capabilities/scripts/stage-application-context.mjs": "ec48ce676ceecb22a45c77d3147272bc58b58669a340f3314e4ad4db78ea02f6",
     "scripts/package-source.mjs": "eabca4e8706982839f8ed9764e2a7cb1a55119c08090689d9394e102eebd9606",
     "pnpm-lock.yaml": "d4e631e1bad71ea5c2ca5d0bfa0a60c8eede2a353dafc28319a38d811d721433",
-    "pnpm-workspace.yaml": "3ab278e0ec4b9b3cf089a443a2b6534ecf1041c6c8947fa28ce3b39c0058e140",
+    "pnpm-workspace.yaml": "cf22786d599a207255ed791fb58407932fe145c565578bdba29412924a1b429f",
     "tsconfig.base.json": "15040c04e8e8711a0f760316a657982f9aa47f91561de105a0832d5732538351"
   },
   "transport": "none",
