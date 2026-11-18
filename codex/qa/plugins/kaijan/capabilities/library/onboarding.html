@@ -626,56 +626,23 @@ button.dz-back:hover {
   background: none;
   overflow: hidden;
 }
-.dz-grp h3 {
-  margin: 0;
-  padding: 9px 14px;
-  font-size: 13px;
-  font-weight: 650;
-  display: flex;
-  gap: 8px;
-  background: var(--pn2);
-  border-bottom: 1px solid var(--ln);
-}
-.dz-grp h3 span {
-  color: var(--ink3);
-  font-weight: 500;
-}
 .dz-gh {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   gap: 8px;
-  width: 100%;
   padding: 6px 8px;
-  border-radius: 6px;
-  text-align: left;
+}
+.dz-gh h4 {
+  margin: 0;
   font-size: 13.5px;
-}
-.dz-gh:hover {
-  background: var(--pn2);
-}
-.dz-gh > svg {
-  width: 14px;
-  height: 14px;
-  color: var(--ink3);
-  align-self: center;
-  transform: rotate(-90deg);
-  transition: transform 0.15s;
-  flex: none;
-}
-.dz-gh b {
   font-weight: 650;
-}
-.dz-gh .sp {
-  flex: 1;
 }
 .dz-gs {
   max-width: 48%;
   color: var(--ink3);
   text-align: right;
   font-size: 12.5px;
-}
-.dz-grp[open] > .dz-gh > svg {
-  transform: none;
 }
 .dz-row[open] > .dz-rh > svg {
   transform: rotate(180deg);
@@ -1687,8 +1654,7 @@ body.light .dz-nb .f {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dz-rh > svg,
-  .dz-gh > svg {
+  .dz-rh > svg {
     transition: none;
   }
 }
