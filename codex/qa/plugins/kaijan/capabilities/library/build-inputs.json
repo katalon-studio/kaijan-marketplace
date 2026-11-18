@@ -335,7 +335,7 @@
     "apps/core/ui/local-capabilities/test-plan/assets/font-7.woff2": "c36f509c0a8f9f85f29cb44bc8701d8a9e0b14c499e77a884f789ead7093a7ac",
     "apps/core/build-test-plan-ui.mjs": "86921d5c61c14c201c4fbd50408be61f6f43b7812e3973e157e85a0bddfc3c90",
     "apps/core/ui/local-capabilities/test-plan/map-viewport.ts": "21d1a5f3c6b535b4f26bd9ecb5faa30284cbfc0407230e4addd8503a1ba49694",
-    "apps/core/ui/local-capabilities/test-plan/app-model.ts": "09dc70bd843f846a5233990e2be3630a92c3288d7f00e969882cf4347049dac1",
+    "apps/core/ui/local-capabilities/test-plan/app-model.ts": "a367ca3537364b63f99727a762c0d00067e8be95a0bdd5d20fadfc87f5c1cb37",
     "apps/core/ui/local-capabilities/test-plan/case-evidence.ts": "39d2b6377e8a5ab8412827bb99a5523bda268004fe9208241f49586c9261b9ea",
     "apps/core/ui/local-capabilities/test-plan/model.ts": "2340a7ab6f26f3a977678b1e8bc344238ca86e0d41bf9ae88936266a2f85b4f0",
     "apps/core/ui/local-capabilities/test-plan/icons.ts": "d64694088479f4cf9198f3e0c5bec5dccadabadc824589215f994a7da6428dd4",
