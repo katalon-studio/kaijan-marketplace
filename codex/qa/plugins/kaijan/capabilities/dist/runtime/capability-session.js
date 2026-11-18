@@ -21149,6 +21149,8 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
+  bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
+  bug_found_by_common_sense: external_exports.boolean().optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()

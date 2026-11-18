@@ -45,8 +45,8 @@ the same authority.
   change. Planner derives scenarios from these inputs. Cover ordinary requested behavior and acceptance conditions as well
   as relevant risks. Keep assumptions distinct from supplied requirements.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
-  A complete caller-supplied scenario can use [run-test](../run-test/SKILL.md)
-  directly. Standalone code review uses
+  Save a Plan for a complete caller-supplied scenario before execution.
+  Standalone code review uses
   [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md).
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
   saved Plan reference and selected test IDs, target and parameters. Kaijan
