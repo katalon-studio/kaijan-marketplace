@@ -12,7 +12,7 @@ When Codex advertises `testObjective`, pass the person's request in that
 field. Generate a `requestKey` and put the selected browser URL in
 `target.initialURL` or the selected Mac app's bundle ID in `target.app`.
 Include `testData` when the person supplied concrete values. It accepts any
-JSON value. Explorer uses the browser target and test data during planning.
+JSON value. Explorer uses the selected target and test data during planning.
 For work based on a saved source packet, pass its `contextId` from
 `loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
 `testObjective`. Use the returned `planId` when the person authorizes a Run.

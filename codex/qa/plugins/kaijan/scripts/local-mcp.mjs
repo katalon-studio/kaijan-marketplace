@@ -55424,7 +55424,7 @@ function codexTestingToolDefinition(tool2) {
   if (tool2.name === "loki_test_plan")
     return {
       ...tool2,
-      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. A browser target starts Explorer. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. Either target starts Explorer. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       inputSchema: external_exports.toJSONSchema(planInput)
     };
   if (tool2.name === "loki_test_execute")
@@ -56850,6 +56850,9 @@ function executionView(value) {
     ...value.result ? { result: executionResult(value.result) } : {}
   });
 }
+function isRunnerAssessment(preparation2) {
+  return preparation2?.source === "runner-browser-session" || preparation2?.source === "runner-desktop-session";
+}
 function assessmentView(value, savedPlan = false, presentation, progressOnly = false, runnerSession = false) {
   if (value === null || value === void 0) return null;
   const identity4 = {
@@ -56973,7 +56976,7 @@ function project(name, value, assessmentPresentation) {
       hasSavedPlanSelection(value.execution?.result),
       assessmentPresentation,
       combinedStatusRead(name, value),
-      value.preparation?.source === "runner-browser-session"
+      isRunnerAssessment(value.preparation)
     ) ?? browserAssessmentNotice(value),
     report: value.report,
     nextAction: value.nextAction ? {
@@ -57172,11 +57175,11 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       );
       let context2;
       try {
-        context2 = retained ? await retained : execution2?.state === "finished" && (hydrated.preparation?.source === "runner-browser-session" || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+        context2 = retained ? await retained : execution2?.state === "finished" && (isRunnerAssessment(hydrated.preparation) || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
       } catch {
       }
       bindProtectedProgress(projected, execution2, context2);
-      if (hydrated.preparation?.source === "runner-browser-session" && projected.assessment) {
+      if (isRunnerAssessment(hydrated.preparation) && projected.assessment) {
         const selectedIds = new Set(
           (hydrated.assessment?.result?.assessment?.test_results ?? []).map(
             (row) => row.test_id
