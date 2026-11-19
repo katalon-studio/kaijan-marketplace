@@ -55756,7 +55756,7 @@ var descriptions = {
   prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
   changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests.",
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration.",
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
   suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
 };
@@ -56624,6 +56624,7 @@ function customerFailure(name, value = {}, runId2) {
   let code = privateLogin || Object.hasOwn(errorMessages, native?.code) ? native.code : "operation_unavailable";
   if (native?.code === "invalid_params") code = "invalid_arguments";
   const browserHosts = code === "invalid_arguments" && native?.requestDispatched === false && native?.recovery?.action === "correct_browser_hosts";
+  const savedPlanSelection = code === "invalid_arguments" && native?.requestDispatched === false && native?.recovery?.action === "verify_saved_plan_selection";
   const [message, action2, instruction] = privateLogin ? [
     `${privateParameterMessages[code]} No new test execution was dispatched.`,
     "correct_private_parameters",
@@ -56632,6 +56633,10 @@ function customerFailure(name, value = {}, runId2) {
     "The browser host list is invalid or does not allow the initial page. No new test execution was dispatched.",
     "correct_browser_hosts",
     "Use hostnames without ports, schemes, paths or wildcards in target.allowedHosts, for example 127.0.0.1. Keep the port in target.initialURL. Include its hostname or an already authorized parent domain. Preserve any original Run; do not replay work with unknown effects."
+  ] : savedPlanSelection ? [
+    "Kaijan could not verify the selected tests in the saved plan. No new run started.",
+    "correct_arguments",
+    "Reopen the original plan in its chat and check the selected tests. If a run already exists, open that run using its original ID."
   ] : errorMessages[code] ?? [
     "The test or its saved result is unavailable. Effects may be unknown.",
     "preserve_original_run",
@@ -57140,34 +57145,37 @@ var object6 = (value) => value !== null && typeof value === "object" && !Array.i
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
-  const invalid = (diagnosticReason = "invalid_arguments") => ({
+  const invalid = (diagnosticReason = "invalid_arguments", showSelectionRecovery = false) => ({
     diagnosticReason,
     error: customerFailureOutput(name, {
       code: "invalid_arguments",
-      requestDispatched: false
+      requestDispatched: false,
+      ...showSelectionRecovery ? { recovery: { action: "verify_saved_plan_selection" } } : {}
     })
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
   if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
     return invalid();
-  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
+  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key2) => Object.hasOwn(args.planRef, key2));
   if (!saved && !checked) return { arguments: args };
   if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
     return invalid("saved_selection_conflict");
+  const key = saved ? "savedTests" : "planRef";
+  const parsed = checkedPlanReferenceSchema.safeParse(args[key]);
+  if (!parsed.success) return invalid();
   if (typeof options.resolveSelection !== "function")
-    return invalid("saved_selection_unavailable");
+    return invalid("saved_selection_unavailable", !invocation?.signal?.aborted);
   try {
     invocation?.signal?.throwIfAborted();
-    const key = saved ? "savedTests" : "planRef";
-    const reference2 = checkedPlanReferenceSchema.parse(args[key]);
+    const reference2 = parsed.data;
     const resolved2 = await options.resolveSelection({
       reference: structuredClone(reference2)
     });
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
-      return invalid("saved_selection_mismatch");
+      return invalid("saved_selection_mismatch", true);
     return {
       arguments: {
         ...args,
@@ -57176,7 +57184,8 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     };
   } catch (error63) {
     return invalid(
-      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable"
+      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable",
+      !invocation?.signal?.aborted
     );
   }
 }
