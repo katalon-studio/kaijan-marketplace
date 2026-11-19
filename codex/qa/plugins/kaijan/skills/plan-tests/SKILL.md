@@ -8,15 +8,24 @@ description: Propose practical tests for the caller's task and available applica
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
-When the caller wants browser-based planning for a selected web target, pass
-its URL and allowed hosts in `exploration.target`. Kaijan's Explorer builds the
-app model during planning. Pass the caller's original task and any supplied
-parameters. The testing method is already part of the agents.
+When Codex advertises `testObjective`, pass the person's request in that
+field. Generate a `requestKey` and put the selected browser URL in
+`target.initialURL` or the selected Mac app's bundle ID in `target.app`.
+Include `testData` when the person supplied concrete values. It accepts any
+JSON value. Explorer uses the browser target and test data during planning.
+For work based on a saved source packet, pass its `contextId` from
+`loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
+`testObjective`. Use the returned `planId` when the person authorizes a Run.
 
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.
 
 ## Planning inputs
+
+On Codex, use the advertised fields above and the original user request.
+For hosts that advertise `input` and `contextId`, use the following planning
+input guidance. For browser exploration on those hosts, provide the authorized
+URL in `exploration.target.initialURL` and any supplied exploration parameters.
 
 Use one supported input form. Preserve original text, attribution and source
 roles. Put application behavior and context in `input`. Include the optional
@@ -65,7 +74,7 @@ A known pre-dispatch context-input refusal asks for corrected arguments. Reuse
 the saved task instead of asking the person to retype it or writing an unsaved
 substitute plan. Preserve an earlier uncertain outcome without replay.
 
-The optional `options.deadline_ms` covers preparation and planning. Follow
+On hosts that advertise it, `options.deadline_ms` covers preparation and planning. Follow
 [completed-answer reading](../../references/RESULT-READING.md) for cancellation
 and result paging. Recover a lost reply with the original optional
 `requestKey` and identical input and configuration. An offered
