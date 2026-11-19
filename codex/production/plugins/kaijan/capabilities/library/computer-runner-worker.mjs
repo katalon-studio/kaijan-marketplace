@@ -26964,13 +26964,12 @@ process.on("message", (message) => {
       const limits = options.limits;
       const originalWorkerDeadline = Date.now() + (limits?.ms ?? 6e5);
       let viewerControl;
-      if (input3.executionMethod !== "desktop-ui")
-        failures = workerFailureBoundary(
-          controller,
-          options.artifactDirectory,
-          options.browserViewer === true ? () => originalWorkerDeadline + (viewerControl?.status().humanMs ?? 0) : originalWorkerDeadline,
-          send
-        );
+      failures = workerFailureBoundary(
+        controller,
+        options.artifactDirectory,
+        options.browserViewer === true ? () => originalWorkerDeadline + (viewerControl?.status().humanMs ?? 0) : originalWorkerDeadline,
+        send
+      );
       const { run } = input3.executionMethod === "desktop-ui" ? await import("@katalon-loki/mac-computer-runner") : await import("@katalon-loki/computer-runner");
       if (input3.executionMethod === "desktop-ui" && options.headless !== void 0)
         throw new TypeError(
@@ -27025,13 +27024,9 @@ process.on("message", (message) => {
       void _ownerTransition;
       void _telemetryPlanId;
       if (clarificationEnabled === true) {
-        if (input3.executionMethod === "desktop-ui")
-          throw Error("Desktop clarification/recovery is unsupported");
         clarification = createWorkerClarification(send, controller.signal);
       }
       if (contextRegistration !== void 0) {
-        if (input3.executionMethod === "desktop-ui")
-          throw Error("Application context requires browser Runner");
         applicationContext = createWorkerApplicationContext(
           contextRegistration,
           send,
@@ -27076,7 +27071,7 @@ process.on("message", (message) => {
           requestAI: (body, signal) => validation.send(body, signal)
         } : managed ? { requestAI: selectedSender } : { apiKey: options.apiKey },
         signal: controller.signal,
-        ...input3.executionMethod === "desktop-ui" ? {} : { reportSignal: reportController.signal },
+        reportSignal: reportController.signal,
         onEvent: (event2) => {
           void send({ type: "event", event: event2 });
         }
