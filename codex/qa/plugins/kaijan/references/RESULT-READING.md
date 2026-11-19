@@ -1,6 +1,6 @@
 # Read complete advisory answers
 
-Advisory query tools return the full original native JSON in the same awaited call. There is no public advisory create/get/stop lifecycle. Cancel the host tool request to cancel the native computation. Unknown provider effects are not a retry instruction.
+Advisory query tools return the full original native JSON in the same awaited call. There is no public advisory create/get/stop lifecycle. Canceling a host tool request normally cancels the native computation. When the last host waiting for a Plan with active Explorer cancels its wait, Kaijan closes Explorer and continues the original Plan with the observed map. Reissue the identical planning request with the original configuration and request key, if supplied, to retrieve that Plan. Unknown provider effects are not a retry instruction.
 
 Every completed answer includes `answerId` and `resultSha256`, including small
 answers. Select planning/assessment reports with that exact answer identity;
