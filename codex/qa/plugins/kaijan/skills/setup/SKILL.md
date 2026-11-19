@@ -15,6 +15,12 @@ source and the testing goal already known, so the person can correct them.
 Keep the saved summary and any follow-up in chat. Do not open a Setup card,
 the legacy onboarding panel or a native Question for Setup.
 
+If the available Setup tool offers Kaijan Browser, mention it as an optional
+part of first-time Setup. When the person chooses to install it, call
+`loki_setup_prepare` with only `browserViewer: "install"`. Report whether the
+app is ready. If the person only asks to prepare the Viewer, finish that
+request without asking for a testing goal or project.
+
 If the objective is missing, ask what behavior, change or problem they want to
 test. A short description, test case, ticket or pull request can supply it.
 Invite an application URL if useful. Ask one focused question in your reply,

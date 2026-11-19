@@ -36732,6 +36732,8 @@ async function createInstalledSession(root, build, data, broker, {
     };
   }
   if (host === "codex") {
+    if (build.browserViewer === true && typeof library.prepareSelectedBrowserViewer === "function")
+      session.prepareBrowserViewer = library.prepareSelectedBrowserViewer;
     session.configurations = createConfigurationSurface({
       session,
       library,
