@@ -53145,6 +53145,8 @@ async function createInstalledSession(root, build, data, broker, {
     };
   }
   if (host === "codex") {
+    if (build.browserViewer === true && typeof library.prepareSelectedBrowserViewer === "function")
+      session.prepareBrowserViewer = library.prepareSelectedBrowserViewer;
     session.configurations = createConfigurationSurface({
       session,
       library,
@@ -54896,6 +54898,30 @@ var customerPrepareSchema = prepareSchema.extend({
     ).max(30).default([])
   })
 });
+var browserViewerSetupSchema = external_exports.strictObject({
+  browserViewer: external_exports.literal("install")
+});
+var browserViewerSetupOutputSchema = external_exports.strictObject({
+  status: external_exports.enum(["ready", "unavailable"]),
+  message: external_exports.string()
+});
+async function setupBrowserViewer(prepare, signal) {
+  try {
+    signal?.throwIfAborted();
+    await prepare(signal);
+    signal?.throwIfAborted();
+    return {
+      status: "ready",
+      message: "Kaijan Browser is ready. Open it from the Dock during a browser Run."
+    };
+  } catch {
+    signal?.throwIfAborted();
+    return {
+      status: "unavailable",
+      message: "Kaijan Browser could not be prepared. You can retry in Setup or run browser tests headlessly."
+    };
+  }
+}
 function invalidSetupInput(message, data) {
   const error63 = new McpError(ErrorCode.InvalidParams, message, data);
   error63.message = message;
@@ -54907,6 +54933,7 @@ async function createSetupTools({
   consumer,
   createTelemetry,
   ui,
+  prepareBrowserViewer,
   authorize = async () => {
     throw new SetupFailure("source_authorization_adapter_unavailable");
   }
@@ -54918,6 +54945,7 @@ async function createSetupTools({
     authorize,
     createTelemetry
   });
+  const prepareInput = prepareBrowserViewer ? external_exports.union([customerPrepareSchema, browserViewerSetupSchema]) : customerPrepareSchema;
   const definitions = [
     [
       "loki_setup_list",
@@ -54929,7 +54957,7 @@ async function createSetupTools({
     [
       "loki_setup_prepare",
       "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
-      customerPrepareSchema,
+      prepareInput,
       (input3, signal, invocation) => setup.prepare(input3, signal, invocation),
       false
     ],
@@ -54979,14 +55007,20 @@ async function createSetupTools({
   const onboarding = createOnboarding(ui);
   const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
     name,
-    description: customerSetupDescriptions[name],
+    description: name === "loki_setup_prepare" && prepareBrowserViewer ? `${customerSetupDescriptions[name]} If the person chooses the optional Kaijan Browser app, pass only browserViewer: install to prepare it on this Mac. That choice keeps saved application Setup separate.` : customerSetupDescriptions[name],
     inputSchema: {
       ...external_exports.toJSONSchema(schema, { io: "input" }),
+      type: "object",
       $id: `urn:loki:${name}:input:1`
     },
     outputSchema: {
       type: "object",
-      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
+      ...external_exports.toJSONSchema(
+        name === "loki_setup_prepare" && prepareBrowserViewer ? external_exports.union([
+          customerSetupOutputSchemas[name],
+          browserViewerSetupOutputSchema
+        ]) : customerSetupOutputSchemas[name]
+      ),
       $id: `urn:kaijan:${name}:customer-output:1`
     },
     annotations: {
@@ -55017,6 +55051,13 @@ async function createSetupTools({
     }
     try {
       signal?.throwIfAborted();
+      if (name === "loki_setup_prepare" && "browserViewer" in parsed.data) {
+        const result3 = await setupBrowserViewer(prepareBrowserViewer, signal);
+        return {
+          structuredContent: result3,
+          content: [{ type: "text", text: JSON.stringify(result3) }]
+        };
+      }
       const result2 = await definition[3](parsed.data, signal, invocation);
       const text4 = JSON.stringify(result2);
       const original2 = JSON.parse(text4);
@@ -59013,6 +59054,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
           scopedSetup = await createSetupTools({
             directory,
             ...ports,
+            prepareBrowserViewer: session.prepareBrowserViewer,
             ui: session.setupCard,
             createTelemetry: () => createBoundLifecycle(telemetry).setup
           });
