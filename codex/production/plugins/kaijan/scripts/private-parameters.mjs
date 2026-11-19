@@ -33513,6 +33513,13 @@ var clarificationPresentationSchema = external_exports.union([
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count3 = external_exports.number().int().nonnegative();
+var desktopRunnerTargetSchema = external_exports.strictObject({
+  app: external_exports.string().max(200).refine((value) => {
+    const parts = value.split(".");
+    return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
+  }, "An application bundle ID is required."),
+  launch: external_exports.boolean().optional()
+});
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),

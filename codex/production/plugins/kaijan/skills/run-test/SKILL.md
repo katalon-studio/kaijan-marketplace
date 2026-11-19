@@ -28,12 +28,20 @@ application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
-or manual login. Keep raw secrets out of chat and tool arguments. For one Run,
-use `params` for ordinary overrides and `privateParams` for scoped secret references.
+or manual login. Keep raw secrets out of chat and tool arguments. On hosts that
+advertise full Runner input, use `params` for ordinary overrides and
+`privateParams` for scoped secret references.
 These overrides leave saved settings unchanged. The person can run without
 saving settings. Configuration selection never authorizes execution.
 
 Use `loki_test_execute` for the normal combined run, assessment and report.
+When Codex advertises `planId`, supply the exact `planId` returned by Plan,
+the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
+target, test data and private configuration references from the saved Plan.
+If the person changes the target or test data, save a Plan using those inputs
+before running it. For an interrupted request, reuse the same key.
+
+For hosts that advertise the full Runner input, follow the instructions below.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
 `{}`) and the authorized target. For one saved test, use its actual test ID as
 `scenarioId`.
@@ -99,9 +107,10 @@ to inspect an existing recording.
 
 ## macOS desktop scenarios
 
-Use `executionMethod: "desktop-ui"` and `target.app` with the app's bundle ID.
-Set `target.launch: true` only when launch is allowed. `false` requires a
-running app. Desktop requires configured full Xcode, UI Automation and
+Supply `target.app` with the app's bundle ID in the Codex Plan. Use
+`executionMethod: "desktop-ui"` and the app target on hosts that advertise the
+full Runner input. Set `target.launch: true` only when launch is allowed.
+`false` requires a running app. Desktop requires configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
 Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
 keeps its state and stays open after the run. Browser clarification and
