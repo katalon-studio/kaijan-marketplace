@@ -817,7 +817,7 @@
       "packages/computer-runner/src/browser-explorer.d.mts": "93c7cc7bd261b83a6afcb98820cee1c9468f6c56f7ad726f52a369c683a160c0",
       "packages/computer-runner/src/agent-context.mjs": "fccdd8bc7cd535d88611b19b3f597c9c7c6d1b1423cefde3f3b66f851c1322be",
       "packages/computer-runner/src/application-ui-model.mjs": "8ffc1f0f4df35ce2ec742ebe882658326d68dae27f54479329c6c16493632040",
-      "packages/computer-runner/src/browser-explorer.mjs": "13f5b13688066a64023aca1ee6d2300d1e6e8a1e3534e90f9ecf543ecc23ec15",
+      "packages/computer-runner/src/browser-explorer.mjs": "2d12188438a82fbbff5b6fa486e8d4beccfaff65b211cd5078f10d90ef90d608",
       "packages/computer-runner/src/browser-inputs.mjs": "5dfec75d9392e0ae91d7fddf68fe3e4f1b3e6b9ba2373a9816420fa23a06653d",
       "packages/computer-runner/src/exploration-map.mjs": "18caedcc9810db82efc297be580f6531f95169614dfa1a4120cea46fddd8d43e",
       "packages/computer-runner/src/browser-handoff.mjs": "a40bbb052b0c2145b21e5487de8afb27fdb4834e4e19d404e0520a061effb0af",
