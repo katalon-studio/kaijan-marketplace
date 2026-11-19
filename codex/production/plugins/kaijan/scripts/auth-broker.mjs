@@ -22503,11 +22503,13 @@ var BrokerAuthorization = class {
       onboarding
     });
     this.resource = `${origin}/api/v1`;
+    this.loadProgress = { stage: "read_connection_state" };
     this.ready = this.load();
     this.pending = null;
   }
   async load() {
     this.blocked = await this.state.read();
+    this.loadProgress.stage = "read_credentials";
     try {
       await this.readCredentials();
     } catch (error62) {
@@ -22535,35 +22537,54 @@ var BrokerAuthorization = class {
     }
     if (this.credentialError) throw this.credentialError;
   }
-  async ensure({ interactive = false } = {}) {
+  async ensure({ interactive = false, observeProgress } = {}) {
+    observeProgress?.(this.loadProgress);
     await this.ready;
+    const progress = { stage: "read_credentials" };
+    observeProgress?.(progress);
     await this.requireCredentials(interactive);
+    progress.stage = "check_saved_grant";
     if (this.loggingOut) throw new ConnectionRequiredError();
-    if (this.pending) return this.pending;
-    if (!interactive && (this.blocked || !this.saved))
+    if (this.pending) {
+      observeProgress?.(
+        this.pendingProgress ?? { stage: "wait_for_connection" }
+      );
+      return this.pending;
+    }
+    if (!interactive && (this.blocked || !this.saved)) {
+      progress.stage = this.blocked ? "blocked_grant" : "missing_grant";
+      if (this.reconnectReason === "refresh_failed")
+        progress.refreshRejected = true;
       throw new ConnectionRequiredError();
+    }
     if (this.saved && !this.scope.split(" ").every(
       (value) => this.saved.tokens.scope?.split(" ").includes(value)
-    ) && !interactive)
+    ) && !interactive) {
+      progress.stage = "insufficient_grant_scope";
       throw new ConnectionRequiredError();
+    }
     if (!this.blocked && !(interactive && this.githubReconnectRequired) && this.saved?.expiresAt > Date.now() + 3e4 && this.scope.split(" ").every((value) => this.saved.tokens.scope?.split(" ").includes(value)))
       return;
+    this.pendingProgress = progress;
     this.pending = Promise.resolve().then(async () => {
       if (interactive) {
+        progress.stage = "write_connection_state";
         this.blocked = true;
         await this.state.write(true);
       }
-      await this.authorize(interactive);
+      progress.stage = "start_oauth";
+      await this.authorize(interactive, progress);
     }).catch(async (error62) => {
       this.blocked = true;
       await this.state.write(true);
       throw error62;
     }).finally(() => {
       this.pending = null;
+      this.pendingProgress = null;
     });
     return this.pending;
   }
-  async authorize(interactive = false) {
+  async authorize(interactive = false, progress = {}) {
     let redirected = false;
     const scope = this.scope;
     let verifier, onboardingTicket, reconnectContext;
@@ -22628,17 +22649,27 @@ var BrokerAuthorization = class {
         issuer: this.origin
       }),
       tokens: () => this.githubReconnectRequired ? void 0 : this.saved?.tokens,
-      saveTokens: (tokens) => this.saveTokens(tokens, { interactive, newIdentity: redirected }),
+      saveTokens: (tokens) => {
+        progress.stage = "save_credentials";
+        return this.saveTokens(tokens, {
+          interactive,
+          newIdentity: redirected
+        });
+      },
       state: () => callbackState,
       saveCodeVerifier: (value) => {
         verifier = value;
       },
       codeVerifier: () => verifier,
       redirectToAuthorization: async (url2) => {
-        if (!interactive) throw new ConnectionRequiredError();
+        if (!interactive) {
+          progress.stage = "browser_sign_in_required";
+          throw new ConnectionRequiredError();
+        }
         if (url2.origin !== this.origin || url2.pathname !== "/oauth/mcp/authorize")
           throw Error("invalid_authorization_server");
         redirected = true;
+        progress.stage = "open_browser_sign_in";
         {
           let knownPrevious = Boolean(this.saved || this.authenticatedBefore);
           try {
@@ -22671,6 +22702,7 @@ var BrokerAuthorization = class {
           }
         }
         await this.openBrowser(url2.href);
+        if (!callbackAccepted) progress.stage = "wait_for_browser_sign_in";
       },
       validateResourceURL: async (serverUrl, resource) => {
         if (new URL(serverUrl).origin !== this.origin || resource !== this.resource)
@@ -22682,7 +22714,9 @@ var BrokerAuthorization = class {
           if (kind === "tokens" && this.saved && !callbackAccepted) {
             this.authenticatedBefore = true;
             this.reconnectReason = "refresh_failed";
+            progress.refreshRejected = true;
           }
+          progress.stage = "delete_rejected_credentials";
           await this.store.delete({ interactive });
           this.saved = null;
         }
@@ -22698,8 +22732,10 @@ var BrokerAuthorization = class {
         if (new URL(input3 instanceof Request ? input3.url : input3).origin !== this.origin)
           throw Error("invalid_authorization_server");
         const url2 = new URL(input3 instanceof Request ? input3.url : input3);
+        const tokenRequest = url2.pathname === "/oauth/token";
+        progress.stage = tokenRequest ? redirected ? "exchange_code" : "refresh_token" : "discover_oauth";
         let body = init?.body;
-        if ((onboardingTicket || supportsReconnectContext && reconnectContext) && url2.pathname === "/oauth/token" && (body instanceof URLSearchParams || typeof body === "string")) {
+        if ((onboardingTicket || supportsReconnectContext && reconnectContext) && tokenRequest && (body instanceof URLSearchParams || typeof body === "string")) {
           const params = new URLSearchParams(body);
           if (params.get("grant_type") === "authorization_code") {
             if (onboardingTicket)
@@ -22715,12 +22751,21 @@ var BrokerAuthorization = class {
             body = params;
           }
         }
-        const response = await fetch(input3, {
-          ...init,
-          body,
-          redirect: "error",
-          signal: AbortSignal.timeout(2e4)
-        });
+        let response;
+        try {
+          response = await fetch(input3, {
+            ...init,
+            body,
+            redirect: "error",
+            signal: AbortSignal.timeout(2e4)
+          });
+        } catch (error62) {
+          if (tokenRequest)
+            progress.tokenRequestFailure = error62?.name === "TimeoutError" ? "timeout" : "transport_error";
+          throw error62;
+        }
+        if (!response.ok && tokenRequest)
+          progress.tokenHttpStatus = response.status;
         if (url2.pathname === "/.well-known/oauth-authorization-server" && response.ok) {
           try {
             supportsReconnectContext = (await response.clone().json()).kaijan_oauth_telemetry_context_supported === true;
@@ -25920,6 +25965,7 @@ async function startBroker({
   telemetry,
   onboarding,
   build,
+  recordConnectionFailure,
   onClose
 }) {
   const identity2 = build ? brokerIdentity(build) : {};
@@ -26007,12 +26053,37 @@ async function startBroker({
         });
         return json2(200, { state: "stopped" });
       }
-      if (req.url === "/initialize" && req.method === "POST") {
-        await authorization.ensure();
-        return json2(200, { state: "connected", installationId });
-      }
-      if (req.url === "/connect" && req.method === "POST") {
-        await authorization.ensure({ interactive: true });
+      if (req.method === "POST" && (req.url === "/initialize" || req.url === "/connect")) {
+        const interactive = req.url === "/connect";
+        const started = performance.now();
+        let progress = { stage: "start_connection_check" };
+        const record3 = (outcome) => recordConnectionFailure?.({
+          operation: interactive ? "connect" : "initialize",
+          outcome,
+          stage: progress.stage,
+          elapsed_ms: Math.round(performance.now() - started),
+          ...progress.refreshRejected ? { refresh_rejected: true } : {},
+          ...progress.tokenHttpStatus ? { token_http_status: progress.tokenHttpStatus } : {},
+          ...progress.tokenRequestFailure ? { token_request_failure: progress.tokenRequestFailure } : {}
+        });
+        const onAbandon = () => record3("client_disconnected");
+        res.once("close", onAbandon);
+        try {
+          await authorization.ensure({
+            interactive,
+            observeProgress: (value) => {
+              progress = value;
+            }
+          });
+        } catch (error62) {
+          if (!res.destroyed) {
+            const outcome = error62 instanceof ConnectionRequiredError ? "sign_in_required" : error62 instanceof KeychainUnavailableError ? "credential_storage_unavailable" : error62?.name === "TimeoutError" ? "timeout" : "connection_error";
+            record3(outcome);
+          }
+          throw error62;
+        } finally {
+          res.off("close", onAbandon);
+        }
         return json2(200, { state: "connected", installationId });
       }
       if (req.url === "/logout" && req.method === "POST") {
@@ -26338,6 +26409,7 @@ function openTelemetryOutbox({ directory, installationId }) {
   db.exec(`PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA max_page_count=4096;
     CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS events(uuid TEXT PRIMARY KEY,epoch TEXT NOT NULL,created INTEGER NOT NULL,payload TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS connection_failures(id INTEGER PRIMARY KEY,payload TEXT NOT NULL);
     INSERT OR IGNORE INTO metadata VALUES('seq','0'),('dropped','0');`);
   const read = (key) => db.prepare("SELECT value FROM metadata WHERE key=?").get(key)?.value;
   const write = (key, value) => db.prepare("INSERT OR REPLACE INTO metadata VALUES(?,?)").run(key, String(value));
@@ -26354,6 +26426,19 @@ function openTelemetryOutbox({ directory, installationId }) {
     } catch (error62) {
       db.exec("ROLLBACK");
       throw error62;
+    }
+  };
+  const recordConnectionFailure = (failure6) => {
+    if (stopped) return;
+    try {
+      transaction(() => {
+        db.prepare("INSERT INTO connection_failures(payload) VALUES(?)").run(
+          JSON.stringify({ at: (/* @__PURE__ */ new Date()).toISOString(), ...failure6 })
+        );
+        db.exec(`DELETE FROM connection_failures
+          WHERE id <= (SELECT max(id) - 128 FROM connection_failures)`);
+      });
+    } catch {
     }
   };
   const pruneExpired = () => {
@@ -26504,6 +26589,7 @@ function openTelemetryOutbox({ directory, installationId }) {
     }
   };
   return {
+    recordConnectionFailure,
     epoch,
     authenticatedBefore() {
       return !disabled && !stopped && read("has_identity") === "1";
@@ -26627,6 +26713,7 @@ async function main() {
     telemetry,
     onboarding,
     build,
+    recordConnectionFailure: telemetry?.recordConnectionFailure,
     onClose: async () => {
       stopTelemetry?.();
       await telemetry?.close();
