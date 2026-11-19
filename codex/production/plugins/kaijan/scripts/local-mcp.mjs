@@ -47663,23 +47663,23 @@ function createConfigurationSurface({ session, library, data }) {
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
-        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey2 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
+        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
         if (args && Object.hasOwn(args, "configurationUsed"))
           throw Error("host_metadata_only");
         if (args) delete args.configurationId;
         if (!metadata2?.threadId && (explicit === null || explicit === void 0))
           return { arguments: args };
         const scope = await scopeFor(metadata2);
-        if (typeof requestKey2 !== "string" || !requestKey2)
+        if (typeof requestKey3 !== "string" || !requestKey3)
           throw Error("invalid_request");
         if (!planning)
-          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey2])).digest("hex");
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey3])).digest("hex");
         marked = true;
         marked = await library.configurationRunMarker(
           scope.data,
           scope.scope.id,
           name,
-          requestKey2
+          requestKey3
         );
         const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
         if (!marked && (explicit === null || preference === false))
@@ -47695,13 +47695,13 @@ function createConfigurationSurface({ session, library, data }) {
             "Could not read the saved configuration. Ask the person if they want to run without it."
           );
         });
-        const previous = saved.admission(scope.scope.id, name, requestKey2, raw);
+        const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
             scope.scope.id,
             name,
-            requestKey2,
+            requestKey3,
             true
           );
           return { arguments: previous };
@@ -47718,8 +47718,8 @@ function createConfigurationSurface({ session, library, data }) {
         const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
         const automatic = selection3 === "automatic";
         const initialURL = execution2.target?.initialURL;
-        const browserURL = initialURL ? new URL(initialURL) : void 0;
-        if (automatic && !browserURL) return { arguments: args };
+        const browserURL2 = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL2) return { arguments: args };
         const configurations = automatic ? saved.list().map(({ id: id8 }) => saved.execution(id8)) : selection3 ? [once?.execution ?? saved.execution(selection3)] : [];
         if (!configurations.length) return { arguments: args };
         const callerParams = execution2.params ?? {};
@@ -47745,8 +47745,8 @@ function createConfigurationSurface({ session, library, data }) {
         execution2.params = { ...callerParams };
         execution2.privateParams = { ...callerPrivate };
         for (const chosen of configurations) {
-          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
-          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL2?.origin;
+          const privateAllowed = matchingOrigin && browserURL2 && chosen.allowedHosts.includes(browserURL2.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
           if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
             (key) => !Object.hasOwn(callerPrivate, key)
           ) && !privateAllowed))
@@ -47833,11 +47833,11 @@ function createConfigurationSurface({ session, library, data }) {
           if (!automatic)
             args.configurationUsed = configurations[0].configuration;
         }
-        if (planning) args.requestKey = requestKey2;
+        if (planning) args.requestKey = requestKey3;
         const prepared = saved.admission(
           scope.scope.id,
           name,
-          requestKey2,
+          requestKey3,
           raw,
           args,
           once?.token
@@ -47846,7 +47846,7 @@ function createConfigurationSurface({ session, library, data }) {
           scope.data,
           scope.scope.id,
           name,
-          requestKey2,
+          requestKey3,
           true
         );
         if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
@@ -48838,6 +48838,13 @@ var clarificationPresentationSchema = external_exports.union([
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
+var desktopRunnerTargetSchema = external_exports.strictObject({
+  app: external_exports.string().max(200).refine((value) => {
+    const parts = value.split(".");
+    return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
+  }, "An application bundle ID is required."),
+  launch: external_exports.boolean().optional()
+});
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),
@@ -55348,6 +55355,74 @@ ${guidance}`
   };
 }
 
+// apps/codex-plugin/src/codex-testing-input.mjs
+var requestKey2 = external_exports.string().min(1);
+var answerDigest = /^[a-f0-9]{64}$/;
+var browserURL = external_exports.url().refine((value) => {
+  if (!URL.canParse(value)) return false;
+  const url2 = new URL(value);
+  return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
+}).describe("HTTP(S) initialURL without embedded credentials");
+var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
+var planInput = external_exports.strictObject({
+  requestKey: requestKey2,
+  testObjective: external_exports.string().refine((text4) => Boolean(text4.trim())).optional(),
+  contextId: external_exports.string().regex(answerDigest).optional(),
+  target: external_exports.union([
+    external_exports.strictObject({ initialURL: browserURL }),
+    desktopRunnerTargetSchema
+  ]).optional(),
+  testData: external_exports.unknown().optional()
+}).refine((input3) => Boolean(input3.testObjective) !== Boolean(input3.contextId));
+var runInput = external_exports.strictObject({
+  requestKey: requestKey2,
+  planId,
+  testIds: external_exports.array(external_exports.string().min(1)).min(1)
+});
+function codexTestingToolDefinition(tool2) {
+  if (tool2.name === "loki_test_plan")
+    return {
+      ...tool2,
+      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. A browser target starts Explorer. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      inputSchema: external_exports.toJSONSchema(planInput)
+    };
+  if (tool2.name === "loki_test_execute")
+    return {
+      ...tool2,
+      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
+      inputSchema: external_exports.toJSONSchema(runInput)
+    };
+  return tool2;
+}
+function codexPlanArguments(args) {
+  const parsed = planInput.safeParse(args);
+  if (!parsed.success) return void 0;
+  const { requestKey: requestKey3, testObjective, contextId, target, testData } = parsed.data;
+  return {
+    requestKey: requestKey3,
+    ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
+    ...target === void 0 ? {} : "app" in target ? { desktopTarget: target } : { exploration: { target } },
+    ...testData === void 0 ? {} : { testData }
+  };
+}
+function codexRunArguments(args) {
+  const parsed = runInput.safeParse(args);
+  if (!parsed.success) return void 0;
+  const { requestKey: requestKey3, planId: planId2, testIds } = parsed.data;
+  const [answerId, resultSha256] = planId2.split(".");
+  return {
+    requestKey: requestKey3,
+    savedTests: { answerId, resultSha256, selectedTestIds: testIds }
+  };
+}
+function codexPlanId(answerId, resultSha256) {
+  if (typeof answerId === "string" && answerDigest.test(answerId) && typeof resultSha256 === "string" && answerDigest.test(resultSha256))
+    return `${answerId}.${resultSha256}`;
+}
+
+// apps/codex-plugin/src/customer-plan-selection.mjs
+import { createHash as createHash10 } from "node:crypto";
+
 // apps/codex-plugin/src/customer-output.mjs
 import { createHash as createHash9 } from "node:crypto";
 
@@ -55682,6 +55757,7 @@ var baseSchema = external_exports.object({
   ]),
   answerId: optional4(id6),
   resultSha256: optional4(id6),
+  planId: optional4(external_exports.string()),
   result: optional4(resultSchema2),
   contextId: optional4(id6),
   replayAllowed: external_exports.literal(false),
@@ -56132,6 +56208,10 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         options
       ) : void 0
     );
+    if (options.codexTesting && family2 === "testPlanning" && dto.result?.status === "proposed_plan") {
+      const planId2 = codexPlanId(dto.answerId, dto.resultSha256);
+      if (planId2) dto.planId = planId2;
+    }
     if (options.connectionOnly === true && family2 === "testPlanning" && dto.result?.status === "proposed_plan")
       return baseSchema.parse({
         ...dto,
@@ -57170,12 +57250,32 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     invocation?.signal?.throwIfAborted();
     const reference2 = parsed.data;
     const resolved2 = await options.resolveSelection({
-      reference: structuredClone(reference2)
+      reference: structuredClone(reference2),
+      ...options.includeRunInputs ? { includeRunInputs: true } : {}
     });
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference2.answerId || selected.resultSha256 !== reference2.resultSha256 || selected.selectedTestIds.length !== reference2.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
       return invalid("saved_selection_mismatch", true);
+    if (options.includeRunInputs) {
+      const exploration = resolved2.exploration;
+      const target = resolved2.desktopTarget ?? exploration?.target;
+      if (!target) return invalid("saved_target_unavailable", true);
+      const scenarioId = createHash10("sha256").update(JSON.stringify(selected)).digest("hex");
+      return {
+        arguments: {
+          requestKey: args.requestKey,
+          savedTests: selected,
+          scenarioId,
+          executionMethod: "app" in target ? "desktop-ui" : "browser-ui",
+          target,
+          params: exploration?.params ?? {},
+          ...exploration?.privateParams === void 0 ? {} : { privateParams: exploration.privateParams },
+          ...typeof resolved2.testObjective === "string" ? { guidance: resolved2.testObjective } : {},
+          ...resolved2.testData === void 0 ? {} : { hostContext: { testData: resolved2.testData } }
+        }
+      };
+    }
     return {
       arguments: {
         ...args,
@@ -57345,7 +57445,7 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
 }
 
 // apps/codex-plugin/src/customer-report-output.mjs
-import { createHash as createHash10 } from "node:crypto";
+import { createHash as createHash11 } from "node:crypto";
 var tools = /* @__PURE__ */ new Set([
   "loki_report_get",
   "loki_report_open",
@@ -57475,7 +57575,7 @@ function projectCustomerReport(value) {
       return customerReportFailure();
     const projected = projectCustomerTestPlanView(
       value,
-      (text4) => createHash10("sha256").update(text4).digest("hex")
+      (text4) => createHash11("sha256").update(text4).digest("hex")
     );
     return restoreVerifiedAssessmentRejection(value, projected);
   } catch {
@@ -57655,9 +57755,9 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
 }
 
 // apps/codex-plugin/src/customer-preparation-output.mjs
-import { createHash as createHash11 } from "node:crypto";
+import { createHash as createHash12 } from "node:crypto";
 var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var hash5 = (value) => createHash11("sha256").update(JSON.stringify(value)).digest("hex");
+var hash5 = (value) => createHash12("sha256").update(JSON.stringify(value)).digest("hex");
 var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 var clone2 = (value) => JSON.parse(JSON.stringify(value));
 var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
@@ -57892,7 +57992,7 @@ function callerObservations(request3) {
 function applicationPageObservations(input3, packet) {
   return (input3?.evidence ?? []).flatMap((item) => {
     const provenance2 = item.provenance;
-    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash11("sha256").update(item.text).digest("hex") !== item.sha256)
+    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash12("sha256").update(item.text).digest("hex") !== item.sha256)
       return [];
     try {
       const page2 = external_exports.object({
@@ -57971,7 +58071,7 @@ function projectCustomerAssessmentPreparation(packet, request3) {
         ...[
           ...projectCustomerPageObservations(
             { assessmentFragment: input3 },
-            (text4) => createHash11("sha256").update(text4).digest("hex")
+            (text4) => createHash12("sha256").update(text4).digest("hex")
           ),
           ...applicationPageObservations(input3, packet)
         ].map((observation2) => ({
@@ -58250,7 +58350,7 @@ function capabilityMcpRegistration(session, setup) {
         }
       } : definition;
     }).filter(Boolean).map(
-      (tool2) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool2) : session.identity?.host === "codex" ? codexToolDefinition(tool2) : tool2
+      (tool2) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool2) : session.identity?.host === "codex" ? codexTestingToolDefinition(codexToolDefinition(tool2)) : tool2
     ),
     // Draft activity stays local. Core's existing completed-feedback event is
     // the feedback record; do not upload autosave/progress metrics from forms.
@@ -58477,11 +58577,17 @@ ${customerInstructions}` : customerInstructions
       const invocation = {
         signal: AbortSignal.any([extra.signal, lifetime.signal])
       };
+      const codexTesting = session.identity?.host === "codex";
+      const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
+      if (!args)
+        throw invalidParams(
+          "Supply requestKey and either testObjective or contextId. Use the selected browser or Mac app target."
+        );
       const resolved2 = params.name === "loki_test_evidence_assess" ? await resolveCustomerAssessmentArguments(
         scopedCatalog,
         params.arguments ?? {},
         invocation
-      ) : { arguments: params.arguments ?? {} };
+      ) : { arguments: args };
       if (resolved2.error) {
         return {
           isError: true,
@@ -58508,6 +58614,7 @@ ${customerInstructions}` : customerInstructions
         configured2.arguments,
         invocation,
         {
+          codexTesting,
           connectionOnly: selected.scope?.kind === "connection",
           proposalReaders: Object.fromEntries(
             [
@@ -58606,6 +58713,8 @@ ${customerInstructions}` : customerInstructions
       };
     }
     if (hasCustomerExecutionOutput(params.name)) {
+      const codexSavedRun = session.identity?.host === "codex" && params.name === "loki_test_execute";
+      const args = codexSavedRun ? codexRunArguments(params.arguments ?? {}) : params.arguments ?? {};
       if (!session.configurations && ["loki_runner_execute", "loki_test_execute"].includes(params.name) && Object.hasOwn(params.arguments ?? {}, "configurationUsed"))
         throw invalidParams(
           "configurationUsed is internal Run metadata. Omit it from this request."
@@ -58615,10 +58724,11 @@ ${customerInstructions}` : customerInstructions
       };
       const resolved2 = await resolveCustomerPlanArguments(
         params.name,
-        params.arguments ?? {},
+        args,
         invocation,
         {
           requireSavedPlan: session.identity?.host !== "claude_code",
+          includeRunInputs: codexSavedRun,
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
@@ -58634,7 +58744,7 @@ ${customerInstructions}` : customerInstructions
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
-      const configured2 = session.configurations ? await session.configurations.prepareExecution(
+      const configured2 = session.configurations && !codexSavedRun ? await session.configurations.prepareExecution(
         params.name,
         resolved2.arguments,
         params._meta
