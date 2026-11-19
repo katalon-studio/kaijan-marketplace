@@ -72,6 +72,11 @@ and result paging. Recover a lost reply with the original optional
 `new_analysis_if_needed` is a separate read-only attempt that requires caller
 scope for new analysis. Preserve the original result or uncertainty.
 
+If the host ends its wait during browser exploration, Kaijan closes Explorer
+and continues the original Plan with the map it saved so far. Recover it with
+the identical request and configuration. An observation timeout alone leaves
+the original wait active. Keep waiting if the person still wants exploration.
+
 ## Show the plan
 
 Read the returned plan, checks and receipt or the original producer failure.
