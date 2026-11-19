@@ -1,4 +1,8 @@
 import { z } from "zod";
+export declare const desktopRunnerTargetSchema: z.ZodObject<{
+    app: z.ZodString;
+    launch: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strict>;
 export declare const runnerTestResultsSchema: z.ZodArray<z.ZodObject<{
     test_id: z.ZodString;
     scenario_finished: z.ZodBoolean;
