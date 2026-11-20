@@ -33,16 +33,17 @@ unlocked macOS session and keep the target on the main display.
   authentication prompt.
 - For a dedicated test Mac, the user can explicitly choose to remove the recurring
   authentication prompt for XCTest. This is a machine-wide security setting.
-  With that choice, show the user the following command to run in Terminal.
+  With that choice, have the user run the tool directly in Terminal from an
+  administrator account and enter that account's password when prompted.
 
   ```sh
-  sudo /usr/bin/automationmodetool enable-automationmode-without-authentication
+  /usr/bin/automationmodetool enable-automationmode-without-authentication
   /usr/bin/automationmodetool
   ```
 
   Verify the status says the device does not require user authentication to
   enable Automation Mode. The user can restore the prompt with
-  `sudo /usr/bin/automationmodetool disable-automationmode-without-authentication`.
+  `/usr/bin/automationmodetool disable-automationmode-without-authentication`.
   [Apple Developer Support guidance](https://developer.apple.com/forums/thread/693850)
 
 Keep planning and saved-result reads available while desktop setup is pending.
