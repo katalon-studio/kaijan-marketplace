@@ -21,10 +21,10 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
@@ -107,6 +107,11 @@
           "packageVersion": "2026.10.27-2",
           "filesSha256": "17181240511e2a030b8c3b38b161f76f699214869313d31932c9590ff2603fdd",
           "sourceCommit": "6cf96e5314e7a624f48fa7752bb49ef6a27df48d"
+        },
+        {
+          "packageVersion": "2026.10.27-2",
+          "filesSha256": "aa0f439108f9f2c81ccca76eba87df12b9830280a056ec888319408977cbe98c",
+          "sourceCommit": "7cb31e9d0bfd67127446fd4762b14c6dea331512"
         }
       ],
       "sourceCommit": "008184b0a616b16768fb0e727e7679e8534aaf97",
@@ -135,7 +140,7 @@
         "github-capture/python_integer.mjs": "1d3341948089022f8c955c49eea14195c30f90a37ed1b2b0e2623776f504d664",
         "github-capture/unicode_bytes.mjs": "39b63c8199c79bbde04171c9759bb0eff592982e704842e62341898c9bf6c59c",
         "github-capture/unicode_properties.mjs": "7cbd7c76e2e6c03925b7f0c48dd7ec6ea19ea7f86b332cef444a7201de7f2d7e",
-        "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
@@ -192,7 +197,7 @@
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/related/query-prompt.mjs": "5f86a637846e771f22063810af0d4f0331badb18cdd5d2021b94890467499845",
         "pr-context-finder/related/query-agent.mjs": "d330e729fa7998ed92167f09cd3637f5eb54846334d26522ecba4dd1ada0cafe",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "pr-context-finder/related/related-work-planner.mjs": "d292a62fe8ffcb416c0b9dd81f1f64f701aeb1ad2794397193cb1c32ecc53d5b",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
@@ -312,13 +317,13 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
         "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830",
         "pr-context-finder/planning/risk-model-view.mjs": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058",
         "pr-context-finder/planning/request-instructions.mjs": "c8c0b11f83e379b8a623cf224b95c3ba4facd0f6ca7cb82540a07656fa5d67b0",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
@@ -485,11 +490,11 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "1ffe6dfe47a57c7257f2a99149924dbff2e454de177579550d8b79f8bfb1a9e7",
         "work-item-instructions.mjs": "2736771b5ef3478d7c1e3ec82f091821b3615881ca2c887e2cd427a309efa639",
-        "node_modules/@katalon-experiments/ai-client/agents.mjs": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+        "node_modules/@katalon-experiments/ai-client/agents.mjs": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
         "node_modules/@katalon-experiments/ai-client/agents.d.mts": "751dd59dcfe7c24cb9008200dda09ecf4a754d552231b87e46fe03a049bab811",
         "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
@@ -1374,7 +1379,7 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+      "sha256": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
       "derivation": "Change-risk Planner SDK transport (#3752)."
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
@@ -1389,7 +1394,7 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "work-item-risk/work-item-review.mjs": {
@@ -1464,7 +1469,7 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192",
+      "sha256": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340",
       "derivation": "Work-item risk Planner SDK transport (#3746)."
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
@@ -1484,7 +1489,7 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/github-capture/authored_eligibility.mjs": {
@@ -1574,7 +1579,7 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/index.d.mts": {
@@ -1903,7 +1908,7 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "44dc14a3da943eac85404555cbbdf19bc1e16bbe10105e2ddc47fd9ab6884f43",
+      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "planner-loop-source/experiments/context-finder/planning/supplement.mjs": {
@@ -2115,7 +2120,7 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192"
+      "sha256": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340"
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
@@ -2136,7 +2141,7 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
-      "sha256": "aff27394d8c7cb760cd4dc724cff42d858d7027145544b2a39f33c3eb2846192"
+      "sha256": "14a53c4659e95d29aad12e36b00e69851a60412db3f822914cbda813e72dd340"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
       "source": "packages/provider-transport/agents.d.mts",
