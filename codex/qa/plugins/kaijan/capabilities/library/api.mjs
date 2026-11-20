@@ -95026,6 +95026,45 @@ var assertions = external_exports.object({
   evidence: external_exports.array(evidenceQuote),
   tests: external_exports.array(assertionTest)
 });
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerTestPlanSummary = summary.pick({
+  schema: true,
+  reportId: true,
+  title: true,
+  assessmentResults: true,
+  observation: true,
+  failedTestTitles: true
+}).extend({
+  counts: summary.shape.counts.pick({
+    pass: true,
+    fail: true,
+    blocked: true,
+    skipped: true,
+    "not-run": true,
+    incomplete: true,
+    inconclusive: true,
+    conflicting: true,
+    unavailable: true
+  }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
+  proposedCounts: external_exports.object({
+    pass: external_exports.number().int().nonnegative(),
+    fail: external_exports.number().int().nonnegative()
+  }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  plans: external_exports.array(summary.shape.plans.element.pick({
+    sourceId: true,
+    resultSha256: true,
+    requestTests: true,
+    executedTests: true,
+    proposedTests: true
+  })),
+  runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+});
 var customerReportSchema = testPlanViewSchema.pick({
   reportId: true,
   title: true,
@@ -95035,6 +95074,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
+  testPlanSummary: customerTestPlanSummary.optional(),
   assessments: external_exports.array(external_exports.object({
     assessedRunIds: external_exports.array(quoteDigest).optional(),
     sourceId: quoteDigest,
@@ -95132,8 +95172,6 @@ var customerReportSchema = testPlanViewSchema.pick({
     })
   })).optional()
 });
-var panelCard = reportCardSchema.options[0];
-var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -95150,43 +95188,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary.pick({
-    schema: true,
-    reportId: true,
-    title: true,
-    assessmentResults: true,
-    observation: true,
-    failedTestTitles: true
-  }).extend({
-    counts: summary.shape.counts.pick({
-      pass: true,
-      fail: true,
-      blocked: true,
-      skipped: true,
-      "not-run": true,
-      incomplete: true,
-      inconclusive: true,
-      conflicting: true,
-      unavailable: true
-    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
-    proposedCounts: external_exports.object({
-      pass: external_exports.number().int().nonnegative(),
-      fail: external_exports.number().int().nonnegative()
-    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
-    pullRequest: external_exports.object({
-      number: external_exports.number().int().positive(),
-      title: external_exports.string(),
-      url: external_exports.url()
-    }).nullable(),
-    plans: external_exports.array(summary.shape.plans.element.pick({
-      sourceId: true,
-      resultSha256: true,
-      requestTests: true,
-      executedTests: true,
-      proposedTests: true
-    })),
-    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
-  })
+  testPlanSummary: customerTestPlanSummary
 });
 var customerReportFailureSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-error/1"),
@@ -95269,7 +95271,8 @@ var customerReportOutputSchema = external_exports.union([
   customerReportFailureSchema
 ]);
 var reportWithoutContextFinder = customerReportSchema.omit({
-  contextFinder: true
+  contextFinder: true,
+  testPlanSummary: true
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
@@ -125229,6 +125232,70 @@ function summarizeTestPlans(view, includeCardDetails = false) {
     })
   };
 }
+function testPlanCardSummary(view, includeCardDetails) {
+  const summary2 = summarizeTestPlans(view, includeCardDetails);
+  const incomplete = summary2.testResults.filter(
+    (test) => test.status === "incomplete"
+  ).length;
+  return {
+    schema: summary2.schema,
+    reportId: summary2.reportId,
+    title: summary2.title,
+    pullRequest: summary2.pullRequest,
+    assessmentResults: summary2.assessmentResults,
+    ...summary2.observation ? { observation: summary2.observation } : {},
+    ...summary2.failedTestTitles ? { failedTestTitles: summary2.failedTestTitles } : {},
+    proposedCounts: {
+      pass: summary2.testResults.filter(
+        (test) => test.status === "pass" && test.expectationAuthority === "hypothesis"
+      ).length,
+      fail: summary2.testResults.filter(
+        (test) => test.status === "fail" && test.expectationAuthority === "hypothesis"
+      ).length
+    },
+    counts: {
+      ...incomplete ? { incomplete } : {},
+      ...Object.fromEntries(
+        [
+          "pass",
+          "fail",
+          "blocked",
+          "skipped",
+          "not-run",
+          "inconclusive",
+          "conflicting",
+          "unavailable"
+        ].map((status2) => [
+          status2,
+          summary2.testResults.filter((test) => test.status === status2).length
+        ])
+      )
+    },
+    runs: summary2.runs.map(
+      ({ sourceId, executionState: executionState2, stoppedByUser, testVerdict: testVerdict2 }) => ({
+        sourceId,
+        executionState: executionState2,
+        ...stoppedByUser ? { stoppedByUser } : {},
+        testVerdict: testVerdict2
+      })
+    ),
+    plans: summary2.plans.map(
+      ({
+        sourceId,
+        resultSha256,
+        requestTests,
+        executedTests,
+        proposedTests
+      }) => ({
+        sourceId,
+        resultSha256,
+        requestTests,
+        executedTests,
+        proposedTests
+      })
+    )
+  };
+}
 
 // src/customer-report-html.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -128148,6 +128215,9 @@ var Reports = class {
     if (!this.assessmentContextReaders?.assessment && !snapshot3.mapId && snapshot3.entries.length > 0 && snapshot3.entries.every(({ kind }) => kind === "assessment"))
       return this.view(snapshot3);
     return this.customerTestPlanView(snapshot3);
+  }
+  summarizeCard(view) {
+    return testPlanCardSummary(view, true);
   }
   /** Host-only per-object proof transfer across separately bundled adapters. */
   verifyCustomerEvidenceSource(value) {
@@ -170536,10 +170606,6 @@ function createCapabilityCatalog(services, options2 = {}) {
             instructions: view.sections.length && view.sections.every(({ kind }) => kind === "assessment") ? "Present this saved evidence assessment in chat. If its verdicts or citations are missing from the report view, read the exact saved assessment through loki_advisory_result_read with family suppliedEvidence and the assessment sourceId. Keep its original digest and distinguish supplied observations from a Kaijan run. Do not open a Test plan panel or repeat the assessment." : "No Test plan or Runner result is selected. Present the original report data in chat; do not invent a plan or run."
           };
         const preview = panelUi ? void 0 : await openReportPreview(snapshot3, invocation.lifecycle);
-        const summary2 = testPlans ? summarizeTestPlans(testPlans, panelUi) : null;
-        const incomplete = summary2?.testResults.filter(
-          (test) => test.status === "incomplete"
-        ).length ?? 0;
         return {
           ...testPlans ? {
             schema: "loki.report-card/1",
@@ -170561,71 +170627,7 @@ function createCapabilityCatalog(services, options2 = {}) {
             presentationNotice: "Local read-only report; not a public share link"
           } : {},
           ...testPlans ? {
-            testPlanSummary: {
-              schema: summary2.schema,
-              reportId: summary2.reportId,
-              title: summary2.title,
-              pullRequest: summary2.pullRequest,
-              assessmentResults: summary2.assessmentResults,
-              ...summary2.observation ? { observation: summary2.observation } : {},
-              ...summary2.failedTestTitles ? { failedTestTitles: summary2.failedTestTitles } : {},
-              proposedCounts: {
-                pass: summary2.testResults.filter(
-                  (test) => test.status === "pass" && test.expectationAuthority === "hypothesis"
-                ).length,
-                fail: summary2.testResults.filter(
-                  (test) => test.status === "fail" && test.expectationAuthority === "hypothesis"
-                ).length
-              },
-              counts: {
-                ...incomplete ? { incomplete } : {},
-                ...Object.fromEntries(
-                  [
-                    "pass",
-                    "fail",
-                    "blocked",
-                    "skipped",
-                    "not-run",
-                    "inconclusive",
-                    "conflicting",
-                    "unavailable"
-                  ].map((status2) => [
-                    status2,
-                    summary2.testResults.filter(
-                      (test) => test.status === status2
-                    ).length
-                  ])
-                )
-              },
-              runs: summary2.runs.map(
-                ({
-                  sourceId,
-                  executionState: executionState2,
-                  stoppedByUser,
-                  testVerdict: testVerdict2
-                }) => ({
-                  sourceId,
-                  executionState: executionState2,
-                  ...stoppedByUser ? { stoppedByUser } : {},
-                  testVerdict: testVerdict2
-                })
-              ),
-              plans: summary2.plans.map(
-                ({
-                  sourceId,
-                  resultSha256,
-                  requestTests,
-                  executedTests,
-                  proposedTests
-                }) => ({
-                  sourceId,
-                  resultSha256,
-                  requestTests,
-                  executedTests,
-                  proposedTests
-                })
-              )
-            },
+            testPlanSummary: testPlanCardSummary(testPlans, panelUi),
             instructions: panelUi ? "Show the native inline Kaijan card without a duplicate Markdown result. Show details directly reads loki_report_open and requests supported MCP Apps expansion into the native side panel. Do not open a browser, send a follow-up prompt, or replay producers. Native Codex owns panel expansion, close and return controls. If the card stays on Opening Kaijan report and Codex shows Open app in tab, use that native control once in the owning chat. If the panel still does not open or the control is unavailable, call loki_report_get with this reportId in the same chat. Say the panel did not open and present the requested saved details in chat. Keep missing data unavailable." : "Show the inline Kaijan Test plan card when supported. Its Show details action directly reads loki_report_open for this saved reportId and requests the host link API without a prompt or assistant turn. Native tab placement/focus requires actual host support; a generic link receipt is not proof. Do not repeat the card as a second chat result or replace its direct action with a follow-up prompt. If the host cannot render the card, present the actual title/count and private link in chat. A separately requested manual opening can use open_in_codex browser/right. No custom side panel, fullscreen request, provider execution or host setting change. Copy actions copy local data only; previewURL is private, not a public share link."
           } : {}
         };
