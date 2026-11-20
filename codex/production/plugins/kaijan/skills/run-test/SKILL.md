@@ -40,6 +40,8 @@ the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
+Tell the person the Run's time limit before starting it. Runner defaults to ten
+minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
 
 For hosts that advertise the full Runner input, follow the instructions below.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
@@ -109,7 +111,9 @@ to inspect an existing recording.
 
 Supply `target.app` with the app's bundle ID in the Codex Plan. Use
 `executionMethod: "desktop-ui"` and the app target on hosts that advertise the
-full Runner input. Set `target.launch: true` only when launch is allowed.
+full Runner input. If the caller supplies a `.app` path or needs first-time setup,
+use the [macOS setup guide](references/macos-appium-setup.md).
+Set `target.launch: true` only when launch is allowed.
 `false` requires a running app. Desktop requires configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
 Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
