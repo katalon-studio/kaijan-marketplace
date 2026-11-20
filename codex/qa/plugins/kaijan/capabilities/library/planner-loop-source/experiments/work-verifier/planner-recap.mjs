@@ -1,4 +1,5 @@
 import { requireManagedBinding } from "@katalon-experiments/ai-client";
+import { storeTestAgentResponses } from "@katalon-experiments/ai-client/agents";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
@@ -50,7 +51,7 @@ Add a separate check only when the recap shows that a distinct behavior within t
 const bugFindingInstructions = `Find bugs in the requested application behavior using the chronological Runner recap, original task and plan. Treat the recap as evidence only. Assess the selected tests against their expected results. Pass a performed check when it found no incorrect behavior. When a check cannot be completed, assess whether an application bug prevented it. Report an observed bug as fail even if later steps could not be performed. Use inconclusive when the available evidence cannot establish the result. Describe what happened and any material limitation in actual result. Weigh relevant observations together and cite the supporting one-based recap steps. Report distinct supported findings with their selected test IDs and recap steps.
 Add a separate check when the recap supports judging a distinct behavior within the original task. Give it a title, expected result, actual result, verdict and supporting recap steps. Keep the original tests and expectations as saved. Report in plain English and return the required JSON.`;
 
-export function preparePlannerRecap(input) {
+export function preparePlannerRecap(input, retainedRequestSha256) {
   assert(
     input?.schema === "kaijan.planner-recap-assessment/1" ||
       input?.schema === "kaijan.planner-recap-assessment/2" ||
@@ -76,9 +77,9 @@ export function preparePlannerRecap(input) {
     associated || input.schema === "kaijan.planner-recap-assessment/13";
   const delegated =
     live || input.schema === "kaijan.planner-recap-assessment/12";
-  const stateless =
+  const locallyRetained =
     delegated || input.schema === "kaijan.planner-recap-assessment/11";
-  if (stateless)
+  if (locallyRetained)
     assert(
       Array.isArray(input.plannerHistory) && input.plannerHistory.length,
       "Original Planner context required",
@@ -101,7 +102,7 @@ export function preparePlannerRecap(input) {
   const explicitFindingReferences =
     input.schema === "kaijan.planner-recap-assessment/9" ||
     input.schema === "kaijan.planner-recap-assessment/10" ||
-    stateless;
+    locallyRetained;
   const bugFinding =
     explicitFindingReferences ||
     input.schema === "kaijan.planner-recap-assessment/7" ||
@@ -168,12 +169,14 @@ export function preparePlannerRecap(input) {
           ? "medium"
           : "low",
     },
-    ...(stateless ? {} : { previous_response_id: input.previousResponseId }),
+    ...(locallyRetained
+      ? {}
+      : { previous_response_id: input.previousResponseId }),
     // Older saved assessments retain their original request and hash.
-    store:
-      !stateless &&
-      (explicitFindingReferences ||
-        input.schema === "kaijan.planner-recap-assessment/8"),
+    store: locallyRetained
+      ? storeTestAgentResponses
+      : explicitFindingReferences ||
+        input.schema === "kaijan.planner-recap-assessment/8",
     instructions: delegated
       ? live
         ? plannerRunnerInstructions.replace(
@@ -204,7 +207,7 @@ export function preparePlannerRecap(input) {
                   ].includes(input.schema)
                 ? expectationInstructions
                 : instructions,
-    input: stateless
+    input: locallyRetained
       ? [
           ...input.plannerHistory,
           {
@@ -237,16 +240,30 @@ export function preparePlannerRecap(input) {
       },
     },
   };
+  let requestSha256 = hash(encodedJson(requestBody));
+  if (
+    locallyRetained &&
+    retainedRequestSha256 &&
+    requestSha256 !== retainedRequestSha256
+  ) {
+    // Reopen the original request if its storage policy predates the current default.
+    const previous = { ...requestBody, store: !requestBody.store };
+    const previousSha256 = hash(encodedJson(previous));
+    if (previousSha256 === retainedRequestSha256) {
+      requestBody.store = previous.store;
+      requestSha256 = previousSha256;
+    }
+  }
   return {
     input: copy(input),
     request: requestBody,
     input_sha256: hash(JSON.stringify(input)),
-    request_sha256: hash(encodedJson(requestBody)),
+    request_sha256: requestSha256,
   };
 }
 
 export function projectPlannerRecap(prepared, candidate) {
-  const verified = preparePlannerRecap(prepared.input);
+  const verified = preparePlannerRecap(prepared.input, prepared.request_sha256);
   assert.equal(prepared.input_sha256, verified.input_sha256);
   assert.equal(prepared.request_sha256, verified.request_sha256);
   if (
