@@ -20467,6 +20467,7 @@ var clarificationPresentationSchema = external_exports.union([
 var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count2 = external_exports.number().int().nonnegative();
+var maxExecutionTimerMs = 2 ** 31 - 1;
 var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
