@@ -388,7 +388,7 @@
     "packages/capabilities/scripts/bundle-codex-dependencies.mjs": "1a9f0e860c966c1612eaf6c2b2ac34a7ff165f84355e4f636e13ac61ea564e26",
     "packages/capabilities/scripts/stage-application-context.mjs": "ec48ce676ceecb22a45c77d3147272bc58b58669a340f3314e4ad4db78ea02f6",
     "scripts/package-source.mjs": "eabca4e8706982839f8ed9764e2a7cb1a55119c08090689d9394e102eebd9606",
-    "pnpm-lock.yaml": "fafc249c56b68a04cc63e5b60f7ec8d29c5e3ac4c29e995c7331531854beff16",
+    "pnpm-lock.yaml": "e0be01ea031d777343f8dd3024b1be1da98b1500d2e6bd66c26c48e3d50a6017",
     "pnpm-workspace.yaml": "cf22786d599a207255ed791fb58407932fe145c565578bdba29412924a1b429f",
     "tsconfig.base.json": "15040c04e8e8711a0f760316a657982f9aa47f91561de105a0832d5732538351"
   },
