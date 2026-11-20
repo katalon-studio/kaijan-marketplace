@@ -103,13 +103,13 @@ chronology from filenames or add missing links.
 For an explicit override, the full packet lists other report-readable PNGs in
 `unselectedArtifacts`. Inspection shows a bounded prefix, omission counts and
 exact artifact selectors. Case capture links keep their original Runner
-attribution. These descriptors do not supply omitted pixels. Normal automatic
-preparation includes the complete supported public artifact sequence. Protected
-pixels and private manifest members stay unavailable. This size cleanup does not
-claim provider acceptance or complete scenario coverage. Missing facts and
-reference/citation failures remain explicit; original results remain
-available through the returned existing readers. Plugin/runtime identity and
-application identity remain distinct.
+attribution. These descriptors do not supply omitted pixels. With no artifact
+IDs, a separate preparation selects no original Run artifacts. Protected pixels
+and private manifest members stay unavailable. Normal browser and desktop
+TestRun use judgments that Runner saves during execution. Missing facts and
+reference/citation failures remain explicit. Original results remain available
+through the existing readers. Plugin/runtime identity and application identity
+remain distinct.
 
 `createCapabilityCatalog(services)` enables map/report UI by default. Pass
 `{ uiEnabled: false }` to opt out explicitly. In that mode, tool definitions have
