@@ -12,7 +12,7 @@
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "application-context-query/runner-context.mjs": "9867c9e7a40a5e9497ff2ef1f485fa4f8458e4ecbc74890c8afa092f601e2132",
     "application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
-    "build-inputs.json": "f06999a6d239413e9ca0bae7fef1661b29ffd56837b67f197ce36013bd3ce348",
+    "build-inputs.json": "adc51fd5d981b730a61fa24bc998ada1b5846036ff0821ddffaa6e250c5bea7b",
     "change-risk/frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
     "change-risk/frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
     "change-risk/input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5",
