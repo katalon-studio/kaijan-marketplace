@@ -5,6 +5,7 @@ import { contract } from "./index.mjs";
 import { QueryStore, identity, sha256, canonical } from "./store.mjs";
 
 export const runnerContextSchema = "loki.runner.application-context/1";
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const applicationContextTool = snapshotJson({
   type: "function",
   name: "application_context_query",

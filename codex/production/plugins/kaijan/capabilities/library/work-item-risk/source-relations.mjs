@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 
 export const RISK_SOURCE_VERSION = "risk-source-relations/1";
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const RISK_RELATION_GUIDANCE =
   "Use depends-on only for behavior with a specific prerequisite. When the source explicitly leaves a claim unverified, use evidence-for. Its first operand is the claim to check. Its second operand is the stated evidence gap. Tie the possible consequence and the next check to that same claim.";
 const hash = (text) => createHash("sha256").update(text).digest("hex");
@@ -376,5 +377,6 @@ export function changeRiskCatalog(packet) {
   return rows;
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const riskRelationInstruction =
   "Return each question as observed source spans, an unresolved assumption relation, a possible consequence relation and an evidence-resolution relation. Use only the fixed kinds and exact UTF-16 start/end spans from source_catalog or passage_catalog. Do not return free-form question prose, internal operations or display IDs. Relations express questions and possible consequences, never verified defects, approved requirements or execution permission.";

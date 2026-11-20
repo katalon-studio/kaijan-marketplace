@@ -58485,6 +58485,7 @@ function createCapabilityMcpServer(session, version4, setup, telemetry) {
     { name: "kaijan-local", version: version4 },
     {
       capabilities: { tools: {}, resources: {} },
+      // Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
       instructions: session.identity?.host === "claude_code" ? `Kaijan is a testing plugin.
 
 ${customerInstructions}` : customerInstructions
