@@ -795,12 +795,12 @@
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca",
-      "packages/computer-runner/src/runner.mjs": "a538f0853de0ac63b0d9d240fb9f6e8e06f7d854addd13612fdb200416931276",
+      "packages/computer-runner/src/runner.mjs": "e029e272b69795012ed90ae1923e7013417607b69ddcb9618a9179bed0b29092",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "550240beb8fe698f533a82425b6459e9dd8918edcd0b77377b89995bae676e3e",
+      "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
       "packages/computer-runner/src/runner.d.mts": "28e935aacfbe955d21dcfbec184c093268e548fa654076edbb4bd433a8f36dc2",
-      "packages/computer-runner/src/browser.mjs": "4f5669484a057a69a37024faf1f3d4dc6b43375dbb67137bee3d4170acde22c4",
+      "packages/computer-runner/src/browser.mjs": "f326e392e7018e31dc5efaf0ce3b8a94dcc22deafe01c47f914e3a958117a81b",
       "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6",
       "packages/computer-runner/src/provider.mjs": "810912e831e5b52378b0248fc5a9664039ce84371ba7e820ff548ab76aa66428",
       "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190",
@@ -836,7 +836,7 @@
       "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb",
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
-      "packages/computer-runner/src/browser-explorer-driver.mjs": "08f453608b9f879dfeeb610c2d45ab19cc3f61843d889baa67bb00cf378be07d",
+      "packages/computer-runner/src/browser-explorer-driver.mjs": "4574ef9c69d785a20c9532a6ac3b271ca8bf90242783b0a9dedf2f145afd85c9",
       "packages/computer-runner/src/agent-loop.mjs": "c9becb7fddb8daf3b9374aed63d9c3d92f0f2c8436a90f5b6bf597c1ed66e905"
     },
     "relocation": {
