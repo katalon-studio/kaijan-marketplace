@@ -56357,7 +56357,7 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         fam,
         error63?.code,
         answerId,
-        error63?.requestDispatched === false ? false : null,
+        name === "loki_advisory_result_read" || error63?.requestDispatched === false ? false : null,
         customerInputCorrections(catalog, name, error63)
       )
     );
