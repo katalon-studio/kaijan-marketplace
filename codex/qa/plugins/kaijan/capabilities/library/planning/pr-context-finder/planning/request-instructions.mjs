@@ -4,14 +4,17 @@ import {
 } from "@katalon-loki/computer-runner/agent-context";
 
 // Current initial-planning instructions. Edit this template for fresh requests.
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const MODEL_INPUT_INSTRUCTIONS =
   "\nRead text_from_evidence_id from the named evidence_catalog quote as the full source text. Preserve its source attribution and references.";
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const RISK_MODEL_INPUT_INSTRUCTIONS =
   "\nRead text_from_evidence_id from the named evidence_catalog quote. Read context_from_evidence_id from risk_context as supporting context, not requirements; retain any stated gaps. Preserve the original source attribution and references.";
 
 // General task-independent instructions. Case-specific regression tasks belong
 // in test fixtures, not in every planning request.
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const GENERAL_INITIAL_PLANNING_INSTRUCTIONS = `${testSessionInstruction}
 
 Derive realistic user scenarios from the caller’s task and the available application context. For each distinct user goal, plan high-level black-box tests of the observable outcome. For a broad workflow request, cover each relevant operation shown in the app model, including operations that change or remove application data. Honor explicit caller exclusions. Treat risk-review questions about scope, permissions and unknown consequences as preparation or assumption notes. Use the authorized testing context when planning those operations. For each operation, identify its entry points and meaningful starting states. Give each observed entry point a test that actually invokes that operation through it. Exercise the usual populated workflow first. When users can start with new work or with an existing result, exercise both if the observable effects differ.
@@ -22,6 +25,7 @@ Separate the prerequisites, core actions and expected result. Specify the data t
 
 Use supplied requirements when available. Otherwise state the normal user expectation as the outcome to check and identify material assumptions. Follow the user journey through its effects on both the original state and the resulting state. Preserve the original intent, source attribution and restrictions. Report gaps in what can be checked. Plan only and return the required JSON.`;
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export const PLANNING_OUTPUT_INSTRUCTIONS = `
 
 JSON contract
