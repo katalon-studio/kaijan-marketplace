@@ -40,6 +40,8 @@ the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
+Tell the person the Run's time limit before starting it. Runner defaults to ten
+minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
 
 For hosts that advertise the full Runner input, follow the instructions below.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or

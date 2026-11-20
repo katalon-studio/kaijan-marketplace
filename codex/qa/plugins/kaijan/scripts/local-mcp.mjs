@@ -48838,6 +48838,9 @@ var clarificationPresentationSchema = external_exports.union([
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
+var defaultExplorerTimeLimitMs = 3e5;
+var defaultRunnerTimeLimitMs = 6e5;
+var maxExecutionTimerMs = 2 ** 31 - 1;
 var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
@@ -55413,24 +55416,30 @@ var planInput = external_exports.strictObject({
     external_exports.strictObject({ initialURL: browserURL }),
     desktopRunnerTargetSchema
   ]).optional(),
-  testData: external_exports.unknown().optional()
+  testData: external_exports.unknown().optional(),
+  explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
+    "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
+  )
 }).refine((input3) => Boolean(input3.testObjective) !== Boolean(input3.contextId));
 var runInput = external_exports.strictObject({
   requestKey: requestKey2,
   planId,
-  testIds: external_exports.array(external_exports.string().min(1)).min(1)
+  testIds: external_exports.array(external_exports.string().min(1)).min(1),
+  runnerTimeLimitMs: external_exports.int().min(defaultRunnerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
+    "Optional longer execution time limit in milliseconds. Omit for the 10-minute default."
+  )
 });
 function codexTestingToolDefinition(tool2) {
   if (tool2.name === "loki_test_plan")
     return {
       ...tool2,
-      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. Either target starts Explorer. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. Either target starts Explorer with a five-minute default. Use explorerTimeLimitMs to increase the time limit before starting. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       inputSchema: external_exports.toJSONSchema(planInput)
     };
   if (tool2.name === "loki_test_execute")
     return {
       ...tool2,
-      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
+      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. Runner has 10 minutes by default. Use runnerTimeLimitMs to increase the time limit before starting. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
       inputSchema: external_exports.toJSONSchema(runInput)
     };
   return tool2;
@@ -55438,22 +55447,31 @@ function codexTestingToolDefinition(tool2) {
 function codexPlanArguments(args) {
   const parsed = planInput.safeParse(args);
   if (!parsed.success) return void 0;
-  const { requestKey: requestKey3, testObjective, contextId, target, testData } = parsed.data;
+  const {
+    requestKey: requestKey3,
+    testObjective,
+    contextId,
+    target,
+    testData,
+    explorerTimeLimitMs
+  } = parsed.data;
   return {
     requestKey: requestKey3,
     ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
     ...target === void 0 ? {} : "app" in target ? { desktopTarget: target } : { exploration: { target } },
-    ...testData === void 0 ? {} : { testData }
+    ...testData === void 0 ? {} : { testData },
+    ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
   };
 }
 function codexRunArguments(args) {
   const parsed = runInput.safeParse(args);
   if (!parsed.success) return void 0;
-  const { requestKey: requestKey3, planId: planId2, testIds } = parsed.data;
+  const { requestKey: requestKey3, planId: planId2, testIds, runnerTimeLimitMs } = parsed.data;
   const [answerId, resultSha256] = planId2.split(".");
   return {
     requestKey: requestKey3,
-    savedTests: { answerId, resultSha256, selectedTestIds: testIds }
+    savedTests: { answerId, resultSha256, selectedTestIds: testIds },
+    ...runnerTimeLimitMs === void 0 ? {} : { options: { limits: { ms: runnerTimeLimitMs } } }
   };
 }
 function codexPlanId(answerId, resultSha256) {
@@ -57314,6 +57332,7 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
           executionMethod: "app" in target ? "desktop-ui" : "browser-ui",
           target,
           params: exploration?.params ?? {},
+          ...args.options === void 0 ? {} : { options: args.options },
           ...exploration?.privateParams === void 0 ? {} : { privateParams: exploration.privateParams },
           ...typeof resolved2.testObjective === "string" ? { guidance: resolved2.testObjective } : {},
           ...resolved2.testData === void 0 ? {} : { hostContext: { testData: resolved2.testData } }
