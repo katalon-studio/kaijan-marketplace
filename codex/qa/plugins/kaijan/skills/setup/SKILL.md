@@ -21,8 +21,9 @@ part of first-time Setup. When the person chooses to install it, call
 app is ready. If the person only asks to prepare the Viewer, finish that
 request without asking for a testing goal or project.
 
-If the objective is missing, ask what behavior, change or problem they want to
-test. A short description, test case, ticket or pull request can supply it.
+If the testing goal is missing, ask what behavior, change or problem they want
+to test. Ask even when the person wants only to set up the application for now.
+A short description, test case, ticket or pull request can supply the goal.
 Invite an application URL if useful. Ask one focused question in your reply,
 then end the turn and wait for the person before saving Setup or choosing tests.
 Reuse the reply and the context already supplied. If a consequential choice is ambiguous, confirm it
