@@ -15,7 +15,7 @@
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
     "packages/application-context-query/index.d.mts": "495e4bf50f0cd65f620195c6adaf4490d46da2cbcae1eeb8219317ade1fd7c6f",
-    "packages/application-context-query/runner-context.mjs": "882558d158db1136724220058ca4d2556aab0970d137171b59d5e51e6e1aa077",
+    "packages/application-context-query/runner-context.mjs": "9867c9e7a40a5e9497ff2ef1f485fa4f8458e4ecbc74890c8afa092f601e2132",
     "packages/application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "packages/source-adapters/index.mjs": "857b44d2be5e993d6c7589246bf4d3d53bfc1324a6081047a3886fec9b7280e8",
     "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf"
@@ -171,7 +171,7 @@
     "application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
     "application-context-query/index.d.mts": "495e4bf50f0cd65f620195c6adaf4490d46da2cbcae1eeb8219317ade1fd7c6f",
-    "application-context-query/runner-context.mjs": "882558d158db1136724220058ca4d2556aab0970d137171b59d5e51e6e1aa077",
+    "application-context-query/runner-context.mjs": "9867c9e7a40a5e9497ff2ef1f485fa4f8458e4ecbc74890c8afa092f601e2132",
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "source-adapters/index.mjs": "eb0494c7d6f2c77cb848045617ca0ff5dd687802068c24fee610158c6646aa4d",
     "component-contracts/index.mjs": "e4ec20ae80d337b122098e874aa6db90efe02bb2c1a3e3611f557910930ff7c0"

@@ -340,6 +340,7 @@ export function snapshotProvenance(packet) {
   };
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 const criteria = Object.freeze({
   high: "Contains a concrete, plausible route to material incorrect behavior or failure that warrants high-priority targeted review.",
   medium:
@@ -348,6 +349,7 @@ const criteria = Object.freeze({
   insufficient: "Insufficient supplied source to assess this hunk.",
 });
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export function screenRequest(packet, hunks) {
   return {
     model: "gpt-6-luna",
@@ -371,6 +373,7 @@ export function screenRequest(packet, hunks) {
   };
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export function linesRequest(packet, hunks) {
   const questions = {};
   for (const hunk of hunks) {
@@ -520,6 +523,7 @@ function requestRiskCatalog(packet, resolveApplicationSpan) {
   });
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 export function directRequest(packet, template, resolveApplicationSpan) {
   const request = assumptionsRequestBody(
     packet,
@@ -633,6 +637,7 @@ export function assumptionsRequest(
   );
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 function assumptionsRequestBody(
   packet,
   selected,
