@@ -96,6 +96,7 @@ export function choicesFor(raw, questions) {
   );
 }
 
+// Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
 function buildDiscussionClassificationRequest(pending) {
   const questions = Object.fromEntries(
     pending.map(([index]) => [
