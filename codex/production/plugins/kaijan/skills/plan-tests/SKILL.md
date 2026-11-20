@@ -11,8 +11,13 @@ to plan useful observable checks and expected results for the original task.
 When Codex advertises `testObjective`, pass the person's request in that
 field. Generate a `requestKey` and put the selected browser URL in
 `target.initialURL` or the selected Mac app's bundle ID in `target.app`.
+For a supplied `.app` path or first-time desktop setup, use the
+[macOS setup guide](../run-test/references/macos-appium-setup.md).
 Include `testData` when the person supplied concrete values. It accepts any
 JSON value. Explorer uses the selected target and test data during planning.
+Tell the person Explorer's time limit before starting exploration. It defaults
+to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
+needs it.
 For work based on a saved source packet, pass its `contextId` from
 `loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
 `testObjective`. Use the returned `planId` when the person authorizes a Run.

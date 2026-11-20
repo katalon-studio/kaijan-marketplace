@@ -1,4 +1,7 @@
 import { z } from "zod";
+export declare const defaultExplorerTimeLimitMs = 300000;
+export declare const defaultRunnerTimeLimitMs = 600000;
+export declare const maxExecutionTimerMs: number;
 export declare const desktopRunnerTargetSchema: z.ZodObject<{
     app: z.ZodString;
     launch: z.ZodOptional<z.ZodBoolean>;
