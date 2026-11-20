@@ -1,4 +1,5 @@
 import { requireManagedBinding } from "@katalon-experiments/ai-client";
+import { storeTestAgentResponses } from "@katalon-experiments/ai-client/agents";
 import {
   sourceGenerationSchema,
   mapPlanningText,
@@ -673,7 +674,7 @@ export function requestFor(
     {
       model,
       reasoning: { effort: reasoning },
-      store: false,
+      store: storeTestAgentResponses,
       instructions: renderPlanningInstructions(
         modelInput.model_input_version ?? null,
         modelInput.requirement_input_version ?? null,
@@ -700,10 +701,9 @@ export async function plan(packet, output_dir, model, options = {}) {
     settings.reasoning,
   );
   // The Planner assesses Runner's recap against the privately retained original
-  // context. Encrypted reasoning can be replayed without provider-side storage.
+  // context. Keep encrypted reasoning so the saved Plan can resume locally.
   if (options.retainPlannerConversation === true) {
     requireManagedBinding(options.env ?? process.env);
-    request.store = false;
     request.include = ["reasoning.encrypted_content"];
   }
   let projected, projection, sourceProjection;
