@@ -34333,6 +34333,7 @@ var testPlanViewSchema = external_exports.object({
     planSourceId: external_exports.string(),
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
+    notStartedTestIds: external_exports.array(external_exports.string()).optional(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
@@ -35342,6 +35343,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     planSourceId: true,
     planResultSha256: true,
     selectedTestIds: true,
+    notStartedTestIds: true,
     elapsedMs: true,
     startedAt: true,
     recordedAt: true
