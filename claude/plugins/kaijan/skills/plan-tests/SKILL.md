@@ -8,10 +8,19 @@ description: Use when the user asks to plan tests, create a test plan, or propos
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
-When the caller wants browser-based planning for a selected web target, pass
-its URL and allowed hosts in `exploration.target`. Kaijan's Explorer builds the
-app model during planning. Pass the caller's original task and any supplied
-parameters. The testing method is already part of the agents.
+When Claude Code advertises `testObjective`, pass the person's request in that
+field. Generate a `requestKey` and put the selected browser URL in
+`target.initialURL` or the selected Mac app's bundle ID in `target.app`.
+For a supplied `.app` path or first-time desktop setup, use the
+[macOS setup guide](../run-test/references/macos-appium-setup.md).
+Include `testData` when the person supplied concrete values. It accepts any
+JSON value. Explorer uses the selected target and test data during planning.
+Tell the person Explorer's time limit before starting exploration. It defaults
+to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
+needs it.
+For work based on a saved source packet, pass its `contextId` from
+`loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
+`testObjective`. Use the returned `planId` when the person authorizes a Run.
 
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.
@@ -27,6 +36,11 @@ in `taskInstructions`. Preserve the complete original request in `input.body`.
 If the task tests the application's own report, save or export feature, keep
 those application actions and expectations in the testing directions. Distinguish
 the recipient and purpose; do not filter words such as report or save.
+
+On Claude Code, use the advertised fields above and the original user request.
+For hosts that advertise `input` and `contextId`, use the following planning
+input guidance. For browser exploration on those hosts, provide the authorized
+URL in `exploration.target.initialURL` and any supplied exploration parameters.
 
 Use one supported input form. Preserve original text, attribution and source
 roles. Put application behavior and context in `input`. Include the optional
@@ -75,12 +89,17 @@ A known pre-dispatch context-input refusal asks for corrected arguments. Reuse
 the saved task instead of asking the person to retype it or writing an unsaved
 substitute plan. Preserve an earlier uncertain outcome without replay.
 
-The optional `options.deadline_ms` covers preparation and planning. Follow
+On hosts that advertise it, `options.deadline_ms` covers preparation and planning. Follow
 [completed-answer reading](../../references/RESULT-READING.md) for cancellation
 and result paging. Recover a lost reply with the original optional
 `requestKey` and identical input and configuration. An offered
 `new_analysis_if_needed` is a separate read-only attempt that requires caller
 scope for new analysis. Preserve the original result or uncertainty.
+
+If the host ends its wait during browser exploration, Kaijan closes Explorer
+and continues the original Plan with the map it saved so far. Recover it with
+the identical request and configuration. An observation timeout alone leaves
+the original wait active. Keep waiting if the person still wants exploration.
 
 ## Show the plan
 
@@ -101,13 +120,7 @@ new record with `supersedes`. Verify the revised expectations against the new
 source and show the revised report under its own answer ID. Preserve the
 original plan and report.
 
-## Preserve a baseline while adding tests
-
-When the experimental `loki_test_supplement` tool is available and additions
-are requested, use `test-plan-supplement-input/1` with the original `context`,
-`baseline: {text, uri, revision, plan_path?}` and
-`risks: [{id, text, uri, revision, attribution}]`. Supply the exact original
-baseline JSON in `text` and use `plan_path` for a wrapper when needed. An empty
-`risks` array is valid. Retained input uses `nativeInputs.testSupplement:
-{input, options?}`. Keep the baseline unchanged beside the returned additions,
-concerns and questions, or the original failure.
+For requested additions, use the same Plan flow. Keep the original objective,
+authorized context and tests, then include the new coverage the person requested.
+Save and show the revision with its own Plan ID. Earlier Runs keep their original
+Plan references.

@@ -14,6 +14,11 @@ does not authorize execution.
 
 ## Run the selected checks
 
+In Claude Code, use a write-capable session with workspace write or Full Access for
+execution. Have the user handle any approval requested by Claude Code. Keep
+application actions within the user's task. If the host refuses dispatch,
+tell the user which permission or approval blocked the Run and keep the saved Plan.
+
 Check readiness for the selected action with `loki_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
 for the responding package when starting AI work. Managed AI uses the Kaijan
@@ -28,12 +33,22 @@ application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
-or manual login. Keep raw secrets out of chat and tool arguments. For one Run,
-use `params` for ordinary overrides and `privateParams` for scoped secret references.
+or manual login. Keep raw secrets out of chat and tool arguments. On hosts that
+advertise full Runner input, use `params` for ordinary overrides and
+`privateParams` for scoped secret references.
 These overrides leave saved settings unchanged. The person can run without
 saving settings. Configuration selection never authorizes execution.
 
 Use `loki_test_execute` for the normal combined run, assessment and report.
+When Claude Code advertises `planId`, supply the exact `planId` returned by Plan,
+the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
+target, test data and private configuration references from the saved Plan.
+If the person changes the target or test data, save a Plan using those inputs
+before running it. For an interrupted request, reuse the same key.
+Tell the person the Run's time limit before starting it. Runner defaults to ten
+minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
+
+For hosts that advertise the full Runner input, follow the instructions below.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
 `{}`) and the authorized target. For one saved test, use its actual test ID as
 `scenarioId`.
@@ -70,9 +85,8 @@ The combined Kaijan operation owns assessment and saving its report. Keep reques
 For a request to run, assess and report, keep reading the same Run until execution and assessment finish or a specific blocker needs the caller. A running reply continues the requested work. Keep the interactive CLI open while the Run is active. Open the final `report.reportId` from the finished combined Run; assessment may produce a different report from the one saved during execution.
 
 Use `loki_test_get` through the execution and assessment result, and
-`loki_test_stop` to stop the same test.
-For external test evidence use
-[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+`loki_test_stop` to stop the same test. Open the saved result with
+[report review](../review-report/SKILL.md).
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
@@ -105,9 +119,12 @@ to inspect an existing recording.
 
 ## macOS desktop scenarios
 
-Use `executionMethod: "desktop-ui"` and `target.app` with the app's bundle ID.
-Set `target.launch: true` only when launch is allowed. `false` requires a
-running app. Desktop requires configured full Xcode, UI Automation and
+Supply `target.app` with the app's bundle ID in the Claude Code Plan. Use
+`executionMethod: "desktop-ui"` and the app target on hosts that advertise the
+full Runner input. If the caller supplies a `.app` path or needs first-time setup,
+use the [macOS setup guide](references/macos-appium-setup.md).
+Set `target.launch: true` only when launch is allowed.
+`false` requires a running app. Desktop requires configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
 Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
 keeps its state and stays open after the run. Browser clarification and

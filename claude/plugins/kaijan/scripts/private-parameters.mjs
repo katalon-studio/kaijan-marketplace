@@ -150,6 +150,7 @@ async function verifyLocalMcpBundle(plugin, build, destination) {
 async function main() {
   let temporary, child, interrupted;
   let outcome;
+  const inlineForms = process.argv[2] === "--inline-forms";
   const signals = ["SIGINT", "SIGTERM", "SIGHUP"];
   const handlers = signals.map((signal2) => {
     const handler = () => {
@@ -161,7 +162,9 @@ async function main() {
     return handler;
   });
   try {
-    temporary = await mkdtemp2(join3(tmpdir(), "kcj-private-parameters-"));
+    temporary = await mkdtemp2(
+      inlineForms ? "/tmp/kcj-inline-" : join3(tmpdir(), "kcj-private-parameters-")
+    );
     const payload = join3(temporary, "payload");
     const root = resolve2(import.meta.dirname, "..");
     await verifyLocalMcpBundle(root, void 0, payload);
@@ -169,8 +172,11 @@ async function main() {
       child = spawn(
         process.execPath,
         [
-          join3(payload, "scripts/private-parameters.mjs"),
-          ...process.argv.slice(2)
+          join3(
+            payload,
+            inlineForms ? "scripts/inline-forms.mjs" : "scripts/private-parameters.mjs"
+          ),
+          ...inlineForms ? [process.argv[3] ?? "", join3(temporary, "form.sock")] : process.argv.slice(2)
         ],
         { stdio: "inherit", env: process.env }
       );

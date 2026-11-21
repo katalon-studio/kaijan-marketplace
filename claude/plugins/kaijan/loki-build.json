@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "buildId": "bdd6f80e-2336-41e5-9913-5cd472f58fc7",
-  "builtAt": "2026-11-18T11:11:20.105Z",
-  "sourceRevision": "1aa4698e746aa978a86642aa62ad8c96490ca5fe",
+  "buildId": "f6b4a2b4-d591-4163-afc7-29e66484dc34",
+  "builtAt": "2026-11-21T12:39:16.392Z",
+  "sourceRevision": "3c241d46d650d7bea2b75a4c4ad99e8d4c33fe7a",
   "sourceDirty": false,
   "profile": "production",
   "profileMode": "runtime-env/1",
@@ -23,15 +23,15 @@
   "authArchitecture": "shared-broker-v1",
   "credentialStorage": "private-file-v1",
   "runtimeLayout": "installed",
-  "capabilityDigest": "ad64834cc4c97a884f914ce67d9e8aa452d49758df84ff6e0d4548e9a41a3521",
-  "pluginVersion": "0.5.0-rc.306",
+  "capabilityDigest": "1f71facd7abd73cc0d5406114c2a0f360a80ed97f0693f191ca581f626fbbbfd",
+  "pluginVersion": "0.5.0-rc.400",
   "mcpUrl": "https://kaijan.ai/mcp",
   "mcpServerName": "kaijan_core",
   "localMcpServerName": "kaijan_local",
   "capabilityTransport": {
     "format": "mcpb/1",
     "bundle": "servers/kaijan-local.mcpb",
-    "sha256": "9686fec8763ce2a576789074a88247b59ff087eb20097241048b464c1e94e31e",
-    "privateHelperSha256": "e48480310924f737406e3ae5dac69e455e6a74d7a40182258048ce76922b6f20"
+    "sha256": "0a767692f636f99c230dfa84ebaa576821d7ac47fcb0b837979e6d5c612b3302",
+    "privateHelperSha256": "5ebfc62920ea297c0816a1012f24b7722b50554dc0d6a6fce2fca5d7be732ccc"
   }
 }

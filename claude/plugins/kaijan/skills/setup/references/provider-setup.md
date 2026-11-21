@@ -14,7 +14,7 @@ saved-result reads can continue when their Local tools are available.
 The service must register the packaged `kaijan-claude-runtime` client and its
 listed scopes. The build's `core-client.json` is an operator example, not proof
 of a deployment. An unknown client or denied scope needs operator resolution;
-do not substitute the Claude Code client identity or broaden its grant.
+do not substitute the Codex client identity or broaden its grant.
 
 Use `loki_disconnect` only at the user's request. It revokes this Claude grant;
-it does not delete reports or disconnect the Claude Code plugin.
+it does not delete reports or disconnect the Codex plugin.

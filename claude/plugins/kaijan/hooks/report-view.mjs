@@ -1,6 +1,6 @@
 // Native presentation of the validated saved report. No model, storage or tool
 // calls belong here; navigation only changes this report's local view state.
-export function reportCard(elements, card, id, onPress) {
+export function reportCard(elements, card, id, onPress, forms, detailUrl) {
   const { Box, Text, Button } = elements;
   const report = card.report;
   return Box({
@@ -10,25 +10,93 @@ export function reportCard(elements, card, id, onPress) {
     padding: "md",
     gap: "sm",
     children: [
-      Text({
-        color: "claude",
-        size: "caption",
-        weight: "semibold",
-        children: ["Kaijan"],
+      Box({
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        children: [
+          Text({
+            color: "claude",
+            weight: "semibold",
+            children: ["Kaijan"],
+          }),
+          detailUrl
+            ? elements.Markdown({ text: `[Open Kaijan report](${detailUrl})` })
+            : Button({
+                key: "kaijan-details-" + id,
+                label: "Show details",
+                variant: "primary",
+                onPress,
+              }),
+        ],
       }),
-      Text({ size: "heading", weight: "semibold", children: [report.title] }),
-      Text({ weight: "semibold", children: [report.summary] }),
-      Text({
-        color: "inactive",
-        size: "footnote",
-        children: [reportCounts(report)],
-      }),
-      Button({
-        key: "kaijan-details-" + id,
-        label: "Show details",
-        variant: "primary",
-        onPress,
-      }),
+      ...(report.planCard
+        ? [
+            Text({
+              size: "heading",
+              children: report.planCard.heading
+                ? [report.planCard.heading]
+                : [
+                    Text({
+                      weight: "semibold",
+                      children: [report.planCard.countLabel],
+                    }),
+                    report.planCard.goal,
+                  ],
+            }),
+            ...[report.planCard.functional, report.planCard.notice]
+              .filter(Boolean)
+              .map((line) =>
+                Text({
+                  color: "inactive",
+                  size: "footnote",
+                  children: [line],
+                }),
+              ),
+          ]
+        : report.runCard
+          ? [
+              Text({
+                size: "heading",
+                weight: "semibold",
+                children: [
+                  report.runCard.pullRequest
+                    ? `PR #${report.runCard.pullRequest.number} · `
+                    : "",
+                  report.runCard.headline,
+                ],
+              }),
+              Text({ children: [report.runCard.primary] }),
+              ...(report.runCard.secondary
+                ? [Text({ children: [report.runCard.secondary] })]
+                : []),
+              ...report.runCard.failedTitles.map((title) =>
+                Text({ children: [`• ${title}`] }),
+              ),
+              ...(report.runCard.moreFailed > 0
+                ? [
+                    Text({
+                      children: [
+                        `${report.runCard.moreFailed} more failed ${report.runCard.moreFailed === 1 ? "test" : "tests"}`,
+                      ],
+                    }),
+                  ]
+                : []),
+            ]
+          : [
+              Text({
+                size: "heading",
+                weight: "semibold",
+                children: [report.title],
+              }),
+              Text({ weight: "semibold", children: [report.summary] }),
+              Text({
+                color: "inactive",
+                size: "footnote",
+                children: [reportCounts(report)],
+              }),
+            ]),
+      ...forms,
     ],
   });
 }

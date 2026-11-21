@@ -21123,6 +21123,14 @@ var clarificationPresentationSchema = external_exports.union([
 var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count2 = external_exports.number().int().nonnegative();
+var maxExecutionTimerMs = 2 ** 31 - 1;
+var desktopRunnerTargetSchema = external_exports.strictObject({
+  app: external_exports.string().max(200).refine((value) => {
+    const parts = value.split(".");
+    return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
+  }, "An application bundle ID is required."),
+  launch: external_exports.boolean().optional()
+});
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),
@@ -22850,6 +22858,45 @@ var assertions = external_exports.object({
   evidence: external_exports.array(evidenceQuote),
   tests: external_exports.array(assertionTest)
 });
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerTestPlanSummary = summary.pick({
+  schema: true,
+  reportId: true,
+  title: true,
+  assessmentResults: true,
+  observation: true,
+  failedTestTitles: true
+}).extend({
+  counts: summary.shape.counts.pick({
+    pass: true,
+    fail: true,
+    blocked: true,
+    skipped: true,
+    "not-run": true,
+    incomplete: true,
+    inconclusive: true,
+    conflicting: true,
+    unavailable: true
+  }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
+  proposedCounts: external_exports.object({
+    pass: external_exports.number().int().nonnegative(),
+    fail: external_exports.number().int().nonnegative()
+  }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  plans: external_exports.array(summary.shape.plans.element.pick({
+    sourceId: true,
+    resultSha256: true,
+    requestTests: true,
+    executedTests: true,
+    proposedTests: true
+  })),
+  runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+});
 var customerReportSchema = testPlanViewSchema.pick({
   reportId: true,
   title: true,
@@ -22859,6 +22906,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
+  testPlanSummary: customerTestPlanSummary.optional(),
   assessments: external_exports.array(external_exports.object({
     assessedRunIds: external_exports.array(quoteDigest).optional(),
     sourceId: quoteDigest,
@@ -22956,8 +23004,6 @@ var customerReportSchema = testPlanViewSchema.pick({
     })
   })).optional()
 });
-var panelCard = reportCardSchema.options[0];
-var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -22974,43 +23020,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary.pick({
-    schema: true,
-    reportId: true,
-    title: true,
-    assessmentResults: true,
-    observation: true,
-    failedTestTitles: true
-  }).extend({
-    counts: summary.shape.counts.pick({
-      pass: true,
-      fail: true,
-      blocked: true,
-      skipped: true,
-      "not-run": true,
-      incomplete: true,
-      inconclusive: true,
-      conflicting: true,
-      unavailable: true
-    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
-    proposedCounts: external_exports.object({
-      pass: external_exports.number().int().nonnegative(),
-      fail: external_exports.number().int().nonnegative()
-    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
-    pullRequest: external_exports.object({
-      number: external_exports.number().int().positive(),
-      title: external_exports.string(),
-      url: external_exports.url()
-    }).nullable(),
-    plans: external_exports.array(summary.shape.plans.element.pick({
-      sourceId: true,
-      resultSha256: true,
-      requestTests: true,
-      executedTests: true,
-      proposedTests: true
-    })),
-    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
-  })
+  testPlanSummary: customerTestPlanSummary
 });
 var customerReportFailureSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-error/1"),
@@ -23093,7 +23103,8 @@ var customerReportOutputSchema = external_exports.union([
   customerReportFailureSchema
 ]);
 var reportWithoutContextFinder = customerReportSchema.omit({
-  contextFinder: true
+  contextFinder: true,
+  testPlanSummary: true
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()

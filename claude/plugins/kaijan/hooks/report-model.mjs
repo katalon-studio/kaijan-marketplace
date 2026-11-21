@@ -20374,6 +20374,14 @@ var clarificationPresentationSchema = external_exports.union([
 var digest6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count2 = external_exports.number().int().nonnegative();
+var maxExecutionTimerMs = 2 ** 31 - 1;
+var desktopRunnerTargetSchema = external_exports.strictObject({
+  app: external_exports.string().max(200).refine((value) => {
+    const parts = value.split(".");
+    return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
+  }, "An application bundle ID is required."),
+  launch: external_exports.boolean().optional()
+});
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),
@@ -22264,6 +22272,45 @@ var assertions = external_exports.object({
   evidence: external_exports.array(evidenceQuote),
   tests: external_exports.array(assertionTest)
 });
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerTestPlanSummary = summary.pick({
+  schema: true,
+  reportId: true,
+  title: true,
+  assessmentResults: true,
+  observation: true,
+  failedTestTitles: true
+}).extend({
+  counts: summary.shape.counts.pick({
+    pass: true,
+    fail: true,
+    blocked: true,
+    skipped: true,
+    "not-run": true,
+    incomplete: true,
+    inconclusive: true,
+    conflicting: true,
+    unavailable: true
+  }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
+  proposedCounts: external_exports.object({
+    pass: external_exports.number().int().nonnegative(),
+    fail: external_exports.number().int().nonnegative()
+  }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  plans: external_exports.array(summary.shape.plans.element.pick({
+    sourceId: true,
+    resultSha256: true,
+    requestTests: true,
+    executedTests: true,
+    proposedTests: true
+  })),
+  runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+});
 var customerReportSchema = testPlanViewSchema.pick({
   reportId: true,
   title: true,
@@ -22273,6 +22320,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
+  testPlanSummary: customerTestPlanSummary.optional(),
   assessments: external_exports.array(external_exports.object({
     assessedRunIds: external_exports.array(quoteDigest).optional(),
     sourceId: quoteDigest,
@@ -22370,8 +22418,6 @@ var customerReportSchema = testPlanViewSchema.pick({
     })
   })).optional()
 });
-var panelCard = reportCardSchema.options[0];
-var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -22388,43 +22434,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary.pick({
-    schema: true,
-    reportId: true,
-    title: true,
-    assessmentResults: true,
-    observation: true,
-    failedTestTitles: true
-  }).extend({
-    counts: summary.shape.counts.pick({
-      pass: true,
-      fail: true,
-      blocked: true,
-      skipped: true,
-      "not-run": true,
-      incomplete: true,
-      inconclusive: true,
-      conflicting: true,
-      unavailable: true
-    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
-    proposedCounts: external_exports.object({
-      pass: external_exports.number().int().nonnegative(),
-      fail: external_exports.number().int().nonnegative()
-    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
-    pullRequest: external_exports.object({
-      number: external_exports.number().int().positive(),
-      title: external_exports.string(),
-      url: external_exports.url()
-    }).nullable(),
-    plans: external_exports.array(summary.shape.plans.element.pick({
-      sourceId: true,
-      resultSha256: true,
-      requestTests: true,
-      executedTests: true,
-      proposedTests: true
-    })),
-    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
-  })
+  testPlanSummary: customerTestPlanSummary
 });
 var customerReportFailureSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-error/1"),
@@ -22507,7 +22517,8 @@ var customerReportOutputSchema = external_exports.union([
   customerReportFailureSchema
 ]);
 var reportWithoutContextFinder = customerReportSchema.omit({
-  contextFinder: true
+  contextFinder: true,
+  testPlanSummary: true
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
@@ -23173,6 +23184,96 @@ function executionCaption(state, stoppedByUser = false) {
   return savedRunProgressCaption(state) ?? (state && state !== "unknown" ? state : "Run status unavailable");
 }
 
+// apps/core/ui/local-capabilities/test-plan/plan-card-copy.ts
+function planCardCopy({
+  title,
+  count: count6,
+  single,
+  requestTests,
+  notRun,
+  mapOnly
+}) {
+  const noun = single ? count6 === 1 ? "test" : "tests" : count6 === 1 ? "test plan" : "test plans";
+  const heading = mapOnly ? "Source app map ready." : count6 === null ? "Test plan unavailable." : void 0;
+  return {
+    heading,
+    countLabel: count6 === null ? "" : `${count6} ${noun}`,
+    goal: ` for ${title}`,
+    functional: count6 !== null && requestTests ? `${requestTests} functional, from your request` : void 0,
+    notice: single && count6 === null ? unavailablePlanDetailsNotice : count6 !== null && notRun ? "Not run." : void 0
+  };
+}
+
+// apps/core/ui/local-capabilities/test-plan/run-card-copy.ts
+function runCardCopy(summary2) {
+  const single = summary2.plans.length === 1 ? summary2.plans[0] : void 0;
+  const count6 = single ? single.proposedTests : summary2.plans.length || null;
+  const { countLabel } = planCardCopy({
+    title: summary2.title,
+    count: count6,
+    single: Boolean(single),
+    requestTests: single?.requestTests ?? 0,
+    notRun: single?.executedTests === false,
+    mapOnly: false
+  });
+  const completed = summary2.runs.filter(
+    (run) => run.executionState === "completed"
+  ).length;
+  const singleRun = summary2.runs.length === 1 ? summary2.runs[0] : void 0;
+  const inProgress = summary2.runs.filter(
+    (run) => !run.stoppedByUser && run.executionState === "running"
+  ).length;
+  const waiting = summary2.runs.filter(
+    (run) => !run.stoppedByUser && run.executionState === "accepted"
+  ).length;
+  const savedProgress = singleRun ? !singleRun.stoppedByUser && savedRunProgressCaption(singleRun.executionState) : inProgress || waiting ? `When this report was saved, ${[
+    completed ? `${completed} ${completed === 1 ? "Run" : "Runs"} had finished` : "",
+    inProgress ? `${inProgress} ${inProgress === 1 ? "Run was" : "Runs were"} in progress` : "",
+    waiting ? `${waiting} ${waiting === 1 ? "Run was" : "Runs were"} waiting to start` : ""
+  ].filter(Boolean).join(" \xB7 ")}` : void 0;
+  const runStatus = singleRun ? executionCaption(singleRun.executionState, singleRun.stoppedByUser) : `${completed} of ${summary2.runs.length} runs finished`;
+  const pr = summary2.pullRequest;
+  const { incomplete = 0, ...recordedCounts } = summary2.counts;
+  const counts = {
+    ...recordedCounts,
+    inconclusive: recordedCounts.inconclusive + incomplete
+  };
+  const countedTests = Object.values(counts).reduce((a, b) => a + b, 0) - (counts.unavailable ?? 0);
+  const hasResults = countedTests > counts["not-run"];
+  const unavailableCount = Math.max(
+    counts.unavailable ?? 0,
+    single && single.proposedTests !== null ? Math.max(0, single.proposedTests - countedTests) : 0
+  );
+  const failed = counts.fail;
+  const passed = counts.pass;
+  const status = [
+    ["pass", `${passed === 1 ? "test" : "tests"} passed`],
+    ["fail", "failed"],
+    ["blocked", "blocked"],
+    ["skipped", "skipped"],
+    ["not-run", "not run"],
+    ["inconclusive", "incomplete"],
+    ["conflicting", "with different results"]
+  ].filter(([key]) => counts[key] > 0).map(([key, label]) => `${counts[key]} ${label}`).concat(
+    unavailableCount ? [
+      `${unavailableCount} ${unavailableCount === 1 ? "result" : "results"} unavailable`
+    ] : []
+  ).join(" \xB7 ");
+  const observation = hasResults && singleRun?.executionState === "completed" && !singleRun.stoppedByUser ? summary2.observation : void 0;
+  const resultCaption2 = savedProgress ? `${savedProgress}${!pr && hasResults ? `. ${status}` : ""}` : hasResults ? pr ? observation ? status : runStatus : `${singleRun?.executionState === "completed" && unavailableCount ? "Run finished. " : ""}${status}` : singleRun?.executionState === "completed" && counts.unavailable ? `Run finished. ${counts.unavailable} ${counts.unavailable === 1 ? "result" : "results"} unavailable` : `${count6 === null ? "" : `${countLabel} \xB7 `}${runStatus}`;
+  const pullRequest = hasResults ? pr : null;
+  const failedTitles = summary2.failedTestTitles ?? [];
+  return {
+    pullRequest,
+    headline: pullRequest && !observation ? status : summary2.title,
+    tone: observation ? "" : failed ? "bad" : passed === countedTests && single?.proposedTests === countedTests ? "ok" : "",
+    primary: observation ?? resultCaption2 + ".",
+    secondary: observation ? resultCaption2 + "." : void 0,
+    failedTitles,
+    moreFailed: failed - failedTitles.length
+  };
+}
+
 // apps/claude-plugin/src/report-model.ts
 function reportData(output2, depth = 0) {
   if (depth > 4) return void 0;
@@ -23338,9 +23439,19 @@ function nativeReport(output2, selectedPlanId) {
       source2.resultSha256
     ).map(({ test }) => test) : []
   ] : runs.flatMap((run) => run.tests);
+  const cardSummary = parsed.data.testPlanSummary;
   return {
     id: view.reportId,
     title: view.title,
+    runCard: view.runs.length && cardSummary?.reportId === view.reportId ? runCardCopy(cardSummary) : void 0,
+    planCard: view.runs.length ? void 0 : planCardCopy({
+      title: view.title,
+      count: view.plans.length === 1 ? Array.isArray(plan.tests) && record3(plan.presentation).detailsAvailable !== false ? plan.tests.length : null : view.plans.length || null,
+      single: view.plans.length === 1,
+      requestTests: view.plans.length === 1 ? functional.size : 0,
+      notRun: view.plans.length === 1 && tests2.length > 0,
+      mapOnly: Boolean(view.mapId && !view.plans.length)
+    }),
     summary: resultCounts(statuses, "could not check") || (tests2.length ? "Not run" : "No assessed test results"),
     tests: tests2,
     runs,

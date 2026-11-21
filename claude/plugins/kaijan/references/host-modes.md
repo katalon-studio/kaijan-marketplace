@@ -3,10 +3,9 @@
 One Kaijan plugin serves the Claude Code CLI and the **local Code tab** in
 Claude Desktop on macOS Apple Silicon. Both use the bundled native runtime,
 stdio Core/Local servers and the same managed Claude client. The normal package
-has the same nine skills as Claude Code and adds `demo`. The fixed-QA variant
-uses the same inventory. Demo runs only when requested, using the selected
-service. It plans and runs two real TodoMVC cases and opens their saved report.
-Prior installed versions keep their original inventory until updated.
+and the fixed-QA variant have the same nine skills as Claude Code. Both use the
+shared Setup flow in chat. Prior installations keep their original skill
+inventory until updated.
 Desktop Code is the first Desktop target. A recorded QA trial completed the
 workflow in local Code and reopened the saved report after an update. See the
 [recorded QA checks](#recorded-qa-checks) for the versions and limits.
@@ -97,9 +96,11 @@ invent a replacement ID to bypass this limit.
 | Host version       | Global `claude --version`                                                      | Embedded Claude Code row in `/status`; record the Desktop app version separately |
 | Interaction        | Terminal; optional `--print` automation                                        | Code conversation and native permission controls                                 |
 | Kaijan tests       | Same managed runtime, planning, authorized Runner and saved assessment methods | Same package and methods; three TodoMVC QA workflows observed                    |
-| Reports            | Native saved-result card and pane when mods are enabled; `--print` uses text   | Same card; Show details opens Claude's native Kaijan report pane                 |
+| Reports            | Inline card with mods; details open in the default browser. `--print` is text. | Inline card; **Open Kaijan report** opens HTML in the Browser pane.              |
 | Records            | Bound to the actual Claude session                                             | Same binding rule; no automatic cross-session report transfer                    |
 | Telemetry          | Lifecycle host `claude_code`; MCP host follows its actual handshake            | Same contract; no asserted Code-tab surface field                                |
+
+In Desktop, select **Show details** to get the **Open Kaijan report** link.
 
 The existing contract leaves `host_surface` unknown. Do not infer Desktop or CLI
 from a path, client name, prompt or environment guess. A text report read never
@@ -153,7 +154,7 @@ The declared 2.1.318 package minimum is unchanged. A newer embedded Desktop
 version, Stop and session isolation across clear/resume remain unverified by
 this three-case check.
 
-### TodoMVC newcomer demo
+### Historical TodoMVC newcomer demo
 
 The explicitly invoked demo passed on 10 November using private QA packages:
 Claude Code CLI 2.1.321 and Desktop 4.23118.1 with embedded Code 2.1.321.
