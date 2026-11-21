@@ -41,13 +41,13 @@ Check `loki_capabilities_list` and the relevant installed owning skills/tools.
 Derive useful actions from the work context and their actual input/output
 contracts, not from a fixed menu or a chat title alone. Conditional examples:
 
-| Available context                                 | Kaijan action to consider                                                  | Result to describe                                           |
-| ------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Requirement or work item                          | `plan-tests`; `assess-change-risk` work-item mode when uncertainty matters | Proposed tests, or consequential requirement assumptions     |
-| Actual code change or PR                          | `assess-change-risk`                                                       | Source-backed change assumptions and evidence to investigate |
-| Supplied test outcomes and original requirement   | `assess-test-evidence`                                                     | Scoped evidence assessment and remaining coverage gaps       |
-| Work item/issue/PR needing related context        | `find-related-work`                                                        | Related items with reasons and source links                  |
-| A complete browser scenario and authorized target | `run-test`                                                                 | Execution records and observations, separately from verdicts |
+| Available context                                 | Kaijan action to consider                                   | Result to describe                                           |
+| ------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| Requirement or issue                              | `plan-tests`; `assess-change-risk` when uncertainty matters | Proposed tests, or consequential requirement assumptions     |
+| Actual code change or PR                          | `assess-change-risk`                                        | Source-backed change assumptions and evidence to investigate |
+| Supplied test outcomes and original requirement   | `assess-test-evidence`                                      | Scoped evidence assessment and remaining coverage gaps       |
+| Issue or PR needing related context               | `find-related-work`                                         | Related items with reasons and source links                  |
+| A complete browser scenario and authorized target | `run-test`                                                  | Execution records and observations, separately from verdicts |
 
 These are examples of semantic fit, not mandatory predecessors, literal option
 text or keyword rules. Do not offer every capability or fill a target count.
