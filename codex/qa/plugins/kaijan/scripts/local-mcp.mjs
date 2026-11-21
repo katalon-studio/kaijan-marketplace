@@ -56430,7 +56430,8 @@ var hasCustomerExecutionOutput = (name) => executionTools.has(name);
 var developmentTools = /* @__PURE__ */ new Set([
   "kaijan_ai_models",
   "loki_report_export_preview",
-  "loki_report_export"
+  "loki_report_export",
+  "loki_test_supplement"
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
 var hash4 = (value) => createHash9("sha256").update(value).digest("hex");
@@ -57466,6 +57467,7 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     message: directDevelopment ? "Complete the local setup for this development package, then continue the same task." : "Open Kaijan setup to complete the connection, then continue the same task."
   };
   const action2 = (value2) => service(value2, setupRequired, unavailable3);
+  const planning = action2(native.testPlanning);
   return customerDiscoverySchema.parse({
     schema: "kaijan.customer-capabilities/1",
     context: native.contextIntake?.state === "available" ? {
@@ -57475,8 +57477,8 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     changeReview: action2(native.changeRisk),
     relatedWork: action2(native.prContext),
     workItemReview: action2(native.riskFinder),
-    testPlanning: action2(native.testPlanning),
-    additionalTests: action2(native.testSupplement),
+    testPlanning: planning,
+    additionalTests: planning.state === "available" ? { state: "available", message: "Save a revised Plan to add tests." } : planning,
     evidenceReview: action2(native.suppliedEvidence),
     testExecution: native.testRun?.available === true && native.computerRunner?.state === "configured" && native.computerRunner?.providerConfigured === true ? configured() : native.testRun?.available === true && native.computerRunner?.state === "blocked" ? setupRequired : unavailable3,
     connection: freshness?.state === "stale" || freshness?.installedMetadataMatches === false ? {
@@ -58412,7 +58414,7 @@ function capabilityMcpRegistration(session, setup) {
       ...session.configurations?.tools ?? [],
       ...session.projectHistory?.tools ?? [],
       ...controls
-    ].map((tool2) => {
+    ].filter(({ name }) => isCustomerToolAllowed(name)).map((tool2) => {
       const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool2, {

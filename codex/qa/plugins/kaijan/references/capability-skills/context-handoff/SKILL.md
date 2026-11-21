@@ -82,11 +82,9 @@ Keep the earlier context ID. Otherwise identify the missing fields; do not
 fabricate packet fields, turn raw reports into code evidence or fetch unresolved
 references automatically.
 
-Explicit experimental consumers also include `nativeInputs.testSupplement` and
-`nativeInputs.suppliedEvidence`, each containing the exact `{input, options?}`
+The supplied evidence consumer uses `nativeInputs.suppliedEvidence` with the exact `{input, options?}`
 object without requestKey. Intake runs the maintained offline producer preparation;
 compatibility still does not prove semantic validity or an observed pass. Follow
-[test planning](../../../skills/plan-tests/SKILL.md) for immutable supplements and
 [test evidence](../assess-test-evidence/SKILL.md) for returned observations. Original
 conversation/task context remains attributed, and references remain unresolved.
 

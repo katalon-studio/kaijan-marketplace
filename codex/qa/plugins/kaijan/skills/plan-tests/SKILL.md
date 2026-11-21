@@ -110,13 +110,7 @@ new record with `supersedes`. Verify the revised expectations against the new
 source and show the revised report under its own answer ID. Preserve the
 original plan and report.
 
-## Preserve a baseline while adding tests
-
-When the experimental `loki_test_supplement` tool is available and additions
-are requested, use `test-plan-supplement-input/1` with the original `context`,
-`baseline: {text, uri, revision, plan_path?}` and
-`risks: [{id, text, uri, revision, attribution}]`. Supply the exact original
-baseline JSON in `text` and use `plan_path` for a wrapper when needed. An empty
-`risks` array is valid. Retained input uses `nativeInputs.testSupplement:
-{input, options?}`. Keep the baseline unchanged beside the returned additions,
-concerns and questions, or the original failure.
+For requested additions, use the same Plan flow. Keep the original objective,
+authorized context and tests, then include the new coverage the person requested.
+Save and show the revision with its own Plan ID. Earlier Runs keep their original
+Plan references.
