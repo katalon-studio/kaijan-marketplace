@@ -809,7 +809,7 @@
       "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e",
       "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300",
       "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8",
-      "packages/provider-transport/responses-session.mjs": "aa740d82d49283dc3573630390771455f19c6cc85bdf2ed32cc249346f680f1f",
+      "packages/provider-transport/responses-session.mjs": "0137886879fec2ccd502c358c5415f4db7c176744eecd7d040f41b512600cf7b",
       "packages/provider-transport/responses-session.d.mts": "3d4955929e29bf871a632ca54543aad2338486a8f854c8d2fc3f75c6a0f5ad27",
       "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c",
       "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea",
