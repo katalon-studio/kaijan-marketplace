@@ -81,10 +81,10 @@ var require_code = __commonJS({
       }
       get names() {
         var _a3;
-        return (_a3 = this._names) !== null && _a3 !== void 0 ? _a3 : this._names = this._items.reduce((names2, c) => {
+        return (_a3 = this._names) !== null && _a3 !== void 0 ? _a3 : this._names = this._items.reduce((names, c) => {
           if (c instanceof Name)
-            names2[c.str] = (names2[c.str] || 0) + 1;
-          return names2;
+            names[c.str] = (names[c.str] || 0) + 1;
+          return names;
         }, {});
       }
     };
@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names2, constants7) {
-        if (!names2[this.name.str])
+      optimizeNames(names, constants7) {
+        if (!names[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names2, constants7);
+          this.rhs = optimizeExpr(this.rhs, names, constants7);
         return this;
       }
       get names() {
@@ -431,15 +431,15 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names2, constants7) {
-        if (this.lhs instanceof code_1.Name && !names2[this.lhs.str] && !this.sideEffects)
+      optimizeNames(names, constants7) {
+        if (this.lhs instanceof code_1.Name && !names[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names2, constants7);
+        this.rhs = optimizeExpr(this.rhs, names, constants7);
         return this;
       }
       get names() {
-        const names2 = this.lhs instanceof code_1.Name ? {} : { ...this.lhs.names };
-        return addExprNames(names2, this.rhs);
+        const names = this.lhs instanceof code_1.Name ? {} : { ...this.lhs.names };
+        return addExprNames(names, this.rhs);
       }
     };
     var AssignOp = class extends Assign {
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names2, constants7) {
-        this.code = optimizeExpr(this.code, names2, constants7);
+      optimizeNames(names, constants7) {
+        this.code = optimizeExpr(this.code, names, constants7);
         return this;
       }
       get names() {
@@ -525,20 +525,20 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names2, constants7) {
+      optimizeNames(names, constants7) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names2, constants7))
+          if (n.optimizeNames(names, constants7))
             continue;
-          subtractNames(names2, n.names);
+          subtractNames(names, n.names);
           nodes.splice(i, 1);
         }
         return nodes.length > 0 ? this : void 0;
       }
       get names() {
-        return this.nodes.reduce((names2, n) => addNames(names2, n.names), {});
+        return this.nodes.reduce((names, n) => addNames(names, n.names), {});
       }
     };
     var BlockNode = class extends ParentNode {
@@ -583,20 +583,20 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names2, constants7) {
+      optimizeNames(names, constants7) {
         var _a3;
-        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants7);
-        if (!(super.optimizeNames(names2, constants7) || this.else))
+        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants7);
+        if (!(super.optimizeNames(names, constants7) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names2, constants7);
+        this.condition = optimizeExpr(this.condition, names, constants7);
         return this;
       }
       get names() {
-        const names2 = super.names;
-        addExprNames(names2, this.condition);
+        const names = super.names;
+        addExprNames(names, this.condition);
         if (this.else)
-          addNames(names2, this.else.names);
-        return names2;
+          addNames(names, this.else.names);
+        return names;
       }
     };
     If.kind = "if";
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names2, constants7) {
-        if (!super.optimizeNames(names2, constants7))
+      optimizeNames(names, constants7) {
+        if (!super.optimizeNames(names, constants7))
           return;
-        this.iteration = optimizeExpr(this.iteration, names2, constants7);
+        this.iteration = optimizeExpr(this.iteration, names, constants7);
         return this;
       }
       get names() {
@@ -635,8 +635,8 @@ var require_codegen = __commonJS({
         return `for(${varKind} ${name}=${from}; ${name}<${to}; ${name}++)` + super.render(opts);
       }
       get names() {
-        const names2 = addExprNames(super.names, this.from);
-        return addExprNames(names2, this.to);
+        const names = addExprNames(super.names, this.from);
+        return addExprNames(names, this.to);
       }
     };
     var ForIter = class extends For {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names2, constants7) {
-        if (!super.optimizeNames(names2, constants7))
+      optimizeNames(names, constants7) {
+        if (!super.optimizeNames(names, constants7))
           return;
-        this.iterable = optimizeExpr(this.iterable, names2, constants7);
+        this.iterable = optimizeExpr(this.iterable, names, constants7);
         return this;
       }
       get names() {
@@ -695,20 +695,20 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names2, constants7) {
+      optimizeNames(names, constants7) {
         var _a3, _b;
-        super.optimizeNames(names2, constants7);
-        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names2, constants7);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names2, constants7);
+        super.optimizeNames(names, constants7);
+        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants7);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants7);
         return this;
       }
       get names() {
-        const names2 = super.names;
+        const names = super.names;
         if (this.catch)
-          addNames(names2, this.catch.names);
+          addNames(names, this.catch.names);
         if (this.finally)
-          addNames(names2, this.finally.names);
-        return names2;
+          addNames(names, this.finally.names);
+        return names;
       }
     };
     var Catch = class extends BlockNode {
@@ -992,15 +992,15 @@ var require_codegen = __commonJS({
       }
     };
     exports.CodeGen = CodeGen;
-    function addNames(names2, from) {
+    function addNames(names, from) {
       for (const n in from)
-        names2[n] = (names2[n] || 0) + (from[n] || 0);
-      return names2;
+        names[n] = (names[n] || 0) + (from[n] || 0);
+      return names;
     }
-    function addExprNames(names2, from) {
-      return from instanceof code_1._CodeOrName ? addNames(names2, from.names) : names2;
+    function addExprNames(names, from) {
+      return from instanceof code_1._CodeOrName ? addNames(names, from.names) : names;
     }
-    function optimizeExpr(expr, names2, constants7) {
+    function optimizeExpr(expr, names, constants7) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1016,18 +1016,18 @@ var require_codegen = __commonJS({
       }, []));
       function replaceName(n) {
         const c = constants7[n.str];
-        if (c === void 0 || names2[n.str] !== 1)
+        if (c === void 0 || names[n.str] !== 1)
           return n;
-        delete names2[n.str];
+        delete names[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names2[c.str] === 1 && constants7[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants7[c.str] !== void 0);
       }
     }
-    function subtractNames(names2, from) {
+    function subtractNames(names, from) {
       for (const n in from)
-        names2[n] = (names2[n] || 0) - (from[n] || 0);
+        names[n] = (names[n] || 0) - (from[n] || 0);
     }
     function not(x) {
       return typeof x == "boolean" || typeof x == "number" || x === null ? !x : (0, code_1._)`!${par(x)}`;
@@ -1061,10 +1061,10 @@ var require_util = __commonJS({
     var codegen_1 = require_codegen();
     var code_1 = require_code();
     function toHash(arr) {
-      const hash6 = {};
+      const hash5 = {};
       for (const item of arr)
-        hash6[item] = true;
-      return hash6;
+        hash5[item] = true;
+      return hash5;
     }
     exports.toHash = toHash;
     function alwaysValidSchema(it, schema) {
@@ -1225,7 +1225,7 @@ var require_names = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var codegen_1 = require_codegen();
-    var names2 = {
+    var names = {
       // validation function arguments
       data: new codegen_1.Name("data"),
       // data passed to validation function
@@ -1254,7 +1254,7 @@ var require_names = __commonJS({
       jsonLen: new codegen_1.Name("jsonLen"),
       jsonPart: new codegen_1.Name("jsonPart")
     };
-    exports.default = names2;
+    exports.default = names;
   }
 });
 
@@ -20679,9 +20679,9 @@ function compileValidator(schema, parser) {
 function compile(schema, options) {
   try {
     const parser = compileFn(schema);
-    const clone3 = withParser(schema, parser);
-    clone3._zod.bag.validator = compileValidator(schema, parser);
-    return clone3;
+    const clone2 = withParser(schema, parser);
+    clone2._zod.bag.validator = compileValidator(schema, parser);
+    return clone2;
   } catch (err) {
     if (options?.strict)
       throw err;
@@ -20692,7 +20692,7 @@ function withParser(schema, parser) {
   if (isRecursiveSchema(schema)) {
     throw new ZodCompileUnsupportedError("a schema whose subtree contains a reference cycle");
   }
-  const clone3 = clone(schema);
+  const clone2 = clone(schema);
   const liveRun = schema._zod.run;
   const originalRun = liveRun.__originalRun ?? liveRun;
   const wrapped = (payload, ctx) => {
@@ -20712,12 +20712,12 @@ function withParser(schema, parser) {
     return originalRun(payload, ctx);
   };
   wrapped.__originalRun = originalRun;
-  clone3._zod.bag.fallbackRun = originalRun;
-  clone3._zod.bag.validator = parser;
-  clone3._zod.run = wrapped;
+  clone2._zod.bag.fallbackRun = originalRun;
+  clone2._zod.bag.validator = parser;
+  clone2._zod.run = wrapped;
   if (!liveRun.__originalRun)
-    installCompiledUserMethods(clone3, schema, parser);
-  return clone3;
+    installCompiledUserMethods(clone2, schema, parser);
+  return clone2;
 }
 function installCompiledUserMethods(target, source3, parser) {
   const targetAny = target;
@@ -24366,12 +24366,12 @@ function rewriteKeyNames(ctx) {
   const rewrites = /* @__PURE__ */ new Map();
   for (const record5 of pendingRecords.get(ctx) ?? []) {
     const seen = ctx.seen.get(record5);
-    const names2 = (seen?.def ?? seen?.schema)?.propertyNames;
-    if (!names2 || names2 === true || rewrites.has(names2))
+    const names = (seen?.def ?? seen?.schema)?.propertyNames;
+    if (!names || names === true || rewrites.has(names))
       continue;
-    const rewritten = stringifyKeyNames(bySchema, names2, /* @__PURE__ */ new Set());
-    if (rewritten !== names2)
-      rewrites.set(names2, rewritten);
+    const rewritten = stringifyKeyNames(bySchema, names, /* @__PURE__ */ new Set());
+    if (rewritten !== names)
+      rewrites.set(names, rewritten);
   }
   if (!rewrites.size)
     return;
@@ -31816,8 +31816,8 @@ function sanitizeFragmentTail(tail, headLastFieldSensitive, allowNestedUrls) {
     lastFieldSensitive: true
   };
 }
-function splitFragmentParts(hash6) {
-  const fragment = hash6.slice(1);
+function splitFragmentParts(hash5) {
+  const fragment = hash5.slice(1);
   const separator = fragment.indexOf("?");
   if (separator < 0) return {
     head: fragment,
@@ -32616,8 +32616,8 @@ async function getHoldoutVariant(holdout, bucketingValue) {
   if (!Number.isFinite(rawPercentage)) return;
   const percentage = Math.min(Math.max(rawPercentage, 0), 100);
   if (100 !== percentage) {
-    const hash6 = await getFeatureFlagHash("holdout", bucketingValue, "", "-");
-    if (hash6 > percentage / 100) return;
+    const hash5 = await getFeatureFlagHash("holdout", bucketingValue, "", "-");
+    if (hash5 > percentage / 100) return;
   }
   return `holdout-${holdout.id}`;
 }
@@ -36550,14 +36550,14 @@ function shouldRecord(fn, key, declared) {
 }
 function aliasNames(aliases) {
   if (!isRecord4(aliases)) return [];
-  return Object.values(aliases).flatMap((names2) => Array.isArray(names2) ? names2.filter((name) => "string" == typeof name) : []);
+  return Object.values(aliases).flatMap((names) => Array.isArray(names) ? names.filter((name) => "string" == typeof name) : []);
 }
 function describeAliasesUsed(aliases, input4) {
   if (!isRecord4(aliases)) return [];
   const used = [];
-  for (const [canonical, names2] of Object.entries(aliases)) {
-    if (!Array.isArray(names2) || Object.prototype.hasOwnProperty.call(input4, canonical)) continue;
-    const alias = names2.find((name) => "string" == typeof name && Object.prototype.hasOwnProperty.call(input4, name));
+  for (const [canonical, names] of Object.entries(aliases)) {
+    if (!Array.isArray(names) || Object.prototype.hasOwnProperty.call(input4, canonical)) continue;
+    const alias = names.find((name) => "string" == typeof name && Object.prototype.hasOwnProperty.call(input4, name));
     if (alias && alias.length <= MAX_KEY_LENGTH && canonical.length <= MAX_KEY_LENGTH) used.push(`${alias}:${canonical}`);
   }
   return used.sort().slice(0, MAX_INPUT_KEYS);
@@ -36944,8 +36944,8 @@ function cacheToolAnalyticsParameterOwnership(cache, tools2) {
 }
 function collectListedToolNames(tools2) {
   if (!tools2 || 0 === tools2.length) return;
-  const names2 = tools2.map((tool3) => tool3?.name).filter((name) => "string" == typeof name);
-  return names2.length > 0 ? names2 : void 0;
+  const names = tools2.map((tool3) => tool3?.name).filter((name) => "string" == typeof name);
+  return names.length > 0 ? names : void 0;
 }
 function toolsListEnvelope(response2) {
   const { tools: _tools, ...envelope2 } = response2;
@@ -40720,9 +40720,9 @@ function createTelemetryCollector(broker, build) {
     });
   }, 1e3);
   timer.unref();
-  const submit = (event2, properties, observation2 = {}) => {
+  const submit = (event2, properties, observation = {}) => {
     try {
-      const epoch = Object.hasOwn(observation2, "epoch") ? observation2.epoch : lease;
+      const epoch = Object.hasOwn(observation, "epoch") ? observation.epoch : lease;
       if (stopped || !epoch || pending.size >= 32) return;
       if (event2 === "Tool Failure Diagnosed" && !failureDiagnosticsSupported)
         return;
@@ -40734,11 +40734,11 @@ function createTelemetryCollector(broker, build) {
         else delete supportedProperties.assessment_status;
       }
       const clientVersion = telemetryVersionSchema.safeParse(
-        observation2.clientVersion
+        observation.clientVersion
       );
       const capture = localTelemetryCaptureSchema.parse({
         event_uuid: randomUUID2(),
-        client_ts: observation2.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
+        client_ts: observation.timestamp ?? (/* @__PURE__ */ new Date()).toISOString(),
         event: event2,
         event_version: event2 === "$mcp_tool_call" ? 2 : 1,
         component: "local_runtime",
@@ -40747,7 +40747,7 @@ function createTelemetryCollector(broker, build) {
         install_channel: build.profile === "local" ? "dev" : build.profile === "qa" ? "qa" : build.profile === "production" ? "early_access" : "unknown",
         cohort: null,
         // Lifecycle comes from the fixed entrypoint; MCP uses its public handshake.
-        host: event2 !== "$mcp_tool_call" ? host : /codex/i.test(observation2.clientName ?? "") ? "codex" : observation2.clientName === "claude-code" ? "claude_code" : "unknown",
+        host: event2 !== "$mcp_tool_call" ? host : /codex/i.test(observation.clientName ?? "") ? "codex" : observation.clientName === "claude-code" ? "claude_code" : "unknown",
         host_version: clientVersion.success ? clientVersion.data : null,
         host_surface: "unknown",
         host_thread_id: null,
@@ -40799,8 +40799,8 @@ function createTelemetryCollector(broker, build) {
     emit(event2, properties) {
       submit(event2, properties);
     },
-    captureMcp(properties, observation2) {
-      submit("$mcp_tool_call", properties, observation2);
+    captureMcp(properties, observation) {
+      submit("$mcp_tool_call", properties, observation);
     },
     flushLocal,
     async close() {
@@ -47652,23 +47652,23 @@ function createConfigurationSurface({ session, library, data }) {
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
-        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey2 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
+        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
         if (args && Object.hasOwn(args, "configurationUsed"))
           throw Error("host_metadata_only");
         if (args) delete args.configurationId;
         if (!metadata2?.threadId && (explicit === null || explicit === void 0))
           return { arguments: args };
         const scope = await scopeFor(metadata2);
-        if (typeof requestKey2 !== "string" || !requestKey2)
+        if (typeof requestKey3 !== "string" || !requestKey3)
           throw Error("invalid_request");
         if (!planning)
-          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey2])).digest("hex");
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey3])).digest("hex");
         marked = true;
         marked = await library.configurationRunMarker(
           scope.data,
           scope.scope.id,
           name,
-          requestKey2
+          requestKey3
         );
         const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
         if (!marked && (explicit === null || preference === false))
@@ -47684,13 +47684,13 @@ function createConfigurationSurface({ session, library, data }) {
             "Could not read the saved configuration. Ask the person if they want to run without it."
           );
         });
-        const previous = saved.admission(scope.scope.id, name, requestKey2, raw);
+        const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
             scope.scope.id,
             name,
-            requestKey2,
+            requestKey3,
             true
           );
           return { arguments: previous };
@@ -47707,8 +47707,8 @@ function createConfigurationSurface({ session, library, data }) {
         const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
         const automatic = selection3 === "automatic";
         const initialURL = execution2.target?.initialURL;
-        const browserURL = initialURL ? new URL(initialURL) : void 0;
-        if (automatic && !browserURL) return { arguments: args };
+        const browserURL2 = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL2) return { arguments: args };
         const configurations = automatic ? saved.list().map(({ id: id8 }) => saved.execution(id8)) : selection3 ? [once?.execution ?? saved.execution(selection3)] : [];
         if (!configurations.length) return { arguments: args };
         const callerParams = execution2.params ?? {};
@@ -47734,8 +47734,8 @@ function createConfigurationSurface({ session, library, data }) {
         execution2.params = { ...callerParams };
         execution2.privateParams = { ...callerPrivate };
         for (const chosen of configurations) {
-          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
-          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL2?.origin;
+          const privateAllowed = matchingOrigin && browserURL2 && chosen.allowedHosts.includes(browserURL2.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
           if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
             (key) => !Object.hasOwn(callerPrivate, key)
           ) && !privateAllowed))
@@ -47822,11 +47822,11 @@ function createConfigurationSurface({ session, library, data }) {
           if (!automatic)
             args.configurationUsed = configurations[0].configuration;
         }
-        if (planning) args.requestKey = requestKey2;
+        if (planning) args.requestKey = requestKey3;
         const prepared = saved.admission(
           scope.scope.id,
           name,
-          requestKey2,
+          requestKey3,
           raw,
           args,
           once?.token
@@ -47835,7 +47835,7 @@ function createConfigurationSurface({ session, library, data }) {
           scope.data,
           scope.scope.id,
           name,
-          requestKey2,
+          requestKey3,
           true
         );
         if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
@@ -48827,6 +48827,16 @@ var clarificationPresentationSchema = external_exports.union([
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
+var defaultExplorerTimeLimitMs = 3e5;
+var defaultRunnerTimeLimitMs = 6e5;
+var maxExecutionTimerMs = 2 ** 31 - 1;
+var desktopRunnerTargetSchema = external_exports.strictObject({
+  app: external_exports.string().max(200).refine((value) => {
+    const parts = value.split(".");
+    return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
+  }, "An application bundle ID is required."),
+  launch: external_exports.boolean().optional()
+});
 var questions = external_exports.array(external_exports.strictObject({
   id: external_exports.string(),
   question: external_exports.string(),
@@ -51301,6 +51311,45 @@ var assertions = external_exports.object({
   evidence: external_exports.array(evidenceQuote),
   tests: external_exports.array(assertionTest)
 });
+var panelCard = reportCardSchema.options[0];
+var summary = panelCard.shape.testPlanSummary;
+var customerTestPlanSummary = summary.pick({
+  schema: true,
+  reportId: true,
+  title: true,
+  assessmentResults: true,
+  observation: true,
+  failedTestTitles: true
+}).extend({
+  counts: summary.shape.counts.pick({
+    pass: true,
+    fail: true,
+    blocked: true,
+    skipped: true,
+    "not-run": true,
+    incomplete: true,
+    inconclusive: true,
+    conflicting: true,
+    unavailable: true
+  }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
+  proposedCounts: external_exports.object({
+    pass: external_exports.number().int().nonnegative(),
+    fail: external_exports.number().int().nonnegative()
+  }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
+  pullRequest: external_exports.object({
+    number: external_exports.number().int().positive(),
+    title: external_exports.string(),
+    url: external_exports.url()
+  }).nullable(),
+  plans: external_exports.array(summary.shape.plans.element.pick({
+    sourceId: true,
+    resultSha256: true,
+    requestTests: true,
+    executedTests: true,
+    proposedTests: true
+  })),
+  runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
+});
 var customerReportSchema = testPlanViewSchema.pick({
   reportId: true,
   title: true,
@@ -51310,6 +51359,7 @@ var customerReportSchema = testPlanViewSchema.pick({
   contextFinder: true
 }).extend({
   schema: external_exports.literal("kaijan.customer-report/1"),
+  testPlanSummary: customerTestPlanSummary.optional(),
   assessments: external_exports.array(external_exports.object({
     assessedRunIds: external_exports.array(quoteDigest).optional(),
     sourceId: quoteDigest,
@@ -51407,8 +51457,6 @@ var customerReportSchema = testPlanViewSchema.pick({
     })
   })).optional()
 });
-var panelCard = reportCardSchema.options[0];
-var summary = panelCard.shape.testPlanSummary;
 var customerReportCardSchema = panelCard.pick({
   mapId: true,
   schema: true,
@@ -51425,43 +51473,7 @@ var customerReportCardSchema = panelCard.pick({
     runId: true,
     resultSha256: true
   })),
-  testPlanSummary: summary.pick({
-    schema: true,
-    reportId: true,
-    title: true,
-    assessmentResults: true,
-    observation: true,
-    failedTestTitles: true
-  }).extend({
-    counts: summary.shape.counts.pick({
-      pass: true,
-      fail: true,
-      blocked: true,
-      skipped: true,
-      "not-run": true,
-      incomplete: true,
-      inconclusive: true,
-      conflicting: true,
-      unavailable: true
-    }).describe("Saved per-test status totals. Pass and fail include the corresponding proposedCounts subset."),
-    proposedCounts: external_exports.object({
-      pass: external_exports.number().int().nonnegative(),
-      fail: external_exports.number().int().nonnegative()
-    }).optional().describe("Assessed hypothesis-based passes and failures already included in counts.pass and counts.fail. If absent, read saved expectation authority before splitting those totals. Unrun proposals are not assessed results."),
-    pullRequest: external_exports.object({
-      number: external_exports.number().int().positive(),
-      title: external_exports.string(),
-      url: external_exports.url()
-    }).nullable(),
-    plans: external_exports.array(summary.shape.plans.element.pick({
-      sourceId: true,
-      resultSha256: true,
-      requestTests: true,
-      executedTests: true,
-      proposedTests: true
-    })),
-    runs: external_exports.array(summary.shape.runs.element.pick({ sourceId: true, stoppedByUser: true }).extend({ executionState, testVerdict }))
-  })
+  testPlanSummary: customerTestPlanSummary
 });
 var customerReportFailureSchema = external_exports.object({
   schema: external_exports.literal("kaijan.customer-report-error/1"),
@@ -51544,7 +51556,8 @@ var customerReportOutputSchema = external_exports.union([
   customerReportFailureSchema
 ]);
 var reportWithoutContextFinder = customerReportSchema.omit({
-  contextFinder: true
+  contextFinder: true,
+  testPlanSummary: true
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
@@ -51743,39 +51756,6 @@ function projectCustomerTestPlanView(input4, sha256) {
     pullRequests: value.pullRequests
   }, sha256, verifiedPlanningFailures);
 }
-function projectCustomerPageObservations(result2, sha256) {
-  const record5 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
-  const evidence2 = record5(record5(result2).assessmentFragment).evidence;
-  return (Array.isArray(evidence2) ? evidence2 : []).flatMap((raw) => {
-    const item = record5(raw);
-    if (record5(item.provenance).source !== "runner-terminal-browser-observation" || typeof item.id !== "string" || typeof item.text !== "string" || typeof item.sha256 !== "string" || sha256(item.text) !== item.sha256)
-      return [];
-    let text4;
-    let accessibilityText;
-    try {
-      const page2 = record5(JSON.parse(item.text));
-      if (typeof page2.text !== "string" && typeof page2.snapshot !== "string")
-        return [];
-      text4 = typeof page2.text === "string" ? page2.text : "";
-      accessibilityText = typeof page2.snapshot === "string" ? page2.snapshot : void 0;
-    } catch {
-      text4 = item.text;
-    }
-    const content = {
-      text: text4,
-      ...accessibilityText === void 0 ? {} : { accessibilityText }
-    };
-    return [
-      {
-        id: item.id,
-        ...content,
-        sourceSha256: item.sha256,
-        contentSha256: sha256(JSON.stringify(content)),
-        contentState: "projected-page-content"
-      }
-    ];
-  });
-}
 
 // packages/contracts/dist/customer-supplement.js
 var strings5 = external_exports.array(external_exports.string());
@@ -51890,16 +51870,16 @@ function transferSupplementSourceProof(source3, target, verify) {
 var supplementUnsupportedRelation = "This saved proposal relation has no verified source-bound presentation. Review the linked application sources; no action or expected result is inferred.";
 var object4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 var list = (value) => Array.isArray(value) ? value : [];
-function supplementPublicId(kind, value, hash6) {
-  return `${kind}-${hash6(JSON.stringify(value ?? null))}`;
+function supplementPublicId(kind, value, hash5) {
+  return `${kind}-${hash5(JSON.stringify(value ?? null))}`;
 }
-function projectCustomerSupplementResult(value, hash6) {
+function projectCustomerSupplementResult(value, hash5) {
   if (hasVerifiedSupplementSource(value)) {
     const parsed = customerSupplementResultSchema.parse(value);
     return retainVerifiedSupplementSource(parsed);
   }
   const native = object4(value), body = object4(native.supplement), baseline = object4(native.baseline);
-  const id8 = (kind, v) => supplementPublicId(kind, v, hash6);
+  const id8 = (kind, v) => supplementPublicId(kind, v, hash5);
   const links2 = (value2, kind) => list(value2).map((v) => id8(kind, v));
   const references = (value2) => list(value2).map((v) => ({
     evidence_id: id8("source", object4(v).evidence_id)
@@ -52758,7 +52738,7 @@ function createIssueSurface({
               ...input4.description !== void 0 ? { description: input4.description } : {},
               context: input4.context ?? [
                 ...build.pluginVersion ? [`Kaijan version: ${build.pluginVersion}`] : [],
-                "Host: Codex",
+                build.host === "claude_code" ? "Host: Claude Code" : "Host: Codex",
                 `Platform: ${process.platform} (${process.arch})`
               ].join("\n")
             },
@@ -53002,7 +52982,8 @@ async function createInstalledSession(root, build, data, broker, {
   applicationContext,
   createHostSurface,
   onStartupStage,
-  lifecycleFactory
+  lifecycleFactory,
+  inlineForms = false
 } = {}) {
   const host = pluginHost(build);
   const stage2 = (value) => {
@@ -53127,6 +53108,8 @@ async function createInstalledSession(root, build, data, broker, {
     };
   }
   if (host === "codex") {
+    if (build.browserViewer === true && typeof library.prepareSelectedBrowserViewer === "function")
+      session.prepareBrowserViewer = library.prepareSelectedBrowserViewer;
     session.configurations = createConfigurationSurface({
       session,
       library,
@@ -53151,6 +53134,8 @@ async function createInstalledSession(root, build, data, broker, {
         onboardingUri: library.onboardingUri,
         readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
       };
+  }
+  if (host === "codex" || inlineForms) {
     session.feedback = createFeedbackSurface({
       session,
       library,
@@ -53160,7 +53145,7 @@ async function createInstalledSession(root, build, data, broker, {
     session.issues = createIssueSurface({ session, library, broker, build });
     const close = session.close.bind(session);
     session.close = async () => {
-      await session.configurations.close();
+      if (host === "codex") await session.configurations.close();
       await session.feedback.close();
       await session.issues.close();
       await close();
@@ -53659,10 +53644,10 @@ async function openSetupStore(directory) {
       if (!row) throw new SetupFailure("unknown_application_context");
       return JSON.parse(row.value);
     },
-    matching(applicationId, hash6) {
+    matching(applicationId, hash5) {
       const rows2 = database.prepare(
         "SELECT value FROM contexts WHERE application_id=? AND configuration_hash=? ORDER BY rowid DESC LIMIT 1"
-      ).all(applicationId, hash6);
+      ).all(applicationId, hash5);
       return rows2.length ? JSON.parse(rows2[0].value) : null;
     },
     list(directory2, offset) {
@@ -53680,19 +53665,19 @@ async function openSetupStore(directory) {
         JSON.stringify(value)
       );
     },
-    command(scope, key, hash6) {
+    command(scope, key, hash5) {
       const row = database.prepare("SELECT digest,value FROM commands WHERE scope=? AND key=?").get(scope, key);
       if (!row) return null;
-      if (row.digest !== hash6) throw new SetupFailure("request_conflict");
+      if (row.digest !== hash5) throw new SetupFailure("request_conflict");
       return JSON.parse(row.value);
     },
-    receipt(scope, key, hash6, value) {
-      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash6, JSON.stringify(value));
+    receipt(scope, key, hash5, value) {
+      database.prepare("INSERT INTO commands VALUES(?,?,?,?)").run(scope, key, hash5, JSON.stringify(value));
     },
-    complete(scope, key, hash6, value) {
+    complete(scope, key, hash5, value) {
       database.prepare(
         "UPDATE commands SET value=? WHERE scope=? AND key=? AND digest=?"
-      ).run(JSON.stringify(value), scope, key, hash6);
+      ).run(JSON.stringify(value), scope, key, hash5);
     },
     observe(contextId, value) {
       database.prepare("INSERT OR IGNORE INTO map_observations VALUES(?,?,?)").run(contextId, digest18(value), JSON.stringify(value));
@@ -54001,7 +53986,7 @@ async function createSetup({
   }
   function reserve(scope, input4, configuration2, sourceIdentity, retry = false) {
     return store.transaction(() => {
-      const hash6 = digest18(input4), previous = store.command(scope, input4.requestKey, hash6);
+      const hash5 = digest18(input4), previous = store.command(scope, input4.requestKey, hash5);
       if (previous) return { receipt: { ...previous, recovered: true } };
       const applicationId = digest18({
         installation: store.installation,
@@ -54012,7 +53997,7 @@ async function createSetup({
       const existing = store.matching(applicationId, configurationHash);
       if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input4.contextId)) {
         const receipt3 = handle(existing);
-        store.receipt(scope, input4.requestKey, hash6, receipt3);
+        store.receipt(scope, input4.requestKey, hash5, receipt3);
         return {
           receipt: { ...receipt3, reused: true },
           retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
@@ -54053,7 +54038,7 @@ async function createSetup({
       }
       store.put(value);
       const receipt2 = handle(value);
-      store.receipt(scope, input4.requestKey, hash6, receipt2);
+      store.receipt(scope, input4.requestKey, hash5, receipt2);
       return { receipt: receipt2, value };
     });
   }
@@ -54376,7 +54361,7 @@ async function createSetup({
       const input4 = commandSchema.parse(raw);
       let stoppedBeforeAdmission = false;
       const reserved = store.transaction(() => {
-        const hash6 = digest18(input4), previous = store.command("stop", input4.requestKey, hash6);
+        const hash5 = digest18(input4), previous = store.command("stop", input4.requestKey, hash5);
         if (previous) {
           const value2 = read(input4);
           return {
@@ -54403,7 +54388,7 @@ async function createSetup({
           runId: value.map?.runId ?? null,
           cancellationRequested: cancel
         };
-        store.receipt("stop", input4.requestKey, hash6, receipt2);
+        store.receipt("stop", input4.requestKey, hash5, receipt2);
         return { receipt: receipt2, value, cancel };
       });
       if (stoppedBeforeAdmission) finished2(reserved.value, true);
@@ -54507,15 +54492,15 @@ async function createSetup({
         expectedRevision: input4.expectedRevision,
         expectedProfileRevision: input4.expectedProfileRevision
       });
-      const hash6 = digest18(input4);
+      const hash5 = digest18(input4);
       const reserved = store.transaction(() => {
-        const previous = store.command("handoff", input4.requestKey, hash6);
+        const previous = store.command("handoff", input4.requestKey, hash5);
         if (previous) return { receipt: previous, recovered: true };
         const receipt2 = {
           ...payload,
           consumer: { state: "pending", provenance: provenance2 }
         };
-        store.receipt("handoff", input4.requestKey, hash6, receipt2);
+        store.receipt("handoff", input4.requestKey, hash5, receipt2);
         return { receipt: receipt2, recovered: false };
       });
       if (reserved.receipt.consumer.state !== "pending")
@@ -54533,11 +54518,11 @@ async function createSetup({
       if (result2.contextId !== payload.application.contextId || result2.provenance?.kind !== provenance2.kind)
         throw new SetupFailure("consumer_scope_mismatch");
       return store.transaction(() => {
-        const prior = store.command("handoff", input4.requestKey, hash6);
+        const prior = store.command("handoff", input4.requestKey, hash5);
         if (prior.consumer.state !== "pending")
           return { ...prior, recovered: true };
         const receipt2 = { ...payload, consumer: result2 };
-        store.complete("handoff", input4.requestKey, hash6, receipt2);
+        store.complete("handoff", input4.requestKey, hash5, receipt2);
         return receipt2;
       });
     },
@@ -54878,6 +54863,30 @@ var customerPrepareSchema = prepareSchema.extend({
     ).max(30).default([])
   })
 });
+var browserViewerSetupSchema = external_exports.strictObject({
+  browserViewer: external_exports.literal("install")
+});
+var browserViewerSetupOutputSchema = external_exports.strictObject({
+  status: external_exports.enum(["ready", "unavailable"]),
+  message: external_exports.string()
+});
+async function setupBrowserViewer(prepare, signal) {
+  try {
+    signal?.throwIfAborted();
+    await prepare(signal);
+    signal?.throwIfAborted();
+    return {
+      status: "ready",
+      message: "Kaijan Browser is ready. Open it from the Dock during a browser Run."
+    };
+  } catch {
+    signal?.throwIfAborted();
+    return {
+      status: "unavailable",
+      message: "Kaijan Browser could not be prepared. You can retry in Setup or run browser tests headlessly."
+    };
+  }
+}
 function invalidSetupInput(message, data) {
   const error63 = new McpError(ErrorCode.InvalidParams, message, data);
   error63.message = message;
@@ -54889,6 +54898,7 @@ async function createSetupTools({
   consumer,
   createTelemetry,
   ui,
+  prepareBrowserViewer,
   authorize = async () => {
     throw new SetupFailure("source_authorization_adapter_unavailable");
   }
@@ -54900,6 +54910,7 @@ async function createSetupTools({
     authorize,
     createTelemetry
   });
+  const prepareInput = prepareBrowserViewer ? external_exports.union([customerPrepareSchema, browserViewerSetupSchema]) : customerPrepareSchema;
   const definitions = [
     [
       "loki_setup_list",
@@ -54911,7 +54922,7 @@ async function createSetupTools({
     [
       "loki_setup_prepare",
       "Prepare the explicitly selected application using committed source excerpts sent to the configured model provider (up to $10 and 5400 seconds). Dirty files are excluded; committed secrets are not automatically sanitized. The native host's selected approval policy governs this operation; no second mandatory form. Source revision defaults to latest main, or accepts an explicit branch/PR ref/commit. Start or reuse one original map when actual prerequisites are sufficient. Keep its requestKey after lost replies.",
-      customerPrepareSchema,
+      prepareInput,
       (input4, signal, invocation) => setup.prepare(input4, signal, invocation),
       false
     ],
@@ -54961,14 +54972,20 @@ async function createSetupTools({
   const onboarding = createOnboarding(ui);
   const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
     name,
-    description: customerSetupDescriptions[name],
+    description: name === "loki_setup_prepare" && prepareBrowserViewer ? `${customerSetupDescriptions[name]} If the person chooses the optional Kaijan Browser app, pass only browserViewer: install to prepare it on this Mac. That choice keeps saved application Setup separate.` : customerSetupDescriptions[name],
     inputSchema: {
       ...external_exports.toJSONSchema(schema, { io: "input" }),
+      type: "object",
       $id: `urn:loki:${name}:input:1`
     },
     outputSchema: {
       type: "object",
-      ...external_exports.toJSONSchema(customerSetupOutputSchemas[name]),
+      ...external_exports.toJSONSchema(
+        name === "loki_setup_prepare" && prepareBrowserViewer ? external_exports.union([
+          customerSetupOutputSchemas[name],
+          browserViewerSetupOutputSchema
+        ]) : customerSetupOutputSchemas[name]
+      ),
       $id: `urn:kaijan:${name}:customer-output:1`
     },
     annotations: {
@@ -54999,6 +55016,13 @@ async function createSetupTools({
     }
     try {
       signal?.throwIfAborted();
+      if (name === "loki_setup_prepare" && "browserViewer" in parsed.data) {
+        const result3 = await setupBrowserViewer(prepareBrowserViewer, signal);
+        return {
+          structuredContent: result3,
+          content: [{ type: "text", text: JSON.stringify(result3) }]
+        };
+      }
       const result2 = await definition[3](parsed.data, signal, invocation);
       const text4 = JSON.stringify(result2);
       const original2 = JSON.parse(text4);
@@ -55274,8 +55298,7 @@ var sourceAlternatives = /* @__PURE__ */ new Map([
   ["loki_change_risk_analyze", ["packet", "contextId"]],
   ["loki_risk_finder_analyze", ["packet", "contextId"]],
   ["loki_test_plan", ["input", "contextId"]],
-  ["loki_test_supplement", ["input", "contextId"]],
-  ["loki_test_evidence_assess", ["input", "contextId"]]
+  ["loki_test_supplement", ["input", "contextId"]]
 ]);
 function sourceDefinition(tool3, fields, host = "Claude") {
   const { oneOf, ...root } = tool3.inputSchema;
@@ -55336,6 +55359,89 @@ function claudeToolDefinition(tool3) {
 ${guidance}`
   };
 }
+
+// apps/codex-plugin/src/codex-testing-input.mjs
+var requestKey2 = external_exports.string().min(1);
+var answerDigest = /^[a-f0-9]{64}$/;
+var browserURL = external_exports.url().refine((value) => {
+  if (!URL.canParse(value)) return false;
+  const url2 = new URL(value);
+  return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
+}).describe("HTTP(S) initialURL without embedded credentials");
+var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
+var planInput = external_exports.strictObject({
+  requestKey: requestKey2,
+  testObjective: external_exports.string().refine((text4) => Boolean(text4.trim())).optional(),
+  contextId: external_exports.string().regex(answerDigest).optional(),
+  target: external_exports.union([
+    external_exports.strictObject({ initialURL: browserURL }),
+    desktopRunnerTargetSchema
+  ]).optional(),
+  testData: external_exports.unknown().optional(),
+  explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
+    "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
+  )
+}).refine((input4) => Boolean(input4.testObjective) !== Boolean(input4.contextId));
+var runInput = external_exports.strictObject({
+  requestKey: requestKey2,
+  planId,
+  testIds: external_exports.array(external_exports.string().min(1)).min(1),
+  runnerTimeLimitMs: external_exports.int().min(defaultRunnerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
+    "Optional longer execution time limit in milliseconds. Omit for the 10-minute default."
+  )
+});
+function codexTestingToolDefinition(tool3) {
+  if (tool3.name === "loki_test_plan")
+    return {
+      ...tool3,
+      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. Either target starts Explorer with a five-minute default. Use explorerTimeLimitMs to increase the time limit before starting. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      inputSchema: external_exports.toJSONSchema(planInput)
+    };
+  if (tool3.name === "loki_test_execute")
+    return {
+      ...tool3,
+      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. Runner has 10 minutes by default. Use runnerTimeLimitMs to increase the time limit before starting. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
+      inputSchema: external_exports.toJSONSchema(runInput)
+    };
+  return tool3;
+}
+function codexPlanArguments(args) {
+  const parsed = planInput.safeParse(args);
+  if (!parsed.success) return void 0;
+  const {
+    requestKey: requestKey3,
+    testObjective,
+    contextId,
+    target,
+    testData,
+    explorerTimeLimitMs
+  } = parsed.data;
+  return {
+    requestKey: requestKey3,
+    ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
+    ...target === void 0 ? {} : "app" in target ? { desktopTarget: target } : { exploration: { target } },
+    ...testData === void 0 ? {} : { testData },
+    ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
+  };
+}
+function codexRunArguments(args) {
+  const parsed = runInput.safeParse(args);
+  if (!parsed.success) return void 0;
+  const { requestKey: requestKey3, planId: planId2, testIds, runnerTimeLimitMs } = parsed.data;
+  const [answerId, resultSha256] = planId2.split(".");
+  return {
+    requestKey: requestKey3,
+    savedTests: { answerId, resultSha256, selectedTestIds: testIds },
+    ...runnerTimeLimitMs === void 0 ? {} : { options: { limits: { ms: runnerTimeLimitMs } } }
+  };
+}
+function codexPlanId(answerId, resultSha256) {
+  if (typeof answerId === "string" && answerDigest.test(answerId) && typeof resultSha256 === "string" && answerDigest.test(resultSha256))
+    return `${answerId}.${resultSha256}`;
+}
+
+// apps/codex-plugin/src/customer-plan-selection.mjs
+import { createHash as createHash10 } from "node:crypto";
 
 // apps/codex-plugin/src/customer-output.mjs
 import { createHash as createHash9 } from "node:crypto";
@@ -55604,10 +55710,12 @@ var advisoryFamilies = {
   loki_change_risk_analyze: "changeRisk",
   loki_risk_finder_analyze: "riskFinder",
   loki_test_plan: "testPlanning",
-  loki_test_supplement: "testSupplement",
-  loki_test_evidence_assess: "suppliedEvidence"
+  loki_test_supplement: "testSupplement"
 };
-var family = external_exports.enum([...new Set(Object.values(advisoryFamilies))]);
+var family = external_exports.enum([
+  ...new Set(Object.values(advisoryFamilies)),
+  "suppliedEvidence"
+]);
 var hasCustomerAdvisoryOutput = (name) => name in advisoryFamilies || name === "loki_advisory_result_read";
 var evidence = customerPlanEvidenceSchema;
 var plan = customerPlanSchema;
@@ -55671,6 +55779,7 @@ var baseSchema = external_exports.object({
   ]),
   answerId: optional4(id6),
   resultSha256: optional4(id6),
+  planId: optional4(external_exports.string()),
   result: optional4(resultSchema2),
   contextId: optional4(id6),
   replayAllowed: external_exports.literal(false),
@@ -55745,9 +55854,8 @@ var descriptions = {
   prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
   changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests.",
-  testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests.",
-  suppliedEvidence: "Assess test outcomes and evidence against the original requirements. For a saved Kaijan Run, use input:{schema:'kaijan.saved-assessment/1',request:{reportId,runId}}. Optional task context belongs in request. Kaijan prepares its saved evidence internally. Omit digests for a new selection; any supplied resultSha256 or inputSha256 must match. External supplied evidence remains supported. This does not execute tests or make an acceptance decision."
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration.",
+  testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests."
 };
 function customerAdvisoryToolDefinition(tool3) {
   if (!hasCustomerAdvisoryOutput(tool3.name)) return void 0;
@@ -55845,7 +55953,7 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
         executed: false,
         reviewRequired: true,
         preparation: prep,
-        message: planningConnectionGuidance(native)?.message ?? planningRejectionMessage(native) ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? native.preparation?.risk?.reason === "provider_timeout" ? "Risk review reached its time limit. No test plan was saved. Keep this answer. Ask for a new plan if you want to try again." : "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
+        message: (native.reason === "desktop_xcode_setup_required" ? "Open Xcode and complete its first-time setup, including any license review. Then ask Kaijan to plan the test again. No test plan was produced." : void 0) ?? planningConnectionGuidance(native)?.message ?? planningRejectionMessage(native) ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? native.preparation?.risk?.reason === "provider_timeout" ? "Risk review reached its time limit. No test plan was saved. Keep this answer. Ask for a new plan if you want to try again." : "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
       });
     if (native.checks?.version !== "pr-context-plan-result/5" || native.checks.executed !== false)
       throw Error("Unknown plan");
@@ -56121,6 +56229,10 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         options
       ) : void 0
     );
+    if (options.codexTesting && family2 === "testPlanning" && dto.result?.status === "proposed_plan") {
+      const planId2 = codexPlanId(dto.answerId, dto.resultSha256);
+      if (planId2) dto.planId = planId2;
+    }
     if (options.connectionOnly === true && family2 === "testPlanning" && dto.result?.status === "proposed_plan")
       return baseSchema.parse({
         ...dto,
@@ -56201,7 +56313,7 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         fam,
         error63?.code,
         answerId,
-        error63?.requestDispatched === false ? false : null,
+        name === "loki_advisory_result_read" || error63?.requestDispatched === false ? false : null,
         customerInputCorrections(catalog, name, error63)
       )
     );
@@ -56274,7 +56386,8 @@ var hasCustomerExecutionOutput = (name) => executionTools.has(name);
 var developmentTools = /* @__PURE__ */ new Set([
   "kaijan_ai_models",
   "loki_report_export_preview",
-  "loki_report_export"
+  "loki_report_export",
+  "loki_test_supplement"
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
 var hash4 = (value) => createHash9("sha256").update(value).digest("hex");
@@ -56613,6 +56726,7 @@ function customerFailure(name, value = {}, runId2) {
   let code = privateLogin || Object.hasOwn(errorMessages, native?.code) ? native.code : "operation_unavailable";
   if (native?.code === "invalid_params") code = "invalid_arguments";
   const browserHosts = code === "invalid_arguments" && native?.requestDispatched === false && native?.recovery?.action === "correct_browser_hosts";
+  const savedPlanSelection = code === "invalid_arguments" && native?.requestDispatched === false && native?.recovery?.action === "verify_saved_plan_selection";
   const [message, action2, instruction] = privateLogin ? [
     `${privateParameterMessages[code]} No new test execution was dispatched.`,
     "correct_private_parameters",
@@ -56621,6 +56735,10 @@ function customerFailure(name, value = {}, runId2) {
     "The browser host list is invalid or does not allow the initial page. No new test execution was dispatched.",
     "correct_browser_hosts",
     "Use hostnames without ports, schemes, paths or wildcards in target.allowedHosts, for example 127.0.0.1. Keep the port in target.initialURL. Include its hostname or an already authorized parent domain. Preserve any original Run; do not replay work with unknown effects."
+  ] : savedPlanSelection ? [
+    "Kaijan could not verify the selected tests in the saved plan. No new run started.",
+    "correct_arguments",
+    "Reopen the original plan in its chat and check the selected tests. If a run already exists, open that run using its original ID."
   ] : errorMessages[code] ?? [
     "The test or its saved result is unavailable. Effects may be unknown.",
     "preserve_original_run",
@@ -56712,6 +56830,9 @@ function executionView(value) {
     } : void 0,
     ...value.result ? { result: executionResult(value.result) } : {}
   });
+}
+function isRunnerAssessment(preparation2) {
+  return preparation2?.source === "runner-browser-session" || preparation2?.source === "runner-desktop-session";
 }
 function assessmentView(value, savedPlan = false, presentation, progressOnly = false, runnerSession = false) {
   if (value === null || value === void 0) return null;
@@ -56836,7 +56957,7 @@ function project(name, value, assessmentPresentation) {
       hasSavedPlanSelection(value.execution?.result),
       assessmentPresentation,
       combinedStatusRead(name, value),
-      value.preparation?.source === "runner-browser-session"
+      isRunnerAssessment(value.preparation)
     ) ?? browserAssessmentNotice(value),
     report: value.report,
     nextAction: value.nextAction ? {
@@ -57035,11 +57156,11 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       );
       let context2;
       try {
-        context2 = retained ? await retained : execution2?.state === "finished" && (hydrated.preparation?.source === "runner-browser-session" || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
+        context2 = retained ? await retained : execution2?.state === "finished" && (isRunnerAssessment(hydrated.preparation) || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
       } catch {
       }
       bindProtectedProgress(projected, execution2, context2);
-      if (hydrated.preparation?.source === "runner-browser-session" && projected.assessment) {
+      if (isRunnerAssessment(hydrated.preparation) && projected.assessment) {
         const selectedIds = new Set(
           (hydrated.assessment?.result?.assessment?.test_results ?? []).map(
             (row) => row.test_id
@@ -57129,34 +57250,58 @@ var object6 = (value) => value !== null && typeof value === "object" && !Array.i
 var selectionKeys = ["answerId", "resultSha256", "selectedTestIds"];
 async function resolveCustomerPlanArguments(name, args, invocation, options = {}) {
   if (!executions.has(name)) return { arguments: args };
-  const invalid = (diagnosticReason = "invalid_arguments") => ({
+  const invalid = (diagnosticReason = "invalid_arguments", showSelectionRecovery = false) => ({
     diagnosticReason,
     error: customerFailureOutput(name, {
       code: "invalid_arguments",
-      requestDispatched: false
+      requestDispatched: false,
+      ...showSelectionRecovery ? { recovery: { action: "verify_saved_plan_selection" } } : {}
     })
   });
   if (!object6(args)) return invalid();
   const saved = args.savedTests !== void 0;
   if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
     return invalid();
-  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key) => Object.hasOwn(args.planRef, key));
+  const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key2) => Object.hasOwn(args.planRef, key2));
   if (!saved && !checked) return { arguments: args };
   if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
     return invalid("saved_selection_conflict");
+  const key = saved ? "savedTests" : "planRef";
+  const parsed = checkedPlanReferenceSchema.safeParse(args[key]);
+  if (!parsed.success) return invalid();
   if (typeof options.resolveSelection !== "function")
-    return invalid("saved_selection_unavailable");
+    return invalid("saved_selection_unavailable", !invocation?.signal?.aborted);
   try {
     invocation?.signal?.throwIfAborted();
-    const key = saved ? "savedTests" : "planRef";
-    const reference3 = checkedPlanReferenceSchema.parse(args[key]);
+    const reference3 = parsed.data;
     const resolved2 = await options.resolveSelection({
-      reference: structuredClone(reference3)
+      reference: structuredClone(reference3),
+      ...options.includeRunInputs ? { includeRunInputs: true } : {}
     });
     invocation?.signal?.throwIfAborted();
     const selected = checkedPlanReferenceSchema.parse(resolved2?.reference);
     if (selected.answerId !== reference3.answerId || selected.resultSha256 !== reference3.resultSha256 || selected.selectedTestIds.length !== reference3.selectedTestIds.length || new Set(selected.selectedTestIds).size !== selected.selectedTestIds.length)
-      return invalid("saved_selection_mismatch");
+      return invalid("saved_selection_mismatch", true);
+    if (options.includeRunInputs) {
+      const exploration = resolved2.exploration;
+      const target = resolved2.desktopTarget ?? exploration?.target;
+      if (!target) return invalid("saved_target_unavailable", true);
+      const scenarioId = createHash10("sha256").update(JSON.stringify(selected)).digest("hex");
+      return {
+        arguments: {
+          requestKey: args.requestKey,
+          savedTests: selected,
+          scenarioId,
+          executionMethod: "app" in target ? "desktop-ui" : "browser-ui",
+          target,
+          params: exploration?.params ?? {},
+          ...args.options === void 0 ? {} : { options: args.options },
+          ...exploration?.privateParams === void 0 ? {} : { privateParams: exploration.privateParams },
+          ...typeof resolved2.testObjective === "string" ? { guidance: resolved2.testObjective } : {},
+          ...resolved2.testData === void 0 ? {} : { hostContext: { testData: resolved2.testData } }
+        }
+      };
+    }
     return {
       arguments: {
         ...args,
@@ -57165,7 +57310,8 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     };
   } catch (error63) {
     return invalid(
-      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable"
+      error63?.name === "ZodError" ? "invalid_arguments" : "saved_selection_unavailable",
+      !invocation?.signal?.aborted
     );
   }
 }
@@ -57224,14 +57370,13 @@ var readiness = external_exports.strictObject({
 });
 var customerDiscoveryInputSchema = external_exports.strictObject({});
 var customerDiscoverySchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.customer-capabilities/1"),
+  schema: external_exports.literal("kaijan.customer-capabilities/2"),
   context: readiness,
   changeReview: readiness,
   relatedWork: readiness,
   workItemReview: readiness,
   testPlanning: readiness,
   additionalTests: readiness,
-  evidenceReview: readiness,
   testExecution: readiness,
   connection: external_exports.strictObject({
     state: external_exports.enum(["current", "reconnect-required", "not-checked"]),
@@ -57277,8 +57422,9 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     message: directDevelopment ? "Complete the local setup for this development package, then continue the same task." : "Open Kaijan setup to complete the connection, then continue the same task."
   };
   const action2 = (value2) => service(value2, setupRequired, unavailable4);
+  const planning = action2(native.testPlanning);
   return customerDiscoverySchema.parse({
-    schema: "kaijan.customer-capabilities/1",
+    schema: "kaijan.customer-capabilities/2",
     context: native.contextIntake?.state === "available" ? {
       state: "available",
       message: "Save relevant task context that the caller has authorized."
@@ -57286,9 +57432,8 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     changeReview: action2(native.changeRisk),
     relatedWork: action2(native.prContext),
     workItemReview: action2(native.riskFinder),
-    testPlanning: action2(native.testPlanning),
-    additionalTests: action2(native.testSupplement),
-    evidenceReview: action2(native.suppliedEvidence),
+    testPlanning: planning,
+    additionalTests: planning.state === "available" ? { state: "available", message: "Save a revised Plan to add tests." } : planning,
     testExecution: native.testRun?.available === true && native.computerRunner?.state === "configured" && native.computerRunner?.providerConfigured === true ? configured() : native.testRun?.available === true && native.computerRunner?.state === "blocked" ? setupRequired : unavailable4,
     connection: freshness?.state === "stale" || freshness?.installedMetadataMatches === false ? {
       state: "reconnect-required",
@@ -57325,7 +57470,7 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
 }
 
 // apps/codex-plugin/src/customer-report-output.mjs
-import { createHash as createHash10 } from "node:crypto";
+import { createHash as createHash11 } from "node:crypto";
 var tools = /* @__PURE__ */ new Set([
   "loki_report_get",
   "loki_report_open",
@@ -57455,7 +57600,7 @@ function projectCustomerReport(value) {
       return customerReportFailure();
     const projected = projectCustomerTestPlanView(
       value,
-      (text4) => createHash10("sha256").update(text4).digest("hex")
+      (text4) => createHash11("sha256").update(text4).digest("hex")
     );
     return restoreVerifiedAssessmentRejection(value, projected);
   } catch {
@@ -57497,28 +57642,28 @@ async function invokeCustomerReport(catalog, name, args, invocation, options = {
 }
 function retainedCustomerEvidenceView(value, options) {
   if (value?.schema !== "loki.test-plan-view/2") return value;
-  const clone3 = structuredClone(value);
+  const clone2 = structuredClone(value);
   transferAssessmentPresentationProof(
     value,
-    clone3,
+    clone2,
     options.verifyCustomerEvidenceSource
   );
   transferCustomerPlanningSource(
     value,
-    clone3,
+    clone2,
     options.verifyCustomerPlanningSource
   );
   transferCustomerRiskEvidence(
     value,
-    clone3,
+    clone2,
     options.verifyCustomerRiskEvidence
   );
   transferRelatedSourceProof(
     value.contextFinder,
-    clone3.contextFinder,
+    clone2.contextFinder,
     options.verifyCustomerRelatedSource
   );
-  return clone3;
+  return clone2;
 }
 function readablePlanExpectation(expected, quotes = []) {
   const texts = new Set(
@@ -57558,6 +57703,14 @@ function readableSavedReport(result2) {
     }))
   };
 }
+function withSavedCard(result2, view2, summarizeCard) {
+  if (result2.schema !== "kaijan.customer-report/1" || view2?.schema !== "loki.test-plan-view/2" || typeof summarizeCard !== "function")
+    return result2;
+  const summary3 = customerReportSchema.shape.testPlanSummary.safeParse(
+    summarizeCard(view2)
+  );
+  return summary3.success && summary3.data?.reportId === result2.reportId ? { ...result2, testPlanSummary: summary3.data } : result2;
+}
 async function invokeCustomerReportWithMetadata(catalog, name, args, invocation, options = {}) {
   if (!hasCustomerReportOutput(name))
     return { result: customerReportFailure() };
@@ -57577,8 +57730,12 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
       if (view2?.reportId !== selected.data.reportId || view2.schema !== "loki.test-plan-view/2" && !isAssessmentOnly(view2))
         return { result: customerReportFailure("report_unavailable") };
       return {
-        result: readableSavedReport(
-          projectCustomerReport(retainedCustomerEvidenceView(view2, options))
+        result: withSavedCard(
+          readableSavedReport(
+            projectCustomerReport(retainedCustomerEvidenceView(view2, options))
+          ),
+          view2,
+          options.summarizeCard
         )
       };
     } catch {
@@ -57611,8 +57768,10 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
       if (value?.reportId !== original2.reportId || value.schema !== "loki.test-plan-view/2" || value.plans?.length !== 0 || value.runs?.length !== 0 || !value.assessments?.length)
         return { result: customerReportFailure("report_unavailable") };
     }
-    const projected = projectCustomerReport(
-      retainedCustomerEvidenceView(value, options)
+    const projected = withSavedCard(
+      projectCustomerReport(retainedCustomerEvidenceView(value, options)),
+      value,
+      options.summarizeCard
     );
     const result2 = options.presentation !== "chat" && value !== original2 && !projected.error ? customerReportReadSchema.parse({
       ...projectCustomerReport(original2),
@@ -57644,35 +57803,9 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
 }
 
 // apps/codex-plugin/src/customer-preparation-output.mjs
-import { createHash as createHash11 } from "node:crypto";
 var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var hash5 = (value) => createHash11("sha256").update(JSON.stringify(value)).digest("hex");
 var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var clone2 = (value) => JSON.parse(JSON.stringify(value));
-var names = /* @__PURE__ */ new Set(["loki_assessment_prepare", "loki_runner_reuse_prepare"]);
-var hasCustomerPreparationOutput = (name) => names.has(name);
-var requestJson = external_exports.toJSONSchema(assessmentPrepareInputSchema, {
-  io: "input"
-});
-delete requestJson.properties.view;
-requestJson.$id = "urn:kaijan:saved-assessment-selection:1";
-var savedRequestSchema = external_exports.unknown().superRefine((value, context2) => {
-  const parsed = assessmentPrepareInputSchema.safeParse(value);
-  if (!parsed.success || value.view !== void 0)
-    context2.addIssue({
-      code: "custom",
-      message: "Invalid saved evidence selection"
-    });
-}).meta(requestJson);
-var savedAssessmentSelectorSchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.saved-assessment/1"),
-  request: savedRequestSchema,
-  resultSha256: digest20.optional(),
-  inputSha256: digest20.optional()
-});
-var selectorJson = external_exports.toJSONSchema(savedAssessmentSelectorSchema, {
-  io: "input"
-});
+var hasCustomerPreparationOutput = (name) => name === "loki_runner_reuse_prepare";
 var customerPreparationFailureSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-preparation-error/1"),
   error: external_exports.strictObject({
@@ -57703,102 +57836,6 @@ function customerPreparationFailure(code = "preparation_unavailable") {
     }
   });
 }
-var callerReceipt = external_exports.object({
-  id: external_exports.string(),
-  attribution: external_exports.string(),
-  content: external_exports.json()
-});
-var observation = external_exports.strictObject({
-  role: external_exports.enum([
-    "caller-observation",
-    "caller-receipt",
-    "caller-preflight",
-    "caller-comparison",
-    "caller-cleanup"
-  ]),
-  receipt: callerReceipt
-});
-var gap = external_exports.strictObject({
-  role: external_exports.enum([
-    "task",
-    "test-intent",
-    "application",
-    "evidence",
-    "execution",
-    "verification"
-  ]),
-  message: external_exports.string()
-});
-var assessmentSummarySchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.customer-assessment-preparation/1"),
-  state: external_exports.enum(["prepared", "unresolved", "refused"]),
-  compatible: external_exports.boolean(),
-  reportId: digest20,
-  runId: digest20,
-  resultSha256: digest20.nullable(),
-  execution: external_exports.strictObject({
-    state: external_exports.enum([
-      "completed",
-      "incomplete",
-      "cancelled",
-      "blocked",
-      "failed",
-      "stopped",
-      "not-executed",
-      "unknown"
-    ]),
-    reportedVerdict: external_exports.enum([
-      "pass",
-      "fail",
-      "blocked",
-      "inconclusive",
-      "unverified",
-      "unknown"
-    ])
-  }),
-  outcomes: external_exports.array(
-    external_exports.strictObject({
-      testId: external_exports.string().nullable(),
-      status: external_exports.enum([
-        "pass",
-        "fail",
-        "blocked",
-        "inconclusive",
-        "reported-pass",
-        "reported-fail",
-        "not-executed",
-        "unknown"
-      ]),
-      evidenceReferenced: external_exports.boolean()
-    })
-  ),
-  observations: external_exports.array(
-    external_exports.union([
-      observation,
-      external_exports.strictObject({
-        role: external_exports.literal("saved-application-observation"),
-        observation: reportObservedPageSchema.pick({
-          id: true,
-          text: true,
-          accessibilityText: true,
-          sourceSha256: true,
-          contentSha256: true,
-          contentState: true
-        })
-      })
-    ])
-  ),
-  evidence: external_exports.strictObject({
-    selected: external_exports.number().int().nonnegative(),
-    available: external_exports.number().int().nonnegative(),
-    omitted: external_exports.number().int().nonnegative()
-  }),
-  gaps: external_exports.array(gap),
-  assessmentInput: savedAssessmentSelectorSchema.nullable(),
-  nextAction: external_exports.enum(["submit_assessment", "resolve_input"]),
-  instruction: external_exports.string(),
-  replayAllowed: external_exports.literal(false)
-});
 var candidateSchema = external_exports.strictObject({
   reference: external_exports.string().regex(/^execution:[a-f0-9]{64}$/),
   task: external_exports.string(),
@@ -57817,177 +57854,7 @@ var reuseSummarySchema = external_exports.strictObject({
   consent: external_exports.string(),
   replayAllowed: external_exports.literal(false)
 });
-var customerPreparationOutputSchema = external_exports.union([
-  assessmentSummarySchema,
-  reuseSummarySchema,
-  customerPreparationFailureSchema
-]).meta({ $id: "urn:kaijan:customer-preparation-output:1" });
-function preparationRequest(args) {
-  if (!assessmentPrepareInputSchema.safeParse(args).success) return null;
-  const request3 = clone2(args);
-  delete request3.view;
-  return request3;
-}
-function boundPacket(packet, request3) {
-  return packet?.schema === "loki.assessment-preparation/1" && ["prepared", "unresolved", "refused"].includes(packet.state) && packet.origin?.report?.reportId === request3.reportId && packet.origin?.operation?.runId === request3.runId && (packet.origin.resultSha256 === null || digest20.safeParse(packet.origin.resultSha256).success);
-}
-function preparedInput(packet) {
-  return packet.state !== "refused" && packet.submission?.compatible === true && suppliedEvidenceInputSchema.safeParse(packet.assessmentInput).success && digest20.safeParse(packet.origin.resultSha256).success;
-}
-function fixedGaps(packet) {
-  const gaps = /* @__PURE__ */ new Map();
-  const add = (role, message) => gaps.set(role + message, { role, message });
-  for (const item of [
-    ...packet.missingFacts ?? [],
-    ...packet.unresolvedReferences ?? []
-  ]) {
-    if (item.location === "accounting.original") continue;
-    if (item.location === "work_item" || item.location === "requirements")
-      add("task", "Some original work-item requirements are unavailable.");
-    else if (item.location === "proposed_tests")
-      add("test-intent", "Some original proposed tests are unavailable.");
-    else if (item.location === "target")
-      add("application", "The original application identity is unavailable.");
-    else if (item.code === "incomplete_execution")
-      add(
-        "execution",
-        "The original execution did not finish. Retained observations do not complete the remaining work."
-      );
-    else if (item.location === "nativeVerdict")
-      add("verification", "No original test verdict is available.");
-    else
-      add(
-        "evidence",
-        "Some saved evidence or references remain unresolved. Assessment must preserve this limitation."
-      );
-  }
-  return [...gaps.values()];
-}
-function callerObservations(request3) {
-  const values = [];
-  for (const [key, role] of [
-    ["suppliedObservations", "caller-observation"],
-    ["receipts", "caller-receipt"],
-    ["preflight", "caller-preflight"],
-    ["runtimeComparison", "caller-comparison"],
-    ["cleanup", "caller-cleanup"]
-  ]) {
-    const receipts = Array.isArray(request3[key]) ? request3[key] : request3[key] ? [request3[key]] : [];
-    for (const receipt2 of receipts)
-      values.push({ role, receipt: callerReceipt.parse(receipt2) });
-  }
-  return values;
-}
-function applicationPageObservations(input4, packet) {
-  return (input4?.evidence ?? []).flatMap((item) => {
-    const provenance2 = item.provenance;
-    if (provenance2?.source !== "application-evidence-projection" || provenance2.schema !== "kaijan.application-evidence/1" || !["application-page", "application-artifact"].includes(provenance2.kind) || provenance2.runId !== packet.origin.operation.runId || provenance2.resultSha256 !== packet.origin.resultSha256 || !digest20.safeParse(provenance2.originalRecordSha256).success || typeof item.id !== "string" || typeof item.text !== "string" || provenance2.textSha256 !== item.sha256 || createHash11("sha256").update(item.text).digest("hex") !== item.sha256)
-      return [];
-    try {
-      const page2 = external_exports.object({
-        page: external_exports.object({
-          text: external_exports.string().optional(),
-          accessibilityText: external_exports.string().optional()
-        })
-      }).parse(JSON.parse(item.text)).page;
-      if (page2.text === void 0 && page2.accessibilityText === void 0)
-        return [];
-      const content = {
-        text: page2.text ?? "",
-        ...page2.accessibilityText === void 0 ? {} : { accessibilityText: page2.accessibilityText }
-      };
-      return [
-        {
-          id: item.id,
-          ...content,
-          sourceSha256: item.sha256,
-          contentSha256: hash5(content),
-          contentState: "projected-page-content"
-        }
-      ];
-    } catch {
-      return [];
-    }
-  });
-}
-function projectCustomerAssessmentPreparation(packet, request3) {
-  try {
-    if (!boundPacket(packet, request3)) return customerPreparationFailure();
-    const compatible = preparedInput(packet);
-    const state2 = packet.executionState?.native;
-    const verdict = packet.nativeVerdict;
-    const input4 = compatible ? packet.assessmentInput : null;
-    return assessmentSummarySchema.parse({
-      schema: "kaijan.customer-assessment-preparation/1",
-      state: packet.state,
-      compatible,
-      reportId: request3.reportId,
-      runId: request3.runId,
-      resultSha256: packet.origin.resultSha256,
-      execution: {
-        state: [
-          "completed",
-          "incomplete",
-          "cancelled",
-          "blocked",
-          "failed",
-          "stopped",
-          "not-executed"
-        ].includes(state2) ? state2 : "unknown",
-        reportedVerdict: [
-          "pass",
-          "fail",
-          "blocked",
-          "inconclusive",
-          "unverified"
-        ].includes(verdict) ? verdict : "unknown"
-      },
-      outcomes: (input4?.outcomes ?? []).map((item) => ({
-        testId: typeof item.test_id === "string" ? item.test_id : null,
-        status: [
-          "pass",
-          "fail",
-          "blocked",
-          "inconclusive",
-          "reported-pass",
-          "reported-fail",
-          "not-executed"
-        ].includes(item.status) ? item.status : "unknown",
-        evidenceReferenced: Array.isArray(item.evidence_ids) && item.evidence_ids.length > 0
-      })),
-      observations: [
-        ...callerObservations(request3),
-        ...[
-          ...projectCustomerPageObservations(
-            { assessmentFragment: input4 },
-            (text4) => createHash11("sha256").update(text4).digest("hex")
-          ),
-          ...applicationPageObservations(input4, packet)
-        ].map((observation2) => ({
-          role: "saved-application-observation",
-          observation: observation2
-        }))
-      ],
-      evidence: {
-        selected: packet.selectedArtifacts?.length ?? 0,
-        available: packet.selectedArtifacts?.filter((item) => item.state === "read").length ?? 0,
-        omitted: packet.unselectedArtifacts?.length ?? 0
-      },
-      gaps: fixedGaps(packet),
-      assessmentInput: compatible ? {
-        schema: "kaijan.saved-assessment/1",
-        request: request3,
-        resultSha256: packet.origin.resultSha256,
-        inputSha256: hash5(input4)
-      } : null,
-      nextAction: compatible ? "submit_assessment" : "resolve_input",
-      instruction: compatible ? "If assessment is authorized, submit this assessmentInput selector unchanged. It resolves the original saved evidence inside this chat. Preparation is not an assessment or a test pass. Listed outcomes are original reports, not independent verification." : "Resolve the missing selection or task inputs from the original saved report. No assessment started. Do not repeat application actions to recover evidence.",
-      replayAllowed: false
-    });
-  } catch {
-    return customerPreparationFailure();
-  }
-}
+var customerPreparationOutputSchema = external_exports.union([reuseSummarySchema, customerPreparationFailureSchema]).meta({ $id: "urn:kaijan:customer-preparation-output:1" });
 function projectCustomerReusePreparation(value) {
   try {
     if (value?.schema !== "loki.runner-reuse-preview/1" || !["approval-required", "unavailable"].includes(value.state))
@@ -58020,18 +57887,6 @@ function projectCustomerReusePreparation(value) {
     return customerPreparationFailure();
   }
 }
-function extendCustomerAssessmentInputSchema(inputSchema3) {
-  if (!object8(inputSchema3?.properties?.input))
-    throw Error("Assessment input schema unavailable");
-  return {
-    ...inputSchema3,
-    $id: "urn:kaijan:customer-assessment-request:1",
-    properties: {
-      ...inputSchema3.properties,
-      input: { anyOf: [inputSchema3.properties.input, selectorJson] }
-    }
-  };
-}
 function schemaWithoutProse(value, propertyMap = false) {
   if (Array.isArray(value))
     return value.map((item) => schemaWithoutProse(item));
@@ -58055,8 +57910,6 @@ function schemaWithoutProse(value, propertyMap = false) {
   );
 }
 function preparationInputSchema(tool3) {
-  if (tool3.name === "loki_assessment_prepare")
-    return external_exports.toJSONSchema(assessmentPrepareInputSchema, { io: "input" });
   const schema = schemaWithoutProse(tool3.inputSchema);
   const limits = schema?.properties?.current?.properties?.options?.properties?.limits;
   if (limits?.properties) {
@@ -58070,7 +57923,7 @@ function customerPreparationToolDefinition(tool3) {
   if (!hasCustomerPreparationOutput(tool3.name)) return tool3;
   return {
     name: tool3.name,
-    title: tool3.name === "loki_assessment_prepare" ? "Prepare saved evidence" : "Review saved task reuse",
+    title: "Review saved task reuse",
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -58081,7 +57934,7 @@ function customerPreparationToolDefinition(tool3) {
       ...external_exports.toJSONSchema(customerPreparationOutputSchema),
       type: "object"
     },
-    description: tool3.name === "loki_assessment_prepare" ? "Prepare the exact saved reportId/runId for a separate authorized assessment. Task overrides, explicit nulls and selectedArtifactIds are preserved. Omit view or use inspection for the same safe summary and assessmentInput selector. Submit that selector unchanged to loki_test_evidence_assess; it resolves saved evidence only inside this chat. No assessment or execution starts here; never replay application actions to recover evidence." : "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
+    description: "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
   };
 }
 async function invokeCustomerPreparation(catalog, name, args, invocation) {
@@ -58089,48 +57942,11 @@ async function invokeCustomerPreparation(catalog, name, args, invocation) {
     if (!hasCustomerPreparationOutput(name))
       return customerPreparationFailure();
     invocation?.signal?.throwIfAborted();
-    if (name === "loki_runner_reuse_prepare")
-      return projectCustomerReusePreparation(
-        await catalog.invoke(name, args, invocation)
-      );
-    const request3 = preparationRequest(args);
-    if (!request3)
-      return customerPreparationFailure("preparation_invalid_selection");
-    const packet = await catalog.invoke(name, request3, invocation);
-    return projectCustomerAssessmentPreparation(packet, request3);
+    return projectCustomerReusePreparation(
+      await catalog.invoke(name, args, invocation)
+    );
   } catch {
     return customerPreparationFailure();
-  }
-}
-async function resolveCustomerAssessmentArguments(catalog, args, invocation) {
-  if (args?.input?.schema !== "kaijan.saved-assessment/1")
-    return { arguments: args };
-  try {
-    const parsed = savedAssessmentSelectorSchema.safeParse(args.input);
-    if (!parsed.success || args.contextId !== void 0)
-      return {
-        error: customerPreparationFailure("preparation_invalid_selection")
-      };
-    invocation?.signal?.throwIfAborted();
-    const selector = parsed.data;
-    const request3 = preparationRequest(selector.request);
-    if (!request3)
-      return {
-        error: customerPreparationFailure("preparation_invalid_selection")
-      };
-    const packet = await catalog.invoke(
-      "loki_assessment_prepare",
-      request3,
-      invocation
-    );
-    invocation?.signal?.throwIfAborted();
-    if (!boundPacket(packet, request3) || !preparedInput(packet))
-      return { error: customerPreparationFailure() };
-    if (selector.resultSha256 !== void 0 && packet.origin.resultSha256 !== selector.resultSha256 || selector.inputSha256 !== void 0 && hash5(packet.assessmentInput) !== selector.inputSha256)
-      return { error: customerPreparationFailure("preparation_changed") };
-    return { arguments: { ...args, input: packet.assessmentInput } };
-  } catch {
-    return { error: customerPreparationFailure() };
   }
 }
 
@@ -58218,28 +58034,16 @@ function capabilityMcpRegistration(session, setup) {
       ...session.configurations?.tools ?? [],
       ...session.projectHistory?.tools ?? [],
       ...controls
-    ].map((tool3) => {
+    ].filter(({ name }) => isCustomerToolAllowed(name)).map((tool3) => {
       const definition = customerDiscoveryTool(tool3) ?? customerAdvisoryToolDefinition(tool3) ?? (hasCustomerPreparationOutput(tool3.name) ? customerPreparationToolDefinition(tool3) : hasCustomerReportOutput(tool3.name) ? customerReportToolDefinition(tool3, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool3, {
         configurations: Boolean(session.configurations),
         requireSavedPlan: session.identity?.host !== "claude_code"
       }));
-      return tool3.name === "loki_test_evidence_assess" && definition ? {
-        ...definition,
-        inputSchema: extendCustomerAssessmentInputSchema(
-          definition.inputSchema
-        ),
-        outputSchema: {
-          type: "object",
-          anyOf: [
-            definition.outputSchema,
-            external_exports.toJSONSchema(customerPreparationFailureSchema)
-          ]
-        }
-      } : definition;
+      return definition;
     }).filter(Boolean).map(
-      (tool3) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool3) : session.identity?.host === "codex" ? codexToolDefinition(tool3) : tool3
+      (tool3) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool3) : session.identity?.host === "codex" ? codexTestingToolDefinition(codexToolDefinition(tool3)) : tool3
     ),
     // Draft activity stays local. Core's existing completed-feedback event is
     // the feedback record; do not upload autosave/progress metrics from forms.
@@ -58261,7 +58065,6 @@ function capabilityMcpDiscovery(tools2, setup, host) {
   const internalPreparation = /* @__PURE__ */ new Set([
     "loki_context_submit",
     "loki_context_get",
-    "loki_assessment_prepare",
     "loki_context_finder_find_related",
     "loki_change_risk_analyze",
     "loki_risk_finder_analyze",
@@ -58291,6 +58094,7 @@ function createCapabilityMcpServer(session, version4, setup, telemetry) {
     { name: "kaijan-local", version: version4 },
     {
       capabilities: { tools: {}, resources: {} },
+      // Keep prompts general. Only give interaction advice that applies across common tasks; keep case-specific steps in tests.
       instructions: session.identity?.host === "claude_code" ? `Kaijan is a testing plugin.
 
 ${customerInstructions}` : customerInstructions
@@ -58466,23 +58270,17 @@ ${customerInstructions}` : customerInstructions
       const invocation = {
         signal: AbortSignal.any([extra.signal, lifetime.signal])
       };
-      const resolved2 = params.name === "loki_test_evidence_assess" ? await resolveCustomerAssessmentArguments(
-        scopedCatalog,
-        params.arguments ?? {},
-        invocation
-      ) : { arguments: params.arguments ?? {} };
-      if (resolved2.error) {
-        return {
-          isError: true,
-          structuredContent: resolved2.error,
-          content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
-        };
-      }
+      const codexTesting = session.identity?.host === "codex";
+      const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
+      if (!args)
+        throw invalidParams(
+          "Supply requestKey and either testObjective or contextId. Use the selected browser or Mac app target."
+        );
       const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
         params.name,
-        resolved2.arguments,
+        args,
         params._meta
-      ) : resolved2;
+      ) : { arguments: args };
       if (configured2.error) {
         const failure6 = customerPlanningConfigurationFailure(configured2.error);
         return {
@@ -58497,6 +58295,7 @@ ${customerInstructions}` : customerInstructions
         configured2.arguments,
         invocation,
         {
+          codexTesting,
           connectionOnly: selected.scope?.kind === "connection",
           proposalReaders: Object.fromEntries(
             [
@@ -58551,6 +58350,9 @@ ${customerInstructions}` : customerInstructions
         { signal: AbortSignal.any([extra.signal, lifetime.signal]) },
         {
           presentation: session.customerReportPresentation,
+          summarizeCard: session.identity?.host === "claude_code" ? selected.services?.reports?.summarizeCard?.bind(
+            selected.services.reports
+          ) : void 0,
           verifyCustomerEvidenceSource: typeof selected.services?.reports?.verifyCustomerEvidenceSource === "function" ? (value) => selected.services.reports.verifyCustomerEvidenceSource(value) : void 0,
           verifyCustomerPlanningSource: selected.services?.reports?.verifyCustomerPlanningSource?.bind(
             selected.services.reports
@@ -58595,6 +58397,8 @@ ${customerInstructions}` : customerInstructions
       };
     }
     if (hasCustomerExecutionOutput(params.name)) {
+      const codexSavedRun = session.identity?.host === "codex" && params.name === "loki_test_execute";
+      const args = codexSavedRun ? codexRunArguments(params.arguments ?? {}) : params.arguments ?? {};
       if (!session.configurations && ["loki_runner_execute", "loki_test_execute"].includes(params.name) && Object.hasOwn(params.arguments ?? {}, "configurationUsed"))
         throw invalidParams(
           "configurationUsed is internal Run metadata. Omit it from this request."
@@ -58604,10 +58408,11 @@ ${customerInstructions}` : customerInstructions
       };
       const resolved2 = await resolveCustomerPlanArguments(
         params.name,
-        params.arguments ?? {},
+        args,
         invocation,
         {
           requireSavedPlan: session.identity?.host !== "claude_code",
+          includeRunInputs: codexSavedRun,
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
@@ -58623,7 +58428,7 @@ ${customerInstructions}` : customerInstructions
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
-      const configured2 = session.configurations ? await session.configurations.prepareExecution(
+      const configured2 = session.configurations && !codexSavedRun ? await session.configurations.prepareExecution(
         params.name,
         resolved2.arguments,
         params._meta
@@ -58746,6 +58551,11 @@ ${customerInstructions}` : customerInstructions
           signal: AbortSignal.any([extra.signal, lifetime.signal])
         }
       );
+      if ((params.name === "loki_context_submit" || params.name === "loki_context_get") && !isCustomerToolAllowed("loki_test_supplement")) {
+        const consumption = { ...result2.consumption };
+        delete consumption.testSupplement;
+        result2 = { ...result2, consumption };
+      }
       if (params.name === "loki_capabilities_list" && session.runtimeDiscovery) {
         result2 = {
           ...result2,
@@ -58892,6 +58702,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
           scopedSetup = await createSetupTools({
             directory,
             ...ports,
+            prepareBrowserViewer: session.prepareBrowserViewer,
             ui: session.setupCard,
             createTelemetry: () => createBoundLifecycle(telemetry).setup
           });
@@ -59356,7 +59167,7 @@ async function createClaudeProjectHistory({
     pending.add(task);
     void task.finally(() => pending.delete(task));
   }
-  function queueObserved(observation2, capture2, preceding = []) {
+  function queueObserved(observation, capture2, preceding = []) {
     queue(async () => {
       const signal = AbortSignal.timeout(35e3);
       if (preceding.length) {
@@ -59373,7 +59184,7 @@ async function createClaudeProjectHistory({
       }
       signal.throwIfAborted();
       const current = await authority(signal, true);
-      if (observation2.binding !== current.binding || observation2.project !== current.project)
+      if (observation.binding !== current.binding || observation.project !== current.project)
         throw Error("project_history_context_changed");
       await capture2(current, signal);
     });
@@ -59579,6 +59390,9 @@ async function createClaudeProjectHistory({
           invocation,
           {
             presentation: "chat",
+            summarizeCard: scope.services.reports.summarizeCard?.bind(
+              scope.services.reports
+            ),
             readReportView: (id8) => scope.services.reports.readTestPlanView(id8, invocation?.signal),
             verifyCustomerEvidenceSource: scope.services.reports.verifyCustomerEvidenceSource.bind(
               scope.services.reports

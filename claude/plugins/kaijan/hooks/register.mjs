@@ -1,6 +1,7 @@
 import { nativeReport, resultCaption } from "./report-model.mjs";
 import { reportToolPrefix, reportServer } from "./report-config.mjs";
 import { reportCard, reportPane } from "./report-view.mjs";
+import { createReportForms } from "./inline-forms.mjs";
 
 const paneId = "kaijan-report";
 const reportTools = new Set([
@@ -53,7 +54,7 @@ async function findCard($, call, id, state) {
     if (!recoverHistory && report?.id !== reportId) return undefined;
   }
   if (!state.isCurrent() || !report) return undefined;
-  const card = { output, report };
+  const card = { output, report, projectHistory: history };
   cards.set(call.tool_use_id ?? id, card);
   return card;
 }
@@ -76,9 +77,42 @@ async function claimSetup($) {
   }
 }
 
+function reportHost($, e) {
+  return {
+    elements: $.ui.resolve(e),
+    terminal: e.surface === "terminal",
+    sessionId: () => $.session.id(),
+    start: (thread) =>
+      $.process.spawn({
+        argv: [
+          `${$.plugin.root}/capabilities/runtime/node`,
+          `${$.plugin.root}/scripts/private-parameters.mjs`,
+          "--inline-forms",
+          thread,
+        ],
+      }),
+    fetch: (options) => $.http.fetch("http://localhost/form", options),
+    redraw: () => $.ui.invalidate("ui.render"),
+    warn: () =>
+      $.ui.log(
+        "Kaijan could not open the HTML report. Showing the saved details in Claude.",
+      ),
+    open: () =>
+      $.ui.open({
+        id: paneId,
+        title: "Kaijan report",
+        focus: true,
+        closeOnEscape: true,
+        columns: 64,
+        rows: 28,
+      }),
+  };
+}
+
 /** Display saved reports. Truncated results use only the same bound report or
  * authorized project-history entry from this plugin's connected Local server. */
 export function register(on, runInterruption) {
+  const forms = createReportForms();
   let generation = 0;
   let active = true;
   let fresh = false;
@@ -91,6 +125,52 @@ export function register(on, runInterruption) {
   const cardState = () => {
     const current = generation;
     return { cards, reads, isCurrent: () => active && current === generation };
+  };
+
+  const drawCard = (host, e, card, id, state) => {
+    const open = async () => {
+      if (!state.isCurrent() || card.opening) return;
+      if (
+        (e.surface === "desktop" || e.surface === "terminal") &&
+        !card.projectHistory
+      ) {
+        card.opening = true;
+        try {
+          const result = await forms.request(host, {
+            kind: "report",
+            operation: e.surface === "desktop" ? "preview" : "launch",
+            reportId: card.report.id,
+          });
+          if (!state.isCurrent()) return;
+          if (
+            result.reportId !== card.report.id ||
+            !/^file:\/\/\/[^\s()]+\.html$/.test(result.url)
+          )
+            throw Error("Unexpected report output");
+          if (e.surface === "desktop") card.detailUrl = result.url;
+          host.redraw();
+          return;
+        } catch {
+          if (!state.isCurrent()) return;
+          host.warn();
+        } finally {
+          card.opening = false;
+        }
+      }
+      selected = card;
+      tab = "tests";
+      expanded.clear();
+      await host.open();
+      if (state.isCurrent()) host.redraw();
+    };
+    return reportCard(
+      host.elements,
+      card,
+      id,
+      open,
+      forms.view(host, id, state.isCurrent),
+      e.surface === "desktop" ? card.detailUrl : undefined,
+    );
   };
 
   on("session.start", async ($, e, next) => {
@@ -109,6 +189,7 @@ export function register(on, runInterruption) {
     expanded.clear();
     // Neither a late turn-count reply nor an offer claim may start Setup in
     // a session that ended or was replaced while the host was responding.
+    await forms.close();
     const turns = await $.session.turns();
     if (!active || current !== generation) return next(e);
     fresh = turns === 0;
@@ -138,6 +219,7 @@ export function register(on, runInterruption) {
     reads.clear();
     grouped.clear();
     expanded.clear();
+    await forms.close();
     await $.ui.close({ id: paneId });
     return next(e);
   });
@@ -176,7 +258,12 @@ export function register(on, runInterruption) {
             if (report?.id !== e.reportId) report = undefined;
           }
           if (report && current === generation) {
-            cards.set(e.tool_use_id, { output, report });
+            cards.set(e.tool_use_id, {
+              output,
+              report,
+              projectHistory:
+                e.tool === `${reportToolPrefix}kaijan_project_history`,
+            });
             if (cards.size > 100) cards.delete(cards.keys().next().value);
             $.ui.invalidate("ui.render");
           }
@@ -210,21 +297,7 @@ export function register(on, runInterruption) {
       children: [
         original,
         ...matches.map(({ card, id }) =>
-          reportCard($.ui.resolve(e), card, id, async () => {
-            if (!state.isCurrent()) return;
-            selected = card;
-            tab = "tests";
-            expanded.clear();
-            await $.ui.open({
-              id: paneId,
-              title: "Kaijan report",
-              focus: true,
-              closeOnEscape: true,
-              columns: 64,
-              rows: 28,
-            });
-            if (state.isCurrent()) $.ui.invalidate("ui.render");
-          }),
+          drawCard(reportHost($, e), e, card, id, state),
         ),
       ],
     });
@@ -248,23 +321,13 @@ export function register(on, runInterruption) {
       flexDirection: "column",
       children: [
         original,
-        reportCard($.ui.resolve(e), card, e.requestId, async () => {
-          if (!state.isCurrent()) return;
-          selected = card;
-          tab = "tests";
-          expanded.clear();
-          await $.ui.open({
-            id: paneId,
-            title: "Kaijan report",
-            focus: true,
-            closeOnEscape: true,
-            columns: 64,
-            rows: 28,
-          });
-          if (state.isCurrent()) $.ui.invalidate("ui.render");
-        }),
+        drawCard(reportHost($, e), e, card, e.requestId, state),
       ],
     });
+  });
+  on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
+    if (!active || e.surface !== "terminal") return next(e);
+    return forms.promptView(reportHost($, e), cardState().isCurrent) ?? next(e);
   });
   on("ui.render", { component: "Pane" }, async ($, e, next) => {
     if (e.requestId !== paneId || !selected) return next(e);

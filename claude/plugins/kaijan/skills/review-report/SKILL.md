@@ -11,7 +11,7 @@ read older entries. Open a selected entry with `operation: "read"` and its
 exact `entryId`; keep using that history reader for projected evidence pages.
 It reads the original records without repeating planning, execution or
 assessment. A normal original-chat reader name in retained data does not grant
-cross-chat access. Report entries use the same native card and details pane.
+cross-chat access. Report entries use the native card and its existing history details reader.
 
 History is bound to the host's selected project and current Kaijan account,
 workspace and profile. Do not supply paths or another chat's identity. If
@@ -27,23 +27,33 @@ For an exact report already in this chat, use the existing reader:
 Use the exact retained reportId or original answer/run IDs from this chat.
 Call `loki_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
-The plugin's native report card shows the saved result. **Show details** opens
-the same report in Claude's **Kaijan report** pane. **Tests** shows the selected Plan and latest saved outcomes. **Runs**
-shows the individual Run records. **Related work** shows saved sources for the
-report Plans. When a Plan includes an observed **App model**, that tab lists
-its views, controls, fields and navigation.
-Use its test rows to review expected behavior and saved observations. Pane
-navigation does not send a prompt or start a test, assessment or sign-in. When
-Claude truncates a large tool result, Kaijan reads the same saved report through
-its existing Local connection; it does not read a returned file path.
-Do not execute, assess again, create an HTML export or open a browser preview.
+The plugin's inline card shows the saved result. For reports in the original
+conversation, **Show details** prepares the saved HTML on Desktop. Select
+**Open Kaijan report** to open that file in the host's Browser pane. In the
+interactive CLI, **Show details** opens the HTML in your browser. Resume the
+original conversation after restarting Claude to use the same saved report.
+If HTML is unavailable, the existing details view reads the same report.
+It also remains available for project history.
 
-The same plugin draws the card and pane in an interactive CLI and local Desktop
-Code when Claude mods are enabled. Claude controls where the pane appears:
-beside the conversation in supported wide layouts, or above the prompt in a
-narrow terminal. `--print` has no visual interface. If mods are disabled or the
-view is unavailable, read the same saved report as text with `loki_report_get`.
-Do not claim a native card or panel rendered without observing it.
+The HTML uses Kaijan's existing private export for saved Plans, Runs and
+assessments. It stays on this device. The card and its actions do not send a
+prompt or start a test, assessment or sign-in. When Claude truncates a large tool
+result, Kaijan reads the same saved report through its existing Local connection.
+Do not run another test, reassess, or open a different report to recover missing
+details.
+
+The card uses Claude mods in the interactive CLI and local Desktop Code.
+`--print` has no visual interface. If mods are disabled or the view is unavailable,
+read the same saved report as text with `loki_report_get`. Do not claim a card,
+browser or pane rendered without observing it.
+
+Use **Kaijan feedback** on the card to open a private editable draft. In the
+CLI, the form appears above the prompt. Press Ctrl+X then Tab to edit it.
+Use **Report issue** for a problem with Kaijan itself. Its inline form names the
+public repository where the issue will appear. Preview the exact issue before
+choosing **Publish issue**. Use the original draft to recover an unconfirmed
+submission. Do not submit feedback or publish an issue on the person's behalf
+from a report read.
 
 Lead with what was checked and the actual result. Show concise test titles,
 expected and observed behavior, useful evidence and any specific next action.

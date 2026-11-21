@@ -12,9 +12,7 @@ claude plugin install kaijan@kaijan-claude --scope user
 claude
 ```
 
-Use /kaijan:setup to connect your Kaijan account and select the application. A Kaijan account with service access is required; installing the plugin does not grant that access. Describe the checks you authorize, then use /kaijan:review-report to review the saved result.
-
-Use /kaijan:demo to try two tests on the public TodoMVC example and review their saved results.
+Use /kaijan:setup and describe what you want to test. Kaijan asks for missing context in chat and summarizes the saved application and goal. Connect your Kaijan account when your task needs service access. Describe the checks you authorize, then use /kaijan:review-report to review the saved result.
 
 In local Desktop Code, enable the installed plugin through Add plugins or Manage plugins. Do not add a second Kaijan MCP configuration. Internal users may instead use the company-managed entry; its version and update policy are independent of this marketplace.
 

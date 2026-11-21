@@ -14,7 +14,7 @@ Do not scan unrelated files or run another model/browser task to fill a template
 If a direct analysis input already fits and retention is unnecessary, use the
 analysis tool directly.
 
-Check `context.state` and `context.message` in the `kaijan.customer-capabilities/1`
+Check `context.state` and `context.message` in the `kaijan.customer-capabilities/2`
 reply from `loki_capabilities_list`. Follow any setup or recovery guidance for
 that action. Read connection guidance separately. Context availability does not
 verify the connection, validate the input or establish analysis readiness.
@@ -82,12 +82,6 @@ Keep the earlier context ID. Otherwise identify the missing fields; do not
 fabricate packet fields, turn raw reports into code evidence or fetch unresolved
 references automatically.
 
-Explicit experimental consumers also include `nativeInputs.testSupplement` and
-`nativeInputs.suppliedEvidence`, each containing the exact `{input, options?}`
-object without requestKey. Intake runs the maintained offline producer preparation;
-compatibility still does not prove semantic validity or an observed pass. Follow
-[test planning](../../../skills/plan-tests/SKILL.md) for immutable supplements and
-[test evidence](../assess-test-evidence/SKILL.md) for returned observations. Original
-conversation/task context remains attributed, and references remain unresolved.
+Use [report review](../../../skills/review-report/SKILL.md) to read saved observations.
 
 Advisory consumers return their native answer in the same awaited call. Use the completed-answer reader only if the host truncates presentation; cancel the host request for user Stop. Context submit remains an explicit persistent write.

@@ -8,6 +8,20 @@ plugin invokes that API in one isolated Node process per execution, so native
 cleanup owns only that invocation’s browser/MCP children. It never invokes the
 component CLI or implements browser actions. Planning remains a proposal. Use `loki_test_execute` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
 
+Claude Code starts a browser or desktop Run from the Plan's `planId` and the selected test IDs.
+The saved Plan supplies its application target, test data and private configuration
+references. Generate a fresh key for a new Run and reuse the key for recovery.
+
+```json
+{
+  "requestKey": "one-authorized-execution",
+  "planId": "<id returned by Plan>",
+  "testIds": ["T1"]
+}
+```
+
+Hosts that advertise the full Runner input can send the following request.
+
 ```json
 {
   "requestKey": "one-authorized-execution",
@@ -27,7 +41,7 @@ component CLI or implements browser actions. Planning remains a proposal. Use `l
 }
 ```
 
-Claude Code callers provide `savedTests` from the exact saved Plan in this chat and
+The full Runner input accepts `savedTests` from the exact saved Plan in this chat and
 explicit friendly scalar `params`, including `{}`. Copy the answer ID, result
 digest and selected test IDs from the saved Plan. If the caller supplied a full
 test in chat, save it as a Plan first. The service loads the complete recorded
@@ -36,7 +50,7 @@ Resolve missing execution inputs before starting. `executionMethod` defaults to
 `browser-ui` and also supports `desktop-ui`. The native Node Runner API uses
 the complete scenario produced by the host.
 
-For headless browser execution, set `options.headless: true` on
+On hosts with the full Runner input, set `options.headless: true` on
 `loki_test_execute`. Omission keeps the headed default; `false` selects headed
 execution. The option passes to the isolated Runner host, stays in the frozen
 request identity and appears in `executionConfig.headless` and
@@ -236,15 +250,9 @@ Plan/Runner references
 in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
 no associated run stays Not run. This adds no GitHub connection or write authority.
 
-To assess, explicitly combine the fragment with original `work_item`,
-`requirements` (or null) and `proposed_tests` (or null), set schema to
-`work-verifier/supplied-test-evidence/1`, and submit to
-`loki_test_evidence_assess`. Include complete original test text/provenance in
-proposals; do not invent an expected result or turn a model claim into a pass.
-The exact requested URL stays in the private frozen request; the assessment target
-contains its origin and SHA256 plus the native redacted terminal URL, so query
-credentials are not copied into another model request. The adapter never starts
-assessment or decides acceptance automatically.
+Runner records judgments during the selected test. Reopen the original report
+to review its results and observations. Keep caller-supplied observations
+attributed and distinguish them from evidence Runner recorded.
 
 Builds copy the unchanged Runner package and its installed dependency graph into
 the output's private module closure. This preserves native package resolution and
@@ -321,7 +329,7 @@ in [local-capabilities.md](local-capabilities.md).
 ## Passive Runner readiness
 
 Call `loki_capabilities_list` with `{}` before authorized execution. The normal
-`kaijan.customer-capabilities/1` reply gives `testExecution.state` and its recovery
+`kaijan.customer-capabilities/2` reply gives `testExecution.state` and its recovery
 `message`, alongside the other Kaijan actions. The action states are
 `available`, `setup-required` and `unavailable`. Read the separate
 `connection.state` and `connection.message`; a `not-checked` connection is not a

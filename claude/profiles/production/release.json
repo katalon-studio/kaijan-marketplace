@@ -3,9 +3,9 @@
   "profile": "production",
   "build": {
     "schemaVersion": 1,
-    "buildId": "bdd6f80e-2336-41e5-9913-5cd472f58fc7",
-    "builtAt": "2026-11-18T11:11:20.105Z",
-    "sourceRevision": "1aa4698e746aa978a86642aa62ad8c96490ca5fe",
+    "buildId": "f6b4a2b4-d591-4163-afc7-29e66484dc34",
+    "builtAt": "2026-11-21T12:39:16.392Z",
+    "sourceRevision": "3c241d46d650d7bea2b75a4c4ad99e8d4c33fe7a",
     "sourceDirty": false,
     "profile": "production",
     "profileMode": "runtime-env/1",
@@ -26,26 +26,26 @@
     "authArchitecture": "shared-broker-v1",
     "credentialStorage": "private-file-v1",
     "runtimeLayout": "installed",
-    "capabilityDigest": "ad64834cc4c97a884f914ce67d9e8aa452d49758df84ff6e0d4548e9a41a3521",
-    "pluginVersion": "0.5.0-rc.306",
+    "capabilityDigest": "1f71facd7abd73cc0d5406114c2a0f360a80ed97f0693f191ca581f626fbbbfd",
+    "pluginVersion": "0.5.0-rc.400",
     "mcpUrl": "https://kaijan.ai/mcp",
     "mcpServerName": "kaijan_core",
     "localMcpServerName": "kaijan_local",
     "capabilityTransport": {
       "format": "mcpb/1",
       "bundle": "servers/kaijan-local.mcpb",
-      "sha256": "9686fec8763ce2a576789074a88247b59ff087eb20097241048b464c1e94e31e",
-      "privateHelperSha256": "e48480310924f737406e3ae5dac69e455e6a74d7a40182258048ce76922b6f20"
+      "sha256": "0a767692f636f99c230dfa84ebaa576821d7ac47fcb0b837979e6d5c612b3302",
+      "privateHelperSha256": "5ebfc62920ea297c0816a1012f24b7722b50554dc0d6a6fce2fca5d7be732ccc"
     }
   },
-  "source": "1aa4698e746aa978a86642aa62ad8c96490ca5fe",
-  "payloadCommit": "206ce37f0d64eaa59133624c4ac54744320420c8",
+  "source": "3c241d46d650d7bea2b75a4c4ad99e8d4c33fe7a",
+  "payloadCommit": "e1c7f78ff49a998a35c3956d7d10ba19f965d582",
   "candidate": {
-    "run": "44291541318",
+    "run": "44903886203",
     "attempt": "1",
-    "digest": "82433462e1bac7ad002b416914d6538bd1499b48c1760e8e66eeb57819c886ff",
-    "artifact": "kaijan-claude-44291541318-1"
+    "digest": "49fb2fd6d679e00929d1e4a0eb0dafb1b54ced399a3a805bf7a82eb0fea25a63",
+    "artifact": "kaijan-claude-44903886203-1"
   },
-  "archiveDigest": "3c23c3a6191298b8afe4080e43d010612b7d94aca3ebe44d5f1b9f75763a6cab",
-  "profileChecksumDigest": "69ac26ab343dfd32f9c6841ee333b5f772896513a2e369868ff14407c9022f4a"
+  "archiveDigest": "703125fca7d9be8bf63ade1fd4b8e94aa3a752c001b6e17bde8eb31c88c5fd06",
+  "profileChecksumDigest": "677c32d7d067e16df211e0eaa8120ed2c816549654cbabf346294ce0b58048b0"
 }
