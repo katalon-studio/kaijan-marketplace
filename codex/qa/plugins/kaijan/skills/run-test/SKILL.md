@@ -14,6 +14,11 @@ does not authorize execution.
 
 ## Run the selected checks
 
+In Codex, use a write-capable session with workspace write or Full Access for
+execution. Have the user handle any approval requested by Codex. Keep
+application actions within the user's task. If the host refuses dispatch,
+tell the user which permission or approval blocked the Run and keep the saved Plan.
+
 Check readiness for the selected action with `loki_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
 for the responding package when starting AI work. Managed AI uses the Kaijan
