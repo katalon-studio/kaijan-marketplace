@@ -49902,6 +49902,7 @@ var testPlanViewSchema = external_exports.object({
     planSourceId: external_exports.string(),
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
+    notStartedTestIds: external_exports.array(external_exports.string()).optional(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
@@ -51416,6 +51417,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     planSourceId: true,
     planResultSha256: true,
     selectedTestIds: true,
+    notStartedTestIds: true,
     elapsedMs: true,
     startedAt: true,
     recordedAt: true
@@ -51619,6 +51621,7 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
     runs: value.runs.map((run) => ({
       ...run,
       selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256, true)) : run.selectedTestIds,
+      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id8) => customerPlanningId("T", id8, sha256, true)) : run.notStartedTestIds,
       assertions: run.assertions && run.planSourceId ? {
         ...run.assertions,
         tests: run.assertions.tests.map((row) => ({
@@ -51725,6 +51728,7 @@ function projectCustomerTestPlanView(input3, sha256) {
     runs: value.runs.map((run) => ({
       ...run,
       selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256)) : run.selectedTestIds,
+      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id8) => customerPlanningId("T", id8, sha256)) : run.notStartedTestIds,
       executionReport: run.executionReport ? {
         ...run.executionReport,
         ..."test_results" in run.executionReport ? {
