@@ -88,7 +88,7 @@ useful evidence. Open external Playwright replay only when requested.
 
 Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The installed profile binds private state and the connection. In the normal managed package (`authArchitecture: shared-broker-v1` in `loki-build.json`), Core and Local use stdio and share the Kaijan sign-in broker. Source, AI access, GitHub and browser authority remain distinct.
 
-The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, supplied-evidence assessment and native browser execution. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
+The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, and browser or macOS test execution with Runner judgments. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. Pass the full scenario, explicit friendly params and initial URL when authorized. IDs correlate only.
 
 Use the installed owning skill and exact advertised input schema. The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
 
@@ -116,9 +116,8 @@ selects analysis and planning under the original goal, target and actions.
 Use `loki_test_execute` for normal execution and assessment. Kaijan reuses its
 saved task, selected tests and evidence internally, then saves the combined report.
 Use `loki_test_get` for that same flow and `loki_test_stop` for Stop. The caller
-does not copy saved evidence back or invoke a second routine assessment. Independent
-execution and external-evidence review remain available. Plan-only
-requests do not execute. Full requests with sufficient inputs continue through
+does not copy saved evidence back or invoke a second routine assessment. Open a retained assessment through its existing report or advisory answer.
+Plan-only requests do not execute. Full requests with sufficient inputs continue through
 their selected scenarios, evidence assessment and native report.
 
 Tell the person the time limit before starting Explorer or Runner in Codex.
@@ -139,9 +138,9 @@ selected original operations. Reopen the immutable reportId without producers.
 ## Read Runner readiness without execution
 
 Call `loki_capabilities_list` with `{}`. The normal reply uses
-`kaijan.customer-capabilities/1`. Each action has a `state` and `message`:
+`kaijan.customer-capabilities/2`. Each action has a `state` and `message`:
 `context`, `changeReview`, `relatedWork`, `workItemReview`, `testPlanning`,
-`additionalTests`, `evidenceReview` and `testExecution`.
+`additionalTests` and `testExecution`.
 
 - `available`: the action is available for an authorized task. Application access
   has not been checked.
