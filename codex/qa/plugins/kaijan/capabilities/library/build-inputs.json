@@ -290,7 +290,7 @@
     "packages/ui-modeler/lib/map-invocation.mjs": "94b18e82dc6bab9afa1338c9df23d981b2cdd9e06a2a17fc3db31aa13bc51fda",
     "packages/ui-modeler/index.mjs": "6de1e8834be6fef5fcc8c485fa728153cfec33042327340d982f02fead400a95",
     "packages/capabilities/src/ui-modeler.ts": "e1fe035541c9bcbf61ab0bbb3c52a66ff79e2169b3430eab12149652dd0942f0",
-    "packages/capabilities/src/api.ts": "047644282ed1737648d7d058bd3f7efbe325f54b898eba87eec69554974c393b",
+    "packages/capabilities/src/api.ts": "3289e172f9fc4c94fd9095d600feb9b7f4c6276af2ef874ff90138114b90d3f3",
     "packages/capabilities/src/runner-clarification-worker.ts": "b02f0fd299900e3f568271f7ed3d5e72d1624c87199506fb237f70df73dea60b",
     "packages/capabilities/src/runner-context-worker.ts": "11686b2c008373b2bb2c222f4b3a9e210ae8590cd388948a52142b33bf1485d4",
     "packages/capabilities/src/runner-worker-failure.ts": "dff7e33325918874b9b1ad65d70020ca293b4eded042c15886574524fa1cf48d",
