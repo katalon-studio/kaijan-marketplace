@@ -45,7 +45,6 @@ contracts, not from a fixed menu or a chat title alone. Conditional examples:
 | ------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
 | Requirement or issue                              | `plan-tests`; `assess-change-risk` when uncertainty matters | Proposed tests, or consequential requirement assumptions     |
 | Actual code change or PR                          | `assess-change-risk`                                        | Source-backed change assumptions and evidence to investigate |
-| Supplied test outcomes and original requirement   | `assess-test-evidence`                                      | Scoped evidence assessment and remaining coverage gaps       |
 | Issue or PR needing related context               | `find-related-work`                                         | Related items with reasons and source links                  |
 | A complete browser scenario and authorized target | `run-test`                                                  | Execution records and observations, separately from verdicts |
 

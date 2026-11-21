@@ -52,8 +52,7 @@ the same authority.
   saved Plan reference and selected test IDs, target and parameters. Kaijan
   runs the selected tests, assesses retained evidence and saves a combined
   report. Keep gaps for unexecuted tests visible and continue independent checks
-  with sufficient inputs. For execution outside Kaijan or a specific new piece
-  of evidence, use [assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+  with sufficient inputs. Attribute any external observations to their source.
 - Open the actual saved result with [review-report](../review-report/SKILL.md).
   Include the review findings and any partial preparation when requested.
   Keep execution status, actual observations, assessment and coverage distinct.

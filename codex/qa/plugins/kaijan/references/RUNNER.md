@@ -250,15 +250,9 @@ Plan/Runner references
 in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
 no associated run stays Not run. This adds no GitHub connection or write authority.
 
-To assess, explicitly combine the fragment with original `work_item`,
-`requirements` (or null) and `proposed_tests` (or null), set schema to
-`work-verifier/supplied-test-evidence/1`, and submit to
-`loki_test_evidence_assess`. Include complete original test text/provenance in
-proposals; do not invent an expected result or turn a model claim into a pass.
-The exact requested URL stays in the private frozen request; the assessment target
-contains its origin and SHA256 plus the native redacted terminal URL, so query
-credentials are not copied into another model request. The adapter never starts
-assessment or decides acceptance automatically.
+Runner records judgments during the selected test. Reopen the original report
+to review its results and observations. Keep caller-supplied observations
+attributed and distinguish them from evidence Runner recorded.
 
 Builds copy the unchanged Runner package and its installed dependency graph into
 the output's private module closure. This preserves native package resolution and
@@ -335,7 +329,7 @@ in [local-capabilities.md](local-capabilities.md).
 ## Passive Runner readiness
 
 Call `loki_capabilities_list` with `{}` before authorized execution. The normal
-`kaijan.customer-capabilities/1` reply gives `testExecution.state` and its recovery
+`kaijan.customer-capabilities/2` reply gives `testExecution.state` and its recovery
 `message`, alongside the other Kaijan actions. The action states are
 `available`, `setup-required` and `unavailable`. Read the separate
 `connection.state` and `connection.message`; a `not-checked` connection is not a

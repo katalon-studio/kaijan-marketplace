@@ -576,7 +576,6 @@
         "experiments/context-finder/planning/pcf_provider.mjs": "d83eec707e5cc95952d89f5f166835f7bfb74cddd154e35b36e6a3a60a53cdc0",
         "experiments/context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963",
         "experiments/context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
-        "experiments/work-verifier/supplied-evidence.mjs": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607",
         "experiments/provider-transport/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823",
         "experiments/provider-transport/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "experiments/context-finder/related/source-screen.mjs": "8d50a1cc74fa9b4dadbf48bf2ee0bb9d37e6214b6e3d9af49f7240c9975e1f61",
@@ -585,20 +584,11 @@
         "experiments/context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9",
         "experiments/context-finder/related/unicode-word-13.0.0.json": "c8c94049ba4e5670afb8f6fb4966cdd1b544c97905f3c7c2e3806f5749eaa148",
         "experiments/context-finder/related/unicode-word-15.0.0.json": "70f9d51c5067a1d96b51e5a6fc3041fd5d5dc17bb79b61d054b2c5a2b80e3aa8",
-        "experiments/work-verifier/source-binding.mjs": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23",
-        "experiments/work-verifier/metadata-urls.mjs": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
-        "experiments/work-verifier/assessment-contract.mjs": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a",
-        "experiments/work-verifier/assessment-runtime.mjs": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e",
         "experiments/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "experiments/context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
         "experiments/context-finder/planning/supplement-source.mjs": "28b5bc073ec41e732fda26f9a1d6bf288ed45871c5f49a7856e8e4645717048f",
-        "experiments/work-verifier/step-observation-sources.mjs": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b",
-        "experiments/work-verifier/step-action-sources.mjs": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8",
-        "experiments/work-verifier/request-instructions.mjs": "5f3fbc635c7f82fba7ccdec6c2c94ac64b3149d32061248c1736d0f0bee6ea95",
         "experiments/context-finder/planning/supplement-instructions.mjs": "25d36e01661940f40bfbb9861d65bf27c1640da3aeb385ca769205d43fa9cca4",
-        "experiments/work-verifier/request-schema.mjs": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
         "experiments/context-finder/planning/agent-generation.mjs": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
-        "experiments/work-verifier/planner-recap.mjs": "f3dd4879b3c4781fe09828e8fc1752bbd96597f3ed5d3a072c9221d87cf34568",
         "experiments/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
       },
       "assets": {
@@ -1951,11 +1941,6 @@
       "sha256": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102",
       "originalSha256": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec"
     },
-    "planner-loop-source/experiments/work-verifier/supplied-evidence.mjs": {
-      "source": "packages/work-verifier/supplied-evidence.mjs",
-      "sha256": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607",
-      "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf"
-    },
     "planner-loop-source/experiments/provider-transport/index.mjs": {
       "source": "packages/provider-transport/index.mjs",
       "sha256": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823",
@@ -2013,30 +1998,6 @@
       "sha256": "7d7b9eb5fd7987b68d924da70d52c5a1e69df00b6cac790656a788569513a84d",
       "originalSha256": "f47afe8e3a3f285babf5f92ff551bbfd60609867e2204a16017fd95b1fd79c60"
     },
-    "planner-loop-source/experiments/work-verifier/source-binding.mjs": {
-      "source": "packages/work-verifier/source-binding.mjs",
-      "sha256": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23",
-      "originalSha256": null,
-      "derivation": "Neutral shared Product helper after source extraction #2173."
-    },
-    "planner-loop-source/experiments/work-verifier/metadata-urls.mjs": {
-      "source": "packages/work-verifier/metadata-urls.mjs",
-      "sha256": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
-      "originalSha256": null,
-      "derivation": "Neutral shared Product helper after source extraction #2173."
-    },
-    "planner-loop-source/experiments/work-verifier/assessment-contract.mjs": {
-      "source": "packages/work-verifier/assessment-contract.mjs",
-      "sha256": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a",
-      "originalSha256": null,
-      "derivation": "Neutral shared Product helper after source extraction #2173."
-    },
-    "planner-loop-source/experiments/work-verifier/assessment-runtime.mjs": {
-      "source": "packages/work-verifier/assessment-runtime.mjs",
-      "sha256": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e",
-      "originalSha256": null,
-      "derivation": "Neutral shared Product helper after source extraction #2173."
-    },
     "change-risk/node_modules/@katalon-experiments/ai-client/broker-channel.mjs": {
       "source": "packages/provider-transport/broker-channel.mjs",
       "sha256": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5"
@@ -2083,18 +2044,6 @@
       "sha256": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a",
       "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
-    "planner-loop-source/experiments/work-verifier/step-observation-sources.mjs": {
-      "source": "packages/work-verifier/step-observation-sources.mjs",
-      "sha256": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b",
-      "originalSha256": null,
-      "derivation": "Shared generation-only source choices for existing literal step binding (#3313)."
-    },
-    "planner-loop-source/experiments/work-verifier/step-action-sources.mjs": {
-      "source": "packages/work-verifier/step-action-sources.mjs",
-      "sha256": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8",
-      "originalSha256": null,
-      "derivation": "Generation-only exact action source/index choices per outcome group (#3359)."
-    },
     "planning/pr-context-finder/planning/risk-model-view.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/risk-model-view.mjs",
       "sha256": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058"
@@ -2103,12 +2052,6 @@
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/request-instructions.mjs",
       "sha256": "38fac7d6d4fe66b27276232f19b15a40d79422d699db53dbe985b8720ff8ed68"
     },
-    "planner-loop-source/experiments/work-verifier/request-instructions.mjs": {
-      "source": "packages/work-verifier/request-instructions.mjs",
-      "sha256": "5f3fbc635c7f82fba7ccdec6c2c94ac64b3149d32061248c1736d0f0bee6ea95",
-      "originalSha256": null,
-      "derivation": "Current general assessment instructions; no historical prompt templates (#3607)."
-    },
     "planner-loop-source/experiments/context-finder/planning/supplement-instructions.mjs": {
       "source": "packages/context-finder/planning/supplement-instructions.mjs",
       "sha256": "25d36e01661940f40bfbb9861d65bf27c1640da3aeb385ca769205d43fa9cca4"
@@ -2116,12 +2059,6 @@
     "work-item-risk/work-item-instructions.mjs": {
       "source": "packages/risk-finder/work-item-instructions.mjs",
       "sha256": "a30005bf5f2b5f7aa326b05cb08581c9004cf2692056445435b33593d772b032"
-    },
-    "planner-loop-source/experiments/work-verifier/request-schema.mjs": {
-      "source": "packages/work-verifier/request-schema.mjs",
-      "sha256": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
-      "originalSha256": null,
-      "derivation": "Exact repeated response-schema sharing for new assessment representation 12; expanded local validation and historical requests retained (#3317)."
     },
     "planning/node_modules/@katalon-experiments/ai-client/agents.mjs": {
       "source": "packages/provider-transport/agents.mjs",
@@ -2156,22 +2093,6 @@
       "source": "packages/context-finder/selected/related/pr-context-finder/related/related-work-planner.mjs",
       "sha256": "d292a62fe8ffcb416c0b9dd81f1f64f701aeb1ad2794397193cb1c32ecc53d5b",
       "derivation": "Shared tool-free Planner SDK turn for related-work queries and ranking (#3808)."
-    },
-    "planner-loop-source/experiments/work-verifier/finding-record-links.mjs": {
-      "source": "packages/work-verifier/finding-record-links.mjs",
-      "sha256": "f2e2a48bc64a8fdfbe0a25fab132767e549ba80ff71d94e06d6b8caf86b45596",
-      "originalSha256": null,
-      "derivation": "Explicit model-returned finding record/citation pairs for assessment representation 13; strict binding and original candidates preserved (#3893)."
-    },
-    "planner-loop-source/experiments/work-verifier/planner-recap.mjs": {
-      "source": "packages/work-verifier/planner-recap.mjs",
-      "sha256": "f3dd4879b3c4781fe09828e8fc1752bbd96597f3ed5d3a072c9221d87cf34568",
-      "derivation": "Retained Planner assessment of Runner recap only (#3939)."
-    },
-    "planner-loop-source/experiments/work-verifier/assessment.mjs": {
-      "source": "packages/work-verifier/assessment.mjs",
-      "sha256": "e04a5ea69e13bb3a9b9ed6414019b94a79c7f926efd8cf8f4e2c89d9a90a89a5",
-      "derivation": "Human-selected report-oriented assessment without model citation bookkeeping (#4305)."
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/retention.mjs": {
       "source": "packages/provider-transport/retention.mjs",
@@ -2230,10 +2151,9 @@
       "originalSha256": "3aeddd3db001520c23b41e0934d9831ce033f07e37b27769f2649d8390b95aec",
       "originalPath": "experiments/context-finder/planning/pcf_native.mjs"
     },
-    "packages/work-verifier/supplied-evidence.mjs": {
-      "sha256": "9751a4079c3af9fe8c98666ad27b1057b9bdeba7d3837a6e85da6aaf995ca607",
-      "originalSha256": "2a859b896eecbbfe63cf2ac35013ae04b9c7ea375dfb200c3fe2da83f92ba8cf",
-      "originalPath": "experiments/work-verifier/supplied-evidence.mjs"
+    "packages/capabilities/research/retained-assessment/supplied-evidence.mjs": {
+      "sha256": "62d601074ff10573f894b1d06ab5d122beda6b8d5430fa6e801563dfb613dd7c",
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
     "packages/provider-transport/index.mjs": {
       "sha256": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823",
@@ -2549,25 +2469,17 @@
       "derivation": "Selected/shared source after research-method extraction #2173.",
       "sha256": "c41c3a575a7c226805dcb97e50be87e92916a951e83ae5091554d0e89a882d62"
     },
-    "packages/work-verifier/source-binding.mjs": {
+    "packages/capabilities/research/retained-assessment/source-binding.mjs": {
       "sha256": "44f16d4a7425c459871a57e4f35cfd25dfbf56d2fb21c315acf33fed069cdd23",
-      "originalSha256": null,
-      "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
-    "packages/work-verifier/metadata-urls.mjs": {
+    "packages/capabilities/research/retained-assessment/metadata-urls.mjs": {
       "sha256": "d08616a6d62bea90d50f322bb31eec2655360c2ebfff1bbd542d8ead6b207e67",
-      "originalSha256": null,
-      "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
-    "packages/work-verifier/assessment-contract.mjs": {
+    "packages/capabilities/research/retained-assessment/assessment-contract.mjs": {
       "sha256": "76ab6241a63681cfa311e52d81249b8a6b7a95f06d3441b4f2cbbc91ac29e35a",
-      "originalSha256": null,
-      "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
-    },
-    "packages/work-verifier/assessment-runtime.mjs": {
-      "sha256": "aceb4524ca7e5488d7f3ce5a3be99055416a807f331575c21b1966de307f534e",
-      "originalSha256": null,
-      "derivation": "Shared source/assessment implementation extracted from research methods in #2173."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
     "packages/ui-modeler/extraction-v2.json": {
       "sha256": "1c030d64177bed5d84cb3755ae1b49e91dbc19a219b0fff360c5ed4f7ace01af",
@@ -2589,52 +2501,43 @@
       "sha256": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a",
       "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
-    "packages/work-verifier/step-observation-sources.mjs": {
+    "packages/capabilities/research/retained-assessment/step-observation-sources.mjs": {
       "sha256": "702b0c96d9d7e462bdfa50ff8cbe135215105d96845f0c88b1c8454fc028287b",
-      "originalSha256": null,
-      "derivation": "Shared generation-only source choices for existing literal step binding (#3313)."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
-    "packages/work-verifier/step-action-sources.mjs": {
+    "packages/capabilities/research/retained-assessment/step-action-sources.mjs": {
       "sha256": "941ac9995da7fd64ace528a95a69a462c01197f6046922b265a7bdfdcaae48a8",
-      "originalSha256": null,
-      "derivation": "Generation-only exact action source/index choices per outcome group (#3359)."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
-    "packages/work-verifier/request-instructions.mjs": {
+    "packages/capabilities/research/retained-assessment/request-instructions.mjs": {
       "sha256": "5f3fbc635c7f82fba7ccdec6c2c94ac64b3149d32061248c1736d0f0bee6ea95",
-      "originalSha256": null,
-      "derivation": "Current general assessment instructions; no historical prompt templates (#3607)."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
     "packages/context-finder/planning/supplement-instructions.mjs": {
       "sha256": "25d36e01661940f40bfbb9861d65bf27c1640da3aeb385ca769205d43fa9cca4"
     },
-    "packages/work-verifier/request-schema.mjs": {
+    "packages/capabilities/research/retained-assessment/request-schema.mjs": {
       "sha256": "05ae4a2d97b8730e789ef70dc1c98da4fd75b7b0af59dc90d8869688d491b8a4",
-      "originalSha256": null,
-      "derivation": "Exact repeated response-schema sharing for new assessment representation 12; expanded local validation and historical requests retained (#3317)."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
     "packages/context-finder/planning/agent-generation.mjs": {
       "sha256": "e86cd89a645149610b5c0a9891d7f3d0851c695f5e893df480dfa2c8b774bb3a",
       "derivation": "Shared one-turn SDK generation for Planner and evidence-only Runner (#3774)."
     },
-    "packages/work-verifier/finding-record-links.mjs": {
+    "packages/capabilities/research/retained-assessment/finding-record-links.mjs": {
       "sha256": "f2e2a48bc64a8fdfbe0a25fab132767e549ba80ff71d94e06d6b8caf86b45596",
-      "originalSha256": null,
-      "derivation": "Explicit model-returned finding record/citation pairs for assessment representation 13; strict binding and original candidates preserved (#3893)."
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
-    "packages/work-verifier/planner-recap.mjs": {
-      "sha256": "f3dd4879b3c4781fe09828e8fc1752bbd96597f3ed5d3a072c9221d87cf34568",
-      "derivation": "Retained Planner assessment of Runner recap only (#3939)."
-    },
-    "packages/work-verifier/assessment.mjs": {
-      "sha256": "e04a5ea69e13bb3a9b9ed6414019b94a79c7f926efd8cf8f4e2c89d9a90a89a5",
-      "derivation": "Human-selected report-oriented assessment without model citation bookkeeping (#4305)."
+    "packages/capabilities/research/retained-assessment/planner-recap.mjs": {
+      "sha256": "a850c9699fdcd4e100e3b13907f4d8a0bb1c1d8a2c6b6a59764ad6f4a69cff3b",
+      "derivation": "Read-only helper retained for saved assessment compatibility (#7326)."
     },
     "packages/provider-transport/retention.mjs": {
       "sha256": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb"
     },
-    "packages/work-verifier/planner-runner.mjs": {
-      "sha256": "9a8700bd45d76a14faef750956b919cb6f2bb267ce6ec57b72a1ee0c196b26df",
-      "derivation": "Human-selected Agents SDK Planner-to-Runner assessment questions and retained answers (#4975)."
+    "packages/capabilities/research/retained-assessment/planner-recap-contract.mjs": {
+      "sha256": "86fb12c5a773cb27d706da2e0bad386874c50e79d7ce786d2b5b74578176059c",
+      "derivation": "Historical tool and prompt definitions for exact retained recap identity (#7326)."
     }
   },
   "assets": {

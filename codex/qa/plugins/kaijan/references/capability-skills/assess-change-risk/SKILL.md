@@ -24,9 +24,8 @@ Skip this capability for a trivial self-contained edit or when there is no
 material question beyond facts already established by decisive evidence. There
 is no required call count or mandatory context → risk → plan → execution pipeline.
 For related context, proposed tests or returned evidence, use the corresponding
-[related-work](../find-related-work/SKILL.md),
-[test-planning](../../../skills/plan-tests/SKILL.md) or
-[evidence-assessment](../assess-test-evidence/SKILL.md) skill only when useful.
+[related-work](../find-related-work/SKILL.md) or
+[test-planning](../../../skills/plan-tests/SKILL.md) skill only when useful.
 
 ## Local changes without a PR
 

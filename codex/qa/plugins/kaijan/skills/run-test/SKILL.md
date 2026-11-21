@@ -79,9 +79,8 @@ from the test outcome.
 ## Read or stop the original test
 
 Use `loki_test_get` through the execution and assessment result, and
-`loki_test_stop` to stop the same test.
-For external test evidence use
-[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+`loki_test_stop` to stop the same test. Open the saved result with
+[report review](../review-report/SKILL.md).
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
