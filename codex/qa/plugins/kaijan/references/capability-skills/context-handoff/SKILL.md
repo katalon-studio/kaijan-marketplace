@@ -82,11 +82,6 @@ Keep the earlier context ID. Otherwise identify the missing fields; do not
 fabricate packet fields, turn raw reports into code evidence or fetch unresolved
 references automatically.
 
-The supplied evidence consumer uses `nativeInputs.suppliedEvidence` with the exact `{input, options?}`
-object without requestKey. Intake runs the maintained offline producer preparation;
-compatibility still does not prove semantic validity or an observed pass. Follow
-[test planning](../../../skills/plan-tests/SKILL.md) for additional tests and revised Plans and
-[report review](../../../skills/review-report/SKILL.md) for saved observations. Keep original
-conversation and task context attributed. Preserve unresolved references.
+Use [report review](../../../skills/review-report/SKILL.md) to read saved observations.
 
 Advisory consumers return their native answer in the same awaited call. Use the completed-answer reader only if the host truncates presentation; cancel the host request for user Stop. Context submit remains an explicit persistent write.
