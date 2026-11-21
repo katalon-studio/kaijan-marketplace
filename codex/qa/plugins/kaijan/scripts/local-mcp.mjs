@@ -58553,6 +58553,11 @@ ${customerInstructions}` : customerInstructions
           signal: AbortSignal.any([extra.signal, lifetime.signal])
         }
       );
+      if ((params.name === "loki_context_submit" || params.name === "loki_context_get") && !isCustomerToolAllowed("loki_test_supplement")) {
+        const consumption = { ...result2.consumption };
+        delete consumption.testSupplement;
+        result2 = { ...result2, consumption };
+      }
       if (params.name === "loki_capabilities_list" && session.runtimeDiscovery) {
         result2 = {
           ...result2,
