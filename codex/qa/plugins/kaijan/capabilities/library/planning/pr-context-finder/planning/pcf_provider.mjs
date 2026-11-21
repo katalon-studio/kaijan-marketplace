@@ -32,6 +32,8 @@ import {
   responseChunks,
   failureType,
   callTransport,
+  managedPlanningSession,
+  planningResponse,
 } from "./pcf_native.mjs";
 function providerFailure(response, broker, raw) {
   const upstream = broker && header(response, "x-kaijan-provider-http-status");
@@ -39,8 +41,8 @@ function providerFailure(response, broker, raw) {
     broker &&
     !(typeof upstream === "string" && /^[1-5][0-9]{2}$/.test(upstream))
   ) {
-    // Older Core maps several native HTTP statuses to the same public error.
-    // Keep that status in receipt.http_status without claiming it was upstream.
+    // Core may return a public transport status with no confirmed upstream HTTP
+    // status. Only the explicit provider metadata proves an HTTP refusal.
     return [undefined, "inference_request_rejected"];
   }
   const status = broker ? Number(upstream) : response.status;
@@ -285,23 +287,22 @@ async function dispatchPlan(
   )
     throw Error("Invalid absolute request deadline");
   const ceiling = outputLimit(body, max_output_tokens_limit);
-  const wire = utf8(
-    encodedJson({
-      ...body,
-      ...(body.text?.format?.type === "json_schema"
-        ? {
-            text: {
-              ...body.text,
-              format: {
-                ...body.text.format,
-                schema: compactRequestSchema(body.text.format.schema),
-              },
+  const requestBody = {
+    ...body,
+    ...(body.text?.format?.type === "json_schema"
+      ? {
+          text: {
+            ...body.text,
+            format: {
+              ...body.text.format,
+              schema: compactRequestSchema(body.text.format.schema),
             },
-          }
-        : {}),
-      ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
-    }),
-  );
+          },
+        }
+      : {}),
+    ...(ceiling === undefined ? {} : { max_output_tokens: ceiling }),
+  };
+  const wire = utf8(encodedJson(requestBody));
   if (
     max_request_bytes !== undefined &&
     (!Number.isInteger(max_request_bytes) ||
@@ -359,7 +360,8 @@ async function dispatchPlan(
       deadline_exceeded: false,
       abort_source: null,
     };
-  let response,
+  let managedSession,
+    response,
     completedResponse,
     requestPhaseEnded = false;
   const recordAbort = () => {
@@ -379,23 +381,36 @@ async function dispatchPlan(
       try {
         try {
           requestSignal.throwIfAborted();
-          response = await callTransport(
-            transport,
-            {
-              url: connection.url,
-              ...(connection.socketPath
-                ? { socketPath: connection.socketPath }
-                : {}),
-              method: "POST",
-              headers: {
-                ...connection.headers,
-                "Content-type": "application/json",
-              },
-              body: wire,
-              inactivityTimeoutMs: 180000,
+          const request = {
+            url: connection.url,
+            ...(connection.socketPath
+              ? { socketPath: connection.socketPath }
+              : {}),
+            method: "POST",
+            headers: {
+              ...connection.headers,
+              "Content-type": "application/json",
             },
-            { signal: requestSignal },
-          );
+            body: wire,
+            inactivityTimeoutMs: 180000,
+          };
+          if (transport === native)
+            managedSession = managedPlanningSession(
+              connection,
+              request,
+              requestBody.store,
+            );
+          const selectedTransport = managedSession
+            ? async (_request, { signal: transportSignal }) =>
+                planningResponse(
+                  await managedSession.send(requestBody, transportSignal, {
+                    inactivityTimeoutMs: request.inactivityTimeoutMs,
+                  }),
+                )
+            : transport;
+          response = await callTransport(selectedTransport, request, {
+            signal: requestSignal,
+          });
           receipt.http_status = response.status;
         } catch (failure) {
           if (
@@ -625,6 +640,7 @@ async function dispatchPlan(
       } catch {
         receipt.response_close_error = true;
       }
+    managedSession?.close();
     receipt.elapsed_seconds = (performance.now() - started) / 1000;
     try {
       save(path.join(root, "receipt.json"), receipt);

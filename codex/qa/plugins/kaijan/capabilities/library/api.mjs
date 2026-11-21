@@ -67,7 +67,7 @@ var init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA = __esm({
 var define_LOKI_CHANGE_RISK_PINS_default;
 var init_define_LOKI_CHANGE_RISK_PINS = __esm({
   "<define:LOKI_CHANGE_RISK_PINS>"() {
-    define_LOKI_CHANGE_RISK_PINS_default = { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", packageVersion: "2026.10.26-1771.1", schemaVersion: "change-risk-finder/result/4", sourceManifestSha256: "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446", files: { "runtime.mjs": "a0b15f48175415d5cfc274e999c51e1333d4377dcecf5d110c09b16dd0644d25", "method.mjs": "be12b184095cc387af32d346d7b6c7cc9e3ac6bef3a37a3ca79603ff99846adf", "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9", "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08", "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b", "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5", "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49", "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, upstreamSourceManifestSha256: "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e", scope: "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.", decision: "https://github.com/katalon-studio/loki/issues/1685#issuecomment-6407244037", transportMigration: { baselineSourceCommit: "953060f7fe7a557495c0071638c43ebd761eeed7", sharedPackage: "@katalon-experiments/ai-client@0.1.0", sharedSourceCommit: "61fc0b3c7e01f8272829f5137a9222b397f03c46" }, baselineSourceCommit: "808f533e4e9aacd4c18c2fbfe14099583faf2c3b", inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", scope: "Remove unsupported native request byte/hunk gates behind public wrapper. JEV255-choice protocol guard retained. Canonical VERSION metadata1771.1 and existing #1929 private diagnostics are included; prior source/version remain baseline provenance." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", scope: "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, outputBudgetRepair: { issue: 2470, scope: "Honor the template output budget for snapshots and patches. Default six-question requests to 8000 total output tokens for reasoning and final JSON. Preserve selected model/effort, partial results, original artifacts and zero retries." }, sourceBoundRiskRelations: { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", previousSourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", schema: "risk-source-relations/1", scope: "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance." }, evidenceQuestionOverlay: { issue: 3071, scope: "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets." }, attributedContextOverlay: { issue: 3958, sourceCommit: "4020dbc22b9cf7504cd521edc91420393980aa5b", scope: "Optional raw attributed context sources for change review; preserve existing work-item packets, native literal-excerpt validation and full original records. No template, model, call allowance or JEV change." }, citationEligibilityOverlay: { issue: 3958, sourceCommit: "24edf12ec49f1116e60748a25ea9e4e489bd69cf", scope: "Offer only application citations accepted by the existing resolver; retain complete original packets and full historical proof catalogs. No prompt, model, allowance or validation relaxation." }, availableOutputOverlay: { issues: [4382, 4449], sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", scope: "Human-selected temporary nonblocking risk output: retain all available rows, unfamiliar relation wording/operands and original responses; format-only non-strict output guidance. Exact source proofs are conditional; unsupported wording does not create verified evidence. Prompt, model, transport accounting and historical records remain unchanged." } };
+    define_LOKI_CHANGE_RISK_PINS_default = { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", packageVersion: "2026.10.26-1771.1", schemaVersion: "change-risk-finder/result/4", sourceManifestSha256: "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446", files: { "runtime.mjs": "306816c214cd0e139e2537ad9fe51023c8d43b4ed2dd5712bc6504d67b9cca95", "method.mjs": "be12b184095cc387af32d346d7b6c7cc9e3ac6bef3a37a3ca79603ff99846adf", "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9", "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08", "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b", "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5", "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49", "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, upstreamSourceManifestSha256: "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e", scope: "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.", decision: "https://github.com/katalon-studio/loki/issues/1685#issuecomment-6407244037", transportMigration: { baselineSourceCommit: "953060f7fe7a557495c0071638c43ebd761eeed7", sharedPackage: "@katalon-experiments/ai-client@0.1.0", sharedSourceCommit: "61fc0b3c7e01f8272829f5137a9222b397f03c46" }, baselineSourceCommit: "808f533e4e9aacd4c18c2fbfe14099583faf2c3b", inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", scope: "Remove unsupported native request byte/hunk gates behind public wrapper. JEV255-choice protocol guard retained. Canonical VERSION metadata1771.1 and existing #1929 private diagnostics are included; prior source/version remain baseline provenance." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", scope: "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, outputBudgetRepair: { issue: 2470, scope: "Honor the template output budget for snapshots and patches. Default six-question requests to 8000 total output tokens for reasoning and final JSON. Preserve selected model/effort, partial results, original artifacts and zero retries." }, sourceBoundRiskRelations: { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", previousSourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", schema: "risk-source-relations/1", scope: "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance." }, evidenceQuestionOverlay: { issue: 3071, scope: "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets." }, attributedContextOverlay: { issue: 3958, sourceCommit: "4020dbc22b9cf7504cd521edc91420393980aa5b", scope: "Optional raw attributed context sources for change review; preserve existing work-item packets, native literal-excerpt validation and full original records. No template, model, call allowance or JEV change." }, citationEligibilityOverlay: { issue: 3958, sourceCommit: "24edf12ec49f1116e60748a25ea9e4e489bd69cf", scope: "Offer only application citations accepted by the existing resolver; retain complete original packets and full historical proof catalogs. No prompt, model, allowance or validation relaxation." }, availableOutputOverlay: { issues: [4382, 4449], sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", scope: "Human-selected temporary nonblocking risk output: retain all available rows, unfamiliar relation wording/operands and original responses; format-only non-strict output guidance. Exact source proofs are conditional; unsupported wording does not create verified evidence. Prompt, model, transport accounting and historical records remain unchanged." } };
   }
 });
 
@@ -75,7 +75,7 @@ var init_define_LOKI_CHANGE_RISK_PINS = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "3788aebd7e8a5a00c0fda6536e2939c17b704113d11c151c52db8392c0edcca6", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "28e935aacfbe955d21dcfbec184c093268e548fa654076edbb4bd433a8f36dc2", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "810912e831e5b52378b0248fc5a9664039ce84371ba7e820ff548ab76aa66428", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "0137886879fec2ccd502c358c5415f4db7c176744eecd7d040f41b512600cf7b", "packages/provider-transport/responses-session.d.mts": "3d4955929e29bf871a632ca54543aad2338486a8f854c8d2fc3f75c6a0f5ad27", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "aaf7960d35e1dfd834566a4cf4e36da2a2339f9ed1cef2eab995e3cfb0b0d3de", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "fba14aaa5fedaf7251d277fbc8d787c8adc4e099e0ab826717b127142bd48c87", "packages/computer-runner/src/agent-loop.mjs": "bb71333dc7cae1570be17b9f64e206e2a40b781554144b3fba06e1255f24aed2" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "4c8e7f653c417df1ae255b147a70c4f4a47a00833a518ddac89286aad1be4ca6", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "41ad0ff969a4b81054db276772af41956fcd52d81ea0efe1ff87c55744c44d54", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "fba14aaa5fedaf7251d277fbc8d787c8adc4e099e0ab826717b127142bd48c87", "packages/computer-runner/src/agent-loop.mjs": "bb71333dc7cae1570be17b9f64e206e2a40b781554144b3fba06e1255f24aed2" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -83,7 +83,7 @@ var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
 var define_LOKI_MAC_RUNNER_PINS_default;
 var init_define_LOKI_MAC_RUNNER_PINS = __esm({
   "<define:LOKI_MAC_RUNNER_PINS>"() {
-    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "3788aebd7e8a5a00c0fda6536e2939c17b704113d11c151c52db8392c0edcca6", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "28e935aacfbe955d21dcfbec184c093268e548fa654076edbb4bd433a8f36dc2", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "810912e831e5b52378b0248fc5a9664039ce84371ba7e820ff548ab76aa66428", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "0137886879fec2ccd502c358c5415f4db7c176744eecd7d040f41b512600cf7b", "packages/provider-transport/responses-session.d.mts": "3d4955929e29bf871a632ca54543aad2338486a8f854c8d2fc3f75c6a0f5ad27", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "aaf7960d35e1dfd834566a4cf4e36da2a2339f9ed1cef2eab995e3cfb0b0d3de", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "fba14aaa5fedaf7251d277fbc8d787c8adc4e099e0ab826717b127142bd48c87", "packages/computer-runner/src/agent-loop.mjs": "bb71333dc7cae1570be17b9f64e206e2a40b781554144b3fba06e1255f24aed2", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "3462229aaa64cc4fac9fbbdeef544615ef40eeb4dbccb1a46fee1d5fa45b4df2", "packages/mac-computer-runner/src/runner.d.mts": "d82419338fb346752e127b93e59619b125e3c12a567fa5c3ac5383988a99c601", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
+    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "4c8e7f653c417df1ae255b147a70c4f4a47a00833a518ddac89286aad1be4ca6", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "41ad0ff969a4b81054db276772af41956fcd52d81ea0efe1ff87c55744c44d54", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "fba14aaa5fedaf7251d277fbc8d787c8adc4e099e0ab826717b127142bd48c87", "packages/computer-runner/src/agent-loop.mjs": "bb71333dc7cae1570be17b9f64e206e2a40b781554144b3fba06e1255f24aed2", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "5f1122c4b9c54bfb9d0303ff336497e34ab43c25687356896d87707f4db8c858", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
   }
 });
 
@@ -107,7 +107,7 @@ var init_define_LOKI_PR_CONTEXT_PINS = __esm({
 var define_LOKI_TEST_PLANNING_PINS_default;
 var init_define_LOKI_TEST_PLANNING_PINS = __esm({
   "<define:LOKI_TEST_PLANNING_PINS>"() {
-    define_LOKI_TEST_PLANNING_PINS_default = { sourceCommit: "008184b0a616b16768fb0e727e7679e8534aaf97", packageVersion: "2026.10.27-3", module: "pr-context-finder/planning/pcf_plan.mjs", archiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", files: { "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b", "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55", "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "pr-context-finder/planning/pcf_native.mjs": "67d6f683f48dd788e6c490a81ee1497550e784cb40be920b6cb88cc3bbc1c102", "pr-context-finder/planning/pcf_plan.mjs": "ea7b6d5d3b5a38c2999e4e61bdb60775ea19e4106358be854ea377227085ebe0", "pr-context-finder/planning/pcf_provider.mjs": "5eca0ccf749b662c3d9996c891118aa0cb48544b595f36a183d9593d7e081e5c", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/planning/prompts.mjs": "62daed30e9045204b0a5eac95df9fb13c62adc54cfb990924bd1ffa962b9631f", "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830", "pr-context-finder/planning/risk-model-view.mjs": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058", "pr-context-finder/planning/request-instructions.mjs": "38fac7d6d4fe66b27276232f19b15a40d79422d699db53dbe985b8720ff8ed68", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, scope: "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.", diagnosticOverlay: { sourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselineSourceCommit: "2d169e723bf21c62dbcfc4cb6a2a99368768047f", baselineArchiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", baselineVersion: "2026.10.27-1", files: { "pr-context-finder/planning/pcf_provider.mjs": "1d527ae4fe1c60225c833f4829c86e769d8569278b9da2d2c76a60d8bf5f74e5" }, scope: "Diagnostic-only provider overlay; all other standalone code/version members retained. Baseline archive/source/version identify the original package, not this derivative.", baselineMergedCommit: "e0c13f263249010df9ae803c32f8f7cbccaaede5" }, prerequisiteContractOverlay: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineSourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselinePackageVersion: "2026.10.27-1", baselineReferenceArchiveSha256: "b2ad35695db5a56e51c09022decd771e49d4152f41e217dfd12b5f9e34c7347c", files: { "pr-context-finder/planning/pcf_plan.mjs": "b946ec3361ea687bbdf366da89841994af6f07380776f429a48ef9c5abbcb9ef" }, scope: "Exact accepted empty-prerequisite module; retain required array/string types, steps, source/evidence/coverage/identity checks and diagnostic provider. Package/integrity version metadata follows accepted module release; unrelated baseline members stay original." }, baselineConciseOverlay: { sourceCommit: "305d4d3d4951ab9b52438e86a137156c2b684a11", baseline: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", mergedCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", packageVersion: "2026.10.27-2" }, baselineReferenceArchiveSha256: "bafd32ea73cbc8619eeb4755bb04ab18a7a32c6eb5a7b1c4529caacad3bee280", decision: "https://github.com/katalon-studio/loki/issues/1899#issuecomment-6439500992", files: { "pr-context-finder/planning/pcf_plan.mjs": "32afc08ab975608a1ce291520326ca61dce2c0e44973fd686b7488454634bf47", "pr-context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5" }, scope: "Exact concise-complete baseline instructions only; retain existing schema, evidence authority, risk and supplement requests. Historical archive/source identities remain baseline provenance." }, requestByteBudgetOverlay: { sourceCommit: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", files: { "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366" }, scope: "Shared transport accepts an omitted request-byte budget; supplied positive caller budgets remain enforced. No baseline request or algorithm change." }, nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", files: { "pr-context-finder/planning/pcf_plan.mjs": "4beae3bdaa091f17a7105783e923b77d1ae23a970a3397750b421ccecaf8a107", "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366", "pr-context-finder/planning/pcf_records.mjs": "597f32a0a43d71481e5928643c237614171da23b670c6e2c67725cba7d45ff38" }, scope: "Independently merged #1929 validation failure diagnostics. Shared provider bytes include #1931 optional request budget; no baseline request construction change." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", files: { "pr-context-finder/planning/cli.mjs": "da72d0c41b58ed81b9a802d02888af06973227c6171ccb93a98e53bf26aa4866", "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520", "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2", "pr-context-finder/planning/pcf_plan.mjs": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5", "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de", "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07", "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072", "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157", "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7", "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b", "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d", "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0" }, scope: "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.", helpCorrection: "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", files: { "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a", "pr-context-finder/related/api.d.mts": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08", "pr-context-finder/related/api.mjs": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee", "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07", "pr-context-finder/related/capture.mjs": "98c30beb60aeb451cae0586bd13ed5494ae4faa0e26a798f39e12665a100ebd1", "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a", "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049", "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc", "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced", "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf", "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce", "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b", "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35", "pr-context-finder/planning/pcf_provider.mjs": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade" }, scope: "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.", resultProtocolSource: "008184b0a616b16768fb0e727e7679e8534aaf97" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceRelationOverlay: { issue: 2862, schema: "planning-source-relations/1", scope: "Current generation renders typed proposal relations from exact captured application spans. Scoped customer reads reconstruct the saved projection; historical free prose keeps identity and literal application excerpts with explicit qualification. Original delivery provenance and historical request records remain unchanged." }, literalExcerptOverlay: { issue: 3055, schema: "planning-source-relations/2", scope: "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged." }, requestSchemaSharingOverlay: { issue: "https://github.com/katalon-studio/loki/issues/3138", baselineSourceCommit: "64e6a58779a6f9da319fb946e1178ee2f53b65a9", files: { "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c" }, scope: "Share identical inline schema components through definitions in outgoing structured requests. Keep the expanded native validators, all source and test constraints, explicit output budgets, original records and no-replay behavior. Does not establish the cause of historical incomplete service responses." }, generatedProposalOverlay: { issue: 3110, schema: "planning-generated-proposal/1", scope: "New plans retain complete generated QA prose as proposed interpretation. Scoped saved reads revalidate the original input, exact evidence and requirement references, candidate and catalog hashes, full test definitions and derived coverage/Runner membership. Keep historical source-relation/1 and /2 readers, earlier plan bytes and original pin provenance unchanged. No automatic source correction call, execution or readiness claim." }, agentsSdk: { issue: 3736, version: "0.21.0", scope: "Initial Planner generation uses the SDK through the managed retained transport. Existing source instructions, native plan validation, originals, no-retry, Stop and MCP contracts remain. Persistent sessions and the remaining phases are separate increments." } };
+    define_LOKI_TEST_PLANNING_PINS_default = { sourceCommit: "008184b0a616b16768fb0e727e7679e8534aaf97", packageVersion: "2026.10.27-3", module: "pr-context-finder/planning/pcf_plan.mjs", archiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", files: { "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b", "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55", "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "pr-context-finder/planning/pcf_native.mjs": "48bd1c58c005472ca53a53d335d767f2caf4b8c237dcde9038b6cb790e2d2d6b", "pr-context-finder/planning/pcf_plan.mjs": "ea7b6d5d3b5a38c2999e4e61bdb60775ea19e4106358be854ea377227085ebe0", "pr-context-finder/planning/pcf_provider.mjs": "3b13d3b5ba6719720e52dd0e1e709a9bf3b0dae67689d0fee4bc325c54c0680a", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/planning/prompts.mjs": "62daed30e9045204b0a5eac95df9fb13c62adc54cfb990924bd1ffa962b9631f", "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "node_modules/@katalon-experiments/ai-client/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "node_modules/@katalon-experiments/ai-client/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830", "pr-context-finder/planning/risk-model-view.mjs": "f2f94693e90d230ee79fc33a62a903cfbbc8320490c7897a5e57d5288da4d058", "pr-context-finder/planning/request-instructions.mjs": "38fac7d6d4fe66b27276232f19b15a40d79422d699db53dbe985b8720ff8ed68", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, scope: "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.", diagnosticOverlay: { sourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselineSourceCommit: "2d169e723bf21c62dbcfc4cb6a2a99368768047f", baselineArchiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", baselineVersion: "2026.10.27-1", files: { "pr-context-finder/planning/pcf_provider.mjs": "1d527ae4fe1c60225c833f4829c86e769d8569278b9da2d2c76a60d8bf5f74e5" }, scope: "Diagnostic-only provider overlay; all other standalone code/version members retained. Baseline archive/source/version identify the original package, not this derivative.", baselineMergedCommit: "e0c13f263249010df9ae803c32f8f7cbccaaede5" }, prerequisiteContractOverlay: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineSourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselinePackageVersion: "2026.10.27-1", baselineReferenceArchiveSha256: "b2ad35695db5a56e51c09022decd771e49d4152f41e217dfd12b5f9e34c7347c", files: { "pr-context-finder/planning/pcf_plan.mjs": "b946ec3361ea687bbdf366da89841994af6f07380776f429a48ef9c5abbcb9ef" }, scope: "Exact accepted empty-prerequisite module; retain required array/string types, steps, source/evidence/coverage/identity checks and diagnostic provider. Package/integrity version metadata follows accepted module release; unrelated baseline members stay original." }, baselineConciseOverlay: { sourceCommit: "305d4d3d4951ab9b52438e86a137156c2b684a11", baseline: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", mergedCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", packageVersion: "2026.10.27-2" }, baselineReferenceArchiveSha256: "bafd32ea73cbc8619eeb4755bb04ab18a7a32c6eb5a7b1c4529caacad3bee280", decision: "https://github.com/katalon-studio/loki/issues/1899#issuecomment-6439500992", files: { "pr-context-finder/planning/pcf_plan.mjs": "32afc08ab975608a1ce291520326ca61dce2c0e44973fd686b7488454634bf47", "pr-context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5" }, scope: "Exact concise-complete baseline instructions only; retain existing schema, evidence authority, risk and supplement requests. Historical archive/source identities remain baseline provenance." }, requestByteBudgetOverlay: { sourceCommit: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", files: { "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366" }, scope: "Shared transport accepts an omitted request-byte budget; supplied positive caller budgets remain enforced. No baseline request or algorithm change." }, nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", files: { "pr-context-finder/planning/pcf_plan.mjs": "4beae3bdaa091f17a7105783e923b77d1ae23a970a3397750b421ccecaf8a107", "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366", "pr-context-finder/planning/pcf_records.mjs": "597f32a0a43d71481e5928643c237614171da23b670c6e2c67725cba7d45ff38" }, scope: "Independently merged #1929 validation failure diagnostics. Shared provider bytes include #1931 optional request budget; no baseline request construction change." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", files: { "pr-context-finder/planning/cli.mjs": "da72d0c41b58ed81b9a802d02888af06973227c6171ccb93a98e53bf26aa4866", "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520", "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2", "pr-context-finder/planning/pcf_plan.mjs": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5", "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de", "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07", "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072", "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157", "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7", "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b", "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d", "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0" }, scope: "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.", helpCorrection: "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", files: { "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a", "pr-context-finder/related/api.d.mts": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08", "pr-context-finder/related/api.mjs": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee", "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07", "pr-context-finder/related/capture.mjs": "98c30beb60aeb451cae0586bd13ed5494ae4faa0e26a798f39e12665a100ebd1", "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a", "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049", "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc", "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced", "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf", "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce", "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b", "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35", "pr-context-finder/planning/pcf_provider.mjs": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade" }, scope: "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.", resultProtocolSource: "008184b0a616b16768fb0e727e7679e8534aaf97" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceRelationOverlay: { issue: 2862, schema: "planning-source-relations/1", scope: "Current generation renders typed proposal relations from exact captured application spans. Scoped customer reads reconstruct the saved projection; historical free prose keeps identity and literal application excerpts with explicit qualification. Original delivery provenance and historical request records remain unchanged." }, literalExcerptOverlay: { issue: 3055, schema: "planning-source-relations/2", scope: "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged." }, requestSchemaSharingOverlay: { issue: "https://github.com/katalon-studio/loki/issues/3138", baselineSourceCommit: "64e6a58779a6f9da319fb946e1178ee2f53b65a9", files: { "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c" }, scope: "Share identical inline schema components through definitions in outgoing structured requests. Keep the expanded native validators, all source and test constraints, explicit output budgets, original records and no-replay behavior. Does not establish the cause of historical incomplete service responses." }, generatedProposalOverlay: { issue: 3110, schema: "planning-generated-proposal/1", scope: "New plans retain complete generated QA prose as proposed interpretation. Scoped saved reads revalidate the original input, exact evidence and requirement references, candidate and catalog hashes, full test definitions and derived coverage/Runner membership. Keep historical source-relation/1 and /2 readers, earlier plan bytes and original pin provenance unchanged. No automatic source correction call, execution or readiness claim." }, agentsSdk: { issue: 3736, version: "0.21.0", scope: "Initial Planner generation uses the SDK through the managed retained transport. Existing source instructions, native plan validation, originals, no-retry, Stop and MCP contracts remain. Persistent sessions and the remaining phases are separate increments." } };
   }
 });
 
@@ -123,7 +123,7 @@ var init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA = __esm({
 var define_LOKI_WORK_ITEM_RISK_PINS_default;
 var init_define_LOKI_WORK_ITEM_RISK_PINS = __esm({
   "<define:LOKI_WORK_ITEM_RISK_PINS>"() {
-    define_LOKI_WORK_ITEM_RISK_PINS_default = { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", mergedCommit: "77dd326a586562a263a0bb8f0f9175eef68afcdc", files: { "work-item-review.mjs": "5321a26b459eb64aa9a18af1474f9e1091bdd25155ae27088fa7a58a8fc86450", "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f", "work-item-output.schema.json": "f68dec67e6123da13624ea1106fc8844f43d2729c3590180878d58bcfaba5d34", "runtime.mjs": "a0b15f48175415d5cfc274e999c51e1333d4377dcecf5d110c09b16dd0644d25", "method.mjs": "be12b184095cc387af32d346d7b6c7cc9e3ac6bef3a37a3ca79603ff99846adf", "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9", "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08", "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b", "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5", "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49", "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a", "work-item-instructions.mjs": "a30005bf5f2b5f7aa326b05cb08581c9004cf2692056445435b33593d772b032", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, scope: "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.", baselineSourceCommit: "8fea2fd74369e75acee6e6f9b147c030f40f024e", nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", scope: "Independent #1929 private first-failure validation diagnostics; algorithm and request preserved." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", scope: "Remove factory and shared runtime fixed byte caps; output/question/model/diagnostics remain." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", scope: "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceBoundRiskRelations: { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", previousSourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", schema: "risk-source-relations/1", scope: "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance." }, literalRiskExcerptOverlay: { issue: 3071, schema: "risk-source-relations/1", scope: "New Work Item Risk responses copy unique complete source phrases; the host derives retained UTF-16 spans. Keep historical saved offsets, source proof, original answers and the one-call accounting contract. No replay or output-budget change." }, serviceOutputBudgetOverlay: { issue: 3231, scope: "Remove only the unrequested Work Item Risk 4000-token response ceiling. Preserve service limits, one dispatch, strict validation, original failure receipts and honest partial coverage. Explicit Change Risk template budgets remain unchanged; no new customer setting or replay." }, evidenceQuestionOverlay: { issue: 3071, scope: "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets." }, attributedContextOverlay: { issue: 3958, sourceCommit: "4020dbc22b9cf7504cd521edc91420393980aa5b", scope: "Optional raw attributed context sources for change review; preserve existing work-item packets, native literal-excerpt validation and full original records. No template, model, call allowance or JEV change." }, citationEligibilityOverlay: { issue: 3958, sourceCommit: "24edf12ec49f1116e60748a25ea9e4e489bd69cf", scope: "Offer only application citations accepted by the existing resolver; retain complete original packets and full historical proof catalogs. No prompt, model, allowance or validation relaxation." }, availableOutputOverlay: { issues: [4382, 4449], sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", scope: "Human-selected temporary nonblocking risk output: retain all available rows, unfamiliar relation wording/operands and original responses; format-only non-strict output guidance. Exact source proofs are conditional; unsupported wording does not create verified evidence. Prompt, model, transport accounting and historical records remain unchanged." } };
+    define_LOKI_WORK_ITEM_RISK_PINS_default = { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", mergedCommit: "77dd326a586562a263a0bb8f0f9175eef68afcdc", files: { "work-item-review.mjs": "5321a26b459eb64aa9a18af1474f9e1091bdd25155ae27088fa7a58a8fc86450", "work-item-input.schema.json": "4c3350c2190ece3fe740e063d37eeb04ba0a933282bfedc56aa33b0d89c6408f", "work-item-output.schema.json": "f68dec67e6123da13624ea1106fc8844f43d2729c3590180878d58bcfaba5d34", "runtime.mjs": "306816c214cd0e139e2537ad9fe51023c8d43b4ed2dd5712bc6504d67b9cca95", "method.mjs": "be12b184095cc387af32d346d7b6c7cc9e3ac6bef3a37a3ca79603ff99846adf", "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9", "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08", "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b", "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5", "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49", "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5", "node_modules/@katalon-experiments/ai-client/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823", "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5", "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a", "work-item-instructions.mjs": "a30005bf5f2b5f7aa326b05cb08581c9004cf2692056445435b33593d772b032", "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb" }, scope: "Supported createWorkItemRisk factory composed with exact delivered runtime/question-output, admitted sourceScreen, planning evidenceCatalog and shared providerConnection. Legacy code API remains separately pinned; no producer algorithm copied.", baselineSourceCommit: "8fea2fd74369e75acee6e6f9b147c030f40f024e", nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", scope: "Independent #1929 private first-failure validation diagnostics; algorithm and request preserved." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", scope: "Remove factory and shared runtime fixed byte caps; output/question/model/diagnostics remain." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", scope: "Shared exposed risk transport captures safe exact full/prefix bytes with status, hash, completion and unknown-accounting receipts; credential echoes remain hash/length only. Semantic methods preserved." }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceBoundRiskRelations: { sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", previousSourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", schema: "risk-source-relations/1", scope: "Typed risk relations over exact retained application spans. Scoped original-result and packet admission; fixed relation prose, per-object customer proof and distinct report projection digests. Original source manifest and historical pins remain provenance." }, literalRiskExcerptOverlay: { issue: 3071, schema: "risk-source-relations/1", scope: "New Work Item Risk responses copy unique complete source phrases; the host derives retained UTF-16 spans. Keep historical saved offsets, source proof, original answers and the one-call accounting contract. No replay or output-budget change." }, serviceOutputBudgetOverlay: { issue: 3231, scope: "Remove only the unrequested Work Item Risk 4000-token response ceiling. Preserve service limits, one dispatch, strict validation, original failure receipts and honest partial coverage. Explicit Change Risk template budgets remain unchanged; no new customer setting or replay." }, evidenceQuestionOverlay: { issue: 3071, scope: "Use an evidence-for relation when a source leaves a claim unverified. Keep exact source bindings, historical relation wording and existing call budgets." }, attributedContextOverlay: { issue: 3958, sourceCommit: "4020dbc22b9cf7504cd521edc91420393980aa5b", scope: "Optional raw attributed context sources for change review; preserve existing work-item packets, native literal-excerpt validation and full original records. No template, model, call allowance or JEV change." }, citationEligibilityOverlay: { issue: 3958, sourceCommit: "24edf12ec49f1116e60748a25ea9e4e489bd69cf", scope: "Offer only application citations accepted by the existing resolver; retain complete original packets and full historical proof catalogs. No prompt, model, allowance or validation relaxation." }, availableOutputOverlay: { issues: [4382, 4449], sourceCommit: "647725aa971b168b58a92db867b7d0b523715d29", scope: "Human-selected temporary nonblocking risk output: retain all available rows, unfamiliar relation wording/operands and original responses; format-only non-strict output guidance. Exact source proofs are conditional; unsupported wording does not create verified evidence. Prompt, model, transport accounting and historical records remain unchanged." } };
   }
 });
 
@@ -8397,6 +8397,3819 @@ var require__ = __commonJS({
   }
 });
 
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/constants.js
+var require_constants = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/constants.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var BINARY_TYPES = ["nodebuffer", "arraybuffer", "fragments"];
+    var hasBlob = typeof Blob !== "undefined";
+    if (hasBlob) BINARY_TYPES.push("blob");
+    module.exports = {
+      BINARY_TYPES,
+      CLOSE_TIMEOUT: 3e4,
+      EMPTY_BUFFER: Buffer.alloc(0),
+      GUID: "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
+      hasBlob,
+      kForOnEventAttribute: /* @__PURE__ */ Symbol("kIsForOnEventAttribute"),
+      kListener: /* @__PURE__ */ Symbol("kListener"),
+      kStatusCode: /* @__PURE__ */ Symbol("status-code"),
+      kWebSocket: /* @__PURE__ */ Symbol("websocket"),
+      NOOP: () => {
+      }
+    };
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/buffer-util.js
+var require_buffer_util = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/buffer-util.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { EMPTY_BUFFER } = require_constants();
+    var FastBuffer = Buffer[Symbol.species];
+    function concat(list15, totalLength) {
+      if (list15.length === 0) return EMPTY_BUFFER;
+      if (list15.length === 1) return list15[0];
+      const target3 = Buffer.allocUnsafe(totalLength);
+      let offset2 = 0;
+      for (let i2 = 0; i2 < list15.length; i2++) {
+        const buf = list15[i2];
+        target3.set(buf, offset2);
+        offset2 += buf.length;
+      }
+      if (offset2 < totalLength) {
+        return new FastBuffer(target3.buffer, target3.byteOffset, offset2);
+      }
+      return target3;
+    }
+    function _mask(source4, mask, output2, offset2, length) {
+      for (let i2 = 0; i2 < length; i2++) {
+        output2[offset2 + i2] = source4[i2] ^ mask[i2 & 3];
+      }
+    }
+    function _unmask(buffer, mask) {
+      for (let i2 = 0; i2 < buffer.length; i2++) {
+        buffer[i2] ^= mask[i2 & 3];
+      }
+    }
+    function toArrayBuffer(buf) {
+      if (buf.length === buf.buffer.byteLength) {
+        return buf.buffer;
+      }
+      return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
+    }
+    function toBuffer(data2) {
+      toBuffer.readOnly = true;
+      if (Buffer.isBuffer(data2)) return data2;
+      let buf;
+      if (data2 instanceof ArrayBuffer) {
+        buf = new FastBuffer(data2);
+      } else if (ArrayBuffer.isView(data2)) {
+        buf = new FastBuffer(data2.buffer, data2.byteOffset, data2.byteLength);
+      } else {
+        buf = Buffer.from(data2);
+        toBuffer.readOnly = false;
+      }
+      return buf;
+    }
+    module.exports = {
+      concat,
+      mask: _mask,
+      toArrayBuffer,
+      toBuffer,
+      unmask: _unmask
+    };
+    if (!process.env.WS_NO_BUFFER_UTIL) {
+      try {
+        const bufferUtil = __require("bufferutil");
+        module.exports.mask = function(source4, mask, output2, offset2, length) {
+          if (length < 48) _mask(source4, mask, output2, offset2, length);
+          else bufferUtil.mask(source4, mask, output2, offset2, length);
+        };
+        module.exports.unmask = function(buffer, mask) {
+          if (buffer.length < 32) _unmask(buffer, mask);
+          else bufferUtil.unmask(buffer, mask);
+        };
+      } catch (e2) {
+      }
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/limiter.js
+var require_limiter = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/limiter.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var kDone = /* @__PURE__ */ Symbol("kDone");
+    var kRun = /* @__PURE__ */ Symbol("kRun");
+    var Limiter = class {
+      /**
+       * Creates a new `Limiter`.
+       *
+       * @param {Number} [concurrency=Infinity] The maximum number of jobs allowed
+       *     to run concurrently
+       */
+      constructor(concurrency) {
+        this[kDone] = () => {
+          this.pending--;
+          this[kRun]();
+        };
+        this.concurrency = concurrency || Infinity;
+        this.jobs = [];
+        this.pending = 0;
+      }
+      /**
+       * Adds a job to the queue.
+       *
+       * @param {Function} job The job to run
+       * @public
+       */
+      add(job) {
+        this.jobs.push(job);
+        this[kRun]();
+      }
+      /**
+       * Removes a job from the queue and runs it if possible.
+       *
+       * @private
+       */
+      [kRun]() {
+        if (this.pending === this.concurrency) return;
+        if (this.jobs.length) {
+          const job = this.jobs.shift();
+          this.pending++;
+          job(this[kDone]);
+        }
+      }
+    };
+    module.exports = Limiter;
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/permessage-deflate.js
+var require_permessage_deflate = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/permessage-deflate.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var zlib = __require("zlib");
+    var bufferUtil = require_buffer_util();
+    var Limiter = require_limiter();
+    var { kStatusCode } = require_constants();
+    var FastBuffer = Buffer[Symbol.species];
+    var TRAILER = Buffer.from([0, 0, 255, 255]);
+    var kPerMessageDeflate = /* @__PURE__ */ Symbol("permessage-deflate");
+    var kTotalLength = /* @__PURE__ */ Symbol("total-length");
+    var kCallback = /* @__PURE__ */ Symbol("callback");
+    var kBuffers = /* @__PURE__ */ Symbol("buffers");
+    var kError = /* @__PURE__ */ Symbol("error");
+    var zlibLimiter;
+    var PerMessageDeflate2 = class {
+      /**
+       * Creates a PerMessageDeflate instance.
+       *
+       * @param {Object} [options] Configuration options
+       * @param {(Boolean|Number)} [options.clientMaxWindowBits] Advertise support
+       *     for, or request, a custom client window size
+       * @param {Boolean} [options.clientNoContextTakeover=false] Advertise/
+       *     acknowledge disabling of client context takeover
+       * @param {Number} [options.concurrencyLimit=10] The number of concurrent
+       *     calls to zlib
+       * @param {Boolean} [options.isServer=false] Create the instance in either
+       *     server or client mode
+       * @param {Number} [options.maxPayload=0] The maximum allowed message length
+       * @param {(Boolean|Number)} [options.serverMaxWindowBits] Request/confirm the
+       *     use of a custom server window size
+       * @param {Boolean} [options.serverNoContextTakeover=false] Request/accept
+       *     disabling of server context takeover
+       * @param {Number} [options.threshold=1024] Size (in bytes) below which
+       *     messages should not be compressed if context takeover is disabled
+       * @param {Object} [options.zlibDeflateOptions] Options to pass to zlib on
+       *     deflate
+       * @param {Object} [options.zlibInflateOptions] Options to pass to zlib on
+       *     inflate
+       */
+      constructor(options2) {
+        this._options = options2 || {};
+        this._threshold = this._options.threshold !== void 0 ? this._options.threshold : 1024;
+        this._maxPayload = this._options.maxPayload | 0;
+        this._isServer = !!this._options.isServer;
+        this._deflate = null;
+        this._inflate = null;
+        this.params = null;
+        if (!zlibLimiter) {
+          const concurrency = this._options.concurrencyLimit !== void 0 ? this._options.concurrencyLimit : 10;
+          zlibLimiter = new Limiter(concurrency);
+        }
+      }
+      /**
+       * @type {String}
+       */
+      static get extensionName() {
+        return "permessage-deflate";
+      }
+      /**
+       * Create an extension negotiation offer.
+       *
+       * @return {Object} Extension parameters
+       * @public
+       */
+      offer() {
+        const params = {};
+        if (this._options.serverNoContextTakeover) {
+          params.server_no_context_takeover = true;
+        }
+        if (this._options.clientNoContextTakeover) {
+          params.client_no_context_takeover = true;
+        }
+        if (this._options.serverMaxWindowBits) {
+          params.server_max_window_bits = this._options.serverMaxWindowBits;
+        }
+        if (this._options.clientMaxWindowBits) {
+          params.client_max_window_bits = this._options.clientMaxWindowBits;
+        } else if (this._options.clientMaxWindowBits == null) {
+          params.client_max_window_bits = true;
+        }
+        return params;
+      }
+      /**
+       * Accept an extension negotiation offer/response.
+       *
+       * @param {Array} configurations The extension negotiation offers/reponse
+       * @return {Object} Accepted configuration
+       * @public
+       */
+      accept(configurations) {
+        configurations = this.normalizeParams(configurations);
+        this.params = this._isServer ? this.acceptAsServer(configurations) : this.acceptAsClient(configurations);
+        return this.params;
+      }
+      /**
+       * Releases all resources used by the extension.
+       *
+       * @public
+       */
+      cleanup() {
+        if (this._inflate) {
+          this._inflate.close();
+          this._inflate = null;
+        }
+        if (this._deflate) {
+          const callback = this._deflate[kCallback];
+          this._deflate.close();
+          this._deflate = null;
+          if (callback) {
+            callback(
+              new Error(
+                "The deflate stream was closed while data was being processed"
+              )
+            );
+          }
+        }
+      }
+      /**
+       *  Accept an extension negotiation offer.
+       *
+       * @param {Array} offers The extension negotiation offers
+       * @return {Object} Accepted configuration
+       * @private
+       */
+      acceptAsServer(offers) {
+        const opts = this._options;
+        const accepted = offers.find((params) => {
+          if (opts.serverNoContextTakeover === false && params.server_no_context_takeover || params.server_max_window_bits && (opts.serverMaxWindowBits === false || typeof opts.serverMaxWindowBits === "number" && opts.serverMaxWindowBits > params.server_max_window_bits) || typeof opts.clientMaxWindowBits === "number" && (typeof params.client_max_window_bits === "number" ? opts.clientMaxWindowBits > params.client_max_window_bits : !params.client_max_window_bits)) {
+            return false;
+          }
+          return true;
+        });
+        if (!accepted) {
+          throw new Error("None of the extension offers can be accepted");
+        }
+        if (opts.serverNoContextTakeover) {
+          accepted.server_no_context_takeover = true;
+        }
+        if (opts.clientNoContextTakeover) {
+          accepted.client_no_context_takeover = true;
+        }
+        if (typeof opts.serverMaxWindowBits === "number") {
+          accepted.server_max_window_bits = opts.serverMaxWindowBits;
+        }
+        if (typeof opts.clientMaxWindowBits === "number") {
+          accepted.client_max_window_bits = opts.clientMaxWindowBits;
+        } else if (accepted.client_max_window_bits === true || opts.clientMaxWindowBits === false) {
+          delete accepted.client_max_window_bits;
+        }
+        return accepted;
+      }
+      /**
+       * Accept the extension negotiation response.
+       *
+       * @param {Array} response The extension negotiation response
+       * @return {Object} Accepted configuration
+       * @private
+       */
+      acceptAsClient(response) {
+        const params = response[0];
+        if (this._options.clientNoContextTakeover === false && params.client_no_context_takeover) {
+          throw new Error('Unexpected parameter "client_no_context_takeover"');
+        }
+        if (!params.client_max_window_bits) {
+          if (typeof this._options.clientMaxWindowBits === "number") {
+            params.client_max_window_bits = this._options.clientMaxWindowBits;
+          }
+        } else if (this._options.clientMaxWindowBits === false || typeof this._options.clientMaxWindowBits === "number" && params.client_max_window_bits > this._options.clientMaxWindowBits) {
+          throw new Error(
+            'Unexpected or invalid parameter "client_max_window_bits"'
+          );
+        }
+        return params;
+      }
+      /**
+       * Normalize parameters.
+       *
+       * @param {Array} configurations The extension negotiation offers/reponse
+       * @return {Array} The offers/response with normalized parameters
+       * @private
+       */
+      normalizeParams(configurations) {
+        configurations.forEach((params) => {
+          Object.keys(params).forEach((key5) => {
+            let value = params[key5];
+            if (value.length > 1) {
+              throw new Error(`Parameter "${key5}" must have only a single value`);
+            }
+            value = value[0];
+            if (key5 === "client_max_window_bits") {
+              if (value !== true) {
+                const num = +value;
+                if (!Number.isInteger(num) || num < 8 || num > 15) {
+                  throw new TypeError(
+                    `Invalid value for parameter "${key5}": ${value}`
+                  );
+                }
+                value = num;
+              } else if (!this._isServer) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key5}": ${value}`
+                );
+              }
+            } else if (key5 === "server_max_window_bits") {
+              const num = +value;
+              if (!Number.isInteger(num) || num < 8 || num > 15) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key5}": ${value}`
+                );
+              }
+              value = num;
+            } else if (key5 === "client_no_context_takeover" || key5 === "server_no_context_takeover") {
+              if (value !== true) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key5}": ${value}`
+                );
+              }
+            } else {
+              throw new Error(`Unknown parameter "${key5}"`);
+            }
+            params[key5] = value;
+          });
+        });
+        return configurations;
+      }
+      /**
+       * Decompress data. Concurrency limited.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @public
+       */
+      decompress(data2, fin, callback) {
+        zlibLimiter.add((done) => {
+          this._decompress(data2, fin, (err, result) => {
+            done();
+            callback(err, result);
+          });
+        });
+      }
+      /**
+       * Compress data. Concurrency limited.
+       *
+       * @param {(Buffer|String)} data Data to compress
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @public
+       */
+      compress(data2, fin, callback) {
+        zlibLimiter.add((done) => {
+          this._compress(data2, fin, (err, result) => {
+            done();
+            callback(err, result);
+          });
+        });
+      }
+      /**
+       * Decompress data.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @private
+       */
+      _decompress(data2, fin, callback) {
+        const endpoint = this._isServer ? "client" : "server";
+        if (!this._inflate) {
+          const key5 = `${endpoint}_max_window_bits`;
+          const windowBits = typeof this.params[key5] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key5];
+          this._inflate = zlib.createInflateRaw({
+            ...this._options.zlibInflateOptions,
+            windowBits
+          });
+          this._inflate[kPerMessageDeflate] = this;
+          this._inflate[kTotalLength] = 0;
+          this._inflate[kBuffers] = [];
+          this._inflate.on("error", inflateOnError);
+          this._inflate.on("data", inflateOnData);
+        }
+        this._inflate[kCallback] = callback;
+        this._inflate.write(data2);
+        if (fin) this._inflate.write(TRAILER);
+        this._inflate.flush(() => {
+          const err = this._inflate[kError];
+          if (err) {
+            this._inflate.close();
+            this._inflate = null;
+            callback(err);
+            return;
+          }
+          const data3 = bufferUtil.concat(
+            this._inflate[kBuffers],
+            this._inflate[kTotalLength]
+          );
+          if (this._inflate._readableState.endEmitted) {
+            this._inflate.close();
+            this._inflate = null;
+          } else {
+            this._inflate[kTotalLength] = 0;
+            this._inflate[kBuffers] = [];
+            if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+              this._inflate.reset();
+            }
+          }
+          callback(null, data3);
+        });
+      }
+      /**
+       * Compress data.
+       *
+       * @param {(Buffer|String)} data Data to compress
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @private
+       */
+      _compress(data2, fin, callback) {
+        const endpoint = this._isServer ? "server" : "client";
+        if (!this._deflate) {
+          const key5 = `${endpoint}_max_window_bits`;
+          const windowBits = typeof this.params[key5] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key5];
+          this._deflate = zlib.createDeflateRaw({
+            ...this._options.zlibDeflateOptions,
+            windowBits
+          });
+          this._deflate[kTotalLength] = 0;
+          this._deflate[kBuffers] = [];
+          this._deflate.on("data", deflateOnData);
+        }
+        this._deflate[kCallback] = callback;
+        this._deflate.write(data2);
+        this._deflate.flush(zlib.Z_SYNC_FLUSH, () => {
+          if (!this._deflate) {
+            return;
+          }
+          let data3 = bufferUtil.concat(
+            this._deflate[kBuffers],
+            this._deflate[kTotalLength]
+          );
+          if (fin) {
+            data3 = new FastBuffer(data3.buffer, data3.byteOffset, data3.length - 4);
+          }
+          this._deflate[kCallback] = null;
+          this._deflate[kTotalLength] = 0;
+          this._deflate[kBuffers] = [];
+          if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+            this._deflate.reset();
+          }
+          callback(null, data3);
+        });
+      }
+    };
+    module.exports = PerMessageDeflate2;
+    function deflateOnData(chunk) {
+      this[kBuffers].push(chunk);
+      this[kTotalLength] += chunk.length;
+    }
+    function inflateOnData(chunk) {
+      this[kTotalLength] += chunk.length;
+      if (this[kPerMessageDeflate]._maxPayload < 1 || this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload) {
+        this[kBuffers].push(chunk);
+        return;
+      }
+      this[kError] = new RangeError("Max payload size exceeded");
+      this[kError].code = "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH";
+      this[kError][kStatusCode] = 1009;
+      this.removeListener("data", inflateOnData);
+      this.reset();
+    }
+    function inflateOnError(err) {
+      this[kPerMessageDeflate]._inflate = null;
+      if (this[kError]) {
+        this[kCallback](this[kError]);
+        return;
+      }
+      err[kStatusCode] = 1007;
+      this[kCallback](err);
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/validation.js
+var require_validation3 = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/validation.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { isUtf8 } = __require("buffer");
+    var { hasBlob } = require_constants();
+    var tokenChars = [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 0 - 15
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 16 - 31
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      // 32 - 47
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 48 - 63
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      // 64 - 79
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      // 80 - 95
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      // 96 - 111
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0
+      // 112 - 127
+    ];
+    function isValidStatusCode(code) {
+      return code >= 1e3 && code <= 1014 && code !== 1004 && code !== 1005 && code !== 1006 || code >= 3e3 && code <= 4999;
+    }
+    function _isValidUTF8(buf) {
+      const len = buf.length;
+      let i2 = 0;
+      while (i2 < len) {
+        if ((buf[i2] & 128) === 0) {
+          i2++;
+        } else if ((buf[i2] & 224) === 192) {
+          if (i2 + 1 === len || (buf[i2 + 1] & 192) !== 128 || (buf[i2] & 254) === 192) {
+            return false;
+          }
+          i2 += 2;
+        } else if ((buf[i2] & 240) === 224) {
+          if (i2 + 2 >= len || (buf[i2 + 1] & 192) !== 128 || (buf[i2 + 2] & 192) !== 128 || buf[i2] === 224 && (buf[i2 + 1] & 224) === 128 || // Overlong
+          buf[i2] === 237 && (buf[i2 + 1] & 224) === 160) {
+            return false;
+          }
+          i2 += 3;
+        } else if ((buf[i2] & 248) === 240) {
+          if (i2 + 3 >= len || (buf[i2 + 1] & 192) !== 128 || (buf[i2 + 2] & 192) !== 128 || (buf[i2 + 3] & 192) !== 128 || buf[i2] === 240 && (buf[i2 + 1] & 240) === 128 || // Overlong
+          buf[i2] === 244 && buf[i2 + 1] > 143 || buf[i2] > 244) {
+            return false;
+          }
+          i2 += 4;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
+    function isBlob(value) {
+      return hasBlob && typeof value === "object" && typeof value.arrayBuffer === "function" && typeof value.type === "string" && typeof value.stream === "function" && (value[Symbol.toStringTag] === "Blob" || value[Symbol.toStringTag] === "File");
+    }
+    module.exports = {
+      isBlob,
+      isValidStatusCode,
+      isValidUTF8: _isValidUTF8,
+      tokenChars
+    };
+    if (isUtf8) {
+      module.exports.isValidUTF8 = function(buf) {
+        return buf.length < 24 ? _isValidUTF8(buf) : isUtf8(buf);
+      };
+    } else if (!process.env.WS_NO_UTF_8_VALIDATE) {
+      try {
+        const isValidUTF8 = __require("utf-8-validate");
+        module.exports.isValidUTF8 = function(buf) {
+          return buf.length < 32 ? _isValidUTF8(buf) : isValidUTF8(buf);
+        };
+      } catch (e2) {
+      }
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/receiver.js
+var require_receiver = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/receiver.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { Writable } = __require("stream");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var {
+      BINARY_TYPES,
+      EMPTY_BUFFER,
+      kStatusCode,
+      kWebSocket
+    } = require_constants();
+    var { concat, toArrayBuffer, unmask } = require_buffer_util();
+    var { isValidStatusCode, isValidUTF8 } = require_validation3();
+    var FastBuffer = Buffer[Symbol.species];
+    var GET_INFO = 0;
+    var GET_PAYLOAD_LENGTH_16 = 1;
+    var GET_PAYLOAD_LENGTH_64 = 2;
+    var GET_MASK = 3;
+    var GET_DATA = 4;
+    var INFLATING = 5;
+    var DEFER_EVENT = 6;
+    var Receiver2 = class extends Writable {
+      /**
+       * Creates a Receiver instance.
+       *
+       * @param {Object} [options] Options object
+       * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {String} [options.binaryType=nodebuffer] The type for binary data
+       * @param {Object} [options.extensions] An object containing the negotiated
+       *     extensions
+       * @param {Boolean} [options.isServer=false] Specifies whether to operate in
+       *     client or server mode
+       * @param {Number} [options.maxBufferedChunks=0] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=0] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=0] The maximum allowed message length
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       */
+      constructor(options2 = {}) {
+        super();
+        this._allowSynchronousEvents = options2.allowSynchronousEvents !== void 0 ? options2.allowSynchronousEvents : true;
+        this._binaryType = options2.binaryType || BINARY_TYPES[0];
+        this._extensions = options2.extensions || {};
+        this._isServer = !!options2.isServer;
+        this._maxBufferedChunks = options2.maxBufferedChunks | 0;
+        this._maxFragments = options2.maxFragments | 0;
+        this._maxPayload = options2.maxPayload | 0;
+        this._skipUTF8Validation = !!options2.skipUTF8Validation;
+        this[kWebSocket] = void 0;
+        this._bufferedBytes = 0;
+        this._buffers = [];
+        this._compressed = false;
+        this._payloadLength = 0;
+        this._mask = void 0;
+        this._fragmented = 0;
+        this._masked = false;
+        this._fin = false;
+        this._opcode = 0;
+        this._totalPayloadLength = 0;
+        this._messageLength = 0;
+        this._numFragments = 0;
+        this._fragments = [];
+        this._errored = false;
+        this._loop = false;
+        this._state = GET_INFO;
+      }
+      /**
+       * Implements `Writable.prototype._write()`.
+       *
+       * @param {Buffer} chunk The chunk of data to write
+       * @param {String} encoding The character encoding of `chunk`
+       * @param {Function} cb Callback
+       * @private
+       */
+      _write(chunk, encoding, cb) {
+        if (this._opcode === 8 && this._state == GET_INFO) return cb();
+        if (this._maxBufferedChunks > 0 && this._buffers.length >= this._maxBufferedChunks) {
+          cb(
+            this.createError(
+              RangeError,
+              "Too many buffered chunks",
+              false,
+              1008,
+              "WS_ERR_TOO_MANY_BUFFERED_PARTS"
+            )
+          );
+          return;
+        }
+        this._bufferedBytes += chunk.length;
+        this._buffers.push(chunk);
+        this.startLoop(cb);
+      }
+      /**
+       * Consumes `n` bytes from the buffered data.
+       *
+       * @param {Number} n The number of bytes to consume
+       * @return {Buffer} The consumed bytes
+       * @private
+       */
+      consume(n) {
+        this._bufferedBytes -= n;
+        if (n === this._buffers[0].length) return this._buffers.shift();
+        if (n < this._buffers[0].length) {
+          const buf = this._buffers[0];
+          this._buffers[0] = new FastBuffer(
+            buf.buffer,
+            buf.byteOffset + n,
+            buf.length - n
+          );
+          return new FastBuffer(buf.buffer, buf.byteOffset, n);
+        }
+        const dst = Buffer.allocUnsafe(n);
+        do {
+          const buf = this._buffers[0];
+          const offset2 = dst.length - n;
+          if (n >= buf.length) {
+            dst.set(this._buffers.shift(), offset2);
+          } else {
+            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n), offset2);
+            this._buffers[0] = new FastBuffer(
+              buf.buffer,
+              buf.byteOffset + n,
+              buf.length - n
+            );
+          }
+          n -= buf.length;
+        } while (n > 0);
+        return dst;
+      }
+      /**
+       * Starts the parsing loop.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      startLoop(cb) {
+        this._loop = true;
+        do {
+          switch (this._state) {
+            case GET_INFO:
+              this.getInfo(cb);
+              break;
+            case GET_PAYLOAD_LENGTH_16:
+              this.getPayloadLength16(cb);
+              break;
+            case GET_PAYLOAD_LENGTH_64:
+              this.getPayloadLength64(cb);
+              break;
+            case GET_MASK:
+              this.getMask();
+              break;
+            case GET_DATA:
+              this.getData(cb);
+              break;
+            case INFLATING:
+            case DEFER_EVENT:
+              this._loop = false;
+              return;
+          }
+        } while (this._loop);
+        if (!this._errored) cb();
+      }
+      /**
+       * Reads the first two bytes of a frame.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getInfo(cb) {
+        if (this._bufferedBytes < 2) {
+          this._loop = false;
+          return;
+        }
+        const buf = this.consume(2);
+        if ((buf[0] & 48) !== 0) {
+          const error62 = this.createError(
+            RangeError,
+            "RSV2 and RSV3 must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_RSV_2_3"
+          );
+          cb(error62);
+          return;
+        }
+        const compressed = (buf[0] & 64) === 64;
+        if (compressed && !this._extensions[PerMessageDeflate2.extensionName]) {
+          const error62 = this.createError(
+            RangeError,
+            "RSV1 must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_RSV_1"
+          );
+          cb(error62);
+          return;
+        }
+        this._fin = (buf[0] & 128) === 128;
+        this._opcode = buf[0] & 15;
+        this._payloadLength = buf[1] & 127;
+        if (this._opcode === 0) {
+          if (compressed) {
+            const error62 = this.createError(
+              RangeError,
+              "RSV1 must be clear",
+              true,
+              1002,
+              "WS_ERR_UNEXPECTED_RSV_1"
+            );
+            cb(error62);
+            return;
+          }
+          if (!this._fragmented) {
+            const error62 = this.createError(
+              RangeError,
+              "invalid opcode 0",
+              true,
+              1002,
+              "WS_ERR_INVALID_OPCODE"
+            );
+            cb(error62);
+            return;
+          }
+          this._opcode = this._fragmented;
+        } else if (this._opcode === 1 || this._opcode === 2) {
+          if (this._fragmented) {
+            const error62 = this.createError(
+              RangeError,
+              `invalid opcode ${this._opcode}`,
+              true,
+              1002,
+              "WS_ERR_INVALID_OPCODE"
+            );
+            cb(error62);
+            return;
+          }
+          this._compressed = compressed;
+        } else if (this._opcode > 7 && this._opcode < 11) {
+          if (!this._fin) {
+            const error62 = this.createError(
+              RangeError,
+              "FIN must be set",
+              true,
+              1002,
+              "WS_ERR_EXPECTED_FIN"
+            );
+            cb(error62);
+            return;
+          }
+          if (compressed) {
+            const error62 = this.createError(
+              RangeError,
+              "RSV1 must be clear",
+              true,
+              1002,
+              "WS_ERR_UNEXPECTED_RSV_1"
+            );
+            cb(error62);
+            return;
+          }
+          if (this._payloadLength > 125 || this._opcode === 8 && this._payloadLength === 1) {
+            const error62 = this.createError(
+              RangeError,
+              `invalid payload length ${this._payloadLength}`,
+              true,
+              1002,
+              "WS_ERR_INVALID_CONTROL_PAYLOAD_LENGTH"
+            );
+            cb(error62);
+            return;
+          }
+        } else {
+          const error62 = this.createError(
+            RangeError,
+            `invalid opcode ${this._opcode}`,
+            true,
+            1002,
+            "WS_ERR_INVALID_OPCODE"
+          );
+          cb(error62);
+          return;
+        }
+        if (!this._fin && !this._fragmented) this._fragmented = this._opcode;
+        this._masked = (buf[1] & 128) === 128;
+        if (this._isServer) {
+          if (!this._masked) {
+            const error62 = this.createError(
+              RangeError,
+              "MASK must be set",
+              true,
+              1002,
+              "WS_ERR_EXPECTED_MASK"
+            );
+            cb(error62);
+            return;
+          }
+        } else if (this._masked) {
+          const error62 = this.createError(
+            RangeError,
+            "MASK must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_MASK"
+          );
+          cb(error62);
+          return;
+        }
+        if (this._payloadLength === 126) this._state = GET_PAYLOAD_LENGTH_16;
+        else if (this._payloadLength === 127) this._state = GET_PAYLOAD_LENGTH_64;
+        else this.haveLength(cb);
+      }
+      /**
+       * Gets extended payload length (7+16).
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getPayloadLength16(cb) {
+        if (this._bufferedBytes < 2) {
+          this._loop = false;
+          return;
+        }
+        this._payloadLength = this.consume(2).readUInt16BE(0);
+        this.haveLength(cb);
+      }
+      /**
+       * Gets extended payload length (7+64).
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getPayloadLength64(cb) {
+        if (this._bufferedBytes < 8) {
+          this._loop = false;
+          return;
+        }
+        const buf = this.consume(8);
+        const num = buf.readUInt32BE(0);
+        if (num > Math.pow(2, 53 - 32) - 1) {
+          const error62 = this.createError(
+            RangeError,
+            "Unsupported WebSocket frame: payload length > 2^53 - 1",
+            false,
+            1009,
+            "WS_ERR_UNSUPPORTED_DATA_PAYLOAD_LENGTH"
+          );
+          cb(error62);
+          return;
+        }
+        this._payloadLength = num * Math.pow(2, 32) + buf.readUInt32BE(4);
+        this.haveLength(cb);
+      }
+      /**
+       * Payload length has been read.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      haveLength(cb) {
+        if (this._payloadLength && this._opcode < 8) {
+          this._totalPayloadLength += this._payloadLength;
+          if (this._totalPayloadLength > this._maxPayload && this._maxPayload > 0) {
+            const error62 = this.createError(
+              RangeError,
+              "Max payload size exceeded",
+              false,
+              1009,
+              "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"
+            );
+            cb(error62);
+            return;
+          }
+        }
+        if (this._masked) this._state = GET_MASK;
+        else this._state = GET_DATA;
+      }
+      /**
+       * Reads mask bytes.
+       *
+       * @private
+       */
+      getMask() {
+        if (this._bufferedBytes < 4) {
+          this._loop = false;
+          return;
+        }
+        this._mask = this.consume(4);
+        this._state = GET_DATA;
+      }
+      /**
+       * Reads data bytes.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getData(cb) {
+        let data2 = EMPTY_BUFFER;
+        if (this._payloadLength) {
+          if (this._bufferedBytes < this._payloadLength) {
+            this._loop = false;
+            return;
+          }
+          data2 = this.consume(this._payloadLength);
+          if (this._masked && (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0) {
+            unmask(data2, this._mask);
+          }
+        }
+        if (this._opcode > 7) {
+          this.controlMessage(data2, cb);
+          return;
+        }
+        if (this._maxFragments > 0 && ++this._numFragments > this._maxFragments) {
+          const error62 = this.createError(
+            RangeError,
+            "Too many message fragments",
+            false,
+            1008,
+            "WS_ERR_TOO_MANY_BUFFERED_PARTS"
+          );
+          cb(error62);
+          return;
+        }
+        if (this._compressed) {
+          this._state = INFLATING;
+          this.decompress(data2, cb);
+          return;
+        }
+        if (data2.length) {
+          this._messageLength = this._totalPayloadLength;
+          this._fragments.push(data2);
+        }
+        this.dataMessage(cb);
+      }
+      /**
+       * Decompresses data.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Function} cb Callback
+       * @private
+       */
+      decompress(data2, cb) {
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        perMessageDeflate.decompress(data2, this._fin, (err, buf) => {
+          if (err) return cb(err);
+          if (buf.length) {
+            this._messageLength += buf.length;
+            if (this._messageLength > this._maxPayload && this._maxPayload > 0) {
+              const error62 = this.createError(
+                RangeError,
+                "Max payload size exceeded",
+                false,
+                1009,
+                "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"
+              );
+              cb(error62);
+              return;
+            }
+            this._fragments.push(buf);
+          }
+          this.dataMessage(cb);
+          if (this._state === GET_INFO) this.startLoop(cb);
+        });
+      }
+      /**
+       * Handles a data message.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      dataMessage(cb) {
+        if (!this._fin) {
+          this._state = GET_INFO;
+          return;
+        }
+        const messageLength = this._messageLength;
+        const fragments = this._fragments;
+        this._totalPayloadLength = 0;
+        this._messageLength = 0;
+        this._fragmented = 0;
+        this._numFragments = 0;
+        this._fragments = [];
+        if (this._opcode === 2) {
+          let data2;
+          if (this._binaryType === "nodebuffer") {
+            data2 = concat(fragments, messageLength);
+          } else if (this._binaryType === "arraybuffer") {
+            data2 = toArrayBuffer(concat(fragments, messageLength));
+          } else if (this._binaryType === "blob") {
+            data2 = new Blob(fragments);
+          } else {
+            data2 = fragments;
+          }
+          if (this._allowSynchronousEvents) {
+            this.emit("message", data2, true);
+            this._state = GET_INFO;
+          } else {
+            this._state = DEFER_EVENT;
+            setImmediate(() => {
+              this.emit("message", data2, true);
+              this._state = GET_INFO;
+              this.startLoop(cb);
+            });
+          }
+        } else {
+          const buf = concat(fragments, messageLength);
+          if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+            const error62 = this.createError(
+              Error,
+              "invalid UTF-8 sequence",
+              true,
+              1007,
+              "WS_ERR_INVALID_UTF8"
+            );
+            cb(error62);
+            return;
+          }
+          if (this._state === INFLATING || this._allowSynchronousEvents) {
+            this.emit("message", buf, false);
+            this._state = GET_INFO;
+          } else {
+            this._state = DEFER_EVENT;
+            setImmediate(() => {
+              this.emit("message", buf, false);
+              this._state = GET_INFO;
+              this.startLoop(cb);
+            });
+          }
+        }
+      }
+      /**
+       * Handles a control message.
+       *
+       * @param {Buffer} data Data to handle
+       * @return {(Error|RangeError|undefined)} A possible error
+       * @private
+       */
+      controlMessage(data2, cb) {
+        if (this._opcode === 8) {
+          if (data2.length === 0) {
+            this._loop = false;
+            this.emit("conclude", 1005, EMPTY_BUFFER);
+            this.end();
+          } else {
+            const code = data2.readUInt16BE(0);
+            if (!isValidStatusCode(code)) {
+              const error62 = this.createError(
+                RangeError,
+                `invalid status code ${code}`,
+                true,
+                1002,
+                "WS_ERR_INVALID_CLOSE_CODE"
+              );
+              cb(error62);
+              return;
+            }
+            const buf = new FastBuffer(
+              data2.buffer,
+              data2.byteOffset + 2,
+              data2.length - 2
+            );
+            if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+              const error62 = this.createError(
+                Error,
+                "invalid UTF-8 sequence",
+                true,
+                1007,
+                "WS_ERR_INVALID_UTF8"
+              );
+              cb(error62);
+              return;
+            }
+            this._loop = false;
+            this.emit("conclude", code, buf);
+            this.end();
+          }
+          this._state = GET_INFO;
+          return;
+        }
+        if (this._allowSynchronousEvents) {
+          this.emit(this._opcode === 9 ? "ping" : "pong", data2);
+          this._state = GET_INFO;
+        } else {
+          this._state = DEFER_EVENT;
+          setImmediate(() => {
+            this.emit(this._opcode === 9 ? "ping" : "pong", data2);
+            this._state = GET_INFO;
+            this.startLoop(cb);
+          });
+        }
+      }
+      /**
+       * Builds an error object.
+       *
+       * @param {function(new:Error|RangeError)} ErrorCtor The error constructor
+       * @param {String} message The error message
+       * @param {Boolean} prefix Specifies whether or not to add a default prefix to
+       *     `message`
+       * @param {Number} statusCode The status code
+       * @param {String} errorCode The exposed error code
+       * @return {(Error|RangeError)} The error
+       * @private
+       */
+      createError(ErrorCtor, message, prefix, statusCode, errorCode) {
+        this._loop = false;
+        this._errored = true;
+        const err = new ErrorCtor(
+          prefix ? `Invalid WebSocket frame: ${message}` : message
+        );
+        Error.captureStackTrace(err, this.createError);
+        err.code = errorCode;
+        err[kStatusCode] = statusCode;
+        return err;
+      }
+    };
+    module.exports = Receiver2;
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/sender.js
+var require_sender = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/sender.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { Duplex } = __require("stream");
+    var { randomFillSync } = __require("crypto");
+    var {
+      types: { isUint8Array }
+    } = __require("util");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var { EMPTY_BUFFER, kWebSocket, NOOP } = require_constants();
+    var { isBlob, isValidStatusCode } = require_validation3();
+    var { mask: applyMask, toBuffer } = require_buffer_util();
+    var kByteLength = /* @__PURE__ */ Symbol("kByteLength");
+    var maskBuffer = Buffer.alloc(4);
+    var RANDOM_POOL_SIZE = 8 * 1024;
+    var randomPool;
+    var randomPoolPointer = RANDOM_POOL_SIZE;
+    var DEFAULT = 0;
+    var DEFLATING = 1;
+    var GET_BLOB_DATA = 2;
+    var Sender2 = class _Sender {
+      /**
+       * Creates a Sender instance.
+       *
+       * @param {Duplex} socket The connection socket
+       * @param {Object} [extensions] An object containing the negotiated extensions
+       * @param {Function} [generateMask] The function used to generate the masking
+       *     key
+       */
+      constructor(socket, extensions, generateMask) {
+        this._extensions = extensions || {};
+        if (generateMask) {
+          this._generateMask = generateMask;
+          this._maskBuffer = Buffer.alloc(4);
+        }
+        this._socket = socket;
+        this._firstFragment = true;
+        this._compress = false;
+        this._bufferedBytes = 0;
+        this._queue = [];
+        this._state = DEFAULT;
+        this.onerror = NOOP;
+        this[kWebSocket] = void 0;
+      }
+      /**
+       * Frames a piece of data according to the HyBi WebSocket protocol.
+       *
+       * @param {(Buffer|String)} data The data to frame
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @return {(Buffer|String)[]} The framed data
+       * @public
+       */
+      static frame(data2, options2) {
+        let mask;
+        let merge2 = false;
+        let offset2 = 2;
+        let skipMasking = false;
+        if (options2.mask) {
+          mask = options2.maskBuffer || maskBuffer;
+          if (options2.generateMask) {
+            options2.generateMask(mask);
+          } else {
+            if (randomPoolPointer === RANDOM_POOL_SIZE) {
+              if (randomPool === void 0) {
+                randomPool = Buffer.alloc(RANDOM_POOL_SIZE);
+              }
+              randomFillSync(randomPool, 0, RANDOM_POOL_SIZE);
+              randomPoolPointer = 0;
+            }
+            mask[0] = randomPool[randomPoolPointer++];
+            mask[1] = randomPool[randomPoolPointer++];
+            mask[2] = randomPool[randomPoolPointer++];
+            mask[3] = randomPool[randomPoolPointer++];
+          }
+          skipMasking = (mask[0] | mask[1] | mask[2] | mask[3]) === 0;
+          offset2 = 6;
+        }
+        let dataLength;
+        if (typeof data2 === "string") {
+          if ((!options2.mask || skipMasking) && options2[kByteLength] !== void 0) {
+            dataLength = options2[kByteLength];
+          } else {
+            data2 = Buffer.from(data2);
+            dataLength = data2.length;
+          }
+        } else {
+          dataLength = data2.length;
+          merge2 = options2.mask && options2.readOnly && !skipMasking;
+        }
+        let payloadLength = dataLength;
+        if (dataLength >= 65536) {
+          offset2 += 8;
+          payloadLength = 127;
+        } else if (dataLength > 125) {
+          offset2 += 2;
+          payloadLength = 126;
+        }
+        const target3 = Buffer.allocUnsafe(merge2 ? dataLength + offset2 : offset2);
+        target3[0] = options2.fin ? options2.opcode | 128 : options2.opcode;
+        if (options2.rsv1) target3[0] |= 64;
+        target3[1] = payloadLength;
+        if (payloadLength === 126) {
+          target3.writeUInt16BE(dataLength, 2);
+        } else if (payloadLength === 127) {
+          target3[2] = target3[3] = 0;
+          target3.writeUIntBE(dataLength, 4, 6);
+        }
+        if (!options2.mask) return [target3, data2];
+        target3[1] |= 128;
+        target3[offset2 - 4] = mask[0];
+        target3[offset2 - 3] = mask[1];
+        target3[offset2 - 2] = mask[2];
+        target3[offset2 - 1] = mask[3];
+        if (skipMasking) return [target3, data2];
+        if (merge2) {
+          applyMask(data2, mask, target3, offset2, dataLength);
+          return [target3];
+        }
+        applyMask(data2, mask, data2, 0, dataLength);
+        return [target3, data2];
+      }
+      /**
+       * Sends a close message to the other peer.
+       *
+       * @param {Number} [code] The status code component of the body
+       * @param {(String|Buffer)} [data] The message component of the body
+       * @param {Boolean} [mask=false] Specifies whether or not to mask the message
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      close(code, data2, mask, cb) {
+        let buf;
+        if (code === void 0) {
+          buf = EMPTY_BUFFER;
+        } else if (typeof code !== "number" || !isValidStatusCode(code)) {
+          throw new TypeError("First argument must be a valid error code number");
+        } else if (data2 === void 0 || !data2.length) {
+          buf = Buffer.allocUnsafe(2);
+          buf.writeUInt16BE(code, 0);
+        } else {
+          const length = Buffer.byteLength(data2);
+          if (length > 123) {
+            throw new RangeError("The message must not be greater than 123 bytes");
+          }
+          buf = Buffer.allocUnsafe(2 + length);
+          buf.writeUInt16BE(code, 0);
+          if (typeof data2 === "string") {
+            buf.write(data2, 2);
+          } else if (isUint8Array(data2)) {
+            buf.set(data2, 2);
+          } else {
+            throw new TypeError("Second argument must be a string or a Uint8Array");
+          }
+        }
+        const options2 = {
+          [kByteLength]: buf.length,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 8,
+          readOnly: false,
+          rsv1: false
+        };
+        if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, buf, false, options2, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(buf, options2), cb);
+        }
+      }
+      /**
+       * Sends a ping message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      ping(data2, mask, cb) {
+        let byteLength;
+        let readOnly;
+        if (typeof data2 === "string") {
+          byteLength = Buffer.byteLength(data2);
+          readOnly = false;
+        } else if (isBlob(data2)) {
+          byteLength = data2.size;
+          readOnly = false;
+        } else {
+          data2 = toBuffer(data2);
+          byteLength = data2.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (byteLength > 125) {
+          throw new RangeError("The data size must not be greater than 125 bytes");
+        }
+        const options2 = {
+          [kByteLength]: byteLength,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 9,
+          readOnly,
+          rsv1: false
+        };
+        if (isBlob(data2)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data2, false, options2, cb]);
+          } else {
+            this.getBlobData(data2, false, options2, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data2, false, options2, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(data2, options2), cb);
+        }
+      }
+      /**
+       * Sends a pong message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      pong(data2, mask, cb) {
+        let byteLength;
+        let readOnly;
+        if (typeof data2 === "string") {
+          byteLength = Buffer.byteLength(data2);
+          readOnly = false;
+        } else if (isBlob(data2)) {
+          byteLength = data2.size;
+          readOnly = false;
+        } else {
+          data2 = toBuffer(data2);
+          byteLength = data2.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (byteLength > 125) {
+          throw new RangeError("The data size must not be greater than 125 bytes");
+        }
+        const options2 = {
+          [kByteLength]: byteLength,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 10,
+          readOnly,
+          rsv1: false
+        };
+        if (isBlob(data2)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data2, false, options2, cb]);
+          } else {
+            this.getBlobData(data2, false, options2, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data2, false, options2, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(data2, options2), cb);
+        }
+      }
+      /**
+       * Sends a data message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Object} options Options object
+       * @param {Boolean} [options.binary=false] Specifies whether `data` is binary
+       *     or text
+       * @param {Boolean} [options.compress=false] Specifies whether or not to
+       *     compress `data`
+       * @param {Boolean} [options.fin=false] Specifies whether the fragment is the
+       *     last one
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      send(data2, options2, cb) {
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        let opcode = options2.binary ? 2 : 1;
+        let rsv1 = options2.compress;
+        let byteLength;
+        let readOnly;
+        if (typeof data2 === "string") {
+          byteLength = Buffer.byteLength(data2);
+          readOnly = false;
+        } else if (isBlob(data2)) {
+          byteLength = data2.size;
+          readOnly = false;
+        } else {
+          data2 = toBuffer(data2);
+          byteLength = data2.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (this._firstFragment) {
+          this._firstFragment = false;
+          if (rsv1 && perMessageDeflate && perMessageDeflate.params[perMessageDeflate._isServer ? "server_no_context_takeover" : "client_no_context_takeover"]) {
+            rsv1 = byteLength >= perMessageDeflate._threshold;
+          }
+          this._compress = rsv1;
+        } else {
+          rsv1 = false;
+          opcode = 0;
+        }
+        if (options2.fin) this._firstFragment = true;
+        const opts = {
+          [kByteLength]: byteLength,
+          fin: options2.fin,
+          generateMask: this._generateMask,
+          mask: options2.mask,
+          maskBuffer: this._maskBuffer,
+          opcode,
+          readOnly,
+          rsv1
+        };
+        if (isBlob(data2)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data2, this._compress, opts, cb]);
+          } else {
+            this.getBlobData(data2, this._compress, opts, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data2, this._compress, opts, cb]);
+        } else {
+          this.dispatch(data2, this._compress, opts, cb);
+        }
+      }
+      /**
+       * Gets the contents of a blob as binary data.
+       *
+       * @param {Blob} blob The blob
+       * @param {Boolean} [compress=false] Specifies whether or not to compress
+       *     the data
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      getBlobData(blob, compress, options2, cb) {
+        this._bufferedBytes += options2[kByteLength];
+        this._state = GET_BLOB_DATA;
+        blob.arrayBuffer().then((arrayBuffer) => {
+          if (this._socket.destroyed) {
+            const err = new Error(
+              "The socket was closed while the blob was being read"
+            );
+            process.nextTick(callCallbacks, this, err, cb);
+            return;
+          }
+          this._bufferedBytes -= options2[kByteLength];
+          const data2 = toBuffer(arrayBuffer);
+          if (!compress) {
+            this._state = DEFAULT;
+            this.sendFrame(_Sender.frame(data2, options2), cb);
+            this.dequeue();
+          } else {
+            this.dispatch(data2, compress, options2, cb);
+          }
+        }).catch((err) => {
+          process.nextTick(onError, this, err, cb);
+        });
+      }
+      /**
+       * Dispatches a message.
+       *
+       * @param {(Buffer|String)} data The message to send
+       * @param {Boolean} [compress=false] Specifies whether or not to compress
+       *     `data`
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      dispatch(data2, compress, options2, cb) {
+        if (!compress) {
+          this.sendFrame(_Sender.frame(data2, options2), cb);
+          return;
+        }
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        this._bufferedBytes += options2[kByteLength];
+        this._state = DEFLATING;
+        perMessageDeflate.compress(data2, options2.fin, (_, buf) => {
+          if (this._socket.destroyed) {
+            const err = new Error(
+              "The socket was closed while data was being compressed"
+            );
+            callCallbacks(this, err, cb);
+            return;
+          }
+          this._bufferedBytes -= options2[kByteLength];
+          this._state = DEFAULT;
+          options2.readOnly = false;
+          this.sendFrame(_Sender.frame(buf, options2), cb);
+          this.dequeue();
+        });
+      }
+      /**
+       * Executes queued send operations.
+       *
+       * @private
+       */
+      dequeue() {
+        while (this._state === DEFAULT && this._queue.length) {
+          const params = this._queue.shift();
+          this._bufferedBytes -= params[3][kByteLength];
+          Reflect.apply(params[0], this, params.slice(1));
+        }
+      }
+      /**
+       * Enqueues a send operation.
+       *
+       * @param {Array} params Send operation parameters.
+       * @private
+       */
+      enqueue(params) {
+        this._bufferedBytes += params[3][kByteLength];
+        this._queue.push(params);
+      }
+      /**
+       * Sends a frame.
+       *
+       * @param {(Buffer | String)[]} list The frame to send
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      sendFrame(list15, cb) {
+        if (list15.length === 2) {
+          this._socket.cork();
+          this._socket.write(list15[0]);
+          this._socket.write(list15[1], cb);
+          this._socket.uncork();
+        } else {
+          this._socket.write(list15[0], cb);
+        }
+      }
+    };
+    module.exports = Sender2;
+    function callCallbacks(sender, err, cb) {
+      if (typeof cb === "function") cb(err);
+      for (let i2 = 0; i2 < sender._queue.length; i2++) {
+        const params = sender._queue[i2];
+        const callback = params[params.length - 1];
+        if (typeof callback === "function") callback(err);
+      }
+    }
+    function onError(sender, err, cb) {
+      callCallbacks(sender, err, cb);
+      sender.onerror(err);
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/event-target.js
+var require_event_target = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/event-target.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { kForOnEventAttribute, kListener } = require_constants();
+    var kCode = /* @__PURE__ */ Symbol("kCode");
+    var kData = /* @__PURE__ */ Symbol("kData");
+    var kError = /* @__PURE__ */ Symbol("kError");
+    var kMessage = /* @__PURE__ */ Symbol("kMessage");
+    var kReason = /* @__PURE__ */ Symbol("kReason");
+    var kTarget = /* @__PURE__ */ Symbol("kTarget");
+    var kType = /* @__PURE__ */ Symbol("kType");
+    var kWasClean = /* @__PURE__ */ Symbol("kWasClean");
+    var Event2 = class {
+      /**
+       * Create a new `Event`.
+       *
+       * @param {String} type The name of the event
+       * @throws {TypeError} If the `type` argument is not specified
+       */
+      constructor(type) {
+        this[kTarget] = null;
+        this[kType] = type;
+      }
+      /**
+       * @type {*}
+       */
+      get target() {
+        return this[kTarget];
+      }
+      /**
+       * @type {String}
+       */
+      get type() {
+        return this[kType];
+      }
+    };
+    Object.defineProperty(Event2.prototype, "target", { enumerable: true });
+    Object.defineProperty(Event2.prototype, "type", { enumerable: true });
+    var CloseEvent = class extends Event2 {
+      /**
+       * Create a new `CloseEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {Number} [options.code=0] The status code explaining why the
+       *     connection was closed
+       * @param {String} [options.reason=''] A human-readable string explaining why
+       *     the connection was closed
+       * @param {Boolean} [options.wasClean=false] Indicates whether or not the
+       *     connection was cleanly closed
+       */
+      constructor(type, options2 = {}) {
+        super(type);
+        this[kCode] = options2.code === void 0 ? 0 : options2.code;
+        this[kReason] = options2.reason === void 0 ? "" : options2.reason;
+        this[kWasClean] = options2.wasClean === void 0 ? false : options2.wasClean;
+      }
+      /**
+       * @type {Number}
+       */
+      get code() {
+        return this[kCode];
+      }
+      /**
+       * @type {String}
+       */
+      get reason() {
+        return this[kReason];
+      }
+      /**
+       * @type {Boolean}
+       */
+      get wasClean() {
+        return this[kWasClean];
+      }
+    };
+    Object.defineProperty(CloseEvent.prototype, "code", { enumerable: true });
+    Object.defineProperty(CloseEvent.prototype, "reason", { enumerable: true });
+    Object.defineProperty(CloseEvent.prototype, "wasClean", { enumerable: true });
+    var ErrorEvent = class extends Event2 {
+      /**
+       * Create a new `ErrorEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {*} [options.error=null] The error that generated this event
+       * @param {String} [options.message=''] The error message
+       */
+      constructor(type, options2 = {}) {
+        super(type);
+        this[kError] = options2.error === void 0 ? null : options2.error;
+        this[kMessage] = options2.message === void 0 ? "" : options2.message;
+      }
+      /**
+       * @type {*}
+       */
+      get error() {
+        return this[kError];
+      }
+      /**
+       * @type {String}
+       */
+      get message() {
+        return this[kMessage];
+      }
+    };
+    Object.defineProperty(ErrorEvent.prototype, "error", { enumerable: true });
+    Object.defineProperty(ErrorEvent.prototype, "message", { enumerable: true });
+    var MessageEvent = class extends Event2 {
+      /**
+       * Create a new `MessageEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {*} [options.data=null] The message content
+       */
+      constructor(type, options2 = {}) {
+        super(type);
+        this[kData] = options2.data === void 0 ? null : options2.data;
+      }
+      /**
+       * @type {*}
+       */
+      get data() {
+        return this[kData];
+      }
+    };
+    Object.defineProperty(MessageEvent.prototype, "data", { enumerable: true });
+    var EventTarget2 = {
+      /**
+       * Register an event listener.
+       *
+       * @param {String} type A string representing the event type to listen for
+       * @param {(Function|Object)} handler The listener to add
+       * @param {Object} [options] An options object specifies characteristics about
+       *     the event listener
+       * @param {Boolean} [options.once=false] A `Boolean` indicating that the
+       *     listener should be invoked at most once after being added. If `true`,
+       *     the listener would be automatically removed when invoked.
+       * @public
+       */
+      addEventListener(type, handler, options2 = {}) {
+        for (const listener of this.listeners(type)) {
+          if (!options2[kForOnEventAttribute] && listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+            return;
+          }
+        }
+        let wrapper;
+        if (type === "message") {
+          wrapper = function onMessage(data2, isBinary) {
+            const event2 = new MessageEvent("message", {
+              data: isBinary ? data2 : data2.toString()
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "close") {
+          wrapper = function onClose(code, message) {
+            const event2 = new CloseEvent("close", {
+              code,
+              reason: message.toString(),
+              wasClean: this._closeFrameReceived && this._closeFrameSent
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "error") {
+          wrapper = function onError(error62) {
+            const event2 = new ErrorEvent("error", {
+              error: error62,
+              message: error62.message
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "open") {
+          wrapper = function onOpen() {
+            const event2 = new Event2("open");
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else {
+          return;
+        }
+        wrapper[kForOnEventAttribute] = !!options2[kForOnEventAttribute];
+        wrapper[kListener] = handler;
+        if (options2.once) {
+          this.once(type, wrapper);
+        } else {
+          this.on(type, wrapper);
+        }
+      },
+      /**
+       * Remove an event listener.
+       *
+       * @param {String} type A string representing the event type to remove
+       * @param {(Function|Object)} handler The listener to remove
+       * @public
+       */
+      removeEventListener(type, handler) {
+        for (const listener of this.listeners(type)) {
+          if (listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+            this.removeListener(type, listener);
+            break;
+          }
+        }
+      }
+    };
+    module.exports = {
+      CloseEvent,
+      ErrorEvent,
+      Event: Event2,
+      EventTarget: EventTarget2,
+      MessageEvent
+    };
+    function callListener(listener, thisArg, event2) {
+      if (typeof listener === "object" && listener.handleEvent) {
+        listener.handleEvent.call(listener, event2);
+      } else {
+        listener.call(thisArg, event2);
+      }
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/extension.js
+var require_extension = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/extension.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { tokenChars } = require_validation3();
+    function push2(dest, name, elem) {
+      if (dest[name] === void 0) dest[name] = [elem];
+      else dest[name].push(elem);
+    }
+    function parse12(header2) {
+      const offers = /* @__PURE__ */ Object.create(null);
+      let params = /* @__PURE__ */ Object.create(null);
+      let mustUnescape = false;
+      let isEscaping = false;
+      let inQuotes = false;
+      let extensionName;
+      let paramName;
+      let start = -1;
+      let code = -1;
+      let end = -1;
+      let i2 = 0;
+      for (; i2 < header2.length; i2++) {
+        code = header2.charCodeAt(i2);
+        if (extensionName === void 0) {
+          if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i2;
+          } else if (i2 !== 0 && (code === 32 || code === 9)) {
+            if (end === -1 && start !== -1) end = i2;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i2}`);
+            }
+            if (end === -1) end = i2;
+            const name = header2.slice(start, end);
+            if (code === 44) {
+              push2(offers, name, params);
+              params = /* @__PURE__ */ Object.create(null);
+            } else {
+              extensionName = name;
+            }
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i2}`);
+          }
+        } else if (paramName === void 0) {
+          if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i2;
+          } else if (code === 32 || code === 9) {
+            if (end === -1 && start !== -1) end = i2;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i2}`);
+            }
+            if (end === -1) end = i2;
+            push2(params, header2.slice(start, end), true);
+            if (code === 44) {
+              push2(offers, extensionName, params);
+              params = /* @__PURE__ */ Object.create(null);
+              extensionName = void 0;
+            }
+            start = end = -1;
+          } else if (code === 61 && start !== -1 && end === -1) {
+            paramName = header2.slice(start, i2);
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i2}`);
+          }
+        } else {
+          if (isEscaping) {
+            if (tokenChars[code] !== 1) {
+              throw new SyntaxError(`Unexpected character at index ${i2}`);
+            }
+            if (start === -1) start = i2;
+            else if (!mustUnescape) mustUnescape = true;
+            isEscaping = false;
+          } else if (inQuotes) {
+            if (tokenChars[code] === 1) {
+              if (start === -1) start = i2;
+            } else if (code === 34 && start !== -1) {
+              inQuotes = false;
+              end = i2;
+            } else if (code === 92) {
+              isEscaping = true;
+            } else {
+              throw new SyntaxError(`Unexpected character at index ${i2}`);
+            }
+          } else if (code === 34 && header2.charCodeAt(i2 - 1) === 61) {
+            inQuotes = true;
+          } else if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i2;
+          } else if (start !== -1 && (code === 32 || code === 9)) {
+            if (end === -1) end = i2;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i2}`);
+            }
+            if (end === -1) end = i2;
+            let value = header2.slice(start, end);
+            if (mustUnescape) {
+              value = value.replace(/\\/g, "");
+              mustUnescape = false;
+            }
+            push2(params, paramName, value);
+            if (code === 44) {
+              push2(offers, extensionName, params);
+              params = /* @__PURE__ */ Object.create(null);
+              extensionName = void 0;
+            }
+            paramName = void 0;
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i2}`);
+          }
+        }
+      }
+      if (start === -1 || inQuotes || code === 32 || code === 9) {
+        throw new SyntaxError("Unexpected end of input");
+      }
+      if (end === -1) end = i2;
+      const token = header2.slice(start, end);
+      if (extensionName === void 0) {
+        push2(offers, token, params);
+      } else {
+        if (paramName === void 0) {
+          push2(params, token, true);
+        } else if (mustUnescape) {
+          push2(params, paramName, token.replace(/\\/g, ""));
+        } else {
+          push2(params, paramName, token);
+        }
+        push2(offers, extensionName, params);
+      }
+      return offers;
+    }
+    function format3(extensions) {
+      return Object.keys(extensions).map((extension3) => {
+        let configurations = extensions[extension3];
+        if (!Array.isArray(configurations)) configurations = [configurations];
+        return configurations.map((params) => {
+          return [extension3].concat(
+            Object.keys(params).map((k) => {
+              let values = params[k];
+              if (!Array.isArray(values)) values = [values];
+              return values.map((v) => v === true ? k : `${k}=${v}`).join("; ");
+            })
+          ).join("; ");
+        }).join(", ");
+      }).join(", ");
+    }
+    module.exports = { format: format3, parse: parse12 };
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket.js
+var require_websocket = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var EventEmitter2 = __require("events");
+    var https2 = __require("https");
+    var http2 = __require("http");
+    var net = __require("net");
+    var tls = __require("tls");
+    var { randomBytes: randomBytes8, createHash: createHash89 } = __require("crypto");
+    var { Duplex, Readable: Readable3 } = __require("stream");
+    var { URL: URL5 } = __require("url");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var Receiver2 = require_receiver();
+    var Sender2 = require_sender();
+    var { isBlob } = require_validation3();
+    var {
+      BINARY_TYPES,
+      CLOSE_TIMEOUT,
+      EMPTY_BUFFER,
+      GUID,
+      kForOnEventAttribute,
+      kListener,
+      kStatusCode,
+      kWebSocket,
+      NOOP
+    } = require_constants();
+    var {
+      EventTarget: { addEventListener, removeEventListener }
+    } = require_event_target();
+    var { format: format3, parse: parse12 } = require_extension();
+    var { toBuffer } = require_buffer_util();
+    var kAborted = /* @__PURE__ */ Symbol("kAborted");
+    var protocolVersions = [8, 13];
+    var readyStates = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
+    var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
+    var WebSocket2 = class _WebSocket extends EventEmitter2 {
+      /**
+       * Create a new `WebSocket`.
+       *
+       * @param {(String|URL)} address The URL to which to connect
+       * @param {(String|String[])} [protocols] The subprotocols
+       * @param {Object} [options] Connection options
+       */
+      constructor(address, protocols, options2) {
+        super();
+        this._binaryType = BINARY_TYPES[0];
+        this._closeCode = 1006;
+        this._closeFrameReceived = false;
+        this._closeFrameSent = false;
+        this._closeMessage = EMPTY_BUFFER;
+        this._closeTimer = null;
+        this._errorEmitted = false;
+        this._extensions = {};
+        this._paused = false;
+        this._protocol = "";
+        this._readyState = _WebSocket.CONNECTING;
+        this._receiver = null;
+        this._sender = null;
+        this._socket = null;
+        if (address !== null) {
+          this._bufferedAmount = 0;
+          this._isServer = false;
+          this._redirects = 0;
+          if (protocols === void 0) {
+            if (!options2 || options2.protocols === void 0) {
+              protocols = [];
+            } else if (Array.isArray(options2.protocols)) {
+              protocols = options2.protocols;
+            } else {
+              protocols = [options2.protocols];
+            }
+          } else if (!Array.isArray(protocols)) {
+            if (typeof protocols === "object" && protocols !== null) {
+              options2 = protocols;
+              if (options2.protocols === void 0) {
+                protocols = [];
+              } else if (Array.isArray(options2.protocols)) {
+                protocols = options2.protocols;
+              } else {
+                protocols = [options2.protocols];
+              }
+            } else {
+              protocols = [protocols];
+            }
+          }
+          initAsClient(this, address, protocols, options2);
+        } else {
+          this._autoPong = options2.autoPong;
+          this._closeTimeout = options2.closeTimeout;
+          this._isServer = true;
+        }
+      }
+      /**
+       * For historical reasons, the custom "nodebuffer" type is used by the default
+       * instead of "blob".
+       *
+       * @type {String}
+       */
+      get binaryType() {
+        return this._binaryType;
+      }
+      set binaryType(type) {
+        if (!BINARY_TYPES.includes(type)) return;
+        this._binaryType = type;
+        if (this._receiver) this._receiver._binaryType = type;
+      }
+      /**
+       * @type {Number}
+       */
+      get bufferedAmount() {
+        if (!this._socket) return this._bufferedAmount;
+        return this._socket._writableState.length + this._sender._bufferedBytes;
+      }
+      /**
+       * @type {String}
+       */
+      get extensions() {
+        return Object.keys(this._extensions).join();
+      }
+      /**
+       * @type {Boolean}
+       */
+      get isPaused() {
+        return this._paused;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onclose() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onerror() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onopen() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onmessage() {
+        return null;
+      }
+      /**
+       * @type {String}
+       */
+      get protocol() {
+        return this._protocol;
+      }
+      /**
+       * @type {Number}
+       */
+      get readyState() {
+        return this._readyState;
+      }
+      /**
+       * @type {String}
+       */
+      get url() {
+        return this._url;
+      }
+      /**
+       * Set up the socket and the internal resources.
+       *
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Object} options Options object
+       * @param {Boolean} [options.allowSynchronousEvents=false] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Number} [options.maxBufferedChunks=0] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=0] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=0] The maximum allowed message size
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       * @private
+       */
+      setSocket(socket, head, options2) {
+        const receiver = new Receiver2({
+          allowSynchronousEvents: options2.allowSynchronousEvents,
+          binaryType: this.binaryType,
+          extensions: this._extensions,
+          isServer: this._isServer,
+          maxBufferedChunks: options2.maxBufferedChunks,
+          maxFragments: options2.maxFragments,
+          maxPayload: options2.maxPayload,
+          skipUTF8Validation: options2.skipUTF8Validation
+        });
+        const sender = new Sender2(socket, this._extensions, options2.generateMask);
+        this._receiver = receiver;
+        this._sender = sender;
+        this._socket = socket;
+        receiver[kWebSocket] = this;
+        sender[kWebSocket] = this;
+        socket[kWebSocket] = this;
+        receiver.on("conclude", receiverOnConclude);
+        receiver.on("drain", receiverOnDrain);
+        receiver.on("error", receiverOnError);
+        receiver.on("message", receiverOnMessage);
+        receiver.on("ping", receiverOnPing);
+        receiver.on("pong", receiverOnPong);
+        sender.onerror = senderOnError;
+        if (socket.setTimeout) socket.setTimeout(0);
+        if (socket.setNoDelay) socket.setNoDelay();
+        if (head.length > 0) socket.unshift(head);
+        socket.on("close", socketOnClose);
+        socket.on("data", socketOnData);
+        socket.on("end", socketOnEnd);
+        socket.on("error", socketOnError);
+        this._readyState = _WebSocket.OPEN;
+        this.emit("open");
+      }
+      /**
+       * Emit the `'close'` event.
+       *
+       * @private
+       */
+      emitClose() {
+        if (!this._socket) {
+          this._readyState = _WebSocket.CLOSED;
+          this.emit("close", this._closeCode, this._closeMessage);
+          return;
+        }
+        if (this._extensions[PerMessageDeflate2.extensionName]) {
+          this._extensions[PerMessageDeflate2.extensionName].cleanup();
+        }
+        this._receiver.removeAllListeners();
+        this._readyState = _WebSocket.CLOSED;
+        this.emit("close", this._closeCode, this._closeMessage);
+      }
+      /**
+       * Start a closing handshake.
+       *
+       *          +----------+   +-----------+   +----------+
+       *     - - -|ws.close()|-->|close frame|-->|ws.close()|- - -
+       *    |     +----------+   +-----------+   +----------+     |
+       *          +----------+   +-----------+         |
+       * CLOSING  |ws.close()|<--|close frame|<--+-----+       CLOSING
+       *          +----------+   +-----------+   |
+       *    |           |                        |   +---+        |
+       *                +------------------------+-->|fin| - - - -
+       *    |         +---+                      |   +---+
+       *     - - - - -|fin|<---------------------+
+       *              +---+
+       *
+       * @param {Number} [code] Status code explaining why the connection is closing
+       * @param {(String|Buffer)} [data] The reason why the connection is
+       *     closing
+       * @public
+       */
+      close(code, data2) {
+        if (this.readyState === _WebSocket.CLOSED) return;
+        if (this.readyState === _WebSocket.CONNECTING) {
+          const msg = "WebSocket was closed before the connection was established";
+          abortHandshake(this, this._req, msg);
+          return;
+        }
+        if (this.readyState === _WebSocket.CLOSING) {
+          if (this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted)) {
+            this._socket.end();
+          }
+          return;
+        }
+        this._sender.close(code, data2, !this._isServer, (err) => {
+          if (err) return;
+          this._closeFrameSent = true;
+          if (this._closeFrameReceived || this._receiver._writableState.errorEmitted) {
+            this._socket.end();
+          }
+        });
+        this._readyState = _WebSocket.CLOSING;
+        setCloseTimer(this);
+      }
+      /**
+       * Pause the socket.
+       *
+       * @public
+       */
+      pause() {
+        if (this.readyState === _WebSocket.CONNECTING || this.readyState === _WebSocket.CLOSED) {
+          return;
+        }
+        this._paused = true;
+        this._socket.pause();
+      }
+      /**
+       * Send a ping.
+       *
+       * @param {*} [data] The data to send
+       * @param {Boolean} [mask] Indicates whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when the ping is sent
+       * @public
+       */
+      ping(data2, mask, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof data2 === "function") {
+          cb = data2;
+          data2 = mask = void 0;
+        } else if (typeof mask === "function") {
+          cb = mask;
+          mask = void 0;
+        }
+        if (typeof data2 === "number") data2 = data2.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data2, cb);
+          return;
+        }
+        if (mask === void 0) mask = !this._isServer;
+        this._sender.ping(data2 || EMPTY_BUFFER, mask, cb);
+      }
+      /**
+       * Send a pong.
+       *
+       * @param {*} [data] The data to send
+       * @param {Boolean} [mask] Indicates whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when the pong is sent
+       * @public
+       */
+      pong(data2, mask, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof data2 === "function") {
+          cb = data2;
+          data2 = mask = void 0;
+        } else if (typeof mask === "function") {
+          cb = mask;
+          mask = void 0;
+        }
+        if (typeof data2 === "number") data2 = data2.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data2, cb);
+          return;
+        }
+        if (mask === void 0) mask = !this._isServer;
+        this._sender.pong(data2 || EMPTY_BUFFER, mask, cb);
+      }
+      /**
+       * Resume the socket.
+       *
+       * @public
+       */
+      resume() {
+        if (this.readyState === _WebSocket.CONNECTING || this.readyState === _WebSocket.CLOSED) {
+          return;
+        }
+        this._paused = false;
+        if (!this._receiver._writableState.needDrain) this._socket.resume();
+      }
+      /**
+       * Send a data message.
+       *
+       * @param {*} data The message to send
+       * @param {Object} [options] Options object
+       * @param {Boolean} [options.binary] Specifies whether `data` is binary or
+       *     text
+       * @param {Boolean} [options.compress] Specifies whether or not to compress
+       *     `data`
+       * @param {Boolean} [options.fin=true] Specifies whether the fragment is the
+       *     last one
+       * @param {Boolean} [options.mask] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when data is written out
+       * @public
+       */
+      send(data2, options2, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof options2 === "function") {
+          cb = options2;
+          options2 = {};
+        }
+        if (typeof data2 === "number") data2 = data2.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data2, cb);
+          return;
+        }
+        const opts = {
+          binary: typeof data2 !== "string",
+          mask: !this._isServer,
+          compress: true,
+          fin: true,
+          ...options2
+        };
+        if (!this._extensions[PerMessageDeflate2.extensionName]) {
+          opts.compress = false;
+        }
+        this._sender.send(data2 || EMPTY_BUFFER, opts, cb);
+      }
+      /**
+       * Forcibly close the connection.
+       *
+       * @public
+       */
+      terminate() {
+        if (this.readyState === _WebSocket.CLOSED) return;
+        if (this.readyState === _WebSocket.CONNECTING) {
+          const msg = "WebSocket was closed before the connection was established";
+          abortHandshake(this, this._req, msg);
+          return;
+        }
+        if (this._socket) {
+          this._readyState = _WebSocket.CLOSING;
+          this._socket.destroy();
+        }
+      }
+    };
+    Object.defineProperty(WebSocket2, "CONNECTING", {
+      enumerable: true,
+      value: readyStates.indexOf("CONNECTING")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CONNECTING", {
+      enumerable: true,
+      value: readyStates.indexOf("CONNECTING")
+    });
+    Object.defineProperty(WebSocket2, "OPEN", {
+      enumerable: true,
+      value: readyStates.indexOf("OPEN")
+    });
+    Object.defineProperty(WebSocket2.prototype, "OPEN", {
+      enumerable: true,
+      value: readyStates.indexOf("OPEN")
+    });
+    Object.defineProperty(WebSocket2, "CLOSING", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSING")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CLOSING", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSING")
+    });
+    Object.defineProperty(WebSocket2, "CLOSED", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSED")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CLOSED", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSED")
+    });
+    [
+      "binaryType",
+      "bufferedAmount",
+      "extensions",
+      "isPaused",
+      "protocol",
+      "readyState",
+      "url"
+    ].forEach((property) => {
+      Object.defineProperty(WebSocket2.prototype, property, { enumerable: true });
+    });
+    ["open", "error", "close", "message"].forEach((method2) => {
+      Object.defineProperty(WebSocket2.prototype, `on${method2}`, {
+        enumerable: true,
+        get() {
+          for (const listener of this.listeners(method2)) {
+            if (listener[kForOnEventAttribute]) return listener[kListener];
+          }
+          return null;
+        },
+        set(handler) {
+          for (const listener of this.listeners(method2)) {
+            if (listener[kForOnEventAttribute]) {
+              this.removeListener(method2, listener);
+              break;
+            }
+          }
+          if (typeof handler !== "function") return;
+          this.addEventListener(method2, handler, {
+            [kForOnEventAttribute]: true
+          });
+        }
+      });
+    });
+    WebSocket2.prototype.addEventListener = addEventListener;
+    WebSocket2.prototype.removeEventListener = removeEventListener;
+    module.exports = WebSocket2;
+    function initAsClient(websocket, address, protocols, options2) {
+      const opts = {
+        allowSynchronousEvents: true,
+        autoPong: true,
+        closeTimeout: CLOSE_TIMEOUT,
+        protocolVersion: protocolVersions[1],
+        maxBufferedChunks: 256 * 1024,
+        maxFragments: 16 * 1024,
+        maxPayload: 100 * 1024 * 1024,
+        skipUTF8Validation: false,
+        perMessageDeflate: true,
+        followRedirects: false,
+        maxRedirects: 10,
+        ...options2,
+        socketPath: void 0,
+        hostname: void 0,
+        protocol: void 0,
+        protocols: void 0,
+        timeout: void 0,
+        method: "GET",
+        host: void 0,
+        path: void 0,
+        port: void 0
+      };
+      websocket._autoPong = opts.autoPong;
+      websocket._closeTimeout = opts.closeTimeout;
+      if (!protocolVersions.includes(opts.protocolVersion)) {
+        throw new RangeError(
+          `Unsupported protocol version: ${opts.protocolVersion} (supported versions: ${protocolVersions.join(", ")})`
+        );
+      }
+      let parsedUrl;
+      if (address instanceof URL5) {
+        parsedUrl = address;
+      } else {
+        try {
+          parsedUrl = new URL5(address);
+        } catch {
+          throw new SyntaxError(`Invalid URL: ${address}`);
+        }
+      }
+      if (parsedUrl.protocol === "http:") {
+        parsedUrl.protocol = "ws:";
+      } else if (parsedUrl.protocol === "https:") {
+        parsedUrl.protocol = "wss:";
+      }
+      websocket._url = parsedUrl.href;
+      const isSecure = parsedUrl.protocol === "wss:";
+      const isIpcUrl = parsedUrl.protocol === "ws+unix:";
+      let invalidUrlMessage;
+      if (parsedUrl.protocol !== "ws:" && !isSecure && !isIpcUrl) {
+        invalidUrlMessage = `The URL's protocol must be one of "ws:", "wss:", "http:", "https:", or "ws+unix:"`;
+      } else if (isIpcUrl && !parsedUrl.pathname) {
+        invalidUrlMessage = "The URL's pathname is empty";
+      } else if (parsedUrl.hash) {
+        invalidUrlMessage = "The URL contains a fragment identifier";
+      }
+      if (invalidUrlMessage) {
+        const err = new SyntaxError(invalidUrlMessage);
+        if (websocket._redirects === 0) {
+          throw err;
+        } else {
+          emitErrorAndClose(websocket, err);
+          return;
+        }
+      }
+      const defaultPort = isSecure ? 443 : 80;
+      const key5 = randomBytes8(16).toString("base64");
+      const request3 = isSecure ? https2.request : http2.request;
+      const protocolSet = /* @__PURE__ */ new Set();
+      let perMessageDeflate;
+      opts.createConnection = opts.createConnection || (isSecure ? tlsConnect : netConnect);
+      opts.defaultPort = opts.defaultPort || defaultPort;
+      opts.port = parsedUrl.port || defaultPort;
+      opts.host = parsedUrl.hostname.startsWith("[") ? parsedUrl.hostname.slice(1, -1) : parsedUrl.hostname;
+      opts.headers = {
+        ...opts.headers,
+        "Sec-WebSocket-Version": opts.protocolVersion,
+        "Sec-WebSocket-Key": key5,
+        Connection: "Upgrade",
+        Upgrade: "websocket"
+      };
+      opts.path = parsedUrl.pathname + parsedUrl.search;
+      opts.timeout = opts.handshakeTimeout;
+      if (opts.perMessageDeflate) {
+        perMessageDeflate = new PerMessageDeflate2({
+          ...opts.perMessageDeflate,
+          isServer: false,
+          maxPayload: opts.maxPayload
+        });
+        opts.headers["Sec-WebSocket-Extensions"] = format3({
+          [PerMessageDeflate2.extensionName]: perMessageDeflate.offer()
+        });
+      }
+      if (protocols.length) {
+        for (const protocol of protocols) {
+          if (typeof protocol !== "string" || !subprotocolRegex.test(protocol) || protocolSet.has(protocol)) {
+            throw new SyntaxError(
+              "An invalid or duplicated subprotocol was specified"
+            );
+          }
+          protocolSet.add(protocol);
+        }
+        opts.headers["Sec-WebSocket-Protocol"] = protocols.join(",");
+      }
+      if (opts.origin) {
+        if (opts.protocolVersion < 13) {
+          opts.headers["Sec-WebSocket-Origin"] = opts.origin;
+        } else {
+          opts.headers.Origin = opts.origin;
+        }
+      }
+      if (parsedUrl.username || parsedUrl.password) {
+        opts.auth = `${parsedUrl.username}:${parsedUrl.password}`;
+      }
+      if (isIpcUrl) {
+        const parts = opts.path.split(":");
+        opts.socketPath = parts[0];
+        opts.path = parts[1];
+      }
+      let req;
+      if (opts.followRedirects) {
+        if (websocket._redirects === 0) {
+          websocket._originalIpc = isIpcUrl;
+          websocket._originalSecure = isSecure;
+          websocket._originalHostOrSocketPath = isIpcUrl ? opts.socketPath : parsedUrl.host;
+          const headers = options2 && options2.headers;
+          options2 = { ...options2, headers: {} };
+          if (headers) {
+            for (const [key6, value] of Object.entries(headers)) {
+              options2.headers[key6.toLowerCase()] = value;
+            }
+          }
+        } else if (websocket.listenerCount("redirect") === 0) {
+          const isSameHost = isIpcUrl ? websocket._originalIpc ? opts.socketPath === websocket._originalHostOrSocketPath : false : websocket._originalIpc ? false : parsedUrl.host === websocket._originalHostOrSocketPath;
+          if (!isSameHost || websocket._originalSecure && !isSecure) {
+            delete opts.headers.authorization;
+            delete opts.headers.cookie;
+            if (!isSameHost) delete opts.headers.host;
+            opts.auth = void 0;
+          }
+        }
+        if (opts.auth && !options2.headers.authorization) {
+          options2.headers.authorization = "Basic " + Buffer.from(opts.auth).toString("base64");
+        }
+        req = websocket._req = request3(opts);
+        if (websocket._redirects) {
+          websocket.emit("redirect", websocket.url, req);
+        }
+      } else {
+        req = websocket._req = request3(opts);
+      }
+      if (opts.timeout) {
+        req.on("timeout", () => {
+          abortHandshake(websocket, req, "Opening handshake has timed out");
+        });
+      }
+      req.on("error", (err) => {
+        if (req === null || req[kAborted]) return;
+        req = websocket._req = null;
+        emitErrorAndClose(websocket, err);
+      });
+      req.on("response", (res) => {
+        const location2 = res.headers.location;
+        const statusCode = res.statusCode;
+        if (location2 && opts.followRedirects && statusCode >= 300 && statusCode < 400) {
+          if (++websocket._redirects > opts.maxRedirects) {
+            abortHandshake(websocket, req, "Maximum redirects exceeded");
+            return;
+          }
+          req.abort();
+          let addr;
+          try {
+            addr = new URL5(location2, address);
+          } catch (e2) {
+            const err = new SyntaxError(`Invalid URL: ${location2}`);
+            emitErrorAndClose(websocket, err);
+            return;
+          }
+          initAsClient(websocket, addr, protocols, options2);
+        } else if (!websocket.emit("unexpected-response", req, res)) {
+          abortHandshake(
+            websocket,
+            req,
+            `Unexpected server response: ${res.statusCode}`
+          );
+        }
+      });
+      req.on("upgrade", (res, socket, head) => {
+        websocket.emit("upgrade", res);
+        if (websocket.readyState !== WebSocket2.CONNECTING) return;
+        req = websocket._req = null;
+        const upgrade = res.headers.upgrade;
+        if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+          abortHandshake(websocket, socket, "Invalid Upgrade header");
+          return;
+        }
+        const digest49 = createHash89("sha1").update(key5 + GUID).digest("base64");
+        if (res.headers["sec-websocket-accept"] !== digest49) {
+          abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
+          return;
+        }
+        const serverProt = res.headers["sec-websocket-protocol"];
+        let protError;
+        if (serverProt !== void 0) {
+          if (!protocolSet.size) {
+            protError = "Server sent a subprotocol but none was requested";
+          } else if (!protocolSet.has(serverProt)) {
+            protError = "Server sent an invalid subprotocol";
+          }
+        } else if (protocolSet.size) {
+          protError = "Server sent no subprotocol";
+        }
+        if (protError) {
+          abortHandshake(websocket, socket, protError);
+          return;
+        }
+        if (serverProt) websocket._protocol = serverProt;
+        const secWebSocketExtensions = res.headers["sec-websocket-extensions"];
+        if (secWebSocketExtensions !== void 0) {
+          if (!perMessageDeflate) {
+            const message = "Server sent a Sec-WebSocket-Extensions header but no extension was requested";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          let extensions;
+          try {
+            extensions = parse12(secWebSocketExtensions);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Extensions header";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          const extensionNames = Object.keys(extensions);
+          if (extensionNames.length !== 1 || extensionNames[0] !== PerMessageDeflate2.extensionName) {
+            const message = "Server indicated an extension that was not requested";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          try {
+            perMessageDeflate.accept(extensions[PerMessageDeflate2.extensionName]);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Extensions header";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          websocket._extensions[PerMessageDeflate2.extensionName] = perMessageDeflate;
+        }
+        websocket.setSocket(socket, head, {
+          allowSynchronousEvents: opts.allowSynchronousEvents,
+          generateMask: opts.generateMask,
+          maxBufferedChunks: opts.maxBufferedChunks,
+          maxFragments: opts.maxFragments,
+          maxPayload: opts.maxPayload,
+          skipUTF8Validation: opts.skipUTF8Validation
+        });
+      });
+      if (opts.finishRequest) {
+        opts.finishRequest(req, websocket);
+      } else {
+        req.end();
+      }
+    }
+    function emitErrorAndClose(websocket, err) {
+      websocket._readyState = WebSocket2.CLOSING;
+      websocket._errorEmitted = true;
+      websocket.emit("error", err);
+      websocket.emitClose();
+    }
+    function netConnect(options2) {
+      options2.path = options2.socketPath;
+      return net.connect(options2);
+    }
+    function tlsConnect(options2) {
+      options2.path = void 0;
+      if (!options2.servername && options2.servername !== "") {
+        options2.servername = net.isIP(options2.host) ? "" : options2.host;
+      }
+      return tls.connect(options2);
+    }
+    function abortHandshake(websocket, stream, message) {
+      websocket._readyState = WebSocket2.CLOSING;
+      const err = new Error(message);
+      Error.captureStackTrace(err, abortHandshake);
+      if (stream.setHeader) {
+        stream[kAborted] = true;
+        stream.abort();
+        if (stream.socket && !stream.socket.destroyed) {
+          stream.socket.destroy();
+        }
+        process.nextTick(emitErrorAndClose, websocket, err);
+      } else {
+        stream.destroy(err);
+        stream.once("error", websocket.emit.bind(websocket, "error"));
+        stream.once("close", websocket.emitClose.bind(websocket));
+      }
+    }
+    function sendAfterClose(websocket, data2, cb) {
+      if (data2) {
+        const length = isBlob(data2) ? data2.size : toBuffer(data2).length;
+        if (websocket._socket) websocket._sender._bufferedBytes += length;
+        else websocket._bufferedAmount += length;
+      }
+      if (cb) {
+        const err = new Error(
+          `WebSocket is not open: readyState ${websocket.readyState} (${readyStates[websocket.readyState]})`
+        );
+        process.nextTick(cb, err);
+      }
+    }
+    function receiverOnConclude(code, reason) {
+      const websocket = this[kWebSocket];
+      websocket._closeFrameReceived = true;
+      websocket._closeMessage = reason;
+      websocket._closeCode = code;
+      if (websocket._socket[kWebSocket] === void 0) return;
+      websocket._socket.removeListener("data", socketOnData);
+      process.nextTick(resume, websocket._socket);
+      if (code === 1005) websocket.close();
+      else websocket.close(code, reason);
+    }
+    function receiverOnDrain() {
+      const websocket = this[kWebSocket];
+      if (!websocket.isPaused) websocket._socket.resume();
+    }
+    function receiverOnError(err) {
+      const websocket = this[kWebSocket];
+      if (websocket._socket[kWebSocket] !== void 0) {
+        websocket._socket.removeListener("data", socketOnData);
+        process.nextTick(resume, websocket._socket);
+        websocket.close(err[kStatusCode]);
+      }
+      if (!websocket._errorEmitted) {
+        websocket._errorEmitted = true;
+        websocket.emit("error", err);
+      }
+    }
+    function receiverOnFinish() {
+      this[kWebSocket].emitClose();
+    }
+    function receiverOnMessage(data2, isBinary) {
+      this[kWebSocket].emit("message", data2, isBinary);
+    }
+    function receiverOnPing(data2) {
+      const websocket = this[kWebSocket];
+      if (websocket._autoPong) websocket.pong(data2, !this._isServer, NOOP);
+      websocket.emit("ping", data2);
+    }
+    function receiverOnPong(data2) {
+      this[kWebSocket].emit("pong", data2);
+    }
+    function resume(stream) {
+      stream.resume();
+    }
+    function senderOnError(err) {
+      const websocket = this[kWebSocket];
+      if (websocket.readyState === WebSocket2.CLOSED) return;
+      if (websocket.readyState === WebSocket2.OPEN) {
+        websocket._readyState = WebSocket2.CLOSING;
+        setCloseTimer(websocket);
+      }
+      this._socket.end();
+      if (!websocket._errorEmitted) {
+        websocket._errorEmitted = true;
+        websocket.emit("error", err);
+      }
+    }
+    function setCloseTimer(websocket) {
+      websocket._closeTimer = setTimeout(
+        websocket._socket.destroy.bind(websocket._socket),
+        websocket._closeTimeout
+      );
+    }
+    function socketOnClose() {
+      const websocket = this[kWebSocket];
+      this.removeListener("close", socketOnClose);
+      this.removeListener("data", socketOnData);
+      this.removeListener("end", socketOnEnd);
+      websocket._readyState = WebSocket2.CLOSING;
+      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && this._readableState.length !== 0) {
+        const chunk = this.read(this._readableState.length);
+        websocket._receiver.write(chunk);
+      }
+      websocket._receiver.end();
+      this[kWebSocket] = void 0;
+      clearTimeout(websocket._closeTimer);
+      if (websocket._receiver._writableState.finished || websocket._receiver._writableState.errorEmitted) {
+        websocket.emitClose();
+      } else {
+        websocket._receiver.on("error", receiverOnFinish);
+        websocket._receiver.on("finish", receiverOnFinish);
+      }
+    }
+    function socketOnData(chunk) {
+      if (!this[kWebSocket]._receiver.write(chunk)) {
+        this.pause();
+      }
+    }
+    function socketOnEnd() {
+      const websocket = this[kWebSocket];
+      websocket._readyState = WebSocket2.CLOSING;
+      websocket._receiver.end();
+      this.end();
+    }
+    function socketOnError() {
+      const websocket = this[kWebSocket];
+      this.removeListener("error", socketOnError);
+      this.on("error", NOOP);
+      if (websocket) {
+        websocket._readyState = WebSocket2.CLOSING;
+        this.destroy();
+      }
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/stream.js
+var require_stream = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/stream.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var WebSocket2 = require_websocket();
+    var { Duplex } = __require("stream");
+    function emitClose(stream) {
+      stream.emit("close");
+    }
+    function duplexOnEnd() {
+      if (!this.destroyed && this._writableState.finished) {
+        this.destroy();
+      }
+    }
+    function duplexOnError(err) {
+      this.removeListener("error", duplexOnError);
+      this.destroy();
+      if (this.listenerCount("error") === 0) {
+        this.emit("error", err);
+      }
+    }
+    function createWebSocketStream2(ws, options2) {
+      let terminateOnDestroy = true;
+      const duplex = new Duplex({
+        ...options2,
+        autoDestroy: false,
+        emitClose: false,
+        objectMode: false,
+        writableObjectMode: false
+      });
+      ws.on("message", function message(msg, isBinary) {
+        const data2 = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+        if (!duplex.push(data2)) ws.pause();
+      });
+      ws.once("error", function error62(err) {
+        if (duplex.destroyed) return;
+        terminateOnDestroy = false;
+        duplex.destroy(err);
+      });
+      ws.once("close", function close2() {
+        if (duplex.destroyed) return;
+        duplex.push(null);
+      });
+      duplex._destroy = function(err, callback) {
+        if (ws.readyState === ws.CLOSED) {
+          callback(err);
+          process.nextTick(emitClose, duplex);
+          return;
+        }
+        let called = false;
+        ws.once("error", function error62(err2) {
+          called = true;
+          callback(err2);
+        });
+        ws.once("close", function close2() {
+          if (!called) callback(err);
+          process.nextTick(emitClose, duplex);
+        });
+        if (terminateOnDestroy) ws.terminate();
+      };
+      duplex._final = function(callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open18() {
+            duplex._final(callback);
+          });
+          return;
+        }
+        if (ws._socket === null) return;
+        if (ws._socket._writableState.finished) {
+          callback();
+          if (duplex._readableState.endEmitted) duplex.destroy();
+        } else {
+          ws._socket.once("finish", function finish() {
+            callback();
+          });
+          ws.close();
+        }
+      };
+      duplex._read = function() {
+        if (ws.isPaused) ws.resume();
+      };
+      duplex._write = function(chunk, encoding, callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open18() {
+            duplex._write(chunk, encoding, callback);
+          });
+          return;
+        }
+        ws.send(chunk, callback);
+      };
+      duplex.on("end", duplexOnEnd);
+      duplex.on("error", duplexOnError);
+      return duplex;
+    }
+    module.exports = createWebSocketStream2;
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/subprotocol.js
+var require_subprotocol = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/subprotocol.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var { tokenChars } = require_validation3();
+    function parse12(header2) {
+      const protocols = /* @__PURE__ */ new Set();
+      let start = -1;
+      let end = -1;
+      let i2 = 0;
+      for (i2; i2 < header2.length; i2++) {
+        const code = header2.charCodeAt(i2);
+        if (end === -1 && tokenChars[code] === 1) {
+          if (start === -1) start = i2;
+        } else if (i2 !== 0 && (code === 32 || code === 9)) {
+          if (end === -1 && start !== -1) end = i2;
+        } else if (code === 44) {
+          if (start === -1) {
+            throw new SyntaxError(`Unexpected character at index ${i2}`);
+          }
+          if (end === -1) end = i2;
+          const protocol2 = header2.slice(start, end);
+          if (protocols.has(protocol2)) {
+            throw new SyntaxError(`The "${protocol2}" subprotocol is duplicated`);
+          }
+          protocols.add(protocol2);
+          start = end = -1;
+        } else {
+          throw new SyntaxError(`Unexpected character at index ${i2}`);
+        }
+      }
+      if (start === -1 || end !== -1) {
+        throw new SyntaxError("Unexpected end of input");
+      }
+      const protocol = header2.slice(start, i2);
+      if (protocols.has(protocol)) {
+        throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+      }
+      protocols.add(protocol);
+      return protocols;
+    }
+    module.exports = { parse: parse12 };
+  }
+});
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket-server.js
+var require_websocket_server = __commonJS({
+  "../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket-server.js"(exports, module) {
+    "use strict";
+    init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+    init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+    init_define_LOKI_CHANGE_RISK_PINS();
+    init_define_LOKI_COMPUTER_RUNNER_PINS();
+    init_define_LOKI_MAC_RUNNER_PINS();
+    init_define_LOKI_PLANNER_LOOP_PINS();
+    init_define_LOKI_PR_CONTEXT_PINS();
+    init_define_LOKI_TEST_PLANNING_PINS();
+    init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+    init_define_LOKI_WORK_ITEM_RISK_PINS();
+    var EventEmitter2 = __require("events");
+    var http2 = __require("http");
+    var { Duplex } = __require("stream");
+    var { createHash: createHash89 } = __require("crypto");
+    var extension3 = require_extension();
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var subprotocol2 = require_subprotocol();
+    var WebSocket2 = require_websocket();
+    var { CLOSE_TIMEOUT, GUID, kWebSocket } = require_constants();
+    var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
+    var RUNNING = 0;
+    var CLOSING = 1;
+    var CLOSED = 2;
+    var WebSocketServer2 = class extends EventEmitter2 {
+      /**
+       * Create a `WebSocketServer` instance.
+       *
+       * @param {Object} options Configuration options
+       * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {Boolean} [options.autoPong=true] Specifies whether or not to
+       *     automatically send a pong in response to a ping
+       * @param {Number} [options.backlog=511] The maximum length of the queue of
+       *     pending connections
+       * @param {Boolean} [options.clientTracking=true] Specifies whether or not to
+       *     track clients
+       * @param {Number} [options.closeTimeout=30000] Duration in milliseconds to
+       *     wait for the closing handshake to finish after `websocket.close()` is
+       *     called
+       * @param {Function} [options.handleProtocols] A hook to handle protocols
+       * @param {String} [options.host] The hostname where to bind the server
+       * @param {Number} [options.maxBufferedChunks=262144] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=16384] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=104857600] The maximum allowed message
+       *     size
+       * @param {Boolean} [options.noServer=false] Enable no server mode
+       * @param {String} [options.path] Accept only connections matching this path
+       * @param {(Boolean|Object)} [options.perMessageDeflate=false] Enable/disable
+       *     permessage-deflate
+       * @param {Number} [options.port] The port where to bind the server
+       * @param {(http.Server|https.Server)} [options.server] A pre-created HTTP/S
+       *     server to use
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       * @param {Function} [options.verifyClient] A hook to reject connections
+       * @param {Function} [options.WebSocket=WebSocket] Specifies the `WebSocket`
+       *     class to use. It must be the `WebSocket` class or class that extends it
+       * @param {Function} [callback] A listener for the `listening` event
+       */
+      constructor(options2, callback) {
+        super();
+        options2 = {
+          allowSynchronousEvents: true,
+          autoPong: true,
+          maxBufferedChunks: 256 * 1024,
+          maxFragments: 16 * 1024,
+          maxPayload: 100 * 1024 * 1024,
+          skipUTF8Validation: false,
+          perMessageDeflate: false,
+          handleProtocols: null,
+          clientTracking: true,
+          closeTimeout: CLOSE_TIMEOUT,
+          verifyClient: null,
+          noServer: false,
+          backlog: null,
+          // use default (511 as implemented in net.js)
+          server: null,
+          host: null,
+          path: null,
+          port: null,
+          WebSocket: WebSocket2,
+          ...options2
+        };
+        if (options2.port == null && !options2.server && !options2.noServer || options2.port != null && (options2.server || options2.noServer) || options2.server && options2.noServer) {
+          throw new TypeError(
+            'One and only one of the "port", "server", or "noServer" options must be specified'
+          );
+        }
+        if (options2.port != null) {
+          this._server = http2.createServer((req, res) => {
+            const body2 = http2.STATUS_CODES[426];
+            res.writeHead(426, {
+              "Content-Length": body2.length,
+              "Content-Type": "text/plain"
+            });
+            res.end(body2);
+          });
+          this._server.listen(
+            options2.port,
+            options2.host,
+            options2.backlog,
+            callback
+          );
+        } else if (options2.server) {
+          this._server = options2.server;
+        }
+        if (this._server) {
+          const emitConnection = this.emit.bind(this, "connection");
+          this._removeListeners = addListeners(this._server, {
+            listening: this.emit.bind(this, "listening"),
+            error: this.emit.bind(this, "error"),
+            upgrade: (req, socket, head) => {
+              this.handleUpgrade(req, socket, head, emitConnection);
+            }
+          });
+        }
+        if (options2.perMessageDeflate === true) options2.perMessageDeflate = {};
+        if (options2.clientTracking) {
+          this.clients = /* @__PURE__ */ new Set();
+          this._shouldEmitClose = false;
+        }
+        this.options = options2;
+        this._state = RUNNING;
+      }
+      /**
+       * Returns the bound address, the address family name, and port of the server
+       * as reported by the operating system if listening on an IP socket.
+       * If the server is listening on a pipe or UNIX domain socket, the name is
+       * returned as a string.
+       *
+       * @return {(Object|String|null)} The address of the server
+       * @public
+       */
+      address() {
+        if (this.options.noServer) {
+          throw new Error('The server is operating in "noServer" mode');
+        }
+        if (!this._server) return null;
+        return this._server.address();
+      }
+      /**
+       * Stop the server from accepting new connections and emit the `'close'` event
+       * when all existing connections are closed.
+       *
+       * @param {Function} [cb] A one-time listener for the `'close'` event
+       * @public
+       */
+      close(cb) {
+        if (this._state === CLOSED) {
+          if (cb) {
+            this.once("close", () => {
+              cb(new Error("The server is not running"));
+            });
+          }
+          process.nextTick(emitClose, this);
+          return;
+        }
+        if (cb) this.once("close", cb);
+        if (this._state === CLOSING) return;
+        this._state = CLOSING;
+        if (this.options.noServer || this.options.server) {
+          if (this._server) {
+            this._removeListeners();
+            this._removeListeners = this._server = null;
+          }
+          if (this.clients) {
+            if (!this.clients.size) {
+              process.nextTick(emitClose, this);
+            } else {
+              this._shouldEmitClose = true;
+            }
+          } else {
+            process.nextTick(emitClose, this);
+          }
+        } else {
+          const server = this._server;
+          this._removeListeners();
+          this._removeListeners = this._server = null;
+          server.close(() => {
+            emitClose(this);
+          });
+        }
+      }
+      /**
+       * See if a given request should be handled by this server instance.
+       *
+       * @param {http.IncomingMessage} req Request object to inspect
+       * @return {Boolean} `true` if the request is valid, else `false`
+       * @public
+       */
+      shouldHandle(req) {
+        if (this.options.path) {
+          const index2 = req.url.indexOf("?");
+          const pathname = index2 !== -1 ? req.url.slice(0, index2) : req.url;
+          if (pathname !== this.options.path) return false;
+        }
+        return true;
+      }
+      /**
+       * Handle a HTTP Upgrade request.
+       *
+       * @param {http.IncomingMessage} req The request object
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Function} cb Callback
+       * @public
+       */
+      handleUpgrade(req, socket, head, cb) {
+        socket.on("error", socketOnError);
+        const key5 = req.headers["sec-websocket-key"];
+        const upgrade = req.headers.upgrade;
+        const version3 = +req.headers["sec-websocket-version"];
+        if (req.method !== "GET") {
+          const message = "Invalid HTTP method";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 405, message);
+          return;
+        }
+        if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+          const message = "Invalid Upgrade header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+          return;
+        }
+        if (key5 === void 0 || !keyRegex.test(key5)) {
+          const message = "Missing or invalid Sec-WebSocket-Key header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+          return;
+        }
+        if (version3 !== 13 && version3 !== 8) {
+          const message = "Missing or invalid Sec-WebSocket-Version header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message, {
+            "Sec-WebSocket-Version": "13, 8"
+          });
+          return;
+        }
+        if (!this.shouldHandle(req)) {
+          abortHandshake(socket, 400);
+          return;
+        }
+        const secWebSocketProtocol = req.headers["sec-websocket-protocol"];
+        let protocols = /* @__PURE__ */ new Set();
+        if (secWebSocketProtocol !== void 0) {
+          try {
+            protocols = subprotocol2.parse(secWebSocketProtocol);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Protocol header";
+            abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+            return;
+          }
+        }
+        const secWebSocketExtensions = req.headers["sec-websocket-extensions"];
+        const extensions = {};
+        if (this.options.perMessageDeflate && secWebSocketExtensions !== void 0) {
+          const perMessageDeflate = new PerMessageDeflate2({
+            ...this.options.perMessageDeflate,
+            isServer: true,
+            maxPayload: this.options.maxPayload
+          });
+          try {
+            const offers = extension3.parse(secWebSocketExtensions);
+            if (offers[PerMessageDeflate2.extensionName]) {
+              perMessageDeflate.accept(offers[PerMessageDeflate2.extensionName]);
+              extensions[PerMessageDeflate2.extensionName] = perMessageDeflate;
+            }
+          } catch (err) {
+            const message = "Invalid or unacceptable Sec-WebSocket-Extensions header";
+            abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+            return;
+          }
+        }
+        if (this.options.verifyClient) {
+          const info = {
+            origin: req.headers[`${version3 === 8 ? "sec-websocket-origin" : "origin"}`],
+            secure: !!(req.socket.authorized || req.socket.encrypted),
+            req
+          };
+          if (this.options.verifyClient.length === 2) {
+            this.options.verifyClient(info, (verified, code, message, headers) => {
+              if (!verified) {
+                return abortHandshake(socket, code || 401, message, headers);
+              }
+              this.completeUpgrade(
+                extensions,
+                key5,
+                protocols,
+                req,
+                socket,
+                head,
+                cb
+              );
+            });
+            return;
+          }
+          if (!this.options.verifyClient(info)) return abortHandshake(socket, 401);
+        }
+        this.completeUpgrade(extensions, key5, protocols, req, socket, head, cb);
+      }
+      /**
+       * Upgrade the connection to WebSocket.
+       *
+       * @param {Object} extensions The accepted extensions
+       * @param {String} key The value of the `Sec-WebSocket-Key` header
+       * @param {Set} protocols The subprotocols
+       * @param {http.IncomingMessage} req The request object
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Function} cb Callback
+       * @throws {Error} If called more than once with the same socket
+       * @private
+       */
+      completeUpgrade(extensions, key5, protocols, req, socket, head, cb) {
+        if (!socket.readable || !socket.writable) return socket.destroy();
+        if (socket[kWebSocket]) {
+          throw new Error(
+            "server.handleUpgrade() was called more than once with the same socket, possibly due to a misconfiguration"
+          );
+        }
+        if (this._state > RUNNING) return abortHandshake(socket, 503);
+        const digest49 = createHash89("sha1").update(key5 + GUID).digest("base64");
+        const headers = [
+          "HTTP/1.1 101 Switching Protocols",
+          "Upgrade: websocket",
+          "Connection: Upgrade",
+          `Sec-WebSocket-Accept: ${digest49}`
+        ];
+        const ws = new this.options.WebSocket(null, void 0, this.options);
+        if (protocols.size) {
+          const protocol = this.options.handleProtocols ? this.options.handleProtocols(protocols, req) : protocols.values().next().value;
+          if (protocol) {
+            headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+            ws._protocol = protocol;
+          }
+        }
+        if (extensions[PerMessageDeflate2.extensionName]) {
+          const params = extensions[PerMessageDeflate2.extensionName].params;
+          const value = extension3.format({
+            [PerMessageDeflate2.extensionName]: [params]
+          });
+          headers.push(`Sec-WebSocket-Extensions: ${value}`);
+          ws._extensions = extensions;
+        }
+        this.emit("headers", headers, req);
+        socket.write(headers.concat("\r\n").join("\r\n"));
+        socket.removeListener("error", socketOnError);
+        ws.setSocket(socket, head, {
+          allowSynchronousEvents: this.options.allowSynchronousEvents,
+          maxBufferedChunks: this.options.maxBufferedChunks,
+          maxFragments: this.options.maxFragments,
+          maxPayload: this.options.maxPayload,
+          skipUTF8Validation: this.options.skipUTF8Validation
+        });
+        if (this.clients) {
+          this.clients.add(ws);
+          ws.on("close", () => {
+            this.clients.delete(ws);
+            if (this._shouldEmitClose && !this.clients.size) {
+              process.nextTick(emitClose, this);
+            }
+          });
+        }
+        cb(ws, req);
+      }
+    };
+    module.exports = WebSocketServer2;
+    function addListeners(server, map2) {
+      for (const event2 of Object.keys(map2)) server.on(event2, map2[event2]);
+      return function removeListeners() {
+        for (const event2 of Object.keys(map2)) {
+          server.removeListener(event2, map2[event2]);
+        }
+      };
+    }
+    function emitClose(server) {
+      server._state = CLOSED;
+      server.emit("close");
+    }
+    function socketOnError() {
+      this.destroy();
+    }
+    function abortHandshake(socket, code, message, headers) {
+      message = message || http2.STATUS_CODES[code];
+      headers = {
+        Connection: "close",
+        "Content-Type": "text/html",
+        "Content-Length": Buffer.byteLength(message),
+        ...headers
+      };
+      socket.once("finish", socket.destroy);
+      socket.end(
+        `HTTP/1.1 ${code} ${http2.STATUS_CODES[code]}\r
+` + Object.keys(headers).map((h) => `${h}: ${headers[h]}`).join("\r\n") + "\r\n\r\n" + message
+      );
+    }
+    function abortHandshakeOrEmitwsClientError(server, req, socket, code, message, headers) {
+      if (server.listenerCount("wsClientError")) {
+        const err = new Error(message);
+        Error.captureStackTrace(err, abortHandshakeOrEmitwsClientError);
+        server.emit("wsClientError", err, socket, req);
+      } else {
+        abortHandshake(socket, code, message, headers);
+      }
+    }
+  }
+});
+
 // ../../node_modules/.pnpm/pend@1.2.0/node_modules/pend/index.js
 var require_pend = __commonJS({
   "../../node_modules/.pnpm/pend@1.2.0/node_modules/pend/index.js"(exports, module) {
@@ -8481,12 +12294,12 @@ var require_fd_slicer = __commonJS({
     var Readable3 = stream.Readable;
     var PassThrough = stream.PassThrough;
     var Pend = require_pend();
-    var EventEmitter = __require("events").EventEmitter;
+    var EventEmitter2 = __require("events").EventEmitter;
     exports.BufferSlicer = BufferSlicer;
     exports.FdSlicer = FdSlicer;
-    util.inherits(FdSlicer, EventEmitter);
+    util.inherits(FdSlicer, EventEmitter2);
     function FdSlicer(fd) {
-      EventEmitter.call(this);
+      EventEmitter2.call(this);
       this.fd = fd;
       this.pend = new Pend();
       this.pend.max = 1;
@@ -8568,9 +12381,9 @@ var require_fd_slicer = __commonJS({
         this.context = null;
       }
     };
-    util.inherits(BufferSlicer, EventEmitter);
+    util.inherits(BufferSlicer, EventEmitter2);
     function BufferSlicer(buffer) {
-      EventEmitter.call(this);
+      EventEmitter2.call(this);
       this.refCount = 0;
       this.buffer = buffer;
     }
@@ -8928,7 +12741,7 @@ var require_yauzl = __commonJS({
     var zlib = __require("zlib");
     var fd_slicer = require_fd_slicer();
     var util = __require("util");
-    var EventEmitter = __require("events").EventEmitter;
+    var EventEmitter2 = __require("events").EventEmitter;
     var Transform2 = __require("stream").Transform;
     var PassThrough = __require("stream").PassThrough;
     var Writable = __require("stream").Writable;
@@ -9097,10 +12910,10 @@ var require_yauzl = __commonJS({
         callback(new Error("End of central directory record signature not found. Either not a zip file, or file is truncated."));
       });
     }
-    util.inherits(ZipFile, EventEmitter);
+    util.inherits(ZipFile, EventEmitter2);
     function ZipFile(reader, centralDirectoryOffset, fileSize, entryCount, comment, autoClose, lazyEntries, decodeStrings, validateEntrySizes, strictFileNames) {
       var self = this;
-      EventEmitter.call(self);
+      EventEmitter2.call(self);
       self.reader = reader;
       self.reader.on("error", function(err) {
         emitError(self, err);
@@ -9644,9 +13457,9 @@ var require_yauzl = __commonJS({
       }
       cb();
     };
-    util.inherits(RandomAccessReader, EventEmitter);
+    util.inherits(RandomAccessReader, EventEmitter2);
     function RandomAccessReader() {
-      EventEmitter.call(this);
+      EventEmitter2.call(this);
       this.refCount = 0;
     }
     RandomAccessReader.prototype.ref = function() {
@@ -10530,7 +14343,7 @@ var require_errors2 = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/core/constants.js
-var require_constants = __commonJS({
+var require_constants2 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/core/constants.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -10684,7 +14497,7 @@ var require_tree = __commonJS({
     var {
       wellknownHeaderNames,
       headerNameLowerCasedRecord
-    } = require_constants();
+    } = require_constants2();
     var TstNode = class _TstNode {
       /** @type {any} */
       value = null;
@@ -10842,7 +14655,7 @@ var require_util2 = __commonJS({
     var { EventEmitter: EE } = __require("node:events");
     var timers = require_timers();
     var { InvalidArgumentError, ConnectTimeoutError } = require_errors2();
-    var { headerNameLowerCasedRecord } = require_constants();
+    var { headerNameLowerCasedRecord } = require_constants2();
     var { tree } = require_tree();
     var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map((v) => Number(v));
     var BodyAsyncIterable = class {
@@ -11957,7 +15770,7 @@ var require_request = __commonJS({
       getProtocolFromUrlString
     } = require_util2();
     var { channels } = require_diagnostics();
-    var { headerNameLowerCasedRecord } = require_constants();
+    var { headerNameLowerCasedRecord } = require_constants2();
     var invalidPathRegex = /[^\u0021-\u00ff]/;
     function isValidContentLengthHeaderValue(val) {
       if (typeof val !== "string" || val.length === 0) {
@@ -12434,10 +16247,10 @@ var require_dispatcher = __commonJS({
     init_define_LOKI_TEST_PLANNING_PINS();
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
-    var EventEmitter = __require("node:events");
+    var EventEmitter2 = __require("node:events");
     var WrapHandler = require_wrap_handler();
     var wrapInterceptor = (dispatch) => (opts, handler) => dispatch(opts, WrapHandler.wrap(handler));
-    var Dispatcher = class extends EventEmitter {
+    var Dispatcher = class extends EventEmitter2 {
       dispatch() {
         throw new Error("not implemented");
       }
@@ -12910,7 +16723,7 @@ var require_utils2 = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/llhttp/constants.js
-var require_constants2 = __commonJS({
+var require_constants3 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/llhttp/constants.js"(exports) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -13593,7 +17406,7 @@ var require_llhttp_simd_wasm = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/fetch/constants.js
-var require_constants3 = __commonJS({
+var require_constants4 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/fetch/constants.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -15060,7 +18873,7 @@ var require_util3 = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { Transform: Transform2 } = __require("node:stream");
     var zlib = __require("node:zlib");
-    var { redirectStatusSet, referrerPolicyTokens, badPortsSet } = require_constants3();
+    var { redirectStatusSet, referrerPolicyTokens, badPortsSet } = require_constants4();
     var { getGlobalOrigin } = require_global();
     var { collectAnHTTPQuotedString, parseMIMEType } = require_data_url();
     var { performance: performance6 } = __require("node:perf_hooks");
@@ -16720,7 +20533,7 @@ var require_client_h1 = __commonJS({
       kHTTPContext,
       kClosed
     } = require_symbols();
-    var constants8 = require_constants2();
+    var constants8 = require_constants3();
     var EMPTY_BUF = Buffer.alloc(0);
     var FastBuffer = Buffer[Symbol.species];
     var removeAllListeners = util.removeAllListeners;
@@ -20254,7 +24067,7 @@ var require_socks5_client = __commonJS({
     init_define_LOKI_TEST_PLANNING_PINS();
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
-    var { EventEmitter } = __require("node:events");
+    var { EventEmitter: EventEmitter2 } = __require("node:events");
     var { Buffer: Buffer14 } = __require("node:buffer");
     var { InvalidArgumentError, Socks5ProxyError } = require_errors2();
     var { debuglog } = __require("node:util");
@@ -20299,7 +24112,7 @@ var require_socks5_client = __commonJS({
       ERROR: "error",
       CLOSED: "closed"
     };
-    var Socks5Client = class extends EventEmitter {
+    var Socks5Client = class extends EventEmitter2 {
       constructor(socket, options2 = {}) {
         super();
         if (!socket) {
@@ -27583,9 +31396,9 @@ var require_memory_cache_store = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { Writable } = __require("node:stream");
-    var { EventEmitter } = __require("node:events");
+    var { EventEmitter: EventEmitter2 } = __require("node:events");
     var { assertCacheKey, assertCacheValue } = require_cache();
-    var MemoryCacheStore = class extends EventEmitter {
+    var MemoryCacheStore = class extends EventEmitter2 {
       #maxCount = 1024;
       #maxSize = 104857600;
       // 100MB
@@ -30167,7 +33980,7 @@ var require_response = __commonJS({
     var {
       redirectStatusSet,
       nullBodyStatus
-    } = require_constants3();
+    } = require_constants4();
     var { webidl } = require_webidl();
     var { URLSerializer } = require_data_url();
     var { kConstruct } = require_symbols();
@@ -30602,7 +34415,7 @@ var require_request2 = __commonJS({
       requestCredentials,
       requestCache,
       requestDuplex
-    } = require_constants3();
+    } = require_constants4();
     var { kEnumerableProperty, normalizedMethodRecordsBase, normalizedMethodRecords } = util;
     var { webidl } = require_webidl();
     var { URLSerializer } = require_data_url();
@@ -31551,7 +35364,7 @@ var require_fetch = __commonJS({
       safeMethodsSet,
       requestBodyHeader,
       subresourceSet
-    } = require_constants3();
+    } = require_constants4();
     var EE = __require("node:events");
     var { Readable: Readable3, pipeline: pipeline2, finished: finished2, isErrored, isReadable } = __require("node:stream");
     var { addAbortListener, bufferToLowerCasedHeaderName } = require_util2();
@@ -33358,7 +37171,7 @@ var require_cachestorage = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/cookies/constants.js
-var require_constants4 = __commonJS({
+var require_constants5 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/cookies/constants.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -33617,7 +37430,7 @@ var require_parse = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { collectASequenceOfCodePointsFast } = require_infra();
-    var { maxNameValuePairSize, maxAttributeValueSize } = require_constants4();
+    var { maxNameValuePairSize, maxAttributeValueSize } = require_constants5();
     var { isCTLExcludingHtab } = require_util5();
     var assert6 = __require("node:assert");
     function parseSetCookie(header2) {
@@ -34173,7 +37986,7 @@ var require_events = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/constants.js
-var require_constants5 = __commonJS({
+var require_constants6 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/constants.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -34252,7 +38065,7 @@ var require_util6 = __commonJS({
     init_define_LOKI_TEST_PLANNING_PINS();
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
-    var { states, opcodes } = require_constants5();
+    var { states, opcodes } = require_constants6();
     var { isUtf8 } = __require("node:buffer");
     var { removeHTTPWhitespace } = require_data_url();
     var { collectASequenceOfCodePointsFast } = require_infra();
@@ -34440,7 +38253,7 @@ var require_frame = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { runtimeFeatures } = require_runtime_features();
-    var { maxUnsigned16Bit, opcodes } = require_constants5();
+    var { maxUnsigned16Bit, opcodes } = require_constants6();
     var BUFFER_SIZE = 8 * 1024;
     var buffer = null;
     var bufIdx = BUFFER_SIZE;
@@ -34554,7 +38367,7 @@ var require_connection = __commonJS({
     init_define_LOKI_TEST_PLANNING_PINS();
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
-    var { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = require_constants5();
+    var { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = require_constants6();
     var { parseExtensions, isClosed, isClosing, isEstablished, isConnecting, validateCloseCodeAndReason } = require_util6();
     var { makeRequest } = require_request2();
     var { fetching } = require_fetch();
@@ -34713,7 +38526,7 @@ var require_connection = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/permessage-deflate.js
-var require_permessage_deflate = __commonJS({
+var require_permessage_deflate2 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/permessage-deflate.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -34732,7 +38545,7 @@ var require_permessage_deflate = __commonJS({
     var tail = Buffer.from([0, 0, 255, 255]);
     var kBuffer = /* @__PURE__ */ Symbol("kBuffer");
     var kLength = /* @__PURE__ */ Symbol("kLength");
-    var PerMessageDeflate = class {
+    var PerMessageDeflate2 = class {
       /** @type {import('node:zlib').InflateRaw} */
       #inflate;
       #options = {};
@@ -34800,12 +38613,12 @@ var require_permessage_deflate = __commonJS({
         });
       }
     };
-    module.exports = { PerMessageDeflate };
+    module.exports = { PerMessageDeflate: PerMessageDeflate2 };
   }
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/receiver.js
-var require_receiver = __commonJS({
+var require_receiver2 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/receiver.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -34820,7 +38633,7 @@ var require_receiver = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { Writable } = __require("node:stream");
     var assert6 = __require("node:assert");
-    var { parserStates, opcodes, states, emptyBuffer, sentCloseFrameState } = require_constants5();
+    var { parserStates, opcodes, states, emptyBuffer, sentCloseFrameState } = require_constants6();
     var {
       isValidStatusCode,
       isValidOpcode,
@@ -34832,7 +38645,7 @@ var require_receiver = __commonJS({
     } = require_util6();
     var { failWebsocketConnection } = require_connection();
     var { WebsocketFrameSend } = require_frame();
-    var { PerMessageDeflate } = require_permessage_deflate();
+    var { PerMessageDeflate: PerMessageDeflate2 } = require_permessage_deflate2();
     var { MessageSizeExceededError } = require_errors2();
     var ByteParser = class extends Writable {
       #buffers = [];
@@ -34862,7 +38675,7 @@ var require_receiver = __commonJS({
         this.#maxFragments = options2.maxFragments ?? 0;
         this.#maxPayloadSize = options2.maxPayloadSize ?? 0;
         if (this.#extensions.has("permessage-deflate")) {
-          this.#extensions.set("permessage-deflate", new PerMessageDeflate(extensions, options2));
+          this.#extensions.set("permessage-deflate", new PerMessageDeflate2(extensions, options2));
         }
       }
       /**
@@ -35183,7 +38996,7 @@ var require_receiver = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/sender.js
-var require_sender = __commonJS({
+var require_sender2 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/sender.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -35197,7 +39010,7 @@ var require_sender = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { WebsocketFrameSend } = require_frame();
-    var { opcodes, sendHints } = require_constants5();
+    var { opcodes, sendHints } = require_constants6();
     var FixedQueue = require_fixed_queue();
     var SendQueue = class {
       /**
@@ -35280,7 +39093,7 @@ var require_sender = __commonJS({
 });
 
 // ../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/websocket.js
-var require_websocket = __commonJS({
+var require_websocket2 = __commonJS({
   "../../node_modules/.pnpm/undici@7.30.1/node_modules/undici/lib/web/websocket/websocket.js"(exports, module) {
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -35297,7 +39110,7 @@ var require_websocket = __commonJS({
     var { webidl } = require_webidl();
     var { URLSerializer } = require_data_url();
     var { environmentSettingsObject } = require_util3();
-    var { staticPropertyDescriptors, states, sentCloseFrameState, sendHints, opcodes } = require_constants5();
+    var { staticPropertyDescriptors, states, sentCloseFrameState, sendHints, opcodes } = require_constants6();
     var {
       isConnecting,
       isEstablished,
@@ -35310,11 +39123,11 @@ var require_websocket = __commonJS({
       getURLRecord
     } = require_util6();
     var { establishWebSocketConnection, closeWebSocketConnection, failWebsocketConnection } = require_connection();
-    var { ByteParser } = require_receiver();
+    var { ByteParser } = require_receiver2();
     var { kEnumerableProperty } = require_util2();
     var { getGlobalDispatcher } = require_global2();
     var { ErrorEvent, CloseEvent, createFastMessageEvent } = require_events();
-    var { SendQueue } = require_sender();
+    var { SendQueue } = require_sender2();
     var { WebsocketFrameSend } = require_frame();
     var { channels } = require_diagnostics();
     function getSocketAddress(socket) {
@@ -35326,7 +39139,7 @@ var require_websocket = __commonJS({
       }
       return null;
     }
-    var WebSocket = class _WebSocket extends EventTarget {
+    var WebSocket2 = class _WebSocket extends EventTarget {
       #events = {
         open: null,
         error: null,
@@ -35694,13 +39507,13 @@ var require_websocket = __commonJS({
         }
       }
     };
-    var { ping } = WebSocket;
-    Reflect.deleteProperty(WebSocket, "ping");
-    WebSocket.CONNECTING = WebSocket.prototype.CONNECTING = states.CONNECTING;
-    WebSocket.OPEN = WebSocket.prototype.OPEN = states.OPEN;
-    WebSocket.CLOSING = WebSocket.prototype.CLOSING = states.CLOSING;
-    WebSocket.CLOSED = WebSocket.prototype.CLOSED = states.CLOSED;
-    Object.defineProperties(WebSocket.prototype, {
+    var { ping } = WebSocket2;
+    Reflect.deleteProperty(WebSocket2, "ping");
+    WebSocket2.CONNECTING = WebSocket2.prototype.CONNECTING = states.CONNECTING;
+    WebSocket2.OPEN = WebSocket2.prototype.OPEN = states.OPEN;
+    WebSocket2.CLOSING = WebSocket2.prototype.CLOSING = states.CLOSING;
+    WebSocket2.CLOSED = WebSocket2.prototype.CLOSED = states.CLOSED;
+    Object.defineProperties(WebSocket2.prototype, {
       CONNECTING: staticPropertyDescriptors,
       OPEN: staticPropertyDescriptors,
       CLOSING: staticPropertyDescriptors,
@@ -35724,7 +39537,7 @@ var require_websocket = __commonJS({
         configurable: true
       }
     });
-    Object.defineProperties(WebSocket, {
+    Object.defineProperties(WebSocket2, {
       CONNECTING: staticPropertyDescriptors,
       OPEN: staticPropertyDescriptors,
       CLOSING: staticPropertyDescriptors,
@@ -35773,7 +39586,7 @@ var require_websocket = __commonJS({
       return webidl.converters.USVString(V);
     };
     module.exports = {
-      WebSocket,
+      WebSocket: WebSocket2,
       ping
     };
   }
@@ -35885,13 +39698,13 @@ var require_websocketstream = __commonJS({
     init_define_LOKI_WORK_ITEM_RISK_PINS();
     var { createDeferredPromise } = require_promise();
     var { environmentSettingsObject } = require_util3();
-    var { states, opcodes, sentCloseFrameState } = require_constants5();
+    var { states, opcodes, sentCloseFrameState } = require_constants6();
     var { webidl } = require_webidl();
     var { getURLRecord, isValidSubprotocol, isEstablished, utf8Decode } = require_util6();
     var { establishWebSocketConnection, failWebsocketConnection, closeWebSocketConnection } = require_connection();
     var { channels } = require_diagnostics();
     var { WebsocketFrameSend } = require_frame();
-    var { ByteParser } = require_receiver();
+    var { ByteParser } = require_receiver2();
     var { WebSocketError, createUnvalidatedWebSocketError } = require_websocketerror();
     var { kEnumerableProperty } = require_util2();
     var { utf8DecodeBytes } = require_encoding();
@@ -37134,8 +40947,8 @@ ${captureLines}` : capture3.stack;
     module.exports.parseMIMEType = parseMIMEType;
     module.exports.serializeAMimeType = serializeAMimeType;
     var { CloseEvent, ErrorEvent, MessageEvent } = require_events();
-    var { WebSocket, ping } = require_websocket();
-    module.exports.WebSocket = WebSocket;
+    var { WebSocket: WebSocket2, ping } = require_websocket2();
+    module.exports.WebSocket = WebSocket2;
     module.exports.CloseEvent = CloseEvent;
     module.exports.ErrorEvent = ErrorEvent;
     module.exports.MessageEvent = MessageEvent;
@@ -101409,6 +105222,488 @@ import { fileURLToPath as fileURLToPath9 } from "node:url";
 var import__5 = __toESM(require__(), 1);
 import { randomUUID as randomUUID12 } from "node:crypto";
 
+// ../provider-transport/responses-session.mjs
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+import { EventEmitter } from "node:events";
+import { createConnection } from "node:net";
+
+// ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/wrapper.mjs
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var import_stream = __toESM(require_stream(), 1);
+var import_extension = __toESM(require_extension(), 1);
+var import_permessage_deflate = __toESM(require_permessage_deflate(), 1);
+var import_receiver = __toESM(require_receiver(), 1);
+var import_sender = __toESM(require_sender(), 1);
+var import_subprotocol = __toESM(require_subprotocol(), 1);
+var import_websocket = __toESM(require_websocket(), 1);
+var import_websocket_server = __toESM(require_websocket_server(), 1);
+var wrapper_default = import_websocket.default;
+
+// ../provider-transport/responses-session.mjs
+import OpenAI from "openai";
+import { ResponsesWS } from "openai/resources/responses/ws";
+var refusedBeforeSend = /* @__PURE__ */ Symbol("broker WebSocket refusal");
+var maxManagedFrameBytes = 16 * 1024 * 1024;
+function storedContinuationUnavailable() {
+  return Response.json(
+    { error: "ai_continuation_unavailable" },
+    { status: 409 }
+  );
+}
+function responseCreateFrame(body2) {
+  const request3 = { ...body2 };
+  delete request3.stream;
+  delete request3.background;
+  return { type: "response.create", ...request3 };
+}
+function reviewComputerInput(input3) {
+  if (!input3.some((item2) => item2.type === "computer_call_output") || input3.flatMap((item2) => Array.isArray(item2.content) ? item2.content : []).filter((part) => part.type === "input_image").length < 2)
+    return input3;
+  return input3.map((item2) => {
+    if (item2.type === "computer_call")
+      return {
+        role: "assistant",
+        content: [{ type: "output_text", text: JSON.stringify(item2) }]
+      };
+    if (item2.type !== "computer_call_output") return item2;
+    const original = structuredClone(item2);
+    const image = {};
+    for (const key5 of ["image_url", "file_id"])
+      if (typeof original.output?.[key5] === "string") {
+        image[key5] = original.output[key5];
+        delete original.output[key5];
+      }
+    return {
+      role: "user",
+      content: [
+        { type: "input_text", text: JSON.stringify(original) },
+        ...Object.keys(image).length ? [{ type: "input_image", ...image, detail: "original" }] : []
+      ]
+    };
+  });
+}
+function reviewWire(request3) {
+  if (request3.tool_choice !== "none") return request3;
+  const input3 = reviewComputerInput(request3.input);
+  if (input3 === request3.input) return request3;
+  return {
+    ...request3,
+    input: input3,
+    // No action is permitted in recap. An unused computer definition still
+    // refuses multiple images even after its historical outputs are quoted.
+    ...request3.tool_choice === "none" ? { tools: request3.tools.filter((tool2) => tool2.type !== "computer") } : {}
+  };
+}
+async function managedResponsesSocket({ socketPath, headers }) {
+  await checkChannel(socketPath);
+  const socket = new wrapper_default("ws://localhost/ai-bound/v1/responses", {
+    headers,
+    createConnection: () => createConnection(socketPath),
+    handshakeTimeout: 1e4,
+    maxPayload: maxManagedFrameBytes,
+    perMessageDeflate: false
+  });
+  const transport2 = Object.assign(new EventEmitter(), {
+    socket,
+    close: () => socket.terminate(),
+    send: (frame) => socket.send(frame)
+  });
+  socket.on("message", (data2) => {
+    let event2;
+    const wire = data2.toString("utf8");
+    try {
+      event2 = JSON.parse(wire);
+    } catch {
+      return socket.terminate();
+    }
+    if (!event2 || typeof event2.type !== "string") return socket.terminate();
+    transport2.emit("event", event2, wire);
+  });
+  socket.on("error", (error62) => transport2.emit("error", error62));
+  socket.on("close", (code) => {
+    if (code === 4001 || code === 4002) transport2.emit("brokerRefusal", code);
+    transport2.emit("close");
+  });
+  return transport2;
+}
+function createManagedResponsesSession({
+  connection: connection2,
+  storeResponses,
+  omitContent,
+  requestAI,
+  recordWebSocketFrame
+}) {
+  if (!connection2.socketPath || !connection2.headers["x-kaijan-ai-connection"])
+    return void 0;
+  const omit2 = () => typeof omitContent === "function" ? omitContent() : omitContent === true;
+  return createResponsesSession({
+    storeResponses,
+    recordWebSocketFrame,
+    requestAI: requestAI ?? ((body2, signal) => sendFetch(connection2, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        ...omit2() ? { "x-kaijan-ai-content": "omit" } : {}
+      },
+      body: JSON.stringify(body2),
+      signal
+    })),
+    managedWebSocket: {
+      socketPath: connection2.socketPath,
+      headers: connection2.headers,
+      omitContent: omit2
+    }
+  });
+}
+function createResponsesSession({
+  apiKey,
+  requestAI,
+  managedWebSocket,
+  storeResponses = false,
+  record: record15,
+  recordWebSocketFrame
+}) {
+  if (managedWebSocket && !requestAI)
+    throw new Error("Managed WebSocket requires the same broker HTTP sender");
+  const history = /* @__PURE__ */ new Map();
+  const storedWebSocketIds = /* @__PURE__ */ new Set();
+  const receivedWebSocketFrames = /* @__PURE__ */ new WeakMap();
+  const client = requestAI ? null : new OpenAI({
+    apiKey,
+    baseURL: "https://api.openai.com/v1",
+    maxRetries: 0
+  });
+  let socket, socketModel, cachedId, httpOnly = Boolean(requestAI && !managedWebSocket), closed = false;
+  const recordEvent = (event2) => record15?.(structuredClone(event2));
+  const http2 = requestAI ?? ((body2, signal) => fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    redirect: "error",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body2),
+    signal
+  }));
+  function closeSocket() {
+    socket?.close();
+    socket = void 0;
+    socketModel = void 0;
+    cachedId = void 0;
+  }
+  function replay(body2) {
+    const turns = [];
+    let id8 = body2.previous_response_id;
+    while (id8) {
+      const prior = history.get(id8);
+      if (!prior) throw new Error("Runner continuation history unavailable");
+      turns.push(prior);
+      id8 = prior.previous;
+    }
+    const request3 = { ...body2 };
+    delete request3.previous_response_id;
+    const input3 = structuredClone([
+      ...turns.reverse().flatMap((turn) => [...turn.input, ...turn.output]),
+      ...body2.input
+    ]);
+    const needsComputer = input3.some((item2) => item2.type === "computer_call_output") && !request3.tools?.some((tool2) => tool2.type === "computer");
+    return {
+      ...request3,
+      input: input3,
+      ...needsComputer ? {
+        tools: [...request3.tools ?? [], { type: "computer" }],
+        ...!request3.tools?.length ? { tool_choice: "none" } : {}
+      } : {}
+    };
+  }
+  function retain(body2, response) {
+    if (typeof response?.id === "string" && Array.isArray(response.output))
+      history.set(response.id, {
+        previous: body2.previous_response_id,
+        input: structuredClone(body2.input),
+        output: structuredClone(response.output)
+      });
+  }
+  async function connect(signal, model) {
+    if (socket?.socket.readyState === 1 && (!managedWebSocket || model === socketModel))
+      return;
+    closeSocket();
+    const current2 = managedWebSocket ? await managedResponsesSocket(managedWebSocket) : new ResponsesWS(client, { reconnect: null });
+    socket = current2;
+    socketModel = model;
+    current2.on("error", () => {
+    });
+    await new Promise((resolve11, reject) => {
+      const cleanup = () => {
+        current2.socket.off("open", opened);
+        current2.off("error", failed);
+        current2.off("close", failed);
+        signal?.removeEventListener("abort", aborted2);
+      };
+      const opened = () => {
+        cleanup();
+        resolve11();
+      };
+      const failed = () => {
+        cleanup();
+        reject(new Error("Runner WebSocket connection unavailable"));
+      };
+      const aborted2 = () => {
+        cleanup();
+        closeSocket();
+        reject(signal.reason);
+      };
+      current2.socket.on("open", opened);
+      current2.on("error", failed);
+      current2.on("close", failed);
+      signal?.addEventListener("abort", aborted2, { once: true });
+      if (signal?.aborted) aborted2();
+      else if (current2.socket.readyState === 1) opened();
+    });
+  }
+  async function websocket(frame, signal, inactivityTimeoutMs) {
+    const current2 = socket;
+    return new Promise((resolve11, reject) => {
+      const cleanup = () => {
+        clearTimeout(inactivity);
+        current2.off("event", event2);
+        current2.off("brokerRefusal", brokerRefusal);
+        current2.off("error", failed);
+        current2.off("close", failed);
+        signal?.removeEventListener("abort", aborted2);
+      };
+      const event2 = (value, wire) => {
+        inactivity?.refresh();
+        if (![
+          "response.completed",
+          "response.failed",
+          "response.incomplete",
+          "error"
+        ].includes(value.type))
+          return;
+        if (recordWebSocketFrame && typeof wire === "string")
+          receivedWebSocketFrames.set(value, wire);
+        cleanup();
+        resolve11(value);
+      };
+      const failed = () => {
+        cleanup();
+        closeSocket();
+        reject(
+          new Error(
+            "Runner WebSocket response interrupted; inference outcome unknown"
+          )
+        );
+      };
+      const aborted2 = () => {
+        cleanup();
+        closeSocket();
+        reject(signal.reason);
+      };
+      const brokerRefusal = (code) => {
+        cleanup();
+        resolve11({ [refusedBeforeSend]: code });
+      };
+      const inactivity = inactivityTimeoutMs === void 0 ? void 0 : setTimeout(() => {
+        cleanup();
+        closeSocket();
+        reject(
+          new DOMException(
+            "Provider socket inactivity timeout",
+            "TimeoutError"
+          )
+        );
+      }, inactivityTimeoutMs);
+      current2.on("brokerRefusal", brokerRefusal);
+      current2.on("event", event2);
+      current2.on("error", failed);
+      current2.on("close", failed);
+      signal?.addEventListener("abort", aborted2, { once: true });
+      if (signal?.aborted) {
+        aborted2();
+        return;
+      }
+      try {
+        current2.send(frame);
+      } catch (error62) {
+        cleanup();
+        closeSocket();
+        reject(error62);
+      }
+    });
+  }
+  async function sendHttp(original, signal, review) {
+    if (managedWebSocket) {
+      signal?.throwIfAborted();
+      return http2(original, signal);
+    }
+    const wire = storeResponses ? original : review ? reviewWire(replay(original)) : replay(original);
+    await recordEvent({ transport: "http", phase: "request", body: wire });
+    signal?.throwIfAborted();
+    const response = await http2(wire, signal);
+    let body2;
+    try {
+      body2 = await response.clone().json();
+    } catch {
+    }
+    await recordEvent({
+      transport: "http",
+      phase: "response",
+      status: response.status,
+      body: body2
+    });
+    if (response.ok && !storeResponses) retain(original, body2);
+    return response;
+  }
+  return {
+    async send(request3, signal, { review = false, inactivityTimeoutMs } = {}) {
+      if (closed) throw new Error("Runner Responses session is closed");
+      signal?.throwIfAborted();
+      const original = storeResponses ? structuredClone({ ...request3, store: true }) : managedWebSocket ? zdrRequest(request3) : structuredClone({
+        ...zdrRequest(request3),
+        include: [
+          .../* @__PURE__ */ new Set([
+            ...request3.include ?? [],
+            "reasoning.encrypted_content"
+          ])
+        ]
+      });
+      const storedWebSocketContinuation = storedWebSocketIds.has(
+        original.previous_response_id
+      );
+      if (httpOnly && !storedWebSocketContinuation)
+        return sendHttp(original, signal, review);
+      const managedFrame = managedWebSocket ? JSON.stringify({
+        ...responseCreateFrame(original),
+        ...managedWebSocket.omitContent?.() ? { kaijan_content: "omit" } : {}
+      }) : void 0;
+      if (managedFrame && Buffer.byteLength(managedFrame) > maxManagedFrameBytes)
+        return sendHttp(original, signal, review);
+      try {
+        await connect(signal, original.model);
+      } catch {
+        signal?.throwIfAborted();
+        closeSocket();
+        if (!storedWebSocketContinuation) httpOnly = true;
+        await recordEvent({
+          transport: "websocket",
+          phase: "unavailable-before-dispatch"
+        });
+        return storedWebSocketContinuation ? storedContinuationUnavailable() : sendHttp(original, signal, review);
+      }
+      let wire = storeResponses || managedWebSocket || !review && original.previous_response_id && original.previous_response_id === cachedId ? original : replay(original);
+      if (review && !managedWebSocket && !storeResponses)
+        wire = reviewWire(wire);
+      const sendFrame = async () => {
+        await recordEvent({
+          transport: "websocket",
+          phase: "request",
+          body: wire
+        });
+        signal?.throwIfAborted();
+        if (recordWebSocketFrame && managedFrame !== void 0)
+          await recordWebSocketFrame("request", managedFrame);
+        return websocket(
+          managedFrame ?? responseCreateFrame(wire),
+          signal,
+          inactivityTimeoutMs
+        );
+      };
+      let event2 = await sendFrame();
+      if (event2[refusedBeforeSend] === 4001 && storedWebSocketContinuation) {
+        closeSocket();
+        try {
+          await connect(signal, original.model);
+        } catch {
+          signal?.throwIfAborted();
+          closeSocket();
+          return storedContinuationUnavailable();
+        }
+        event2 = await sendFrame();
+      }
+      if (event2[refusedBeforeSend] !== void 0) {
+        closeSocket();
+        if (event2[refusedBeforeSend] === 4001)
+          return storedWebSocketContinuation ? storedContinuationUnavailable() : sendHttp(original, signal, review);
+        return Response.json(
+          { error: "ai_connection_changed" },
+          { status: 412 }
+        );
+      }
+      const receivedFrame = receivedWebSocketFrames.get(event2);
+      if (receivedFrame !== void 0)
+        await recordWebSocketFrame("response", receivedFrame);
+      await recordEvent({
+        transport: "websocket",
+        phase: "response",
+        body: event2
+      });
+      if (event2.type === "error") {
+        cachedId = void 0;
+        if (!storeResponses && !managedWebSocket && event2.error?.code === "previous_response_not_found")
+          return sendHttp(original, signal, review);
+        const status2 = event2.status ?? event2.error?.status ?? (event2.error?.type === "rate_limit_error" ? 429 : event2.error?.type === "server_error" ? 500 : 400);
+        const providerHttpStatus = event2.provider_http_status;
+        const providerFailureCode2 = event2.provider_failure_code;
+        const headers = new Headers();
+        if (managedWebSocket) {
+          if (Number.isInteger(providerHttpStatus) && providerHttpStatus >= 400 && providerHttpStatus <= 599)
+            headers.set(
+              "x-kaijan-provider-http-status",
+              String(providerHttpStatus)
+            );
+          if (providerHttpStatus === 429 && providerFailureCode2 === "provider_quota_exhausted")
+            headers.set("x-kaijan-provider-failure-code", providerFailureCode2);
+        }
+        const quotaRefusal = managedWebSocket && status2 === 429 && providerHttpStatus === 429 && providerFailureCode2 === "provider_quota_exhausted";
+        return Response.json(
+          {
+            error: event2.error,
+            ...quotaRefusal ? {
+              statusCode: 429,
+              code: "ai_gateway_rejected",
+              retryable: false
+            } : {}
+          },
+          { status: status2, headers }
+        );
+      }
+      if (managedWebSocket && storeResponses && event2.type === "response.completed" && event2.response?.store !== false && typeof event2.response?.id === "string") {
+        storedWebSocketIds.add(event2.response.id);
+      }
+      if (!managedWebSocket && !storeResponses) {
+        cachedId = event2.response.id;
+        retain(original, event2.response);
+      }
+      return Response.json(event2.response);
+    },
+    close() {
+      closed = true;
+      closeSocket();
+      history.clear();
+      storedWebSocketIds.clear();
+    }
+  };
+}
+
 // src/change-risk.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -104481,12 +108776,12 @@ function combineExtensions(extensions) {
   }
   return all2;
 }
-function syntaxExtension(all2, extension2) {
+function syntaxExtension(all2, extension3) {
   let hook;
-  for (hook in extension2) {
+  for (hook in extension3) {
     const maybe = hasOwnProperty2.call(all2, hook) ? all2[hook] : void 0;
     const left = maybe || (all2[hook] = {});
-    const right = extension2[hook];
+    const right = extension3[hook];
     let code;
     if (right) {
       for (code in right) {
@@ -109846,24 +114141,24 @@ function configure(combined, extensions) {
     if (Array.isArray(value)) {
       configure(combined, value);
     } else {
-      extension(combined, value);
+      extension2(combined, value);
     }
   }
 }
-function extension(combined, extension2) {
+function extension2(combined, extension3) {
   let key5;
-  for (key5 in extension2) {
-    if (own3.call(extension2, key5)) {
+  for (key5 in extension3) {
+    if (own3.call(extension3, key5)) {
       switch (key5) {
         case "canContainEols": {
-          const right = extension2[key5];
+          const right = extension3[key5];
           if (right) {
             combined[key5].push(...right);
           }
           break;
         }
         case "transforms": {
-          const right = extension2[key5];
+          const right = extension3[key5];
           if (right) {
             combined[key5].push(...right);
           }
@@ -109871,7 +114166,7 @@ function extension(combined, extension2) {
         }
         case "afterExit":
         case "beforeEnter": {
-          const right = extension2[key5];
+          const right = extension3[key5];
           if (right) {
             combined[key5].push(right);
           }
@@ -109879,7 +114174,7 @@ function extension(combined, extension2) {
         }
         case "enter":
         case "exit": {
-          const right = extension2[key5];
+          const right = extension3[key5];
           if (right) {
             Object.assign(combined[key5], right);
           }
@@ -112781,9 +117076,15 @@ var WorkItemRisk = class {
         },
         execute: async (request3, context) => {
           const api = await this.loadNative();
+          const provider = context.environment ?? await this.environment();
+          const env = provider.LOKI_AUTH_BROKER_SOCKET ? (await plannerProviderConnection(
+            this.data,
+            provider,
+            context.signal
+          )).environment : provider;
           return api.run(request3.packet, {
             archive: context.artifactDirectory,
-            env: { ...context.environment ?? await this.environment() },
+            env: { ...env },
             signal: context.signal,
             ...this.dependencies.fetcher ? { fetcher: this.dependencies.fetcher } : {}
           });
@@ -112831,7 +117132,14 @@ var WorkItemRisk = class {
     const questions2 = await import("#loki-selected/work-item-questions");
     const source4 = await import("#loki-selected/source-screen");
     const native2 = module.createWorkItemRisk({
-      runWithMethod: runtime2.runWithMethod,
+      runWithMethod: (packet, options2, method2) => runtime2.runWithMethod(
+        packet,
+        {
+          ...options2,
+          managedResponsesSession: createManagedResponsesSession
+        },
+        method2
+      ),
       questionIdentity: questions2.questionIdentity,
       responseText: questions2.responseText,
       evidenceCatalog: planning.evidenceCatalog,
@@ -113014,7 +117322,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import OpenAI from "openai";
+import OpenAI2 from "openai";
 import { Agent, Runner, computerTool, tool } from "@openai/agents-core";
 import { OpenAIResponsesModel } from "@openai/agents-openai";
 var storeTestAgentResponses = true;
@@ -113031,7 +117339,7 @@ var RetainedResponsesModel = class extends OpenAIResponsesModel {
   #previousResponse;
   constructor({ model, dispatch, store: store2 }) {
     super(
-      new OpenAI({
+      new OpenAI2({
         apiKey: "unused-caller-owned-transport",
         maxRetries: 0,
         fetch: async () => {
@@ -124184,6 +128492,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
               requestClarification: Boolean(options2.requestClarification),
               apiKey: options2.apiKey,
               brokerSocket: options2.brokerSocket,
+              brokerBinding: options2.brokerBinding,
               telemetryPlanId: options2.telemetryPlanId,
               artifactDirectory: options2.artifactDirectory,
               limits: options2.limits,
@@ -126114,8 +130423,23 @@ var ComputerRunner = class {
           const originalExecutionDeadline = Date.now() + (request3.options?.limits?.ms ?? defaultRunnerTimeLimitMs);
           const viewerBudget = !desktop && this.dependencies.browserViewer && !this.dependencies.runnerValidation ? new RunnerExecutionBudget(originalExecutionDeadline) : void 0;
           try {
+            const connection2 = provider.brokerSocket ? await readManagedPlannerConnection(
+              provider.brokerSocket,
+              context.signal
+            ).catch((error62) => {
+              if (error62 instanceof PlannerConnectionUnavailableError && error62.operationUnavailable)
+                return void 0;
+              context.signal.throwIfAborted();
+              throw new Error(
+                "Managed provider connection is unavailable.",
+                {
+                  cause: error62
+                }
+              );
+            }) : void 0;
             const options2 = {
               ...provider,
+              ...connection2 ? { brokerBinding: connection2.binding } : {},
               ...context.identity.runnerSettings ?? defaultRunnerSettings,
               signal: context.signal,
               artifactDirectory: context.artifactDirectory,
