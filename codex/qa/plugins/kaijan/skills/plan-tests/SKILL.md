@@ -28,6 +28,14 @@ the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
 saved target, account and data in Plan and Run. After Setup, use its saved
 `application.workItem` as the objective and its resolved target to find or save
 the environment for the selected AUT.
+
+When the person selects an issue or pull request as the basis for testing,
+read that record through the host's authorized source access before calling
+Plan. Keep the person's request as written. In `testObjective`, append the
+relevant original text and its link as attributed evidence. Record unknowns
+as open questions. Use an existing compatible `contextId` when available. If
+the source is unavailable, say what could not be read and keep source-dependent
+expectations unresolved.
 <!-- end-codex-only -->
 
 Tell the person Explorer's time limit before starting exploration. It defaults
