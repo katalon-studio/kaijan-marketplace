@@ -59,11 +59,13 @@ rendering.
 
 ## Preserve PR source bindings
 
-For a PR-bound report, `sourceContextId` selects original PR/files reads retained
-as `loki.report-sources/1` in `nativeInputs.reportSources`. A uniquely linked
-Runner source context is selected automatically. Use an explicit compatible
-reference when adding PR sources without a linked Run. Keep selected Runs
-within the same source context. The source revision, Plan digest and selected
+For a new report, attach original GitHub PR and files reads as
+`reportSources` in `loki_report_show`. If a historical Run already has a linked
+source context, the report uses that original automatically. Keep selected Runs
+within the same source context. To read the original record, call
+`loki_report_get` with the report ID and `sourceOffset: 0`. Join the returned
+`recordChunk.text` pages in order, using each `nextOffset` until it is null.
+The source revision, Plan digest and selected
 identities must agree. Historical terminal verification stays attributed to its
 original saved operation and remains separate from model assessment. See the
 [terminal-check/source contract](../../references/RUNNER.md#terminal-checks-and-pr-sources).

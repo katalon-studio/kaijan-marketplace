@@ -55,8 +55,6 @@ matching records matters, ask for that decision.
   as relevant risks. Keep assumptions distinct from supplied requirements.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
   Save a Plan for a complete caller-supplied scenario before execution.
-  Standalone code review uses
-  [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md).
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
   saved Plan reference and selected test IDs. In Codex, the saved Plan supplies
   the target and inputs. Kaijan runs the selected tests, assesses retained

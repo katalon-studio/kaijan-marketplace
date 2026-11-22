@@ -232,8 +232,8 @@ Reading an old operation preserves its original `verification` and provenance;
 it does not run the removed evaluator or recompute the result.
 
 For a PR-bound case, first read the original PR and all selected changed-file
-pages through an authorized existing GitHub interface. Use `loki_context_submit`
-with `nativeInputs.reportSources` set to:
+pages through an authorized GitHub interface. Set `reportSources` on
+`loki_report_show` to:
 
 ```json
 {
@@ -250,12 +250,11 @@ with `nativeInputs.reportSources` set to:
 }
 ```
 
-The placeholders denote an object and array, not literal strings. Context Intake
-derives display fields/hashes from these original source inputs and accepts no
-execution outcomes. Select the returned sourceContextId with the original
-Plan/Runner references
-in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
-no associated run stays Not run. This adds no GitHub connection or write authority.
+Pass the original PR object and changed-file array in place of the placeholders.
+Select the saved Plan or Runner result in the same report call. A historical
+PR-bound Run keeps its original source context and check results. Use the exact
+report ID with `loki_report_get` to reopen it. Set `sourceOffset: 0` to read the
+attached original source record. A PR with no associated run stays Not run. This adds no GitHub connection or write authority.
 
 Runner records judgments during the selected test. Reopen the original report
 to review its results and observations. Keep caller-supplied observations

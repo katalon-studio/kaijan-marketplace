@@ -281,11 +281,13 @@ assessment/report route. Historical verification stays readable with its origina
 attribution and bytes; it is not reevaluated.
 See the [saved-result contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
 
-Original authorized GitHub PR/files reads can be retained through
-`loki_context_submit` with `nativeInputs.reportSources` (`loki.report-sources/1`).
-Pass its `sourceContextId` to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
-reads preserve historical check outcomes only from the original stored operation and validate
-source, observation, Plan/test IDs and PR head-or-merge revision associations.
+Attach the original authorized GitHub PR and files reads in `reportSources`
+(`loki.report-sources/1`) when calling `loki_report_show`. Historical PR-bound
+Runs keep their saved source context and outcomes. An unbound report can use
+only its original operation IDs and hashes. Read the attached original record
+with `loki_report_get({reportId, sourceOffset: 0})` and the returned offsets.
+Report reads validate source, observation, Plan/test IDs and PR revision
+associations.
 `view:"test-plan"` selects Test plan presentation in the caller's configured UI mode during initial report creation.
 The same scope-bound stores retain inputs, operations and report snapshots.
 

@@ -90429,7 +90429,11 @@ var reportViewSchema = external_exports.object({
   evidenceContext: external_exports.object({
     contextId: digest3,
     recordSha256: digest3,
-    readTool: external_exports.literal("loki_context_get"),
+    readTool: external_exports.literal("loki_report_get"),
+    readArguments: external_exports.strictObject({
+      reportId: digest3,
+      sourceOffset: external_exports.literal(0)
+    }),
     provenance: external_exports.string()
   }).optional(),
   executionChecks: external_exports.array(reportExecutionSchema).optional()
@@ -94042,11 +94046,10 @@ function projectReportResult(input3, sha2563, verifiedPlanningFailures) {
 function projectCustomerTestPlanView(input3, sha2563) {
   const object44 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
   const record13 = (value2) => object44(value2) ? value2 : {};
-  const value = testPlanViewSchema.omit({ plans: true, runs: true, pullRequests: true, assessments: true }).extend({
+  const value = testPlanViewSchema.omit({ plans: true, runs: true, assessments: true }).extend({
     presentation: external_exports.literal("panel").optional(),
     plans: external_exports.array(external_exports.unknown()),
     runs: external_exports.array(external_exports.unknown()),
-    pullRequests: external_exports.unknown().optional(),
     assessments: external_exports.array(external_exports.unknown()).optional()
   }).parse(input3);
   const verifiedPlanningFailures = /* @__PURE__ */ new Set();
@@ -94158,7 +94161,10 @@ function projectCustomerTestPlanView(input3, sha2563) {
         interruptionNote: "The test stopped before it finished. Review the recorded steps before continuing."
       } : {}
     })),
-    pullRequests: value.pullRequests
+    pullRequests: value.pullRequests?.map(({ source: source4, ...pullRequest }) => ({
+      ...pullRequest,
+      source: { kind: source4.kind, sha256: source4.sha256 }
+    }))
   }, sha2563, verifiedPlanningFailures);
 }
 function projectCustomerPageObservations(result, sha2563) {
@@ -98483,8 +98489,6 @@ var ContextIntake = class {
       state: "available",
       schema: "loki.context-record/1",
       storage: "private-local",
-      submitTool: "loki_context_submit",
-      readTool: "loki_context_get",
       acceptedContent: "Raw text or JSON; partial work-item/change/test-report context and artifact-only references are retained. No parser or analysis is implied.",
       maxSubmissionBytes: null,
       consumers: Object.keys(this.#consumers),
@@ -120135,7 +120139,7 @@ var planningToolRequest = external_exports.strictObject({
     "The original caller request and available application context. Use title/body for one work item or separate attributed sources in a pr-context-plan/3 packet. Preserve supplied source text and attribution. Put the coding agent's additional planning guidance in agentInstructions; Planner receives both. Put the caller's instructions for carrying out the testing work in taskInstructions."
   ),
   contextId: contextIdSchema.optional().describe(
-    "Use only a contextId returned by loki_context_submit with compatible nativeInputs.testPlanning. Application/Setup context IDs are configuration references, not planning inputs. After Setup, reuse the saved original workItem text and relevant source in input."
+    "An existing retained planning source can be selected by its original contextId. For new work, supply the original work item text and relevant sources in input."
   )
 }).refine(
   (x) => Boolean(x.input) !== Boolean(x.contextId),
@@ -120370,8 +120374,6 @@ var capabilitiesDiscoverySchema = external_exports.strictObject({
     state: external_exports.literal("available"),
     schema: external_exports.literal("loki.context-record/1"),
     storage: external_exports.literal("private-local"),
-    submitTool: external_exports.literal("loki_context_submit"),
-    readTool: external_exports.literal("loki_context_get"),
     acceptedContent: external_exports.string(),
     maxSubmissionBytes: count7.nullable(),
     consumers: external_exports.array(external_exports.string()),
@@ -125632,10 +125634,24 @@ var reportSelection = external_exports.strictObject({
   "Each original operation can be selected only once."
 );
 var reportHandle = external_exports.strictObject({ reportId: digest36 });
-var reportShow = external_exports.union([
-  reportHandle.extend({ view: external_exports.literal("test-plan").optional() }),
-  reportSelection
-]);
+var reportGet = reportHandle.extend({
+  sourceOffset: external_exports.number().int().nonnegative().optional().describe(
+    "Use 0 to start reading the report's original GitHub source record. Continue at the returned nextOffset."
+  )
+});
+var reportShow = preserveAdvisoryInput(
+  external_exports.union([
+    reportHandle.extend({ view: external_exports.literal("test-plan").optional() }),
+    reportSelection.safeExtend({
+      reportSources: reportSourcesSchema.optional().describe(
+        "Original GitHub PR and files reads to attach to this report."
+      )
+    }).refine(
+      (value) => !(value.reportSources && value.sourceContextId),
+      "Choose original GitHub reads or an existing report source ID."
+    )
+  ])
+);
 var reportTrace = reportHandle.extend({
   runId: digest36,
   action: external_exports.enum(["status", "open", "launch", "close"]),
@@ -126136,7 +126152,8 @@ function projectReport(snapshot2, associationEntries = snapshot2.entries, option
       evidenceContext: {
         contextId: snapshot2.evidenceContext.contextId,
         recordSha256: snapshot2.evidenceContext.recordSha256,
-        readTool: "loki_context_get",
+        readTool: "loki_report_get",
+        readArguments: { reportId: snapshot2.reportId, sourceOffset: 0 },
         provenance: "Original supplied GitHub reads. Execution checks are produced by the stored Runner receiver, not this context."
       }
     } : {},
@@ -169003,20 +169020,19 @@ function createCapabilityCatalog(services, options2 = {}) {
     testPlanning,
     testSupplement
   };
-  async function query(family, args, invocation = {}) {
+  async function plan(args, invocation = {}) {
     const { contextId, ...request3 } = validateAdvisoryInput(
       external_exports.record(external_exports.string(), external_exports.json()),
       args
     );
-    const service = advisory[family];
     invocation = {
       ...invocation,
       ...options2.queryPackageIdentity ? { packageIdentity: options2.queryPackageIdentity } : {}
     };
     let result;
     if (typeof contextId === "string") {
-      const saved = await contextIntake.consume(contextId, family).catch((error62) => {
-        if (family === "testPlanning" && error62 instanceof ContextIntakeFailure && error62.code === "context_not_found_in_scope")
+      const saved = await contextIntake.consume(contextId, "testPlanning").catch((error62) => {
+        if (error62 instanceof ContextIntakeFailure && error62.code === "context_not_found_in_scope")
           throw new PlanningContextFailure();
         throw error62;
       });
@@ -169026,34 +169042,36 @@ function createCapabilityCatalog(services, options2 = {}) {
         saved.input
       );
       const savedRequest = { ...stored2, ...request3 };
-      if (family === "testPlanning") {
-        const requested = request3.options;
-        const original = stored2.options;
-        if (requested?.explorerTimeLimitMs !== void 0 && original) {
-          savedRequest.options = {
-            ...original,
-            ...requested,
-            explorerTimeLimitMs: Math.max(
-              original.explorerTimeLimitMs ?? requested.explorerTimeLimitMs,
-              requested.explorerTimeLimitMs
-            )
-          };
-        }
+      const requested = request3.options;
+      const original = stored2.options;
+      if (requested?.explorerTimeLimitMs !== void 0 && original) {
+        savedRequest.options = {
+          ...original,
+          ...requested,
+          explorerTimeLimitMs: Math.max(
+            original.explorerTimeLimitMs ?? requested.explorerTimeLimitMs,
+            requested.explorerTimeLimitMs
+          )
+        };
       }
       const source4 = {
         contextId,
         recordSha256: saved.recordSha256,
         reference: saved.reference
       };
-      const retained2 = family === "testPlanning" ? await retainInlinePlanningInput(contextIntake, savedRequest, source4) : null;
-      result = await service.query(
+      const retained2 = await retainInlinePlanningInput(
+        contextIntake,
+        savedRequest,
+        source4
+      );
+      result = await testPlanning.query(
         retained2?.request ?? savedRequest,
         invocation,
         retained2?.storedContext ?? source4
       );
     } else {
-      const retained2 = family === "testPlanning" ? await retainInlinePlanningInput(contextIntake, request3) : null;
-      result = await service.query(
+      const retained2 = await retainInlinePlanningInput(contextIntake, request3);
+      result = await testPlanning.query(
         retained2?.request ?? request3,
         invocation,
         retained2?.storedContext
@@ -169063,12 +169081,12 @@ function createCapabilityCatalog(services, options2 = {}) {
       result.resultRead = {
         ...result.resultRead,
         tool: "loki_advisory_result_read",
-        family
+        family: "testPlanning"
       };
     }
     return result;
   }
-  const queryContract = " Returns the full original native answer in this awaited call, with answerId and resultSha256 for exact completed-result/report selection. No public job, polling or Stop tool. Transport cancellation normally reaches native execution; in-flight effects/fees can remain unknown. Omit requestKey for ordinary new analysis, or use a fresh UUID. Reuse a key only to recover its identical request. A request_key_conflict rejects the new call before dispatch and supplies a fresh key for new work. Immutable supplied-input answers may reuse a private cache bound to full input, package, model/settings and private configuration. The same advisory request remains fenced after an uncertain provider response. A native partial/refused result may have outer state complete and no isError: complete means a retained answer, so inspect native status, checks, coverage and accounting. A fresh key alone does not authorize a retry. Use an offered query.recovery.action=new_analysis_if_needed only when current caller authorization covers that distinct analysis; another charge is possible and original receipts remain. Recover lost replies, in-flight work and unknown effects only with the original key/input/configuration or a completed-answer selector; never escape that fence with a fresh key. Honor user Stop. On unsupported-consumption, preserve contextId/detail, read loki_context_get and inspect consumption for this family; pass an available exact compatible native input directly or submit a new Context record with a new submission key, optional supersedes and the owning nativeInputs field (without an embedded analysis requestKey). Do not invent missing source, baseline or evidence. On provider_not_configured, inspect loki_capabilities_list readiness and report the missing provider prerequisite; configuration needs its own existing authority. This does not authorize replaying uncertain browser or desktop execution. Fixed model Responses requests use store:false; native JEV selection remains unchanged. If presentation is truncated, use resultRead with loki_advisory_result_read; it reads completed answers only.";
+  const queryContract = " Returns the full original native answer in this awaited call, with answerId and resultSha256 for exact completed-result/report selection. No public job, polling or Stop tool. Transport cancellation normally reaches native execution; in-flight effects/fees can remain unknown. Omit requestKey for ordinary new analysis, or use a fresh UUID. Reuse a key only to recover its identical request. A request_key_conflict rejects the new call before dispatch and supplies a fresh key for new work. Immutable supplied-input answers may reuse a private cache bound to full input, package, model/settings and private configuration. The same advisory request remains fenced after an uncertain provider response. A native partial/refused result may have outer state complete and no isError: complete means a retained answer, so inspect native status, checks, coverage and accounting. A fresh key alone does not authorize a retry. Use an offered query.recovery.action=new_analysis_if_needed only when current caller authorization covers that distinct analysis; another charge is possible and original receipts remain. Recover lost replies, in-flight work and unknown effects only with the original key/input/configuration or a completed-answer selector; never escape that fence with a fresh key. Honor user Stop. If a saved source cannot be used, preserve its receipt and supply the available original source in Plan input. Do not invent missing source, baseline or evidence. On provider_not_configured, inspect loki_capabilities_list readiness and report the missing provider prerequisite; configuration needs its own existing authority. This does not authorize replaying uncertain browser or desktop execution. Fixed model Responses requests use store:false; native JEV selection remains unchanged. If presentation is truncated, use resultRead with loki_advisory_result_read; it reads completed answers only.";
   async function showMap(mapId, pageId) {
     const first2 = await context.readMap({
       ...mapId ? { mapId } : {},
@@ -169235,39 +169253,6 @@ function createCapabilityCatalog(services, options2 = {}) {
       }
     ] : [],
     {
-      name: "loki_context_submit",
-      title: "Retain context for the current task",
-      description: "Save caller-authorized work-item, change or test-report context as original text/JSON in private local storage. Partial context and unknown metadata are valid. Submit/get sourceUri identifies the immutable retained record; it is not its asserted original origin, a public link or an access grant. Receipt time is separate from source capture time. Artifact references are retained unresolved, not read, parsed or fetched. Caller-reported outcomes are not Loki-observed execution. No model/network calls. Use one requestKey for identical input; updates use a new key and optional supersedes. Optional nativeInputs.prContext, nativeInputs.changeRisk, nativeInputs.riskFinder or nativeInputs.testPlanning must contain that tool's original supported input without a requestKey; raw reports are not converted into source packets. Discovery/read receipt distinguishes storage, input compatibility and analysis readiness.",
-      input: contextSubmitSchema,
-      output: contextSubmitOutputSchema,
-      readOnly: false,
-      call: async (args) => projectCustomerContext(
-        await contextIntake.submit(contextSubmitSchema.parse(args))
-      )
-    },
-    {
-      name: "loki_context_get",
-      title: "Read retained task context",
-      description: "Read an immutable context record and original artifact references by contextId. No artifact dereference, provider call or execution. Large records use recordRead.nextOffset; join recordChunk.text in order until nextOffset=null for original JSON. Source metadata, nulls and caller attribution remain unchanged.",
-      input: contextGetSchema,
-      output: contextGetOutputSchema,
-      readOnly: true,
-      call: async (args) => projectCustomerContext(
-        await contextIntake.get(contextGetSchema.parse(args))
-      )
-    },
-    {
-      name: "loki_context_finder_find_related",
-      title: "Find related GitHub issues and pull requests",
-      description: "Find related work for one caller-authorized GitHub URL, supplied work-item context or compatible contextId. The seed repository is the default scope. Native retrieval budgets, optional authorized repositories, comment/parent/followthrough filtering and intent query modes remain unchanged. Uses existing gh credentials or an injected connected transport. Live GitHub data is reacquired by default; an explicit requestKey replays its original receipt, never claims a fresh read. Preserve literal links, model judgments, partial/unassessed coverage and all known/unknown fees. No AUT execution or retries." + queryContract,
-      input: advisoryToolRequests.prContext,
-      inputSchema: advisoryToolInputSchemas.prContext,
-      output: advisoryToolOutputSchemas.prContext,
-      outputSchema: advisoryToolJsonSchemas.prContext,
-      readOnly: true,
-      call: (args, invocation = {}) => query("prContext", args, invocation)
-    },
-    {
       name: "loki_capabilities_list",
       title: "Inspect plugin capabilities",
       description: "Read loki.capability-discovery/1: typed local context intake, output-family declarations, source adapters and per-service readiness. Package/source availability, provider configuration, actual validation and map selection remain separate. Installed runtime identity/freshness is optional; matching metadata does not prove latest or validated payloads. No model call or browser input.",
@@ -169324,28 +169309,6 @@ function createCapabilityCatalog(services, options2 = {}) {
       )
     },
     {
-      name: "loki_change_risk_analyze",
-      title: "Find assumptions in a frozen code change",
-      description: "Analyze a caller-authorized frozen source packet using pinned Change Risk Finder. Supply packet or compatible contextId. For ordinary review send mode=direct: at most one Luna medium call. Honor explicit guided mode: JEV selection, at most three sequential provider calls, 120 seconds each, zero retries. Native omitted mode remains guided with default provenance. At most six questions. Supply frozen Git revisions with patches/file metadata, or a hash-bound provided-snapshot packet in direct mode. Preserve null patches, coverage and optional work-item text. Packet transport is bounded to 16MB; native request-capacity refusals retain coverage. Textual per-file patch values must contain complete GitHub-style hunks beginning with @@, without diff --git, index, --- or +++ file headers. No GitHub retrieval, model escalation or automatic provider retry. A completed invalid_patch refusal with calls_started=0, unknown_cost_calls=0 and an empty ledger permits a distinct corrected-input submission: preserve the first receipt, correct the packet, and omit requestKey or use a fresh key. Never change input under the old key or use correction to retry provider refusal, empty output, lost replies, in-flight or unknown effects. Questions are model-authored assumptions, not confirmed bugs or tests; empty output is not a safety verdict." + queryContract,
-      input: advisoryToolRequests.changeRisk,
-      inputSchema: advisoryToolInputSchemas.changeRisk,
-      output: advisoryToolOutputSchemas.changeRisk,
-      outputSchema: advisoryToolJsonSchemas.changeRisk,
-      readOnly: true,
-      call: (args, invocation = {}) => query("changeRisk", args, invocation)
-    },
-    {
-      name: "loki_risk_finder_analyze",
-      title: "Find consequential uncertainties in work-item evidence",
-      description: "Analyze caller-authorized work-item text and optional attributed context using the exact risk-finder/work-item-input/1 packet, or compatible contextId. No PR, code diff, map or fabricated revision is required. Unknown URI/revision stays null. At most one Luna medium call, no retries. Returns consequential uncertainties with original source bindings, not implementation defects, approved requirements, proposed tests or observed behavior. Preserve native partial/refused/stopped results, source coverage and known/unknown fees." + queryContract,
-      input: advisoryToolRequests.riskFinder,
-      inputSchema: advisoryToolInputSchemas.riskFinder,
-      output: advisoryToolOutputSchemas.riskFinder,
-      outputSchema: advisoryToolJsonSchemas.riskFinder,
-      readOnly: true,
-      call: (args, invocation = {}) => query("riskFinder", args, invocation)
-    },
-    {
       name: "loki_test_plan",
       title: "Propose tests for an issue or supplied work item",
       description: "Build functional and change-impact tests for a supplied work item or compatible contextId. Kaijan reads missing explicit GitHub issue/PR links within the supplied source repositories, assesses work-item risks and generates the plan in this operation. Sources already included in the input are reused. No PR, diff or map is required. Simple input requires title and body. Supply a real source URI in url when available; Kaijan retains pasted work-item text internally when url is omitted. Supply the original request, application behavior, target and attributed source text in input. Optional agentInstructions carries the coding agent's additional planning guidance or suggested steps; Planner uses both inputs together. Put the caller's instructions for carrying out testing in taskInstructions; Kaijan retains them with the Plan and carries them into Run. For multiple sources, prefer separate items in the supported input.sources packet, preserving original text, source roles, qualifications and conflicts; do not flatten them into one unattributed summary. Optional repositories supplies an authorized owner/repository search scope; Kaijan discovers related work internally before risk preparation and planning. Omit it when discovery is not requested. Optional change supplies actual frozen change data in this same call; Kaijan reviews it internally before planning. Optional procedures supplies historical steps as separate title/steps items or saved Run references; Kaijan reads only the selected authored scenario as background for this new plan. No history search, old verdict or execution permission is inherited. Optional riskAnswers reuses exact saved changeRisk/riskFinder answers from this conversation, including a matching review of the supplied change. Do not arrange separate context or risk calls for normal planning, duplicate whole histories or invent missing facts. Linked sources remain context, not new acceptance requirements. Source access gaps, native outcomes and all stage receipts remain in the saved result. No tests are executed. To run selected tests with automatic result assessment, use loki_test_execute. options.deadline_ms covers the whole preparation and planning operation. Ending the last host wait during browser exploration closes Explorer and continues the original Plan. Recover it with the identical request and configuration." + queryContract,
@@ -169354,7 +169317,7 @@ function createCapabilityCatalog(services, options2 = {}) {
       output: advisoryToolOutputSchemas.testPlanning,
       outputSchema: advisoryToolJsonSchemas.testPlanning,
       readOnly: true,
-      call: (args, invocation = {}) => query("testPlanning", args, invocation)
+      call: (args, invocation = {}) => plan(args, invocation)
     },
     {
       name: "loki_ui_modeler_build_map",
@@ -169441,17 +169404,6 @@ function createCapabilityCatalog(services, options2 = {}) {
       }
     }
   ];
-  const supplementDefinition = {
-    name: "loki_test_supplement",
-    title: "loki_test_supplement",
-    description: "Experimental opt-in: add test proposals to an exact caller-supplied baseline without rewriting its bytes or IDs. Native test-plan-supplement-input/1 includes context, original baseline JSON text/URI/revision and attributed risks. Empty additions and unanswered oracles remain valid; risks are not accepted requirements. No execution, source retrieval, automatic baseline approval or memory ingestion. Supply input or compatible contextId. One Luna medium call, total deadline at most 180000ms, no retry." + queryContract,
-    input: advisoryToolRequests.testSupplement,
-    inputSchema: advisoryToolInputSchemas.testSupplement,
-    output: advisoryToolOutputSchemas.testSupplement,
-    outputSchema: advisoryToolJsonSchemas.testSupplement,
-    readOnly: true,
-    call: (args, invocation = {}) => query("testSupplement", args, invocation)
-  };
   const testRunDefinitions = services.testRun ? [
     {
       name: "loki_test_execute",
@@ -169520,12 +169472,32 @@ function createCapabilityCatalog(services, options2 = {}) {
       output: reportShowOutputSchema,
       resultSchema: reportShowSuccessSchema,
       title: uiEnabled ? "Kaijan report" : "Read Kaijan report for chat",
-      description: (panelUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the inline saved report card; an original Runner-only report needs no Plan; Show details directly reads this same immutable report and requests native MCP Apps expansion. Codex owns the side panel and its close/return controls. No browser navigation, prompt, assistant turn, provider call or producer replay. Keep the selected design and unavailable data slots." : browserUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the selected Test plan summary in native chat. Show details opens the returned private previewURL in Codex's browser at right; no MCP side panel or fullscreen request. Keep original identities and the selected design; bind groups only to explicit source data and leave unavailable fields blank. Select sourceContextId for original GitHub PR/files retained by nativeInputs.reportSources. Product check results come only from the selected persisted Runner operations. Reopen by reportId without running tools again." : uiEnabled ? "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. No execution, provider call or replay. Open the returned local previewURL in Codex browser at right when the host does not render the resource. Use native chat controls for execution decisions." : "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. Returns report data for direct presentation in chat. No panels, browser previews, execution, provider calls or replay. Use readable conclusions and evidence links.") + " Optional sourceContextId must be compatible with nativeInputs.reportSources. When omitted, reuse the unique original context of selected PR-bound Runner verification, or keep an unbound report. An arbitrary work-item context ID is not report source input.",
+      description: (panelUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the inline saved report card; an original Runner-only report needs no Plan; Show details directly reads this same immutable report and requests native MCP Apps expansion. Codex owns the side panel and its close/return controls. No browser navigation, prompt, assistant turn, provider call or producer replay. Keep the selected design and unavailable data slots." : browserUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the selected Test plan summary in native chat. Show details opens the returned private previewURL in Codex's browser at right; no MCP side panel or fullscreen request. Keep original identities and the selected design; bind groups only to explicit source data and leave unavailable fields blank. Select sourceContextId for original GitHub PR/files retained by nativeInputs.reportSources. Product check results come only from the selected persisted Runner operations. Reopen by reportId without running tools again." : uiEnabled ? "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. No execution, provider call or replay. Open the returned local previewURL in Codex browser at right when the host does not render the resource. Use native chat controls for execution decisions." : "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. Returns report data for direct presentation in chat. No panels, browser previews, execution, provider calls or replay. Use readable conclusions and evidence links.") + " Attach available original GitHub PR and files reads as reportSources. For a historical PR-bound Run, keep its existing sourceContextId or omit it so the report uses the Run's saved source. Reopen a report by its original reportId.",
       input: reportShow,
       readOnly: false,
       call: async (args, invocation = {}) => {
         const selected2 = reportShow.parse(args);
-        const snapshot2 = "reportId" in selected2 ? await services.reports.get(selected2.reportId) : await services.reports.show(selected2);
+        let snapshot2;
+        if ("reportId" in selected2) {
+          snapshot2 = await services.reports.get(selected2.reportId);
+        } else {
+          const { reportSources, ...selection4 } = selected2;
+          if (reportSources !== void 0) {
+            const original = snapshotJson(reportSources);
+            projectReportSources(original);
+            const sourceSha256 = createHash85("sha256").update(canonicalJson(original)).digest("hex");
+            const saved = await contextIntake.submit({
+              requestKey: `report-sources:${sourceSha256}`,
+              kind: "report-sources",
+              content: "GitHub source evidence for a report",
+              nativeInputs: { reportSources: original }
+            });
+            selection4.sourceContextId = saved.contextId;
+          }
+          snapshot2 = await services.reports.show(
+            reportSelection.parse(selection4)
+          );
+        }
         const view = await services.reports.view(snapshot2);
         if (!uiEnabled)
           return {
@@ -169600,14 +169572,25 @@ function createCapabilityCatalog(services, options2 = {}) {
     },
     {
       name: "loki_report_get",
-      output: reportReadOutputSchema,
+      output: external_exports.union([reportReadOutputSchema, contextReadSchema]),
       title: "Read exact report",
-      description: "Read the exact saved report in its original conversation without opening any UI. Use this read when the user cannot open the native card or panel. Returns saved tests, steps, expectations and available results with their original source IDs and digests. No new report, provider call, test execution or replay.",
-      input: reportHandle,
+      description: "Read the exact saved report in its original conversation without opening any UI. Returns saved tests, steps, expectations and available results with their original source IDs and digests. Set sourceOffset to 0 to read its original GitHub source record, then continue at each returned nextOffset. No new report, provider call, test execution or replay.",
+      input: reportGet,
       readOnly: true,
-      call: async (args) => services.reports.view(
-        await services.reports.get(reportHandle.parse(args).reportId)
-      )
+      call: async (args) => {
+        const { reportId, sourceOffset } = reportGet.parse(args);
+        const snapshot2 = await services.reports.get(reportId);
+        if (sourceOffset === void 0)
+          return services.reports.view(snapshot2);
+        if (!snapshot2.evidenceContext) throw new ReportReadFailure();
+        const original = await contextIntake.get({
+          contextId: snapshot2.evidenceContext.contextId,
+          offset: sourceOffset
+        });
+        if (original.recordSha256 !== snapshot2.evidenceContext.recordSha256)
+          throw new ReportReadFailure();
+        return projectCustomerContext(original);
+      }
     },
     {
       name: "loki_report_artifact_read",
@@ -169666,7 +169649,6 @@ function createCapabilityCatalog(services, options2 = {}) {
     completedAnswerRead,
     ...validatedReports,
     ...definitions,
-    supplementDefinition,
     ...testRunDefinitions,
     ...runnerDefinitions
   ].filter((tool2) => mapsEnabled || !tool2.name.startsWith("loki_ui_modeler_"));
@@ -169684,7 +169666,7 @@ function createCapabilityCatalog(services, options2 = {}) {
       } : {},
       ...(componentUi || panelUi) && tool2.name === "loki_ui_modeler_show_map" ? { _meta: panelUi ? testPlanCardMetadata : mapUiMetadata } : {},
       inputSchema: {
-        ..."inputSchema" in tool2 && tool2.inputSchema ? tool2.inputSchema : tool2.name === "loki_change_risk_analyze" ? riskToolInputSchema : tool2.name === "loki_risk_finder_analyze" ? workItemRiskToolInputSchema : external_exports.toJSONSchema(tool2.input, { io: "input" }),
+        ..."inputSchema" in tool2 && tool2.inputSchema ? tool2.inputSchema : external_exports.toJSONSchema(tool2.input, { io: "input" }),
         type: "object"
       },
       ..."output" in tool2 && tool2.output ? {
@@ -169698,7 +169680,6 @@ function createCapabilityCatalog(services, options2 = {}) {
         destructiveHint: tool2.name === "loki_test_execute" || tool2.name === "loki_test_stop" || tool2.name === "loki_runner_stop" || tool2.name === "loki_runner_answer" || tool2.name === "loki_ui_modeler_load_map",
         idempotentHint: tool2.name !== "loki_report_show" && !(panelUi && tool2.name === "loki_ui_modeler_show_map"),
         openWorldHint: [
-          "loki_context_finder_find_related",
           "loki_github_read",
           "loki_github_source_read",
           "loki_test_execute",
