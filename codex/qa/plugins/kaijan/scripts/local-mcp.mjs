@@ -55547,10 +55547,20 @@ ${guidance}`
 var requestKey2 = external_exports.string().min(1);
 var answerDigest = /^[a-f0-9]{64}$/;
 var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
+var sourceOptions = {
+  repositories: external_exports.array(external_exports.string()).optional(),
+  change: external_exports.record(external_exports.string(), external_exports.json()).optional(),
+  procedures: external_exports.array(external_exports.json()).optional(),
+  riskAnswers: external_exports.array(external_exports.json()).optional(),
+  agentInstructions: external_exports.string().optional(),
+  taskInstructions: external_exports.string().optional()
+};
 var planInput = external_exports.strictObject({
   requestKey: requestKey2,
   testObjective: external_exports.string().refine((text4) => Boolean(text4.trim())).optional(),
+  input: planningInputSchema.optional(),
   contextId: external_exports.string().regex(answerDigest).optional(),
+  ...sourceOptions,
   testEnvironmentId: external_exports.uuid().describe("The saved Test Environment ID."),
   testDataId: external_exports.uuid().optional().describe("The saved Test Data ID, when needed."),
   sourceModel: sourceModelSelectionSchema.optional().describe(
@@ -55559,7 +55569,9 @@ var planInput = external_exports.strictObject({
   explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
     "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
   )
-}).refine((input3) => Boolean(input3.testObjective) !== Boolean(input3.contextId));
+}).refine(
+  ({ testObjective, input: input3, contextId }) => [testObjective, input3, contextId].filter((value) => value !== void 0).length === 1
+);
 var runInput = external_exports.strictObject({
   requestKey: requestKey2,
   planId,
@@ -55569,12 +55581,19 @@ var runInput = external_exports.strictObject({
   )
 });
 function codexTestingToolDefinition(tool2) {
-  if (tool2.name === "loki_test_plan")
+  if (tool2.name === "loki_test_plan") {
+    const inputSchema3 = external_exports.toJSONSchema(planInput);
+    for (const name of Object.keys(sourceOptions)) {
+      const native = tool2.inputSchema?.properties?.[name];
+      if (native) inputSchema3.properties[name] = native;
+    }
     return {
       ...tool2,
-      description: "Save a test plan. Supply testObjective or the contextId containing the original planning input, plus the saved Test Environment ID and optional Test Data ID. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
-      inputSchema: external_exports.toJSONSchema(planInput)
+      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Kaijan prepares related work and change review inside Plan when you supply their source inputs. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      // Keep the source fields visible to Codex. The receiver checks exclusivity.
+      inputSchema: inputSchema3
     };
+  }
   if (tool2.name === "loki_test_execute")
     return {
       ...tool2,
@@ -55589,15 +55608,18 @@ function codexPlanArguments(args) {
   const {
     requestKey: requestKey3,
     testObjective,
+    input: input3,
     contextId,
     testEnvironmentId,
     testDataId,
     sourceModel,
-    explorerTimeLimitMs
+    explorerTimeLimitMs,
+    ...preparation2
   } = parsed.data;
   return {
     requestKey: requestKey3,
-    ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
+    ...contextId ? { contextId } : { input: input3 ?? { title: testObjective, body: testObjective } },
+    ...preparation2,
     savedTestInputs: {
       testEnvironmentId,
       ...testDataId === void 0 ? {} : { testDataId }
@@ -58303,7 +58325,7 @@ ${customerInstructions}` : customerInstructions
       const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
       if (!args)
         throw invalidParams(
-          "Supply requestKey, the saved Test Environment ID, and either testObjective or contextId. Include the saved Test Data ID when needed."
+          "Supply requestKey, the saved Test Environment ID, and one of testObjective, input, or contextId. Include the saved Test Data ID when needed."
         );
       const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
         params.name,
