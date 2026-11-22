@@ -1,9 +1,16 @@
 const unavailable =
   "Kaijan could not open the form. Check your Kaijan connection and try again.";
 
+const requests = {
+  feedback:
+    "Open a private Kaijan feedback draft. I will write and review the feedback.",
+  issue:
+    "Help me report a problem with Kaijan itself to katalon-studio/kaijan-marketplace. Prepare a draft for me to review. Do not publish it.",
+};
+
 export function createReportForms() {
   const forms = new Map();
-  let bridge, child, terminalForm;
+  let bridge, child, selectedForm, opening;
   let generation = 0;
 
   async function connect(host) {
@@ -62,13 +69,75 @@ export function createReportForms() {
     ],
   };
 
-  function view(host, id, active, atPrompt = false) {
+  function actions(host, id, active) {
+    const { Box, Button } = host.elements;
+    const open = async (kind) => {
+      if (!active() || opening) return;
+      const current = generation;
+      opening = true;
+      try {
+        const result = await host.submit(requests[kind]);
+        if (result.drop) throw Error(result.drop);
+      } catch {
+        if (active()) host.warnForm();
+      } finally {
+        if (current === generation) opening = false;
+      }
+    };
+    return [
+      Box({
+        flexDirection: "row",
+        gap: "md",
+        children: [
+          ["feedback", "Kaijan feedback"],
+          ["issue", "Report issue"],
+        ].map(([kind, label]) =>
+          Button({
+            key: `kaijan-${kind}-${id}`,
+            label,
+            plain: true,
+            onPress: () => open(kind),
+          }),
+        ),
+      }),
+    ];
+  }
+
+  async function openDraft(host, callId, kind, active) {
+    if (!active() || forms.get(selectedForm)?.busy) return false;
+    const state = forms.get(kind) ?? { kind, edits: {} };
+    state.callId = callId;
+    state.visible = true;
+    state.busy = true;
+    forms.set(kind, state);
+    selectedForm = kind;
+    try {
+      const opened = await host.openForm(kind);
+      if (opened?.deny || !active()) return false;
+      if (!state.draft) {
+        const draft = await request(host, { kind, operation: "open" });
+        state.draft = draft.draft;
+        state.error = draft.error ? draft.message : undefined;
+      }
+      return active() && Boolean(state.draft) && !state.error;
+    } catch {
+      state.error = unavailable;
+      return false;
+    } finally {
+      state.busy = false;
+      if (active()) host.redraw();
+    }
+  }
+
+  function view(host, active) {
+    const state = forms.get(selectedForm);
+    if (!state?.visible) return undefined;
+    const id = state.callId;
     const { Box, Button, Input, Text, Link } = host.elements;
     const redraw = () => {
       if (active()) host.redraw();
     };
-    let state = forms.get(id);
-    const change = async (operation, changes) => {
+    const change = async (operation, changes, imageId) => {
       if (!active()) return false;
       const draft = state.draft;
       const result = await request(host, {
@@ -76,13 +145,21 @@ export function createReportForms() {
         operation,
         ...(draft && { draftId: draft.id, revision: draft.revision }),
         ...(changes && { changes }),
+        ...(imageId && { imageId }),
       });
       if (result.draft) state.draft = result.draft;
       state.error = result.error ? result.message : undefined;
       return !result.error;
     };
     const act = async (callback) => {
-      if (state.busy || !active() || !state.visible || forms.get(id) !== state)
+      if (
+        state.busy ||
+        !active() ||
+        !state.visible ||
+        selectedForm !== state.kind ||
+        forms.get(state.kind) !== state ||
+        id !== state.callId
+      )
         return;
       state.busy = true;
       state.error = undefined;
@@ -100,38 +177,6 @@ export function createReportForms() {
         redraw();
       }
     };
-    const open = (kind) => {
-      if (!active() || state?.busy || state?.visible) return;
-      if (host.terminal) {
-        const previous = forms.get(terminalForm);
-        if (previous?.busy) return;
-        if (previous) previous.visible = false;
-        terminalForm = id;
-      }
-      if (state?.kind !== kind) {
-        state = { kind, visible: true, edits: {} };
-        forms.set(id, state);
-      } else state.visible = true;
-      return act(async () => {
-        if (!state.draft) await change("open");
-      });
-    };
-    const actions = [
-      ["feedback", "Kaijan feedback"],
-      ["issue", "Report issue"],
-    ].map(([kind, label]) =>
-      Button({
-        key: `kaijan-${kind}-${id}`,
-        label,
-        plain: true,
-        onPress: () => open(kind),
-      }),
-    );
-    // Claude routes terminal keyboard input to the prompt or a focused mod
-    // band. The historical tool row can open the form but cannot edit it.
-    if (!state?.visible || (host.terminal && !atPrompt))
-      return [Box({ flexDirection: "row", gap: "md", children: actions })];
-
     const field = (key) => state.edits[key] ?? state.draft?.fields[key];
     const issue = state.kind === "issue";
     const closed = ["saved", "published"].includes(state.draft?.status);
@@ -168,11 +213,12 @@ export function createReportForms() {
       if (!closed && !recover && state.draft) {
         if (issue) {
           if (!(await change("close_review"))) return;
-          forms.delete(id);
+          forms.delete(state.kind);
         } else if (!(await update())) return;
       }
       state.visible = false;
-      if (terminalForm === id) terminalForm = undefined;
+      if (selectedForm === state.kind) selectedForm = undefined;
+      await host.closeForm();
     };
     const submit = async (action, recovering) => {
       // Bind the press to the action on the rendered button. A delayed or
@@ -213,7 +259,9 @@ export function createReportForms() {
                 !active() ||
                 state.busy ||
                 !state.visible ||
-                forms.get(id) !== state ||
+                selectedForm !== state.kind ||
+                forms.get(state.kind) !== state ||
+                id !== state.callId ||
                 state.reviewed ||
                 state.submission
               )
@@ -230,96 +278,132 @@ export function createReportForms() {
             });
           })
         : [];
-    return [
-      ...(!atPrompt
-        ? [Box({ flexDirection: "row", gap: "md", children: actions })]
-        : []),
-      Box({
-        flexDirection: "column",
-        borderStyle: "round",
-        padding: "md",
-        gap: "sm",
-        children: [
-          Text({
-            weight: "semibold",
-            children: [issue ? "Report a Kaijan issue" : "Kaijan feedback"],
-          }),
-          caption(
-            issue
-              ? "Selected text will be public in katalon-studio/kaijan-marketplace."
-              : "Private feedback to Kaijan. Draft kept on this device.",
-          ),
-          ...(atPrompt && !closed && !recover
-            ? [caption("Ctrl+X then Tab to edit.")]
-            : []),
-          ...inputs,
-          ...(state.draft?.context && !issue && !closed
-            ? [
-                caption(
-                  `Included: Kaijan ${state.draft.context.pluginVersion} · ${state.draft.context.os}.`,
-                ),
-              ]
-            : []),
-          ...(state.error ? [caption(state.error)] : []),
-          ...(closed
-            ? [
-                issue && receipt?.url
-                  ? Link({ href: receipt.url, label: "Open published issue" })
-                  : caption(issue ? "Issue published." : "Feedback saved."),
-              ]
-            : []),
-          ...(busy
-            ? [caption("Working…")]
-            : [
-                button(
-                  "form-dismiss",
-                  closed ? "Close" : issue ? "Cancel" : "Not now",
-                  dismiss,
-                ),
-                ...(state.draft && !closed
-                  ? [
-                      ...(state.reviewed && !recover
-                        ? [
-                            button("form-edit", "Edit", async () => {
-                              state.reviewed = false;
-                            }),
-                          ]
-                        : []),
-                      button(
-                        "form-submit",
-                        recover
-                          ? issue
-                            ? "Check status"
-                            : "Retry send"
-                          : issue
-                            ? state.reviewed
-                              ? "Publish issue"
-                              : "Preview issue"
-                            : "Send",
-                        () => submit(shownAction, Boolean(recover)),
-                      ),
-                    ]
-                  : []),
-              ]),
-        ],
-      }),
-    ];
+    const selectedImages = state.draft?.fields.images ?? [];
+    const images =
+      issue && state.draft && !closed
+        ? [
+            Text({ weight: "semibold", children: ["Images"] }),
+            ...selectedImages.map((image) =>
+              Box({
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "sm",
+                children: [
+                  caption(image.name),
+                  ...(!state.reviewed && !recover && !busy
+                    ? [
+                        button(`remove-image-${image.id}`, "Remove", () =>
+                          change("remove_image", undefined, image.id),
+                        ),
+                      ]
+                    : []),
+                ],
+              }),
+            ),
+            ...(!state.reviewed && !recover && !busy
+              ? [
+                  button("choose-images", "Choose images", () =>
+                    change("choose_images"),
+                  ),
+                  caption(
+                    "PNG, JPEG or WebP. Up to 5 images, 5 MiB each and 20 MiB total.",
+                  ),
+                ]
+              : []),
+          ]
+        : [];
+    return Box({
+      flexDirection: "column",
+      borderStyle: "round",
+      padding: "md",
+      gap: "sm",
+      children: [
+        Text({
+          weight: "semibold",
+          children: [issue ? "Report a Kaijan issue" : "Kaijan feedback"],
+        }),
+        caption(
+          issue
+            ? "Selected text and images will be public in katalon-studio/kaijan-marketplace."
+            : "Draft kept on this device. Select Send when ready.",
+        ),
+        ...(host.terminal && !closed && !recover
+          ? [caption("Ctrl+X then Tab to edit.")]
+          : []),
+        ...inputs,
+        ...images,
+        ...(state.draft?.context && !issue && !closed
+          ? [
+              caption("Private feedback to Kaijan."),
+              caption(
+                `Included: Kaijan ${state.draft.context.pluginVersion} · ${state.draft.context.os}.`,
+              ),
+            ]
+          : []),
+        ...(state.error ? [caption(state.error)] : []),
+        ...(closed
+          ? [
+              issue && receipt?.url
+                ? Link({ href: receipt.url, label: "Open published issue" })
+                : caption(issue ? "Issue published." : "Feedback saved."),
+            ]
+          : []),
+        ...(busy
+          ? [caption("Working…")]
+          : [
+              Box({
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "sm",
+                children: [
+                  button(
+                    "form-dismiss",
+                    closed ? "Close" : issue ? "Cancel" : "Not now",
+                    dismiss,
+                  ),
+                  ...(state.draft && !closed
+                    ? [
+                        ...(state.reviewed && !recover
+                          ? [
+                              button("form-edit", "Edit", async () => {
+                                state.reviewed = false;
+                              }),
+                            ]
+                          : []),
+                        button(
+                          "form-submit",
+                          recover
+                            ? issue
+                              ? "Check status"
+                              : "Retry send"
+                            : issue
+                              ? state.reviewed
+                                ? "Publish issue"
+                                : "Preview issue"
+                              : "Send",
+                          () => submit(shownAction, Boolean(recover)),
+                        ),
+                      ]
+                    : []),
+                ],
+              }),
+            ]),
+      ],
+    });
   }
 
   async function close() {
     generation++;
     forms.clear();
-    terminalForm = undefined;
+    selectedForm = undefined;
+    opening = false;
     const current = child;
     child = undefined;
     bridge = undefined;
     await current?.return().catch(() => {});
   }
 
-  function promptView(host, active) {
-    if (!terminalForm) return undefined;
-    return view(host, terminalForm, active, true).at(-1);
-  }
-
-  return { view, promptView, close, request };
+  return { actions, openDraft, view, close, request };
 }

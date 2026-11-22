@@ -7,12 +7,12 @@
   "plugins": [
     {
       "name": "kaijan",
-      "version": "0.5.0-rc.428",
+      "version": "0.5.0-rc.429",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/katalon-studio/kaijan-marketplace.git",
         "path": "claude/plugins/kaijan",
-        "sha": "348083d834a12acae9433befaeb3e4dc530618d5"
+        "sha": "3ff3e7df17df142e75cf8582d4e1afe097f887f6"
       }
     }
   ]

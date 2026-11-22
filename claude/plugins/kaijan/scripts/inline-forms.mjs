@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names, constants4) {
+      optimizeNames(names, constants5) {
         if (!names[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names, constants4);
+          this.rhs = optimizeExpr(this.rhs, names, constants5);
         return this;
       }
       get names() {
@@ -431,10 +431,10 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names, constants4) {
+      optimizeNames(names, constants5) {
         if (this.lhs instanceof code_1.Name && !names[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names, constants4);
+        this.rhs = optimizeExpr(this.rhs, names, constants5);
         return this;
       }
       get names() {
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names, constants4) {
-        this.code = optimizeExpr(this.code, names, constants4);
+      optimizeNames(names, constants5) {
+        this.code = optimizeExpr(this.code, names, constants5);
         return this;
       }
       get names() {
@@ -525,12 +525,12 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names, constants4) {
+      optimizeNames(names, constants5) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names, constants4))
+          if (n.optimizeNames(names, constants5))
             continue;
           subtractNames(names, n.names);
           nodes.splice(i, 1);
@@ -583,12 +583,12 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names, constants4) {
+      optimizeNames(names, constants5) {
         var _a3;
-        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants4);
-        if (!(super.optimizeNames(names, constants4) || this.else))
+        this.else = (_a3 = this.else) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants5);
+        if (!(super.optimizeNames(names, constants5) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names, constants4);
+        this.condition = optimizeExpr(this.condition, names, constants5);
         return this;
       }
       get names() {
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names, constants4) {
-        if (!super.optimizeNames(names, constants4))
+      optimizeNames(names, constants5) {
+        if (!super.optimizeNames(names, constants5))
           return;
-        this.iteration = optimizeExpr(this.iteration, names, constants4);
+        this.iteration = optimizeExpr(this.iteration, names, constants5);
         return this;
       }
       get names() {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names, constants4) {
-        if (!super.optimizeNames(names, constants4))
+      optimizeNames(names, constants5) {
+        if (!super.optimizeNames(names, constants5))
           return;
-        this.iterable = optimizeExpr(this.iterable, names, constants4);
+        this.iterable = optimizeExpr(this.iterable, names, constants5);
         return this;
       }
       get names() {
@@ -695,11 +695,11 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names, constants4) {
+      optimizeNames(names, constants5) {
         var _a3, _b;
-        super.optimizeNames(names, constants4);
-        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants4);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants4);
+        super.optimizeNames(names, constants5);
+        (_a3 = this.catch) === null || _a3 === void 0 ? void 0 : _a3.optimizeNames(names, constants5);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants5);
         return this;
       }
       get names() {
@@ -1000,7 +1000,7 @@ var require_codegen = __commonJS({
     function addExprNames(names, from) {
       return from instanceof code_1._CodeOrName ? addNames(names, from.names) : names;
     }
-    function optimizeExpr(expr, names, constants4) {
+    function optimizeExpr(expr, names, constants5) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1015,14 +1015,14 @@ var require_codegen = __commonJS({
         return items;
       }, []));
       function replaceName(n) {
-        const c = constants4[n.str];
+        const c = constants5[n.str];
         if (c === void 0 || names[n.str] !== 1)
           return n;
         delete names[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants4[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants5[c.str] !== void 0);
       }
     }
     function subtractNames(names, from) {
@@ -7256,9 +7256,9 @@ var require_dist = __commonJS({
 });
 
 // apps/claude-plugin/src/inline-forms-entry.mjs
-import { randomBytes as randomBytes3, randomUUID as randomUUID5 } from "node:crypto";
-import { execFile as execFile2 } from "node:child_process";
-import { promisify as promisify2 } from "node:util";
+import { randomBytes as randomBytes3, randomUUID as randomUUID6 } from "node:crypto";
+import { execFile as execFile3 } from "node:child_process";
+import { promisify as promisify3 } from "node:util";
 import { readFile as readFile3 } from "node:fs/promises";
 import { createServer } from "node:http";
 import { homedir as homedir2 } from "node:os";
@@ -29817,6 +29817,19 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// packages/contracts/dist/issue-image-type.js
+function issueImageType(bytes) {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const text4 = (start, end) => String.fromCharCode(...bytes.subarray(start, end));
+  if (bytes.length >= 33 && bytes[0] === 137 && text4(1, 8) === "PNG\r\n\n" && view.getUint32(8) === 13 && text4(12, 16) === "IHDR" && view.getUint32(16) > 0 && view.getUint32(20) > 0)
+    return "image/png";
+  if (bytes.length >= 4 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255)
+    return "image/jpeg";
+  if (bytes.length >= 20 && text4(0, 4) === "RIFF" && text4(8, 12) === "WEBP" && view.getUint32(4, true) === bytes.length - 8 && ["VP8 ", "VP8L", "VP8X"].includes(text4(12, 16)))
+    return "image/webp";
+  return null;
+}
+
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
   applicationKey: external_exports.string().min(1),
@@ -37499,38 +37512,194 @@ async function createInstalledSession(root, build, data, broker, {
   return session;
 }
 
+// apps/claude-plugin/src/issue-image-picker.mjs
+import { createHash as createHash6, randomUUID as randomUUID5 } from "node:crypto";
+import { execFile as execFile2 } from "node:child_process";
+import { constants as constants4 } from "node:fs";
+import { open as open5 } from "node:fs/promises";
+import { basename, isAbsolute as isAbsolute2 } from "node:path";
+import { promisify as promisify2 } from "node:util";
+var picker = `
+ObjC.import("AppKit");
+const app = $.NSApplication.sharedApplication;
+app.setActivationPolicy($.NSApplicationActivationPolicyRegular);
+const panel = $.NSOpenPanel.openPanel;
+panel.title = "Choose images for this Kaijan issue";
+panel.canChooseDirectories = false;
+panel.canChooseFiles = true;
+panel.allowsMultipleSelection = true;
+// Keep the selected file URL instead of silently substituting an alias target.
+panel.resolvesAliases = false;
+panel.allowedFileTypes = $(["png", "jpg", "jpeg", "webp"]);
+app.activateIgnoringOtherApps(true);
+const accepted = panel.runModal === $.NSModalResponseOK;
+JSON.stringify(accepted ? ObjC.unwrap(panel.URLs).map(url => ObjC.unwrap(url.path)) : []);
+`;
+async function chooseIssueImages(existing, signal) {
+  const rejected = (message) => ({ error: "image_selection_failed", message });
+  let selected;
+  try {
+    const { stdout } = await promisify2(execFile2)(
+      "/usr/bin/osascript",
+      ["-l", "JavaScript", "-e", picker],
+      { signal, timeout: 12e4, maxBuffer: 64 * 1024 }
+    );
+    selected = JSON.parse(stdout);
+  } catch {
+    signal.throwIfAborted();
+    return rejected(
+      "The image chooser closed before it returned a selection. Choose images again."
+    );
+  }
+  if (!Array.isArray(selected) || selected.some((file2) => typeof file2 !== "string" || !isAbsolute2(file2)))
+    return rejected("The image chooser returned an invalid selection.");
+  if (selected.length + existing.length > issueImageLimits.files)
+    return rejected("Choose up to five images.");
+  const images = [];
+  let total = existing.reduce((sum, image) => sum + image.bytes, 0);
+  for (const file2 of selected) {
+    signal.throwIfAborted();
+    let handle;
+    try {
+      handle = await open5(
+        file2,
+        constants4.O_RDONLY | constants4.O_NOFOLLOW | constants4.O_NONBLOCK
+      );
+      const stat2 = await handle.stat();
+      if (!stat2.isFile()) return rejected("Choose the original image file.");
+      if (stat2.size < 1 || stat2.size > issueImageLimits.fileBytes)
+        return rejected("Choose a nonempty image up to 5 MiB.");
+      total += stat2.size;
+      if (total > issueImageLimits.totalBytes)
+        return rejected("Keep the selected images within 20 MiB in total.");
+      const bytes = Buffer.alloc(stat2.size);
+      for (let offset = 0; offset < bytes.length; ) {
+        const { bytesRead } = await handle.read(bytes, offset);
+        if (!bytesRead)
+          return rejected("The image changed while opening. Select it again.");
+        offset += bytesRead;
+      }
+      if ((await handle.stat()).size !== bytes.length)
+        return rejected("The image changed while opening. Select it again.");
+      const selection2 = issueImageSchema.safeParse({
+        id: randomUUID5(),
+        name: basename(file2),
+        bytes: bytes.length,
+        mediaType: issueImageType(bytes),
+        sha256: createHash6("sha256").update(bytes).digest("hex")
+      });
+      if (!selection2.success)
+        return rejected("Choose PNG, JPEG or WebP images.");
+      images.push({ image: selection2.data, bytes });
+    } catch (error62) {
+      return rejected(
+        error62.code === "ELOOP" ? "Choose the original image file instead of a link." : "Kaijan could not read the selected image."
+      );
+    } finally {
+      await handle?.close();
+    }
+  }
+  return { images };
+}
+
 // apps/claude-plugin/src/inline-forms-entry.mjs
 function formAction(session, metadata2, views) {
-  return async ({ kind, operation, draftId, revision: revision2, changes }, signal) => {
+  return async ({ kind, operation, draftId, revision: revision2, changes, imageId }, signal) => {
     const surface = kind === "feedback" ? session.feedback : kind === "issue" ? session.issues : void 0;
     if (!surface) throw Error("Invalid form");
     const name = `kaijan_${kind}`;
     if (operation === "open") {
       return surface.invoke(
         `${name}_draft`,
-        { operation, requestId: randomUUID5() },
+        { operation, requestId: randomUUID6() },
         metadata2,
         signal
       );
     }
-    const operations2 = kind === "issue" ? ["update", "preview", "publish", "close_review", "status"] : ["update", "send"];
+    const operations2 = kind === "issue" ? [
+      "update",
+      "preview",
+      "publish",
+      "close_review",
+      "status",
+      "choose_images",
+      "remove_image"
+    ] : ["update", "send"];
     if (!operations2.includes(operation)) throw Error("Invalid form action");
     const view = views.get(draftId);
     if (!view || view.kind !== kind) throw Error("Form unavailable");
     const { grant: grant2 } = view;
-    return surface.invoke(
+    const apply = (action2, args = {}) => surface.invoke(
       `${name}_form_action`,
       {
         ...grant2,
-        ...operation === "close_review" || !grant2.cleanupToken ? {} : { cleanupToken: void 0 },
-        operation: operation === "preview" ? "read" : operation,
-        ...operation === "preview" && { refreshPublisher: true },
-        ...["update", "send", "publish"].includes(operation) && { revision: revision2 },
-        ...changes !== void 0 && { changes }
+        ...action2 === "close_review" || !grant2.cleanupToken ? {} : { cleanupToken: void 0 },
+        operation: action2 === "preview" ? "read" : action2,
+        ...action2 === "preview" && { refreshPublisher: true },
+        ...[
+          "update",
+          "send",
+          "publish",
+          "begin_image",
+          "append_image",
+          "remove_image"
+        ].includes(action2) && { revision: revision2 },
+        ...args
       },
       metadata2,
       signal
     );
+    if (operation !== "choose_images" && operation !== "remove_image")
+      return apply(operation, changes === void 0 ? {} : { changes });
+    const original = await apply("read");
+    const draft = original.structuredContent?.draft;
+    if (original.isError || !draft) return original;
+    if (draft.revision !== revision2 || draft.status !== "draft")
+      throw Error("The selected draft changed");
+    const existing = draft.fields.images;
+    if (operation === "remove_image") {
+      if (!existing.some((image) => image.id === imageId)) return original;
+      const updated = await apply("update", {
+        changes: { images: existing.filter((image) => image.id !== imageId) }
+      });
+      if (!updated.isError && updated.structuredContent?.draft)
+        await apply("remove_image", {
+          imageId,
+          revision: updated.structuredContent.draft.revision
+        });
+      return updated;
+    }
+    const selection2 = await chooseIssueImages(existing, signal);
+    if (selection2.error) return { structuredContent: selection2 };
+    if (!selection2.images.length) return original;
+    const staged = [];
+    let selected = false;
+    try {
+      for (const { image, bytes } of selection2.images) {
+        const begun = await apply("begin_image", { image });
+        if (begun.isError) return begun;
+        staged.push(image);
+        const chunkSize = 256 * 1024;
+        for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+          const result = await apply("append_image", {
+            imageId: image.id,
+            offset,
+            base64: bytes.subarray(offset, offset + chunkSize).toString("base64")
+          });
+          if (result.isError) return result;
+        }
+      }
+      const updated = await apply("update", {
+        changes: { images: [...existing, ...staged] }
+      });
+      selected = !updated.isError && Boolean(updated.structuredContent?.draft);
+      return updated;
+    } finally {
+      if (!selected)
+        await Promise.allSettled(
+          staged.map(({ id: id7 }) => apply("remove_image", { imageId: id7 }))
+        );
+    }
   };
 }
 async function run() {
@@ -37582,7 +37751,7 @@ async function run() {
         );
         lifetime.signal.throwIfAborted();
         if (input3.operation === "launch") {
-          await promisify2(execFile2)("/usr/bin/open", [previewURL], {
+          await promisify3(execFile3)("/usr/bin/open", [previewURL], {
             timeout: 1e4
           });
         }
