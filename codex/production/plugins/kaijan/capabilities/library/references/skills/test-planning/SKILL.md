@@ -65,8 +65,7 @@ Saved input uses `nativeInputs.testSupplement: {input, options?}`.
 The agent decides which concerns can be expressed as web UI tests and what needs
 other inspection. Execute only within the user's separately authorized target,
 actions and environment. Planning grants no permission to run tests. Return actual
-outcomes and supporting observations through the supplied-evidence assessment
-skill; do not report merely proposed steps as execution. Explicit browser execution uses the separate test-execution skill with full scenario,
+outcomes and supporting observations in the saved report; do not report merely proposed steps as execution. Explicit browser execution uses the separate test-execution skill with full scenario,
 params and target authority. Planning never dispatches it. Broader memory ingestion
 is not implemented.
 

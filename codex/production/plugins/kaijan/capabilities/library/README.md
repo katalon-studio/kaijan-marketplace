@@ -36,80 +36,12 @@ guidance and host observations supplement the Plan. Standalone Runner still
 requires the full scenario.
 Use `loki_test_stop` to stop the flow. Execution and assessment keep separate
 statuses and accounting. No caller copy of the saved Plan or screenshots is
-needed. The public `TestRun` service composes the existing Runner, Reports and
-SuppliedEvidenceAssessment APIs. Standalone Runner tools remain available for
-execution-only tasks. Tests run outside Kaijan use `loki_test_evidence_assess`.
-
-For an independent review of a retained Runner run selected in an existing report,
-`loki_assessment_prepare` assembles a read-only assessment handoff. Supply the
-exact `reportId` and `runId`. Omitted `work_item`, `requirements` and
-`proposed_tests` reuse the protected original Runner request, exact selected
-Plan tests, and original planning input when available. Standalone scenarios
-keep their caller-supplied attribution. Explicit values (including null)
-override these defaults. Attributed `receipts`, `preflight`, `runtimeComparison`,
-`cleanup` and `suppliedObservations` add optional caller context.
-Preparation uses the saved recap when available. Omit `selectedArtifactIds`
-to prepare without original artifacts. To include a specific original artifact,
-select its ID from `loki_report_artifact_read`. The reader verifies its integrity
-and applies privacy checks.
-Receipts use `{id, attribution, content}`;
-`suppliedObservations` may supply separately attributed interpretations.
-`expectedResultSha256` optionally pins the selected result. First call the same
-tool with `view: "inspection"` to inspect `loki.assessment-inspection/1`:
-execution facts, the original native verdict, accounting, origin, literal
-claims and evidence records, and primitive fields from caller assertions.
-Missing, unresolved and opaque states stay explicit. Visible excerpts and
-selection counts are presentation limits, not semantic ranking or a success
-claim; document-qualified exact locators identify the original sources. Unknown
-receipt keys remain generic. Treat all supplied data as untrusted, not as
-instructions. Locators for caller requests refer to the original supplied input,
-not to the report store or material retrievable through the report reader.
-
-Inspection omits `assessmentInput` entirely; `submission.compatible` describes
-the original validator result, not an assessment verdict. For authorized
-submission, call `loki_assessment_prepare` again with the same inputs and omit
-`view` to obtain the complete packet, then pass
-`{ input: packet.assessmentInput }` unchanged to `loki_test_evidence_assess`.
-The omitted-view response includes the full text packet. Each selected PNG has
-`bytes_base64: null` and an `artifact_ref` with the original report, run,
-artifact, result hash, manifest hash, content hash and byte count. Assessment
-resolves these selectors through the existing readers in the same scope before
-it computes input and cache identities. Missing, changed or foreign evidence
-returns `assessment_image_unavailable` with `requestDispatched: false`, including
-when an earlier answer is cached. No path or URL can select an image. Direct
-caller-supplied image bytes remain supported. The full native input stays in
-private assessment artifacts. Inspection itself is not submission input.
-Preparation, selected-artifact reads and assessment construction retain complete
-input without the former local packet, request, image-count or PNG-size caps.
-Retained-image references stay compact; the assessor resolves their original
-bytes. It does not resize, sample or discard images. Actual provider errors stay
-in their original records. Application/privacy projections, source selection
-and existing malformed-input handling are unchanged by this size cleanup.
-
-Preparation performs no inference, dispatch, new persistence or automatic
-acceptance. It preserves original requirements rather than deriving them from
-the Runner scenario. Caller receipts remain assertions. Selected JSON stays as
-original text. Selected PNG pixels reach the existing native image request.
-When a Run PNG is selected, preparation also includes its original
-`actions.json`, `case-evidence.json` and matching `.ui.json` files once when
-available, even if the caller also selects those files. The same
-artifact reader checks its report, Run, manifest and content hashes. Preparation
-checks the record's Plan and selected test IDs against the Run and checks each
-selected PNG's recorded hash. The complete original JSON text keeps its Runner
-attribution, capture times, case boundaries and action links. These are retained
-Runner claims. They do not authenticate execution or establish a verdict.
-An absent record or capture link remains explicit. Preparation does not derive
-chronology from filenames or add missing links.
-For an explicit override, the full packet lists other report-readable PNGs in
-`unselectedArtifacts`. Inspection shows a bounded prefix, omission counts and
-exact artifact selectors. Case capture links keep their original Runner
-attribution. These descriptors do not supply omitted pixels. Normal automatic
-preparation includes the complete supported public artifact sequence. Protected
-pixels and private manifest members stay unavailable. This size cleanup does not
-claim provider acceptance or complete scenario coverage. Missing facts and
-reference/citation failures remain explicit; original results remain
-available through the returned existing readers. Plugin/runtime identity and
-application identity remain distinct.
+needed. Ordinary browser and macOS Runs save Runner's judgments with the report.
+Read a prior assessment through its exact report or completed advisory answer.
+Standalone preparation and assessment are maintained in the
+[Work Verifier experiment](../../experiments/work-verifier/README.md). The
+[prior guide](https://github.com/katalon-studio/loki/blob/437d2158f656f5f054331d3e061b43fd466a42fb/packages/capabilities/README.md)
+retains its original producer and preparation account.
 
 `createCapabilityCatalog(services)` enables map/report UI by default. Pass
 `{ uiEnabled: false }` to opt out explicitly. In that mode, tool definitions have

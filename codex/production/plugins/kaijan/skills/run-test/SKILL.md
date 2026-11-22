@@ -14,6 +14,11 @@ does not authorize execution.
 
 ## Run the selected checks
 
+In Codex, use a write-capable session with workspace write or Full Access for
+execution. Have the user handle any approval requested by Codex. Keep
+application actions within the user's task. If the host refuses dispatch,
+tell the user which permission or approval blocked the Run and keep the saved Plan.
+
 Check readiness for the selected action with `loki_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
 for the responding package when starting AI work. Managed AI uses the Kaijan
@@ -21,18 +26,27 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-Kaijan supplies saved Configuration groups automatically when available. Use
-the application and task to select the relevant settings. Follow the person's
-explicit Configuration selection or opt-out. If several saved groups match the
-application and the intended group is unclear, ask which to use.
+For hosts that advertise full Runner input, use the application and task to
+select the relevant Configuration when available. Follow the person's explicit
+selection or opt-out. Ask which group to use when several match and the choice
+matters.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
-save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
-or manual login. Keep raw secrets out of chat and tool arguments. On hosts that
-advertise full Runner input, use `params` for ordinary overrides and
-`privateParams` for scoped secret references.
-These overrides leave saved settings unchanged. The person can run without
-saving settings. Configuration selection never authorizes execution.
+save it.
+
+<!-- codex-only -->
+
+In Codex, when the person chooses to save an app login from a local file, use the
+[Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+before starting the test.
+<!-- end-codex-only -->
+
+Keep raw secrets out of chat and tool arguments. On
+hosts that advertise full Runner input, use `params` for ordinary overrides and
+[`privateParams`](../../references/private-parameters.md)
+for scoped secret references. Those hosts can Run without saved settings, and
+overrides leave any saved settings unchanged. Configuration selection never
+authorizes execution.
 
 Use `loki_test_execute` for the normal combined run, assessment and report.
 When Codex advertises `planId`, supply the exact `planId` returned by Plan,
@@ -71,17 +85,37 @@ cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
+<!-- codex-only -->
+
+## Restart after an app login change
+
+In Codex, when a Run needs a new or replacement app login, guide the person to
+save it with the [Configuration command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
+If the person requests a restart, stop a Run that is still waiting and read
+the original result to see what already happened. When the intended checks
+are safe to repeat, prepare a fresh Plan for that scope with the updated
+Configuration and start a new Run. Keep the original Run and report. The
+earlier saved Plan retains its original login reference.
+<!-- end-codex-only -->
+
 ## Read or stop the original test
 
 Use `loki_test_get` through the execution and assessment result, and
-`loki_test_stop` to stop the same test.
-For external test evidence use
-[assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+`loki_test_stop` to stop the same test. Open the saved result with
+[report review](../review-report/SKILL.md).
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
 original run and clarification IDs, one answer key and the available authorized
-context. Match known questions when possible; partial answers and extra JSON
+context.
+
+<!-- codex-only -->
+
+For an app login that needs to be saved or changed, follow
+[Restart after an app login change](#restart-after-an-app-login-change).
+<!-- end-codex-only -->
+
+Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
 The original deadline still applies; a missing answer does not require
@@ -109,7 +143,12 @@ to inspect an existing recording.
 
 ## macOS desktop scenarios
 
-Supply `target.app` with the app's bundle ID in the Codex Plan. Use
+<!-- codex-only -->
+
+In Codex, save the app’s bundle ID as `target.app` in Test Environment and pass its ID to Plan.
+<!-- end-codex-only -->
+
+Use
 `executionMethod: "desktop-ui"` and the app target on hosts that advertise the
 full Runner input. If the caller supplies a `.app` path or needs first-time setup,
 use the [macOS setup guide](references/macos-appium-setup.md).
