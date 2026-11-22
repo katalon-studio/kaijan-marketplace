@@ -22241,34 +22241,6 @@ var reportTraceOutputSchema = external_exports.union([
   reportTraceResultSchema,
   reportReadFailureSchema
 ]);
-var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
-var reportExportPreviewSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest9,
-  previewSha256: digest9,
-  html: external_exports.string(),
-  omitted: external_exports.array(external_exports.string()),
-  redaction: external_exports.string(),
-  included: external_exports.array(external_exports.string())
-});
-var reportExportReceiptSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest9,
-  sha256: digest9,
-  path: external_exports.string(),
-  delivery: external_exports.literal("local-file-only"),
-  uploaded: external_exports.literal(false)
-});
-var reportExportPreviewOutputSchema = external_exports.union([
-  reportExportPreviewSchema,
-  reportReadFailureSchema
-]);
-var reportExportOutputSchema = external_exports.union([
-  reportExportReceiptSchema,
-  reportReadFailureSchema
-]);
 
 // ../contracts/dist/report-artifact.js
 var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
