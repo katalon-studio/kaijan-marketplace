@@ -2235,10 +2235,10 @@ var require_resolve = __commonJS({
       }
       return count9;
     }
-    function getFullPath(resolver, id8 = "", normalize2) {
+    function getFullPath(resolver, id9 = "", normalize2) {
       if (normalize2 !== false)
-        id8 = normalizeId(id8);
-      const p = resolver.parse(id8);
+        id9 = normalizeId(id9);
+      const p = resolver.parse(id9);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2248,13 +2248,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id8) {
-      return id8 ? id8.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id9) {
+      return id9 ? id9.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id8) {
-      id8 = normalizeId(id8);
-      return resolver.resolve(baseId, id8);
+    function resolveUrl(resolver, baseId, id9) {
+      id9 = normalizeId(id9);
+      return resolver.resolve(baseId, id9);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -3024,8 +3024,8 @@ var require_compile = __commonJS({
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id8 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id8] || this.schemas[id8];
+      const id9 = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id9] || this.schemas[id9];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema2.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3036,7 +3036,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id8 === (0, resolve_1.normalizeId)(ref)) {
+      if (id9 === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -4519,15 +4519,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id8;
+        let id9;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id8 = schema[schemaId];
-          if (id8 !== void 0 && typeof id8 != "string") {
+          id9 = schema[schemaId];
+          if (id9 !== void 0 && typeof id9 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id8);
+        key = (0, resolve_1.normalizeId)(key || id9);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4606,11 +4606,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id8 = schemaKeyRef[this.opts.schemaId];
-            if (id8) {
-              id8 = (0, resolve_1.normalizeId)(id8);
-              delete this.schemas[id8];
-              delete this.refs[id8];
+            let id9 = schemaKeyRef[this.opts.schemaId];
+            if (id9) {
+              id9 = (0, resolve_1.normalizeId)(id9);
+              delete this.schemas[id9];
+              delete this.refs[id9];
             }
             return this;
           }
@@ -4717,10 +4717,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta3, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id8;
+        let id9;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id8 = schema[schemaId];
+          id9 = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4730,7 +4730,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id8 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id9 || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta: meta3, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4743,9 +4743,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id8) {
-        if (this.schemas[id8] || this.refs[id8]) {
-          throw new Error(`schema with key or id "${id8}" already exists`);
+      _checkUnique(id9) {
+        if (this.schemas[id9] || this.refs[id9]) {
+          throw new Error(`schema with key or id "${id9}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -7390,12 +7390,12 @@ function installationPrefix(build) {
   return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
 }
 function claudeSessionId(environment) {
-  const id8 = environment.CLAUDE_CODE_SESSION_ID;
-  if (typeof id8 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id8))
+  const id9 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id9 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id9))
     throw Error(
       "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
     );
-  return id8;
+  return id9;
 }
 function bindHostSession(session, build, environment) {
   if (pluginHost(build) !== "claude_code") return session;
@@ -11340,15 +11340,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id8, k) => `
-          let ${id8}_ab = false;
-          for (let i = 0; i < ${id8}.issues.length; i++) {
-            const iss = ${id8}.issues[i];
+    const prefixStr = (id9, k) => `
+          let ${id9}_ab = false;
+          for (let i = 0; i < ${id9}.issues.length; i++) {
+            const iss = ${id9}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id8}_ab = true;
+            if (iss.continue !== true) ${id9}_ab = true;
           }
-          if (${id8}_ab && ctx && ctx.abortEarly) {
+          if (${id9}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -11362,34 +11362,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id8 = ids2[key];
+      const id9 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id8} = ${parseStr(k)};`);
+      doc.write(`const ${id9} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id8}_present` : `${id8}.value !== undefined || ${id8}_present`;
+        const assign = optin === "optional" ? `${id9}_present` : `${id9}.value !== undefined || ${id9}_present`;
         doc.write(`
-        const ${id8}_present = ${isPresent};
-        if (!${id8}.issues.length || ${id8}_present) {
-          if (${id8}.issues.length) {${prefixStr(id8, k)}
+        const ${id9}_present = ${isPresent};
+        if (!${id9}.issues.length || ${id9}_present) {
+          if (${id9}.issues.length) {${prefixStr(id9, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id8}.value;
+            newResult[${k}] = ${id9}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id8}_present = ${isPresent};
-        if (${id8}.issues.length) {${prefixStr(id8, k)}
+        const ${id9}_present = ${isPresent};
+        if (${id9}.issues.length) {${prefixStr(id9, k)}
         }
-        if (!${id8}_present && !${id8}.issues.length) {
+        if (!${id9}_present && !${id9}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -11402,22 +11402,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id8}_present) {
-          newResult[${k}] = ${id8}.value;
+        if (${id9}_present) {
+          newResult[${k}] = ${id9}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id8}.issues.length) {${prefixStr(id8, k)}
+        if (${id9}.issues.length) {${prefixStr(id9, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id8}.value;`);
+          doc.write(`newResult[${k}] = ${id9}.value;`);
         } else {
           doc.write(`
-        if (${id8}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id8}.value;
+        if (${id9}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id9}.value;
         }
       `);
         }
@@ -23445,26 +23445,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id8 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id8) {
-      const existing = idToSchema.get(id8);
+    const id9 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id9) {
+      const existing = idToSchema.get(id9);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id8}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id9}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id8, entry[0]);
+      idToSchema.set(id9, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id9) => id9);
+      const uriGenerator = ctx.external.uri ?? ((id10) => id10);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id8 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id8;
-      return { defId: id8, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id8)}` };
+      const id9 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id9;
+      return { defId: id9, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id9)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -23512,8 +23512,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id8 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id8) {
+    const id9 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id9) {
       extractToDef(entry);
       continue;
     }
@@ -23746,10 +23746,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id8 = ctx.external.registry.get(schema)?.id;
-    if (!id8)
+    const id9 = ctx.external.registry.get(schema)?.id;
+    if (!id9)
       throw new Error("Schema is missing an `id` property");
-    result2.$id = ctx.external.uri(id8);
+    result2.$id = ctx.external.uri(id9);
   }
   assignProps(result2, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -24355,7 +24355,7 @@ function stringifyKeyNames(bySchema, json3, visited) {
   const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json3;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id8, ...rest } = json3;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id9, ...rest } = json3;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -28899,9 +28899,9 @@ var uuidv7obj = () => (defaultGenerator || (defaultGenerator = new V7Generator()
 var PromiseQueue = class {
   add(promise2) {
     const promiseUUID = uuidv72();
-    const id8 = ++this.nextId;
+    const id9 = ++this.nextId;
     this.promiseByIds[promiseUUID] = {
-      id: id8,
+      id: id9,
       promise: promise2
     };
     promise2.catch(() => {
@@ -39203,9 +39203,9 @@ var WAITUNTIL_DEBOUNCE_MS = 50;
 var WAITUNTIL_MAX_WAIT_MS = 500;
 var DEFAULT_NODE_HOST = "https://us.i.posthog.com";
 var _emittedDeprecations = /* @__PURE__ */ new Set();
-function emitDeprecationWarningOnce(id8, message) {
-  if (_emittedDeprecations.has(id8)) return;
-  _emittedDeprecations.add(id8);
+function emitDeprecationWarningOnce(id9, message) {
+  if (_emittedDeprecations.has(id9)) return;
+  _emittedDeprecations.add(id9);
   console.warn(`[PostHog] ${message}`);
 }
 function normalizeApiKey(value) {
@@ -46392,7 +46392,7 @@ var ExperimentalServerTasks = class {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id8) => toolResultIds.has(id8))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id9) => toolResultIds.has(id9))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -46817,7 +46817,7 @@ var Server = class extends Protocol {
       if (hasPreviousToolUse) {
         const toolUseIds = new Set(previousContent.filter((c) => c.type === "tool_use").map((c) => c.id));
         const toolResultIds = new Set(lastContent.filter((c) => c.type === "tool_result").map((c) => c.toolUseId));
-        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id8) => toolResultIds.has(id8))) {
+        if (toolUseIds.size !== toolResultIds.size || ![...toolUseIds].every((id9) => toolResultIds.has(id9))) {
           throw new Error("ids of tool_result blocks and tool_use blocks from previous message do not match");
         }
       }
@@ -47633,713 +47633,6 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
 
 // apps/codex-plugin/src/configurations.mjs
 import { createHash as createHash3, randomUUID as randomUUID5 } from "node:crypto";
-var cachedFormUris = /* @__PURE__ */ new Set([
-  "ui://kaijan/configurations/form/v1.html",
-  "ui://kaijan/configurations/form/v2.html"
-]);
-var id2 = external_exports.uuid();
-var inputSchema = external_exports.strictObject({
-  operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
-  id: id2.nullable().optional().describe(
-    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
-  ),
-  revision: external_exports.number().int().nonnegative().optional().describe(
-    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
-  ),
-  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
-  values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
-  name: external_exports.string().optional(),
-  automatic: external_exports.literal(true).optional()
-});
-var allowedFields = {
-  list: ["application"],
-  read: ["id"],
-  save: ["id", "revision", "name", "application", "values"],
-  delete: ["id", "revision"],
-  select: ["id", "automatic"]
-};
-var tool = {
-  name: "kaijan_configuration",
-  title: "Read or update Configurations",
-  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and follow the installed app sign-in guide for a missing or changed login. A saved configuration is optional and never starts a test.",
-  inputSchema: external_exports.toJSONSchema(inputSchema),
-  annotations: {
-    readOnlyHint: false,
-    destructiveHint: true,
-    openWorldHint: false
-  }
-};
-function response(value) {
-  return {
-    ...value.error ? { isError: true } : {},
-    structuredContent: value,
-    content: [{ type: "text", text: JSON.stringify(value) }]
-  };
-}
-function createConfigurationSurface({ session, library, data }) {
-  let storePromise, stopped = false;
-  const store = () => {
-    if (!storePromise) {
-      const opening = library.ConfigurationStore.open(data);
-      storePromise = opening;
-      void opening.catch(() => {
-        if (storePromise === opening) storePromise = void 0;
-      });
-    }
-    return storePromise;
-  };
-  const safeError = (error63) => {
-    const known = [
-      library.ConfigurationError,
-      library.PrivateParameterError
-    ].some((type) => typeof type === "function" && error63 instanceof type);
-    return {
-      error: known ? error63.code : "configuration_unavailable",
-      message: known ? error63.message : "Could not save or read Configurations. Read the current settings before trying again."
-    };
-  };
-  async function scopeFor(metadata2) {
-    if (stopped || typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
-      throw Error("chat_required");
-    const scope = await session.forRequest(metadata2);
-    if (!scope.scope.restartPersistent || scope.scope.kind !== "host-thread")
-      throw Error("chat_required");
-    return scope;
-  }
-  return {
-    tools: [tool],
-    hasTool: (name) => name === tool.name,
-    // Historical cards can read their resource, but this host opens no editor.
-    hasResource: (uri) => cachedFormUris.has(uri),
-    readResource: (uri) => library.readConfigurationForm(uri),
-    async invoke(name, raw, metadata2) {
-      try {
-        if (name !== tool.name) throw Error("invalid_arguments");
-        const args = inputSchema.parse(raw);
-        if (Object.keys(args).some(
-          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
-        ))
-          throw Error("invalid_arguments");
-        const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
-        if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
-          throw Error("invalid_arguments");
-        if (args.operation === "select" && args.id === null) {
-          await library.configurationPreference(scope.data, scopeId, false);
-          let configurations = [];
-          try {
-            const saved2 = await store();
-            saved2.select(scopeId, null);
-            configurations = saved2.list();
-          } catch {
-          }
-          return response({
-            configurations,
-            selectedId: null,
-            selectionMode: "none",
-            nextRunConfiguration: null,
-            message: "No configuration selected for this chat."
-          });
-        }
-        const saved = await store();
-        let configuration2;
-        let message = "";
-        if (args.operation === "read") {
-          if (!args.id) throw Error("invalid_arguments");
-          configuration2 = saved.read(args.id);
-        } else if (args.operation === "save") {
-          if (!args.id || args.revision === void 0 || !args.values)
-            throw Error("invalid_arguments");
-          const old = args.revision ? saved.read(args.id) : {
-            name: args.name,
-            application: args.application ?? "",
-            allowedHosts: [],
-            entries: []
-          };
-          const existingSecrets = old.entries.filter((entry) => entry.secret);
-          if (args.application !== void 0 && args.application !== old.application && existingSecrets.length)
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "A configuration with a saved secret must keep its website."
-            );
-          if (existingSecrets.some(({ key }) => Object.hasOwn(args.values, key)))
-            throw new library.ConfigurationError(
-              "configuration_secret_editor",
-              "This chat tool saves ordinary values. Use the installed app sign-in guide to update the account."
-            );
-          const entries = old.entries.map((entry) => ({
-            key: entry.key,
-            secret: entry.secret,
-            ...entry.secret ? {} : {
-              value: Object.hasOwn(args.values, entry.key) ? args.values[entry.key] : entry.value
-            }
-          }));
-          for (const [key, value] of Object.entries(args.values))
-            if (!entries.some((entry) => entry.key === key))
-              entries.push({ key, value, secret: false });
-          configuration2 = saved.save(
-            {
-              name: args.name ?? old.name,
-              application: args.application ?? old.application,
-              allowedHosts: old.allowedHosts,
-              entries
-            },
-            args.id,
-            args.revision
-          );
-          message = "Configuration saved.";
-        } else if (args.operation === "delete") {
-          if (!args.id || !args.revision) throw Error("invalid_arguments");
-          saved.delete(args.id, args.revision);
-          message = "Configuration deleted. Existing Runs keep their saved settings.";
-        } else if (args.operation === "select") {
-          configuration2 = saved.select(scopeId, args.id);
-          await library.configurationPreference(scope.data, scopeId, true);
-          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration2.name}.`;
-        }
-        const enabled = await library.configurationPreference(
-          scope.data,
-          scopeId
-        );
-        const selected = enabled !== false ? saved.selected(scopeId) : null;
-        return response({
-          configurations: saved.list(args.application),
-          nextRunConfiguration: saved.pendingView(scopeId),
-          selectedId: selected && selected !== "automatic" ? selected : null,
-          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
-          ...configuration2 ? { configuration: configuration2 } : {},
-          message
-        });
-      } catch (error63) {
-        return response(safeError(error63));
-      }
-    },
-    async prepareExecution(name, raw, metadata2) {
-      const planning = name === "loki_test_plan";
-      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration)
-        return { arguments: raw };
-      let marked = false, recoveryRunId;
-      try {
-        const args = structuredClone(raw), explicit = args?.configurationId, execution2 = planning ? args.exploration : args, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
-        if (args && Object.hasOwn(args, "configurationUsed"))
-          throw Error("host_metadata_only");
-        if (args) delete args.configurationId;
-        if (!metadata2?.threadId && (explicit === null || explicit === void 0))
-          return { arguments: args };
-        const scope = await scopeFor(metadata2);
-        if (typeof requestKey3 !== "string" || !requestKey3)
-          throw Error("invalid_request");
-        if (!planning)
-          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey3])).digest("hex");
-        marked = true;
-        marked = await library.configurationRunMarker(
-          scope.data,
-          scope.scope.id,
-          name,
-          requestKey3
-        );
-        const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
-        if (!marked && (explicit === null || preference === false))
-          return { arguments: args };
-        if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
-          return { arguments: args };
-        const canSelect = explicit !== void 0 || preference === true || Boolean(execution2.target?.initialURL);
-        if (!marked && !canSelect) return { arguments: args };
-        const saved = await store().catch((error63) => {
-          if (marked) throw error63;
-          throw new library.ConfigurationError(
-            "configuration_unavailable",
-            "Could not read the saved configuration. Ask the person if they want to run without it."
-          );
-        });
-        const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
-        if (previous) {
-          await library.configurationRunMarker(
-            scope.data,
-            scope.scope.id,
-            name,
-            requestKey3,
-            true
-          );
-          return { arguments: previous };
-        }
-        if (marked) throw Error("configuration_admission_unavailable");
-        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
-        if (!runSchema.safeParse(args).success)
-          throw new library.ConfigurationError(
-            "configuration_run_input",
-            "Check the Run inputs before starting. The saved configuration is unchanged."
-          );
-        if (explicit !== void 0 && explicit !== null) id2.parse(explicit);
-        const once = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
-        const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
-        const automatic = selection3 === "automatic";
-        const initialURL = execution2.target?.initialURL;
-        const browserURL2 = initialURL ? new URL(initialURL) : void 0;
-        if (automatic && !browserURL2) return { arguments: args };
-        const configurations = automatic ? saved.list().map(({ id: id8 }) => saved.execution(id8)) : selection3 ? [once?.execution ?? saved.execution(selection3)] : [];
-        if (!configurations.length) return { arguments: args };
-        const callerParams = execution2.params ?? {};
-        const callerPrivate = execution2.privateParams ?? {};
-        const allowed = execution2.target?.allowedHosts ?? (execution2.target?.initialURL ? [new URL(execution2.target.initialURL).hostname] : []);
-        if (Object.keys(callerPrivate).length)
-          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
-            ...execution2,
-            target: { ...execution2.target, allowedHosts: allowed }
-          });
-        const occupied = /* @__PURE__ */ new Set([
-          ...Object.keys(callerParams),
-          ...Object.keys(callerPrivate)
-        ]);
-        const parameterName = (base) => {
-          let name2 = base;
-          while (occupied.has(name2)) name2 += "_";
-          occupied.add(name2);
-          return name2;
-        };
-        const descriptors = [];
-        const secretNames = [];
-        execution2.params = { ...callerParams };
-        execution2.privateParams = { ...callerPrivate };
-        for (const chosen of configurations) {
-          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL2?.origin;
-          const privateAllowed = matchingOrigin && browserURL2 && chosen.allowedHosts.includes(browserURL2.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
-          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
-            (key) => !Object.hasOwn(callerPrivate, key)
-          ) && !privateAllowed))
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "This configuration belongs to another application. Choose a configuration for the browser target."
-            );
-          const fields = {};
-          const secrets = {};
-          chosen.configuration.overrides = automatic ? [] : [
-            .../* @__PURE__ */ new Set([
-              ...once?.changed ?? [],
-              ...[
-                ...Object.keys(callerParams),
-                ...Object.keys(callerPrivate)
-              ].filter(
-                (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
-              )
-            ])
-          ];
-          for (const key of [
-            ...Object.keys(chosen.params),
-            ...Object.keys(chosen.secrets)
-          ]) {
-            const isSecret = Object.hasOwn(chosen.secrets, key);
-            if (automatic && isSecret && !privateAllowed) continue;
-            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
-              if (isSecret && !Object.hasOwn(callerPrivate, key))
-                throw new library.ConfigurationError(
-                  "configuration_secret_editor",
-                  "Use the installed app sign-in guide to update the account."
-                );
-              fields[key] = key;
-              continue;
-            }
-            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
-            fields[key] = name2;
-            if (Object.hasOwn(chosen.secrets, key))
-              secrets[name2] = chosen.secrets[key];
-            else execution2.params[name2] = chosen.params[key];
-          }
-          descriptors.push({
-            id: chosen.configuration.id,
-            name: chosen.configuration.name,
-            url: chosen.application ?? null,
-            fields
-          });
-          if (Object.keys(secrets).length) {
-            const binding2 = await library.provisionRunnerParameters(
-              scope.data,
-              scope.scope.id,
-              { allowedHosts: chosen.allowedHosts, values: secrets }
-            );
-            for (const field2 of binding2.fields)
-              execution2.privateParams[field2] = {
-                bindingId: binding2.bindingId,
-                field: field2
-              };
-            secretNames.push(...binding2.fields);
-          }
-        }
-        if (automatic)
-          execution2.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
-        if (Object.keys(execution2.privateParams).length) {
-          execution2.target.allowedHosts = allowed;
-          await library.resolveRunnerParameters(
-            scope.data,
-            scope.scope.id,
-            execution2
-          );
-        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
-          delete execution2.privateParams;
-        }
-        if (!planning) {
-          execution2.options = {
-            ...execution2.options,
-            secretParameterNames: [
-              .../* @__PURE__ */ new Set([
-                ...execution2.options?.secretParameterNames ?? [],
-                ...secretNames
-              ])
-            ]
-          };
-          if (!automatic)
-            args.configurationUsed = configurations[0].configuration;
-        }
-        if (planning) args.requestKey = requestKey3;
-        const prepared = saved.admission(
-          scope.scope.id,
-          name,
-          requestKey3,
-          raw,
-          args,
-          once?.token
-        );
-        await library.configurationRunMarker(
-          scope.data,
-          scope.scope.id,
-          name,
-          requestKey3,
-          true
-        );
-        if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
-          await library.configurationPreference(
-            scope.data,
-            scope.scope.id,
-            false
-          );
-        return { arguments: prepared };
-      } catch (error63) {
-        const value = safeError(error63);
-        return {
-          error: {
-            code: marked && !(error63 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
-            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
-            requestDispatched: marked ? null : false,
-            ...marked ? { existingRunId: recoveryRunId } : {}
-          }
-        };
-      }
-    },
-    async close() {
-      if (stopped) return;
-      stopped = true;
-      if (storePromise) (await storePromise.catch(() => null))?.close();
-    }
-  };
-}
-
-// apps/codex-plugin/src/issues.mjs
-import { randomBytes as randomBytes2 } from "node:crypto";
-import { lstat as lstat5 } from "node:fs/promises";
-import { join as join5 } from "node:path";
-
-// apps/codex-plugin/src/issue-user-authorization.mjs
-import { execFile } from "node:child_process";
-import { promisify as promisify2 } from "node:util";
-var executeFile = promisify2(execFile);
-var id3 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
-var user = external_exports.object({
-  id: id3,
-  login: external_exports.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/)
-});
-var denied = () => Error("issue_publishing_account_unavailable");
-function issueUserAuthorization({
-  broker,
-  library,
-  signal,
-  request: request3 = fetch,
-  execute: execute2 = executeFile
-}) {
-  async function ownerStillConnected(owner2) {
-    signal?.throwIfAborted();
-    const result2 = await forwardCore(
-      broker,
-      "loki_connection_status",
-      {},
-      signal
-    );
-    const connection = coreConnectionSchema.parse(result2.structuredContent);
-    if (connection.context.user.id !== owner2.userId || connection.context.workspace.id !== owner2.workspaceId)
-      throw denied();
-  }
-  async function metadata2(path, token) {
-    signal?.throwIfAborted();
-    const response2 = await request3("https://api.github.com" + path, {
-      method: "GET",
-      redirect: "error",
-      credentials: "omit",
-      referrerPolicy: "no-referrer",
-      signal: AbortSignal.any([
-        ...signal ? [signal] : [],
-        AbortSignal.timeout(15e3)
-      ]),
-      headers: {
-        authorization: "Bearer " + token,
-        accept: "application/vnd.github+json",
-        "user-agent": "Kaijan",
-        "x-github-api-version": "2026-03-10"
-      }
-    });
-    if (!response2.ok) {
-      await response2.body?.cancel();
-      throw denied();
-    }
-    const reader = response2.body?.getReader();
-    if (!reader) throw denied();
-    const chunks = [];
-    let length = 0;
-    try {
-      for (; ; ) {
-        const part = await reader.read();
-        if (part.done) break;
-        length += part.value.length;
-        if (length > 2097152) throw denied();
-        chunks.push(part.value);
-      }
-    } finally {
-      await reader.cancel();
-      reader.releaseLock();
-    }
-    return JSON.parse(
-      new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)),
-      (_key, value, context2) => typeof value === "number" && !Number.isSafeInteger(value) && context2?.source && /^[1-9][0-9]{0,19}$/.test(context2.source) ? context2.source : value
-    );
-  }
-  async function inspect(token, source3, expectedId) {
-    if (typeof token !== "string" || !token || token.length > 8192 || /[\r\n]/.test(token))
-      throw denied();
-    const account = user.parse(await metadata2("/user", token));
-    if (expectedId && account.id !== expectedId) throw denied();
-    const repository2 = external_exports.object({
-      id: id3,
-      full_name: external_exports.literal(kaijanIssueRepository),
-      private: external_exports.literal(false),
-      permissions: external_exports.object({ push: external_exports.boolean() })
-    }).parse(await metadata2("/repos/" + kaijanIssueRepository, token));
-    return {
-      token,
-      repositoryId: repository2.id,
-      expiresAt: null,
-      canUpload: repository2.permissions.push,
-      publisher: { githubUserId: account.id, login: account.login, source: source3 }
-    };
-  }
-  async function managed(owner2, imagesRequired) {
-    const response2 = await broker.send("/github/credential", {
-      method: "POST",
-      body: "{}",
-      headers: { "content-type": "application/json" },
-      signal
-    });
-    if (!response2.ok) {
-      await response2.body?.cancel();
-      if ([401, 403, 404].includes(response2.status))
-        return { credential: null, githubUserId: null };
-      throw denied();
-    }
-    const grant2 = githubCredentialSchema.parse(await response2.json());
-    if (grant2.userId !== owner2.userId || grant2.workspaceId !== owner2.workspaceId || grant2.authority !== "github-app-user-intersection")
-      throw denied();
-    const current = await inspect(
-      grant2.accessToken,
-      "kaijan",
-      grant2.githubUserId
-    );
-    if (imagesRequired && !current.canUpload)
-      return { credential: null, githubUserId: grant2.githubUserId };
-    let permitted = false;
-    for (let page2 = 1; page2 <= 10; page2++) {
-      const result2 = external_exports.object({
-        installations: external_exports.array(
-          external_exports.object({
-            id: id3,
-            account: external_exports.object({ login: external_exports.string() }),
-            repository_selection: external_exports.enum(["all", "selected"]),
-            permissions: external_exports.object({ issues: external_exports.string().optional() })
-          })
-        )
-      }).parse(
-        await metadata2(
-          `/user/installations?per_page=100&page=${page2}`,
-          grant2.accessToken
-        )
-      );
-      for (const installation of result2.installations) {
-        if (installation.account.login !== "katalon-studio" || installation.permissions.issues !== "write")
-          continue;
-        if (installation.repository_selection === "all") {
-          permitted = true;
-          break;
-        }
-        for (let repoPage = 1; repoPage <= 10; repoPage++) {
-          const repositories = external_exports.object({
-            repositories: external_exports.array(external_exports.object({ id: id3, full_name: external_exports.string() }))
-          }).parse(
-            await metadata2(
-              `/user/installations/${installation.id}/repositories?per_page=100&page=${repoPage}`,
-              grant2.accessToken
-            )
-          );
-          if (repositories.repositories.some(
-            (repo) => repo.id === current.repositoryId && repo.full_name === kaijanIssueRepository
-          )) {
-            permitted = true;
-            break;
-          }
-          if (repositories.repositories.length < 100) break;
-        }
-        if (permitted) break;
-      }
-      if (permitted || result2.installations.length < 100) break;
-    }
-    return {
-      credential: permitted ? {
-        ...current,
-        expiresAt: grant2.expiresAt
-      } : null,
-      githubUserId: grant2.githubUserId
-    };
-  }
-  async function local(expectedId, imagesRequired) {
-    signal?.throwIfAborted();
-    let result2;
-    try {
-      result2 = await execute2(
-        "gh",
-        ["auth", "token", "--hostname", "github.com"],
-        {
-          encoding: "utf8",
-          timeout: 5e3,
-          signal,
-          maxBuffer: 16384,
-          windowsHide: true
-        }
-      );
-    } catch {
-      throw denied();
-    }
-    const current = await inspect(
-      result2.stdout.trim(),
-      "local-github",
-      expectedId
-    );
-    if (imagesRequired && !current.canUpload) throw denied();
-    return current;
-  }
-  async function selected(owner2, expected, imagesRequired) {
-    await ownerStillConnected(owner2);
-    if (expected?.source === "local-github")
-      return local(expected.githubUserId, imagesRequired);
-    const managedGrant = await managed(owner2, imagesRequired);
-    if (managedGrant.credential) return managedGrant.credential;
-    if (expected?.source === "kaijan") throw denied();
-    return local(managedGrant.githubUserId, imagesRequired);
-  }
-  return {
-    async identify(owner2, { imagesRequired = false } = {}) {
-      return (await selected(owner2, null, imagesRequired)).publisher;
-    },
-    authorize(owner2, publisher, { imagesRequired = false } = {}) {
-      return library.directIssueAuthorization(
-        publisher,
-        () => selected(owner2, publisher, imagesRequired),
-        { request: request3, signal }
-      );
-    }
-  };
-}
-
-// apps/codex-plugin/src/issue-transport.mjs
-function issueTransport({ library, broker, build, signal }) {
-  async function operation(owner2, kind, value) {
-    const response2 = await broker.send("/product-issues", {
-      method: "POST",
-      signal,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        ...owner2,
-        operation: kind,
-        ...kind === "prepare" ? { input: value } : { requestId: value }
-      })
-    });
-    let result2;
-    try {
-      result2 = await response2.json();
-    } catch {
-      throw Error("issue_result_unavailable");
-    }
-    if (kind === "read" && response2.status === 404 && result2?.error === "not_found")
-      return null;
-    if (!response2.ok) throw Error("issue_result_unavailable");
-    return result2;
-  }
-  return library.createIssueDraftTransport(
-    {
-      read: (owner2, requestId) => operation(owner2, "read", requestId),
-      prepare: (owner2, input3) => operation(owner2, "prepare", input3),
-      publish: (owner2, requestId) => operation(owner2, "publish", requestId)
-    },
-    { origin: build.coreOrigin }
-  );
-}
-function scopedIssueTransport({
-  library,
-  broker,
-  build,
-  signal,
-  journal,
-  request: request3,
-  execute: execute2,
-  publicationRoute
-}) {
-  const legacy = issueTransport({ library, broker, build, signal });
-  if (publicationRoute === "github-app")
-    return {
-      requiresPublisher: false,
-      async submit(owner2, input3, images, publisher) {
-        if (publisher) throw Error("issue_original_route_required");
-        return legacy.submit(owner2, input3, images);
-      },
-      async read(owner2, requestId, publisher) {
-        if (publisher) throw Error("issue_original_route_required");
-        return legacy.read(owner2, requestId);
-      }
-    };
-  const authorization = issueUserAuthorization({
-    library,
-    broker,
-    signal,
-    request: request3,
-    execute: execute2
-  });
-  return {
-    requiresPublisher: true,
-    identify: (owner2, options) => authorization.identify(owner2, options),
-    async submit(owner2, input3, images, publisher) {
-      if (!publisher) return legacy.submit(owner2, input3, images);
-      return (await journal()).submit(
-        owner2,
-        input3,
-        images,
-        publisher,
-        (selected) => authorization.authorize(owner2, selected, {
-          imagesRequired: images.length > 0
-        })
-      );
-    },
-    async read(owner2, requestId, publisher) {
-      return publisher ? (await journal()).read(owner2, requestId) : legacy.read(owner2, requestId);
-    }
-  };
-}
-
-// apps/codex-plugin/src/issue-screenshot.mjs
-import assert2 from "node:assert/strict";
-import { createHash as createHash4 } from "node:crypto";
 
 // packages/contracts/dist/report-evidence.js
 var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -48443,7 +47736,7 @@ var reportVerificationSchema = external_exports.strictObject({
       message: "Test IDs must be unique per run."
     });
   const ids2 = new Set(run.evidence.map((item) => item.id));
-  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step2) => step2.evidenceIds.some((id8) => !ids2.has(id8)))))
+  if (ids2.size !== run.evidence.length || run.tests.some((test) => test.steps.some((step2) => step2.evidenceIds.some((id9) => !ids2.has(id9)))))
     ctx.addIssue({
       code: "custom",
       message: "Each step must reference supplied evidence."
@@ -49694,7 +48987,7 @@ function presentAssessmentFinding(kind, supported, content) {
 }
 
 // packages/contracts/dist/customer-related.js
-var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings2 = external_exports.array(external_exports.string());
 var optional2 = (value) => value.optional();
 var customerRelatedResultSchema = external_exports.object({
@@ -49741,7 +49034,7 @@ var customerRelatedResultSchema = external_exports.object({
     text: external_exports.string(),
     source_uri: external_exports.string(),
     revision: external_exports.string(),
-    sha256: id4.nullable(),
+    sha256: id2.nullable(),
     sourceState: external_exports.enum(["available", "unavailable"]),
     omitted_characters: external_exports.number().int().nonnegative()
   })),
@@ -49754,7 +49047,7 @@ var customerRelatedResultSchema = external_exports.object({
     relation: external_exports.literal("unjudged"),
     provenance: external_exports.array(external_exports.object({
       source_uri: external_exports.string(),
-      source_text_sha256: id4,
+      source_text_sha256: id2,
       captured_at: external_exports.string()
     }))
   })).optional(),
@@ -51294,8 +50587,8 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
   const verified = hasCustomerPlanningSource(plan2);
   const text4 = (value, role) => value === void 0 ? void 0 : verified ? value : role === "expectation" ? "The recorded expectation needs review against the retained application sources." : role === "step" ? "This proposed step needs review against the retained application sources." : "This proposal detail needs review against the retained application sources.";
   const list3 = (values, role) => values?.map((value) => text4(value, role));
-  const id8 = (kind, value) => customerPlanningId(kind, value, sha256, !originalIds);
-  const references = (values) => values?.map((row) => ({ evidence_id: id8("E", row.evidence_id) }));
+  const id9 = (kind, value) => customerPlanningId(kind, value, sha256, !originalIds);
+  const references = (values) => values?.map((row) => ({ evidence_id: id9("E", row.evidence_id) }));
   const omitAbsent = (record5) => Object.fromEntries(Object.entries(record5).filter(([, value]) => value !== void 0));
   const projected = {
     ...plan2,
@@ -51310,14 +50603,14 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     },
     objectives: plan2.objectives?.map((row) => ({
       ...row,
-      id: id8("O", row.id),
+      id: id9("O", row.id),
       text: text4(row.text, "objective"),
       refs: references(row.refs)
     })),
     tests: plan2.tests.map((row) => omitAbsent({
       ...row,
-      id: id8("T", row.id),
-      objective_ids: row.objective_ids?.map((value) => id8("O", value)),
+      id: id9("T", row.id),
+      objective_ids: row.objective_ids?.map((value) => id9("O", value)),
       title: text4(row.title, "title"),
       method: text4(row.method, "method"),
       reason: text4(row.reason, "reason"),
@@ -51332,8 +50625,8 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     })),
     requirement_coverage: plan2.requirement_coverage?.map((row) => omitAbsent({
       ...row,
-      requirement_id: id8("R", row.requirement_id),
-      test_ids: row.test_ids.map((value) => id8("T", value)),
+      requirement_id: id9("R", row.requirement_id),
+      test_ids: row.test_ids.map((value) => id9("T", value)),
       text: text4(row.text, "coverage"),
       reason: text4(row.reason, "coverage")
     })),
@@ -51352,7 +50645,7 @@ function projectCustomerPlan(input3, _evidence, sha256, _nativeCatalog, original
     })),
     runner_handoff: plan2.runner_handoff === void 0 ? void 0 : {
       ...plan2.runner_handoff,
-      scenario_ids: plan2.runner_handoff.scenario_ids.map((value) => id8("T", value)),
+      scenario_ids: plan2.runner_handoff.scenario_ids.map((value) => id9("T", value)),
       required_inputs: list3(plan2.runner_handoff.required_inputs, "required-input")
     }
   };
@@ -51766,10 +51059,10 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
       const plan2 = source3.plan === null ? null : projectCustomerPlan(source3.plan, source3.evidence, sha256);
       const unavailable3 = plan2?.presentation?.detailsAvailable === false;
       const evidence2 = projectCustomerSavedPlanEvidence(source3.evidence, sha256)?.map((row) => {
-        const id8 = customerPlanningId("E", row.id, sha256, true);
-        if (id8 === row.id)
+        const id9 = customerPlanningId("E", row.id, sha256, true);
+        if (id9 === row.id)
           return row;
-        const mapped = { ...row, id: id8 };
+        const mapped = { ...row, id: id9 };
         const risk = getVerifiedCustomerRiskEvidence(row);
         return risk ? retainCustomerRiskEvidence(mapped, risk) : mapped;
       });
@@ -51779,7 +51072,7 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
         evidence: evidence2,
         coverage: source3.coverage ? {
           ...source3.coverage,
-          unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id8) => customerPlanningId("R", id8, sha256, true))
+          unassessed_requirement_ids: source3.coverage.unassessed_requirement_ids.map((id9) => customerPlanningId("R", id9, sha256, true))
         } : source3.coverage,
         plan: unavailable3 ? null : plan2,
         ...unavailable3 ? { notice: unavailablePlanDetailsNotice } : {}
@@ -51791,8 +51084,8 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
     })),
     runs: value.runs.map((run) => ({
       ...run,
-      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256, true)) : run.selectedTestIds,
-      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id8) => customerPlanningId("T", id8, sha256, true)) : run.notStartedTestIds,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id9) => customerPlanningId("T", id9, sha256, true)) : run.selectedTestIds,
+      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id9) => customerPlanningId("T", id9, sha256, true)) : run.notStartedTestIds,
       assertions: run.assertions && run.planSourceId ? {
         ...run.assertions,
         tests: run.assertions.tests.map((row) => ({
@@ -51898,8 +51191,8 @@ function projectCustomerTestPlanView(input3, sha256) {
     plans,
     runs: value.runs.map((run) => ({
       ...run,
-      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id8) => customerPlanningId("T", id8, sha256)) : run.selectedTestIds,
-      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id8) => customerPlanningId("T", id8, sha256)) : run.notStartedTestIds,
+      selectedTestIds: run.planSourceId ? run.selectedTestIds.map((id9) => customerPlanningId("T", id9, sha256)) : run.selectedTestIds,
+      notStartedTestIds: run.planSourceId ? run.notStartedTestIds?.map((id9) => customerPlanningId("T", id9, sha256)) : run.notStartedTestIds,
       executionReport: run.executionReport ? {
         ...run.executionReport,
         ..."test_results" in run.executionReport ? {
@@ -52065,10 +51358,10 @@ function projectCustomerSupplementResult(value, hash5) {
     return retainVerifiedSupplementSource(parsed);
   }
   const native = object4(value), body = object4(native.supplement), baseline = object4(native.baseline);
-  const id8 = (kind, v) => supplementPublicId(kind, v, hash5);
-  const links2 = (value2, kind) => list(value2).map((v) => id8(kind, v));
+  const id9 = (kind, v) => supplementPublicId(kind, v, hash5);
+  const links2 = (value2, kind) => list(value2).map((v) => id9(kind, v));
   const references = (value2) => list(value2).map((v) => ({
-    evidence_id: id8("source", object4(v).evidence_id)
+    evidence_id: id9("source", object4(v).evidence_id)
   }));
   const additions = list(body.additional_tests).map(object4), concerns = list(body.baseline_concerns).map(object4), questions2 = list(body.unanswered_questions).map(object4);
   const status3 = external_exports.enum(["proposed_supplement", "no_additional_tests", "needs_clarification"]).safeParse(body.status);
@@ -52100,7 +51393,7 @@ function projectCustomerSupplementResult(value, hash5) {
     supplement: {
       status: status3.data,
       additional_tests: additions.map((row) => ({
-        id: id8("addition", row.id),
+        id: id9("addition", row.id),
         verification_kind: "Proposed verification; purpose needs review",
         method: "Proposed approach needs confirmation",
         reason: text4,
@@ -52141,15 +51434,15 @@ function projectCustomerSupplementResult(value, hash5) {
       revision: "",
       sha256: null,
       test_ids: links2(baseline.test_ids, "baseline"),
-      tests: links2(baseline.test_ids, "baseline").map((id9) => ({
-        id: id9,
+      tests: links2(baseline.test_ids, "baseline").map((id10) => ({
+        id: id10,
         source_refs: []
       })),
       notice: "Original baseline retained; source presentation is unavailable and no approval is inferred."
     },
     evidence: list(native.evidence).map(object4).filter((row) => ["intent", "implementation", "context"].includes(String(row.kind))).map((row) => ({
-      id: id8("source", row.id),
-      source_id: id8("source-document", row.source_id),
+      id: id9("source", row.id),
+      source_id: id9("source-document", row.source_id),
       kind: row.kind,
       uri: "",
       revision: "",
@@ -52182,7 +51475,7 @@ var localLimits = {
   pageSize: 100,
   inputLifetimeMs: 30 * 60 * 1e3
 };
-var id5 = external_exports.uuid();
+var id3 = external_exports.uuid();
 var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
@@ -52190,11 +51483,11 @@ var localContextSchema = external_exports.strictObject({
     const url2 = new URL(value);
     return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
   }),
-  userId: id5,
-  workspaceId: id5
+  userId: id3,
+  workspaceId: id3
 });
 var localAuthSchema = external_exports.strictObject({
-  bindingId: id5,
+  bindingId: id3,
   secret,
   context: localContextSchema
 });
@@ -52257,7 +51550,7 @@ var page = {
 };
 var request2 = (method, params) => external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  requestId: id5,
+  requestId: id3,
   method: external_exports.literal(method),
   params,
   auth: localAuthSchema.optional()
@@ -52270,47 +51563,47 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
   request2("capabilities.list", external_exports.strictObject({})),
   request2("settings.open", external_exports.strictObject({})),
   request2("input.select", external_exports.strictObject({})),
-  request2("input.prepare", external_exports.strictObject({ inputId: id5 })),
-  request2("input.status", external_exports.strictObject({ inputId: id5, ...page })),
-  request2("input.release", external_exports.strictObject({ inputId: id5 })),
+  request2("input.prepare", external_exports.strictObject({ inputId: id3 })),
+  request2("input.status", external_exports.strictObject({ inputId: id3, ...page })),
+  request2("input.release", external_exports.strictObject({ inputId: id3 })),
   request2("run.start", external_exports.strictObject({
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
-    inputId: id5,
+    inputId: id3,
     inputDigest: digest17,
     transferAcknowledged: external_exports.literal(true),
-    idempotencyKey: id5
+    idempotencyKey: id3
   })),
   request2("run.get", external_exports.union([
-    external_exports.strictObject({ runId: id5 }),
-    external_exports.strictObject({ idempotencyKey: id5 })
+    external_exports.strictObject({ runId: id3 }),
+    external_exports.strictObject({ idempotencyKey: id3 })
   ])),
   request2("run.list", external_exports.strictObject(page)),
-  request2("run.cancel", external_exports.strictObject({ runId: id5 })),
+  request2("run.cancel", external_exports.strictObject({ runId: id3 })),
   request2("run.events", external_exports.strictObject({
-    runId: id5,
+    runId: id3,
     afterSequence: external_exports.number().int().nonnegative(),
     ...page
   })),
   request2("result.read", external_exports.strictObject({
-    runId: id5,
+    runId: id3,
     section: external_exports.enum(["summary", "screens", "elements", "connections"]),
     ...page
   })),
   request2("artifact.read", external_exports.strictObject({
-    runId: id5,
-    artifactId: id5,
+    runId: id3,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
     length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
   })),
-  request2("run.delete", external_exports.strictObject({ runId: id5 }))
+  request2("run.delete", external_exports.strictObject({ runId: id3 }))
 ]);
 var omission = external_exports.strictObject({
   path: external_exports.string().max(1024),
   reason: external_exports.string().max(100)
 });
 var localInputSchema = external_exports.strictObject({
-  inputId: id5,
+  inputId: id3,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
   digest: digest17.nullable(),
@@ -52325,14 +51618,14 @@ var localInputSchema = external_exports.strictObject({
 });
 var localEventSchema = external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  runId: id5,
+  runId: id3,
   sequence: external_exports.number().int().positive(),
   state: localRunStateSchema,
   detail: external_exports.string().max(500),
   at: external_exports.iso.datetime()
 });
 var localRunSchema = external_exports.strictObject({
-  runId: id5,
+  runId: id3,
   state: localRunStateSchema,
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
@@ -52353,7 +51646,7 @@ var localRunSchema = external_exports.strictObject({
   completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
   usage: external_exports.literal("unknown"),
   artifacts: external_exports.array(external_exports.strictObject({
-    artifactId: id5,
+    artifactId: id3,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
     sha256: digest17
@@ -52446,7 +51739,7 @@ var localResultSchemas = {
   hello: external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
     companionVersion: external_exports.literal(localCompanionVersion),
-    bindingId: id5,
+    bindingId: id3,
     bindingSecret: secret.optional(),
     context: localContextSchema,
     setup: localSetupSchema
@@ -52482,7 +51775,7 @@ var localResultSchemas = {
   }),
   "result.read": resultPage,
   "artifact.read": external_exports.strictObject({
-    artifactId: id5,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
     sha256: digest17,
@@ -52494,19 +51787,847 @@ var localResultSchemas = {
 var localResponseSchema = external_exports.discriminatedUnion("ok", [
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id5,
+    requestId: id3,
     ok: external_exports.literal(true),
     result: external_exports.unknown()
   }),
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id5,
+    requestId: id3,
     ok: external_exports.literal(false),
     error: localErrorSchema
   })
 ]);
 
+// apps/codex-plugin/src/saved-test-inputs.mjs
+var id4 = external_exports.uuid();
+var discoveryInput = external_exports.strictObject({
+  autId: id4.optional(),
+  testEnvironmentId: id4.optional(),
+  testDataId: id4.optional()
+});
+var applicationInput = external_exports.strictObject({
+  operation: external_exports.literal("save"),
+  id: id4.optional(),
+  name: external_exports.string()
+});
+var testDataInput = external_exports.strictObject({
+  operation: external_exports.literal("save"),
+  id: id4.optional(),
+  autId: id4,
+  name: external_exports.string(),
+  data: external_exports.json()
+});
+var savedTestInputTools = [
+  {
+    name: "kaijan_test_inputs_read",
+    title: "Find saved applications and test inputs",
+    description: "Find saved applications and Test Environments before setting up new ones. With autId, list that application's Test Environments and Test Data. Use testEnvironmentId or testDataId to read an exact saved record.",
+    inputSchema: external_exports.toJSONSchema(discoveryInput),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
+    }
+  },
+  {
+    name: "kaijan_aut_manage",
+    title: "Save an application under test",
+    description: "Save an application under test. Use kaijan_test_inputs_read to find an existing application. Save with its ID to update its name.",
+    inputSchema: external_exports.toJSONSchema(applicationInput),
+    annotations: { readOnlyHint: false, openWorldHint: false }
+  },
+  {
+    name: "kaijan_test_data_manage",
+    title: "Save Test Data",
+    description: "Save arbitrary JSON under an application under test. Use kaijan_test_inputs_read to find a reusable set. Use the returned Test Data ID when planning tests.",
+    inputSchema: external_exports.toJSONSchema(testDataInput),
+    annotations: { readOnlyHint: false, openWorldHint: false }
+  }
+];
+function useSavedTestInput(store, name, raw) {
+  if (name === "kaijan_test_inputs_read") {
+    const { autId, testEnvironmentId, testDataId } = discoveryInput.parse(raw);
+    if (testEnvironmentId)
+      return { testEnvironment: store.read(testEnvironmentId) };
+    if (testDataId) return { testData: store.readTestData(testDataId) };
+    return {
+      applications: store.listApplications(),
+      environments: store.list(void 0, autId).filter((item) => item.autId),
+      dataSets: autId ? store.listTestData(autId) : []
+    };
+  }
+  if (name === "kaijan_aut_manage") {
+    const input4 = applicationInput.parse(raw);
+    return { application: store.saveApplication(input4.name, input4.id) };
+  }
+  const input3 = testDataInput.parse(raw);
+  return {
+    testData: store.saveTestData(input3.autId, input3.name, input3.data, input3.id)
+  };
+}
+
+// apps/codex-plugin/src/configurations.mjs
+var cachedFormUris = /* @__PURE__ */ new Set([
+  "ui://kaijan/configurations/form/v1.html",
+  "ui://kaijan/configurations/form/v2.html"
+]);
+var id5 = external_exports.uuid();
+var inputSchema = external_exports.strictObject({
+  operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
+  id: id5.nullable().optional().describe(
+    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
+  ),
+  revision: external_exports.number().int().nonnegative().optional().describe(
+    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
+  ),
+  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
+  autId: id5.optional(),
+  target: external_exports.union([
+    external_exports.strictObject({ initialURL: external_exports.string() }),
+    desktopRunnerTargetSchema
+  ]).optional(),
+  values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
+  name: external_exports.string().optional(),
+  automatic: external_exports.literal(true).optional()
+});
+var testEnvironmentWriteSchema = inputSchema.omit({ application: true, automatic: true }).extend({ operation: external_exports.enum(["save", "delete"]) });
+var allowedFields = {
+  list: ["application", "autId"],
+  read: ["id"],
+  save: ["id", "revision", "name", "application", "autId", "target", "values"],
+  delete: ["id", "revision"],
+  select: ["id", "automatic"]
+};
+var tool = {
+  name: "kaijan_configuration",
+  title: "Read or update Configurations",
+  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and follow the installed app sign-in guide for a missing or changed login. A saved configuration is optional and never starts a test.",
+  inputSchema: external_exports.toJSONSchema(inputSchema),
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: true,
+    openWorldHint: false
+  }
+};
+function response(value) {
+  return {
+    ...value.error ? { isError: true } : {},
+    structuredContent: value,
+    content: [{ type: "text", text: JSON.stringify(value) }]
+  };
+}
+function createConfigurationSurface({ session, library, data }) {
+  const codex = session.identity?.host === "codex";
+  const configurationInput = codex ? testEnvironmentWriteSchema : inputSchema;
+  const tools2 = codex ? [
+    {
+      ...tool,
+      title: "Save or delete a Test Environment",
+      inputSchema: external_exports.toJSONSchema(configurationInput),
+      description: "Use kaijan_test_inputs_read to find saved Test Environments before creating another. Save the selected AUT ID, name, and browser or Mac app target. Use a fresh UUID and revision 0 for a new environment, or the saved ID and revision to update it. App logins are saved with the local Configuration command. Pass the saved environment ID to Plan."
+    },
+    ...savedTestInputTools
+  ] : [tool];
+  let storePromise, stopped = false;
+  const store = () => {
+    if (!storePromise) {
+      const opening = library.ConfigurationStore.open(data);
+      storePromise = opening;
+      void opening.catch(() => {
+        if (storePromise === opening) storePromise = void 0;
+      });
+    }
+    return storePromise;
+  };
+  const safeError = (error63) => {
+    const known = [
+      library.ConfigurationError,
+      library.PrivateParameterError
+    ].some((type) => typeof type === "function" && error63 instanceof type);
+    return {
+      error: known ? error63.code : "configuration_unavailable",
+      message: known ? error63.message : "Could not save or read Configurations. Read the current settings before trying again."
+    };
+  };
+  async function scopeFor(metadata2, allowConnection = false) {
+    if (stopped) throw Error("chat_required");
+    if (allowConnection && metadata2?.threadId === void 0)
+      return session.forRequest(metadata2);
+    if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
+      throw Error("chat_required");
+    const scope = await session.forRequest(metadata2);
+    if (!scope.scope.restartPersistent || scope.scope.kind !== "host-thread")
+      throw Error("chat_required");
+    return scope;
+  }
+  return {
+    tools: tools2,
+    hasTool: (name) => tools2.some((item) => item.name === name),
+    // Historical cards can read their resource, but this host opens no editor.
+    hasResource: (uri) => cachedFormUris.has(uri),
+    readResource: (uri) => library.readConfigurationForm(uri),
+    async invoke(name, raw, metadata2) {
+      try {
+        if (name !== tool.name) {
+          await scopeFor(metadata2);
+          return response(useSavedTestInput(await store(), name, raw));
+        }
+        const args = configurationInput.parse(raw);
+        if (Object.keys(args).some(
+          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
+        ))
+          throw Error("invalid_arguments");
+        const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
+        if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
+          throw Error("invalid_arguments");
+        if (args.operation === "select" && args.id === null) {
+          await library.configurationPreference(scope.data, scopeId, false);
+          let configurations = [];
+          try {
+            const saved2 = await store();
+            saved2.select(scopeId, null);
+            configurations = saved2.list();
+          } catch {
+          }
+          return response({
+            configurations,
+            selectedId: null,
+            selectionMode: "none",
+            nextRunConfiguration: null,
+            message: "No configuration selected for this chat."
+          });
+        }
+        const saved = await store();
+        let configuration2;
+        let message = "";
+        if (args.operation === "read") {
+          if (!args.id) throw Error("invalid_arguments");
+          configuration2 = saved.read(args.id);
+        } else if (args.operation === "save") {
+          if (!args.id || args.revision === void 0)
+            throw Error("invalid_arguments");
+          const values = args.values ?? {};
+          const old = args.revision ? saved.read(args.id) : {
+            name: args.name,
+            application: "",
+            allowedHosts: [],
+            entries: []
+          };
+          const existingSecrets = old.entries.filter((entry) => entry.secret);
+          const application = args.target ? args.target.initialURL ?? "" : args.application ?? old.application;
+          const desktopTarget = args.target ? "app" in args.target ? args.target : void 0 : args.application === void 0 ? old.desktopTarget : void 0;
+          if (application !== old.application && existingSecrets.length)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "A configuration with a saved secret must keep its website."
+            );
+          if (existingSecrets.some(({ key }) => Object.hasOwn(values, key)))
+            throw new library.ConfigurationError(
+              "configuration_secret_editor",
+              "This chat tool saves ordinary values. Use the installed app sign-in guide to update the account."
+            );
+          const entries = old.entries.map((entry) => ({
+            key: entry.key,
+            secret: entry.secret,
+            ...entry.secret ? {} : {
+              value: Object.hasOwn(values, entry.key) ? values[entry.key] : entry.value
+            }
+          }));
+          for (const [key, value] of Object.entries(values))
+            if (!entries.some((entry) => entry.key === key))
+              entries.push({ key, value, secret: false });
+          configuration2 = saved.save(
+            {
+              name: args.name ?? old.name,
+              ...args.autId || old.autId ? { autId: args.autId ?? old.autId } : {},
+              application,
+              ...desktopTarget ? { desktopTarget } : {},
+              allowedHosts: old.allowedHosts,
+              entries
+            },
+            args.id,
+            args.revision
+          );
+          message = "Configuration saved.";
+        } else if (args.operation === "delete") {
+          if (!args.id || !args.revision) throw Error("invalid_arguments");
+          saved.delete(args.id, args.revision);
+          message = "Configuration deleted. Existing Runs keep their saved settings.";
+        } else if (args.operation === "select") {
+          configuration2 = saved.select(scopeId, args.id);
+          await library.configurationPreference(scope.data, scopeId, true);
+          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration2.name}.`;
+        }
+        const enabled = await library.configurationPreference(
+          scope.data,
+          scopeId
+        );
+        const selected = enabled !== false ? saved.selected(scopeId) : null;
+        return response({
+          configurations: saved.list(args.application, args.autId),
+          nextRunConfiguration: saved.pendingView(scopeId),
+          selectedId: selected && selected !== "automatic" ? selected : null,
+          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
+          ...configuration2 ? { configuration: configuration2 } : {},
+          message
+        });
+      } catch (error63) {
+        return response(safeError(error63));
+      }
+    },
+    async prepareExecution(name, raw, metadata2) {
+      const planning = name === "loki_test_plan";
+      const savedInputs = planning ? raw?.savedTestInputs : void 0;
+      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration && !savedInputs)
+        return { arguments: raw };
+      let marked = false, recoveryRunId;
+      try {
+        const args = structuredClone(raw), explicit = savedInputs?.testEnvironmentId ?? args?.configurationId, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
+        if (args && Object.hasOwn(args, "configurationUsed"))
+          throw Error("host_metadata_only");
+        if (args) delete args.configurationId;
+        if (savedInputs) delete args.savedTestInputs;
+        if (!metadata2?.threadId && (explicit === null || explicit === void 0))
+          return { arguments: args };
+        const scope = await scopeFor(metadata2, Boolean(savedInputs));
+        if (typeof requestKey3 !== "string" || !requestKey3)
+          throw Error("invalid_request");
+        if (!planning)
+          recoveryRunId = createHash3("sha256").update(JSON.stringify([scope.scope.id, requestKey3])).digest("hex");
+        marked = true;
+        marked = await library.configurationRunMarker(
+          scope.data,
+          scope.scope.id,
+          name,
+          requestKey3
+        );
+        const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
+        if (!marked && (explicit === null || preference === false))
+          return { arguments: args };
+        if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
+          return { arguments: args };
+        const canSelect = explicit !== void 0 || preference === true || Boolean((planning ? args.exploration : args)?.target?.initialURL);
+        if (!marked && !canSelect) return { arguments: args };
+        const saved = await store().catch((error63) => {
+          if (marked) throw error63;
+          throw new library.ConfigurationError(
+            "configuration_unavailable",
+            "Could not read the saved configuration. Ask the person if they want to run without it."
+          );
+        });
+        const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
+        if (previous) {
+          await library.configurationRunMarker(
+            scope.data,
+            scope.scope.id,
+            name,
+            requestKey3,
+            true
+          );
+          return { arguments: previous };
+        }
+        if (marked) throw Error("configuration_admission_unavailable");
+        const retain = async (onceToken) => {
+          if (planning) args.requestKey = requestKey3;
+          const prepared2 = saved.admission(
+            scope.scope.id,
+            name,
+            requestKey3,
+            raw,
+            args,
+            onceToken
+          );
+          await library.configurationRunMarker(
+            scope.data,
+            scope.scope.id,
+            name,
+            requestKey3,
+            true
+          );
+          return { arguments: prepared2 };
+        };
+        const environment = savedInputs ? saved.execution(explicit) : void 0;
+        if (environment) {
+          if (environment.desktopTarget)
+            args.desktopTarget = environment.desktopTarget;
+          else if (environment.application)
+            args.exploration = {
+              target: { initialURL: environment.application }
+            };
+          else
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "Save the browser URL or Mac app in the selected Test Environment before planning."
+            );
+          if (savedInputs.testDataId)
+            args.testData = saved.readTestData(savedInputs.testDataId).data;
+        }
+        const execution2 = planning ? args.exploration : args;
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        if (!runSchema.safeParse(args).success)
+          throw new library.ConfigurationError(
+            "configuration_run_input",
+            "Check the Run inputs before starting. The saved configuration is unchanged."
+          );
+        if (!execution2) return await retain();
+        if (explicit !== void 0 && explicit !== null) id5.parse(explicit);
+        const once = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
+        const selection3 = once ? once.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
+        const automatic = selection3 === "automatic";
+        const initialURL = execution2.target?.initialURL;
+        const browserURL = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL) return { arguments: args };
+        const configurations = automatic ? saved.list().map(({ id: id9 }) => saved.execution(id9)) : selection3 ? [environment ?? once?.execution ?? saved.execution(selection3)] : [];
+        if (!configurations.length) return { arguments: args };
+        const callerParams = execution2.params ?? {};
+        const callerPrivate = execution2.privateParams ?? {};
+        const allowed = execution2.target?.allowedHosts ?? (execution2.target?.initialURL ? [new URL(execution2.target.initialURL).hostname] : []);
+        if (Object.keys(callerPrivate).length)
+          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
+            ...execution2,
+            target: { ...execution2.target, allowedHosts: allowed }
+          });
+        const occupied = /* @__PURE__ */ new Set([
+          ...Object.keys(callerParams),
+          ...Object.keys(callerPrivate)
+        ]);
+        const parameterName = (base) => {
+          let name2 = base;
+          while (occupied.has(name2)) name2 += "_";
+          occupied.add(name2);
+          return name2;
+        };
+        const descriptors = [];
+        const secretNames = [];
+        execution2.params = { ...callerParams };
+        execution2.privateParams = { ...callerPrivate };
+        for (const chosen of configurations) {
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
+          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
+            (key) => !Object.hasOwn(callerPrivate, key)
+          ) && !privateAllowed))
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "This configuration belongs to another application. Choose a configuration for the browser target."
+            );
+          const fields = {};
+          const secrets = {};
+          chosen.configuration.overrides = automatic ? [] : [
+            .../* @__PURE__ */ new Set([
+              ...once?.changed ?? [],
+              ...[
+                ...Object.keys(callerParams),
+                ...Object.keys(callerPrivate)
+              ].filter(
+                (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
+              )
+            ])
+          ];
+          for (const key of [
+            ...Object.keys(chosen.params),
+            ...Object.keys(chosen.secrets)
+          ]) {
+            const isSecret = Object.hasOwn(chosen.secrets, key);
+            if (automatic && isSecret && !privateAllowed) continue;
+            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
+              if (isSecret && !Object.hasOwn(callerPrivate, key))
+                throw new library.ConfigurationError(
+                  "configuration_secret_editor",
+                  "Use the installed app sign-in guide to update the account."
+                );
+              fields[key] = key;
+              continue;
+            }
+            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
+            fields[key] = name2;
+            if (Object.hasOwn(chosen.secrets, key))
+              secrets[name2] = chosen.secrets[key];
+            else execution2.params[name2] = chosen.params[key];
+          }
+          descriptors.push({
+            id: chosen.configuration.id,
+            name: chosen.configuration.name,
+            url: chosen.application ?? null,
+            fields
+          });
+          if (Object.keys(secrets).length) {
+            const binding2 = await library.provisionRunnerParameters(
+              scope.data,
+              scope.scope.id,
+              { allowedHosts: chosen.allowedHosts, values: secrets }
+            );
+            for (const field2 of binding2.fields)
+              execution2.privateParams[field2] = {
+                bindingId: binding2.bindingId,
+                field: field2
+              };
+            secretNames.push(...binding2.fields);
+          }
+        }
+        if (automatic)
+          execution2.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
+        if (Object.keys(execution2.privateParams).length) {
+          execution2.target.allowedHosts = allowed;
+          await library.resolveRunnerParameters(
+            scope.data,
+            scope.scope.id,
+            execution2
+          );
+        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
+          delete execution2.privateParams;
+        }
+        if (!planning) {
+          execution2.options = {
+            ...execution2.options,
+            secretParameterNames: [
+              .../* @__PURE__ */ new Set([
+                ...execution2.options?.secretParameterNames ?? [],
+                ...secretNames
+              ])
+            ]
+          };
+          if (!automatic)
+            args.configurationUsed = configurations[0].configuration;
+        }
+        const prepared = await retain(once?.token);
+        if (once && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
+          await library.configurationPreference(
+            scope.data,
+            scope.scope.id,
+            false
+          );
+        return prepared;
+      } catch (error63) {
+        const value = safeError(error63);
+        return {
+          error: {
+            code: marked && !(error63 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
+            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
+            requestDispatched: marked ? null : false,
+            ...marked ? { existingRunId: recoveryRunId } : {}
+          }
+        };
+      }
+    },
+    async close() {
+      if (stopped) return;
+      stopped = true;
+      if (storePromise) (await storePromise.catch(() => null))?.close();
+    }
+  };
+}
+
+// apps/codex-plugin/src/issues.mjs
+import { randomBytes as randomBytes2 } from "node:crypto";
+import { lstat as lstat5 } from "node:fs/promises";
+import { join as join5 } from "node:path";
+
+// apps/codex-plugin/src/issue-user-authorization.mjs
+import { execFile } from "node:child_process";
+import { promisify as promisify2 } from "node:util";
+var executeFile = promisify2(execFile);
+var id6 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
+var user = external_exports.object({
+  id: id6,
+  login: external_exports.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/)
+});
+var denied = () => Error("issue_publishing_account_unavailable");
+function issueUserAuthorization({
+  broker,
+  library,
+  signal,
+  request: request3 = fetch,
+  execute: execute2 = executeFile
+}) {
+  async function ownerStillConnected(owner2) {
+    signal?.throwIfAborted();
+    const result2 = await forwardCore(
+      broker,
+      "loki_connection_status",
+      {},
+      signal
+    );
+    const connection = coreConnectionSchema.parse(result2.structuredContent);
+    if (connection.context.user.id !== owner2.userId || connection.context.workspace.id !== owner2.workspaceId)
+      throw denied();
+  }
+  async function metadata2(path, token) {
+    signal?.throwIfAborted();
+    const response2 = await request3("https://api.github.com" + path, {
+      method: "GET",
+      redirect: "error",
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      signal: AbortSignal.any([
+        ...signal ? [signal] : [],
+        AbortSignal.timeout(15e3)
+      ]),
+      headers: {
+        authorization: "Bearer " + token,
+        accept: "application/vnd.github+json",
+        "user-agent": "Kaijan",
+        "x-github-api-version": "2026-03-10"
+      }
+    });
+    if (!response2.ok) {
+      await response2.body?.cancel();
+      throw denied();
+    }
+    const reader = response2.body?.getReader();
+    if (!reader) throw denied();
+    const chunks = [];
+    let length = 0;
+    try {
+      for (; ; ) {
+        const part = await reader.read();
+        if (part.done) break;
+        length += part.value.length;
+        if (length > 2097152) throw denied();
+        chunks.push(part.value);
+      }
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
+    return JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)),
+      (_key, value, context2) => typeof value === "number" && !Number.isSafeInteger(value) && context2?.source && /^[1-9][0-9]{0,19}$/.test(context2.source) ? context2.source : value
+    );
+  }
+  async function inspect(token, source3, expectedId) {
+    if (typeof token !== "string" || !token || token.length > 8192 || /[\r\n]/.test(token))
+      throw denied();
+    const account = user.parse(await metadata2("/user", token));
+    if (expectedId && account.id !== expectedId) throw denied();
+    const repository2 = external_exports.object({
+      id: id6,
+      full_name: external_exports.literal(kaijanIssueRepository),
+      private: external_exports.literal(false),
+      permissions: external_exports.object({ push: external_exports.boolean() })
+    }).parse(await metadata2("/repos/" + kaijanIssueRepository, token));
+    return {
+      token,
+      repositoryId: repository2.id,
+      expiresAt: null,
+      canUpload: repository2.permissions.push,
+      publisher: { githubUserId: account.id, login: account.login, source: source3 }
+    };
+  }
+  async function managed(owner2, imagesRequired) {
+    const response2 = await broker.send("/github/credential", {
+      method: "POST",
+      body: "{}",
+      headers: { "content-type": "application/json" },
+      signal
+    });
+    if (!response2.ok) {
+      await response2.body?.cancel();
+      if ([401, 403, 404].includes(response2.status))
+        return { credential: null, githubUserId: null };
+      throw denied();
+    }
+    const grant2 = githubCredentialSchema.parse(await response2.json());
+    if (grant2.userId !== owner2.userId || grant2.workspaceId !== owner2.workspaceId || grant2.authority !== "github-app-user-intersection")
+      throw denied();
+    const current = await inspect(
+      grant2.accessToken,
+      "kaijan",
+      grant2.githubUserId
+    );
+    if (imagesRequired && !current.canUpload)
+      return { credential: null, githubUserId: grant2.githubUserId };
+    let permitted = false;
+    for (let page2 = 1; page2 <= 10; page2++) {
+      const result2 = external_exports.object({
+        installations: external_exports.array(
+          external_exports.object({
+            id: id6,
+            account: external_exports.object({ login: external_exports.string() }),
+            repository_selection: external_exports.enum(["all", "selected"]),
+            permissions: external_exports.object({ issues: external_exports.string().optional() })
+          })
+        )
+      }).parse(
+        await metadata2(
+          `/user/installations?per_page=100&page=${page2}`,
+          grant2.accessToken
+        )
+      );
+      for (const installation of result2.installations) {
+        if (installation.account.login !== "katalon-studio" || installation.permissions.issues !== "write")
+          continue;
+        if (installation.repository_selection === "all") {
+          permitted = true;
+          break;
+        }
+        for (let repoPage = 1; repoPage <= 10; repoPage++) {
+          const repositories = external_exports.object({
+            repositories: external_exports.array(external_exports.object({ id: id6, full_name: external_exports.string() }))
+          }).parse(
+            await metadata2(
+              `/user/installations/${installation.id}/repositories?per_page=100&page=${repoPage}`,
+              grant2.accessToken
+            )
+          );
+          if (repositories.repositories.some(
+            (repo) => repo.id === current.repositoryId && repo.full_name === kaijanIssueRepository
+          )) {
+            permitted = true;
+            break;
+          }
+          if (repositories.repositories.length < 100) break;
+        }
+        if (permitted) break;
+      }
+      if (permitted || result2.installations.length < 100) break;
+    }
+    return {
+      credential: permitted ? {
+        ...current,
+        expiresAt: grant2.expiresAt
+      } : null,
+      githubUserId: grant2.githubUserId
+    };
+  }
+  async function local(expectedId, imagesRequired) {
+    signal?.throwIfAborted();
+    let result2;
+    try {
+      result2 = await execute2(
+        "gh",
+        ["auth", "token", "--hostname", "github.com"],
+        {
+          encoding: "utf8",
+          timeout: 5e3,
+          signal,
+          maxBuffer: 16384,
+          windowsHide: true
+        }
+      );
+    } catch {
+      throw denied();
+    }
+    const current = await inspect(
+      result2.stdout.trim(),
+      "local-github",
+      expectedId
+    );
+    if (imagesRequired && !current.canUpload) throw denied();
+    return current;
+  }
+  async function selected(owner2, expected, imagesRequired) {
+    await ownerStillConnected(owner2);
+    if (expected?.source === "local-github")
+      return local(expected.githubUserId, imagesRequired);
+    const managedGrant = await managed(owner2, imagesRequired);
+    if (managedGrant.credential) return managedGrant.credential;
+    if (expected?.source === "kaijan") throw denied();
+    return local(managedGrant.githubUserId, imagesRequired);
+  }
+  return {
+    async identify(owner2, { imagesRequired = false } = {}) {
+      return (await selected(owner2, null, imagesRequired)).publisher;
+    },
+    authorize(owner2, publisher, { imagesRequired = false } = {}) {
+      return library.directIssueAuthorization(
+        publisher,
+        () => selected(owner2, publisher, imagesRequired),
+        { request: request3, signal }
+      );
+    }
+  };
+}
+
+// apps/codex-plugin/src/issue-transport.mjs
+function issueTransport({ library, broker, build, signal }) {
+  async function operation(owner2, kind, value) {
+    const response2 = await broker.send("/product-issues", {
+      method: "POST",
+      signal,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        ...owner2,
+        operation: kind,
+        ...kind === "prepare" ? { input: value } : { requestId: value }
+      })
+    });
+    let result2;
+    try {
+      result2 = await response2.json();
+    } catch {
+      throw Error("issue_result_unavailable");
+    }
+    if (kind === "read" && response2.status === 404 && result2?.error === "not_found")
+      return null;
+    if (!response2.ok) throw Error("issue_result_unavailable");
+    return result2;
+  }
+  return library.createIssueDraftTransport(
+    {
+      read: (owner2, requestId) => operation(owner2, "read", requestId),
+      prepare: (owner2, input3) => operation(owner2, "prepare", input3),
+      publish: (owner2, requestId) => operation(owner2, "publish", requestId)
+    },
+    { origin: build.coreOrigin }
+  );
+}
+function scopedIssueTransport({
+  library,
+  broker,
+  build,
+  signal,
+  journal,
+  request: request3,
+  execute: execute2,
+  publicationRoute
+}) {
+  const legacy = issueTransport({ library, broker, build, signal });
+  if (publicationRoute === "github-app")
+    return {
+      requiresPublisher: false,
+      async submit(owner2, input3, images, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.submit(owner2, input3, images);
+      },
+      async read(owner2, requestId, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.read(owner2, requestId);
+      }
+    };
+  const authorization = issueUserAuthorization({
+    library,
+    broker,
+    signal,
+    request: request3,
+    execute: execute2
+  });
+  return {
+    requiresPublisher: true,
+    identify: (owner2, options) => authorization.identify(owner2, options),
+    async submit(owner2, input3, images, publisher) {
+      if (!publisher) return legacy.submit(owner2, input3, images);
+      return (await journal()).submit(
+        owner2,
+        input3,
+        images,
+        publisher,
+        (selected) => authorization.authorize(owner2, selected, {
+          imagesRequired: images.length > 0
+        })
+      );
+    },
+    async read(owner2, requestId, publisher) {
+      return publisher ? (await journal()).read(owner2, requestId) : legacy.read(owner2, requestId);
+    }
+  };
+}
+
 // apps/codex-plugin/src/issue-screenshot.mjs
+import assert2 from "node:assert/strict";
+import { createHash as createHash4 } from "node:crypto";
 var issueScreenshotReference = reportArtifactInputSchema.omit({ offset: true }).required({ artifactId: true });
 async function selectIssueScreenshot(reports, reference2, imageId) {
   const input3 = issueScreenshotReference.parse(reference2);
@@ -55564,21 +55685,13 @@ ${guidance}`
 // apps/codex-plugin/src/codex-testing-input.mjs
 var requestKey2 = external_exports.string().min(1);
 var answerDigest = /^[a-f0-9]{64}$/;
-var browserURL = external_exports.url().refine((value) => {
-  if (!URL.canParse(value)) return false;
-  const url2 = new URL(value);
-  return ["http:", "https:"].includes(url2.protocol) && !url2.username && !url2.password;
-}).describe("HTTP(S) initialURL without embedded credentials");
 var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
 var planInput = external_exports.strictObject({
   requestKey: requestKey2,
   testObjective: external_exports.string().refine((text4) => Boolean(text4.trim())).optional(),
   contextId: external_exports.string().regex(answerDigest).optional(),
-  target: external_exports.union([
-    external_exports.strictObject({ initialURL: browserURL }),
-    desktopRunnerTargetSchema
-  ]).optional(),
-  testData: external_exports.unknown().optional(),
+  testEnvironmentId: external_exports.uuid().describe("The saved Test Environment ID."),
+  testDataId: external_exports.uuid().optional().describe("The saved Test Data ID, when needed."),
   sourceModel: sourceModelSelectionSchema.optional().describe(
     "Use { application: true } to read the current shared App Model."
   ),
@@ -55598,7 +55711,7 @@ function codexTestingToolDefinition(tool2) {
   if (tool2.name === "loki_test_plan")
     return {
       ...tool2,
-      description: "Save a test plan. Supply testObjective or a contextId containing the original planning input. Use target.initialURL for a browser or target.app for a Mac app. Either target starts Explorer with a five-minute default. Use explorerTimeLimitMs to increase the time limit before starting. The target and optional testData are saved for Run. This tool does not run tests. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      description: "Save a test plan. Supply testObjective or the contextId containing the original planning input, plus the saved Test Environment ID and optional Test Data ID. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       inputSchema: external_exports.toJSONSchema(planInput)
     };
   if (tool2.name === "loki_test_execute")
@@ -55616,16 +55729,18 @@ function codexPlanArguments(args) {
     requestKey: requestKey3,
     testObjective,
     contextId,
-    target,
-    testData,
+    testEnvironmentId,
+    testDataId,
     sourceModel,
     explorerTimeLimitMs
   } = parsed.data;
   return {
     requestKey: requestKey3,
     ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
-    ...target === void 0 ? {} : "app" in target ? { desktopTarget: target } : { exploration: { target } },
-    ...testData === void 0 ? {} : { testData },
+    savedTestInputs: {
+      testEnvironmentId,
+      ...testDataId === void 0 ? {} : { testDataId }
+    },
     ...sourceModel === void 0 ? {} : { sourceModel },
     ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
   };
@@ -55908,7 +56023,7 @@ function planningTemporaryFailureGuidance(answer) {
 
 // apps/codex-plugin/src/customer-advisory-output.mjs
 var hash3 = (value) => createHash8("sha256").update(value).digest("hex");
-var id6 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional4 = (value) => value.optional();
 var advisoryFamilies = {
   loki_pr_context_find_related: "prContext",
@@ -55983,11 +56098,11 @@ var baseSchema = external_exports.object({
     "unsupported-consumption",
     "unavailable"
   ]),
-  answerId: optional4(id6),
-  resultSha256: optional4(id6),
+  answerId: optional4(id7),
+  resultSha256: optional4(id7),
   planId: optional4(external_exports.string()),
   result: optional4(resultSchema2),
-  contextId: optional4(id6),
+  contextId: optional4(id7),
   replayAllowed: external_exports.literal(false),
   message: optional4(external_exports.string()),
   recovery: optional4(recovery),
@@ -56026,17 +56141,17 @@ var baseSchema = external_exports.object({
 });
 var readInput = external_exports.strictObject({
   family,
-  answerId: id6,
+  answerId: id7,
   offset: external_exports.number().int().nonnegative().default(0),
-  projectionSha256: optional4(id6),
-  resultSha256: optional4(id6)
+  projectionSha256: optional4(id7),
+  resultSha256: optional4(id7)
 });
 var pageSchema3 = external_exports.object({
   schema: external_exports.literal("kaijan.customer-advisory-page/1"),
   family,
-  answerId: id6,
-  resultSha256: id6,
-  projectionSha256: id6,
+  answerId: id7,
+  resultSha256: id7,
+  projectionSha256: id7,
   encoding: external_exports.literal("JSON text, UTF-16 offsets"),
   offset: external_exports.number().int().nonnegative(),
   text: external_exports.string(),
@@ -56046,7 +56161,7 @@ var pageSchema3 = external_exports.object({
 });
 var customerAdvisoryOutputSchema = external_exports.union([
   baseSchema.extend({
-    projectionSha256: id6,
+    projectionSha256: id7,
     resultRead: optional4(
       external_exports.object({
         tool: external_exports.literal("loki_advisory_result_read"),
@@ -56176,8 +56291,8 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
       external_exports.array(external_exports.unknown()).parse(proposalEvidence ?? native.evidence),
       hash3
     ).map((row) => {
-      const id8 = customerPlanningId("E", row.id, hash3, true);
-      return id8 === row.id ? row : { ...row, id: id8 };
+      const id9 = customerPlanningId("E", row.id, hash3, true);
+      return id9 === row.id ? row : { ...row, id: id9 };
     });
     return planResult.parse({
       kind: "test-plan",
@@ -56233,7 +56348,7 @@ function failure4(fam, code = "advisory_unavailable", answerId, dispatched = nul
     schema: "kaijan.customer-advisory/1",
     family: fam,
     state: "unavailable",
-    ...id6.safeParse(answerId).success ? { answerId } : {},
+    ...id7.safeParse(answerId).success ? { answerId } : {},
     replayAllowed: false,
     error: {
       code: safe,
@@ -56335,7 +56450,7 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
         code: value.error.code
       });
     const chunk = value.resultChunk;
-    if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id6.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
+    if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id7.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
       throw Error("Invalid saved answer");
     digest21 ??= value.resultSha256;
     total ??= chunk.totalCharacters;
@@ -56395,7 +56510,7 @@ async function relatedPresentation(fam, native, options) {
     options.verifyCustomerRelatedSource
   );
 }
-function customerPlanningConfigurationFailure(value) {
+function customerPlanningConfigurationFailure(value, codexTesting) {
   const uncertain = value.requestDispatched !== false;
   return finish(
     baseSchema.parse({
@@ -56410,7 +56525,7 @@ function customerPlanningConfigurationFailure(value) {
       },
       recovery: {
         action: uncertain ? "read-original" : "check-readiness",
-        instruction: uncertain ? "Read the original planning answer in this chat. Keep its request and saved settings." : "Check the selected application configuration. You can also continue without saved settings."
+        instruction: uncertain ? "Read the original planning answer in this chat. Keep its request and saved settings." : codexTesting ? "Correct the selected Test Environment before planning again." : "Check the selected application configuration. You can also continue without saved settings."
       }
     })
   );
@@ -56509,7 +56624,7 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
       });
     }
     const native = await catalog.invoke(name, args, invocation);
-    if (id6.safeParse(native?.answerId).success) answerId = native.answerId;
+    if (id7.safeParse(native?.answerId).success) answerId = native.answerId;
     catalog.validateOutput?.(name, native);
     const verified = native?.state === "complete" ? {
       ...native,
@@ -56606,7 +56721,7 @@ var developmentTools = /* @__PURE__ */ new Set([
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
 var hash4 = (value) => createHash9("sha256").update(value).digest("hex");
-var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id8 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings6 = external_exports.array(external_exports.string());
 var optional5 = (schema) => schema.optional();
 var generatedText = external_exports.string();
@@ -56625,22 +56740,22 @@ var progress3 = external_exports.object({
   effects: optional5(external_exports.enum(["known", "uncertain"]))
 });
 var customerQuestion = external_exports.strictObject({
-  id: id7,
+  id: id8,
   question: external_exports.string(),
   kind: external_exports.enum(["missing-value", "app-choice", "permission", "task-scope"])
 });
 var clarification = progress3.extend({
   questions: external_exports.array(customerQuestion),
   bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
-  clarificationId: id7,
+  clarificationId: id8,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"])
 });
 var nextAction2 = external_exports.object({
   kind: external_exports.literal("input-required"),
   tool: external_exports.literal("loki_runner_answer"),
-  runId: id7,
-  clarificationId: id7,
+  runId: id8,
+  clarificationId: id8,
   deadlineAt: external_exports.string(),
   questions: external_exports.array(customerQuestion)
 });
@@ -56659,8 +56774,8 @@ var assessment = customerAssessmentResultSchema.omit({ kind: true, meaning: true
     "cancelled",
     "unavailable"
   ]),
-  answerId: optional5(id7),
-  resultSha256: optional5(id7),
+  answerId: optional5(id8),
+  resultSha256: optional5(id8),
   status: customerAssessmentResultSchema.shape.status.optional(),
   coverage: customerAssessmentResultSchema.shape.coverage.unwrap().extend({ meaning: customerAssessmentResultSchema.shape.meaning }).optional()
 });
@@ -56683,7 +56798,7 @@ var verification = external_exports.object({
       steps: external_exports.array(step)
     })
   ),
-  evidence: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), sha256: id7 }))
+  evidence: external_exports.array(external_exports.object({ id: external_exports.string(), text: external_exports.string(), sha256: id8 }))
 });
 var result = external_exports.object({
   status: external_exports.enum([
@@ -56717,12 +56832,12 @@ var lifecycle = external_exports.enum([
   "unavailable"
 ]);
 var execution = external_exports.object({
-  runId: id7,
+  runId: id8,
   state: lifecycle,
   replayAllowed: external_exports.literal(false),
   stopRequested: optional5(external_exports.boolean()),
   createdAt: optional5(external_exports.string()),
-  resultSha256: optional5(id7),
+  resultSha256: optional5(id8),
   result: optional5(result),
   pendingClarification: optional5(clarification.nullable()),
   nextAction: optional5(nextAction2)
@@ -56776,7 +56891,7 @@ var failure5 = external_exports.object({
     action: external_exports.string(),
     instruction: external_exports.string(),
     requestKey: optional5(external_exports.string()),
-    existingRunId: optional5(id7)
+    existingRunId: optional5(id8)
   })
 });
 var customerExecutionSchema = external_exports.strictObject({
@@ -56784,31 +56899,31 @@ var customerExecutionSchema = external_exports.strictObject({
   kind: external_exports.enum(["test", "execution", "answer"]),
   browserCleanup: customerBrowserCleanupSchema.optional(),
   executionEvidence: customerExecutionEvidenceSchema.optional(),
-  runId: optional5(id7),
+  runId: optional5(id8),
   state: lifecycle,
   replayAllowed: external_exports.literal(false),
   stopRequested: optional5(external_exports.boolean()),
   createdAt: optional5(external_exports.string()),
-  resultSha256: optional5(id7),
+  resultSha256: optional5(id8),
   result: optional5(result),
   execution: optional5(execution.nullable()),
   status: optional5(
     external_exports.object({ execution: stage, assessment: stage, report: stage })
   ),
   assessment: optional5(assessment.nullable()),
-  report: optional5(external_exports.object({ reportId: id7 }).nullable()),
+  report: optional5(external_exports.object({ reportId: id8 }).nullable()),
   pendingClarification: optional5(clarification.nullable()),
   nextAction: optional5(nextAction2),
-  clarificationId: optional5(id7),
+  clarificationId: optional5(id8),
   answerKey: optional5(external_exports.string()),
   answerStatus: optional5(external_exports.literal("retained")),
   error: optional5(failure5)
 });
 var projection2 = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-execution-page/1"),
-  runId: id7,
-  resultSha256: id7.optional(),
-  projectionSha256: id7,
+  runId: id8,
+  resultSha256: id8.optional(),
+  projectionSha256: id8,
   encoding: external_exports.literal("JSON text, UTF-16 offsets"),
   offset: external_exports.number().int().nonnegative(),
   text: external_exports.string(),
@@ -56819,14 +56934,14 @@ var projection2 = external_exports.strictObject({
 var readHint = external_exports.strictObject({
   tool: external_exports.enum(["loki_test_get", "loki_runner_get"]),
   arguments: external_exports.strictObject({
-    runId: id7,
+    runId: id8,
     offset: external_exports.literal(0),
-    projectionSha256: id7
+    projectionSha256: id8
   })
 });
 var customerOutputSchema = external_exports.union([
   customerExecutionSchema.extend({
-    projectionSha256: id7,
+    projectionSha256: id8,
     resultRead: readHint.optional()
   }),
   projection2
@@ -56874,9 +56989,9 @@ function customerToolDefinition(tool2, { configurations = false, requireSavedPla
     description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
     inputSchema: read ? external_exports.toJSONSchema(
       external_exports.strictObject({
-        runId: id7,
+        runId: id8,
         offset: external_exports.number().int().nonnegative().optional(),
-        projectionSha256: id7.optional(),
+        projectionSha256: id8.optional(),
         ...tool2.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
@@ -56969,7 +57084,7 @@ function customerFailure(name, value = {}, runId2) {
   return customerExecutionSchema.parse({
     schema: "kaijan.customer-execution/1",
     kind: name.startsWith("loki_test_") ? "test" : name.endsWith("_answer") ? "answer" : "execution",
-    ...id7.safeParse(runId2 ?? value?.runId).success ? { runId: runId2 ?? value.runId } : {},
+    ...id8.safeParse(runId2 ?? value?.runId).success ? { runId: runId2 ?? value.runId } : {},
     state: "unavailable",
     replayAllowed: false,
     error: {
@@ -56980,7 +57095,7 @@ function customerFailure(name, value = {}, runId2) {
         action: action2,
         instruction,
         ...code === "request_key_conflict" && typeof native?.recovery?.requestKey === "string" ? { requestKey: native.recovery.requestKey } : {},
-        ...id7.safeParse(native?.recovery?.existingRunId).success ? { existingRunId: native.recovery.existingRunId } : {}
+        ...id8.safeParse(native?.recovery?.existingRunId).success ? { existingRunId: native.recovery.existingRunId } : {}
       }
     }
   });
@@ -56996,7 +57111,7 @@ function hasSavedPlanSelection(value) {
   }).success)
     return true;
   const checks = value?.verification;
-  return checks?.provenance === "product-terminal-checks/1" && id7.safeParse(checks.planRef?.answerId).success && id7.safeParse(checks.planRef?.resultSha256).success;
+  return checks?.provenance === "product-terminal-checks/1" && id8.safeParse(checks.planRef?.answerId).success && id8.safeParse(checks.planRef?.resultSha256).success;
 }
 var planTestId = (value) => customerPlanningId("T", value, hash4);
 function executionResult(value, blockedReason) {
@@ -57112,7 +57227,7 @@ function assessmentView(value, savedPlan = false, presentation, progressOnly = f
 }
 async function readAssessmentPresentation(value, options, invocation) {
   const reference2 = value?.schema === "kaijan.test-run/1" ? value.assessment : void 0;
-  if (reference2?.state !== "complete" || reference2.error || !id7.safeParse(reference2.answerId).success || !id7.safeParse(reference2.resultSha256).success || typeof options.readAssessmentPresentation !== "function")
+  if (reference2?.state !== "complete" || reference2.error || !id8.safeParse(reference2.answerId).success || !id8.safeParse(reference2.resultSha256).success || typeof options.readAssessmentPresentation !== "function")
     return void 0;
   try {
     const source3 = await options.readAssessmentPresentation(
@@ -57134,7 +57249,7 @@ function combinedStatusRead(name, value) {
   return name === "loki_test_get" && ["accepted", "running"].includes(value?.state);
 }
 function browserAssessmentNotice(value) {
-  if (value.state !== "finished" || value.assessment !== null || value.status?.report !== "saved" || !id7.safeParse(value.report?.reportId).success || !value.preparation || value.preparation.state !== value.status.assessment)
+  if (value.state !== "finished" || value.assessment !== null || value.status?.report !== "saved" || !id8.safeParse(value.report?.reportId).success || !value.preparation || value.preparation.state !== value.status.assessment)
     return null;
   const { state: state2, reason } = value.preparation;
   let message;
@@ -57198,7 +57313,7 @@ function project(name, value, assessmentPresentation) {
   });
 }
 async function original(catalog, tool2, first, invocation) {
-  const runId2 = id7.parse(first.runId), expected = id7.parse(first.resultSha256);
+  const runId2 = id8.parse(first.runId), expected = id8.parse(first.resultSha256);
   let offset = 0, text4 = "", total;
   for (let pages = 0; pages < 4096; pages++) {
     invocation?.signal?.throwIfAborted();
@@ -57278,7 +57393,7 @@ function customerConfigurationFailure(name, value) {
   return { ...dto, projectionSha256: hash4(JSON.stringify(dto)) };
 }
 var customerPending = external_exports.strictObject({
-  clarificationId: id7,
+  clarificationId: id8,
   deadlineAt: external_exports.string(),
   state: external_exports.enum(["live", "unknown"]),
   bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
@@ -57348,7 +57463,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
   let retainedRunId = args?.runId;
   try {
     const paging = name.endsWith("_get") && args.offset !== void 0;
-    if (paging && (!Number.isSafeInteger(args.offset) || args.offset < 0 || args.offset > 0 && !id7.safeParse(args.projectionSha256).success) || !paging && args.projectionSha256 !== void 0)
+    if (paging && (!Number.isSafeInteger(args.offset) || args.offset < 0 || args.offset > 0 && !id8.safeParse(args.projectionSha256).success) || !paging && args.projectionSha256 !== void 0)
       return customerFailureOutput(
         name,
         { code: "customer_read_restart", requestDispatched: false },
@@ -57366,7 +57481,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         retainedRunId
       );
     const native = name === "loki_runner_answer" ? await options.answerCustomerClarification(input3, invocation) : await catalog.invoke(name, input3, invocation);
-    if (id7.safeParse(native?.runId).success) retainedRunId = native.runId;
+    if (id8.safeParse(native?.runId).success) retainedRunId = native.runId;
     catalog.validateOutput?.(name, native);
     const hydrated = await hydrate(catalog, name, native, invocation);
     const projected = project(
@@ -58495,7 +58610,7 @@ ${customerInstructions}` : customerInstructions
       const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
       if (!args)
         throw invalidParams(
-          "Supply requestKey and either testObjective or contextId. Use the selected browser or Mac app target."
+          "Supply requestKey, the saved Test Environment ID, and either testObjective or contextId. Include the saved Test Data ID when needed."
         );
       const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
         params.name,
@@ -58503,7 +58618,10 @@ ${customerInstructions}` : customerInstructions
         params._meta
       ) : { arguments: args };
       if (configured2.error) {
-        const failure6 = customerPlanningConfigurationFailure(configured2.error);
+        const failure6 = customerPlanningConfigurationFailure(
+          configured2.error,
+          codexTesting
+        );
         return {
           isError: true,
           structuredContent: failure6,

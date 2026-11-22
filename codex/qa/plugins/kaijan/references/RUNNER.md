@@ -69,11 +69,18 @@ in the plugin archive and
 does not require an installed Google Chrome. Browser preparation respects Stop
 and the execution time limit; download failure returns before browser launch or
 provider calls. Imports, tool discovery and analysis do not download browsers.
-For browser logins, use [private parameters](private-parameters.md). The installed
-host command returns `privateParams` references scoped to this conversation and
-the approved hosts. Kaijan resolves these before dispatch and adds the names to
-`options.secretParameterNames`. Keep ordinary inputs in `params`. Raw credentials
-must not appear in MCP arguments. The adapter never reads unrelated browser
+<!-- codex-only -->
+
+For a Codex browser login, save the account to the selected Test Environment
+using the [installed login guide](private-parameters.md). Plan takes that
+environment's ID and retains its settings for Run.
+<!-- end-codex-only -->
+
+On a host that advertises the full Runner input, the [installed login guide](private-parameters.md)
+describes how to prepare conversation-scoped `privateParams` references. The
+full Runner resolves these before dispatch and adds the names to
+`options.secretParameterNames`. Keep its ordinary inputs in `params`. Keep raw
+credentials out of MCP arguments. The adapter never reads unrelated browser
 profiles or live history. Existing-session attachment and persisted memory are
 not implemented by this delivered Runner. Its native limits remain 80 calls,
 150 returned browser inputs and ten minutes; options can lower those bounds.

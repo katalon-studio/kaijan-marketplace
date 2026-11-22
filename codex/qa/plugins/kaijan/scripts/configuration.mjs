@@ -42,13 +42,22 @@ async function saveConfiguration(root, argv) {
       "from-file": { type: "string" },
       name: { type: "string" },
       application: { type: "string" },
+      "aut-id": { type: "string" },
       host: { type: "string", multiple: true },
       secret: { type: "string", multiple: true },
       id: { type: "string" },
       revision: { type: "string" },
     },
   });
-  const { "from-file": file, name, application, host, secret, id } = values;
+  const {
+    "from-file": file,
+    "aut-id": autId,
+    name,
+    application,
+    host,
+    secret,
+    id,
+  } = values;
   const revision =
     values.revision === undefined ? undefined : Number(values.revision);
   if (!file || !secret?.length) throw Error("Select the file and fields");
@@ -60,7 +69,8 @@ async function saveConfiguration(root, argv) {
         revision < 1 ||
         name !== undefined ||
         application !== undefined ||
-        host !== undefined
+        host !== undefined ||
+        autId !== undefined
   )
     throw Error(
       "Select a new application or an existing Configuration revision",
@@ -95,7 +105,7 @@ async function saveConfiguration(root, argv) {
   try {
     const previous = id
       ? store.read(id)
-      : { name, application, allowedHosts: host ?? [], entries: [] };
+      : { name, application, autId, allowedHosts: host ?? [], entries: [] };
     for (const { key, secret: hidden, value } of previous.entries) {
       if (!entries.has(key))
         entries.set(key, { key, secret: hidden, ...(hidden ? {} : { value }) });
@@ -104,6 +114,7 @@ async function saveConfiguration(root, argv) {
       {
         name: previous.name,
         application: previous.application,
+        ...(previous.autId ? { autId: previous.autId } : {}),
         allowedHosts: previous.allowedHosts,
         entries: [...entries.values()],
       },
@@ -125,7 +136,7 @@ try {
 } catch {
   // File, parser, and store errors can contain input values.
   process.stderr.write(
-    "Configuration was not confirmed. Check the local file, field names, and current Configuration revision. Use save --from-file PATH --secret FIELD=VARIABLE with --name NAME --application URL, or with --id ID --revision REVISION. Read the Configuration before retrying.\n",
+    "Configuration was not confirmed. Check the local file, field names, and current Configuration revision. Use save --from-file PATH --secret FIELD=VARIABLE with --name NAME --application URL, or with --id ID --revision REVISION. Include --aut-id AUT_ID when creating a Test Environment in Codex. Read the Configuration before retrying.\n",
   );
   process.exitCode = 1;
 }
