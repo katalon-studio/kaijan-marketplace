@@ -51208,6 +51208,21 @@ var savedExecutionLimitReasons = {
   "browser-actions": "The test stopped after reaching its browser action limit.",
   time: "The test stopped after reaching its time limit."
 };
+function recordedExecutionLimit(executionState2, terminal2) {
+  if (executionState2 !== "incomplete" || terminal2?.actor !== "harness")
+    return void 0;
+  switch (terminal2.reason) {
+    case "API call limit":
+      return "requests";
+    case "Browser input limit":
+    case "Error: Browser input limit":
+      return "browser-actions";
+    case "Time limit":
+      return "time";
+    default:
+      return void 0;
+  }
+}
 var nativeRun = testPlanViewSchema.shape.runs.element;
 var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
   sourceId: true,
@@ -56503,6 +56518,8 @@ var result = external_exports.object({
   effects: optional5(external_exports.enum(["unknown-do-not-replay"])),
   message: optional5(external_exports.string()),
   elapsedMs: optional5(external_exports.number().nonnegative()),
+  executionLimit: optional5(external_exports.enum(Object.keys(savedExecutionLimitReasons))),
+  notStartedTestIds: optional5(strings6),
   verification: optional5(verification)
 });
 var lifecycle = external_exports.enum([
@@ -56699,6 +56716,11 @@ var errorMessages = {
     "correct_arguments",
     "Correct the input. Keep the original run when recovering existing work."
   ],
+  run_cap_reached_in_turn: [
+    "The run for this plan reached its limit. No new run started.",
+    "read_original_run",
+    "Open the original run and report. The remaining tests can run after a new user request."
+  ],
   request_key_conflict: [
     "This request key belongs to different work.",
     "recover_original_or_select_new_work",
@@ -56802,15 +56824,23 @@ function executionResult(value, blockedReason) {
     throw Error("Unsupported execution result");
   if (value.status === "returned") {
     const native = value.nativeResult ?? value;
+    const executionLimit = recordedExecutionLimit(
+      native.executionState,
+      native.terminal
+    );
+    const unstarted = executionLimit ? strings6.safeParse(native.terminal.notStartedTestIds).data : void 0;
+    const effects = native.executionReport?.effects;
     return result.parse({
       status: value.status,
       executionState: native.executionState,
       testVerdict: native.testVerdict,
-      answer: customerExecutionStatus(
+      answer: executionLimit && effects !== "uncertain" ? savedExecutionLimitReasons[executionLimit] : customerExecutionStatus(
         native.executionState,
-        native.executionReport?.effects,
+        effects,
         blockedReason
       ),
+      ...executionLimit ? { executionLimit } : {},
+      ...unstarted?.length ? { notStartedTestIds: unstarted.map(planTestId) } : {},
       executionReport: native.executionReport === null || native.executionReport === void 0 ? native.executionReport : projectCustomerExecutionProgress(native.executionReport),
       elapsedMs: native.elapsedMs,
       verification: value.verification && hasSavedPlanSelection(value) ? {
@@ -58409,8 +58439,10 @@ ${customerInstructions}` : customerInstructions
         throw invalidParams(
           "configurationUsed is internal Run metadata. Omit it from this request."
         );
+      const turnId = params._meta?.["x-codex-turn-metadata"]?.turn_id;
       const invocation = {
-        signal: AbortSignal.any([extra.signal, lifetime.signal])
+        signal: AbortSignal.any([extra.signal, lifetime.signal]),
+        ...codexSavedRun && typeof params._meta?.threadId === "string" && typeof turnId === "string" && turnId.trim() ? { hostTurnId: turnId } : {}
       };
       const resolved2 = await resolveCustomerPlanArguments(
         params.name,

@@ -98725,6 +98725,21 @@ var savedExecutionLimitReasons = {
   "browser-actions": "The test stopped after reaching its browser action limit.",
   time: "The test stopped after reaching its time limit."
 };
+function recordedExecutionLimit(executionState2, terminal2) {
+  if (executionState2 !== "incomplete" || terminal2?.actor !== "harness")
+    return void 0;
+  switch (terminal2.reason) {
+    case "API call limit":
+      return "requests";
+    case "Browser input limit":
+    case "Error: Browser input limit":
+      return "browser-actions";
+    case "Time limit":
+      return "time";
+    default:
+      return void 0;
+  }
+}
 var nativeRun = testPlanViewSchema.shape.runs.element;
 var assessmentQuote2 = customerAssessmentQuoteSchema.pick({
   sourceId: true,
@@ -125048,7 +125063,10 @@ function projectTestPlans(snapshot3, runnerContexts) {
       const native2 = record8(original.nativeResult);
       const correlation = record8(native2.correlation);
       const terminal2 = record8(native2.terminal);
-      const browserActionLimit = terminal2.reason === "Browser input limit" || terminal2.reason === "Error: Browser input limit";
+      const executionLimit = recordedExecutionLimit(
+        native2.executionState,
+        terminal2
+      );
       const start = testPlanViewSchema.shape.runs.element.shape.startedAt.safeParse(
         record8(original.executionHost).startedAt
       );
@@ -125071,9 +125089,7 @@ function projectTestPlans(snapshot3, runnerContexts) {
         state: entry.state,
         executionState: record8(entry.result).status === "not-executed" && record8(entry.result).nativeResult === null ? "not-executed" : text9(native2.executionState) || (entry.result === null && (entry.state === "accepted" || entry.state === "running") ? entry.state : ""),
         testVerdict: text9(native2.testVerdict),
-        ...terminal2.actor === "harness" && native2.executionState === "incomplete" && (browserActionLimit || terminal2.reason === "API call limit" || terminal2.reason === "Time limit") ? {
-          executionLimit: terminal2.reason === "API call limit" ? "requests" : browserActionLimit ? "browser-actions" : "time"
-        } : {},
+        ...executionLimit ? { executionLimit } : {},
         ...terminal2.actor === "operator" && terminal2.reason === "Operator Stop" && ["incomplete", "cancelled", "stopped"].includes(
           text9(native2.executionState)
         ) ? { stoppedByUser: true } : {},
@@ -136517,7 +136533,36 @@ var TestRun = class {
           runnerRequest.parse(request3);
           return Promise.resolve();
         },
-        execute: (request3, context) => this.execute(runnerRequest.parse(request3), context),
+        execute: async (request3, context) => {
+          const result = await this.execute(
+            runnerRequest.parse(request3),
+            context
+          );
+          const capKey = context.identity.hostTurnPlan;
+          const runId2 = context.owner?.id;
+          const summary2 = member(result, "executionSummary");
+          const terminal2 = member(summary2, "terminal");
+          const limit = recordedExecutionLimit(
+            member(summary2, "executionState"),
+            {
+              actor: member(terminal2, "actor"),
+              reason: member(terminal2, "reason")
+            }
+          );
+          if (typeof capKey === "string" && runId2 && limit) {
+            this.unsettledCaps.set(capKey, runId2);
+            try {
+              await atomicFile(
+                join46(this.data, "test-run-turn-caps"),
+                capKey,
+                Buffer.from(runId2)
+              );
+              this.unsettledCaps.delete(capKey);
+            } catch {
+            }
+          }
+          return result;
+        },
         validate: (result) => {
           object36(result);
         },
@@ -136540,6 +136585,8 @@ var TestRun = class {
   // Live views only. OperationHost owns all durable admission and terminal state.
   live = /* @__PURE__ */ new Map();
   completions = /* @__PURE__ */ new Map();
+  // Holds a cap while its private receipt is written, including after a failed write.
+  unsettledCaps = /* @__PURE__ */ new Map();
   id(requestKey) {
     return hash38(
       this.scopeId ? JSON.stringify([this.scopeId, requestKey]) : requestKey
@@ -136942,7 +136989,22 @@ var TestRun = class {
       }
     };
   }
-  async start(input3) {
+  async cappedRun(capKey) {
+    const pending = this.unsettledCaps.get(capKey);
+    if (pending) return pending;
+    try {
+      const saved = await privateFile(
+        join46(this.data, "test-run-turn-caps", capKey),
+        64
+      );
+      return runnerHandle.parse({ runId: saved.toString("utf8") }).runId;
+    } catch (error62) {
+      if (error62 instanceof Error && "code" in error62 && error62.code === "ENOENT")
+        return this.unsettledCaps.get(capKey);
+      throw error62;
+    }
+  }
+  async start(input3, hostTurnId) {
     const lifecycle2 = snapshotLifecycle(this.services.lifecycle, "run");
     let runId2;
     try {
@@ -136979,12 +137041,42 @@ var TestRun = class {
           );
         }
       } else request3 = submitted;
+      const plan = "savedTests" in submitted ? submitted.savedTests : void 0;
+      const capKey = hostTurnId && plan ? hash38(
+        JSON.stringify([
+          this.scopeId,
+          hostTurnId,
+          plan.answerId,
+          plan.resultSha256
+        ])
+      ) : void 0;
+      const capped = capKey ? await this.cappedRun(capKey) : void 0;
+      if (capped) {
+        try {
+          await this.operations.get(runId2);
+        } catch (error62) {
+          if (!(error62 instanceof OperationNotFound)) throw error62;
+          return {
+            schema: "kaijan.test-run/1",
+            runId: capped,
+            state: "unavailable",
+            replayAllowed: false,
+            error: {
+              code: "run_cap_reached_in_turn",
+              message: "The current request already reached its run limit for this plan.",
+              requestDispatched: false,
+              recovery: { existingRunId: capped }
+            }
+          };
+        }
+      }
       return await this.view(
         await this.operations.start(
           request3.requestKey,
           object36(request3),
           {
             integration: "kaijan.test-run/1",
+            ...capKey ? { hostTurnPlan: capKey } : {},
             inputSha256: hash38(canonicalJson(object36(request3))),
             ..."savedTests" in submitted ? { scenarioSource: "saved-plan" } : {}
           },
@@ -170903,7 +170995,7 @@ function createCapabilityCatalog(services, options2 = {}) {
       input: testRunRequest,
       output: testRunOutputSchema,
       readOnly: false,
-      call: (args) => services.testRun.start(args)
+      call: (args, invocation = {}) => services.testRun.start(args, invocation.hostTurnId)
     },
     {
       name: "loki_test_get",
