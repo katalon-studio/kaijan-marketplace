@@ -28,9 +28,12 @@ does not build or require application maps.
 
 The returned Setup and `application.contextId` values identify saved application
 configuration. They are not Context Intake IDs and must not be passed as
-`loki_test_plan.contextId`. To continue planning, reuse the exact saved
-`application.workItem` text as the original task in `input`, with relevant source
-from the saved revision. Do not ask the person to repeat a task already saved.
+`loki_test_plan.contextId`. Reuse the exact saved `application.workItem` text as
+the original task, with relevant source from the saved revision.
+
+
+On hosts where Plan accepts `input`, use the saved task in `input`.
+Do not ask the person to repeat a task already saved.
 If no original task is saved or supplied in chat, ask for that missing task.
 
 A matching request recovers the original configuration. Use a new request

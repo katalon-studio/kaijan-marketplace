@@ -26,10 +26,10 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-Kaijan supplies saved Configuration groups automatically when available. Use
-the application and task to select the relevant settings. Follow the person's
-explicit Configuration selection or opt-out. If several saved groups match the
-application and the intended group is unclear, ask which to use.
+For hosts that advertise full Runner input, use the application and task to
+select the relevant Configuration when available. Follow the person's explicit
+selection or opt-out. Ask which group to use when several match and the choice
+matters.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
 save it.
@@ -38,9 +38,9 @@ save it.
 Keep raw secrets out of chat and tool arguments. On
 hosts that advertise full Runner input, use `params` for ordinary overrides and
 [`privateParams`](../../references/private-parameters.md)
-for scoped secret references.
-These overrides leave saved settings unchanged. The person can run without
-saving settings. Configuration selection never authorizes execution.
+for scoped secret references. Those hosts can Run without saved settings, and
+overrides leave any saved settings unchanged. Configuration selection never
+authorizes execution.
 
 Use `loki_test_execute` for the normal combined run, assessment and report.
 When Claude Code advertises `planId`, supply the exact `planId` returned by Plan,
@@ -126,7 +126,8 @@ to inspect an existing recording.
 
 ## macOS desktop scenarios
 
-Supply `target.app` with the app's bundle ID in the Claude Code Plan. Use
+
+Use
 `executionMethod: "desktop-ui"` and the app target on hosts that advertise the
 full Runner input. If the caller supplies a `.app` path or needs first-time setup,
 use the [macOS setup guide](references/macos-appium-setup.md).

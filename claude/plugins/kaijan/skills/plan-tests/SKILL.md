@@ -8,15 +8,7 @@ description: Use when the user asks to plan tests, create a test plan, or propos
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
-When Claude Code advertises `testObjective`, pass the person's request in that
-field. Generate a `requestKey` and put the selected browser URL in
-`target.initialURL` or the selected Mac app's bundle ID in `target.app`.
-For a supplied `.app` path or first-time desktop setup, use the
-[macOS setup guide](../run-test/references/macos-appium-setup.md).
 
-
-Include `testData` when the person supplied concrete values. It accepts any
-JSON value. Explorer uses the selected target and test data during planning.
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
@@ -89,12 +81,14 @@ the plan.
   the original supported input when available. A raw report is retained evidence,
   not a planning packet.
 
-After Setup, use its saved `application.workItem` as the original task and read
-relevant source at its saved revision. For a saved free-text task, preserve it in
-`input.body`; use the original task text as `input.title` too when no separate
-title was supplied. Keep available code/context in separate attributed sources
-when needed. Setup IDs and `application.contextId` select configuration, not
-`nativeInputs.testPlanning`; do not pass them as the planning `contextId`.
+After Setup, read relevant source at its saved revision. Keep code and task
+context in separate attributed sources when needed. Use a Context Intake ID
+for Plan's `contextId`. Setup IDs and `application.contextId` identify saved
+application context.
+
+On hosts where Plan accepts `input`, use the saved `application.workItem` as
+the original task. For a saved free-text task, preserve it in `input.body`.
+Use the original task text for `input.title` when no title was supplied.
 A known pre-dispatch context-input refusal asks for corrected arguments. Reuse
 the saved task instead of asking the person to retype it or writing an unsaved
 substitute plan. Preserve an earlier uncertain outcome without replay.

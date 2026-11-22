@@ -28,15 +28,17 @@ Use the exact retained reportId or original answer/run IDs from this chat.
 Call `loki_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
 The plugin's inline card shows the saved result. For reports in the original
-conversation, **Show details** prepares the saved HTML on Desktop. Select
-**Open Kaijan report** to open that file in the host's Browser pane. In the
-interactive CLI, **Show details** opens the HTML in your browser. Resume the
-original conversation after restarting Claude to use the same saved report.
-If HTML is unavailable, the existing details view reads the same report.
-It also remains available for project history.
+conversation, **Show details** prepares the interactive report on Desktop.
+Select **Open Kaijan report** to open it in the browser selected by Claude.
+If the local link expires, select **Refresh link**. In the interactive CLI,
+**Show details** opens the same report in your browser. Resume the original
+conversation after restarting Claude to use the same saved report. If the
+browser view is unavailable, Claude shows the saved details in its own pane.
+Project history also uses that pane.
 
-The HTML uses Kaijan's existing private export for saved Plans, Runs and
-assessments. It stays on this device. The card and its actions do not send a
+The interactive report uses Kaijan's shared report renderer. Its private
+browser link stays on this device and is available while the session serves
+the report. The card and its actions do not send a
 prompt or start a test, assessment or sign-in. When Claude truncates a large tool
 result, Kaijan reads the same saved report through its existing Local connection.
 Do not run another test, reassess, or open a different report to recover missing

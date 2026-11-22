@@ -39,6 +39,7 @@ ends at the plan. A full test
 request with sufficient inputs can proceed through execution and report under
 the same authority.
 
+
 - Use [plan-tests](../plan-tests/SKILL.md) for requested planning or to prepare
   tests for a full request. Give it the original task and relevant attributed
   sources, including the actual frozen change when the request concerns a
@@ -49,10 +50,11 @@ the same authority.
   Standalone code review uses
   [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md).
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
-  saved Plan reference and selected test IDs, target and parameters. Kaijan
-  runs the selected tests, assesses retained evidence and saves a combined
-  report. Keep gaps for unexecuted tests visible and continue independent checks
-  with sufficient inputs. Attribute any external observations to their source.
+  saved Plan reference and selected test IDs. In Claude Code, the saved Plan supplies
+  the target and inputs. Kaijan runs the selected tests, assesses retained
+  evidence and saves a combined report. Keep gaps for unexecuted tests visible
+  and continue independent checks with sufficient inputs. Attribute any external
+  observations to their source.
 - Open the actual saved result with [review-report](../review-report/SKILL.md).
   Include the review findings and any partial preparation when requested.
   Keep execution status, actual observations, assessment and coverage distinct.
