@@ -20791,7 +20791,11 @@ var reportViewSchema = external_exports.object({
   evidenceContext: external_exports.object({
     contextId: digest3,
     recordSha256: digest3,
-    readTool: external_exports.literal("loki_context_get"),
+    readTool: external_exports.literal("loki_report_get"),
+    readArguments: external_exports.strictObject({
+      reportId: digest3,
+      sourceOffset: external_exports.literal(0)
+    }),
     provenance: external_exports.string()
   }).optional(),
   executionChecks: external_exports.array(reportExecutionSchema).optional()

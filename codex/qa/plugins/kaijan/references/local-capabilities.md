@@ -88,9 +88,9 @@ useful evidence. Open external Playwright replay only when requested.
 
 Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect loki_capabilities_list for actual readiness. The installed profile binds private state and the connection. In the normal managed package (`authArchitecture: shared-broker-v1` in `loki-build.json`), Core and Local use stdio and share the Kaijan sign-in broker. Source, AI access, GitHub and browser authority remain distinct.
 
-The local catalog includes Context Intake, related work (generic names and explicit PR aliases), code and work-item risk, test planning, and browser or macOS test execution with Runner judgments. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. An issue is enough for work-item risk and planning. Planning never starts Runner automatically. In Codex, use the saved Test Environment and any saved Test Data with the original objective. Run uses the exact saved Plan and selected test IDs. Follow the owning skill on hosts that advertise inline target and parameters.
+The local catalog includes test planning and browser or macOS test execution with Runner judgments. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. Plan finds related work and reviews risk from the selected source or work item. Planning never starts Runner automatically. In Codex, use the saved Test Environment and any saved Test Data with the original objective. Run uses the exact saved Plan and selected test IDs. Follow the owning skill on hosts that advertise inline target and parameters.
 
-Use the installed owning skill and exact advertised input schema. The advisory tool returns the full original native answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
+Use the installed owning skill and exact advertised input schema. Plan returns the saved answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `loki_advisory_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
 
 The supplied native algorithms, prompts, models and validator contracts retain their origin hashes. Current public sources live under packages/. Alternative experiments remain in experiments/ and are outside the Product build selection. Mapping source is preserved in the repository for future backend work; it is not an installed plugin action. Broader cleanup remains deferred. Research MCP registration/distribution is removed; there is one maintained Product capability MCP plus the existing Product Setup and Core transports.
 
@@ -108,11 +108,8 @@ does not package, log or save them.
 ## Compose a caller-scoped test request
 
 Use the installed `test-request` skill for a full testing request or a combined
-risk review and test-planning request. Read relevant linked requirements before
-reviewing the selected work item, and pass the saved risk answer into planning
-when risk review was requested. A completed plan alone does not complete that
-combined request. The coding agent
-selects analysis and planning under the original goal, target and actions.
+risk review and test-planning request. Pass the original objective and selected
+source or work item to Plan. Check the saved answer for both requested results.
 Use `loki_test_execute` for normal execution and assessment. Kaijan reuses its
 saved task, selected tests and evidence internally, then saves the combined report.
 Use `loki_test_get` for that same flow and `loki_test_stop` for Stop. The caller
@@ -126,14 +123,11 @@ to ten minutes. Codex can use `explorerTimeLimitMs` on Plan or
 `runnerTimeLimitMs` on Run to increase a limit before starting that operation.
 The tools reject a duration below the stage's default.
 
-Context Intake submit/get returns `sourceUri` for its exact retained record:
-`urn:kaijan:retained-context:<recordSha256>`. Use that actual identity when a
-chat-only request lacks an original source URI. It is not an external source,
-public URL, access grant or artifact resolver. Preserve original provenance and
-use the same conversation-scoped contextId/get for reads. Keep exact completed
-Plan/Assessment answer IDs/digests, actual Runner IDs/digests and selected test
-references through the flow. Mixed reports use `view: "test-plan"` with all
-selected original operations. Reopen the immutable reportId without producers.
+Plan retains original source internally. To read original GitHub source attached
+to a saved report, use its report ID and `sourceOffset: 0` with `loki_report_get`.
+Continue with the returned offsets until the complete source record has been read.
+Keep the exact Plan and Assessment answer IDs, Runner IDs and result digests for
+the selected operations. Reopen the saved report by its original report ID.
 
 ## Read Runner readiness without execution
 
