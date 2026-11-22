@@ -796,7 +796,7 @@
       "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6",
       "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3",
       "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190",
-      "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab",
+      "packages/computer-runner/src/execution-status.mjs": "072655b6293573076290b016c8032295f8d6c25eeeb97fe65d968ef5f5f5ff75",
       "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec",
       "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af",
       "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d",
@@ -829,7 +829,7 @@
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
       "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5",
-      "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb"
+      "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031"
     },
     "relocation": {
       "originalFiles": {
