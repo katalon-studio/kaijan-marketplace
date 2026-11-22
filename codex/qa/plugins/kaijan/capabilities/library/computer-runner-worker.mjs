@@ -2446,7 +2446,7 @@ var require_websocket = __commonJS({
     var http = __require("http");
     var net = __require("net");
     var tls = __require("tls");
-    var { randomBytes: randomBytes2, createHash: createHash6 } = __require("crypto");
+    var { randomBytes: randomBytes2, createHash: createHash5 } = __require("crypto");
     var { Duplex, Readable: Readable2 } = __require("stream");
     var { URL: URL2 } = __require("url");
     var PerMessageDeflate2 = require_permessage_deflate();
@@ -3127,7 +3127,7 @@ var require_websocket = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest21 = createHash6("sha1").update(key + GUID).digest("base64");
+        const digest21 = createHash5("sha1").update(key + GUID).digest("base64");
         if (res.headers["sec-websocket-accept"] !== digest21) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
@@ -3418,7 +3418,7 @@ var require_stream = __commonJS({
       };
       duplex._final = function(callback) {
         if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open4() {
+          ws.once("open", function open3() {
             duplex._final(callback);
           });
           return;
@@ -3439,7 +3439,7 @@ var require_stream = __commonJS({
       };
       duplex._write = function(chunk, encoding, callback) {
         if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open4() {
+          ws.once("open", function open3() {
             duplex._write(chunk, encoding, callback);
           });
           return;
@@ -3526,7 +3526,7 @@ var require_websocket_server = __commonJS({
     var EventEmitter2 = __require("events");
     var http = __require("http");
     var { Duplex } = __require("stream");
-    var { createHash: createHash6 } = __require("crypto");
+    var { createHash: createHash5 } = __require("crypto");
     var extension2 = require_extension();
     var PerMessageDeflate2 = require_permessage_deflate();
     var subprotocol2 = require_subprotocol();
@@ -3833,7 +3833,7 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest21 = createHash6("sha1").update(key + GUID).digest("base64");
+        const digest21 = createHash5("sha1").update(key + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
@@ -13774,8 +13774,8 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-var capitalizeFirstCharacter = (text5) => {
-  return text5.charAt(0).toUpperCase() + text5.slice(1);
+var capitalizeFirstCharacter = (text4) => {
+  return text4.charAt(0).toUpperCase() + text4.slice(1);
 };
 function getUnitTypeFromNumber(number4) {
   const abs = Math.abs(number4);
@@ -20403,13 +20403,13 @@ function initializeContext(params) {
     external: params?.external ?? void 0
   };
 }
-function handleUnrepresentable(schema, ctx, json4, params, message) {
+function handleUnrepresentable(schema, ctx, json3, params, message) {
   const result = typeof ctx.unrepresentable === "function" ? ctx.unrepresentable({ zodSchema: schema, path: params.path, message }) : ctx.unrepresentable;
   if (result === "any")
     return false;
   if (result === void 0 || result === "throw")
     throw new Error(message);
-  Object.assign(json4, result);
+  Object.assign(json3, result);
   return true;
 }
 function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
@@ -20645,12 +20645,12 @@ function foldObjects(members2) {
   }
   return folded;
 }
-function foldIntersection(json4) {
-  const allOf = json4.allOf;
+function foldIntersection(json3) {
+  const allOf = json3.allOf;
   if (!Array.isArray(allOf) || allOf.length < 2)
     return;
   for (const key of FOLDABLE_KEYS)
-    if (key in json4)
+    if (key in json3)
       return;
   const unions = allOf.filter((m) => UNION_KEYS.some((k) => Array.isArray(m[k])));
   let folded = null;
@@ -20669,8 +20669,8 @@ function foldIntersection(json4) {
   }
   if (!folded)
     return;
-  delete json4.allOf;
-  assignProps(json4, folded);
+  delete json3.allOf;
+  assignProps(json3, folded);
 }
 function finalize(ctx, schema) {
   const root = ctx.seen.get(schema);
@@ -20752,20 +20752,20 @@ function finalize(ctx, schema) {
     if (ctx.intersections.length) {
       const carriers = /* @__PURE__ */ new Map();
       for (const seen of ctx.seen.values()) {
-        for (const json4 of [seen.schema, seen.def]) {
-          const allOf = json4?.allOf;
+        for (const json3 of [seen.schema, seen.def]) {
+          const allOf = json3?.allOf;
           if (!Array.isArray(allOf))
             continue;
           const existing = carriers.get(allOf);
           if (existing)
-            existing.push(json4);
+            existing.push(json3);
           else
-            carriers.set(allOf, [json4]);
+            carriers.set(allOf, [json3]);
         }
       }
       for (const allOf of ctx.intersections) {
-        for (const json4 of carriers.get(allOf) ?? [])
-          foldIntersection(json4);
+        for (const json3 of carriers.get(allOf) ?? [])
+          foldIntersection(json3);
       }
     }
   }
@@ -21010,29 +21010,29 @@ var exactPatterns = /* @__PURE__ */ new Map([
 ]);
 var exactPattern = (p) => exactPatterns.get(p) ?? p;
 var stringProcessor = (schema, ctx, _json, _params) => {
-  const json4 = _json;
-  json4.type = "string";
+  const json3 = _json;
+  json3.type = "string";
   const { minimum, maximum, format, patterns, contentEncoding, laxFormat } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json4.minLength = minimum;
+    json3.minLength = minimum;
   if (typeof maximum === "number")
-    json4.maxLength = maximum;
+    json3.maxLength = maximum;
   if (format) {
-    json4.format = formatMap[format] ?? format;
-    if (json4.format === "")
-      delete json4.format;
+    json3.format = formatMap[format] ?? format;
+    if (json3.format === "")
+      delete json3.format;
     if (format === "time" || laxFormat) {
-      delete json4.format;
+      delete json3.format;
     }
   }
   if (contentEncoding)
-    json4.contentEncoding = contentEncoding;
+    json3.contentEncoding = contentEncoding;
   if (patterns && patterns.size > 0) {
     const patternList = [...patterns].map(exactPattern);
     if (patternList.length === 1)
-      json4.pattern = patternList[0].source;
+      json3.pattern = patternList[0].source;
     else if (patternList.length > 1) {
-      json4.allOf = [
+      json3.allOf = [
         ...patternList.map((regex) => ({
           ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
           pattern: regex.source
@@ -21042,31 +21042,31 @@ var stringProcessor = (schema, ctx, _json, _params) => {
   }
 };
 var numberProcessor = (schema, ctx, _json, params) => {
-  const json4 = _json;
+  const json3 = _json;
   const { minimum, maximum, multipleOf, exclusiveMaximum, exclusiveMinimum, isInt } = aggregateChecks(schema);
-  json4.type = isInt ? "integer" : "number";
+  json3.type = isInt ? "integer" : "number";
   const exMin = typeof exclusiveMinimum === "number" && exclusiveMinimum >= (minimum ?? Number.NEGATIVE_INFINITY);
   const exMax = typeof exclusiveMaximum === "number" && exclusiveMaximum <= (maximum ?? Number.POSITIVE_INFINITY);
   const legacy = ctx.target === "draft-04" || ctx.target === "openapi-3.0";
   if (exMin) {
     if (legacy) {
-      json4.minimum = exclusiveMinimum;
-      json4.exclusiveMinimum = true;
+      json3.minimum = exclusiveMinimum;
+      json3.exclusiveMinimum = true;
     } else {
-      json4.exclusiveMinimum = exclusiveMinimum;
+      json3.exclusiveMinimum = exclusiveMinimum;
     }
   } else if (typeof minimum === "number") {
-    json4.minimum = minimum;
+    json3.minimum = minimum;
   }
   if (exMax) {
     if (legacy) {
-      json4.maximum = exclusiveMaximum;
-      json4.exclusiveMaximum = true;
+      json3.maximum = exclusiveMaximum;
+      json3.exclusiveMaximum = true;
     } else {
-      json4.exclusiveMaximum = exclusiveMaximum;
+      json3.exclusiveMaximum = exclusiveMaximum;
     }
   } else if (typeof maximum === "number") {
-    json4.maximum = maximum;
+    json3.maximum = maximum;
   }
   if (multipleOf) {
     const divisors = /* @__PURE__ */ new Set();
@@ -21074,75 +21074,75 @@ var numberProcessor = (schema, ctx, _json, params) => {
       if (Number.isFinite(divisor) && divisor !== 0)
         divisors.add(Math.abs(divisor));
       else
-        handleUnrepresentable(schema, ctx, json4, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
+        handleUnrepresentable(schema, ctx, json3, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
     }
     const [first, ...rest] = divisors;
     if (first !== void 0)
-      json4.multipleOf = first;
+      json3.multipleOf = first;
     if (rest.length)
-      json4.allOf = [...json4.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
+      json3.allOf = [...json3.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
   }
 };
-var booleanProcessor = (_schema, _ctx, json4, _params) => {
-  json4.type = "boolean";
+var booleanProcessor = (_schema, _ctx, json3, _params) => {
+  json3.type = "boolean";
 };
-var bigintProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "BigInt cannot be represented in JSON Schema");
+var bigintProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "BigInt cannot be represented in JSON Schema");
 };
-var symbolProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Symbols cannot be represented in JSON Schema");
+var symbolProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Symbols cannot be represented in JSON Schema");
 };
-var nullProcessor = (_schema, ctx, json4, _params) => {
+var nullProcessor = (_schema, ctx, json3, _params) => {
   if (ctx.target === "openapi-3.0") {
-    json4.type = "string";
-    json4.nullable = true;
-    json4.enum = [null];
+    json3.type = "string";
+    json3.nullable = true;
+    json3.enum = [null];
   } else {
-    json4.type = "null";
+    json3.type = "null";
   }
 };
-var undefinedProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Undefined cannot be represented in JSON Schema");
+var undefinedProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Undefined cannot be represented in JSON Schema");
 };
-var voidProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Void cannot be represented in JSON Schema");
+var voidProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Void cannot be represented in JSON Schema");
 };
-var neverProcessor = (_schema, _ctx, json4, _params) => {
-  json4.not = {};
+var neverProcessor = (_schema, _ctx, json3, _params) => {
+  json3.not = {};
 };
 var anyProcessor = (_schema, _ctx, _json, _params) => {
 };
 var unknownProcessor = (_schema, _ctx, _json, _params) => {
 };
-var dateProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Date cannot be represented in JSON Schema");
+var dateProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Date cannot be represented in JSON Schema");
 };
-var enumProcessor = (schema, _ctx, json4, _params) => {
+var enumProcessor = (schema, _ctx, json3, _params) => {
   const def = schema._zod.def;
   const values = getEnumValues(def.entries);
   if (values.length === 0) {
-    json4.not = {};
+    json3.not = {};
     return;
   }
   if (values.every((v) => typeof v === "number"))
-    json4.type = "number";
+    json3.type = "number";
   if (values.every((v) => typeof v === "string"))
-    json4.type = "string";
-  json4.enum = values;
+    json3.type = "string";
+  json3.enum = values;
 };
-var literalProcessor = (schema, ctx, json4, params) => {
+var literalProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   if (def.values.length === 0) {
-    json4.not = {};
+    json3.not = {};
     return;
   }
   const vals = [];
   for (const val of def.values) {
     if (val === void 0) {
-      if (handleUnrepresentable(schema, ctx, json4, params, "Literal `undefined` cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json3, params, "Literal `undefined` cannot be represented in JSON Schema"))
         return;
     } else if (typeof val === "bigint") {
-      if (handleUnrepresentable(schema, ctx, json4, params, "BigInt literals cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json3, params, "BigInt literals cannot be represented in JSON Schema"))
         return;
       vals.push(Number(val));
     } else {
@@ -21152,37 +21152,37 @@ var literalProcessor = (schema, ctx, json4, params) => {
   if (vals.length === 0) {
   } else if (vals.length === 1) {
     const val = vals[0];
-    json4.type = val === null ? "null" : typeof val;
+    json3.type = val === null ? "null" : typeof val;
     if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-      json4.enum = [val];
+      json3.enum = [val];
     } else {
-      json4.const = val;
+      json3.const = val;
     }
   } else {
     if (vals.every((v) => typeof v === "number"))
-      json4.type = "number";
+      json3.type = "number";
     if (vals.every((v) => typeof v === "string"))
-      json4.type = "string";
+      json3.type = "string";
     if (vals.every((v) => typeof v === "boolean"))
-      json4.type = "boolean";
+      json3.type = "boolean";
     if (vals.every((v) => v === null))
-      json4.type = "null";
-    json4.enum = vals;
+      json3.type = "null";
+    json3.enum = vals;
   }
 };
-var nanProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "NaN cannot be represented in JSON Schema");
+var nanProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "NaN cannot be represented in JSON Schema");
 };
-var templateLiteralProcessor = (schema, _ctx, json4, _params) => {
-  const _json = json4;
+var templateLiteralProcessor = (schema, _ctx, json3, _params) => {
+  const _json = json3;
   const pattern = schema._zod.pattern;
   if (!pattern)
     throw new Error("Pattern not found in template literal");
   _json.type = "string";
   _json.pattern = pattern.source;
 };
-var fileProcessor = (schema, _ctx, json4, _params) => {
-  const _json = json4;
+var fileProcessor = (schema, _ctx, json3, _params) => {
+  const _json = json3;
   _json.type = "string";
   _json.format = "binary";
   _json.contentEncoding = "binary";
@@ -21200,34 +21200,34 @@ var fileProcessor = (schema, _ctx, json4, _params) => {
   else
     _json.anyOf = mime.map((m) => ({ contentMediaType: m }));
 };
-var successProcessor = (_schema, _ctx, json4, _params) => {
-  json4.type = "boolean";
+var successProcessor = (_schema, _ctx, json3, _params) => {
+  json3.type = "boolean";
 };
-var customProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Custom types cannot be represented in JSON Schema");
+var customProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Custom types cannot be represented in JSON Schema");
 };
-var functionProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Function types cannot be represented in JSON Schema");
+var functionProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Function types cannot be represented in JSON Schema");
 };
-var transformProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Transforms cannot be represented in JSON Schema");
+var transformProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Transforms cannot be represented in JSON Schema");
 };
-var mapProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Map cannot be represented in JSON Schema");
+var mapProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Map cannot be represented in JSON Schema");
 };
-var setProcessor = (schema, ctx, json4, params) => {
-  handleUnrepresentable(schema, ctx, json4, params, "Set cannot be represented in JSON Schema");
+var setProcessor = (schema, ctx, json3, params) => {
+  handleUnrepresentable(schema, ctx, json3, params, "Set cannot be represented in JSON Schema");
 };
 var arrayProcessor = (schema, ctx, _json, params) => {
-  const json4 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json4.minItems = minimum;
+    json3.minItems = minimum;
   if (typeof maximum === "number")
-    json4.maxItems = maximum;
-  json4.type = "array";
-  json4.items = processSchema(def.element, ctx, {
+    json3.maxItems = maximum;
+  json3.type = "array";
+  json3.items = processSchema(def.element, ctx, {
     ...params,
     path: [...params.path, "items"]
   });
@@ -21243,17 +21243,17 @@ function inputOptin(schema) {
   return schema._zod.optin;
 }
 var objectProcessor = (schema, ctx, _json, params) => {
-  const json4 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
   const shape = def.shape;
   const symbolKeys = Object.getOwnPropertySymbols(shape);
-  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json4, params, "Symbol keys cannot be represented in JSON Schema")) {
+  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json3, params, "Symbol keys cannot be represented in JSON Schema")) {
     return;
   }
-  json4.type = "object";
-  json4.properties = {};
+  json3.type = "object";
+  json3.properties = {};
   for (const key in shape) {
-    assignProp(json4.properties, key, processSchema(shape[key], ctx, {
+    assignProp(json3.properties, key, processSchema(shape[key], ctx, {
       ...params,
       path: [...params.path, "properties", key]
     }));
@@ -21266,21 +21266,21 @@ var objectProcessor = (schema, ctx, _json, params) => {
     }
   }
   if (requiredKeys.length > 0) {
-    json4.required = requiredKeys;
+    json3.required = requiredKeys;
   }
   if (def.catchall?._zod.def.type === "never") {
-    json4.additionalProperties = false;
+    json3.additionalProperties = false;
   } else if (!def.catchall) {
     if (ctx.io === "output")
-      json4.additionalProperties = false;
+      json3.additionalProperties = false;
   } else if (def.catchall) {
-    json4.additionalProperties = processSchema(def.catchall, ctx, {
+    json3.additionalProperties = processSchema(def.catchall, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
   }
 };
-var unionProcessor = (schema, ctx, json4, params) => {
+var unionProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const isExclusive = def.inclusive === false;
   const options = def.options.map((x, i) => processSchema(x, ctx, {
@@ -21288,12 +21288,12 @@ var unionProcessor = (schema, ctx, json4, params) => {
     path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
   }));
   if (isExclusive) {
-    json4.oneOf = options;
+    json3.oneOf = options;
   } else {
-    json4.anyOf = options;
+    json3.anyOf = options;
   }
 };
-var intersectionProcessor = (schema, ctx, json4, params) => {
+var intersectionProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const a = processSchema(def.left, ctx, {
     ...params,
@@ -21308,13 +21308,13 @@ var intersectionProcessor = (schema, ctx, json4, params) => {
     ...isSimpleIntersection(a) ? a.allOf : [a],
     ...isSimpleIntersection(b) ? b.allOf : [b]
   ];
-  json4.allOf = allOf;
+  json3.allOf = allOf;
   ctx.intersections.push(allOf);
 };
 var tupleProcessor = (schema, ctx, _json, params) => {
-  const json4 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
-  json4.type = "array";
+  json3.type = "array";
   const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
   const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
   const prefixItems = def.items.map((x, i) => processSchema(x, ctx, {
@@ -21336,70 +21336,70 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   const maxItems = def.items.length;
   const isClosed = !def.rest;
   if (ctx.target === "draft-2020-12") {
-    json4.prefixItems = prefixItems;
+    json3.prefixItems = prefixItems;
     if (isClosed) {
-      json4.items = false;
+      json3.items = false;
     } else if (rest) {
-      json4.items = rest;
+      json3.items = rest;
     }
     if (minItems > 0)
-      json4.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json4.maxItems = maxItems;
+      json3.maxItems = maxItems;
   } else if (ctx.target === "openapi-3.0") {
-    json4.items = {
+    json3.items = {
       anyOf: prefixItems
     };
     if (rest) {
-      json4.items.anyOf.push(rest);
+      json3.items.anyOf.push(rest);
     }
     if (minItems > 0)
-      json4.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json4.maxItems = maxItems;
+      json3.maxItems = maxItems;
   } else {
-    json4.items = prefixItems;
+    json3.items = prefixItems;
     if (isClosed) {
-      json4.additionalItems = false;
+      json3.additionalItems = false;
     } else if (rest) {
-      json4.additionalItems = rest;
+      json3.additionalItems = rest;
     }
     if (minItems > 0)
-      json4.minItems = minItems;
+      json3.minItems = minItems;
     if (isClosed)
-      json4.maxItems = maxItems;
+      json3.maxItems = maxItems;
   }
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json4.minItems = minimum;
+    json3.minItems = minimum;
   if (typeof maximum === "number")
-    json4.maxItems = maximum;
+    json3.maxItems = maximum;
 };
-function stringifyKeyNames(bySchema, json4, visited) {
-  if (json4.$ref) {
-    if (visited.has(json4))
-      return json4;
-    visited.add(json4);
-    const def = bySchema.get(json4)?.def;
+function stringifyKeyNames(bySchema, json3, visited) {
+  if (json3.$ref) {
+    if (visited.has(json3))
+      return json3;
+    visited.add(json3);
+    const def = bySchema.get(json3)?.def;
     if (!def)
-      return json4;
+      return json3;
     const inlined = stringifyKeyNames(bySchema, def, visited);
-    return inlined === def ? json4 : inlined;
+    return inlined === def ? json3 : inlined;
   }
   for (const keyword of ["anyOf", "oneOf"]) {
-    const branches = json4[keyword];
+    const branches = json3[keyword];
     if (!Array.isArray(branches))
       continue;
     const mapped = branches.map((branch) => stringifyKeyNames(bySchema, branch, visited));
     if (mapped.some((branch, i) => branch !== branches[i]))
-      json4 = { ...json4, [keyword]: mapped };
+      json3 = { ...json3, [keyword]: mapped };
   }
-  const types = Array.isArray(json4.type) ? json4.type : [json4.type];
+  const types = Array.isArray(json3.type) ? json3.type : [json3.type];
   const numericType = !types.includes("string") && types.some((t) => t === "number" || t === "integer");
-  const values = json4.enum ?? (json4.const !== void 0 ? [json4.const] : void 0);
+  const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
-    return json4;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id4, ...rest } = json4;
+    return json3;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id4, ...rest } = json3;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -21419,8 +21419,8 @@ function rewriteKeyNames(ctx) {
       bySchema.set(entry.schema, entry);
   }
   const rewrites = /* @__PURE__ */ new Map();
-  for (const record5 of pendingRecords.get(ctx) ?? []) {
-    const seen = ctx.seen.get(record5);
+  for (const record4 of pendingRecords.get(ctx) ?? []) {
+    const seen = ctx.seen.get(record4);
     const names = (seen?.def ?? seen?.schema)?.propertyNames;
     if (!names || names === true || rewrites.has(names))
       continue;
@@ -21439,9 +21439,9 @@ function rewriteKeyNames(ctx) {
   }
 }
 var recordProcessor = (schema, ctx, _json, params) => {
-  const json4 = _json;
+  const json3 = _json;
   const def = schema._zod.def;
-  json4.type = "object";
+  json3.type = "object";
   const keyType = def.keyType;
   const patterns = aggregateChecks(keyType).patterns;
   if (def.mode === "loose" && patterns && patterns.size > 0) {
@@ -21449,13 +21449,13 @@ var recordProcessor = (schema, ctx, _json, params) => {
       ...params,
       path: [...params.path, "patternProperties", "*"]
     });
-    json4.patternProperties = {};
+    json3.patternProperties = {};
     for (const pattern of patterns) {
-      assignProp(json4.patternProperties, exactPattern(pattern).source, valueSchema);
+      assignProp(json3.patternProperties, exactPattern(pattern).source, valueSchema);
     }
   } else {
     if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-      json4.propertyNames = processSchema(def.keyType, ctx, {
+      json3.propertyNames = processSchema(def.keyType, ctx, {
         ...params,
         path: [...params.path, "propertyNames"]
       });
@@ -21467,7 +21467,7 @@ var recordProcessor = (schema, ctx, _json, params) => {
       }
       pending.push(schema);
     }
-    json4.additionalProperties = processSchema(def.valueType, ctx, {
+    json3.additionalProperties = processSchema(def.valueType, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
@@ -21477,19 +21477,19 @@ var recordProcessor = (schema, ctx, _json, params) => {
   if (keyValues && !def.partial && !omittableOnInput) {
     const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
     if (validKeyValues.length > 0) {
-      json4.required = validKeyValues.map(String);
+      json3.required = validKeyValues.map(String);
     }
   }
 };
-var nullableProcessor = (schema, ctx, json4, params) => {
+var nullableProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   const inner = processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   if (ctx.target === "openapi-3.0") {
     seen.ref = def.innerType;
-    json4.nullable = true;
+    json3.nullable = true;
   } else {
-    json4.anyOf = [inner, { type: "null" }];
+    json3.anyOf = [inner, { type: "null" }];
   }
 };
 var nonoptionalProcessor = (schema, ctx, _json, params) => {
@@ -21499,7 +21499,7 @@ var nonoptionalProcessor = (schema, ctx, _json, params) => {
   seen.ref = def.innerType;
 };
 var UNREPRESENTABLE_DEFAULT = /* @__PURE__ */ Symbol();
-function serializeDefaultValue(value, schema, ctx, json4, params) {
+function serializeDefaultValue(value, schema, ctx, json3, params) {
   let unrepresentable = false;
   const serialized = JSON.stringify(value, (_, val) => {
     if (typeof val !== "bigint")
@@ -21509,30 +21509,30 @@ function serializeDefaultValue(value, schema, ctx, json4, params) {
   });
   if (!unrepresentable)
     return JSON.parse(serialized);
-  handleUnrepresentable(schema, ctx, json4, params, "BigInt defaults cannot be represented in JSON Schema");
+  handleUnrepresentable(schema, ctx, json3, params, "BigInt defaults cannot be represented in JSON Schema");
   return UNREPRESENTABLE_DEFAULT;
 }
-var defaultProcessor = (schema, ctx, json4, params) => {
+var defaultProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json4, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json4.default = value;
+    json3.default = value;
 };
-var prefaultProcessor = (schema, ctx, json4, params) => {
+var prefaultProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   if (ctx.io !== "input")
     return;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json4, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json4._prefault = value;
+    json3._prefault = value;
 };
-var catchProcessor = (schema, ctx, json4, params) => {
+var catchProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
@@ -21541,10 +21541,10 @@ var catchProcessor = (schema, ctx, json4, params) => {
   try {
     catchValue = def.catchValue(void 0);
   } catch {
-    handleUnrepresentable(schema, ctx, json4, params, "Dynamic catch values are not supported in JSON Schema");
+    handleUnrepresentable(schema, ctx, json3, params, "Dynamic catch values are not supported in JSON Schema");
     return;
   }
-  json4.default = catchValue;
+  json3.default = catchValue;
 };
 var pipeProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -21554,12 +21554,12 @@ var pipeProcessor = (schema, ctx, _json, params) => {
   const seen = ctx.seen.get(schema);
   seen.ref = innerType;
 };
-var readonlyProcessor = (schema, ctx, json4, params) => {
+var readonlyProcessor = (schema, ctx, json3, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  json4.readOnly = true;
+  json3.readOnly = true;
 };
 var promiseProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -22263,7 +22263,7 @@ var _ZodString = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodString.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json4, params) => stringProcessor(inst, ctx, json4, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => stringProcessor(inst, ctx, json3, params);
   },
   /* @__PURE__ */ util_exports.derived({
     format: (inst) => aggregateChecks(inst).format ?? null,
@@ -22622,7 +22622,7 @@ var ZodNumber = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodNumber.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json4, params) => numberProcessor(inst, ctx, json4, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => numberProcessor(inst, ctx, json3, params);
     inst.isFinite = true;
   },
   /* @__PURE__ */ util_exports.derived({
@@ -22712,7 +22712,7 @@ function uint32(params) {
 var ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def) => {
   $ZodBoolean.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => booleanProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => booleanProcessor(inst, ctx, json3, params);
 });
 function boolean2(params) {
   return _boolean(ZodBoolean, params);
@@ -22722,7 +22722,7 @@ var ZodBigInt = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodBigInt.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json4, params) => bigintProcessor(inst, ctx, json4, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => bigintProcessor(inst, ctx, json3, params);
   },
   /* @__PURE__ */ util_exports.derived({
     minValue: (inst) => aggregateChecks(inst).minimum ?? null,
@@ -22780,7 +22780,7 @@ function uint64(params) {
 var ZodSymbol = /* @__PURE__ */ $constructor("ZodSymbol", (inst, def) => {
   $ZodSymbol.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => symbolProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => symbolProcessor(inst, ctx, json3, params);
 });
 function symbol(params) {
   return _symbol(ZodSymbol, params);
@@ -22788,7 +22788,7 @@ function symbol(params) {
 var ZodUndefined = /* @__PURE__ */ $constructor("ZodUndefined", (inst, def) => {
   $ZodUndefined.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => undefinedProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => undefinedProcessor(inst, ctx, json3, params);
 });
 function _undefined3(params) {
   return _undefined2(ZodUndefined, params);
@@ -22796,7 +22796,7 @@ function _undefined3(params) {
 var ZodNull = /* @__PURE__ */ $constructor("ZodNull", (inst, def) => {
   $ZodNull.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => nullProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nullProcessor(inst, ctx, json3, params);
 });
 function _null3(params) {
   return _null2(ZodNull, params);
@@ -22804,7 +22804,7 @@ function _null3(params) {
 var ZodAny = /* @__PURE__ */ $constructor("ZodAny", (inst, def) => {
   $ZodAny.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => anyProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => anyProcessor(inst, ctx, json3, params);
 });
 function any() {
   return _any(ZodAny);
@@ -22812,7 +22812,7 @@ function any() {
 var ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def) => {
   $ZodUnknown.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => unknownProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unknownProcessor(inst, ctx, json3, params);
 });
 function unknown() {
   return _unknown(ZodUnknown);
@@ -22820,7 +22820,7 @@ function unknown() {
 var ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def) => {
   $ZodNever.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => neverProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => neverProcessor(inst, ctx, json3, params);
 });
 function never(params) {
   return _never(ZodNever, params);
@@ -22828,7 +22828,7 @@ function never(params) {
 var ZodVoid = /* @__PURE__ */ $constructor("ZodVoid", (inst, def) => {
   $ZodVoid.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => voidProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => voidProcessor(inst, ctx, json3, params);
 });
 function _void2(params) {
   return _void(ZodVoid, params);
@@ -22838,7 +22838,7 @@ var ZodDate = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodDate.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json4, params) => dateProcessor(inst, ctx, json4, params);
+    inst._zod.processJSONSchema = (ctx, json3, params) => dateProcessor(inst, ctx, json3, params);
     inst.min = (value, params) => inst.check(_gte(value, params));
     inst.max = (value, params) => inst.check(_lte(value, params));
   },
@@ -22860,7 +22860,7 @@ var ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodArray.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => arrayProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => arrayProcessor(inst, ctx, json3, params);
   inst.element = def.element;
 }, {
   min(n, params) {
@@ -22890,7 +22890,7 @@ var ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodObjectJIT.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => objectProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => objectProcessor(inst, ctx, json3, params);
   util_exports.installLazyProp(inst, "shape", (self) => self._zod.def.shape, false);
 }, {
   keyof() {
@@ -22963,7 +22963,7 @@ function looseObject(shape, params) {
 var ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def) => {
   $ZodUnion.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
   inst.options = def.options;
 });
 function union(options, params) {
@@ -22976,7 +22976,7 @@ function union(options, params) {
 var ZodXor = /* @__PURE__ */ $constructor("ZodXor", (inst, def) => {
   ZodUnion.init(inst, def);
   $ZodXor.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
   inst.options = def.options;
 });
 function xor(options, params) {
@@ -23002,7 +23002,7 @@ function discriminatedUnion(discriminator, options, params) {
 var ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def) => {
   $ZodIntersection.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => intersectionProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => intersectionProcessor(inst, ctx, json3, params);
 });
 function intersection(left, right) {
   return new ZodIntersection({
@@ -23015,7 +23015,7 @@ var ZodTuple = /* @__PURE__ */ $constructor("ZodTuple", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTuple.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => tupleProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => tupleProcessor(inst, ctx, json3, params);
 }, {
   rest(rest) {
     return this.clone({
@@ -23048,7 +23048,7 @@ var ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodRecord.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => recordProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => recordProcessor(inst, ctx, json3, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
 });
@@ -23090,7 +23090,7 @@ var ZodMap = /* @__PURE__ */ $constructor("ZodMap", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodMap.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => mapProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => mapProcessor(inst, ctx, json3, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
   inst.min = (...args) => inst.check(_minSize(...args));
@@ -23110,7 +23110,7 @@ var ZodSet = /* @__PURE__ */ $constructor("ZodSet", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodSet.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => setProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => setProcessor(inst, ctx, json3, params);
   inst.min = (...args) => inst.check(_minSize(...args));
   inst.nonempty = (params) => inst.check(_minSize(1, params));
   inst.max = (...args) => inst.check(_maxSize(...args));
@@ -23126,7 +23126,7 @@ function set(valueType, params) {
 var ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def) => {
   $ZodEnum.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => enumProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => enumProcessor(inst, ctx, json3, params);
   inst.enum = def.entries;
   inst.options = [...inst._zod.values];
   const keys = new Set(Object.keys(def.entries));
@@ -23179,7 +23179,7 @@ function nativeEnum(entries, params) {
 var ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def) => {
   $ZodLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => literalProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => literalProcessor(inst, ctx, json3, params);
   inst.values = new Set(def.values);
   Object.defineProperty(inst, "value", {
     get() {
@@ -23200,7 +23200,7 @@ function literal(value, params) {
 var ZodFile = /* @__PURE__ */ $constructor("ZodFile", (inst, def) => {
   $ZodFile.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => fileProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => fileProcessor(inst, ctx, json3, params);
   inst.min = (size, params) => inst.check(_minSize(size, params));
   inst.max = (size, params) => inst.check(_maxSize(size, params));
   inst.mime = (types, params) => inst.check(_mime(Array.isArray(types) ? types : [types], params));
@@ -23212,7 +23212,7 @@ var ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTransform.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => transformProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => transformProcessor(inst, ctx, json3, params);
   inst._zod.parse = (payload, _ctx) => {
     if (_ctx.direction === "backward") {
       throw new $ZodEncodeError(inst.constructor.name);
@@ -23251,7 +23251,7 @@ function transform(fn) {
 var ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def) => {
   $ZodOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function optional(innerType) {
@@ -23263,7 +23263,7 @@ function optional(innerType) {
 var ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def) => {
   $ZodExactOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function exactOptional(innerType) {
@@ -23275,7 +23275,7 @@ function exactOptional(innerType) {
 var ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def) => {
   $ZodNullable.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => nullableProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nullableProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nullable(innerType) {
@@ -23290,7 +23290,7 @@ function nullish2(innerType) {
 var ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def) => {
   $ZodDefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => defaultProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => defaultProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeDefault = inst.unwrap;
 });
@@ -23306,7 +23306,7 @@ function _default2(innerType, defaultValue) {
 var ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def) => {
   $ZodPrefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => prefaultProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => prefaultProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function prefault(innerType, defaultValue) {
@@ -23321,7 +23321,7 @@ function prefault(innerType, defaultValue) {
 var ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def) => {
   $ZodNonOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => nonoptionalProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nonoptionalProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nonoptional(innerType, params) {
@@ -23334,7 +23334,7 @@ function nonoptional(innerType, params) {
 var ZodSuccess = /* @__PURE__ */ $constructor("ZodSuccess", (inst, def) => {
   $ZodSuccess.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => successProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => successProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function success(innerType) {
@@ -23346,7 +23346,7 @@ function success(innerType) {
 var ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def) => {
   $ZodCatch.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => catchProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => catchProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeCatch = inst.unwrap;
 });
@@ -23360,7 +23360,7 @@ function _catch2(innerType, catchValue) {
 var ZodNaN = /* @__PURE__ */ $constructor("ZodNaN", (inst, def) => {
   $ZodNaN.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => nanProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => nanProcessor(inst, ctx, json3, params);
 });
 function nan(params) {
   return _nan(ZodNaN, params);
@@ -23368,7 +23368,7 @@ function nan(params) {
 var ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def) => {
   $ZodPipe.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => pipeProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => pipeProcessor(inst, ctx, json3, params);
   inst.in = def.in;
   inst.out = def.out;
 });
@@ -23410,7 +23410,7 @@ var ZodPreprocess = /* @__PURE__ */ $constructor("ZodPreprocess", (inst, def) =>
 var ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def) => {
   $ZodReadonly.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => readonlyProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => readonlyProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function readonly(innerType) {
@@ -23422,7 +23422,7 @@ function readonly(innerType) {
 var ZodTemplateLiteral = /* @__PURE__ */ $constructor("ZodTemplateLiteral", (inst, def) => {
   $ZodTemplateLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => templateLiteralProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => templateLiteralProcessor(inst, ctx, json3, params);
 });
 function templateLiteral(parts, params) {
   return new ZodTemplateLiteral({
@@ -23434,7 +23434,7 @@ function templateLiteral(parts, params) {
 var ZodLazy = /* @__PURE__ */ $constructor("ZodLazy", (inst, def) => {
   $ZodLazy.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => lazyProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => lazyProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.getter();
 });
 function lazy(getter) {
@@ -23446,7 +23446,7 @@ function lazy(getter) {
 var ZodPromise = /* @__PURE__ */ $constructor("ZodPromise", (inst, def) => {
   $ZodPromise.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => promiseProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => promiseProcessor(inst, ctx, json3, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function promise(innerType) {
@@ -23458,7 +23458,7 @@ function promise(innerType) {
 var ZodFunction = /* @__PURE__ */ $constructor("ZodFunction", (inst, def) => {
   $ZodFunction.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => functionProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => functionProcessor(inst, ctx, json3, params);
 });
 function _function(params) {
   return new ZodFunction({
@@ -23470,7 +23470,7 @@ function _function(params) {
 var ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def) => {
   $ZodCustom.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json4, params) => customProcessor(inst, ctx, json4, params);
+  inst._zod.processJSONSchema = (ctx, json3, params) => customProcessor(inst, ctx, json3, params);
 });
 function check(fn) {
   const ch = new $ZodCheck({
@@ -25084,7 +25084,7 @@ var advisoryReadSchema = external_exports.strictObject({
   resultChunk: external_exports.strictObject({
     encoding: external_exports.literal("JSON text, UTF-16 offsets"),
     offset: external_exports.number().int().nonnegative(),
-    text: external_exports.string().min(1).refine((text5) => text5.isWellFormed()),
+    text: external_exports.string().min(1).refine((text4) => text4.isWellFormed()),
     nextOffset: external_exports.number().int().positive().nullable(),
     totalCharacters: external_exports.number().int().positive()
   })
@@ -26877,18 +26877,18 @@ var caseEvidenceSchema = external_exports.object({
   })),
   unassignedActions: external_exports.array(action),
   unassignedScreenshots: external_exports.array(screenshot)
-}).superRefine((record5, ctx) => {
-  const ids2 = new Set(record5.selectedTestIds);
-  const occurrences = record5.cases.map((item) => `${item.testId}:${item.occurrence}`);
+}).superRefine((record4, ctx) => {
+  const ids2 = new Set(record4.selectedTestIds);
+  const occurrences = record4.cases.map((item) => `${item.testId}:${item.occurrence}`);
   const actions = [
-    ...record5.unassignedActions,
-    ...record5.cases.flatMap((item) => item.actions)
+    ...record4.unassignedActions,
+    ...record4.cases.flatMap((item) => item.actions)
   ].map((item) => item.index);
   const screenshots = [
-    ...record5.unassignedScreenshots,
-    ...record5.cases.flatMap((item) => item.screenshots)
+    ...record4.unassignedScreenshots,
+    ...record4.cases.flatMap((item) => item.screenshots)
   ].map((item) => item.name);
-  if (ids2.size !== record5.selectedTestIds.length || record5.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
+  if (ids2.size !== record4.selectedTestIds.length || record4.cases.some((item) => !ids2.has(item.testId)) || new Set(occurrences).size !== occurrences.length || new Set(actions).size !== actions.length || new Set(screenshots).size !== screenshots.length)
     ctx.addIssue({
       code: "custom",
       message: "Case evidence identities must be unique and selected."
@@ -27038,11 +27038,11 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
 var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
 var internalCleanupExplanation = /(^|[.!?]\s+)The Runner['’]s cleanup record concerns its browser, not the host-started server\.(?=\s|$)/gi;
-function isInternalRecap(text5) {
-  if (!text5.trimStart().startsWith("{"))
+function isInternalRecap(text4) {
+  if (!text4.trimStart().startsWith("{"))
     return false;
   try {
-    const value = JSON.parse(text5);
+    const value = JSON.parse(text4);
     const parsed = external_exports.object({ schema: external_exports.string() }).safeParse(value);
     return parsed.success && parsed.data.schema.startsWith("loki.runner.execution-recap/");
   } catch {
@@ -31638,7 +31638,7 @@ var clarificationRequestSchema = external_exports.object({
   ),
   provenance: external_exports.literal("model-authored-unverified").catch("model-authored-unverified")
 }).superRefine(checkCorrelation);
-var digest19 = (text5) => createHash3("sha256").update(text5).digest("hex");
+var digest19 = (text4) => createHash3("sha256").update(text4).digest("hex");
 
 // src/runner-clarification-worker.ts
 var answerFrame = external_exports.looseObject({
@@ -31969,7 +31969,7 @@ function createResponsesSession({
   requestAI,
   managedWebSocket,
   storeResponses = false,
-  record: record5,
+  record: record4,
   recordWebSocketFrame
 }) {
   if (managedWebSocket && !requestAI)
@@ -31983,7 +31983,7 @@ function createResponsesSession({
     maxRetries: 0
   });
   let socket, socketModel, cachedId, httpOnly = Boolean(requestAI && !managedWebSocket), closed = false;
-  const recordEvent = (event2) => record5?.(structuredClone(event2));
+  const recordEvent = (event2) => record4?.(structuredClone(event2));
   const http = requestAI ?? ((body, signal) => fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     redirect: "error",
@@ -32543,7 +32543,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
   const directory = dirname3(artifacts);
   await privateDirectory(directory);
   let writes = Promise.resolve();
-  const record5 = (event2) => {
+  const record4 = (event2) => {
     writes = writes.then(
       () => appendFile(
         join2(directory, "runner-validation.jsonl"),
@@ -32560,7 +32560,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
     );
     return writes;
   };
-  await record5({
+  await record4({
     phase: "bound",
     route,
     requestKey: plan.requestKey,
@@ -32656,14 +32656,14 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
           throw Error(
             "No controlled response bound for this call; no upstream dispatch"
           );
-        await record5({
+        await record4({
           ...current,
           phase: "upstream-dispatch-intent",
           upstreamForwarded: null,
           route
         });
         if (signal.aborted) {
-          await record5({
+          await record4({
             ...current,
             phase: "upstream-not-dispatched",
             upstreamForwarded: false
@@ -32674,14 +32674,14 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         try {
           response2 = await sender(body, signal);
         } catch (error62) {
-          await record5({
+          await record4({
             ...current,
             phase: "upstream-effect-unknown",
             upstreamForwarded: null
           });
           throw error62;
         }
-        await record5({
+        await record4({
           ...current,
           phase: "upstream-headers",
           httpStatus: response2.status,
@@ -32689,7 +32689,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         });
         return response2;
       }
-      await record5({
+      await record4({
         ...current,
         phase: "synthetic-response-prepared",
         faultId: selectedFault.id,
@@ -32704,17 +32704,17 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         });
         const read2 = response2.text.bind(response2);
         response2.text = async () => {
-          const text5 = await read2();
-          await record5({
+          const text4 = await read2();
+          await record4({
             ...current,
             phase: "controlled-response-consumed",
             faultId: selectedFault.id,
             upstreamForwarded: false
           });
-          return text5;
+          return text4;
         };
         used.add(selectedFault.id);
-        await record5({
+        await record4({
           ...current,
           phase: "controlled-response-constructed",
           faultId: selectedFault.id,
@@ -32734,7 +32734,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
           }
         );
         used.add(selectedFault.id);
-        await record5({
+        await record4({
           ...current,
           phase: "synthetic-response-constructed",
           faultId: selectedFault.id,
@@ -32755,7 +32755,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
             clearTimeout(timer);
             signal.removeEventListener("abort", abort);
             controller2.error(error62);
-            void record5({
+            void record4({
               ...current,
               phase,
               faultId: selectedFault.id,
@@ -32777,7 +32777,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         pull() {
           if (bodyRead) return;
           bodyRead = true;
-          void record5({
+          void record4({
             ...current,
             phase: "held-body-reading",
             faultId: selectedFault.id,
@@ -32797,7 +32797,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
         }
       });
       used.add(selectedFault.id);
-      await record5({
+      await record4({
         ...current,
         phase: "synthetic-response-constructed",
         faultId: selectedFault.id,
@@ -32806,7 +32806,7 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
       return response;
     },
     async flush() {
-      await record5({
+      await record4({
         phase: "finished",
         usedFaultIds: [...used],
         unusedFaultIds: plan.faults.filter((item) => !used.has(item.id)).map((item) => item.id)
@@ -32907,234 +32907,6 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
     },
     failure: () => failure2("native-settled")
   };
-}
-
-// research/execution-reuse.mjs
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { Buffer as Buffer2 } from "node:buffer";
-import { TextDecoder as TextDecoder2 } from "node:util";
-import { createHash as createHash5 } from "node:crypto";
-import { constants as constants2 } from "node:fs";
-import { open as open3, realpath as realpath2 } from "node:fs/promises";
-import { isAbsolute, join as join4 } from "node:path";
-var evidenceSchema = "loki.computer-runner.private-evidence/1";
-var hash2 = (bytes) => createHash5("sha256").update(bytes).digest("hex");
-var record4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var text4 = (value) => typeof value === "string" && value.trim().length > 0;
-var ReuseError = class extends Error {
-  constructor(code, details = {}) {
-    super(code);
-    this.name = "ReuseError";
-    this.code = code;
-    this.details = details;
-  }
-};
-function insist(condition, code) {
-  if (!condition) throw new ReuseError(code);
-}
-function stopped(signal) {
-  if (signal?.aborted) throw new ReuseError("stopped");
-}
-function snapshot(value, seen = /* @__PURE__ */ new Set()) {
-  if (value === null || typeof value === "boolean") return value;
-  if (typeof value === "string") {
-    insist(value.isWellFormed(), "invalid-json-string");
-    return value;
-  }
-  if (typeof value === "number") {
-    insist(Number.isFinite(value), "invalid-json-number");
-    return value;
-  }
-  insist(record4(value) || Array.isArray(value), "json-input-required");
-  insist(!seen.has(value), "cyclic-json-input");
-  insist(
-    Array.isArray(value) || [Object.prototype, null].includes(Object.getPrototypeOf(value)),
-    "plain-json-input-required"
-  );
-  insist(
-    Object.getOwnPropertySymbols(value).length === 0,
-    "json-input-required"
-  );
-  seen.add(value);
-  const entries = Object.entries(Object.getOwnPropertyDescriptors(value));
-  for (const [, descriptor] of entries)
-    insist(Object.hasOwn(descriptor, "value"), "json-accessor-refused");
-  let result;
-  if (Array.isArray(value)) {
-    insist(entries.length === value.length + 1, "dense-json-array-required");
-    result = Array.from({ length: value.length }, (_, index) => {
-      insist(Object.hasOwn(value, index), "dense-json-array-required");
-      return snapshot(value[index], seen);
-    });
-  } else {
-    result = Object.fromEntries(
-      entries.map(([key, descriptor]) => [
-        key,
-        snapshot(descriptor.value, seen)
-      ])
-    );
-  }
-  seen.delete(value);
-  return result;
-}
-function canonical(value) {
-  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
-  if (record4(value))
-    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
-  return JSON.stringify(value);
-}
-function json3(bytes) {
-  try {
-    return JSON.parse(new TextDecoder2("utf-8", { fatal: true }).decode(bytes));
-  } catch {
-    throw new ReuseError("invalid-source-json");
-  }
-}
-var maxMetadataBytes = 8 * 1024 * 1024;
-var readChunkBytes = 64 * 1024;
-async function regularRead(path, signal, { metadata: metadata2 = false } = {}) {
-  stopped(signal);
-  const handle = await open3(
-    path,
-    constants2.O_RDONLY | constants2.O_NOFOLLOW | constants2.O_NONBLOCK
-  );
-  try {
-    const stat = await handle.stat();
-    insist(stat.isFile(), "nonregular-source-member");
-    insist(!metadata2 || stat.size <= maxMetadataBytes, "source-capacity");
-    const digest21 = createHash5("sha256");
-    const buffer = Buffer2.alloc(readChunkBytes);
-    const chunks = [];
-    let size = 0;
-    while (size <= stat.size) {
-      stopped(signal);
-      const { bytesRead } = await handle.read(
-        buffer,
-        0,
-        Math.min(buffer.length, stat.size - size + 1),
-        null
-      );
-      stopped(signal);
-      if (bytesRead === 0) break;
-      size += bytesRead;
-      insist(!metadata2 || size <= maxMetadataBytes, "source-capacity");
-      const chunk = buffer.subarray(0, bytesRead);
-      digest21.update(chunk);
-      if (metadata2) chunks.push(Buffer2.from(chunk));
-    }
-    insist(size === stat.size, "source-drift");
-    return {
-      size,
-      sha256: digest21.digest("hex"),
-      ...metadata2 ? { bytes: Buffer2.concat(chunks, size) } : {}
-    };
-  } finally {
-    await handle.close();
-  }
-}
-async function regularBytes(path, signal) {
-  return (await regularRead(path, signal, { metadata: true })).bytes;
-}
-async function sourceAt(directory, signal) {
-  const canonicalDirectory = await realpath2(directory);
-  const manifestBytes = await regularBytes(
-    join4(canonicalDirectory, "manifest.json"),
-    signal
-  );
-  const manifestSha256 = hash2(manifestBytes);
-  const manifest = json3(manifestBytes);
-  insist(
-    record4(manifest) && manifest.schema === evidenceSchema && Array.isArray(manifest.files),
-    "invalid-source-manifest"
-  );
-  const members2 = [];
-  const names = /* @__PURE__ */ new Set();
-  for (const member of manifest.files) {
-    insist(
-      record4(member) && text4(member.path) && ![".", "..", "manifest.json", "result.json"].includes(member.path) && !member.path.includes("/") && !member.path.includes("\\") && !member.path.includes("\0") && !names.has(member.path) && Number.isSafeInteger(member.bytes) && member.bytes >= 0 && typeof member.sha256 === "string" && /^[a-f0-9]{64}$/.test(member.sha256),
-      "invalid-source-member"
-    );
-    names.add(member.path);
-    const memberRead = await regularRead(
-      join4(canonicalDirectory, member.path),
-      signal
-    );
-    insist(
-      memberRead.size === member.bytes && memberRead.sha256 === member.sha256,
-      "source-member-integrity"
-    );
-    members2.push({
-      path: member.path,
-      bytes: member.bytes,
-      sha256: member.sha256
-    });
-  }
-  insist(names.has("protocol.json"), "source-material-unavailable");
-  const resultBytes = await regularBytes(
-    join4(canonicalDirectory, "result.json"),
-    signal
-  );
-  const result = json3(resultBytes);
-  insist(
-    record4(result) && result.traceManifest?.sha256 === manifestSha256 && result.traceManifest?.files === members2.length,
-    "result-manifest-binding"
-  );
-  insist(
-    hash2(
-      await regularBytes(join4(canonicalDirectory, "manifest.json"), signal)
-    ) === manifestSha256,
-    "source-drift"
-  );
-  const resultSha256 = hash2(resultBytes);
-  return {
-    directory: canonicalDirectory,
-    reference: `execution:${hash2(canonicalDirectory)}`,
-    manifestSha256,
-    resultSha256,
-    sourceSha256: hash2(canonical({ manifestSha256, resultSha256 })),
-    members: [
-      {
-        path: "manifest.json",
-        bytes: manifestBytes.length,
-        sha256: manifestSha256
-      },
-      ...members2,
-      {
-        path: "result.json",
-        bytes: resultBytes.length,
-        sha256: resultSha256,
-        basis: "separately-hashed-not-manifest-authenticated"
-      }
-    ]
-  };
-}
-var selectorPolicies = Object.freeze({
-  description: "source-specific-projection/2",
-  instruction: "procedural-relevance/2"
-});
-var maxResponseBytes2 = 8 * 1024 * 1024;
-async function verifyExecutionSource(binding2, { signal } = {}) {
-  stopped(signal);
-  const value = snapshot(binding2);
-  insist(
-    record4(value) && Object.keys(value).length === 2 && typeof value.directory === "string" && isAbsolute(value.directory) && typeof value.sourceSha256 === "string" && /^[a-f0-9]{64}$/.test(value.sourceSha256),
-    "invalid-source-binding"
-  );
-  const source3 = await sourceAt(value.directory, signal);
-  insist(
-    source3.directory === value.directory && source3.sourceSha256 === value.sourceSha256,
-    "source-drift"
-  );
-  stopped(signal);
 }
 
 // src/runner-review-channel.ts
@@ -33267,13 +33039,13 @@ var contextDirectory;
 var contextReplyErrors = [];
 var contextReplyWrites = Promise.resolve();
 var retainContextReplyError = (frame, error62) => {
-  let text5;
+  let text4;
   try {
-    text5 = String(error62);
+    text4 = String(error62);
   } catch {
-    text5 = "Unprintable context reply failure";
+    text4 = "Unprintable context reply failure";
   }
-  contextReplyErrors.push({ frame, error: text5 });
+  contextReplyErrors.push({ frame, error: text4 });
   if (contextDirectory) {
     const directory = contextDirectory;
     contextReplyWrites = contextReplyWrites.then(
@@ -33400,7 +33172,6 @@ process.on("message", (message) => {
         runnerValidation,
         requestClarification: clarificationEnabled,
         applicationContext: contextRegistration,
-        reuseSource,
         ownerTransition: _ownerTransition,
         telemetryPlanId: _telemetryPlanId,
         brokerBinding: _brokerBinding,
@@ -33470,10 +33241,6 @@ process.on("message", (message) => {
           void send({ type: "event", event: event2 });
         }
       };
-      if (reuseSource !== void 0)
-        await verifyExecutionSource(reuseSource, {
-          signal: controller.signal
-        });
       controller.signal.throwIfAborted();
       nativeDispatched = true;
       if (registration.success)
