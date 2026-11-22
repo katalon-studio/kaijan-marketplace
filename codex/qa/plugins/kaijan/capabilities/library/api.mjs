@@ -576,9 +576,9 @@ var require_codegen = __commonJS({
       }
     };
     var Label = class extends Node3 {
-      constructor(label4) {
+      constructor(label3) {
         super();
-        this.label = label4;
+        this.label = label3;
         this.names = {};
       }
       render({ _n }) {
@@ -586,14 +586,14 @@ var require_codegen = __commonJS({
       }
     };
     var Break = class extends Node3 {
-      constructor(label4) {
+      constructor(label3) {
         super();
-        this.label = label4;
+        this.label = label3;
         this.names = {};
       }
       render({ _n }) {
-        const label4 = this.label ? ` ${this.label}` : "";
-        return `break${label4};` + _n;
+        const label3 = this.label ? ` ${this.label}` : "";
+        return `break${label3};` + _n;
       }
     };
     var Throw = class extends Node3 {
@@ -1005,12 +1005,12 @@ var require_codegen = __commonJS({
         return this._endBlockNode(For);
       }
       // `label` statement
-      label(label4) {
-        return this._leafNode(new Label(label4));
+      label(label3) {
+        return this._leafNode(new Label(label3));
       }
       // `break` statement
-      break(label4) {
-        return this._leafNode(new Break(label4));
+      break(label3) {
+        return this._leafNode(new Break(label3));
       }
       // `return` statement
       return(value) {
@@ -41903,7 +41903,7 @@ var require_lib = __commonJS({
     var prefix = true;
     var postfix = true;
     var ExportedTokenType = class {
-      constructor(label4, conf = {}) {
+      constructor(label3, conf = {}) {
         this.label = void 0;
         this.keyword = void 0;
         this.beforeExpr = void 0;
@@ -41914,7 +41914,7 @@ var require_lib = __commonJS({
         this.prefix = void 0;
         this.postfix = void 0;
         this.binop = void 0;
-        this.label = label4;
+        this.label = label3;
         this.keyword = conf.keyword;
         this.beforeExpr = !!conf.beforeExpr;
         this.startsExpr = !!conf.startsExpr;
@@ -43018,10 +43018,10 @@ var require_lib = __commonJS({
           return this.finishNode(node3, "DeclareExportDeclaration");
         } else {
           if (this.match(75) || this.isLet() || (this.isContextual(130) || this.isContextual(129)) && !insideModule) {
-            const label4 = this.state.value;
+            const label3 = this.state.value;
             throw this.raise(FlowErrors.UnsupportedDeclareExportKind, this.state.startLoc, {
-              unsupportedExportKind: label4,
-              suggestion: exportSuggestions[label4]
+              unsupportedExportKind: label3,
+              suggestion: exportSuggestions[label3]
             });
           }
           if (this.match(74) || this.match(68) || this.match(80) || this.isContextual(131)) {
@@ -43774,9 +43774,9 @@ var require_lib = __commonJS({
             return this.flowParseTypeofType();
           default:
             if (tokenIsKeyword(this.state.type)) {
-              const label4 = tokenLabelName(this.state.type);
+              const label3 = tokenLabelName(this.state.type);
               this.next();
-              return super.createIdentifier(node3, label4);
+              return super.createIdentifier(node3, label3);
             } else if (tokenIsIdentifier(this.state.type)) {
               if (this.isContextual(129)) {
                 return this.flowParseInterfaceType();
@@ -49315,7 +49315,7 @@ var require_lib = __commonJS({
           startLoc
         } = this.state;
         let labeled2;
-        let label4;
+        let label3;
         let optional4;
         let type;
         const isWord = tokenIsKeywordOrIdentifier(this.state.type);
@@ -49323,7 +49323,7 @@ var require_lib = __commonJS({
         if (chAfterWord === 58) {
           labeled2 = true;
           optional4 = false;
-          label4 = this.parseIdentifier(true);
+          label3 = this.parseIdentifier(true);
           this.expect(14);
           type = this.tsParseType();
         } else if (chAfterWord === 63) {
@@ -49332,7 +49332,7 @@ var require_lib = __commonJS({
           const typeOrLabel = this.tsParseNonArrayType();
           if (this.lookaheadCharCode() === 58) {
             labeled2 = true;
-            label4 = this.createIdentifier(this.startNodeAt(startLoc), wordName);
+            label3 = this.createIdentifier(this.startNodeAt(startLoc), wordName);
             this.expect(17);
             this.expect(14);
             type = this.tsParseType();
@@ -49348,10 +49348,10 @@ var require_lib = __commonJS({
         }
         if (labeled2) {
           let labeledNode;
-          if (label4) {
+          if (label3) {
             labeledNode = this.startNodeAt(startLoc);
             labeledNode.optional = optional4;
-            labeledNode.label = label4;
+            labeledNode.label = label3;
             labeledNode.elementType = type;
             if (this.eat(17)) {
               labeledNode.optional = true;
@@ -54250,8 +54250,8 @@ var require_lib = __commonJS({
         return this.finishNode(node3, "EmptyStatement");
       }
       parseLabeledStatement(node3, maybeName, expr, flags) {
-        for (const label4 of this.state.labels) {
-          if (label4.name === maybeName) {
+        for (const label3 of this.state.labels) {
+          if (label3.name === maybeName) {
             this.raise(Errors.LabelRedeclaration, expr, {
               labelName: maybeName
             });
@@ -54259,10 +54259,10 @@ var require_lib = __commonJS({
         }
         const kind = tokenIsLoop(this.state.type) ? 1 : this.match(71) ? 2 : null;
         for (let i2 = this.state.labels.length - 1; i2 >= 0; i2--) {
-          const label4 = this.state.labels[i2];
-          if (label4.statementStart === node3.start) {
-            label4.statementStart = this.sourceToOffsetPos(this.state.start);
-            label4.kind = kind;
+          const label3 = this.state.labels[i2];
+          if (label3.statementStart === node3.start) {
+            label3.statementStart = this.sourceToOffsetPos(this.state.start);
+            label3.kind = kind;
           } else {
             break;
           }
@@ -83336,9 +83336,9 @@ function codePointLengthVar(doc, ctx, accessor, inDoubt) {
   doc.write(`const ${v} = typeof ${accessor} === "string" && ${inDoubt} ? ${cpLen}(${accessor}) : ${accessor}.length;`);
   return v;
 }
-function numericOperand(value, label4) {
+function numericOperand(value, label3) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    throw new ZodCompileUnsupportedError(`${label4} bound of type ${typeof value}`);
+    throw new ZodCompileUnsupportedError(`${label3} bound of type ${typeof value}`);
   }
   return `${value}`;
 }
@@ -91491,14 +91491,14 @@ var customerSourceDisplaySchema = external_exports.object({
   expectation: external_exports.object({ label: external_exports.string(), text: external_exports.string() }).optional()
 });
 function customerSourceText(quote2) {
-  const text14 = quote2.display ? quote2.display.fields.map(({ label: label4, text: text15 }) => {
+  const text14 = quote2.display ? quote2.display.fields.map(({ label: label3, text: text15 }) => {
     if (quote2.display?.kind === "proposed-test") {
-      if (label4 === "Proposed expectation")
-        label4 = "Expected result";
-      else if (/^Proposed step [1-9]\d*$/.test(label4))
-        label4 = `Step ${label4.slice("Proposed step ".length)}`;
+      if (label3 === "Proposed expectation")
+        label3 = "Expected result";
+      else if (/^Proposed step [1-9]\d*$/.test(label3))
+        label3 = `Step ${label3.slice("Proposed step ".length)}`;
     }
-    return `${label4}: ${text15}`;
+    return `${label3}: ${text15}`;
   }).join("\n\n") : quote2.text ?? "";
   return quote2.text !== void 0 && quote2.notice ? `${text14}
 
@@ -91507,18 +91507,6 @@ ${quote2.notice}` : text14;
 function customerLiteralText(value, quotes2 = []) {
   const source4 = quotes2.find((quote2) => quote2.text === value && quote2.display);
   return source4 ? customerSourceText(source4) : value;
-}
-function customerExpectationText(value, quotes2 = []) {
-  const candidates = /* @__PURE__ */ new Map();
-  for (const quote2 of quotes2) {
-    const expectation = quote2.display?.expectation;
-    if (!expectation)
-      continue;
-    const rendered = expectation.label === "Expected" ? expectation.text : `${expectation.label}: ${expectation.text}`;
-    if (quote2.text === value || rendered === value)
-      candidates.set(JSON.stringify([expectation.label, expectation.text]), expectation);
-  }
-  return candidates.size === 1 ? [...candidates.values()][0] : { label: "Expected", text: value };
 }
 
 // ../contracts/dist/customer-assessment-presentation.js
@@ -91675,12 +91663,6 @@ function projectAssessmentActions(values = []) {
       attribution: "retained-action-record"
     }) : { ...supplied, attribution: "supplied-action-record" };
   });
-}
-function presentRecordedAction(row2) {
-  const a = row2.action;
-  const detail = a.type === "type" && a.text !== void 0 ? ` text ${JSON.stringify(a.text)}` : a.type === "keypress" && a.keys ? ` ${a.keys.join(" + ")}` : a.type === "scroll" ? ` horizontally ${a.scroll_x ?? 0}, vertically ${a.scroll_y ?? 0}` : a.x !== void 0 && a.y !== void 0 ? ` at (${a.x}, ${a.y})` : "";
-  const status2 = row2.status === "invoked" ? "attempt recorded; completion unknown" : row2.status === "returned" ? "return recorded; application effect not established" : "error recorded; effects may be uncertain";
-  return `${row2.attribution === "retained-action-record" ? "Recorded" : "Supplied"} action ${row2.index}: ${a.type.replaceAll("_", " ")}${detail} \u2014 ${status2}.`;
 }
 function projectAssessmentStepFacts(value) {
   const row2 = copyAssessmentPresentationProof(value, customerAssessmentStepFactsSchema.parse(value));
@@ -92035,30 +92017,6 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   ...reportExecutionRejectionNoticeSchema.options,
   "The test could not finish. Review the saved observations before retrying."
 ]);
-function savedRunProgressCaption(state2) {
-  if (state2 === "running")
-    return "Run was in progress when this report was saved";
-  if (state2 === "accepted")
-    return "Run was accepted when this report was saved";
-  return void 0;
-}
-function additionalReportTestIds(planTestIds, selectedTestIds, assessments) {
-  const originalIds = /* @__PURE__ */ new Set([...planTestIds, ...selectedTestIds]);
-  let number4 = BigInt(originalIds.size);
-  for (const id8 of originalIds) {
-    const suffix = /^T([1-9][0-9]*)$/.exec(id8)?.[1];
-    if (suffix && BigInt(suffix) > number4)
-      number4 = BigInt(suffix);
-  }
-  const displayIds = /* @__PURE__ */ new Map();
-  for (const assessment of assessments) {
-    if (assessment.additionalCheck && !displayIds.has(assessment.testId)) {
-      number4 += 1n;
-      displayIds.set(assessment.testId, `T${number4}`);
-    }
-  }
-  return displayIds;
-}
 var testPlanViewSchema = external_exports.object({
   schema: external_exports.literal("loki.test-plan-view/2"),
   reportId: digest9,
@@ -92299,34 +92257,6 @@ var customerReportTraceOutputSchema = external_exports.union([
 ]);
 var reportTraceOutputSchema = external_exports.union([
   reportTraceResultSchema,
-  reportReadFailureSchema
-]);
-var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
-var reportExportPreviewSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest9,
-  previewSha256: digest9,
-  html: external_exports.string(),
-  omitted: external_exports.array(external_exports.string()),
-  redaction: external_exports.string(),
-  included: external_exports.array(external_exports.string())
-});
-var reportExportReceiptSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest9,
-  sha256: digest9,
-  path: external_exports.string(),
-  delivery: external_exports.literal("local-file-only"),
-  uploaded: external_exports.literal(false)
-});
-var reportExportPreviewOutputSchema = external_exports.union([
-  reportExportPreviewSchema,
-  reportReadFailureSchema
-]);
-var reportExportOutputSchema = external_exports.union([
-  reportExportReceiptSchema,
   reportReadFailureSchema
 ]);
 
@@ -106555,7 +106485,7 @@ var planningProcedures = external_exports.array(
   ).size === items.length,
   "Supply each historical procedure once."
 ).describe(
-  "Optional historical background for a new plan. Supply separate title/steps items, with source URI/revision when known, or an explicit saved Run ID from this conversation. Kaijan reads saved authored scenarios internally. These are not verified action logs, current requirements, prior verdicts or permission to execute. Do not fetch and copy a whole Run history. Recorded-execution reuse stays in Run."
+  "Optional historical background for a new plan. Supply separate title/steps items, with source URI/revision when known, or an explicit saved Run ID from this conversation. Kaijan reads saved authored scenarios internally. These are not verified action logs, current requirements, prior verdicts or permission to execute. Do not fetch and copy a whole Run history."
 );
 var hash10 = (value) => createHash22("sha256").update(value).digest("hex");
 var authority = "Historical authored procedure supplied as background. Adapt it to the current task and requirements. It is not proof of performed actions or current behavior, a new requirement, or execution authority. Prior results do not establish a fresh result.";
@@ -111202,9 +111132,9 @@ function factoryTitle(effects, ok, nok, type, markerType, stringType) {
       return atBreak(code);
     }
     effects.consume(code);
-    return code === 92 ? escape3 : inside3;
+    return code === 92 ? escape2 : inside3;
   }
-  function escape3(code) {
+  function escape2(code) {
     if (code === marker || code === 92) {
       effects.consume(code);
       return inside3;
@@ -112301,7 +112231,7 @@ function resolveToLabelEnd(events, context) {
       ...events[events.length - 1][1].end
     }
   };
-  const label4 = {
+  const label3 = {
     type: "label",
     start: {
       ...events[open17][1].start
@@ -112319,11 +112249,11 @@ function resolveToLabelEnd(events, context) {
       ...events[close2 - 2][1].start
     }
   };
-  media = [["enter", group, context], ["enter", label4, context]];
+  media = [["enter", group, context], ["enter", label3, context]];
   media = push(media, events.slice(open17 + 1, open17 + offset2 + 3));
   media = push(media, [["enter", text14, context]]);
   media = push(media, resolveAll(context.parser.constructs.insideSpan.null, events.slice(open17 + offset2 + 4, close2 - 3), context));
-  media = push(media, [["exit", text14, context], events[close2 - 2], events[close2 - 1], ["exit", label4, context]]);
+  media = push(media, [["exit", text14, context], events[close2 - 2], events[close2 - 1], ["exit", label3, context]]);
   media = push(media, events.slice(close2 + 1));
   media = push(media, [["exit", group, context]]);
   splice(events, open17, events.length, media);
@@ -114070,9 +114000,9 @@ function compiler(options2) {
     node3.value = data3.replace(/(\r?\n|\r)$/g, "");
   }
   function onexitdefinitionlabelstring(token) {
-    const label4 = this.resume();
+    const label3 = this.resume();
     const node3 = this.stack[this.stack.length - 1];
-    node3.label = label4;
+    node3.label = label3;
     node3.identifier = normalizeIdentifier(this.sliceSerialize(token)).toLowerCase();
   }
   function onexitdefinitiontitlestring() {
@@ -114216,9 +114146,9 @@ function compiler(options2) {
     this.data.referenceType = "collapsed";
   }
   function onexitreferencestring(token) {
-    const label4 = this.resume();
+    const label3 = this.resume();
     const node3 = this.stack[this.stack.length - 1];
-    node3.label = label4;
+    node3.label = label3;
     node3.identifier = normalizeIdentifier(this.sliceSerialize(token)).toLowerCase();
     this.data.referenceType = "full";
   }
@@ -123237,74 +123167,6 @@ function projectTestAssessments(entries, run, runnerContext) {
   });
 }
 
-// ../contracts/dist/customer-assessment-rejection.js
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-var assessmentServiceRejectionNotice = "The assessment service rejected the request. No assessment result was produced. Keep the supplied evidence.";
-var capturedAssessmentRejection = external_exports.object({
-  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
-  status: external_exports.literal("first_response_failure"),
-  assessment: external_exports.null(),
-  failure: external_exports.object({ reason: external_exports.literal("invalid_first_response_no_retry") }),
-  result_persisted: external_exports.literal(true),
-  persistence_failure: external_exports.unknown().optional(),
-  provider_calls_started: external_exports.literal(1),
-  native_receipt: external_exports.object({
-    status: external_exports.literal("http_identity_or_completion_failure"),
-    http_status: external_exports.literal(429),
-    started_calls: external_exports.literal(1),
-    automatic_retry: external_exports.literal(false),
-    body_complete: external_exports.literal(true),
-    capture_error: external_exports.null(),
-    captured_bytes: external_exports.number().int().positive(),
-    captured_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
-  }),
-  native_artifact_directory: external_exports.string(),
-  native_artifacts: external_exports.array(external_exports.unknown())
-});
-var responseArtifact = external_exports.object({
-  path: external_exports.string(),
-  bytes: external_exports.number(),
-  sha256: external_exports.string()
-});
-function hasCapturedAssessmentRejection(input3, joinPath) {
-  const parsed = capturedAssessmentRejection.safeParse(input3);
-  if (!parsed.success || parsed.data.persistence_failure === true)
-    return false;
-  const { native_receipt: receipt4, native_artifacts: artifacts } = parsed.data;
-  const path21 = joinPath(parsed.data.native_artifact_directory, "response.bin");
-  return artifacts.some((value) => {
-    const artifact2 = responseArtifact.safeParse(value).data;
-    return artifact2 !== void 0 && artifact2.path === path21 && artifact2.bytes === receipt4.captured_bytes && artifact2.sha256 === receipt4.captured_sha256;
-  });
-}
-function restoreVerifiedAssessmentRejection(view, report) {
-  if (!report.assessments || !view.assessments)
-    return report;
-  const rejected = new Set(view.assessments.flatMap((source4) => {
-    const result = source4.result;
-    return source4.sourceKind === "answer" && source4.state === "complete" && source4.resultSha256 && hasVerifiedAssessmentSource(result) && result?.message === assessmentServiceRejectionNotice ? [source4.sourceId + ":" + source4.resultSha256] : [];
-  }));
-  return {
-    ...report,
-    assessments: report.assessments.map((source4) => source4.sourceKind === "answer" && source4.state === "complete" && source4.result?.status === "first_response_failure" && rejected.has(source4.sourceId + ":" + source4.resultSha256) ? {
-      ...source4,
-      result: {
-        ...source4.result,
-        message: assessmentServiceRejectionNotice
-      }
-    } : source4)
-  };
-}
-
 // src/report-risk.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -125155,13 +125017,13 @@ var ReportTraces = class {
       if (await realpath16(directory3) !== directory3)
         throw Error("Noncanonical artifact directory");
       const names = await readdir2(directory3);
-      for (const [name, label4] of [
+      for (const [name, label3] of [
         ["manifest.json", "Artifact manifest"],
         ["actions.json", desktop ? "Desktop actions" : "Browser actions"],
         ["terminal-ui.json", "Terminal browser observation"]
       ]) {
-        if (name && label4 && names.includes(name))
-          artifacts.files.push({ label: label4, path: join30(directory3, name) });
+        if (name && label3 && names.includes(name))
+          artifacts.files.push({ label: label3, path: join30(directory3, name) });
       }
       if (desktop) return artifacts;
       const trace = object25(native2.trace);
@@ -125734,438 +125596,6 @@ function testPlanCardSummary(view, includeCardDetails) {
   };
 }
 
-// src/customer-report-html.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-var label3 = (value) => ({
-  proposed_plan: "Test plan",
-  needs_clarification: "More information needed",
-  returned_assessment: "Evidence reviewed",
-  first_response_failure: "Assessment unavailable",
-  pass: "Passed",
-  fail: "Failed",
-  unverified: "Result not verified",
-  unknown: "Result unknown",
-  unavailable: "Result unavailable",
-  inconclusive: "Incomplete",
-  conflicting: "Different recorded results",
-  "not-run": "Not run",
-  "not-executed": "Not run",
-  blocked_or_not_run: "Blocked or not run",
-  completed: "Steps completed",
-  complete: "Complete",
-  incomplete: "Steps not completed",
-  failed: "Run failed",
-  blocked: "Blocked",
-  stuck: "Could not continue",
-  needs_input: "More information needed",
-  cancelled: "Cancelled",
-  stopped: "Stopped",
-  accepted: "Waiting to start",
-  running: "In progress",
-  skipped: "Skipped",
-  partial: "Partial coverage",
-  proposed: "Test in plan",
-  gap: "No test in plan",
-  "reported-pass": "Reported pass",
-  "reported-fail": "Reported failure"
-})[value] ?? value.replaceAll("_", " ");
-function customerReportHtmlSummary(tests2, text14) {
-  if (!tests2.length) return "";
-  const counts = /* @__PURE__ */ new Map();
-  for (const test of tests2) {
-    let name = label3(test.status).toLowerCase();
-    if (test.status === "pass") name = "tests passed";
-    counts.set(name, (counts.get(name) ?? 0) + 1);
-  }
-  const summary2 = [...counts].map(
-    ([name, count8]) => `${count8} ${count8 === 1 ? name.replace("tests passed", "test passed") : name}`
-  ).join(" \xB7 ");
-  return `<section><h2>Result summary</h2><p>${text14(summary2)}</p><p>These counts describe the saved tests. They do not establish complete requirement coverage.</p></section>`;
-}
-function customerReportHtmlSections(view, text14, selectedKinds2 = ["plan", "runner", "assessment"]) {
-  const paragraph = (value) => value ? `<p>${text14(value)}</p>` : "";
-  const lines = (values) => values.map(paragraph).join("");
-  const article = (title, values) => `<article><h3>${text14(title)}</h3>${lines(values)}</article>`;
-  const details = (title, body2) => body2 ? `<details class="report-detail"><summary>${text14(title)}</summary>${body2}</details>` : "";
-  const assessmentOutcome = ({
-    title,
-    verdict: verdict2,
-    observed,
-    expectation
-  }) => article(title, [
-    `Status: ${verdict2}`,
-    `Actual result: ${observed || "Actual result unavailable."}`,
-    expectation
-  ]);
-  const identity2 = (source4) => lines([
-    `Source: ${source4.sourceId}`,
-    `Original SHA-256: ${source4.resultSha256 ?? "unknown"}`
-  ]);
-  const expected = (value, quotes3 = []) => {
-    const shown = customerExpectationText(value, quotes3);
-    return `Expected result: ${shown.text ?? "Expected result unavailable."}`;
-  };
-  const sourceLabels = {
-    "application-observation": "Recorded application excerpt",
-    "caller-supplied": "Caller-supplied observation",
-    "original-intent": "Original expectation",
-    "proposed-test": "Test plan source",
-    "resource-record": "Recorded resource facts"
-  };
-  const sourceLabel = (attribution) => sourceLabels[attribution ?? ""] ?? "Supplied source excerpt";
-  const quotes2 = (values) => values.map(
-    (quote2) => article(
-      quote2.display?.kind === "submitted-task" ? "Submitted task" : sourceLabel(quote2.attribution),
-      [customerSourceText(quote2)]
-    ) + details("Source identity", paragraph(quote2.sourceId))
-  ).join("");
-  const boundQuotes = (values) => {
-    const present = (values ?? []).filter((quote2) => quote2.text !== void 0);
-    const unavailable5 = (values ?? []).filter(
-      (quote2) => quote2.text === void 0
-    );
-    return quotes2(
-      present.map((quote2) => ({
-        sourceId: quote2.sourceId,
-        text: quote2.text,
-        attribution: quote2.attribution,
-        display: quote2.display,
-        notice: quote2.notice
-      }))
-    ) + details(
-      unavailable5.length ? `Supporting source evidence \xB7 ${unavailable5.length} unavailable` : "Supporting source evidence",
-      present.map(
-        (quote2) => article("Source evidence", [
-          customerSourceText(quote2),
-          `Source: ${quote2.sourceId}`,
-          ...quote2.sha256 ? [`Original source SHA-256: ${quote2.sha256}`] : []
-        ])
-      ).join("") + (unavailable5.length ? paragraph(
-        `${unavailable5.length} cited source ${unavailable5.length === 1 ? "text is" : "texts are"} unavailable in this view.`
-      ) + lines(
-        unavailable5.flatMap((quote2) => [
-          `Source: ${quote2.sourceId}`,
-          ...quote2.sha256 ? [`Quote SHA-256: ${quote2.sha256}`] : []
-        ])
-      ) : "")
-    );
-  };
-  const coverage3 = (value) => details(
-    "Coverage",
-    lines([
-      label3(value.status),
-      ...value.unassessed_requirement_ids.length ? [
-        `Requirements not assessed: ${value.unassessed_requirement_ids.join(", ")}`
-      ] : [],
-      "Record coverage does not prove that all requirements were tested or passed."
-    ])
-  );
-  const sections = [];
-  for (const source4 of view.plans) {
-    const plan = source4.plan;
-    const evidence2 = (source4.evidence ?? []).map((item2) => {
-      const proof4 = lines([
-        `Evidence: ${item2.id}`,
-        `Source: ${item2.source_id}`,
-        `Source role: ${item2.kind}`,
-        ...item2.uri ? [`Source location: ${item2.uri}`] : [],
-        `Revision: ${item2.revision} \xB7 line: ${item2.line}`
-      ]);
-      if (item2.contentState === "original-quote")
-        return article("Original application/source quote", [
-          item2.quote,
-          `Original quote SHA-256: ${item2.quote_sha256}`
-        ]) + proof4;
-      if (item2.contentState === "projected-risk") {
-        let content3 = paragraph("Risk review unavailable.");
-        try {
-          const parsed = JSON.parse(item2.projection.text);
-          const risk = customerRiskSchema.safeParse(parsed);
-          if (risk.success)
-            content3 = paragraph(
-              "Questions to review, not verified defects or approved requirements."
-            ) + risk.data.assumptions_to_confirm.map(
-              (finding3) => article(finding3.assumption_to_confirm, [
-                finding3.observed_code_behavior ?? "",
-                finding3.observed_source_statement ?? "",
-                finding3.question,
-                finding3.why_it_matters,
-                finding3.evidence_needed
-              ]) + details(
-                "Risk source references",
-                paragraph(finding3.id) + finding3.source_evidence.map(
-                  (reference2) => typeof reference2 === "string" ? paragraph(reference2) : article("Source evidence", [
-                    reference2.quote,
-                    `Evidence: ${reference2.id}`,
-                    `Source: ${reference2.source_id}`,
-                    `Source role: ${reference2.kind}`,
-                    ...reference2.uri ? [`Source location: ${reference2.uri}`] : [],
-                    `Revision: ${reference2.revision} \xB7 line: ${reference2.line}`,
-                    `Original quote SHA-256: ${reference2.quote_sha256}`
-                  ])
-                ).join("")
-              )
-            ).join("");
-        } catch {
-        }
-        return content3 + proof4 + lines([
-          `Customer content SHA-256 before export filtering: ${item2.projection.sha256}`,
-          `Original quote SHA-256: ${item2.originalQuoteSha256}`
-        ]);
-      }
-      return proof4 + lines([
-        item2.notice,
-        `Original quote SHA-256: ${item2.originalQuoteSha256}`
-      ]);
-    }).join("");
-    const body2 = plan ? paragraph(
-      `${label3(plan.status)}. Creating a plan does not run these tests.`
-    ) + plan.tests.map(
-      (item2) => article(`${item2.id} \xB7 ${item2.title ?? "Test"}`, [
-        expected(item2.expected.text),
-        ...(item2.execution_gaps ?? []).map(
-          (gap) => `Not covered: ${gap}`
-        )
-      ]) + details(
-        item2.steps.length ? "Planned steps" : "Test details",
-        lines([
-          item2.reason ?? "",
-          ...(item2.prerequisites ?? []).map(
-            (value) => `Prerequisite: ${value}`
-          ),
-          ...item2.steps.map(
-            (value, index2) => `Step ${index2 + 1}: ${value}`
-          )
-        ])
-      )
-    ).join("") + lines([
-      ...plan.ambiguities ?? [],
-      ...plan.disagreements ?? [],
-      ...plan.limitations ?? []
-    ]) + (source4.coverage ? coverage3(source4.coverage) : "") + details(
-      "Objectives and requirement coverage",
-      (plan.objectives ?? []).map((item2) => article(item2.id, [item2.text])).join("") + (plan.requirement_coverage ?? []).map(
-        (row2) => article(`Requirement ${row2.requirement_id}`, [
-          row2.text ?? "",
-          label3(row2.status),
-          `Tests: ${row2.test_ids.join(", ")}`,
-          row2.reason ?? ""
-        ])
-      ).join("")
-    ) : paragraph(
-      source4.planningFailure === "service-rejected" ? planningServiceRejectionNotice : source4.notice ?? "This saved plan is unavailable in the supported view."
-    );
-    sections.push({
-      kind: "plan",
-      title: "Test plan",
-      html: `<section><h2>Test plan</h2>${body2}${details("Plan sources and evidence", identity2(source4) + evidence2)}</section>`
-    });
-  }
-  for (const [index2, run] of view.runs.entries()) {
-    const plan = view.plans.find(
-      (source4) => source4.sourceId === run.planSourceId && source4.resultSha256 === run.planResultSha256
-    )?.plan;
-    const displayIds = additionalReportTestIds(
-      plan?.tests.map((test) => test.id) ?? [],
-      run.selectedTestIds,
-      run.assessments ?? []
-    );
-    const execution = run.executionReport;
-    const completedSteps = execution?.completedSteps ?? [];
-    const hasExecutionSteps = Boolean(
-      completedSteps.length || execution?.remainingSteps.length
-    );
-    const executionSteps = execution ? (execution.status === "complete" ? "" : paragraph(label3(execution.status))) + (!run.executionRecap && completedSteps.length ? `<h3>Completed steps</h3><ol>${completedSteps.map((step) => `<li>${text14(step)}</li>`).join("")}</ol>` : "") + (execution.test_results ?? []).map(
-      (row2) => article(row2.test_id, [
-        row2.bug_found ? "Fail" : row2.scenario_finished ? "Pass" : "Incomplete",
-        row2.scenario_finished ? "Scenario finished" : "Scenario incomplete",
-        row2.bug_found ? "Bug found" : row2.bug_found_by_common_sense ? "Additional bug reported" : "No bug observed",
-        row2.actual,
-        row2.execution_details,
-        ...row2.warning ? ["Needs confirmation \u2014 " + row2.warning] : []
-      ])
-    ).join("") + lines(execution.questions.map((question3) => question3.question)) + (!run.executionRecap && !hasExecutionSteps && execution.reason?.trim() ? "<h3>Execution reason</h3>" + paragraph(execution.reason) : "") : "";
-    const interruptionNote = run.executionLimitNotice ?? run.interruptionNote;
-    const body2 = lines([
-      savedRunProgressCaption(run.executionState) ?? label3(run.executionState || "unknown"),
-      ...run.outcomeNotice ? [run.outcomeNotice] : [],
-      ...interruptionNote ? [interruptionNote] : [],
-      ...run.stoppedByUser ? ["The test was stopped by the user."] : []
-    ]) + (run.notStartedTestIds?.length ? `<section aria-label="Tests not started"><h3>Tests not started</h3><ul>${run.notStartedTestIds.map((id8) => `<li>${text14(id8)}</li>`).join("")}</ul></section>` : "") + (run.executionEvidence ? details(
-      "Application evidence",
-      paragraph(run.executionEvidence.notice) + (run.executionEvidence.cleanup ? boundQuotes([run.executionEvidence.cleanup]) : "") + run.executionEvidence.actions.map(
-        (action3) => article("Action record", [presentRecordedAction(action3)])
-      ).join("") + boundQuotes(run.executionEvidence.observations)
-    ) : "") + (run.assessments ?? []).map((assessment) => {
-      const test = plan?.tests.find(
-        (item2) => item2.id === assessment.testId
-      );
-      const scenarioTitle = assessment.scenarioTitle?.trim();
-      const title = assessment.additionalCheck ? `${displayIds.get(assessment.testId)} \xB7 ${scenarioTitle || "Test"}` : `${assessment.testId} \xB7 ${test?.title ?? "Test assessment"}`;
-      const verdict2 = label3(assessment.verdict);
-      const observed = assessment.actual?.trim() ? customerLiteralText(assessment.actual, assessment.evidence) : "";
-      return assessmentOutcome({
-        title,
-        verdict: verdict2,
-        observed,
-        expectation: expected(assessment.expected, assessment.evidence)
-      }) + quotes2(assessment.evidence) + details(
-        "Action records for the selected outcomes",
-        paragraph(assessmentActionQualification) + (assessment.recordedActions ?? []).map(
-          (action3) => article("Action record", [presentRecordedAction(action3)])
-        ).join("")
-      ) + details(
-        "Assessment evidence",
-        lines([
-          `Assessment source: ${assessment.answerId}`,
-          `Original SHA-256: ${assessment.resultSha256}`,
-          expected(assessment.expected, assessment.evidence),
-          ...assessment.evidenceNotice ? [assessment.evidenceNotice] : []
-        ]) + assessment.observedSteps.map(
-          (step) => article("Cited observation group", [
-            customerLiteralText(step.description, step.evidence)
-          ]) + quotes2(step.evidence) + (step.facts ? paragraph(step.facts.notice) + step.facts.actions.map(
-            (action3) => article("Referenced action record", [
-              presentRecordedAction(action3)
-            ])
-          ).join("") + boundQuotes(step.facts.observations) : "")
-        ).join("")
-      );
-    }).join("") + (run.assertions?.tests ?? []).map(
-      (test) => article(`${test.testId} ${test.title} \xB7 ${label3(test.status)}`, [
-        `Status: ${label3(test.status)}`,
-        `Actual result: ${test.actual}`,
-        expected(test.expected)
-      ]) + details(
-        "Recorded checks and source",
-        lines(
-          test.steps.map(
-            (step) => `${step.title}: ${label3(step.status)} \xB7 Actual result: ${step.actual} \xB7 Expected result: ${step.expected}`
-          )
-        ) + (test.code ? lines([
-          test.code.text,
-          `Source revision: ${test.code.revision}`,
-          `Code SHA-256: ${test.code.sha256}`
-        ]) : "")
-      )
-    ).join("") + executionSteps + (run.executionRecap ? `<section aria-label="Executed steps"><h3>Executed steps</h3>${run.executionRecap.detailsOmitted ? paragraph("Some private details are omitted from these saved steps.") : ""}<ol>${run.executionRecap.steps.map((step) => `<li>${text14(step)}</li>`).join("")}</ol></section>` : savedRunProgressCaption(run.executionState) || hasExecutionSteps ? "" : '<section aria-label="Executed steps"><h3>Executed steps</h3><p>The full recap is unavailable for this Run.</p></section>') + (execution?.remainingSteps.length ? `<h3>Not completed</h3><ul>${execution.remainingSteps.map((step) => `<li>${text14(step)}</li>`).join("")}</ul>` : "");
-    const evidence2 = (run.observedPages ?? []).map(
-      (page4) => article("Observed application content", [
-        page4.text,
-        ...page4.accessibilityText ? [page4.accessibilityText] : [],
-        "Page content can include text outside the visible area. It does not establish a test verdict.",
-        `Evidence: ${page4.id}`,
-        `Original source SHA-256: ${page4.sourceSha256}`,
-        `Customer content SHA-256 before export filtering: ${page4.contentSha256}`
-      ])
-    ).join("") + (run.assertions?.evidence ?? []).map(
-      (item2) => article("Application evidence", [
-        item2.text,
-        `Evidence: ${item2.id}`,
-        `SHA-256: ${item2.sha256}`
-      ])
-    ).join("") + (run.observationNotice ? paragraph(run.observationNotice) : "");
-    const sources = identity2(run) + paragraph(
-      `Selected tests: ${run.selectedTestIds.join(", ") || "Not specified"}`
-    ) + paragraph(
-      !run.testVerdict || run.testVerdict === "unverified" ? "Execution did not assign a test result. See the separate assessment." : `Recorded execution result: ${label3(run.testVerdict)}`
-    ) + evidence2;
-    sections.push({
-      kind: "runner",
-      title: "Test results",
-      html: `<section><h2>Test results${view.runs.length > 1 ? ` \xB7 Run ${index2 + 1}` : ""}</h2>${body2}${details("Run sources and observations", sources)}</section>`
-    });
-  }
-  for (const source4 of view.assessments ?? []) {
-    const assessment = source4.result;
-    let repeated = "";
-    const tests2 = (assessment?.tests ?? []).map((test) => {
-      const observed = test.actual?.trim() ? customerLiteralText(test.actual, test.evidenceQuotes) : "";
-      const content3 = assessmentOutcome({
-        title: test.test_id ?? "Unassigned test",
-        verdict: label3(test.verdict),
-        observed,
-        expectation: expected(test.expected, test.evidenceQuotes)
-      }) + boundQuotes(test.evidenceQuotes) + details(
-        "Action records for the selected outcomes",
-        paragraph(assessmentActionQualification) + (test.recordedActions ?? []).map(
-          (action3) => article("Action record", [presentRecordedAction(action3)])
-        ).join("")
-      ) + (test.observed_steps ?? []).map(
-        (step) => article("Cited observation group", [
-          customerLiteralText(step.description, step.evidenceQuotes)
-        ]) + boundQuotes(step.evidenceQuotes) + (step.facts ? paragraph(step.facts.notice) + step.facts.actions.map(
-          (action3) => article("Referenced action record", [
-            presentRecordedAction(action3)
-          ])
-        ).join("") + boundQuotes(step.facts.observations) : "")
-      ).join("") + details(
-        "Outcome references and recorded expectation",
-        lines([
-          ...test.outcome_ids,
-          expected(test.expected, test.evidenceQuotes)
-        ])
-      );
-      const linked = selectedKinds2.includes("runner") && view.runs.some(
-        (run) => source4.assessedRunIds?.includes(run.sourceId) && run.assessments?.some(
-          (row2) => row2.answerId === source4.sourceId && row2.resultSha256 === source4.resultSha256 && row2.testId === test.test_id
-        )
-      );
-      if (linked) {
-        repeated += content3;
-        return "";
-      }
-      return content3;
-    }).join("");
-    const body2 = assessment ? paragraph(`${label3(assessment.status)}. ${assessment.meaning}`) + (repeated ? paragraph(
-      "The linked test results are shown above. Supporting assessment records are in the source details below."
-    ) : "") + (assessment.message ? paragraph(assessment.message) : "") + tests2 + (assessment.findings ?? []).map(
-      (finding3) => article(label3(finding3.kind ?? "Finding to review"), [
-        finding3.claim ?? finding3.notice ?? "Finding text unavailable.",
-        finding3.remaining_gap ?? "",
-        "Finding to review; not a verified defect."
-      ]) + details(
-        "Finding evidence",
-        lines([
-          `Finding: ${finding3.id}`,
-          ...finding3.test_ids?.length ? [`Tests: ${finding3.test_ids.join(", ")}`] : []
-        ]) + boundQuotes(finding3.evidenceQuotes)
-      )
-    ).join("") + (assessment.coverage ? coverage3(assessment.coverage) : "") : paragraph(
-      source4.notice ?? "This saved assessment is unavailable in the supported view."
-    );
-    const records = identity2(source4) + lines(
-      (source4.assessedRunIds ?? []).map(
-        (id8) => `Associated saved run: ${id8}`
-      )
-    ) + repeated + (assessment?.reportedOutcomes ?? []).map(
-      (outcome) => article("Reported outcome", [
-        label3(outcome.status),
-        `Outcome: ${outcome.id}`,
-        `Test: ${outcome.test_id ?? "unassigned"}`,
-        `Evidence: ${outcome.evidence_ids.join(", ")}`
-      ])
-    ).join("");
-    sections.push({
-      kind: "assessment",
-      title: "Assessment",
-      html: `<section><h2>Assessment</h2>${body2}${details("Assessment sources and supporting records", records)}</section>`
-    });
-  }
-  return sections.sort(
-    (left, right) => ["runner", "assessment", "plan"].indexOf(left.kind) - ["runner", "assessment", "plan"].indexOf(right.kind)
-  );
-}
-
 // src/report.ts
 var hash21 = (value) => createHash51("sha256").update(value).digest("hex");
 var digest36 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -126213,13 +125643,6 @@ var reportTrace = reportHandle.extend({
     testId: external_exports.string().min(1).max(512),
     occurrence: external_exports.number().int().positive()
   }).optional()
-});
-var reportExportSelection = external_exports.strictObject({
-  reportId: digest36,
-  kinds: external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3)
-});
-var reportExportCommit = reportExportSelection.extend({
-  previewSha256: digest36
 });
 var object26 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 var display = (value) => typeof value === "string" ? value : JSON.stringify(value);
@@ -126319,11 +125742,11 @@ function projectReport(snapshot2, associationEntries = snapshot2.entries, option
         const t = object26(raw);
         const groups = [];
         const lines = [];
-        const add = (key5, label4, values) => {
+        const add = (key5, label3, values) => {
           const start = lines.length;
           lines.push(...values.filter(Boolean));
           if (lines.length > start)
-            groups.push({ key: key5, label: label4, start, end: lines.length });
+            groups.push({ key: key5, label: label3, start, end: lines.length });
         };
         add("why", "Why", [text10(t.reason), text10(t.intent)]);
         add("method", "Method", [text10(t.method)]);
@@ -126721,49 +126144,6 @@ function projectReport(snapshot2, associationEntries = snapshot2.entries, option
     sections: visible,
     displayNotice: limited ? "This report shows a bounded excerpt. Open the original operation for complete text and omitted details; no work has been repeated." : null
   };
-}
-var escape2 = (value) => value.replace(
-  /[&<>"']/g,
-  (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
-);
-function redactText(value) {
-  return value.replace(
-    /(?:sk-[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{12,}|github_pat_[A-Za-z0-9_]+)/g,
-    "[credential omitted]"
-  ).replace(
-    /(?:\/Users\/|\/home\/|[A-Z]:\\)[^\s"<>]*/g,
-    "[private path omitted]"
-  ).replace(/\b[a-z][a-z0-9+.-]{0,24}:\/\/[^\s"<>]+/gi, "[URL omitted]").replace(/(^|[\s"'=(:])\/(?!\/)[^\s"'<>]+/g, "$1[private path omitted]").replace(
-    /(?:Bearer\s+\S+|["']?(?:api[_-]?key|access[_-]?token|password|secret)["']?\s*[=:]\s*(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,;}]+))/gi,
-    "[credential omitted]"
-  );
-}
-function redact(value) {
-  const scrub = (input3, depth = 0) => {
-    if (depth > 100) return "[Nested export content omitted]";
-    if (typeof input3 === "string") return redact(input3);
-    if (Array.isArray(input3))
-      return input3.map((part) => scrub(part, depth + 1));
-    if (input3 !== null && typeof input3 === "object")
-      return Object.fromEntries(
-        Object.entries(input3).map(([key5, part]) => [
-          key5,
-          /^(?:api[_-]?key|access[_-]?token|password|secret)$/i.test(key5) ? "[credential omitted]" : scrub(part, depth + 1)
-        ])
-      );
-    return input3;
-  };
-  try {
-    const structured = JSON.parse(value);
-    if (structured !== null && typeof structured === "object")
-      return redactText(JSON.stringify(scrub(structured)));
-  } catch {
-    if (/["'](?:api[_-]?key|access[_-]?token|password|secret)["']\s*:/i.test(
-      value
-    ))
-      return "[Structured credential-bearing text omitted]";
-  }
-  return redactText(value);
 }
 function recordHasDifferentSource(entry, sourceContextId) {
   const result = object26(entry.result);
@@ -127345,57 +126725,6 @@ var Reports = class {
   }
   async closeTraces(snapshot2) {
     await this.traces.closeAll(snapshot2?.reportId);
-  }
-  async preview(input3) {
-    reportExportSelection.parse(input3);
-    const snapshot2 = await this.get(input3.reportId);
-    const nativeView = await this.customerTestPlanView(snapshot2);
-    const view = restoreVerifiedAssessmentRejection(
-      nativeView,
-      projectCustomerTestPlanView(nativeView, hash21)
-    );
-    const displayText = (value) => escape2(redact(value));
-    const sections = customerReportHtmlSections(view, displayText, input3.kinds);
-    const summary2 = input3.kinds.includes("runner") ? customerReportHtmlSummary(
-      summarizeTestPlans(nativeView).testResults,
-      displayText
-    ) : "";
-    const included = sections.filter(
-      (section2) => input3.kinds.includes(section2.kind)
-    );
-    const omitted = sections.filter((section2) => !input3.kinds.includes(section2.kind)).map((section2) => section2.title);
-    const body2 = included.map((section2) => section2.html).join("");
-    const html = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Kaijan report</title><style>:root{color-scheme:light dark;overflow-wrap:anywhere}*{box-sizing:border-box}body{font:15px system-ui;background:Canvas;color:CanvasText;max-width:1008px;margin:32px auto;padding:24px}section,details,article{min-width:0;padding:18px;border:1px solid color-mix(in srgb,CanvasText 18%,transparent);border-radius:12px;margin:16px 0}summary{cursor:pointer}summary:focus-visible{outline:2px solid CanvasText;outline-offset:4px}p{white-space:pre-wrap;overflow-wrap:anywhere}small{color:color-mix(in srgb,CanvasText 70%,Canvas)}@media(max-width:480px){body{margin:16px auto;padding:16px}section,details,article{padding:12px}}</style><h1>${escape2(redact(view.title))}</h1><p>Read-only snapshot \xB7 ${escape2(view.createdAt)}</p><p>Saved results only. No tests were run to create this report.${omitted.length ? ` Omitted sections: ${escape2([...new Set(omitted)].join(", "))}.` : ""}</p>${summary2}${body2}<details><summary>Report sources and sharing notes</summary><p>Report: ${view.reportId}</p><p>Source identities and original digests refer to retained records. Derived risk reviews and displayed page content have separate digests before export filtering; they are not original quotations. Quoted application evidence can include JSON-shaped source text. Unavailable source text remains unavailable. Review the report before sharing.</p></details></html>`;
-    return reportExportPreviewSchema.parse({
-      schema: "loki.report-export-preview/1",
-      selectedKinds: input3.kinds,
-      reportId: input3.reportId,
-      previewSha256: hash21(html),
-      html,
-      omitted,
-      redaction: "Paths, URLs and recognized credentials omitted; review all content before sharing.",
-      included: included.map((section2) => section2.title)
-    });
-  }
-  async export(input3) {
-    reportExportCommit.parse(input3);
-    const preview = await this.preview({
-      reportId: input3.reportId,
-      kinds: input3.kinds
-    });
-    if (preview.previewSha256 !== input3.previewSha256)
-      throw new Error("Export selection changed; preview it again.");
-    const name = `export-${preview.previewSha256}.html`;
-    await atomicFile(this.directory, name, Buffer.from(preview.html));
-    return reportExportReceiptSchema.parse({
-      schema: "loki.report-export-receipt/1",
-      selectedKinds: input3.kinds,
-      reportId: input3.reportId,
-      sha256: preview.previewSha256,
-      path: join31(this.directory, name),
-      delivery: "local-file-only",
-      uploaded: false
-    });
   }
 };
 
@@ -131815,6 +131144,56 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash71 } from "node:crypto";
 import { join as join43 } from "node:path";
 
+// ../contracts/dist/customer-assessment-rejection.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var assessmentServiceRejectionNotice = "The assessment service rejected the request. No assessment result was produced. Keep the supplied evidence.";
+var capturedAssessmentRejection = external_exports.object({
+  schema: external_exports.literal("work-verifier/supplied-test-assessment/1"),
+  status: external_exports.literal("first_response_failure"),
+  assessment: external_exports.null(),
+  failure: external_exports.object({ reason: external_exports.literal("invalid_first_response_no_retry") }),
+  result_persisted: external_exports.literal(true),
+  persistence_failure: external_exports.unknown().optional(),
+  provider_calls_started: external_exports.literal(1),
+  native_receipt: external_exports.object({
+    status: external_exports.literal("http_identity_or_completion_failure"),
+    http_status: external_exports.literal(429),
+    started_calls: external_exports.literal(1),
+    automatic_retry: external_exports.literal(false),
+    body_complete: external_exports.literal(true),
+    capture_error: external_exports.null(),
+    captured_bytes: external_exports.number().int().positive(),
+    captured_sha256: external_exports.string().regex(/^[a-f0-9]{64}$/)
+  }),
+  native_artifact_directory: external_exports.string(),
+  native_artifacts: external_exports.array(external_exports.unknown())
+});
+var responseArtifact = external_exports.object({
+  path: external_exports.string(),
+  bytes: external_exports.number(),
+  sha256: external_exports.string()
+});
+function hasCapturedAssessmentRejection(input3, joinPath) {
+  const parsed = capturedAssessmentRejection.safeParse(input3);
+  if (!parsed.success || parsed.data.persistence_failure === true)
+    return false;
+  const { native_receipt: receipt4, native_artifacts: artifacts } = parsed.data;
+  const path21 = joinPath(parsed.data.native_artifact_directory, "response.bin");
+  return artifacts.some((value) => {
+    const artifact2 = responseArtifact.safeParse(value).data;
+    return artifact2 !== void 0 && artifact2.path === path21 && artifact2.bytes === receipt4.captured_bytes && artifact2.sha256 === receipt4.captured_sha256;
+  });
+}
+
 // src/assessment-presentation.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -131901,9 +131280,9 @@ function retainedCallerObservation(value) {
     ["environment", "Environment"],
     ["date", "Observation date"],
     ["deployed_revision", "Deployed revision"]
-  ].flatMap(([key5, label4]) => {
+  ].flatMap(([key5, label3]) => {
     const text14 = metadata4.data[key5];
-    return typeof text14 === "string" && text14.trim() ? [`${label4}: ${text14}`] : [];
+    return typeof text14 === "string" && text14.trim() ? [`${label3}: ${text14}`] : [];
   });
   return {
     sourceId: row2.pointer.sourceId,
@@ -131927,8 +131306,8 @@ function retainedSourceDisplay(value) {
     return void 0;
   }
   const fields4 = [];
-  const add = (label4, text14) => {
-    if (text14 !== void 0) fields4.push({ label: label4, text: text14 });
+  const add = (label3, text14) => {
+    if (text14 !== void 0) fields4.push({ label: label3, text: text14 });
   };
   const base = { sourceTextSha256: row2.rendered.sha256, fields: fields4 };
   if (row2.sourceKind === "authored_context" && ["work_item", "proposed_test"].includes(row2.provenance.role) && reported.data.source === "caller-supplied-runner-scenario") {
@@ -131967,8 +131346,8 @@ function retainedSourceDisplay(value) {
 }
 function projectedPlanSourceDisplay(value, sourceTextSha256) {
   const fields4 = [];
-  const add = (label5, text14) => {
-    if (text14 !== void 0) fields4.push({ label: label5, text: text14 });
+  const add = (label4, text14) => {
+    if (text14 !== void 0) fields4.push({ label: label4, text: text14 });
   };
   const base = { sourceTextSha256, fields: fields4 };
   const selected2 = customerPlanSchema.shape.tests.element.strict().extend({
@@ -131978,7 +131357,7 @@ function projectedPlanSourceDisplay(value, sourceTextSha256) {
   }).safeParse(value);
   if (!selected2.success) return void 0;
   const test = selected2.data;
-  const label4 = test.expected.authority === "hypothesis" ? "Proposed expectation" : test.expected.authority === "unresolved" ? "Expectation needs confirmation" : "Expected";
+  const label3 = test.expected.authority === "hypothesis" ? "Proposed expectation" : test.expected.authority === "unresolved" ? "Expectation needs confirmation" : "Expected";
   add("Test ID", test.id);
   add("Test title", test.title);
   add("Method", test.method);
@@ -131989,7 +131368,7 @@ function projectedPlanSourceDisplay(value, sourceTextSha256) {
     (text14, index2) => add(`Prerequisite ${index2 + 1}`, text14)
   );
   test.steps.forEach((text14, index2) => add(`Proposed step ${index2 + 1}`, text14));
-  add(label4, test.expected.text);
+  add(label3, test.expected.text);
   test.expected.refs?.forEach(
     (ref5) => add("Expected source reference", ref5.evidence_id)
   );
@@ -131999,7 +131378,7 @@ function projectedPlanSourceDisplay(value, sourceTextSha256) {
   return {
     ...base,
     kind: "proposed-test",
-    expectation: { label: label4, text: test.expected.text }
+    expectation: { label: label3, text: test.expected.text }
   };
 }
 
@@ -132952,22 +132331,22 @@ var pngSize = (bytes2) => {
   assert3(width > 0 && height > 0, "PNG dimensions required");
   return { width, height };
 };
-var recordArray = (values, label4) => {
-  assert3(Array.isArray(values), label4 + " array required");
+var recordArray = (values, label3) => {
+  assert3(Array.isArray(values), label3 + " array required");
   const ids2 = /* @__PURE__ */ new Set();
   for (const value of values) {
     assert3(
       object32(value) && nonempty8(value.id) && !ids2.has(value.id),
-      label4 + " unique IDs required"
+      label3 + " unique IDs required"
     );
     assert3.equal(
       typeof value.text,
       "string",
-      label4 + " original text required"
+      label3 + " original text required"
     );
     assert3(
       nullableObject(value.provenance),
-      label4 + " provenance must be supplied or null"
+      label3 + " provenance must be supplied or null"
     );
     ids2.add(value.id);
   }
@@ -139098,9 +138477,9 @@ function isIdentifierChar(code, astral) {
   }
   return isInAstralSet(code, astralIdentifierStartCodes) || isInAstralSet(code, astralIdentifierCodes);
 }
-var TokenType = function TokenType2(label4, conf) {
+var TokenType = function TokenType2(label3, conf) {
   if (conf === void 0) conf = {};
-  this.label = label4;
+  this.label = label3;
   this.keyword = conf.keyword;
   this.beforeExpr = !!conf.beforeExpr;
   this.startsExpr = !!conf.startsExpr;
@@ -140257,8 +139636,8 @@ pp$8.parseEmptyStatement = function(node3) {
 };
 pp$8.parseLabeledStatement = function(node3, maybeName, expr, context) {
   for (var i$1 = 0, list15 = this.labels; i$1 < list15.length; i$1 += 1) {
-    var label4 = list15[i$1];
-    if (label4.name === maybeName) {
+    var label3 = list15[i$1];
+    if (label3.name === maybeName) {
       this.raise(expr.start, "Label '" + maybeName + "' is already declared");
     }
   }
@@ -146120,10 +145499,10 @@ function adaptParser(Parser4, config2) {
     }
     parseLabeledStatement(node3, maybeName, expr, context) {
       for (let i2 = this.labels.length - 1; i2 >= 0; i2--) {
-        const label4 = this.labels[i2];
-        if (label4.statementStart !== node3.start) break;
-        this.parseEffects?.willSet(label4, "statementStart");
-        this.parseEffects?.willSet(label4, "kind");
+        const label3 = this.labels[i2];
+        if (label3.statementStart !== node3.start) break;
+        this.parseEffects?.willSet(label3, "statementStart");
+        this.parseEffects?.willSet(label3, "kind");
       }
       this.parseEffects?.willAppend(this.labels);
       return super.parseLabeledStatement(node3, maybeName, expr, context);
@@ -167345,7 +166724,7 @@ async function runFolderWorkflow({
       );
       focusedPages = {
         policy: focusedPagePolicy,
-        available_pages: registry2.pages.map(({ id: id8, label: label4 }) => ({ id: id8, label: label4 })),
+        available_pages: registry2.pages.map(({ id: id8, label: label3 }) => ({ id: id8, label: label3 })),
         ...selected2.value
       };
       await a.save("focused-page-selection", focusedPages);
@@ -169969,7 +169348,7 @@ function createCapabilityCatalog(services, options2 = {}) {
     {
       name: "loki_test_plan",
       title: "Propose tests for an issue or supplied work item",
-      description: "Build functional and change-impact tests for a supplied work item or compatible contextId. Kaijan reads missing explicit GitHub issue/PR links within the supplied source repositories, assesses work-item risks and generates the plan in this operation. Sources already included in the input are reused. No PR, diff or map is required. Simple input requires title and body. Supply a real source URI in url when available; Kaijan retains pasted work-item text internally when url is omitted. Supply the original request, application behavior, target and attributed source text in input. Optional agentInstructions carries the coding agent's additional planning guidance or suggested steps; Planner uses both inputs together. Put the caller's instructions for carrying out testing in taskInstructions; Kaijan retains them with the Plan and carries them into Run. For multiple sources, prefer separate items in the supported input.sources packet, preserving original text, source roles, qualifications and conflicts; do not flatten them into one unattributed summary. Optional repositories supplies an authorized owner/repository search scope; Kaijan discovers related work internally before risk preparation and planning. Omit it when discovery is not requested. Optional change supplies actual frozen change data in this same call; Kaijan reviews it internally before planning. Optional procedures supplies historical steps as separate title/steps items or saved Run references; Kaijan reads only the selected authored scenario as background for this new plan. No history search, old verdict or execution permission is inherited. Explicit recorded-execution reuse stays in Run. Optional riskAnswers reuses exact saved changeRisk/riskFinder answers from this conversation, including a matching review of the supplied change. Do not arrange separate context or risk calls for normal planning, duplicate whole histories or invent missing facts. Linked sources remain context, not new acceptance requirements. Source access gaps, native outcomes and all stage receipts remain in the saved result. No tests are executed. To run selected tests with automatic result assessment, use loki_test_execute. options.deadline_ms covers the whole preparation and planning operation. Ending the last host wait during browser exploration closes Explorer and continues the original Plan. Recover it with the identical request and configuration." + queryContract,
+      description: "Build functional and change-impact tests for a supplied work item or compatible contextId. Kaijan reads missing explicit GitHub issue/PR links within the supplied source repositories, assesses work-item risks and generates the plan in this operation. Sources already included in the input are reused. No PR, diff or map is required. Simple input requires title and body. Supply a real source URI in url when available; Kaijan retains pasted work-item text internally when url is omitted. Supply the original request, application behavior, target and attributed source text in input. Optional agentInstructions carries the coding agent's additional planning guidance or suggested steps; Planner uses both inputs together. Put the caller's instructions for carrying out testing in taskInstructions; Kaijan retains them with the Plan and carries them into Run. For multiple sources, prefer separate items in the supported input.sources packet, preserving original text, source roles, qualifications and conflicts; do not flatten them into one unattributed summary. Optional repositories supplies an authorized owner/repository search scope; Kaijan discovers related work internally before risk preparation and planning. Omit it when discovery is not requested. Optional change supplies actual frozen change data in this same call; Kaijan reviews it internally before planning. Optional procedures supplies historical steps as separate title/steps items or saved Run references; Kaijan reads only the selected authored scenario as background for this new plan. No history search, old verdict or execution permission is inherited. Optional riskAnswers reuses exact saved changeRisk/riskFinder answers from this conversation, including a matching review of the supplied change. Do not arrange separate context or risk calls for normal planning, duplicate whole histories or invent missing facts. Linked sources remain context, not new acceptance requirements. Source access gaps, native outcomes and all stage receipts remain in the saved result. No tests are executed. To run selected tests with automatic result assessment, use loki_test_execute. options.deadline_ms covers the whole preparation and planning operation. Ending the last host wait during browser exploration closes Explorer and continues the original Plan. Recover it with the identical request and configuration." + queryContract,
       input: advisoryToolRequests.testPlanning,
       inputSchema: advisoryToolInputSchemas.testPlanning,
       output: advisoryToolOutputSchemas.testPlanning,
@@ -170249,24 +169628,6 @@ function createCapabilityCatalog(services, options2 = {}) {
       input: reportTrace,
       readOnly: false,
       call: (args) => services.reports.trace(reportTrace.parse(args))
-    },
-    {
-      name: "loki_report_export_preview",
-      output: reportExportPreviewOutputSchema,
-      title: "Preview HTML export",
-      description: "Preview the selected exact report version and filtered content. Raw artifact attachments (original result files, screenshots, traces and provider payloads) are omitted; quoted supplied evidence can include JSON-shaped source text. Review the returned HTML before creating a local file. Never upload or send automatically.",
-      input: reportExportSelection,
-      readOnly: true,
-      call: async (args) => services.reports.preview(reportExportSelection.parse(args))
-    },
-    {
-      name: "loki_report_export",
-      output: reportExportOutputSchema,
-      title: "Save previewed HTML",
-      description: "Save the exact previewed report as a private local standalone HTML file. Requires matching selection and preview SHA256; does not upload, publish or send.",
-      input: reportExportCommit,
-      readOnly: false,
-      call: async (args) => services.reports.export(reportExportCommit.parse(args))
     }
   ] : [];
   const validatedReports = reportDefinitions.map((definition2) => ({
@@ -170592,8 +169953,6 @@ export {
   readRetainedMap,
   readSetupCard,
   reportCardSchema,
-  reportExportOutputSchema,
-  reportExportPreviewOutputSchema,
   reportLinkSchema,
   reportOpenOutputSchema,
   reportPanelSchema,
