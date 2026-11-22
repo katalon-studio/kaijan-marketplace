@@ -97407,6 +97407,29 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// ../contracts/dist/issue-image-type.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+function issueImageType(bytes2) {
+  const view = new DataView(bytes2.buffer, bytes2.byteOffset, bytes2.byteLength);
+  const text15 = (start, end) => String.fromCharCode(...bytes2.subarray(start, end));
+  if (bytes2.length >= 33 && bytes2[0] === 137 && text15(1, 8) === "PNG\r\n\n" && view.getUint32(8) === 13 && text15(12, 16) === "IHDR" && view.getUint32(16) > 0 && view.getUint32(20) > 0)
+    return "image/png";
+  if (bytes2.length >= 4 && bytes2[0] === 255 && bytes2[1] === 216 && bytes2[2] === 255)
+    return "image/jpeg";
+  if (bytes2.length >= 20 && text15(0, 4) === "RIFF" && text15(8, 12) === "WEBP" && view.getUint32(4, true) === bytes2.length - 8 && ["VP8 ", "VP8L", "VP8X"].includes(text15(12, 16)))
+    return "image/webp";
+  return null;
+}
+
 // ../contracts/dist/app-model.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -103859,31 +103882,6 @@ import { lstat as lstat9, open as open11, realpath as realpath8 } from "node:fs/
 import { isAbsolute as isAbsolute9, join as join10, resolve as resolve6 } from "node:path";
 import { DatabaseSync as DatabaseSync5 } from "node:sqlite";
 import { isDeepStrictEqual as isDeepStrictEqual6 } from "node:util";
-
-// src/issue-image-type.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-function issueImageType(bytes2) {
-  const view = new DataView(bytes2.buffer, bytes2.byteOffset, bytes2.byteLength);
-  const text15 = (start, end) => String.fromCharCode(...bytes2.subarray(start, end));
-  if (bytes2.length >= 33 && bytes2[0] === 137 && text15(1, 8) === "PNG\r\n\n" && view.getUint32(8) === 13 && text15(12, 16) === "IHDR" && view.getUint32(16) > 0 && view.getUint32(20) > 0)
-    return "image/png";
-  if (bytes2.length >= 4 && bytes2[0] === 255 && bytes2[1] === 216 && bytes2[2] === 255)
-    return "image/jpeg";
-  if (bytes2.length >= 20 && text15(0, 4) === "RIFF" && text15(8, 12) === "WEBP" && view.getUint32(4, true) === bytes2.length - 8 && ["VP8 ", "VP8L", "VP8X"].includes(text15(12, 16)))
-    return "image/webp";
-  return null;
-}
-
-// src/issue-direct.ts
 var ownerSchema2 = external_exports.strictObject({ userId: external_exports.uuid(), workspaceId: external_exports.uuid() });
 var hash4 = (value) => createHash13("sha256").update(value).digest("hex");
 var asset = (value) => {
