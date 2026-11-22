@@ -41920,6 +41920,48 @@ var mapReviewSchema = external_exports.strictObject({
   })).max(1e5)
 });
 
+// packages/contracts/dist/application-source.js
+var applicationSourceSelectionSchema = external_exports.strictObject({
+  expectedRevision: external_exports.uuid().transform((value) => value.toLowerCase()).nullable(),
+  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once.")
+});
+var applicationSourceConfigurationSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.application-source-configuration/1"),
+  configurationId: external_exports.uuid().nullable(),
+  revision: external_exports.uuid().nullable(),
+  repositories: external_exports.array(external_exports.strictObject({
+    repositoryId: external_exports.uuid(),
+    fullName: repositoryNameSchema
+  }))
+});
+var applicationSourceSnapshotSchema = external_exports.strictObject({
+  repositoryId: external_exports.uuid(),
+  githubRepositoryId: githubIdSchema,
+  fullName: repositoryNameSchema,
+  snapshotId: external_exports.uuid(),
+  commit: gitShaSchema,
+  manifestDigest: digestSchema,
+  bundleDigest: digestSchema
+});
+var applicationSourceSetSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.application-source-set/1"),
+  configurationId: external_exports.uuid(),
+  configurationRevision: external_exports.uuid(),
+  repositories: external_exports.array(applicationSourceSnapshotSchema).min(1).refine((sources) => new Set(sources.map((source3) => source3.repositoryId)).size === sources.length && new Set(sources.map((source3) => source3.githubRepositoryId)).size === sources.length, "Each repository must have one source capture in the application model.")
+});
+var applicationModelReferenceSchema = external_exports.strictObject({
+  modelRef: external_exports.uuid(),
+  configurationId: external_exports.uuid(),
+  configurationRevision: external_exports.uuid(),
+  sources: external_exports.array(applicationSourceSnapshotSchema.pick({
+    repositoryId: true,
+    githubRepositoryId: true,
+    fullName: true,
+    commit: true
+  })).min(1),
+  createdAt: external_exports.iso.datetime()
+});
+
 // packages/contracts/dist/analysis.js
 var uiModelerPin = {
   capability: "ui-modeler/2026.10.18-8",
@@ -41930,6 +41972,16 @@ var uiModelerPin = {
   models: ["typesafe-ai/jev", "gpt-6-luna/medium"],
   sourceBudget: 64e4
 };
+var repositoryModelerPin = {
+  capability: "ui-modeler/repository-main-v1",
+  version: "2026.10.29-2108.4",
+  pipeline: "folder-definitions-global-visible/26",
+  adapter: "loki-repository-model-v1"
+};
+var analysisCapabilitySchema = external_exports.enum([
+  uiModelerPin.capability,
+  repositoryModelerPin.capability
+]);
 var analysisLimits = {
   maxBundleBytes: 64 * 1024 * 1024,
   maxOutputBytes: 64 * 1024 * 1024,
@@ -41941,7 +41993,7 @@ var analysisLimits = {
 };
 var requestFields = {
   protocol: external_exports.literal("ui-modeler-v1"),
-  capability: external_exports.literal(uiModelerPin.capability),
+  capability: analysisCapabilitySchema,
   requestId: external_exports.uuid()
 };
 var analysisRequestSchema = external_exports.discriminatedUnion("input", [
@@ -41955,6 +42007,14 @@ var analysisRequestSchema = external_exports.discriminatedUnion("input", [
     ...requestFields,
     input: external_exports.literal("snapshot"),
     snapshotId: external_exports.uuid()
+  }),
+  external_exports.strictObject({
+    ...requestFields,
+    capability: external_exports.literal(repositoryModelerPin.capability),
+    input: external_exports.literal("application"),
+    configurationId: external_exports.uuid(),
+    configurationRevision: external_exports.uuid(),
+    repositoryIds: external_exports.array(external_exports.uuid()).min(1).refine((ids2) => new Set(ids2).size === ids2.length)
   })
 ]);
 var analysisPhaseSchema = external_exports.enum([
@@ -41976,13 +42036,17 @@ var analysisSourceSchema = external_exports.strictObject({
   manifestDigest: digestSchema,
   bundleDigest: digestSchema
 });
+var analysisSourceBindingSchema = external_exports.union([
+  analysisSourceSchema,
+  applicationSourceSetSchema
+]);
 var analysisRunSchema = external_exports.strictObject({
   protocol: external_exports.literal("ui-modeler-v1"),
   id: external_exports.uuid(),
   request: analysisRequestSchema,
   phase: analysisPhaseSchema,
   sourceRunId: external_exports.uuid().nullable(),
-  source: analysisSourceSchema.nullable(),
+  source: analysisSourceBindingSchema.nullable(),
   sourceProgress: sourceRunSchema.nullable(),
   attemptId: external_exports.uuid().nullable(),
   fingerprint: digestSchema.nullable(),
@@ -42052,16 +42116,12 @@ var analysisFileSchema = external_exports.strictObject({
   sha256: digestSchema,
   size: external_exports.number().int().nonnegative().max(analysisLimits.maxFileBytes)
 });
-var analysisReportSchema = external_exports.strictObject({
+var analysisReportFields = {
   protocol: external_exports.literal("ui-modeler-output-v1"),
   workspaceId: external_exports.uuid(),
   runId: external_exports.uuid(),
   attemptId: external_exports.uuid(),
-  capability: external_exports.literal(uiModelerPin.capability),
-  cliDigest: external_exports.literal(uiModelerPin.sha256),
-  adapter: external_exports.literal(uiModelerPin.adapter),
   runtime: external_exports.string().min(1).max(300),
-  execution: external_exports.enum(["released-cli", "controlled-output-fixture"]),
   fingerprint: digestSchema,
   source: analysisSourceSchema,
   status: external_exports.enum(["complete", "partial", "failed"]),
@@ -42085,7 +42145,25 @@ var analysisReportSchema = external_exports.strictObject({
     size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
     sha256: digestSchema
   })
-});
+};
+var analysisReportSchema = external_exports.discriminatedUnion("capability", [
+  external_exports.strictObject({
+    ...analysisReportFields,
+    capability: external_exports.literal(uiModelerPin.capability),
+    cliDigest: external_exports.literal(uiModelerPin.sha256),
+    adapter: external_exports.literal(uiModelerPin.adapter),
+    execution: external_exports.enum(["released-cli", "controlled-output-fixture"])
+  }),
+  external_exports.strictObject({
+    ...analysisReportFields,
+    capability: external_exports.literal(repositoryModelerPin.capability),
+    source: analysisSourceBindingSchema,
+    producerVersion: external_exports.literal(repositoryModelerPin.version),
+    pipeline: external_exports.literal(repositoryModelerPin.pipeline),
+    adapter: external_exports.literal(repositoryModelerPin.adapter),
+    execution: external_exports.enum(["native-module", "controlled-native-fixture"])
+  })
+]);
 var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
@@ -42108,7 +42186,8 @@ var analysisJobInputSchema = external_exports.strictObject({
   workspaceId: external_exports.uuid(),
   runId: external_exports.uuid(),
   attemptId: external_exports.uuid(),
-  source: analysisSourceSchema,
+  capability: analysisCapabilitySchema.optional(),
+  source: analysisSourceBindingSchema,
   fingerprint: digestSchema,
   runtime: external_exports.string().min(1).max(300),
   leaseSeconds: external_exports.literal(90)
@@ -42123,13 +42202,21 @@ var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
 ]);
 var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
   analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
-  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip(),
+  analysisRequestSchema.options[2].pick({
+    input: true,
+    requestId: true,
+    configurationId: true,
+    configurationRevision: true,
+    repositoryIds: true
+  }).strip()
 ]);
 var customerAnalysisRunSchema = external_exports.object({
   id: external_exports.uuid(),
   request: customerAnalysisRequestSchema,
   phase: analysisPhaseSchema,
   source: customerAnalysisSourceSchema.nullable(),
+  sources: external_exports.array(customerAnalysisSourceSchema).optional(),
   sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
   message: external_exports.string(),
   retryAt: external_exports.iso.datetime().nullable(),
@@ -43058,6 +43145,75 @@ var customerWorkspaceListSchema = external_exports.strictObject({
     bytes: count3
   }))
 });
+
+// packages/contracts/dist/source-model.js
+var sourceModelSelectionSchema = external_exports.strictObject({
+  application: external_exports.literal(true).optional(),
+  repositoryId: external_exports.uuid().optional(),
+  repository: repositoryNameSchema.optional(),
+  modelRef: external_exports.uuid().optional(),
+  pageIds: external_exports.array(external_exports.string().min(1)).optional()
+}).refine((value) => [value.application, value.repositoryId, value.repository].filter(Boolean).length === 1, "Choose the configured application, or one legacy repository ID or full name.");
+var sourceModelReferenceSchema = external_exports.strictObject({
+  modelRef: external_exports.uuid(),
+  repositoryId: external_exports.uuid(),
+  commit: external_exports.string().regex(/^[a-f0-9]{40}$/),
+  createdAt: external_exports.iso.datetime()
+});
+var sourceModelContextRequestSchema = external_exports.strictObject({
+  pageIds: external_exports.array(external_exports.string().min(1)).optional()
+});
+var sourceModelDiscoverySchema = external_exports.strictObject({
+  items: external_exports.array(external_exports.strictObject({
+    fullName: repositoryNameSchema,
+    reference: sourceModelReferenceSchema
+  }))
+});
+var sourceModelStatusSchema = external_exports.strictObject({
+  repositoryId: external_exports.uuid(),
+  enabled: external_exports.boolean(),
+  latestAttempt: external_exports.uuid().nullable(),
+  latestModelRef: external_exports.uuid().nullable(),
+  phase: analysisPhaseSchema.nullable(),
+  latestMainCommit: external_exports.string().regex(/^[a-f0-9]{40}$/).nullable(),
+  checkedAt: external_exports.iso.datetime().nullable(),
+  checkingMain: external_exports.boolean(),
+  refreshUnavailable: external_exports.boolean()
+});
+var applicationModelStatusSchema = external_exports.strictObject({
+  configuration: applicationSourceConfigurationSchema,
+  latestAttempt: external_exports.uuid().nullable(),
+  latestModelRef: external_exports.uuid().nullable(),
+  phase: analysisPhaseSchema.nullable(),
+  checkedAt: external_exports.iso.datetime().nullable(),
+  matchesSelection: external_exports.boolean(),
+  modelStatus: external_exports.enum(["processed", "incomplete"]).nullable(),
+  incompletePages: external_exports.strictObject({
+    failed: external_exports.array(external_exports.string()),
+    browsable: external_exports.array(external_exports.string())
+  }).optional()
+});
+var contextFields = {
+  basis: external_exports.literal("source-inferred; runtime behavior unverified"),
+  model: customerAnalysisResultSchema.shape.map.unwrap(),
+  sourceIndex: customerAnalysisResultSchema.shape.sourceIndex,
+  selection: external_exports.strictObject({
+    pageIds: external_exports.array(external_exports.string()),
+    wholeModel: external_exports.boolean()
+  })
+};
+var sourceModelContextSchema = external_exports.discriminatedUnion("schema", [
+  external_exports.strictObject({
+    ...contextFields,
+    schema: external_exports.literal("kaijan.source-model-context/1"),
+    reference: sourceModelReferenceSchema
+  }),
+  external_exports.strictObject({
+    ...contextFields,
+    schema: external_exports.literal("kaijan.source-model-context/2"),
+    reference: applicationModelReferenceSchema
+  })
+]);
 
 // packages/contracts/dist/index.js
 var apiVersion = "1";
@@ -52990,6 +53146,10 @@ function createIssueSurface({
   };
 }
 
+// apps/codex-plugin/src/auth/ai-binding.mjs
+var aiConnectionHeader = "x-kaijan-ai-connection";
+var aiConnectionId = external_exports.uuid();
+
 // apps/codex-plugin/src/installed-session.mjs
 import { join as join6, delimiter } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -53047,14 +53207,25 @@ async function createInstalledSession(root, build, data, broker, {
     ...contextSetup.binding,
     artifactDigest
   }) : void 0;
+  const readSourceModel = broker && typeof library.SourceModelClient === "function" ? (selection3, signal, binding2) => {
+    if (!binding2) throw Error("Shared planning connection unavailable.");
+    const client = new library.SourceModelClient(
+      (path, options) => broker.send(path.slice("/api/v1".length), {
+        ...options,
+        headers: { ...options?.headers, [aiConnectionHeader]: binding2 }
+      })
+    );
+    return client.context(selection3, signal);
+  } : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. For optional shared Main source context in planning, use sourceModel with application:true to select the configured application. Core returns the current app model. Reopening a saved Plan uses the context already recorded in it. Keep local changes and browser observations separately attributed. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
         ...build.browserViewer === true ? { browserViewer: true } : {},
         mapGeneration: false,
+        ...readSourceModel ? { readSourceModel } : {},
         ...validation ? { runnerValidation: validation } : {},
         ...lifecycleFactory ? { lifecycle: lifecycleFactory } : {},
         ...options?.scopeId === contextSetup?.scopeId && contextBinding ? { applicationContext: contextBinding } : {}
@@ -55408,6 +55579,9 @@ var planInput = external_exports.strictObject({
     desktopRunnerTargetSchema
   ]).optional(),
   testData: external_exports.unknown().optional(),
+  sourceModel: sourceModelSelectionSchema.optional().describe(
+    "Use { application: true } to read the current shared App Model."
+  ),
   explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
     "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
   )
@@ -55444,6 +55618,7 @@ function codexPlanArguments(args) {
     contextId,
     target,
     testData,
+    sourceModel,
     explorerTimeLimitMs
   } = parsed.data;
   return {
@@ -55451,6 +55626,7 @@ function codexPlanArguments(args) {
     ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
     ...target === void 0 ? {} : "app" in target ? { desktopTarget: target } : { exploration: { target } },
     ...testData === void 0 ? {} : { testData },
+    ...sourceModel === void 0 ? {} : { sourceModel },
     ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
   };
 }
@@ -55884,7 +56060,7 @@ var descriptions = {
   prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
   changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
   riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration.",
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Optional sourceModel with application:true selects the configured application\u2019s combined Main source context across its selected repositories. Legacy repository (owner/name) or repositoryId selection remains supported. Core returns the current combined model for an application read. For a legacy repository request, omit modelRef for latest or use its saved reference. Keep local changes and browser observations separately attributed. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration.",
   testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests."
 };
 function customerAdvisoryToolDefinition(tool2) {
@@ -55953,10 +56129,19 @@ function preparationView(value) {
     )
   });
 }
-function planningConnectionGuidance(native) {
+function planningAdmissionGuidance(native) {
   const prepared = native?.receipt?.status === "preparation_complete" && native.preparation?.schema === "kaijan.planning-preparation/1" && typeof native.receipt.unknown_charge === "boolean" && typeof native.receipt.unknown_usage === "boolean";
   if (native?.schema !== "loki.planning-failure/1" || !prepared && (native.receipt?.status !== "not_started" || native.receipt.unknown_charge !== false || native.receipt.unknown_usage !== false))
     return void 0;
+  const appModelAccessDenied = native.reason === "application_model_access_denied";
+  if (!prepared && (appModelAccessDenied || native.reason === "application_model_unavailable"))
+    return {
+      message: appModelAccessDenied ? "This connection cannot read the workspace App Model." : "No application model is available for this connection.",
+      recovery: {
+        action: "correct-source",
+        instruction: appModelAccessDenied ? "This attempt stopped before planning started. Request a plan using local source or browser observations." : "No test plan was started. Check Model status in Kaijan, or request a plan using local source or browser observations without the shared model."
+      }
+    };
   const needsUpdate = native.reason === "connection_unavailable" && native.receipt.connection_operation_unavailable === true;
   const message = native.reason === "keychain_unavailable" ? "Kaijan could not access the saved connection. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_required" ? "Kaijan needs a connection before it can plan tests. No test plan was produced. Check Kaijan connection readiness." : native.reason === "connection_unavailable" ? needsUpdate ? prepared ? "Kaijan's connection needs an update before planning can continue. Keep this answer and its saved preparation. Update Kaijan and its connection together." : "Kaijan's connection needs an update before planning can start. Keep this answer. Update Kaijan and its connection together." : prepared ? "Kaijan could not check the connection to produce the test plan. Keep this answer and its saved preparation. Check Kaijan connection readiness." : "Kaijan could not check the connection. No test plan was produced. Check Kaijan connection readiness." : void 0;
   return message ? {
@@ -55983,7 +56168,7 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
         executed: false,
         reviewRequired: true,
         preparation: prep,
-        message: (native.reason === "desktop_xcode_setup_required" ? "Open Xcode and complete its first-time setup, including any license review. Then ask Kaijan to plan the test again. No test plan was produced." : void 0) ?? planningConnectionGuidance(native)?.message ?? planningRejectionMessage(native) ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? native.preparation?.risk?.reason === "provider_timeout" ? "Risk review reached its time limit. No test plan was saved. Keep this answer. Ask for a new plan if you want to try again." : "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
+        message: (native.reason === "desktop_xcode_setup_required" ? "Open Xcode and complete its first-time setup, including any license review. Then ask Kaijan to plan the test again. No test plan was produced." : void 0) ?? planningAdmissionGuidance(native)?.message ?? planningRejectionMessage(native) ?? planningTemporaryFailureMessage(native) ?? (native.reason === "transport_failure_no_retry" && native.receipt?.status === "transport_error" && native.receipt.body_complete === false && native.receipt.automatic_retry === false ? "The planning request ended before a complete response arrived. No test plan was saved. Keep this answer. Do not replay uncertain work." : void 0) ?? (native.reason === "risk_analysis_not_complete" ? native.preparation?.risk?.reason === "provider_timeout" ? "Risk review reached its time limit. No test plan was saved. Keep this answer. Ask for a new plan if you want to try again." : "Risk review did not complete, so no test plan was produced. Preserve this answer; do not replay uncertain work." : "No test plan was produced. Preserve this answer; do not replay uncertain work.")
       });
     if (native.checks?.version !== "pr-context-plan-result/5" || native.checks.executed !== false)
       throw Error("Unknown plan");
@@ -56090,7 +56275,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
         proposal,
         proposalEvidence
       ),
-      ...fam === "testPlanning" ? planningConnectionGuidance(native.result) ?? planningTemporaryFailureGuidance(native) : void 0,
+      ...fam === "testPlanning" ? planningAdmissionGuidance(native.result) ?? planningTemporaryFailureGuidance(native) : void 0,
       ...["changeRisk", "riskFinder"].includes(fam) && native.result?.error_code === "provider_not_configured" && native.result?.accounting?.calls_started === 0 ? {
         message: "Kaijan is not ready for this analysis. Check connection readiness and complete the required setup.",
         recovery: {
