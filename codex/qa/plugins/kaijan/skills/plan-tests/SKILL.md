@@ -6,7 +6,7 @@ description: Propose practical tests for the caller's task and available applica
 # Propose tests from current work
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
-and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
+and the readiness returned by `kaijan_capabilities_list`. Use `kaijan_plan_create`
 to plan useful observable checks and expected results for the original task.
 <!-- codex-only -->
 

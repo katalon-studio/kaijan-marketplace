@@ -67,7 +67,7 @@ matching records matters, ask for that decision.
   Preserve the selected Plan, Run and Assessment identities. Report the
   specific missing source or input if it blocks a requested outcome.
 
-Check `loki_capabilities_list` for action availability and connection guidance.
+Check `kaijan_capabilities_list` for action availability and connection guidance.
 Verify the responding build, inference and application access separately when
 needed. Pass authorized related-work discovery scope to `plan-tests`.
 
