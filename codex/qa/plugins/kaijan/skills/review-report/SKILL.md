@@ -7,10 +7,10 @@ description: Read a saved Kaijan Test plan or report, inspect a saved observatio
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md).
 Open a saved snapshot by its exact `reportId` in the owning conversation.
-Use `loki_report_get` for data and `loki_report_show` to reopen its presentation.
+Use `kaijan_report_get` for data and `kaijan_report_show` to reopen its presentation.
 Keep earlier report snapshots available when comparing Runs.
 
-To show retained results together, use `loki_report_show` with the caller's
+To show retained results together, use `kaijan_report_show` with the caller's
 title (the original work-item title for a Test plan) and exact `operations`:
 
 - Plan: `{kind: "plan", answerId, resultSha256?}` from completed `testPlanning`.
@@ -22,7 +22,7 @@ For the native Test plan view, including a mixed report, use `view: "test-plan"`
 and retain all selected outcomes. A Runner-only report can show its saved Run.
 A standalone saved assessment can be read in chat. If the report omits needed
 verdicts or citations, read the original `suppliedEvidence` answer with
-`loki_advisory_result_read`. Keep supplied evidence distinct from execution
+`kaijan_result_read`. Keep supplied evidence distinct from execution
 by Kaijan.
 
 Use actual saved identities and validated bindings. Test and evidence links
@@ -38,7 +38,7 @@ Follow the returned presentation. For `panel`, show the native inline card.
 **Show details** uses `loki_report_open` for the same report and requests native
 MCP Apps expansion. If it stays on **Opening Kaijan report**, use the host's
 **Open app in tab** once if offered. If the panel remains unavailable or the
-user wants text, use `loki_report_get` for the exact report and show the requested
+user wants text, use `kaijan_report_get` for the exact report and show the requested
 details in chat. Verify actual rendering before saying it opened.
 
 For `chat`, use the saved data and returned instructions. Use plain result
@@ -60,10 +60,10 @@ rendering.
 ## Preserve PR source bindings
 
 For a new report, attach original GitHub PR and files reads as
-`reportSources` in `loki_report_show`. If a historical Run already has a linked
+`reportSources` in `kaijan_report_show`. If a historical Run already has a linked
 source context, the report uses that original automatically. Keep selected Runs
 within the same source context. To read the original record, call
-`loki_report_get` with the report ID and `sourceOffset: 0`. Join the returned
+`kaijan_report_get` with the report ID and `sourceOffset: 0`. Join the returned
 `recordChunk.text` pages in order, using each `nextOffset` until it is null.
 The source revision, Plan digest and selected
 identities must agree. Historical terminal verification stays attributed to its
@@ -72,7 +72,7 @@ original saved operation and remains separate from model assessment. See the
 
 ## View a saved browser trace
 
-Use `loki_report_trace` with the exact report ID and its selected Runner ID.
+Use `kaijan_report_trace` with the exact report ID and its selected Runner ID.
 Use `action: "launch"` for the local viewer, `"status"` to check availability,
 or `"open"` to open the returned private `viewerURL` in the current host.
 Verify that the viewer opened and report any returned failure. For a specific
@@ -84,7 +84,7 @@ same report and Run.
 
 ## Read a saved observation
 
-Use `loki_report_artifact_read` with the exact report and selected Run.
+Use `kaijan_report_read_artifact` with the exact report and selected Run.
 Omit `artifactId` to list manifest-bound selectors and follow `nextOffset`.
 Read a returned ID and inspect the PNG or join JSON `content.text` by its
 ordered UTF-16 offsets. Keep the filtered projection digest and byte count

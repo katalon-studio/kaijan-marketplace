@@ -30424,6 +30424,46 @@ var Server = class extends Protocol {
 // apps/codex-plugin/src/core-tools.mjs
 import { platform } from "node:os";
 
+// apps/codex-plugin/src/mcp-tool-names.mjs
+var publicNames = /* @__PURE__ */ new Map([
+  ["loki_connection_status", "kaijan_connection_get"],
+  ["loki_disconnect", "kaijan_connection_disconnect"],
+  ["kaijan_connect", "kaijan_connection_connect"],
+  ["kaijan_submit_feedback", "kaijan_feedback_submit"],
+  ["kaijan_get_feedback", "kaijan_feedback_get"],
+  ["kaijan_configuration", "kaijan_test_environment_manage"],
+  ["loki_capabilities_list", "kaijan_capabilities_list"],
+  ["loki_github_read", "kaijan_github_read"],
+  ["loki_github_source_read", "kaijan_github_source_read"],
+  ["kaijan_agent_feedback", "kaijan_agent_feedback_record"],
+  ["loki_setup_list", "kaijan_app_config_list"],
+  ["loki_setup_prepare", "kaijan_app_config_prepare"],
+  ["loki_setup_get", "kaijan_app_config_get"],
+  ["loki_setup_retry", "kaijan_app_config_retry"],
+  ["loki_setup_resolve", "kaijan_app_config_resolve"],
+  ["loki_advisory_result_read", "kaijan_result_read"],
+  ["loki_test_plan", "kaijan_plan_create"],
+  ["loki_test_execute", "kaijan_run_start"],
+  ["loki_test_get", "kaijan_run_get"],
+  ["loki_test_stop", "kaijan_run_stop"],
+  ["loki_runner_answer", "kaijan_run_answer"],
+  ["loki_runner_get", "kaijan_run_read_execution"],
+  ["loki_runner_stop", "kaijan_run_stop_execution"],
+  ["loki_report_show", "kaijan_report_show"],
+  ["loki_report_get", "kaijan_report_get"],
+  ["loki_report_artifact_read", "kaijan_report_read_artifact"],
+  ["loki_report_trace", "kaijan_report_trace"],
+  ["kaijan_project_history", "kaijan_project_history_manage"]
+]);
+var operationNames = new Map(
+  [...publicNames].map(([operationName, publicName]) => [
+    publicName,
+    operationName
+  ])
+);
+var publicToolName = (name) => publicNames.get(name) ?? name;
+var operationToolName = (name) => operationNames.get(name) ?? name;
+
 // packages/contracts/dist/telemetry.js
 var telemetryLimits = {
   eventBytes: 4096,
@@ -33154,7 +33194,7 @@ var aiModelsSchema = external_exports.looseObject({
 var KeychainUnavailableError = class extends Error {
   constructor() {
     super(
-      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Reconnect Kaijan. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
     this.name = "KeychainUnavailableError";
     this.code = "keychain_unavailable";
@@ -33216,7 +33256,7 @@ function protocolFailure(code, message) {
 }
 function httpGuidance(status) {
   if (status === 401)
-    return "Kaijan is not connected. Use kaijan_connect to sign in, then continue in this chat.";
+    return "Kaijan is not connected. Use kaijan_connection_connect to sign in, then continue in this chat.";
   if (status === 403)
     return "Core forbids this request. Check the required permission, authorized workspace and connection policy before retrying.";
   if (status === 429)
@@ -33232,7 +33272,7 @@ function httpGuidance(status) {
 var upstreamErrors = {
   not_found: "The selected item is unavailable. Check its identifier and workspace access. Keep older snapshots separate.",
   permission_denied: "This operation is not permitted. Check the required permission and authorized workspace before continuing.",
-  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connect to select an authorized account.",
+  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connection_connect to select an authorized account.",
   request_conflict: "This request ID belongs to different input. Preserve the original ID and input when recovering existing work. Use a new ID only for distinct authorized work.",
   invalid_request: "The selected input is invalid. Check the advertised fields and selected item before requesting distinct work.",
   internal_error: "The service could not complete this operation. Preserve the original request and result; do not replay work with uncertain effects."
@@ -33255,7 +33295,7 @@ function invalidResponseGuidance(name, args) {
 }
 function logoutProtocolFailure(error62, confirmed) {
   if (error62 instanceof McpError)
-    error62.message += confirmed ? " Shared sign-out was confirmed. Use kaijan_connect before reading again. Do not replay uncertain work." : " Shared sign-out is not confirmed. Retry explicit loki_disconnect when the sign-in service is available. Do not replay uncertain work.";
+    error62.message += confirmed ? " Shared sign-out was confirmed. Use kaijan_connection_connect before reading again. Do not replay uncertain work." : " Shared sign-out is not confirmed. Retry explicit kaijan_connection_disconnect when the sign-in service is available. Do not replay uncertain work.";
   return error62;
 }
 async function forwardCore(broker, name, args, signal) {
@@ -33372,7 +33412,7 @@ function createCoreMcpServer(broker, version2) {
   );
   server.setRequestHandler(ListToolsRequestSchema, () => ({
     tools: Object.keys(inputs).map((name) => ({
-      name,
+      name: publicToolName(name),
       title: titles[name],
       description: descriptions[name],
       inputSchema: external_exports.toJSONSchema(inputs[name]),
@@ -33389,7 +33429,8 @@ function createCoreMcpServer(broker, version2) {
     }))
   }));
   server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
-    const inputSchema = Object.hasOwn(inputs, params.name) && inputs[params.name];
+    const name = operationToolName(params.name);
+    const inputSchema = Object.hasOwn(inputs, name) && inputs[name];
     if (!inputSchema)
       throw protocolFailure(
         ErrorCode.InvalidParams,
@@ -33401,7 +33442,6 @@ function createCoreMcpServer(broker, version2) {
         ErrorCode.InvalidParams,
         "arguments: use only the fields advertised for this tool and valid UUIDs."
       );
-    const name = params.name;
     if (broker instanceof BrokerRestartRequiredError)
       return failure2(name, broker.code, broker.message, {
         category: "connection"
@@ -33418,7 +33458,7 @@ function createCoreMcpServer(broker, version2) {
         return failure2(
           name,
           "connection_required",
-          "Core authorization did not complete. Use kaijan_connect when ready to authorize.",
+          "Core authorization did not complete. Use kaijan_connection_connect when ready to authorize.",
           { category: "connection" }
         );
       }
@@ -33426,7 +33466,7 @@ function createCoreMcpServer(broker, version2) {
         return failure2(
           name,
           "core_response_invalid",
-          "Kaijan could not confirm the connection. Use kaijan_connect to sign in again.",
+          "Kaijan could not confirm the connection. Use kaijan_connection_connect to sign in again.",
           { category: "upstream" }
         );
       return coreResult(name, value);
@@ -33448,7 +33488,7 @@ function createCoreMcpServer(broker, version2) {
         return failure2(
           name,
           "revocation_pending",
-          "Shared logout is not confirmed. Preserve the current grant and retry explicit loki_disconnect when the sign-in service is available. Do not replay uncertain work.",
+          "Shared logout is not confirmed. Preserve the current grant and retry explicit kaijan_connection_disconnect when the sign-in service is available. Do not replay uncertain work.",
           { category: "connection" }
         );
       }
@@ -33458,7 +33498,7 @@ function createCoreMcpServer(broker, version2) {
         {
           ...remote.structuredContent,
           localState: "signed_out",
-          message: remote.structuredContent.message + " Sign-out was confirmed. Use kaijan_connect before reading again."
+          message: remote.structuredContent.message + " Sign-out was confirmed. Use kaijan_connection_connect before reading again."
         },
         true
       ) : coreResult(name, loggedOut);

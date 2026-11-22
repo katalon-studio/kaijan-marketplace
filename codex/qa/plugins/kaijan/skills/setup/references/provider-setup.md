@@ -6,7 +6,7 @@ Read `loki-build.json` in the installed plugin folder. Normal packages use manag
 
 Managed analysis, planning, Runner and evidence assessment use the Kaijan sign-in grant through Core. The managed provider does not read local API keys. Source-only Setup, context retention and saved-result reads can continue when their Local tools are available, even if AI access is missing.
 
-When a selected action needs AI, check `loki_connection_status` for the intended account, workspace and `ai:invoke` permission. If the connection is missing, expired or revoked, use the installed `kaijan_connect` tool when available and let the user complete browser sign-in and consent. Check the connection and the selected Local capability again. If the tool itself is missing, use [update recovery](update-recovery.md). GitHub repository access and application login each have their own checks.
+When a selected action needs AI, check `kaijan_connection_get` for the intended account, workspace and `ai:invoke` permission. If the connection is missing, expired or revoked, use the installed `kaijan_connection_connect` tool when available and let the user complete browser sign-in and consent. Check the connection and the selected Local capability again. If the tool itself is missing, use [update recovery](update-recovery.md). GitHub repository access and application login each have their own checks.
 
 A connected grant, a configured provider and a successful model-list read are separate observations. Verify inference only through the authorized action. Preserve the original records and request keys during recovery.
 

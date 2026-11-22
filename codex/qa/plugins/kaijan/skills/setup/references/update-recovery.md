@@ -6,9 +6,9 @@ Kaijan connection. Installed files do not prove which version answers this chat.
 ## Check before new work
 
 1. Check that the tools required by the installed owning skill are callable in
-   this chat. For normal test execution, these include `loki_test_execute`,
-   `loki_test_get` and `loki_test_stop`. Do not run a paid test to probe availability.
-2. If `loki_capabilities_list` is available, use its normal
+   this chat. For normal test execution, these include `kaijan_run_start`,
+   `kaijan_run_get` and `kaijan_run_stop`. Do not run a paid test to probe availability.
+2. If `kaijan_capabilities_list` is available, use its normal
    `kaijan.customer-capabilities/2` (or `/1` in an older installation) reply. Read the selected action's state and
    message, and the separate connection guidance. This request does not test
    application access or inference.

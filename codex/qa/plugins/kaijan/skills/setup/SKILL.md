@@ -17,7 +17,7 @@ the legacy onboarding panel or a native Question for Setup.
 
 If the available Setup tool offers Kaijan Browser, mention it as an optional
 part of first-time Setup. When the person chooses to install it, call
-`loki_setup_prepare` with only `browserViewer: "install"`. Report whether the
+`kaijan_app_config_prepare` with only `browserViewer: "install"`. Report whether the
 app is ready. If the person only asks to prepare the Viewer, finish that
 request without asking for a testing goal or project.
 
@@ -43,14 +43,14 @@ goal and optional target. Setup returns saved configuration without a map.
 Continue the user's explicit task when its own prerequisites are met.
 
 When the person asks only for a summary, skip reconciliation or any new save.
-Find the selected Setup with `loki_setup_list`. For a ready Setup, use
-`loki_setup_resolve` with the saved source and target-profile revisions, then
+Find the selected Setup with `kaijan_app_config_list`. For a ready Setup, use
+`kaijan_app_config_resolve` with the saved source and target-profile revisions, then
 summarize the saved application and goal in ordinary chat. If Setup is pending
 or blocked, state that status and the specific next step when known.
 
 ## Check the connection for the selected action
 
-Check the chat's actual tool inventory and `loki_capabilities_list` when
+Check the chat's actual tool inventory and `kaijan_capabilities_list` when
 available. Distinguish installation, current-chat tool availability and
 readiness for the selected operation.
 
@@ -62,8 +62,8 @@ readiness for the selected operation.
   managed sign-in or confirmed direct-development provider setup.
 - Check target login and private GitHub access separately. Follow
   [GitHub setup and recovery](references/github-setup.md) for GitHub work.
-- Use `loki_connection_status` to verify the live Kaijan account and workspace.
-  On an explicit disconnect request, use `loki_disconnect` through the host.
+- Use `kaijan_connection_get` to verify the live Kaijan account and workspace.
+  On an explicit disconnect request, use `kaijan_connection_disconnect` through the host.
   Verify the new connection after sign-in before starting dependent work.
 - If tools are missing after an update or the responding build is uncertain,
   follow [update recovery](references/update-recovery.md). Check callable tools

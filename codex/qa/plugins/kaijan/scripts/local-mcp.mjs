@@ -7328,7 +7328,7 @@ import { spawn } from "node:child_process";
 var KeychainUnavailableError = class extends Error {
   constructor() {
     super(
-      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Reconnect Kaijan. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
     this.name = "KeychainUnavailableError";
     this.code = "keychain_unavailable";
@@ -40819,6 +40819,46 @@ function createTelemetryCollector(broker, build) {
   };
 }
 
+// apps/codex-plugin/src/mcp-tool-names.mjs
+var publicNames = /* @__PURE__ */ new Map([
+  ["loki_connection_status", "kaijan_connection_get"],
+  ["loki_disconnect", "kaijan_connection_disconnect"],
+  ["kaijan_connect", "kaijan_connection_connect"],
+  ["kaijan_submit_feedback", "kaijan_feedback_submit"],
+  ["kaijan_get_feedback", "kaijan_feedback_get"],
+  ["kaijan_configuration", "kaijan_test_environment_manage"],
+  ["loki_capabilities_list", "kaijan_capabilities_list"],
+  ["loki_github_read", "kaijan_github_read"],
+  ["loki_github_source_read", "kaijan_github_source_read"],
+  ["kaijan_agent_feedback", "kaijan_agent_feedback_record"],
+  ["loki_setup_list", "kaijan_app_config_list"],
+  ["loki_setup_prepare", "kaijan_app_config_prepare"],
+  ["loki_setup_get", "kaijan_app_config_get"],
+  ["loki_setup_retry", "kaijan_app_config_retry"],
+  ["loki_setup_resolve", "kaijan_app_config_resolve"],
+  ["loki_advisory_result_read", "kaijan_result_read"],
+  ["loki_test_plan", "kaijan_plan_create"],
+  ["loki_test_execute", "kaijan_run_start"],
+  ["loki_test_get", "kaijan_run_get"],
+  ["loki_test_stop", "kaijan_run_stop"],
+  ["loki_runner_answer", "kaijan_run_answer"],
+  ["loki_runner_get", "kaijan_run_read_execution"],
+  ["loki_runner_stop", "kaijan_run_stop_execution"],
+  ["loki_report_show", "kaijan_report_show"],
+  ["loki_report_get", "kaijan_report_get"],
+  ["loki_report_artifact_read", "kaijan_report_read_artifact"],
+  ["loki_report_trace", "kaijan_report_trace"],
+  ["kaijan_project_history", "kaijan_project_history_manage"]
+]);
+var operationNames = new Map(
+  [...publicNames].map(([operationName, publicName]) => [
+    publicName,
+    operationName
+  ])
+);
+var publicToolName = (name) => publicNames.get(name) ?? name;
+var operationToolName = (name) => operationNames.get(name) ?? name;
+
 // apps/codex-plugin/src/telemetry/mcp.mjs
 function createLocalTelemetry(broker, build) {
   const collector = createTelemetryCollector(broker, build);
@@ -40865,9 +40905,10 @@ function createLocalTelemetry(broker, build) {
           beforeSend: (event2) => {
             try {
               const properties = event2.properties;
-              if (event2.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
+              const operation = operationToolName(properties.$mcp_tool_name);
+              if (event2.event !== "$mcp_tool_call" || controls.has(operation) || !properties.identity_epoch)
                 return null;
-              const name = known.has(properties.$mcp_tool_name) ? properties.$mcp_tool_name : "unknown";
+              const name = known.has(operation) ? operation : "unknown";
               const errorCode = properties.$mcp_is_error && name.startsWith("loki_") ? mcpToolFailureCode(
                 properties.$mcp_response,
                 properties.$mcp_error_type
@@ -46813,7 +46854,7 @@ function protocolFailure(code, message) {
 }
 function httpGuidance(status3) {
   if (status3 === 401)
-    return "Kaijan is not connected. Use kaijan_connect to sign in, then continue in this chat.";
+    return "Kaijan is not connected. Use kaijan_connection_connect to sign in, then continue in this chat.";
   if (status3 === 403)
     return "Core forbids this request. Check the required permission, authorized workspace and connection policy before retrying.";
   if (status3 === 429)
@@ -46829,7 +46870,7 @@ function httpGuidance(status3) {
 var upstreamErrors = {
   not_found: "The selected item is unavailable. Check its identifier and workspace access. Keep older snapshots separate.",
   permission_denied: "This operation is not permitted. Check the required permission and authorized workspace before continuing.",
-  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connect to select an authorized account.",
+  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connection_connect to select an authorized account.",
   request_conflict: "This request ID belongs to different input. Preserve the original ID and input when recovering existing work. Use a new ID only for distinct authorized work.",
   invalid_request: "The selected input is invalid. Check the advertised fields and selected item before requesting distinct work.",
   internal_error: "The service could not complete this operation. Preserve the original request and result; do not replay work with uncertain effects."
@@ -53173,7 +53214,7 @@ async function createInstalledSession(root, build, data, broker, {
   } : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. For optional shared Main source context in planning, use sourceModel with application:true to select the configured application. Core returns the current app model. Reopening a saved Plan uses the context already recorded in it. Keep local changes and browser observations separately attributed. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. For optional shared Main source context in planning, use sourceModel with application:true to select the configured application. Core returns the current app model. Reopening a saved Plan uses the context already recorded in it. Keep local changes and browser observations separately attributed. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use kaijan_run_start for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
@@ -53449,7 +53490,7 @@ var waitSchema = handleSchema.extend({
 var resolveSchema = handleSchema.extend({
   expectedRevision: revision2,
   expectedProfileRevision: identity3.optional().describe(
-    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
+    "Pass the exact configuration.target.profileRevision returned by kaijan_app_config_get when present. Omit only when the saved configuration has no target-profile revision."
   )
 });
 var handoffSchema = resolveSchema.extend({ requestKey });
@@ -56008,7 +56049,7 @@ var customerAdvisoryOutputSchema = external_exports.union([
     projectionSha256: id7,
     resultRead: optional4(
       external_exports.object({
-        tool: external_exports.literal("loki_advisory_result_read"),
+        tool: external_exports.literal(publicToolName("loki_advisory_result_read")),
         arguments: readInput
       })
     )
@@ -56075,7 +56116,7 @@ function planningAdmissionGuidance(native) {
     message,
     recovery: {
       action: "check-readiness",
-      instruction: needsUpdate ? "Update Kaijan and its connection together. Keep this answer and any saved preparation. Do not replay uncertain work." : "Use loki_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
+      instruction: needsUpdate ? "Update Kaijan and its connection together. Keep this answer and any saved preparation. Do not replay uncertain work." : "Use kaijan_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
     }
   } : void 0;
 }
@@ -56207,7 +56248,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
         message: "Kaijan is not ready for this analysis. Check connection readiness and complete the required setup.",
         recovery: {
           action: "check-readiness",
-          instruction: "Use loki_capabilities_list to check readiness, then complete Kaijan setup or sign in as required. Keep this answer. Request distinct authorized work only after setup is ready; do not replay uncertain work."
+          instruction: "Use kaijan_capabilities_list to check readiness, then complete Kaijan setup or sign in as required. Keep this answer. Request distinct authorized work only after setup is ready; do not replay uncertain work."
         }
       } : {},
       ...fam === "changeRisk" && native.result?.status === "refused" && native.result?.error_code === "invalid_patch" && native.result?.accounting?.calls_started === 0 && native.result?.accounting?.unknown_cost_calls === 0 && Array.isArray(native.result?.ledger) && native.result.ledger.length === 0 ? {
@@ -56295,7 +56336,7 @@ function finish(dto) {
     projectionSha256,
     ...dto.state === "complete" && dto.answerId ? {
       resultRead: {
-        tool: "loki_advisory_result_read",
+        tool: publicToolName("loki_advisory_result_read"),
         arguments: {
           family: dto.family,
           answerId: dto.answerId,
@@ -56569,7 +56610,7 @@ var clarification = progress3.extend({
 });
 var nextAction2 = external_exports.object({
   kind: external_exports.literal("input-required"),
-  tool: external_exports.literal("loki_runner_answer"),
+  tool: external_exports.literal(publicToolName("loki_runner_answer")),
   runId: id8,
   clarificationId: id8,
   deadlineAt: external_exports.string(),
@@ -56748,7 +56789,7 @@ var projection2 = external_exports.strictObject({
   replayAllowed: external_exports.literal(false)
 });
 var readHint = external_exports.strictObject({
-  tool: external_exports.enum(["loki_test_get", "loki_runner_get"]),
+  tool: external_exports.enum(["loki_test_get", "loki_runner_get"].map(publicToolName)),
   arguments: external_exports.strictObject({
     runId: id8,
     offset: external_exports.literal(0),
@@ -56802,7 +56843,7 @@ function customerToolDefinition(tool2, { configurations = false, requireSavedPla
     name: tool2.name,
     title: tool2.title,
     annotations: tool2.annotations,
-    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read2 ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read2 ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use kaijan_run_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
     inputSchema: read2 ? external_exports.toJSONSchema(
       external_exports.strictObject({
         runId: id8,
@@ -57256,7 +57297,7 @@ async function bindPendingQuestions(value, read2) {
     pendingClarification: safe,
     nextAction: safe.state === "live" && safe.bindingState !== "unavailable" && safe.questions.length ? {
       kind: "input-required",
-      tool: "loki_runner_answer",
+      tool: publicToolName("loki_runner_answer"),
       runId: value.runId,
       clarificationId: safe.clarificationId,
       deadlineAt: safe.deadlineAt,
@@ -57383,7 +57424,9 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       projectionSha256: digest20,
       ...dto.runId && dto.kind !== "answer" && !dto.error ? {
         resultRead: {
-          tool: dto.kind === "test" ? "loki_test_get" : "loki_runner_get",
+          tool: publicToolName(
+            dto.kind === "test" ? "loki_test_get" : "loki_runner_get"
+          ),
           arguments: {
             runId: dto.runId,
             offset: 0,
@@ -57927,7 +57970,7 @@ function projectCustomerReport(value) {
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
   const resourceUri = "ui://loki/test-plan/card/v87.html";
-  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. Use loki_report_show to present the card. Set sourceOffset to 0 to read the original GitHub source record, then use the returned nextOffset to continue. Reading does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
+  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original GitHub source record, then use the returned nextOffset to continue. Reading does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
     title: tool2.title,
@@ -58261,7 +58304,7 @@ ${customerInstructions}` : customerInstructions
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools: tools2
+    tools: tools2.map((tool2) => ({ ...tool2, name: publicToolName(tool2.name) }))
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
@@ -58338,7 +58381,11 @@ ${customerInstructions}` : customerInstructions
       throw error63;
     }
   });
-  server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request3, extra) => {
+    const params = {
+      ...request3.params,
+      name: operationToolName(request3.params.name)
+    };
     let diagnosticOwner;
     try {
       diagnosticOwner = telemetry?.bind();

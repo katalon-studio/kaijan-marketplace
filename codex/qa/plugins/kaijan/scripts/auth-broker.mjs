@@ -3923,7 +3923,7 @@ var AIConnectionChangedError = class extends Error {
 var KeychainUnavailableError = class extends Error {
   constructor() {
     super(
-      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Reconnect Kaijan. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
     this.name = "KeychainUnavailableError";
     this.code = "keychain_unavailable";
@@ -30336,7 +30336,7 @@ async function startBroker({
       else if (!res.headersSent && error62 instanceof ConnectionRequiredError)
         json2(401, {
           error: "connection_required",
-          message: "Use kaijan_connect to authorize this Kaijan connection."
+          message: "Reconnect Kaijan to authorize this connection."
         });
       else if (!res.headersSent)
         json2(503, {
