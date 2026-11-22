@@ -32,10 +32,13 @@ explicit Configuration selection or opt-out. If several saved groups match the
 application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
-save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
-or manual login. Keep raw secrets out of chat and tool arguments. On hosts that
-advertise full Runner input, use `params` for ordinary overrides and
-`privateParams` for scoped secret references.
+save it.
+
+
+Keep raw secrets out of chat and tool arguments. On
+hosts that advertise full Runner input, use `params` for ordinary overrides and
+[`privateParams`](../../references/private-parameters.md)
+for scoped secret references.
 These overrides leave saved settings unchanged. The person can run without
 saving settings. Configuration selection never authorizes execution.
 
@@ -76,6 +79,7 @@ cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
+
 ## Keep Kaijan workflow separate from application actions
 
 The combined Kaijan operation owns assessment and saving its report. Keep requests to assess the Run, save the Kaijan report or reopen that report in your Kaijan tool workflow; do not put them in browser `guidance` as actions for the application under test. Preserve the original saved Plan, application actions, expectations, permissions and restrictions. If the person is testing the application's own report, save or export feature, keep those application checks in the scenario or `guidance`; they are real test requirements. This is a distinction by task and recipient, not a filter on words such as report or save.
@@ -91,7 +95,10 @@ Use `loki_test_get` through the execution and assessment result, and
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
 original run and clarification IDs, one answer key and the available authorized
-context. Match known questions when possible; partial answers and extra JSON
+context.
+
+
+Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
 The original deadline still applies; a missing answer does not require
