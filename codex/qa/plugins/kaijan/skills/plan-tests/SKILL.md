@@ -30,20 +30,21 @@ saved target, account and data in Plan and Run. After Setup, use its saved
 the environment for the selected AUT.
 
 When the person selects an issue or pull request as the basis for testing,
-read that record through the host's authorized source access before calling
-Plan. Keep the person's request as written. In `testObjective`, append the
-relevant original text and its link as attributed evidence. Record unknowns
-as open questions. Use an existing compatible `contextId` when available. If
-the source is unavailable, say what could not be read and keep source-dependent
-expectations unresolved.
+read it through the host's authorized source access. Call Plan with `input`
+in place of `testObjective`. Use the original `title`, `body` and `url`
+for a single source. For more than one source, use the original work item and
+the separate attributed `sources` in the advertised `pr-context-plan/3`
+format. Keep the person's request and application details intact. Pass
+authorized `repositories` or the original frozen `change` when needed so
+Kaijan can prepare related work and risk inside Plan. If a source is
+unavailable, keep its expectations unresolved.
 <!-- end-codex-only -->
 
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
-For work based on a saved source packet, pass its `contextId` from
-`loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
-`testObjective`. Use the returned `planId` when the person authorizes a Run.
+For work based on an already saved planning packet, pass its `contextId`.
+Use the returned `planId` when the person authorizes a Run.
 
 When the person selects the configured application's shared Main model, use
 `sourceModel: {application: true}`. Core supplies one combined context for its
