@@ -828,7 +828,7 @@
       "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb",
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
-      "packages/computer-runner/src/browser-explorer-driver.mjs": "fba14aaa5fedaf7251d277fbc8d787c8adc4e099e0ab826717b127142bd48c87",
+      "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5",
       "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb"
     },
     "relocation": {
