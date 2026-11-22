@@ -14,8 +14,9 @@ unlocked macOS session and keep the target on the main display.
   For a custom Xcode installation, use its developer directory for the host.
 - For the user's `.app` path, read `CFBundleIdentifier` from its `Contents/Info.plist`.
   For example, run `/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app_path/Contents/Info.plist"`
-  after setting `app_path` to the exact supplied path. Pass the returned bundle
-  ID as `target.app`.
+  after setting `app_path` to the exact supplied path. In Codex, save the bundle
+  ID as `target.app` in Test Environment, then pass the environment ID to Plan.
+  On hosts that accept an inline target, use the bundle ID as `target.app`.
 
 ## Handle macOS permission prompts
 

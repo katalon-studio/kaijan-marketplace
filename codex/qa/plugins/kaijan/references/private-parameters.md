@@ -8,6 +8,7 @@ environment file, run the installed Configuration command:
 ```sh
 "$PLUGIN_ROOT/capabilities/runtime/node" "$PLUGIN_ROOT/scripts/configuration.mjs" save \
   --from-file /absolute/path/to/approved.env \
+  --aut-id APPLICATION_ID \
   --name "App test account" --application https://app.example.com \
   --secret email=APP_TEST_EMAIL --secret password=APP_TEST_PASSWORD
 ```
@@ -20,8 +21,8 @@ command prints the saved Configuration name, ID and revision.
 
 To replace selected values, repeat `save --from-file ... --secret ...` with
 `--id` and `--revision` from the latest Configuration read in place of
-`--name`, `--application`, and `--host`. The remaining settings are retained.
-Use the same website in the next Plan and choose the saved Configuration if
+`--name`, `--application`, `--aut-id`, and `--host`. The remaining settings are retained.
+Use the saved environment ID in the next Plan and choose the saved Configuration if
 more than one matches. A save applies to new operations. See the
 [Run steps](../skills/run-test/SKILL.md#restart-after-an-app-login-change) when
 the person needs to continue testing after a login change.
