@@ -2216,10 +2216,10 @@
       "originalPath": "experiments/github-capture/github_packet.mjs"
     },
     "packages/ui-modeler/index.d.mts": {
-      "sha256": "8beb6758d730251d4e272f20ee3cd6660491b24ad39d29fe9fb59af8352f6203"
+      "sha256": "7cd7f62a563d5632dce46d6455c1daff4b84aa9b34ef83b7ee2216955693f1a9"
     },
     "packages/ui-modeler/index.mjs": {
-      "sha256": "6de1e8834be6fef5fcc8c485fa728153cfec33042327340d982f02fead400a95"
+      "sha256": "0967ead034d58b2c89e1e66ffdd1ee3db15a493c436e747e30fad8bb9fe969e1"
     },
     "packages/ui-modeler/lib/activated-surface-source.mjs": {
       "sha256": "7df00b3a4263a212238b7a39247b883f1678728c6e8536c2cd77ab3ded827468"
@@ -2351,7 +2351,7 @@
       "sha256": "11117612e071cd5d39514d555383f940a89054dc97fc99cf559674b772837a69"
     },
     "packages/ui-modeler/README.md": {
-      "sha256": "5691c636a2289b1d8c0a6e391562b357ebcf87b4521e2190dae909f96ca65d87"
+      "sha256": "5688be6d562e2ac50d502bf0bab8a5256365e9598ac2330896b529a0f186bd71"
     },
     "packages/ui-modeler/scripts/extract_ui_visible_elements.mjs": {
       "sha256": "88f3f621266f52eb9e4df9813e7c677a70748e88f052309b12b8fd94616954fe"

@@ -75,7 +75,7 @@ var init_define_LOKI_CHANGE_RISK_PINS = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "41ad0ff969a4b81054db276772af41956fcd52d81ea0efe1ff87c55744c44d54", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5", "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "3acfccfb5789031635159d5efa6a20bb902c642fb5eeaf5d1a0164650661c2dd", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "9fc57f2e00f8fad1312af42abd76d57af7b6599a84069521c4b3813a43006a4b", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5", "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -83,7 +83,7 @@ var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
 var define_LOKI_MAC_RUNNER_PINS_default;
 var init_define_LOKI_MAC_RUNNER_PINS = __esm({
   "<define:LOKI_MAC_RUNNER_PINS>"() {
-    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "d8f4999b28343bf67a5bfa64dea77c77f10ecc9181a0e02d31597fd687633038", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "41ad0ff969a4b81054db276772af41956fcd52d81ea0efe1ff87c55744c44d54", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5", "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "6f76bbc453dbeefeb51de6a496f41cb19ca299efb32a15c446efc371d5306f38", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
+    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "ccb3a769dbebb1cf07d26884ec028276c531577cc5c71e93581b5e7c5bf951ca", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "7483bcfaef0bde3eee9543f6efde2b660d2c2063f781e2959df41141e443d9d3", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "2e4a358574e26d37ba136238a0fa0ea83fc1c2fbd809c8b93f0d006a82b7f8ab", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "db36e7be92002e1ecf9d84195a25b02c10e687b15ced91d56e05cf5817009c0c", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "3acfccfb5789031635159d5efa6a20bb902c642fb5eeaf5d1a0164650661c2dd", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "9fc57f2e00f8fad1312af42abd76d57af7b6599a84069521c4b3813a43006a4b", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "99c6af4c2de43b1523814046eb71acb83e18c251056927245960e2cd39d2c579", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "e3485426e5bb705bcba667ca7891f408c5b35549c02739ec32953551f1973af5", "packages/computer-runner/src/agent-loop.mjs": "067b97e9533e73e6c9403a9e826e10d55a47e0c76a635a914f683c952b186adb", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "6f76bbc453dbeefeb51de6a496f41cb19ca299efb32a15c446efc371d5306f38", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
   }
 });
 
@@ -91482,6 +91482,58 @@ var mapReviewSchema = external_exports.strictObject({
   })).max(1e5)
 });
 
+// ../contracts/dist/application-source.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var applicationSourceSelectionSchema = external_exports.strictObject({
+  expectedRevision: external_exports.uuid().transform((value) => value.toLowerCase()).nullable(),
+  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once.")
+});
+var applicationSourceConfigurationSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.application-source-configuration/1"),
+  configurationId: external_exports.uuid().nullable(),
+  revision: external_exports.uuid().nullable(),
+  repositories: external_exports.array(external_exports.strictObject({
+    repositoryId: external_exports.uuid(),
+    fullName: repositoryNameSchema
+  }))
+});
+var applicationSourceSnapshotSchema = external_exports.strictObject({
+  repositoryId: external_exports.uuid(),
+  githubRepositoryId: githubIdSchema,
+  fullName: repositoryNameSchema,
+  snapshotId: external_exports.uuid(),
+  commit: gitShaSchema,
+  manifestDigest: digestSchema,
+  bundleDigest: digestSchema
+});
+var applicationSourceSetSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.application-source-set/1"),
+  configurationId: external_exports.uuid(),
+  configurationRevision: external_exports.uuid(),
+  repositories: external_exports.array(applicationSourceSnapshotSchema).min(1).refine((sources) => new Set(sources.map((source4) => source4.repositoryId)).size === sources.length && new Set(sources.map((source4) => source4.githubRepositoryId)).size === sources.length, "Each repository must have one source capture in the application model.")
+});
+var applicationModelReferenceSchema = external_exports.strictObject({
+  modelRef: external_exports.uuid(),
+  configurationId: external_exports.uuid(),
+  configurationRevision: external_exports.uuid(),
+  sources: external_exports.array(applicationSourceSnapshotSchema.pick({
+    repositoryId: true,
+    githubRepositoryId: true,
+    fullName: true,
+    commit: true
+  })).min(1),
+  createdAt: external_exports.iso.datetime()
+});
+
 // ../contracts/dist/analysis.js
 var uiModelerPin = {
   capability: "ui-modeler/2026.10.18-8",
@@ -91492,6 +91544,16 @@ var uiModelerPin = {
   models: ["typesafe-ai/jev", "gpt-6-luna/medium"],
   sourceBudget: 64e4
 };
+var repositoryModelerPin = {
+  capability: "ui-modeler/repository-main-v1",
+  version: "2026.10.29-2108.4",
+  pipeline: "folder-definitions-global-visible/26",
+  adapter: "loki-repository-model-v1"
+};
+var analysisCapabilitySchema = external_exports.enum([
+  uiModelerPin.capability,
+  repositoryModelerPin.capability
+]);
 var analysisLimits = {
   maxBundleBytes: 64 * 1024 * 1024,
   maxOutputBytes: 64 * 1024 * 1024,
@@ -91503,7 +91565,7 @@ var analysisLimits = {
 };
 var requestFields = {
   protocol: external_exports.literal("ui-modeler-v1"),
-  capability: external_exports.literal(uiModelerPin.capability),
+  capability: analysisCapabilitySchema,
   requestId: external_exports.uuid()
 };
 var analysisRequestSchema = external_exports.discriminatedUnion("input", [
@@ -91517,6 +91579,14 @@ var analysisRequestSchema = external_exports.discriminatedUnion("input", [
     ...requestFields,
     input: external_exports.literal("snapshot"),
     snapshotId: external_exports.uuid()
+  }),
+  external_exports.strictObject({
+    ...requestFields,
+    capability: external_exports.literal(repositoryModelerPin.capability),
+    input: external_exports.literal("application"),
+    configurationId: external_exports.uuid(),
+    configurationRevision: external_exports.uuid(),
+    repositoryIds: external_exports.array(external_exports.uuid()).min(1).refine((ids2) => new Set(ids2).size === ids2.length)
   })
 ]);
 var analysisPhaseSchema = external_exports.enum([
@@ -91538,13 +91608,17 @@ var analysisSourceSchema = external_exports.strictObject({
   manifestDigest: digestSchema,
   bundleDigest: digestSchema
 });
+var analysisSourceBindingSchema = external_exports.union([
+  analysisSourceSchema,
+  applicationSourceSetSchema
+]);
 var analysisRunSchema = external_exports.strictObject({
   protocol: external_exports.literal("ui-modeler-v1"),
   id: external_exports.uuid(),
   request: analysisRequestSchema,
   phase: analysisPhaseSchema,
   sourceRunId: external_exports.uuid().nullable(),
-  source: analysisSourceSchema.nullable(),
+  source: analysisSourceBindingSchema.nullable(),
   sourceProgress: sourceRunSchema.nullable(),
   attemptId: external_exports.uuid().nullable(),
   fingerprint: digestSchema.nullable(),
@@ -91614,16 +91688,12 @@ var analysisFileSchema = external_exports.strictObject({
   sha256: digestSchema,
   size: external_exports.number().int().nonnegative().max(analysisLimits.maxFileBytes)
 });
-var analysisReportSchema = external_exports.strictObject({
+var analysisReportFields = {
   protocol: external_exports.literal("ui-modeler-output-v1"),
   workspaceId: external_exports.uuid(),
   runId: external_exports.uuid(),
   attemptId: external_exports.uuid(),
-  capability: external_exports.literal(uiModelerPin.capability),
-  cliDigest: external_exports.literal(uiModelerPin.sha256),
-  adapter: external_exports.literal(uiModelerPin.adapter),
   runtime: external_exports.string().min(1).max(300),
-  execution: external_exports.enum(["released-cli", "controlled-output-fixture"]),
   fingerprint: digestSchema,
   source: analysisSourceSchema,
   status: external_exports.enum(["complete", "partial", "failed"]),
@@ -91647,7 +91717,25 @@ var analysisReportSchema = external_exports.strictObject({
     size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
     sha256: digestSchema
   })
-});
+};
+var analysisReportSchema = external_exports.discriminatedUnion("capability", [
+  external_exports.strictObject({
+    ...analysisReportFields,
+    capability: external_exports.literal(uiModelerPin.capability),
+    cliDigest: external_exports.literal(uiModelerPin.sha256),
+    adapter: external_exports.literal(uiModelerPin.adapter),
+    execution: external_exports.enum(["released-cli", "controlled-output-fixture"])
+  }),
+  external_exports.strictObject({
+    ...analysisReportFields,
+    capability: external_exports.literal(repositoryModelerPin.capability),
+    source: analysisSourceBindingSchema,
+    producerVersion: external_exports.literal(repositoryModelerPin.version),
+    pipeline: external_exports.literal(repositoryModelerPin.pipeline),
+    adapter: external_exports.literal(repositoryModelerPin.adapter),
+    execution: external_exports.enum(["native-module", "controlled-native-fixture"])
+  })
+]);
 var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
@@ -91670,7 +91758,8 @@ var analysisJobInputSchema = external_exports.strictObject({
   workspaceId: external_exports.uuid(),
   runId: external_exports.uuid(),
   attemptId: external_exports.uuid(),
-  source: analysisSourceSchema,
+  capability: analysisCapabilitySchema.optional(),
+  source: analysisSourceBindingSchema,
   fingerprint: digestSchema,
   runtime: external_exports.string().min(1).max(300),
   leaseSeconds: external_exports.literal(90)
@@ -91695,13 +91784,21 @@ var customerReferenceSchema = external_exports.discriminatedUnion("kind", [
 ]);
 var customerAnalysisRequestSchema = external_exports.discriminatedUnion("input", [
   analysisRequestSchema.options[0].pick({ input: true, requestId: true, repositoryId: true, reference: true }).extend({ reference: customerReferenceSchema }).strip(),
-  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip()
+  analysisRequestSchema.options[1].pick({ input: true, requestId: true, snapshotId: true }).strip(),
+  analysisRequestSchema.options[2].pick({
+    input: true,
+    requestId: true,
+    configurationId: true,
+    configurationRevision: true,
+    repositoryIds: true
+  }).strip()
 ]);
 var customerAnalysisRunSchema = external_exports.object({
   id: external_exports.uuid(),
   request: customerAnalysisRequestSchema,
   phase: analysisPhaseSchema,
   source: customerAnalysisSourceSchema.nullable(),
+  sources: external_exports.array(customerAnalysisSourceSchema).optional(),
   sourceProgress: external_exports.object({ commit: analysisSourceSchema.shape.commit.nullable() }).nullable(),
   message: external_exports.string(),
   retryAt: external_exports.iso.datetime().nullable(),
@@ -92766,6 +92863,85 @@ var customerWorkspaceListSchema = external_exports.strictObject({
     bytes: count
   }))
 });
+
+// ../contracts/dist/source-model.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var sourceModelSelectionSchema = external_exports.strictObject({
+  application: external_exports.literal(true).optional(),
+  repositoryId: external_exports.uuid().optional(),
+  repository: repositoryNameSchema.optional(),
+  modelRef: external_exports.uuid().optional(),
+  pageIds: external_exports.array(external_exports.string().min(1)).optional()
+}).refine((value) => [value.application, value.repositoryId, value.repository].filter(Boolean).length === 1, "Choose the configured application, or one legacy repository ID or full name.");
+var sourceModelReferenceSchema = external_exports.strictObject({
+  modelRef: external_exports.uuid(),
+  repositoryId: external_exports.uuid(),
+  commit: external_exports.string().regex(/^[a-f0-9]{40}$/),
+  createdAt: external_exports.iso.datetime()
+});
+var sourceModelContextRequestSchema = external_exports.strictObject({
+  pageIds: external_exports.array(external_exports.string().min(1)).optional()
+});
+var sourceModelDiscoverySchema = external_exports.strictObject({
+  items: external_exports.array(external_exports.strictObject({
+    fullName: repositoryNameSchema,
+    reference: sourceModelReferenceSchema
+  }))
+});
+var sourceModelStatusSchema = external_exports.strictObject({
+  repositoryId: external_exports.uuid(),
+  enabled: external_exports.boolean(),
+  latestAttempt: external_exports.uuid().nullable(),
+  latestModelRef: external_exports.uuid().nullable(),
+  phase: analysisPhaseSchema.nullable(),
+  latestMainCommit: external_exports.string().regex(/^[a-f0-9]{40}$/).nullable(),
+  checkedAt: external_exports.iso.datetime().nullable(),
+  checkingMain: external_exports.boolean(),
+  refreshUnavailable: external_exports.boolean()
+});
+var applicationModelStatusSchema = external_exports.strictObject({
+  configuration: applicationSourceConfigurationSchema,
+  latestAttempt: external_exports.uuid().nullable(),
+  latestModelRef: external_exports.uuid().nullable(),
+  phase: analysisPhaseSchema.nullable(),
+  checkedAt: external_exports.iso.datetime().nullable(),
+  matchesSelection: external_exports.boolean(),
+  modelStatus: external_exports.enum(["processed", "incomplete"]).nullable(),
+  incompletePages: external_exports.strictObject({
+    failed: external_exports.array(external_exports.string()),
+    browsable: external_exports.array(external_exports.string())
+  }).optional()
+});
+var contextFields = {
+  basis: external_exports.literal("source-inferred; runtime behavior unverified"),
+  model: customerAnalysisResultSchema.shape.map.unwrap(),
+  sourceIndex: customerAnalysisResultSchema.shape.sourceIndex,
+  selection: external_exports.strictObject({
+    pageIds: external_exports.array(external_exports.string()),
+    wholeModel: external_exports.boolean()
+  })
+};
+var sourceModelContextSchema = external_exports.discriminatedUnion("schema", [
+  external_exports.strictObject({
+    ...contextFields,
+    schema: external_exports.literal("kaijan.source-model-context/1"),
+    reference: sourceModelReferenceSchema
+  }),
+  external_exports.strictObject({
+    ...contextFields,
+    schema: external_exports.literal("kaijan.source-model-context/2"),
+    reference: applicationModelReferenceSchema
+  })
+]);
 
 // ../contracts/dist/index.js
 var apiVersion = "1";
@@ -95065,6 +95241,16 @@ var PlanningSourceFailure = class extends Error {
     super(
       "The plan needs distinct source IDs and the original caller task as intent."
     );
+  }
+};
+var ApplicationModelUnavailable = class extends Error {
+  code;
+  constructor(status2) {
+    const accessDenied = status2 === 403;
+    super(
+      accessDenied ? "This connection cannot read the workspace App Model." : "No app model is available yet. Continue with local source or browser observations."
+    );
+    this.code = accessDenied ? "application_model_access_denied" : "application_model_unavailable";
   }
 };
 var PlanningContextFailure = class extends Error {
@@ -105824,314 +106010,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { createHash as createHash20 } from "node:crypto";
-var object7 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
-var hash8 = (value) => createHash20("sha256").update(value).digest("hex");
-var planningRepositories = external_exports.array(
-  external_exports.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/)
-).min(1).refine(
-  (values) => new Set(values.map((value) => value.toLowerCase())).size === values.length,
-  "Supply each authorized repository once."
-).describe(
-  "Optional owner/repository scope authorized for related-work discovery. Include the original work item's repository when known; otherwise the first entry supplies the repository context for local references. Kaijan searches this scope inside the planning call. Omit when discovery is not requested; supplying a link alone does not authorize a repository search."
-);
-function githubTaskSource(value) {
-  if (typeof value !== "string") return void 0;
-  let url2;
-  try {
-    url2 = new URL(value);
-  } catch {
-    return void 0;
-  }
-  if (url2.origin !== "https://github.com" || url2.username || url2.password)
-    return void 0;
-  const match = /^\/([\w.-]+\/[\w.-]+)\/(issues|pull)\/([1-9][0-9]*)(?:\/.*)?$/.exec(
-    url2.pathname
-  );
-  if (!match || !Number.isSafeInteger(Number(match[3]))) return void 0;
-  return {
-    repository: match[1],
-    uri: `https://github.com/${match[1]}/${match[2]}/${match[3]}`
-  };
-}
-function planningRelatedScope(repositories, planning) {
-  const scope = planningRepositories.parse(repositories);
-  const packet = object7(planning);
-  const task2 = object7(packet.work_item);
-  const sourceIdentity = githubTaskSource(task2.url);
-  const sourceRepository = sourceIdentity?.repository;
-  const seedRepository = sourceRepository ? scope.find(
-    (repository2) => repository2.toLowerCase() === sourceRepository.toLowerCase()
-  ) : scope[0];
-  if (!seedRepository)
-    throw Error(
-      "Include the task's repository in its authorized discovery scope."
-    );
-  return { scope, seedRepository, sourceIdentity };
-}
-async function preparePlanningRelated(repositories, planning, context, reader, originalDiscussion) {
-  const { scope, seedRepository, sourceIdentity } = planningRelatedScope(
-    repositories,
-    planning
-  );
-  context.signal.throwIfAborted();
-  if (!reader)
-    throw Error(
-      "Related-work preparation is unavailable in this planning host."
-    );
-  const packet = object7(planning);
-  const task2 = object7(packet.work_item);
-  const sources = external_exports.array(external_exports.json()).parse(packet.sources).map(object7);
-  const intent = sources.filter((source5) => source5.kind === "intent");
-  if (!intent.length)
-    throw Error("Related-work discovery requires original task sources.");
-  const discoverySources = [
-    ...intent,
-    ...originalDiscussion === void 0 ? [] : [object7(originalDiscussion)]
-  ];
-  const text15 = discoverySources.map((source5) => {
-    const text16 = external_exports.string().parse(source5.text);
-    if (source5.kind === "intent") return text16;
-    const discussion = object7(JSON.parse(text16));
-    const comments = Array.isArray(discussion.comments) ? discussion.comments.map(object7) : [];
-    return [
-      discussion.title,
-      discussion.body,
-      ...comments.map((comment) => comment.body)
-    ].filter((value) => typeof value === "string").join("\n\n");
-  }).join("\n\n");
-  const revision2 = hash8(text15);
-  const seed = {
-    schema: "pr-context-related/1",
-    repo: seedRepository,
-    title: external_exports.string().min(1).parse(task2.title),
-    text: text15,
-    // Native admission excludes this known original item. Keep the composite
-    // supplied text and its digest; never infer identity from links or prose.
-    source_uri: sourceIdentity?.uri ?? `urn:kaijan:planning-related:${revision2}`,
-    revision: revision2,
-    captured_at: external_exports.string().parse(packet.captured_at),
-    authorized_repositories: scope
-  };
-  const answer = object7(
-    await reader.query({ context: seed }, { signal: context.signal })
-  );
-  context.signal.throwIfAborted();
-  if (answer.state !== "complete" || typeof answer.answerId !== "string" || typeof answer.resultSha256 !== "string")
-    return {
-      sources: [],
-      receipt: answer,
-      ready: false,
-      unknownCharge: true
-    };
-  const original = await readCompletedAnswer(
-    (id8, offset2) => {
-      context.signal.throwIfAborted();
-      return reader.readQuery(id8, offset2);
-    },
-    answer.answerId,
-    answer.resultSha256
-  );
-  context.signal.throwIfAborted();
-  const result = object7(JSON.parse(original.text));
-  if (result.schema !== "pr-context-related/1")
-    throw Error("Invalid related-work preparation result.");
-  const accounting = object7(result.accounting ?? {});
-  const unknownCharge = accounting.unknown_cost_calls !== 0;
-  const view = structuredClone(result);
-  if (result.seed !== void 0) {
-    const returned = object7(result.seed);
-    if (returned.text !== seed.text || returned.body !== seed.text || returned.source_uri !== seed.source_uri || returned.revision !== revision2 || returned.repo !== seed.repo || returned.title !== seed.title || returned.captured_at !== seed.captured_at || JSON.stringify(returned.authorized_repositories) !== JSON.stringify(scope))
-      throw Error("Related-work result does not match the planning seed.");
-    const metadata4 = { ...returned };
-    delete metadata4.text;
-    delete metadata4.body;
-    view.seed = {
-      ...metadata4,
-      planning_source_ids: discoverySources.map((source5) => source5.id)
-    };
-    const fullSeed = `${seed.title}
-${seed.text}`;
-    if (Array.isArray(view.evidence))
-      view.evidence = view.evidence.map((entry) => {
-        const row2 = object7(entry);
-        if (row2.source_uri !== seed.source_uri) return entry;
-        const excerpt = external_exports.string().parse(row2.text);
-        if (!fullSeed.startsWith(excerpt) || row2.sha256 !== hash8(excerpt) || row2.omitted_characters !== fullSeed.length - excerpt.length)
-          throw Error("Related-work seed evidence does not match its source.");
-        const binding2 = { ...row2 };
-        delete binding2.text;
-        return {
-          ...binding2,
-          text_from_planning_seed: {
-            title: seed.title,
-            source_ids: discoverySources.map((source5) => source5.id),
-            format: "title + newline + source texts joined with two newlines; intent text is unchanged; original discussion text is its title, body and comment bodies joined with two newlines",
-            prefix_characters: excerpt.length
-          }
-        };
-      });
-  }
-  const discoveredSources = [];
-  const existingSources = external_exports.array(external_exports.json()).parse(packet.sources).map(object7);
-  const evidenceIds = /* @__PURE__ */ new Set();
-  if (Array.isArray(view.evidence))
-    view.evidence = view.evidence.map((entry) => {
-      const row2 = object7(entry);
-      if (row2.source_role !== "authored_metadata" || row2.text === void 0)
-        return entry;
-      const id8 = external_exports.string().min(1).parse(row2.id);
-      const text16 = external_exports.string().parse(row2.text);
-      const uri2 = external_exports.string().min(1).parse(row2.source_uri);
-      if (evidenceIds.has(id8) || row2.sha256 !== hash8(text16))
-        throw Error("Invalid related-work source evidence.");
-      evidenceIds.add(id8);
-      const revision3 = external_exports.string().nullable().parse(row2.revision ?? null);
-      const existing = existingSources.find(
-        (source5) => source5.kind === "context" && source5.text === text16 && source5.uri === uri2 && source5.revision === revision3 && typeof source5.id === "string"
-      );
-      const sourceId = existing ? external_exports.string().parse(existing.id) : `discovered-source:${external_exports.string().parse(answer.answerId)}:${id8}`;
-      if (!existing)
-        discoveredSources.push({
-          id: sourceId,
-          kind: "context",
-          uri: uri2,
-          revision: revision3,
-          text: text16,
-          attribution: "Original authored source excerpt captured by related-work discovery.",
-          authority_limit: "Context, not a requirement or an observed application result. The discovery record retains attribution and omitted-character limits.",
-          provenance: {
-            family: "prContext",
-            answerId: external_exports.string().parse(answer.answerId),
-            resultSha256: original.resultSha256,
-            evidenceId: id8
-          }
-        });
-      const metadata4 = { ...row2 };
-      delete metadata4.text;
-      return { ...metadata4, text_from_source: { source_id: sourceId } };
-    });
-  const source4 = {
-    id: `planning-related:${answer.answerId}`,
-    kind: "context",
-    uri: `kaijan-answer://prContext/${answer.answerId}`,
-    revision: original.resultSha256,
-    text: JSON.stringify(view),
-    attribution: "Related-work discovery for this planning task; original seed text refers to the unchanged planning sources.",
-    authority_limit: "Related records and judgments are context, not requirements or observed defects. Preserve unjudged candidates, errors, omissions and bounded coverage; an empty result does not establish absence of related work.",
-    provenance: {
-      family: "prContext",
-      answerId: answer.answerId,
-      resultSha256: original.resultSha256
-    }
-  };
-  return {
-    sources: [source4, ...discoveredSources],
-    receipt: {
-      answerId: answer.answerId,
-      resultSha256: original.resultSha256,
-      query: answer.query ?? null,
-      status: result.status ?? null,
-      accounting
-    },
-    ready: (result.status === "complete" || result.status === "partial") && !unknownCharge,
-    unknownCharge
-  };
-}
-
-// src/planning-procedure-context.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash21 } from "node:crypto";
-var digest23 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var planningProcedures = external_exports.array(
-  external_exports.union([
-    external_exports.strictObject({
-      title: external_exports.string().min(1),
-      steps: external_exports.array(external_exports.string().min(1)).min(1),
-      uri: external_exports.string().min(1).optional(),
-      revision: external_exports.string().min(1).optional()
-    }),
-    external_exports.strictObject({ runId: digest23, resultSha256: digest23.optional() })
-  ])
-).min(1).refine(
-  (items) => new Set(
-    items.map(
-      (item2) => "runId" in item2 ? item2.runId : JSON.stringify(item2)
-    )
-  ).size === items.length,
-  "Supply each historical procedure once."
-).describe(
-  "Optional historical background for a new plan. Supply separate title/steps items, with source URI/revision when known, or an explicit saved Run ID from this conversation. Kaijan reads saved authored scenarios internally. These are not verified action logs, current requirements, prior verdicts or permission to execute. Do not fetch and copy a whole Run history. Recorded-execution reuse stays in Run."
-);
-var hash9 = (value) => createHash21("sha256").update(value).digest("hex");
-var authority = "Historical authored procedure supplied as background. Adapt it to the current task and requirements. It is not proof of performed actions or current behavior, a new requirement, or execution authority. Prior results do not establish a fresh result.";
-async function readPlanningProcedures(selection4, read5, signal) {
-  if (selection4 === void 0) return [];
-  const sources = [];
-  for (const item2 of planningProcedures.parse(selection4)) {
-    signal?.throwIfAborted();
-    if (!("runId" in item2)) {
-      const text16 = JSON.stringify({ title: item2.title, steps: item2.steps });
-      const identity2 = hash9(JSON.stringify(item2));
-      sources.push({
-        id: `historical-procedure:${identity2}`,
-        kind: "context",
-        uri: item2.uri ?? `urn:kaijan:caller-procedure:${identity2}`,
-        revision: item2.revision ?? hash9(text16),
-        text: text16,
-        attribution: "Historical steps supplied by the caller; not independently verified.",
-        authority_limit: authority
-      });
-      continue;
-    }
-    let saved;
-    try {
-      saved = await read5?.(item2.runId);
-    } catch {
-      signal?.throwIfAborted();
-    }
-    signal?.throwIfAborted();
-    if (saved?.state !== "ready" || saved.runId !== item2.runId || !digest23.safeParse(saved.resultSha256).success || !digest23.safeParse(saved.requestSha256).success || item2.resultSha256 !== void 0 && item2.resultSha256 !== saved.resultSha256) {
-      const text16 = "The caller-selected saved procedure could not be read or verified. Its steps are unavailable. Continue planning from the available current task and sources; do not infer the missing steps. Preserve any resulting coverage gap.";
-      sources.push({
-        id: `saved-procedure:${item2.runId}`,
-        kind: "context",
-        uri: `kaijan-run://${item2.runId}`,
-        revision: item2.resultSha256 ?? hash9(text16),
-        text: text16,
-        attribution: "Kaijan source-read gap; no historical procedure was acquired.",
-        authority_limit: "This is a missing-source notice, not application evidence or a requirement.",
-        source_unavailable: true
-      });
-      continue;
-    }
-    const text15 = typeof saved.scenario === "string" ? saved.scenario : JSON.stringify(saved.scenario);
-    sources.push({
-      id: `saved-procedure:${item2.runId}`,
-      kind: "context",
-      uri: `kaijan-run://${item2.runId}`,
-      revision: saved.requestSha256,
-      text: text15,
-      attribution: "Protected original authored scenario from the caller-selected saved Run; not an action log.",
-      authority_limit: authority,
-      provenance: {
-        runId: saved.runId,
-        requestSha256: saved.requestSha256,
-        resultSha256: saved.resultSha256
-      }
-    });
-  }
-  return sources;
-}
 
 // src/planning-conversation.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -106144,7 +106023,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { createHash as createHash22 } from "node:crypto";
+import { createHash as createHash20 } from "node:crypto";
 import { realpath as realpath10 } from "node:fs/promises";
 import { join as join13 } from "node:path";
 
@@ -106244,13 +106123,13 @@ var aiModelsSchema = external_exports.looseObject({
 });
 
 // src/planning-conversation.ts
-var hash10 = (value) => createHash22("sha256").update(value).digest("hex");
-var digest24 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var hash8 = (value) => createHash20("sha256").update(value).digest("hex");
+var digest23 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var plannerConversationBindingSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.planner-conversation/1"),
-  providerIdentity: digest24,
-  requestSha256: digest24,
-  responseSha256: digest24,
+  providerIdentity: digest23,
+  requestSha256: digest23,
+  responseSha256: digest23,
   responseId: external_exports.string().min(1).max(512)
 });
 var PlannerConnectionUnavailableError = class extends Error {
@@ -106261,6 +106140,12 @@ var PlannerConnectionUnavailableError = class extends Error {
   }
   operationUnavailable;
 };
+function planningQueryInvocation({
+  environment,
+  signal
+}) {
+  return environment?.LOKI_AI_CONNECTION_BINDING ? { signal, providerEnvironment: environment } : { signal };
+}
 async function readManagedPlannerConnection(socketPath, signal) {
   signal?.throwIfAborted();
   try {
@@ -106300,7 +106185,7 @@ async function plannerProviderConnection(data2, environment, signal) {
     if (!environment.OPENAI_API_KEY?.trim() || environment.LOKI_AI_CONNECTION_BINDING)
       throw new PlannerConnectionUnavailableError();
     return {
-      providerIdentity: hash10(
+      providerIdentity: hash8(
         JSON.stringify(["openai-responses", scope, environment.OPENAI_API_KEY])
       ),
       environment: Object.freeze({ ...environment })
@@ -106311,7 +106196,7 @@ async function plannerProviderConnection(data2, environment, signal) {
     signal
   );
   return {
-    providerIdentity: hash10(
+    providerIdentity: hash8(
       JSON.stringify([
         "managed-responses",
         scope,
@@ -106359,18 +106244,18 @@ async function readPlannerConversation(directory3, receipt4, providerIdentity) {
       "valid_plan_unknown_accounting",
       "valid_partial_plan_unknown_accounting"
     ]),
-    captured_sha256: digest24,
+    captured_sha256: digest23,
     response_id: external_exports.string(),
     model_returned: external_exports.string(),
     body_complete: external_exports.literal(true)
   }).parse(receipt4);
-  if (original.captured_sha256 !== hash10(responseBytes) || original.response_id !== response.id || original.model_returned !== request3.model || response.model !== request3.model)
+  if (original.captured_sha256 !== hash8(responseBytes) || original.response_id !== response.id || original.model_returned !== request3.model || response.model !== request3.model)
     throw Error("The saved Planner response changed.");
   const binding2 = plannerConversationBindingSchema.parse({
     schema: "kaijan.planner-conversation/1",
     providerIdentity,
-    requestSha256: hash10(requestBytes2),
-    responseSha256: hash10(responseBytes),
+    requestSha256: hash8(requestBytes2),
+    responseSha256: hash8(responseBytes),
     responseId: response.id
   });
   const input3 = typeof request3.input === "string" ? [{ role: "user", content: request3.input }] : Array.isArray(request3.input) ? request3.input : null;
@@ -106382,6 +106267,315 @@ async function readPlannerConversation(directory3, receipt4, providerIdentity) {
 }
 async function capturePlannerConversation(directory3, receipt4, providerIdentity) {
   return (await readPlannerConversation(directory3, receipt4, providerIdentity)).binding;
+}
+
+// src/planning-related-preparation.ts
+var object7 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
+var hash9 = (value) => createHash21("sha256").update(value).digest("hex");
+var planningRepositories = external_exports.array(
+  external_exports.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/)
+).min(1).refine(
+  (values) => new Set(values.map((value) => value.toLowerCase())).size === values.length,
+  "Supply each authorized repository once."
+).describe(
+  "Optional owner/repository scope authorized for related-work discovery. Include the original work item's repository when known; otherwise the first entry supplies the repository context for local references. Kaijan searches this scope inside the planning call. Omit when discovery is not requested; supplying a link alone does not authorize a repository search."
+);
+function githubTaskSource(value) {
+  if (typeof value !== "string") return void 0;
+  let url2;
+  try {
+    url2 = new URL(value);
+  } catch {
+    return void 0;
+  }
+  if (url2.origin !== "https://github.com" || url2.username || url2.password)
+    return void 0;
+  const match = /^\/([\w.-]+\/[\w.-]+)\/(issues|pull)\/([1-9][0-9]*)(?:\/.*)?$/.exec(
+    url2.pathname
+  );
+  if (!match || !Number.isSafeInteger(Number(match[3]))) return void 0;
+  return {
+    repository: match[1],
+    uri: `https://github.com/${match[1]}/${match[2]}/${match[3]}`
+  };
+}
+function planningRelatedScope(repositories, planning) {
+  const scope = planningRepositories.parse(repositories);
+  const packet = object7(planning);
+  const task2 = object7(packet.work_item);
+  const sourceIdentity = githubTaskSource(task2.url);
+  const sourceRepository = sourceIdentity?.repository;
+  const seedRepository = sourceRepository ? scope.find(
+    (repository2) => repository2.toLowerCase() === sourceRepository.toLowerCase()
+  ) : scope[0];
+  if (!seedRepository)
+    throw Error(
+      "Include the task's repository in its authorized discovery scope."
+    );
+  return { scope, seedRepository, sourceIdentity };
+}
+async function preparePlanningRelated(repositories, planning, context, reader, originalDiscussion) {
+  const { scope, seedRepository, sourceIdentity } = planningRelatedScope(
+    repositories,
+    planning
+  );
+  context.signal.throwIfAborted();
+  if (!reader)
+    throw Error(
+      "Related-work preparation is unavailable in this planning host."
+    );
+  const packet = object7(planning);
+  const task2 = object7(packet.work_item);
+  const sources = external_exports.array(external_exports.json()).parse(packet.sources).map(object7);
+  const intent = sources.filter((source5) => source5.kind === "intent");
+  if (!intent.length)
+    throw Error("Related-work discovery requires original task sources.");
+  const discoverySources = [
+    ...intent,
+    ...originalDiscussion === void 0 ? [] : [object7(originalDiscussion)]
+  ];
+  const text15 = discoverySources.map((source5) => {
+    const text16 = external_exports.string().parse(source5.text);
+    if (source5.kind === "intent") return text16;
+    const discussion = object7(JSON.parse(text16));
+    const comments = Array.isArray(discussion.comments) ? discussion.comments.map(object7) : [];
+    return [
+      discussion.title,
+      discussion.body,
+      ...comments.map((comment) => comment.body)
+    ].filter((value) => typeof value === "string").join("\n\n");
+  }).join("\n\n");
+  const revision2 = hash9(text15);
+  const seed = {
+    schema: "pr-context-related/1",
+    repo: seedRepository,
+    title: external_exports.string().min(1).parse(task2.title),
+    text: text15,
+    // Native admission excludes this known original item. Keep the composite
+    // supplied text and its digest; never infer identity from links or prose.
+    source_uri: sourceIdentity?.uri ?? `urn:kaijan:planning-related:${revision2}`,
+    revision: revision2,
+    captured_at: external_exports.string().parse(packet.captured_at),
+    authorized_repositories: scope
+  };
+  const answer = object7(
+    await reader.query({ context: seed }, planningQueryInvocation(context))
+  );
+  context.signal.throwIfAborted();
+  if (answer.state !== "complete" || typeof answer.answerId !== "string" || typeof answer.resultSha256 !== "string")
+    return {
+      sources: [],
+      receipt: answer,
+      ready: false,
+      unknownCharge: true
+    };
+  const original = await readCompletedAnswer(
+    (id8, offset2) => {
+      context.signal.throwIfAborted();
+      return reader.readQuery(id8, offset2);
+    },
+    answer.answerId,
+    answer.resultSha256
+  );
+  context.signal.throwIfAborted();
+  const result = object7(JSON.parse(original.text));
+  if (result.schema !== "pr-context-related/1")
+    throw Error("Invalid related-work preparation result.");
+  const accounting = object7(result.accounting ?? {});
+  const unknownCharge = accounting.unknown_cost_calls !== 0;
+  const view = structuredClone(result);
+  if (result.seed !== void 0) {
+    const returned = object7(result.seed);
+    if (returned.text !== seed.text || returned.body !== seed.text || returned.source_uri !== seed.source_uri || returned.revision !== revision2 || returned.repo !== seed.repo || returned.title !== seed.title || returned.captured_at !== seed.captured_at || JSON.stringify(returned.authorized_repositories) !== JSON.stringify(scope))
+      throw Error("Related-work result does not match the planning seed.");
+    const metadata4 = { ...returned };
+    delete metadata4.text;
+    delete metadata4.body;
+    view.seed = {
+      ...metadata4,
+      planning_source_ids: discoverySources.map((source5) => source5.id)
+    };
+    const fullSeed = `${seed.title}
+${seed.text}`;
+    if (Array.isArray(view.evidence))
+      view.evidence = view.evidence.map((entry) => {
+        const row2 = object7(entry);
+        if (row2.source_uri !== seed.source_uri) return entry;
+        const excerpt = external_exports.string().parse(row2.text);
+        if (!fullSeed.startsWith(excerpt) || row2.sha256 !== hash9(excerpt) || row2.omitted_characters !== fullSeed.length - excerpt.length)
+          throw Error("Related-work seed evidence does not match its source.");
+        const binding2 = { ...row2 };
+        delete binding2.text;
+        return {
+          ...binding2,
+          text_from_planning_seed: {
+            title: seed.title,
+            source_ids: discoverySources.map((source5) => source5.id),
+            format: "title + newline + source texts joined with two newlines; intent text is unchanged; original discussion text is its title, body and comment bodies joined with two newlines",
+            prefix_characters: excerpt.length
+          }
+        };
+      });
+  }
+  const discoveredSources = [];
+  const existingSources = external_exports.array(external_exports.json()).parse(packet.sources).map(object7);
+  const evidenceIds = /* @__PURE__ */ new Set();
+  if (Array.isArray(view.evidence))
+    view.evidence = view.evidence.map((entry) => {
+      const row2 = object7(entry);
+      if (row2.source_role !== "authored_metadata" || row2.text === void 0)
+        return entry;
+      const id8 = external_exports.string().min(1).parse(row2.id);
+      const text16 = external_exports.string().parse(row2.text);
+      const uri2 = external_exports.string().min(1).parse(row2.source_uri);
+      if (evidenceIds.has(id8) || row2.sha256 !== hash9(text16))
+        throw Error("Invalid related-work source evidence.");
+      evidenceIds.add(id8);
+      const revision3 = external_exports.string().nullable().parse(row2.revision ?? null);
+      const existing = existingSources.find(
+        (source5) => source5.kind === "context" && source5.text === text16 && source5.uri === uri2 && source5.revision === revision3 && typeof source5.id === "string"
+      );
+      const sourceId = existing ? external_exports.string().parse(existing.id) : `discovered-source:${external_exports.string().parse(answer.answerId)}:${id8}`;
+      if (!existing)
+        discoveredSources.push({
+          id: sourceId,
+          kind: "context",
+          uri: uri2,
+          revision: revision3,
+          text: text16,
+          attribution: "Original authored source excerpt captured by related-work discovery.",
+          authority_limit: "Context, not a requirement or an observed application result. The discovery record retains attribution and omitted-character limits.",
+          provenance: {
+            family: "prContext",
+            answerId: external_exports.string().parse(answer.answerId),
+            resultSha256: original.resultSha256,
+            evidenceId: id8
+          }
+        });
+      const metadata4 = { ...row2 };
+      delete metadata4.text;
+      return { ...metadata4, text_from_source: { source_id: sourceId } };
+    });
+  const source4 = {
+    id: `planning-related:${answer.answerId}`,
+    kind: "context",
+    uri: `kaijan-answer://prContext/${answer.answerId}`,
+    revision: original.resultSha256,
+    text: JSON.stringify(view),
+    attribution: "Related-work discovery for this planning task; original seed text refers to the unchanged planning sources.",
+    authority_limit: "Related records and judgments are context, not requirements or observed defects. Preserve unjudged candidates, errors, omissions and bounded coverage; an empty result does not establish absence of related work.",
+    provenance: {
+      family: "prContext",
+      answerId: answer.answerId,
+      resultSha256: original.resultSha256
+    }
+  };
+  return {
+    sources: [source4, ...discoveredSources],
+    receipt: {
+      answerId: answer.answerId,
+      resultSha256: original.resultSha256,
+      query: answer.query ?? null,
+      status: result.status ?? null,
+      accounting
+    },
+    ready: (result.status === "complete" || result.status === "partial") && !unknownCharge,
+    unknownCharge
+  };
+}
+
+// src/planning-procedure-context.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+import { createHash as createHash22 } from "node:crypto";
+var digest24 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var planningProcedures = external_exports.array(
+  external_exports.union([
+    external_exports.strictObject({
+      title: external_exports.string().min(1),
+      steps: external_exports.array(external_exports.string().min(1)).min(1),
+      uri: external_exports.string().min(1).optional(),
+      revision: external_exports.string().min(1).optional()
+    }),
+    external_exports.strictObject({ runId: digest24, resultSha256: digest24.optional() })
+  ])
+).min(1).refine(
+  (items) => new Set(
+    items.map(
+      (item2) => "runId" in item2 ? item2.runId : JSON.stringify(item2)
+    )
+  ).size === items.length,
+  "Supply each historical procedure once."
+).describe(
+  "Optional historical background for a new plan. Supply separate title/steps items, with source URI/revision when known, or an explicit saved Run ID from this conversation. Kaijan reads saved authored scenarios internally. These are not verified action logs, current requirements, prior verdicts or permission to execute. Do not fetch and copy a whole Run history. Recorded-execution reuse stays in Run."
+);
+var hash10 = (value) => createHash22("sha256").update(value).digest("hex");
+var authority = "Historical authored procedure supplied as background. Adapt it to the current task and requirements. It is not proof of performed actions or current behavior, a new requirement, or execution authority. Prior results do not establish a fresh result.";
+async function readPlanningProcedures(selection4, read5, signal) {
+  if (selection4 === void 0) return [];
+  const sources = [];
+  for (const item2 of planningProcedures.parse(selection4)) {
+    signal?.throwIfAborted();
+    if (!("runId" in item2)) {
+      const text16 = JSON.stringify({ title: item2.title, steps: item2.steps });
+      const identity2 = hash10(JSON.stringify(item2));
+      sources.push({
+        id: `historical-procedure:${identity2}`,
+        kind: "context",
+        uri: item2.uri ?? `urn:kaijan:caller-procedure:${identity2}`,
+        revision: item2.revision ?? hash10(text16),
+        text: text16,
+        attribution: "Historical steps supplied by the caller; not independently verified.",
+        authority_limit: authority
+      });
+      continue;
+    }
+    let saved;
+    try {
+      saved = await read5?.(item2.runId);
+    } catch {
+      signal?.throwIfAborted();
+    }
+    signal?.throwIfAborted();
+    if (saved?.state !== "ready" || saved.runId !== item2.runId || !digest24.safeParse(saved.resultSha256).success || !digest24.safeParse(saved.requestSha256).success || item2.resultSha256 !== void 0 && item2.resultSha256 !== saved.resultSha256) {
+      const text16 = "The caller-selected saved procedure could not be read or verified. Its steps are unavailable. Continue planning from the available current task and sources; do not infer the missing steps. Preserve any resulting coverage gap.";
+      sources.push({
+        id: `saved-procedure:${item2.runId}`,
+        kind: "context",
+        uri: `kaijan-run://${item2.runId}`,
+        revision: item2.resultSha256 ?? hash10(text16),
+        text: text16,
+        attribution: "Kaijan source-read gap; no historical procedure was acquired.",
+        authority_limit: "This is a missing-source notice, not application evidence or a requirement.",
+        source_unavailable: true
+      });
+      continue;
+    }
+    const text15 = typeof saved.scenario === "string" ? saved.scenario : JSON.stringify(saved.scenario);
+    sources.push({
+      id: `saved-procedure:${item2.runId}`,
+      kind: "context",
+      uri: `kaijan-run://${item2.runId}`,
+      revision: saved.requestSha256,
+      text: text15,
+      attribution: "Protected original authored scenario from the caller-selected saved Run; not an action log.",
+      authority_limit: authority,
+      provenance: {
+        runId: saved.runId,
+        requestSha256: saved.requestSha256,
+        resultSha256: saved.resultSha256
+      }
+    });
+  }
+  return sources;
 }
 
 // src/planning-failure-diagnostics.ts
@@ -114320,7 +114514,7 @@ async function preparePlanningChange(change, planning, selected2, context, reade
   const answer = object8(
     await reader.query(
       { packet: reviewPacket, mode: "direct" },
-      { signal: context.signal }
+      planningQueryInvocation(context)
     )
   );
   if (answer.state !== "complete" || typeof answer.answerId !== "string" || typeof answer.resultSha256 !== "string")
@@ -114726,7 +114920,7 @@ function createPlanningPreparation(dependencies) {
             }
           }
         },
-        { signal: context.signal }
+        planningQueryInvocation(context)
       )
     );
     if (answer.state !== "complete" || typeof answer.answerId !== "string" || typeof answer.resultSha256 !== "string") {
@@ -114884,6 +115078,9 @@ var planningRequest = external_exports.strictObject({
   ),
   exploration: planningExploration.optional().describe(
     "Explore the selected browser target and build an observed app model before planning."
+  ),
+  sourceModel: sourceModelSelectionSchema.optional().describe(
+    "Optional shared Main source context. Select application:true for the current configured app model. Legacy repository requests can pin a modelRef. Code-derived context is not a browser observation or an approved requirement."
   ),
   testData: external_exports.json().optional(),
   desktopTarget: desktopRunnerTargetSchema.optional(),
@@ -115108,6 +115305,55 @@ var TestPlanning = class {
           await privateDirectory(context.artifactDirectory);
           const base = api.prepare(planningTaskInput(request3, api.prepare));
           const extraSources = Array.isArray(request3.procedureSources) ? [...request3.procedureSources] : [];
+          let sourceContext;
+          let sourceConnection;
+          if (request3.sourceModel) {
+            if (!this.dependencies.readSourceModel || !this.dependencies.prepareForPlanning)
+              throw Error(
+                "Shared source context requires the authenticated planning connection."
+              );
+            try {
+              const environment = context.environment ?? await this.environment();
+              if (environment.LOKI_AUTH_BROKER_SOCKET)
+                sourceConnection = await plannerProviderConnection(
+                  this.data,
+                  environment,
+                  context.signal
+                );
+              sourceContext = sourceModelContextSchema.parse(
+                await this.dependencies.readSourceModel(
+                  sourceModelSelectionSchema.parse(request3.sourceModel),
+                  context.signal,
+                  sourceConnection?.environment.LOKI_AI_CONNECTION_BINDING
+                )
+              );
+            } catch (error62) {
+              context.signal.throwIfAborted();
+              const refused = error62 instanceof ApplicationModelUnavailable;
+              if (!refused && !(error62 instanceof PlannerConnectionUnavailableError))
+                throw error62;
+              return {
+                schema: "loki.planning-failure/1",
+                reason: refused ? error62.code : "connection_unavailable",
+                ...refused ? { message: error62.message } : {},
+                receipt_directory: context.artifactDirectory,
+                receipt: {
+                  status: "not_started",
+                  unknown_charge: false,
+                  unknown_usage: false
+                }
+              };
+            }
+            const text15 = JSON.stringify(sourceContext);
+            extraSources.push({
+              id: "shared-source-model-" + sourceContext.reference.modelRef,
+              kind: "context",
+              uri: "urn:kaijan:source-model:" + sourceContext.reference.modelRef,
+              revision: digest26(text15),
+              text: text15,
+              attribution: "Shared Main source-derived application context; runtime behavior unverified. Local changes and browser observations remain separate."
+            });
+          }
           if ((request3.exploration || request3.desktopTarget) && !this.dependencies.prepareForPlanning)
             throw Error(
               request3.exploration ? "Browser exploration requires planning preparation." : "Desktop exploration requires planning preparation."
@@ -115133,7 +115379,7 @@ var TestPlanning = class {
               (name, hosts2) => privateInputHosts.set(name, hosts2)
             );
             const directory3 = join15(context.artifactDirectory, "explorer");
-            const environment = (await plannerProviderConnection(
+            const environment = (sourceConnection ?? await plannerProviderConnection(
               this.data,
               context.environment ?? await this.environment(),
               context.signal
@@ -115147,6 +115393,7 @@ var TestPlanning = class {
             );
             const options2 = {
               input: request3.input,
+              ...sourceContext ? { sourceContext } : {},
               testData: request3.testData,
               params: external_exports.record(
                 external_exports.string(),
@@ -115229,7 +115476,7 @@ var TestPlanning = class {
           const preparation = this.dependencies.prepareForPlanning ? await this.dependencies.prepareForPlanning(
             base,
             Array.isArray(request3.riskSources) ? request3.riskSources : [],
-            context,
+            sourceConnection ? { ...context, environment: sourceConnection.environment } : context,
             request3.change,
             request3.repositories,
             extraSources
@@ -115242,7 +115489,7 @@ var TestPlanning = class {
           context.signal.throwIfAborted();
           try {
             const environment = context.environment ?? await this.environment();
-            const connection3 = await plannerProviderConnection(
+            const connection3 = sourceConnection ?? await plannerProviderConnection(
               this.data,
               environment,
               context.signal
@@ -115563,7 +115810,7 @@ var TestPlanning = class {
         ...(request3.exploration || request3.desktopTarget) && hostSignal ? { hostSignal } : {},
         lifecycle: lifecycle2,
         environment: await this.environment(),
-        ...this.dependencies.prepareForPlanning && (request3.exploration !== void 0 || request3.desktopTarget !== void 0 || request3.repositories !== void 0 || planningLinks(request3.input).some((link) => link.authorized)) ? { cache: false } : {},
+        ...this.dependencies.prepareForPlanning && (request3.exploration !== void 0 || request3.desktopTarget !== void 0 || request3.sourceModel !== void 0 && (object10(request3.sourceModel).application === true || !object10(request3.sourceModel).modelRef) || request3.repositories !== void 0 || planningLinks(request3.input).some((link) => link.authorized)) ? { cache: false } : {},
         ...typeof supplied.requestKey === "string" ? { correlationKey: supplied.requestKey } : {},
         ...this.queryInjectionScope ? { injectionScope: this.queryInjectionScope } : {}
       }
@@ -116198,7 +116445,7 @@ var ChangeRisk = class {
       },
       {
         ...invocation,
-        environment: this.environment ?? await providerEnvironment(this.data),
+        environment: invocation.providerEnvironment ?? this.environment ?? await providerEnvironment(this.data),
         ...typeof supplied.requestKey === "string" ? { correlationKey: supplied.requestKey } : {},
         ...this.queryInjectionScope ? { injectionScope: this.queryInjectionScope } : {}
       }
@@ -116825,7 +117072,7 @@ var PrContext = class {
       },
       {
         ...invocation,
-        environment: await this.environment(),
+        environment: invocation.providerEnvironment ?? await this.environment(),
         cache: false,
         ...typeof supplied.requestKey === "string" ? { correlationKey: supplied.requestKey } : {},
         ...this.queryInjectionScope ? { injectionScope: this.queryInjectionScope } : {}
@@ -117238,7 +117485,7 @@ var WorkItemRisk = class {
       },
       {
         ...invocation,
-        environment: await this.environment(),
+        environment: invocation.providerEnvironment ?? await this.environment(),
         ...typeof supplied.requestKey === "string" ? { correlationKey: supplied.requestKey } : {},
         ...this.queryInjectionScope ? { injectionScope: this.queryInjectionScope } : {}
       }
@@ -120784,6 +121031,93 @@ function workspaceResultTools(service) {
     }
   };
 }
+
+// src/source-model-client.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var SourceModelClient = class {
+  constructor(request3) {
+    this.request = request3;
+  }
+  request;
+  async available(signal) {
+    signal?.throwIfAborted();
+    const response = await this.request("/api/v1/source-models", {
+      method: "GET",
+      ...signal ? { signal } : {}
+    });
+    if (!response.ok) {
+      await response.body?.cancel();
+      if (response.status === 412)
+        throw new PlannerConnectionUnavailableError();
+      throw Error("Shared source models are unavailable to this connection.");
+    }
+    return sourceModelDiscoverySchema.parse(await response.json());
+  }
+  async context(value, signal) {
+    const selected2 = sourceModelSelectionSchema.parse(value);
+    const discovered = selected2.repository ? (await this.available(signal)).items.filter(
+      (item2) => item2.fullName.toLowerCase() === selected2.repository.toLowerCase()
+    ) : void 0;
+    if (discovered && discovered.length !== 1)
+      throw Error(
+        "No unique shared source model is available for the selected repository."
+      );
+    const repositoryId = selected2.repositoryId ?? discovered?.[0]?.reference.repositoryId;
+    const read5 = async (path21, body2) => {
+      signal?.throwIfAborted();
+      const response = await this.request(`/api/v1/source-models${path21}`, {
+        method: body2 === void 0 ? "GET" : "POST",
+        ...signal ? { signal } : {},
+        ...body2 === void 0 ? {} : {
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(body2)
+        }
+      });
+      if (!response.ok) {
+        await response.body?.cancel();
+        if (response.status === 412)
+          throw new PlannerConnectionUnavailableError();
+        if (selected2.application && (response.status === 403 || response.status === 404))
+          throw new ApplicationModelUnavailable(response.status);
+        throw Error(
+          "Shared source context is unavailable to this connection. Browser-only testing remains available."
+        );
+      }
+      const value2 = await response.json();
+      return value2;
+    };
+    const pages = selected2.pageIds === void 0 ? {} : { pageIds: selected2.pageIds };
+    if (selected2.application) {
+      const context2 = sourceModelContextSchema.parse(
+        await read5("/application/context", pages)
+      );
+      if (context2.schema !== "kaijan.source-model-context/2")
+        throw Error("Core did not return the configured application model.");
+      return context2;
+    }
+    const latest = selected2.modelRef ? void 0 : sourceModelReferenceSchema.parse(
+      discovered?.[0]?.reference ?? await read5(`/repositories/${repositoryId}/latest`)
+    );
+    const modelRef = selected2.modelRef ?? latest.modelRef;
+    const context = sourceModelContextSchema.parse(
+      await read5(`/${modelRef}/context`, pages)
+    );
+    if (context.schema !== "kaijan.source-model-context/1" || context.reference.modelRef !== modelRef || context.reference.repositoryId !== repositoryId)
+      throw Error(
+        "The shared source context differs from the selected repository or model version."
+      );
+    return context;
+  }
+};
 
 // src/report.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -170396,6 +170730,7 @@ function createCapabilityServices(data2, options2 = {}) {
   const runnerValidation = options2.runnerValidation === void 0 ? void 0 : parseRunnerValidationBinding(options2.runnerValidation);
   const github = new GitHubData(data2), changeRisk = new ChangeRisk(data2), prContext = new PrContext(data2), riskFinder = new WorkItemRisk(data2), testPlanning = new TestPlanning(data2, void 0, {
     scopeId: options2.scopeId,
+    ...options2.readSourceModel ? { readSourceModel: options2.readSourceModel } : {},
     prepareForPlanning: createPlanningPreparation({
       github,
       risk: riskFinder,
@@ -171409,6 +171744,7 @@ export {
   Reports,
   ResultReadError,
   SourceAdapterRegistry,
+  SourceModelClient,
   TestPlanning,
   TestRun,
   TestSupplement,
