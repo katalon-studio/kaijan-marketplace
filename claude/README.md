@@ -12,9 +12,11 @@ claude plugin install kaijan@kaijan-claude --scope user
 claude
 ```
 
-Use /kaijan:setup and describe what you want to test. Kaijan asks for missing context in chat and summarizes the saved application and goal. Connect your Kaijan account when your task needs service access. Describe the checks you authorize, then use /kaijan:review-report to review the saved result.
+After installing, run `/kaijan:setup` and describe what you want to test. If you installed Kaijan in an open terminal chat, run Setup in that same chat. If Claude reports pending plugin changes, run `/reload-plugins` first.
 
-In local Desktop Code, enable the installed plugin through Add plugins or Manage plugins. Do not add a second Kaijan MCP configuration. Internal users may instead use the company-managed entry; its version and update policy are independent of this marketplace.
+Kaijan asks for missing context in chat and summarizes the saved application and goal. Kaijan reuses your signed-in account when you have one. If a selected action needs access and your connection is unavailable, complete Kaijan sign-in in your browser. Describe the checks you authorize, then use `/kaijan:review-report` to review the saved result.
+
+In Claude Desktop, open Code in a Local session, enable Kaijan through Add plugins or Manage plugins, then run `/kaijan:setup`. Do not add a second Kaijan MCP configuration. Internal users may instead use the company-managed entry; its version and update policy are independent of this marketplace.
 
 The catalog installs a Git subdirectory pinned to the release's immutable payload commit. Downloadable ZIPs remain available for manual installation. Use the supported plugin update and uninstall controls; saved work and account grants are separate from the installation.
 
