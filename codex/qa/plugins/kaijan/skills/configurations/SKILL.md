@@ -23,9 +23,14 @@ settings that may already be saved.
 Supply the known application URL to find its configurations. Read an exact ID
 when needed. Ordinary entries contain their typed values. A secret entry
 contains availability and a reference. Keep raw secrets out of chat and tool
-arguments. Use the [private login path](../../references/private-parameters.md)
-or manual login for a new or changed secret needed for a Run. Configuration
-remains optional.
+arguments. Configuration remains optional.
+
+<!-- codex-only -->
+
+In Codex, when the person chooses to save a new or changed app login
+from a local environment file, use the [Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
+Save before starting Plan or Run.
+<!-- end-codex-only -->
 
 The person can save any key names. Do not require a fixed URL, username or
 password schema. Keep their existing names and types. For agent edits, `save`
