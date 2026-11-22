@@ -49,13 +49,18 @@ The card uses Claude mods in the interactive CLI and local Desktop Code.
 read the same saved report as text with `loki_report_get`. Do not claim a card,
 browser or pane rendered without observing it.
 
-Use **Kaijan feedback** on the card to open a private editable draft. In the
-CLI, the form appears above the prompt. Press Ctrl+X then Tab to edit it.
-Use **Report issue** for a problem with Kaijan itself. Its inline form names the
-public repository where the issue will appear. Preview the exact issue before
-choosing **Publish issue**. Use the original draft to recover an unconfirmed
-submission. Do not submit feedback or publish an issue on the person's behalf
-from a report read.
+Use **Kaijan feedback** on the card to request a private editable draft in a new
+chat turn. Use **Report issue** for a problem with Kaijan itself. Claude opens
+the requested draft with the matching draft tool. The tool opens a form for
+the person to edit and review in a separate pane. In the CLI, press
+Ctrl+X then Tab if it needs keyboard focus.
+
+The issue form names the public repository where the issue will appear.
+Use **Choose images** to select PNG, JPEG or WebP files for this draft. Review
+the text and selected images with **Preview issue** before choosing
+**Publish issue**. Use the original draft to recover an unconfirmed
+submission. Only the person can send feedback or publish the issue from
+its form.
 
 Lead with what was checked and the actual result. Show concise test titles,
 expected and observed behavior, useful evidence and any specific next action.

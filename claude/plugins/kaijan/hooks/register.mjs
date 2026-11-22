@@ -4,6 +4,7 @@ import { reportCard, reportPane } from "./report-view.mjs";
 import { createReportForms } from "./inline-forms.mjs";
 
 const paneId = "kaijan-report";
+const formPaneId = "kaijan-form";
 const reportTools = new Set([
   "loki_report_show",
   "loki_report_open",
@@ -61,8 +62,8 @@ async function findCard($, call, id, state) {
 
 function reportHost($, e) {
   return {
-    elements: $.ui.resolve(e),
-    terminal: e.surface === "terminal",
+    elements: e ? $.ui.resolve(e) : undefined,
+    terminal: e?.surface === "terminal",
     sessionId: () => $.session.id(),
     start: (thread) =>
       $.process.spawn({
@@ -74,6 +75,17 @@ function reportHost($, e) {
         ],
       }),
     fetch: (options) => $.http.fetch("http://localhost/form", options),
+    submit: (text) => $.prompt.submit({ text, asUser: true }),
+    openForm: (kind) =>
+      $.ui.open({
+        id: formPaneId,
+        title: kind === "issue" ? "Report a Kaijan issue" : "Kaijan feedback",
+        focus: true,
+        columns: 64,
+        rows: 28,
+      }),
+    closeForm: () => $.ui.close({ id: formPaneId }),
+    warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
     redraw: () => $.ui.invalidate("ui.render"),
     warn: () =>
       $.ui.log(
@@ -103,6 +115,7 @@ export function register(on, runInterruption) {
   const cards = new Map();
   const reads = new Map();
   const grouped = new Set();
+  const draftTools = new Map();
   const cardState = () => {
     const current = generation;
     return { cards, reads, isCurrent: () => active && current === generation };
@@ -152,7 +165,7 @@ export function register(on, runInterruption) {
       card,
       id,
       open,
-      forms.view(host, id, state.isCurrent),
+      forms.actions(host, id, state.isCurrent),
       e.surface === "desktop" ? card.detailUrl : undefined,
     );
   };
@@ -171,6 +184,28 @@ export function register(on, runInterruption) {
     grouped.clear();
     expanded.clear();
     await forms.close();
+    draftTools.clear();
+    for (const [kind, description] of [
+      [
+        "feedback",
+        "Open the requested private Kaijan feedback draft in Claude. The person writes, reviews, and sends it from the form. This tool sends nothing.",
+      ],
+      [
+        "issue",
+        "Open the requested Kaijan issue draft for review in Claude. The person can edit the draft and choose images before confirming publication. This tool publishes nothing.",
+      ],
+    ]) {
+      const { tool } = await $.tool.register({
+        name: `open_kaijan_${kind}_draft`,
+        description,
+        inputSchema: {
+          type: "object",
+          properties: {},
+          additionalProperties: false,
+        },
+      });
+      draftTools.set(tool, kind);
+    }
     return next(e);
   });
   on("session.end", async ($, e, next) => {
@@ -186,10 +221,36 @@ export function register(on, runInterruption) {
     reads.clear();
     grouped.clear();
     expanded.clear();
+    draftTools.clear();
     await forms.close();
     await $.ui.close({ id: paneId });
+    await $.ui.close({ id: formPaneId });
     return next(e);
   });
+  on(
+    "tool.call",
+    {
+      tool: /^mcp__kaijan(?:-qa|-local)?__open_kaijan_(?:feedback|issue)_draft$/,
+    },
+    async ($, e, next) => {
+      const kind = draftTools.get(e.tool);
+      if (!kind || e.agentId) return next(e);
+      const state = cardState();
+      const surfaces = await $.session.surfaces();
+      if (!surfaces.includes("terminal") && !surfaces.includes("desktop"))
+        return {
+          deny: "Open the draft in an interactive Claude Code session.",
+        };
+      const opened = await forms.openDraft(
+        reportHost($),
+        e.tool_use_id,
+        kind,
+        state.isCurrent,
+      );
+      if (!opened) return { deny: "Kaijan could not open the draft form." };
+      return { result: "Opened the draft for user review." };
+    },
+  );
   on(
     "tool.call",
     {
@@ -292,11 +353,9 @@ export function register(on, runInterruption) {
       ],
     });
   });
-  on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
-    if (!active || e.surface !== "terminal") return next(e);
-    return forms.promptView(reportHost($, e), cardState().isCurrent) ?? next(e);
-  });
   on("ui.render", { component: "Pane" }, async ($, e, next) => {
+    if (e.requestId === formPaneId && active)
+      return forms.view(reportHost($, e), cardState().isCurrent) ?? next(e);
     if (e.requestId !== paneId || !selected) return next(e);
     const redraw = () => $.ui.invalidate("ui.render");
     return reportPane($.ui.resolve(e), selected.report, {
