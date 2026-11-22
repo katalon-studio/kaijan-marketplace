@@ -1,8 +1,11 @@
 # Private login parameters
 
-Use this path when the caller has authorized an application login and supplied
-approved environment variable names. It works for browser tests. It does not
-grant access to another app, account or conversation.
+## Prepare a login for one chat
+
+In Claude Code, use this path when the caller has authorized an application
+login and supplied approved environment variable names, and the host
+advertises a browser Runner input that accepts `privateParams`. The references
+are scoped to this app and conversation.
 
 Use the installed plugin directory that contains this file as `PLUGIN_ROOT`.
 Use the current host conversation ID. Do not guess another chat's ID. Run the

@@ -29,29 +29,9 @@ workflow in local Code and reopened the saved report after an update. See the
    status before connecting. Claude account access and the Kaijan grant are
    separate. Do not copy a Claude Code or CLI credential into Desktop.
 
-The first fresh interactive CLI session starts this setup skill automatically
-when mods are enabled. A private atomic offer record prevents another automatic
-start after a plugin update or in another CLI session. QA and Production keep
-separate records using their existing Claude broker profiles; Claude Code is unchanged.
-The record means setup was offered, not that the person completed it. After an
-interruption, use the explicit command. Existing conversations and noninteractive
-automation do not start onboarding.
-
-Local Desktop Code uses the standard plugin `SessionStart` command hook and its
-documented `initialUserMessage`, rather than the mod's queued command. The helper
-offers setup only for a fresh `startup` from `CLAUDE_CODE_ENTRYPOINT=claude-desktop`.
-The offer shares the CLI's atomic record, so a later session or host switch does
-not repeat it. Desktop normally starts its engine with the person's first
-message; the setup skill starts first and that message remains available.
-
-The actual Desktop 4.23118.1 / Code 2.1.321 startup is recorded on
-[#4512](https://github.com/katalon-studio/loki/issues/4512). The earlier queued
-mod command and first-message mod hooks failed; those approaches remain excluded.
-The standard command hook works with `cc-plugin-sec-default` unchanged, as
-[Claude's guard documentation](https://code.claude.com/docs/en/plugins/mods/admin#know-which-controls-still-apply)
-describes. Other host versions keep the explicit setup command as fallback.
-This check does not raise the package's general minimum version or claim
-automatic startup on every supported host version.
+Open Setup yourself in either host. If the session already has a Kaijan grant,
+reuse it. During work that needs managed access, Kaijan can open browser sign-in
+when that grant is missing, expired or revoked.
 
 After an update, follow Claude's restart instructions and resume the original
 Code session to reopen its saved reports. In the recorded Code2.1.317 control,

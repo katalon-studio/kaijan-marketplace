@@ -1,16 +1,3 @@
 {
-  "modules": ["./plugin-register.mjs"],
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/capabilities/runtime/node\" \"${CLAUDE_PLUGIN_ROOT}/hooks/onboarding-state.mjs\" --desktop-session-start"
-          }
-        ]
-      }
-    ]
-  }
+  "modules": ["./plugin-register.mjs"]
 }

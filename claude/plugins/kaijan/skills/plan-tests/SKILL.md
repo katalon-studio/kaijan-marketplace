@@ -13,6 +13,8 @@ field. Generate a `requestKey` and put the selected browser URL in
 `target.initialURL` or the selected Mac app's bundle ID in `target.app`.
 For a supplied `.app` path or first-time desktop setup, use the
 [macOS setup guide](../run-test/references/macos-appium-setup.md).
+
+
 Include `testData` when the person supplied concrete values. It accepts any
 JSON value. Explorer uses the selected target and test data during planning.
 Tell the person Explorer's time limit before starting exploration. It defaults
@@ -21,6 +23,14 @@ needs it.
 For work based on a saved source packet, pass its `contextId` from
 `loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
 `testObjective`. Use the returned `planId` when the person authorizes a Run.
+
+When the person selects the configured application's shared Main model, use
+`sourceModel: {application: true}`. Core supplies one combined context for its
+selected repositories. New planning reads the current model once. To continue
+saved work, use the context recorded in that Plan. A fresh read returns the
+current model even when the request includes an older `modelRef`.
+Keep local changes and browser observations separately attributed. A source
+model provides optional inferred context. Browser-only testing remains available.
 
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.

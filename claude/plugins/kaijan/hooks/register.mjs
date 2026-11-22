@@ -59,24 +59,6 @@ async function findCard($, call, id, state) {
   return card;
 }
 
-async function claimSetup($) {
-  try {
-    const root = $.plugin.root;
-    const claim = await $.process.run([
-      `${root}/capabilities/runtime/node`,
-      `${root}/hooks/onboarding-state.mjs`,
-      await $.session.id(),
-    ]);
-    if (claim.exitCode !== 0) throw Error("Setup offer unavailable");
-    return JSON.parse(claim.stdout).start;
-  } catch {
-    $.ui.log(
-      `Kaijan setup could not start automatically. Use /${$.plugin.name}:setup when you are ready.`,
-    );
-    return false;
-  }
-}
-
 function reportHost($, e) {
   return {
     elements: $.ui.resolve(e),
@@ -115,7 +97,6 @@ export function register(on, runInterruption) {
   const forms = createReportForms();
   let generation = 0;
   let active = true;
-  let fresh = false;
   let selected;
   let tab = "tests";
   const expanded = new Set();
@@ -180,30 +161,13 @@ export function register(on, runInterruption) {
       runInterruption.current = undefined;
     }
     active = true;
-    const current = ++generation;
-    fresh = false;
+    generation++;
     selected = undefined;
     cards.clear();
     reads.clear();
     grouped.clear();
     expanded.clear();
-    // Neither a late turn-count reply nor an offer claim may start Setup in
-    // a session that ended or was replaced while the host was responding.
     await forms.close();
-    const turns = await $.session.turns();
-    if (!active || current !== generation) return next(e);
-    fresh = turns === 0;
-    if (e.isInteractive && e.surface === "terminal") {
-      const isCurrent = () => active && fresh && current === generation;
-      $.clock.after(0, async () => {
-        if (!isCurrent() || !(await claimSetup($)) || !isCurrent()) return;
-        try {
-          await $.command.run({ command: `${$.plugin.name}:setup` });
-        } catch {
-          $.ui.log(`Use /${$.plugin.name}:setup when you are ready.`);
-        }
-      });
-    }
     return next(e);
   });
   on("session.end", async ($, e, next) => {

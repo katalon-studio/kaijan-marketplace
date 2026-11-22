@@ -21237,6 +21237,7 @@ var testPlanViewSchema = external_exports.object({
     planSourceId: external_exports.string(),
     planResultSha256: external_exports.string(),
     selectedTestIds: external_exports.array(external_exports.string()),
+    notStartedTestIds: external_exports.array(external_exports.string()).optional(),
     elapsedMs: external_exports.number().finite().nonnegative().nullable(),
     startedAt: external_exports.iso.datetime({ offset: true }).optional(),
     observation: external_exports.string(),
@@ -21491,7 +21492,7 @@ function plannedTest(view, planId, digest15, testId) {
 function reportTestResult(view, planId, planDigest, testId, selectedRun) {
   const matches = [];
   for (const entry of view.runs) {
-    if (entry.planSourceId !== planId || entry.planResultSha256 !== planDigest || selectedRun && entry.sourceId !== selectedRun)
+    if (entry.planSourceId !== planId || entry.planResultSha256 !== planDigest || selectedRun && entry.sourceId !== selectedRun || entry.notStartedTestIds?.includes(testId))
       continue;
     const planned = plannedTest(view, planId, planDigest, testId);
     const assessments = (entry.assessments ?? []).filter((item) => item.testId === testId);
@@ -21592,7 +21593,7 @@ function reportTestStatus(view, planId, planDigest, testId) {
   const result = reportTestResult(view, planId, planDigest, testId);
   if (result)
     return result.test.status;
-  return view.runs.some((run) => run.planSourceId === planId && run.planResultSha256 === planDigest && run.selectedTestIds.includes(testId)) ? "unavailable" : "not-run";
+  return view.runs.some((run) => run.planSourceId === planId && run.planResultSha256 === planDigest && run.selectedTestIds.includes(testId) && !run.notStartedTestIds?.includes(testId)) ? "unavailable" : "not-run";
 }
 
 // packages/contracts/dist/report-artifact.js
@@ -22366,6 +22367,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     planSourceId: true,
     planResultSha256: true,
     selectedTestIds: true,
+    notStartedTestIds: true,
     elapsedMs: true,
     startedAt: true,
     recordedAt: true
