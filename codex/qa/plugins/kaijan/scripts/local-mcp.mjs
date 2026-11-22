@@ -53398,9 +53398,10 @@ async function createInstalledSession(root, build, data, broker, {
         );
       }
     } : hostLibrary,
-    ...host === "claude_code" ? { uiEnabled: false } : {},
-    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
-    uiMode: "panel"
+    // The private Claude forms worker can open the shared browser report.
+    // The ordinary Claude MCP session keeps its text tools and no UI resources.
+    ...host === "claude_code" && !inlineForms ? { uiEnabled: false } : {},
+    uiMode: host === "claude_code" && inlineForms ? "browser" : "panel"
   });
   session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
