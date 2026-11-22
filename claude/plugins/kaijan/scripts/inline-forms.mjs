@@ -2235,10 +2235,10 @@ var require_resolve = __commonJS({
       }
       return count7;
     }
-    function getFullPath(resolver, id6 = "", normalize) {
+    function getFullPath(resolver, id7 = "", normalize) {
       if (normalize !== false)
-        id6 = normalizeId(id6);
-      const p = resolver.parse(id6);
+        id7 = normalizeId(id7);
+      const p = resolver.parse(id7);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2248,13 +2248,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id6) {
-      return id6 ? id6.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id7) {
+      return id7 ? id7.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id6) {
-      id6 = normalizeId(id6);
-      return resolver.resolve(baseId, id6);
+    function resolveUrl(resolver, baseId, id7) {
+      id7 = normalizeId(id7);
+      return resolver.resolve(baseId, id7);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -3024,8 +3024,8 @@ var require_compile = __commonJS({
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id6 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id6] || this.schemas[id6];
+      const id7 = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id7] || this.schemas[id7];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3036,7 +3036,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id6 === (0, resolve_1.normalizeId)(ref)) {
+      if (id7 === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -4519,15 +4519,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id6;
+        let id7;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id6 = schema[schemaId];
-          if (id6 !== void 0 && typeof id6 != "string") {
+          id7 = schema[schemaId];
+          if (id7 !== void 0 && typeof id7 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id6);
+        key = (0, resolve_1.normalizeId)(key || id7);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4606,11 +4606,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id6 = schemaKeyRef[this.opts.schemaId];
-            if (id6) {
-              id6 = (0, resolve_1.normalizeId)(id6);
-              delete this.schemas[id6];
-              delete this.refs[id6];
+            let id7 = schemaKeyRef[this.opts.schemaId];
+            if (id7) {
+              id7 = (0, resolve_1.normalizeId)(id7);
+              delete this.schemas[id7];
+              delete this.refs[id7];
             }
             return this;
           }
@@ -4717,10 +4717,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta3, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id6;
+        let id7;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id6 = schema[schemaId];
+          id7 = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4730,7 +4730,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id6 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id7 || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta: meta3, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4743,9 +4743,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id6) {
-        if (this.schemas[id6] || this.refs[id6]) {
-          throw new Error(`schema with key or id "${id6}" already exists`);
+      _checkUnique(id7) {
+        if (this.schemas[id7] || this.refs[id7]) {
+          throw new Error(`schema with key or id "${id7}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -7259,7 +7259,6 @@ var require_dist = __commonJS({
 import { randomBytes as randomBytes3, randomUUID as randomUUID5 } from "node:crypto";
 import { execFile as execFile2 } from "node:child_process";
 import { promisify as promisify2 } from "node:util";
-import { pathToFileURL as pathToFileURL2 } from "node:url";
 import { readFile as readFile3 } from "node:fs/promises";
 import { createServer } from "node:http";
 import { homedir as homedir2 } from "node:os";
@@ -7390,12 +7389,12 @@ function installationPrefix(build) {
   return pluginHost(build) === "claude_code" ? "kaijan-claude-plugin-" : "kaijan-codex-plugin-";
 }
 function claudeSessionId(environment) {
-  const id6 = environment.CLAUDE_CODE_SESSION_ID;
-  if (typeof id6 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id6))
+  const id7 = environment.CLAUDE_CODE_SESSION_ID;
+  if (typeof id7 !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id7))
     throw Error(
       "Start this plugin in a supported Claude Code CLI or local Desktop Code session."
     );
-  return id6;
+  return id7;
 }
 
 // apps/codex-plugin/src/auth/profile.mjs
@@ -11447,15 +11446,15 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     const syms = normalized.symbolKeys;
     const doc = new Doc(["payload", "ctx"], { shape, inst, memo: memo2, syms });
     const parseStr = (k) => `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    const prefixStr = (id6, k) => `
-          let ${id6}_ab = false;
-          for (let i = 0; i < ${id6}.issues.length; i++) {
-            const iss = ${id6}.issues[i];
+    const prefixStr = (id7, k) => `
+          let ${id7}_ab = false;
+          for (let i = 0; i < ${id7}.issues.length; i++) {
+            const iss = ${id7}.issues[i];
             iss.path = iss.path ? [${k}, ...iss.path] : [${k}];
             payload.issues.push(iss);
-            if (iss.continue !== true) ${id6}_ab = true;
+            if (iss.continue !== true) ${id7}_ab = true;
           }
-          if (${id6}_ab && ctx && ctx.abortEarly) {
+          if (${id7}_ab && ctx && ctx.abortEarly) {
             payload.value = newResult;
             return payload;
           }`;
@@ -11469,34 +11468,34 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
     for (const key of normalized.allKeys) {
       if (key === "__proto__")
         continue;
-      const id6 = ids2[key];
+      const id7 = ids2[key];
       const k = typeof key === "symbol" ? `syms[${syms.indexOf(key)}]` : esc(key);
       const isPresent = `${k} in input`;
       const schema = shape[key];
       const optin = schema?._zod?.optin;
       const isOptionalIn = optin !== void 0;
       const isOptionalOut = schema?._zod?.optout === "optional";
-      doc.write(`const ${id6} = ${parseStr(k)};`);
+      doc.write(`const ${id7} = ${parseStr(k)};`);
       if (isOptionalIn && isOptionalOut) {
-        const assign = optin === "optional" ? `${id6}_present` : `${id6}.value !== undefined || ${id6}_present`;
+        const assign = optin === "optional" ? `${id7}_present` : `${id7}.value !== undefined || ${id7}_present`;
         doc.write(`
-        const ${id6}_present = ${isPresent};
-        if (!${id6}.issues.length || ${id6}_present) {
-          if (${id6}.issues.length) {${prefixStr(id6, k)}
+        const ${id7}_present = ${isPresent};
+        if (!${id7}.issues.length || ${id7}_present) {
+          if (${id7}.issues.length) {${prefixStr(id7, k)}
           }
 
           if (${assign}) {
-            newResult[${k}] = ${id6}.value;
+            newResult[${k}] = ${id7}.value;
           }
         }
 
       `);
       } else if (!isOptionalIn) {
         doc.write(`
-        const ${id6}_present = ${isPresent};
-        if (${id6}.issues.length) {${prefixStr(id6, k)}
+        const ${id7}_present = ${isPresent};
+        if (${id7}.issues.length) {${prefixStr(id7, k)}
         }
-        if (!${id6}_present && !${id6}.issues.length) {
+        if (!${id7}_present && !${id7}.issues.length) {
           payload.issues.push({
             code: "invalid_type",
             expected: "nonoptional",
@@ -11509,22 +11508,22 @@ var $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def) =>
           }
         }
 
-        if (${id6}_present) {
-          newResult[${k}] = ${id6}.value;
+        if (${id7}_present) {
+          newResult[${k}] = ${id7}.value;
         }
 
       `);
       } else {
         doc.write(`
-        if (${id6}.issues.length) {${prefixStr(id6, k)}
+        if (${id7}.issues.length) {${prefixStr(id7, k)}
         }
       `);
         if (optin === "defaulted") {
-          doc.write(`newResult[${k}] = ${id6}.value;`);
+          doc.write(`newResult[${k}] = ${id7}.value;`);
         } else {
           doc.write(`
-        if (${id6}.value !== undefined || ${isPresent}) {
-          newResult[${k}] = ${id6}.value;
+        if (${id7}.value !== undefined || ${isPresent}) {
+          newResult[${k}] = ${id7}.value;
         }
       `);
         }
@@ -23552,26 +23551,26 @@ function extractDefs(ctx, schema) {
     return;
   const idToSchema = /* @__PURE__ */ new Map();
   for (const entry of ctx.seen.entries()) {
-    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id6) {
-      const existing = idToSchema.get(id6);
+    const id7 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id7) {
+      const existing = idToSchema.get(id7);
       if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id6}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+        throw new Error(`Duplicate schema id "${id7}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
       }
-      idToSchema.set(id6, entry[0]);
+      idToSchema.set(id7, entry[0]);
     }
   }
   const makeURI = (entry) => {
     const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
     if (ctx.external) {
       const externalId = ctx.external.registry.get(entry[0])?.id;
-      const uriGenerator = ctx.external.uri ?? ((id7) => id7);
+      const uriGenerator = ctx.external.uri ?? ((id8) => id8);
       if (externalId) {
         return { ref: uriGenerator(externalId) };
       }
-      const id6 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id6;
-      return { defId: id6, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id6)}` };
+      const id7 = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id7;
+      return { defId: id7, ref: `${uriGenerator("__shared")}#/${defsSegment}/${encodeJSONPointerSegment(id7)}` };
     }
     const uriPrefix = `#`;
     const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
@@ -23619,8 +23618,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         continue;
       }
     }
-    const id6 = ctx.metadataRegistry.get(entry[0])?.id;
-    if (id6) {
+    const id7 = ctx.metadataRegistry.get(entry[0])?.id;
+    if (id7) {
       extractToDef(entry);
       continue;
     }
@@ -23853,10 +23852,10 @@ function finalize(ctx, schema) {
   } else {
   }
   if (ctx.external?.uri) {
-    const id6 = ctx.external.registry.get(schema)?.id;
-    if (!id6)
+    const id7 = ctx.external.registry.get(schema)?.id;
+    if (!id7)
       throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id6);
+    result.$id = ctx.external.uri(id7);
   }
   assignProps(result, root.defId ? root.schema : root.def ?? root.schema);
   const rootMetaId = ctx.metadataRegistry.get(schema)?.id;
@@ -24462,7 +24461,7 @@ function stringifyKeyNames(bySchema, json2, visited) {
   const values = json2.enum ?? (json2.const !== void 0 ? [json2.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
     return json2;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id6, ...rest } = json2;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id7, ...rest } = json2;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -32669,713 +32668,6 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
 
 // apps/codex-plugin/src/configurations.mjs
 import { createHash as createHash4, randomUUID as randomUUID4 } from "node:crypto";
-var cachedFormUris = /* @__PURE__ */ new Set([
-  "ui://kaijan/configurations/form/v1.html",
-  "ui://kaijan/configurations/form/v2.html"
-]);
-var id2 = external_exports.uuid();
-var inputSchema = external_exports.strictObject({
-  operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
-  id: id2.nullable().optional().describe(
-    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
-  ),
-  revision: external_exports.number().int().nonnegative().optional().describe(
-    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
-  ),
-  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
-  values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
-  name: external_exports.string().optional(),
-  automatic: external_exports.literal(true).optional()
-});
-var allowedFields = {
-  list: ["application"],
-  read: ["id"],
-  save: ["id", "revision", "name", "application", "values"],
-  delete: ["id", "revision"],
-  select: ["id", "automatic"]
-};
-var tool = {
-  name: "kaijan_configuration",
-  title: "Read or update Configurations",
-  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and follow the installed app sign-in guide for a missing or changed login. A saved configuration is optional and never starts a test.",
-  inputSchema: external_exports.toJSONSchema(inputSchema),
-  annotations: {
-    readOnlyHint: false,
-    destructiveHint: true,
-    openWorldHint: false
-  }
-};
-function response(value) {
-  return {
-    ...value.error ? { isError: true } : {},
-    structuredContent: value,
-    content: [{ type: "text", text: JSON.stringify(value) }]
-  };
-}
-function createConfigurationSurface({ session, library, data }) {
-  let storePromise, stopped = false;
-  const store = () => {
-    if (!storePromise) {
-      const opening = library.ConfigurationStore.open(data);
-      storePromise = opening;
-      void opening.catch(() => {
-        if (storePromise === opening) storePromise = void 0;
-      });
-    }
-    return storePromise;
-  };
-  const safeError = (error62) => {
-    const known = [
-      library.ConfigurationError,
-      library.PrivateParameterError
-    ].some((type) => typeof type === "function" && error62 instanceof type);
-    return {
-      error: known ? error62.code : "configuration_unavailable",
-      message: known ? error62.message : "Could not save or read Configurations. Read the current settings before trying again."
-    };
-  };
-  async function scopeFor(metadata2) {
-    if (stopped || typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
-      throw Error("chat_required");
-    const scope = await session.forRequest(metadata2);
-    if (!scope.scope.restartPersistent || scope.scope.kind !== "host-thread")
-      throw Error("chat_required");
-    return scope;
-  }
-  return {
-    tools: [tool],
-    hasTool: (name) => name === tool.name,
-    // Historical cards can read their resource, but this host opens no editor.
-    hasResource: (uri) => cachedFormUris.has(uri),
-    readResource: (uri) => library.readConfigurationForm(uri),
-    async invoke(name, raw, metadata2) {
-      try {
-        if (name !== tool.name) throw Error("invalid_arguments");
-        const args = inputSchema.parse(raw);
-        if (Object.keys(args).some(
-          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
-        ))
-          throw Error("invalid_arguments");
-        const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
-        if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
-          throw Error("invalid_arguments");
-        if (args.operation === "select" && args.id === null) {
-          await library.configurationPreference(scope.data, scopeId, false);
-          let configurations = [];
-          try {
-            const saved2 = await store();
-            saved2.select(scopeId, null);
-            configurations = saved2.list();
-          } catch {
-          }
-          return response({
-            configurations,
-            selectedId: null,
-            selectionMode: "none",
-            nextRunConfiguration: null,
-            message: "No configuration selected for this chat."
-          });
-        }
-        const saved = await store();
-        let configuration;
-        let message = "";
-        if (args.operation === "read") {
-          if (!args.id) throw Error("invalid_arguments");
-          configuration = saved.read(args.id);
-        } else if (args.operation === "save") {
-          if (!args.id || args.revision === void 0 || !args.values)
-            throw Error("invalid_arguments");
-          const old = args.revision ? saved.read(args.id) : {
-            name: args.name,
-            application: args.application ?? "",
-            allowedHosts: [],
-            entries: []
-          };
-          const existingSecrets = old.entries.filter((entry) => entry.secret);
-          if (args.application !== void 0 && args.application !== old.application && existingSecrets.length)
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "A configuration with a saved secret must keep its website."
-            );
-          if (existingSecrets.some(({ key }) => Object.hasOwn(args.values, key)))
-            throw new library.ConfigurationError(
-              "configuration_secret_editor",
-              "This chat tool saves ordinary values. Use the installed app sign-in guide to update the account."
-            );
-          const entries = old.entries.map((entry) => ({
-            key: entry.key,
-            secret: entry.secret,
-            ...entry.secret ? {} : {
-              value: Object.hasOwn(args.values, entry.key) ? args.values[entry.key] : entry.value
-            }
-          }));
-          for (const [key, value] of Object.entries(args.values))
-            if (!entries.some((entry) => entry.key === key))
-              entries.push({ key, value, secret: false });
-          configuration = saved.save(
-            {
-              name: args.name ?? old.name,
-              application: args.application ?? old.application,
-              allowedHosts: old.allowedHosts,
-              entries
-            },
-            args.id,
-            args.revision
-          );
-          message = "Configuration saved.";
-        } else if (args.operation === "delete") {
-          if (!args.id || !args.revision) throw Error("invalid_arguments");
-          saved.delete(args.id, args.revision);
-          message = "Configuration deleted. Existing Runs keep their saved settings.";
-        } else if (args.operation === "select") {
-          configuration = saved.select(scopeId, args.id);
-          await library.configurationPreference(scope.data, scopeId, true);
-          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration.name}.`;
-        }
-        const enabled = await library.configurationPreference(
-          scope.data,
-          scopeId
-        );
-        const selected = enabled !== false ? saved.selected(scopeId) : null;
-        return response({
-          configurations: saved.list(args.application),
-          nextRunConfiguration: saved.pendingView(scopeId),
-          selectedId: selected && selected !== "automatic" ? selected : null,
-          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
-          ...configuration ? { configuration } : {},
-          message
-        });
-      } catch (error62) {
-        return response(safeError(error62));
-      }
-    },
-    async prepareExecution(name, raw, metadata2) {
-      const planning = name === "loki_test_plan";
-      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration)
-        return { arguments: raw };
-      let marked = false, recoveryRunId;
-      try {
-        const args = structuredClone(raw), explicit = args?.configurationId, execution = planning ? args.exploration : args, requestKey = planning && raw?.requestKey === void 0 ? randomUUID4() : raw?.requestKey;
-        if (args && Object.hasOwn(args, "configurationUsed"))
-          throw Error("host_metadata_only");
-        if (args) delete args.configurationId;
-        if (!metadata2?.threadId && (explicit === null || explicit === void 0))
-          return { arguments: args };
-        const scope = await scopeFor(metadata2);
-        if (typeof requestKey !== "string" || !requestKey)
-          throw Error("invalid_request");
-        if (!planning)
-          recoveryRunId = createHash4("sha256").update(JSON.stringify([scope.scope.id, requestKey])).digest("hex");
-        marked = true;
-        marked = await library.configurationRunMarker(
-          scope.data,
-          scope.scope.id,
-          name,
-          requestKey
-        );
-        const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
-        if (!marked && (explicit === null || preference === false))
-          return { arguments: args };
-        if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
-          return { arguments: args };
-        const canSelect = explicit !== void 0 || preference === true || Boolean(execution.target?.initialURL);
-        if (!marked && !canSelect) return { arguments: args };
-        const saved = await store().catch((error62) => {
-          if (marked) throw error62;
-          throw new library.ConfigurationError(
-            "configuration_unavailable",
-            "Could not read the saved configuration. Ask the person if they want to run without it."
-          );
-        });
-        const previous = saved.admission(scope.scope.id, name, requestKey, raw);
-        if (previous) {
-          await library.configurationRunMarker(
-            scope.data,
-            scope.scope.id,
-            name,
-            requestKey,
-            true
-          );
-          return { arguments: previous };
-        }
-        if (marked) throw Error("configuration_admission_unavailable");
-        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
-        if (!runSchema.safeParse(args).success)
-          throw new library.ConfigurationError(
-            "configuration_run_input",
-            "Check the Run inputs before starting. The saved configuration is unchanged."
-          );
-        if (explicit !== void 0 && explicit !== null) id2.parse(explicit);
-        const once2 = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
-        const selection2 = once2 ? once2.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
-        const automatic = selection2 === "automatic";
-        const initialURL = execution.target?.initialURL;
-        const browserURL = initialURL ? new URL(initialURL) : void 0;
-        if (automatic && !browserURL) return { arguments: args };
-        const configurations = automatic ? saved.list().map(({ id: id6 }) => saved.execution(id6)) : selection2 ? [once2?.execution ?? saved.execution(selection2)] : [];
-        if (!configurations.length) return { arguments: args };
-        const callerParams = execution.params ?? {};
-        const callerPrivate = execution.privateParams ?? {};
-        const allowed = execution.target?.allowedHosts ?? (execution.target?.initialURL ? [new URL(execution.target.initialURL).hostname] : []);
-        if (Object.keys(callerPrivate).length)
-          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
-            ...execution,
-            target: { ...execution.target, allowedHosts: allowed }
-          });
-        const occupied = /* @__PURE__ */ new Set([
-          ...Object.keys(callerParams),
-          ...Object.keys(callerPrivate)
-        ]);
-        const parameterName = (base) => {
-          let name2 = base;
-          while (occupied.has(name2)) name2 += "_";
-          occupied.add(name2);
-          return name2;
-        };
-        const descriptors = [];
-        const secretNames = [];
-        execution.params = { ...callerParams };
-        execution.privateParams = { ...callerPrivate };
-        for (const chosen of configurations) {
-          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
-          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
-          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
-            (key) => !Object.hasOwn(callerPrivate, key)
-          ) && !privateAllowed))
-            throw new library.ConfigurationError(
-              "configuration_target",
-              "This configuration belongs to another application. Choose a configuration for the browser target."
-            );
-          const fields = {};
-          const secrets = {};
-          chosen.configuration.overrides = automatic ? [] : [
-            .../* @__PURE__ */ new Set([
-              ...once2?.changed ?? [],
-              ...[
-                ...Object.keys(callerParams),
-                ...Object.keys(callerPrivate)
-              ].filter(
-                (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
-              )
-            ])
-          ];
-          for (const key of [
-            ...Object.keys(chosen.params),
-            ...Object.keys(chosen.secrets)
-          ]) {
-            const isSecret = Object.hasOwn(chosen.secrets, key);
-            if (automatic && isSecret && !privateAllowed) continue;
-            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
-              if (isSecret && !Object.hasOwn(callerPrivate, key))
-                throw new library.ConfigurationError(
-                  "configuration_secret_editor",
-                  "Use the installed app sign-in guide to update the account."
-                );
-              fields[key] = key;
-              continue;
-            }
-            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
-            fields[key] = name2;
-            if (Object.hasOwn(chosen.secrets, key))
-              secrets[name2] = chosen.secrets[key];
-            else execution.params[name2] = chosen.params[key];
-          }
-          descriptors.push({
-            id: chosen.configuration.id,
-            name: chosen.configuration.name,
-            url: chosen.application ?? null,
-            fields
-          });
-          if (Object.keys(secrets).length) {
-            const binding2 = await library.provisionRunnerParameters(
-              scope.data,
-              scope.scope.id,
-              { allowedHosts: chosen.allowedHosts, values: secrets }
-            );
-            for (const field of binding2.fields)
-              execution.privateParams[field] = {
-                bindingId: binding2.bindingId,
-                field
-              };
-            secretNames.push(...binding2.fields);
-          }
-        }
-        if (automatic)
-          execution.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
-        if (Object.keys(execution.privateParams).length) {
-          execution.target.allowedHosts = allowed;
-          await library.resolveRunnerParameters(
-            scope.data,
-            scope.scope.id,
-            execution
-          );
-        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
-          delete execution.privateParams;
-        }
-        if (!planning) {
-          execution.options = {
-            ...execution.options,
-            secretParameterNames: [
-              .../* @__PURE__ */ new Set([
-                ...execution.options?.secretParameterNames ?? [],
-                ...secretNames
-              ])
-            ]
-          };
-          if (!automatic)
-            args.configurationUsed = configurations[0].configuration;
-        }
-        if (planning) args.requestKey = requestKey;
-        const prepared = saved.admission(
-          scope.scope.id,
-          name,
-          requestKey,
-          raw,
-          args,
-          once2?.token
-        );
-        await library.configurationRunMarker(
-          scope.data,
-          scope.scope.id,
-          name,
-          requestKey,
-          true
-        );
-        if (once2 && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
-          await library.configurationPreference(
-            scope.data,
-            scope.scope.id,
-            false
-          );
-        return { arguments: prepared };
-      } catch (error62) {
-        const value = safeError(error62);
-        return {
-          error: {
-            code: marked && !(error62 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
-            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
-            requestDispatched: marked ? null : false,
-            ...marked ? { existingRunId: recoveryRunId } : {}
-          }
-        };
-      }
-    },
-    async close() {
-      if (stopped) return;
-      stopped = true;
-      if (storePromise) (await storePromise.catch(() => null))?.close();
-    }
-  };
-}
-
-// apps/codex-plugin/src/issues.mjs
-import { randomBytes as randomBytes2 } from "node:crypto";
-import { lstat as lstat5 } from "node:fs/promises";
-import { join as join6 } from "node:path";
-
-// apps/codex-plugin/src/issue-user-authorization.mjs
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-var executeFile = promisify(execFile);
-var id3 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
-var user = external_exports.object({
-  id: id3,
-  login: external_exports.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/)
-});
-var denied = () => Error("issue_publishing_account_unavailable");
-function issueUserAuthorization({
-  broker,
-  library,
-  signal,
-  request: request3 = fetch,
-  execute = executeFile
-}) {
-  async function ownerStillConnected(owner) {
-    signal?.throwIfAborted();
-    const result = await forwardCore(
-      broker,
-      "loki_connection_status",
-      {},
-      signal
-    );
-    const connection = coreConnectionSchema.parse(result.structuredContent);
-    if (connection.context.user.id !== owner.userId || connection.context.workspace.id !== owner.workspaceId)
-      throw denied();
-  }
-  async function metadata2(path, token) {
-    signal?.throwIfAborted();
-    const response2 = await request3("https://api.github.com" + path, {
-      method: "GET",
-      redirect: "error",
-      credentials: "omit",
-      referrerPolicy: "no-referrer",
-      signal: AbortSignal.any([
-        ...signal ? [signal] : [],
-        AbortSignal.timeout(15e3)
-      ]),
-      headers: {
-        authorization: "Bearer " + token,
-        accept: "application/vnd.github+json",
-        "user-agent": "Kaijan",
-        "x-github-api-version": "2026-03-10"
-      }
-    });
-    if (!response2.ok) {
-      await response2.body?.cancel();
-      throw denied();
-    }
-    const reader = response2.body?.getReader();
-    if (!reader) throw denied();
-    const chunks = [];
-    let length = 0;
-    try {
-      for (; ; ) {
-        const part = await reader.read();
-        if (part.done) break;
-        length += part.value.length;
-        if (length > 2097152) throw denied();
-        chunks.push(part.value);
-      }
-    } finally {
-      await reader.cancel();
-      reader.releaseLock();
-    }
-    return JSON.parse(
-      new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)),
-      (_key, value, context) => typeof value === "number" && !Number.isSafeInteger(value) && context?.source && /^[1-9][0-9]{0,19}$/.test(context.source) ? context.source : value
-    );
-  }
-  async function inspect(token, source3, expectedId) {
-    if (typeof token !== "string" || !token || token.length > 8192 || /[\r\n]/.test(token))
-      throw denied();
-    const account = user.parse(await metadata2("/user", token));
-    if (expectedId && account.id !== expectedId) throw denied();
-    const repository2 = external_exports.object({
-      id: id3,
-      full_name: external_exports.literal(kaijanIssueRepository),
-      private: external_exports.literal(false),
-      permissions: external_exports.object({ push: external_exports.boolean() })
-    }).parse(await metadata2("/repos/" + kaijanIssueRepository, token));
-    return {
-      token,
-      repositoryId: repository2.id,
-      expiresAt: null,
-      canUpload: repository2.permissions.push,
-      publisher: { githubUserId: account.id, login: account.login, source: source3 }
-    };
-  }
-  async function managed(owner, imagesRequired) {
-    const response2 = await broker.send("/github/credential", {
-      method: "POST",
-      body: "{}",
-      headers: { "content-type": "application/json" },
-      signal
-    });
-    if (!response2.ok) {
-      await response2.body?.cancel();
-      if ([401, 403, 404].includes(response2.status))
-        return { credential: null, githubUserId: null };
-      throw denied();
-    }
-    const grant2 = githubCredentialSchema.parse(await response2.json());
-    if (grant2.userId !== owner.userId || grant2.workspaceId !== owner.workspaceId || grant2.authority !== "github-app-user-intersection")
-      throw denied();
-    const current = await inspect(
-      grant2.accessToken,
-      "kaijan",
-      grant2.githubUserId
-    );
-    if (imagesRequired && !current.canUpload)
-      return { credential: null, githubUserId: grant2.githubUserId };
-    let permitted = false;
-    for (let page2 = 1; page2 <= 10; page2++) {
-      const result = external_exports.object({
-        installations: external_exports.array(
-          external_exports.object({
-            id: id3,
-            account: external_exports.object({ login: external_exports.string() }),
-            repository_selection: external_exports.enum(["all", "selected"]),
-            permissions: external_exports.object({ issues: external_exports.string().optional() })
-          })
-        )
-      }).parse(
-        await metadata2(
-          `/user/installations?per_page=100&page=${page2}`,
-          grant2.accessToken
-        )
-      );
-      for (const installation of result.installations) {
-        if (installation.account.login !== "katalon-studio" || installation.permissions.issues !== "write")
-          continue;
-        if (installation.repository_selection === "all") {
-          permitted = true;
-          break;
-        }
-        for (let repoPage = 1; repoPage <= 10; repoPage++) {
-          const repositories = external_exports.object({
-            repositories: external_exports.array(external_exports.object({ id: id3, full_name: external_exports.string() }))
-          }).parse(
-            await metadata2(
-              `/user/installations/${installation.id}/repositories?per_page=100&page=${repoPage}`,
-              grant2.accessToken
-            )
-          );
-          if (repositories.repositories.some(
-            (repo) => repo.id === current.repositoryId && repo.full_name === kaijanIssueRepository
-          )) {
-            permitted = true;
-            break;
-          }
-          if (repositories.repositories.length < 100) break;
-        }
-        if (permitted) break;
-      }
-      if (permitted || result.installations.length < 100) break;
-    }
-    return {
-      credential: permitted ? {
-        ...current,
-        expiresAt: grant2.expiresAt
-      } : null,
-      githubUserId: grant2.githubUserId
-    };
-  }
-  async function local(expectedId, imagesRequired) {
-    signal?.throwIfAborted();
-    let result;
-    try {
-      result = await execute(
-        "gh",
-        ["auth", "token", "--hostname", "github.com"],
-        {
-          encoding: "utf8",
-          timeout: 5e3,
-          signal,
-          maxBuffer: 16384,
-          windowsHide: true
-        }
-      );
-    } catch {
-      throw denied();
-    }
-    const current = await inspect(
-      result.stdout.trim(),
-      "local-github",
-      expectedId
-    );
-    if (imagesRequired && !current.canUpload) throw denied();
-    return current;
-  }
-  async function selected(owner, expected, imagesRequired) {
-    await ownerStillConnected(owner);
-    if (expected?.source === "local-github")
-      return local(expected.githubUserId, imagesRequired);
-    const managedGrant = await managed(owner, imagesRequired);
-    if (managedGrant.credential) return managedGrant.credential;
-    if (expected?.source === "kaijan") throw denied();
-    return local(managedGrant.githubUserId, imagesRequired);
-  }
-  return {
-    async identify(owner, { imagesRequired = false } = {}) {
-      return (await selected(owner, null, imagesRequired)).publisher;
-    },
-    authorize(owner, publisher, { imagesRequired = false } = {}) {
-      return library.directIssueAuthorization(
-        publisher,
-        () => selected(owner, publisher, imagesRequired),
-        { request: request3, signal }
-      );
-    }
-  };
-}
-
-// apps/codex-plugin/src/issue-transport.mjs
-function issueTransport({ library, broker, build, signal }) {
-  async function operation(owner, kind, value) {
-    const response2 = await broker.send("/product-issues", {
-      method: "POST",
-      signal,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        ...owner,
-        operation: kind,
-        ...kind === "prepare" ? { input: value } : { requestId: value }
-      })
-    });
-    let result;
-    try {
-      result = await response2.json();
-    } catch {
-      throw Error("issue_result_unavailable");
-    }
-    if (kind === "read" && response2.status === 404 && result?.error === "not_found")
-      return null;
-    if (!response2.ok) throw Error("issue_result_unavailable");
-    return result;
-  }
-  return library.createIssueDraftTransport(
-    {
-      read: (owner, requestId) => operation(owner, "read", requestId),
-      prepare: (owner, input3) => operation(owner, "prepare", input3),
-      publish: (owner, requestId) => operation(owner, "publish", requestId)
-    },
-    { origin: build.coreOrigin }
-  );
-}
-function scopedIssueTransport({
-  library,
-  broker,
-  build,
-  signal,
-  journal,
-  request: request3,
-  execute,
-  publicationRoute
-}) {
-  const legacy = issueTransport({ library, broker, build, signal });
-  if (publicationRoute === "github-app")
-    return {
-      requiresPublisher: false,
-      async submit(owner, input3, images, publisher) {
-        if (publisher) throw Error("issue_original_route_required");
-        return legacy.submit(owner, input3, images);
-      },
-      async read(owner, requestId, publisher) {
-        if (publisher) throw Error("issue_original_route_required");
-        return legacy.read(owner, requestId);
-      }
-    };
-  const authorization = issueUserAuthorization({
-    library,
-    broker,
-    signal,
-    request: request3,
-    execute
-  });
-  return {
-    requiresPublisher: true,
-    identify: (owner, options) => authorization.identify(owner, options),
-    async submit(owner, input3, images, publisher) {
-      if (!publisher) return legacy.submit(owner, input3, images);
-      return (await journal()).submit(
-        owner,
-        input3,
-        images,
-        publisher,
-        (selected) => authorization.authorize(owner, selected, {
-          imagesRequired: images.length > 0
-        })
-      );
-    },
-    async read(owner, requestId, publisher) {
-      return publisher ? (await journal()).read(owner, requestId) : legacy.read(owner, requestId);
-    }
-  };
-}
-
-// apps/codex-plugin/src/issue-screenshot.mjs
-import assert2 from "node:assert/strict";
-import { createHash as createHash5 } from "node:crypto";
 
 // packages/contracts/dist/report-evidence.js
 var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -33479,7 +32771,7 @@ var reportVerificationSchema = external_exports.strictObject({
       message: "Test IDs must be unique per run."
     });
   const ids2 = new Set(run2.evidence.map((item) => item.id));
-  if (ids2.size !== run2.evidence.length || run2.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id6) => !ids2.has(id6)))))
+  if (ids2.size !== run2.evidence.length || run2.tests.some((test) => test.steps.some((step) => step.evidenceIds.some((id7) => !ids2.has(id7)))))
     ctx.addIssue({
       code: "custom",
       message: "Each step must reference supplied evidence."
@@ -34616,7 +33908,7 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 });
 
 // packages/contracts/dist/customer-related.js
-var id4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var id2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var strings2 = external_exports.array(external_exports.string());
 var optional2 = (value) => value.optional();
 var customerRelatedResultSchema = external_exports.object({
@@ -34663,7 +33955,7 @@ var customerRelatedResultSchema = external_exports.object({
     text: external_exports.string(),
     source_uri: external_exports.string(),
     revision: external_exports.string(),
-    sha256: id4.nullable(),
+    sha256: id2.nullable(),
     sourceState: external_exports.enum(["available", "unavailable"]),
     omitted_characters: external_exports.number().int().nonnegative()
   })),
@@ -34676,7 +33968,7 @@ var customerRelatedResultSchema = external_exports.object({
     relation: external_exports.literal("unjudged"),
     provenance: external_exports.array(external_exports.object({
       source_uri: external_exports.string(),
-      source_text_sha256: id4,
+      source_text_sha256: id2,
       captured_at: external_exports.string()
     }))
   })).optional(),
@@ -36128,7 +35420,7 @@ var localLimits = {
   pageSize: 100,
   inputLifetimeMs: 30 * 60 * 1e3
 };
-var id5 = external_exports.uuid();
+var id3 = external_exports.uuid();
 var digest17 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var secret = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
 var localContextSchema = external_exports.strictObject({
@@ -36136,11 +35428,11 @@ var localContextSchema = external_exports.strictObject({
     const url2 = new URL(value);
     return url2.origin === value && (url2.protocol === "https:" || url2.protocol === "http:" && url2.hostname === "127.0.0.1");
   }),
-  userId: id5,
-  workspaceId: id5
+  userId: id3,
+  workspaceId: id3
 });
 var localAuthSchema = external_exports.strictObject({
-  bindingId: id5,
+  bindingId: id3,
   secret,
   context: localContextSchema
 });
@@ -36203,7 +35495,7 @@ var page = {
 };
 var request2 = (method, params) => external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  requestId: id5,
+  requestId: id3,
   method: external_exports.literal(method),
   params,
   auth: localAuthSchema.optional()
@@ -36216,47 +35508,47 @@ var localRequestSchema = external_exports.discriminatedUnion("method", [
   request2("capabilities.list", external_exports.strictObject({})),
   request2("settings.open", external_exports.strictObject({})),
   request2("input.select", external_exports.strictObject({})),
-  request2("input.prepare", external_exports.strictObject({ inputId: id5 })),
-  request2("input.status", external_exports.strictObject({ inputId: id5, ...page })),
-  request2("input.release", external_exports.strictObject({ inputId: id5 })),
+  request2("input.prepare", external_exports.strictObject({ inputId: id3 })),
+  request2("input.status", external_exports.strictObject({ inputId: id3, ...page })),
+  request2("input.release", external_exports.strictObject({ inputId: id3 })),
   request2("run.start", external_exports.strictObject({
     capability: external_exports.literal("ui-modeler"),
     version: external_exports.literal("2026.10.18-8"),
-    inputId: id5,
+    inputId: id3,
     inputDigest: digest17,
     transferAcknowledged: external_exports.literal(true),
-    idempotencyKey: id5
+    idempotencyKey: id3
   })),
   request2("run.get", external_exports.union([
-    external_exports.strictObject({ runId: id5 }),
-    external_exports.strictObject({ idempotencyKey: id5 })
+    external_exports.strictObject({ runId: id3 }),
+    external_exports.strictObject({ idempotencyKey: id3 })
   ])),
   request2("run.list", external_exports.strictObject(page)),
-  request2("run.cancel", external_exports.strictObject({ runId: id5 })),
+  request2("run.cancel", external_exports.strictObject({ runId: id3 })),
   request2("run.events", external_exports.strictObject({
-    runId: id5,
+    runId: id3,
     afterSequence: external_exports.number().int().nonnegative(),
     ...page
   })),
   request2("result.read", external_exports.strictObject({
-    runId: id5,
+    runId: id3,
     section: external_exports.enum(["summary", "screens", "elements", "connections"]),
     ...page
   })),
   request2("artifact.read", external_exports.strictObject({
-    runId: id5,
-    artifactId: id5,
+    runId: id3,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative().max(64 * 1024 * 1024),
     length: external_exports.number().int().positive().max(localLimits.artifactChunkBytes)
   })),
-  request2("run.delete", external_exports.strictObject({ runId: id5 }))
+  request2("run.delete", external_exports.strictObject({ runId: id3 }))
 ]);
 var omission = external_exports.strictObject({
   path: external_exports.string().max(1024),
   reason: external_exports.string().max(100)
 });
 var localInputSchema = external_exports.strictObject({
-  inputId: id5,
+  inputId: id3,
   displayName: external_exports.string().max(255),
   state: localInputStateSchema,
   digest: digest17.nullable(),
@@ -36271,14 +35563,14 @@ var localInputSchema = external_exports.strictObject({
 });
 var localEventSchema = external_exports.strictObject({
   protocol: external_exports.literal(localProtocol),
-  runId: id5,
+  runId: id3,
   sequence: external_exports.number().int().positive(),
   state: localRunStateSchema,
   detail: external_exports.string().max(500),
   at: external_exports.iso.datetime()
 });
 var localRunSchema = external_exports.strictObject({
-  runId: id5,
+  runId: id3,
   state: localRunStateSchema,
   sequence: external_exports.number().int().nonnegative(),
   capability: external_exports.literal("ui-modeler"),
@@ -36299,7 +35591,7 @@ var localRunSchema = external_exports.strictObject({
   completeness: external_exports.enum(["unknown", "complete", "partial", "unavailable"]),
   usage: external_exports.literal("unknown"),
   artifacts: external_exports.array(external_exports.strictObject({
-    artifactId: id5,
+    artifactId: id3,
     name: external_exports.string().max(255),
     size: external_exports.number().int().nonnegative(),
     sha256: digest17
@@ -36392,7 +35684,7 @@ var localResultSchemas = {
   hello: external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
     companionVersion: external_exports.literal(localCompanionVersion),
-    bindingId: id5,
+    bindingId: id3,
     bindingSecret: secret.optional(),
     context: localContextSchema,
     setup: localSetupSchema
@@ -36428,7 +35720,7 @@ var localResultSchemas = {
   }),
   "result.read": resultPage,
   "artifact.read": external_exports.strictObject({
-    artifactId: id5,
+    artifactId: id3,
     offset: external_exports.number().int().nonnegative(),
     base64: external_exports.string().max(Math.ceil(localLimits.artifactChunkBytes / 3) * 4),
     sha256: digest17,
@@ -36440,19 +35732,847 @@ var localResultSchemas = {
 var localResponseSchema = external_exports.discriminatedUnion("ok", [
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id5,
+    requestId: id3,
     ok: external_exports.literal(true),
     result: external_exports.unknown()
   }),
   external_exports.strictObject({
     protocol: external_exports.literal(localProtocol),
-    requestId: id5,
+    requestId: id3,
     ok: external_exports.literal(false),
     error: localErrorSchema
   })
 ]);
 
+// apps/codex-plugin/src/saved-test-inputs.mjs
+var id4 = external_exports.uuid();
+var discoveryInput = external_exports.strictObject({
+  autId: id4.optional(),
+  testEnvironmentId: id4.optional(),
+  testDataId: id4.optional()
+});
+var applicationInput = external_exports.strictObject({
+  operation: external_exports.literal("save"),
+  id: id4.optional(),
+  name: external_exports.string()
+});
+var testDataInput = external_exports.strictObject({
+  operation: external_exports.literal("save"),
+  id: id4.optional(),
+  autId: id4,
+  name: external_exports.string(),
+  data: external_exports.json()
+});
+var savedTestInputTools = [
+  {
+    name: "kaijan_test_inputs_read",
+    title: "Find saved applications and test inputs",
+    description: "Find saved applications and Test Environments before setting up new ones. With autId, list that application's Test Environments and Test Data. Use testEnvironmentId or testDataId to read an exact saved record.",
+    inputSchema: external_exports.toJSONSchema(discoveryInput),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
+    }
+  },
+  {
+    name: "kaijan_aut_manage",
+    title: "Save an application under test",
+    description: "Save an application under test. Use kaijan_test_inputs_read to find an existing application. Save with its ID to update its name.",
+    inputSchema: external_exports.toJSONSchema(applicationInput),
+    annotations: { readOnlyHint: false, openWorldHint: false }
+  },
+  {
+    name: "kaijan_test_data_manage",
+    title: "Save Test Data",
+    description: "Save arbitrary JSON under an application under test. Use kaijan_test_inputs_read to find a reusable set. Use the returned Test Data ID when planning tests.",
+    inputSchema: external_exports.toJSONSchema(testDataInput),
+    annotations: { readOnlyHint: false, openWorldHint: false }
+  }
+];
+function useSavedTestInput(store, name, raw) {
+  if (name === "kaijan_test_inputs_read") {
+    const { autId, testEnvironmentId, testDataId } = discoveryInput.parse(raw);
+    if (testEnvironmentId)
+      return { testEnvironment: store.read(testEnvironmentId) };
+    if (testDataId) return { testData: store.readTestData(testDataId) };
+    return {
+      applications: store.listApplications(),
+      environments: store.list(void 0, autId).filter((item) => item.autId),
+      dataSets: autId ? store.listTestData(autId) : []
+    };
+  }
+  if (name === "kaijan_aut_manage") {
+    const input4 = applicationInput.parse(raw);
+    return { application: store.saveApplication(input4.name, input4.id) };
+  }
+  const input3 = testDataInput.parse(raw);
+  return {
+    testData: store.saveTestData(input3.autId, input3.name, input3.data, input3.id)
+  };
+}
+
+// apps/codex-plugin/src/configurations.mjs
+var cachedFormUris = /* @__PURE__ */ new Set([
+  "ui://kaijan/configurations/form/v1.html",
+  "ui://kaijan/configurations/form/v2.html"
+]);
+var id5 = external_exports.uuid();
+var inputSchema = external_exports.strictObject({
+  operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
+  id: id5.nullable().optional().describe(
+    "Use a fresh UUID for a new configuration or the ID of a saved configuration."
+  ),
+  revision: external_exports.number().int().nonnegative().optional().describe(
+    "Use 0 for a new configuration or the revision from the latest read for an edit or delete."
+  ),
+  application: external_exports.string().optional().describe("Application website URL, such as https://example.test."),
+  autId: id5.optional(),
+  target: external_exports.union([
+    external_exports.strictObject({ initialURL: external_exports.string() }),
+    desktopRunnerTargetSchema
+  ]).optional(),
+  values: external_exports.record(external_exports.string(), external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional(),
+  name: external_exports.string().optional(),
+  automatic: external_exports.literal(true).optional()
+});
+var testEnvironmentWriteSchema = inputSchema.omit({ application: true, automatic: true }).extend({ operation: external_exports.enum(["save", "delete"]) });
+var allowedFields = {
+  list: ["application", "autId"],
+  read: ["id"],
+  save: ["id", "revision", "name", "application", "autId", "target", "values"],
+  delete: ["id", "revision"],
+  select: ["id", "automatic"]
+};
+var tool = {
+  name: "kaijan_configuration",
+  title: "Read or update Configurations",
+  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and follow the installed app sign-in guide for a missing or changed login. A saved configuration is optional and never starts a test.",
+  inputSchema: external_exports.toJSONSchema(inputSchema),
+  annotations: {
+    readOnlyHint: false,
+    destructiveHint: true,
+    openWorldHint: false
+  }
+};
+function response(value) {
+  return {
+    ...value.error ? { isError: true } : {},
+    structuredContent: value,
+    content: [{ type: "text", text: JSON.stringify(value) }]
+  };
+}
+function createConfigurationSurface({ session, library, data }) {
+  const codex = session.identity?.host === "codex";
+  const configurationInput = codex ? testEnvironmentWriteSchema : inputSchema;
+  const tools = codex ? [
+    {
+      ...tool,
+      title: "Save or delete a Test Environment",
+      inputSchema: external_exports.toJSONSchema(configurationInput),
+      description: "Use kaijan_test_inputs_read to find saved Test Environments before creating another. Save the selected AUT ID, name, and browser or Mac app target. Use a fresh UUID and revision 0 for a new environment, or the saved ID and revision to update it. App logins are saved with the local Configuration command. Pass the saved environment ID to Plan."
+    },
+    ...savedTestInputTools
+  ] : [tool];
+  let storePromise, stopped = false;
+  const store = () => {
+    if (!storePromise) {
+      const opening = library.ConfigurationStore.open(data);
+      storePromise = opening;
+      void opening.catch(() => {
+        if (storePromise === opening) storePromise = void 0;
+      });
+    }
+    return storePromise;
+  };
+  const safeError = (error62) => {
+    const known = [
+      library.ConfigurationError,
+      library.PrivateParameterError
+    ].some((type) => typeof type === "function" && error62 instanceof type);
+    return {
+      error: known ? error62.code : "configuration_unavailable",
+      message: known ? error62.message : "Could not save or read Configurations. Read the current settings before trying again."
+    };
+  };
+  async function scopeFor(metadata2, allowConnection = false) {
+    if (stopped) throw Error("chat_required");
+    if (allowConnection && metadata2?.threadId === void 0)
+      return session.forRequest(metadata2);
+    if (typeof metadata2?.threadId !== "string" || !metadata2.threadId.trim())
+      throw Error("chat_required");
+    const scope = await session.forRequest(metadata2);
+    if (!scope.scope.restartPersistent || scope.scope.kind !== "host-thread")
+      throw Error("chat_required");
+    return scope;
+  }
+  return {
+    tools,
+    hasTool: (name) => tools.some((item) => item.name === name),
+    // Historical cards can read their resource, but this host opens no editor.
+    hasResource: (uri) => cachedFormUris.has(uri),
+    readResource: (uri) => library.readConfigurationForm(uri),
+    async invoke(name, raw, metadata2) {
+      try {
+        if (name !== tool.name) {
+          await scopeFor(metadata2);
+          return response(useSavedTestInput(await store(), name, raw));
+        }
+        const args = configurationInput.parse(raw);
+        if (Object.keys(args).some(
+          (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
+        ))
+          throw Error("invalid_arguments");
+        const scope = await scopeFor(metadata2), scopeId = scope.scope.id;
+        if (args.operation === "select" && args.id === void 0 !== (args.automatic === true))
+          throw Error("invalid_arguments");
+        if (args.operation === "select" && args.id === null) {
+          await library.configurationPreference(scope.data, scopeId, false);
+          let configurations = [];
+          try {
+            const saved2 = await store();
+            saved2.select(scopeId, null);
+            configurations = saved2.list();
+          } catch {
+          }
+          return response({
+            configurations,
+            selectedId: null,
+            selectionMode: "none",
+            nextRunConfiguration: null,
+            message: "No configuration selected for this chat."
+          });
+        }
+        const saved = await store();
+        let configuration;
+        let message = "";
+        if (args.operation === "read") {
+          if (!args.id) throw Error("invalid_arguments");
+          configuration = saved.read(args.id);
+        } else if (args.operation === "save") {
+          if (!args.id || args.revision === void 0)
+            throw Error("invalid_arguments");
+          const values = args.values ?? {};
+          const old = args.revision ? saved.read(args.id) : {
+            name: args.name,
+            application: "",
+            allowedHosts: [],
+            entries: []
+          };
+          const existingSecrets = old.entries.filter((entry) => entry.secret);
+          const application = args.target ? args.target.initialURL ?? "" : args.application ?? old.application;
+          const desktopTarget = args.target ? "app" in args.target ? args.target : void 0 : args.application === void 0 ? old.desktopTarget : void 0;
+          if (application !== old.application && existingSecrets.length)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "A configuration with a saved secret must keep its website."
+            );
+          if (existingSecrets.some(({ key }) => Object.hasOwn(values, key)))
+            throw new library.ConfigurationError(
+              "configuration_secret_editor",
+              "This chat tool saves ordinary values. Use the installed app sign-in guide to update the account."
+            );
+          const entries = old.entries.map((entry) => ({
+            key: entry.key,
+            secret: entry.secret,
+            ...entry.secret ? {} : {
+              value: Object.hasOwn(values, entry.key) ? values[entry.key] : entry.value
+            }
+          }));
+          for (const [key, value] of Object.entries(values))
+            if (!entries.some((entry) => entry.key === key))
+              entries.push({ key, value, secret: false });
+          configuration = saved.save(
+            {
+              name: args.name ?? old.name,
+              ...args.autId || old.autId ? { autId: args.autId ?? old.autId } : {},
+              application,
+              ...desktopTarget ? { desktopTarget } : {},
+              allowedHosts: old.allowedHosts,
+              entries
+            },
+            args.id,
+            args.revision
+          );
+          message = "Configuration saved.";
+        } else if (args.operation === "delete") {
+          if (!args.id || !args.revision) throw Error("invalid_arguments");
+          saved.delete(args.id, args.revision);
+          message = "Configuration deleted. Existing Runs keep their saved settings.";
+        } else if (args.operation === "select") {
+          configuration = saved.select(scopeId, args.id);
+          await library.configurationPreference(scope.data, scopeId, true);
+          message = args.automatic ? "Automatic configuration selection by Explorer and Runner selected." : `Configuration selected: ${configuration.name}.`;
+        }
+        const enabled = await library.configurationPreference(
+          scope.data,
+          scopeId
+        );
+        const selected = enabled !== false ? saved.selected(scopeId) : null;
+        return response({
+          configurations: saved.list(args.application, args.autId),
+          nextRunConfiguration: saved.pendingView(scopeId),
+          selectedId: selected && selected !== "automatic" ? selected : null,
+          selectionMode: selected === "automatic" ? "automatic" : selected ? "selected" : "none",
+          ...configuration ? { configuration } : {},
+          message
+        });
+      } catch (error62) {
+        return response(safeError(error62));
+      }
+    },
+    async prepareExecution(name, raw, metadata2) {
+      const planning = name === "loki_test_plan";
+      const savedInputs = planning ? raw?.savedTestInputs : void 0;
+      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration && !savedInputs)
+        return { arguments: raw };
+      let marked = false, recoveryRunId;
+      try {
+        const args = structuredClone(raw), explicit = savedInputs?.testEnvironmentId ?? args?.configurationId, requestKey = planning && raw?.requestKey === void 0 ? randomUUID4() : raw?.requestKey;
+        if (args && Object.hasOwn(args, "configurationUsed"))
+          throw Error("host_metadata_only");
+        if (args) delete args.configurationId;
+        if (savedInputs) delete args.savedTestInputs;
+        if (!metadata2?.threadId && (explicit === null || explicit === void 0))
+          return { arguments: args };
+        const scope = await scopeFor(metadata2, Boolean(savedInputs));
+        if (typeof requestKey !== "string" || !requestKey)
+          throw Error("invalid_request");
+        if (!planning)
+          recoveryRunId = createHash4("sha256").update(JSON.stringify([scope.scope.id, requestKey])).digest("hex");
+        marked = true;
+        marked = await library.configurationRunMarker(
+          scope.data,
+          scope.scope.id,
+          name,
+          requestKey
+        );
+        const preference = explicit === void 0 ? await library.configurationPreference(scope.data, scope.scope.id) : void 0;
+        if (!marked && (explicit === null || preference === false))
+          return { arguments: args };
+        if (!marked && explicit === void 0 && !await library.ConfigurationStore.exists(data))
+          return { arguments: args };
+        const canSelect = explicit !== void 0 || preference === true || Boolean((planning ? args.exploration : args)?.target?.initialURL);
+        if (!marked && !canSelect) return { arguments: args };
+        const saved = await store().catch((error62) => {
+          if (marked) throw error62;
+          throw new library.ConfigurationError(
+            "configuration_unavailable",
+            "Could not read the saved configuration. Ask the person if they want to run without it."
+          );
+        });
+        const previous = saved.admission(scope.scope.id, name, requestKey, raw);
+        if (previous) {
+          await library.configurationRunMarker(
+            scope.data,
+            scope.scope.id,
+            name,
+            requestKey,
+            true
+          );
+          return { arguments: previous };
+        }
+        if (marked) throw Error("configuration_admission_unavailable");
+        const retain = async (onceToken) => {
+          if (planning) args.requestKey = requestKey;
+          const prepared2 = saved.admission(
+            scope.scope.id,
+            name,
+            requestKey,
+            raw,
+            args,
+            onceToken
+          );
+          await library.configurationRunMarker(
+            scope.data,
+            scope.scope.id,
+            name,
+            requestKey,
+            true
+          );
+          return { arguments: prepared2 };
+        };
+        const environment = savedInputs ? saved.execution(explicit) : void 0;
+        if (environment) {
+          if (environment.desktopTarget)
+            args.desktopTarget = environment.desktopTarget;
+          else if (environment.application)
+            args.exploration = {
+              target: { initialURL: environment.application }
+            };
+          else
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "Save the browser URL or Mac app in the selected Test Environment before planning."
+            );
+          if (savedInputs.testDataId)
+            args.testData = saved.readTestData(savedInputs.testDataId).data;
+        }
+        const execution = planning ? args.exploration : args;
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        if (!runSchema.safeParse(args).success)
+          throw new library.ConfigurationError(
+            "configuration_run_input",
+            "Check the Run inputs before starting. The saved configuration is unchanged."
+          );
+        if (!execution) return await retain();
+        if (explicit !== void 0 && explicit !== null) id5.parse(explicit);
+        const once2 = !planning && explicit === void 0 ? saved.pending(scope.scope.id) : void 0;
+        const selection2 = once2 ? once2.value.id : explicit !== void 0 ? explicit : saved.selected(scope.scope.id);
+        const automatic = selection2 === "automatic";
+        const initialURL = execution.target?.initialURL;
+        const browserURL = initialURL ? new URL(initialURL) : void 0;
+        if (automatic && !browserURL) return { arguments: args };
+        const configurations = automatic ? saved.list().map(({ id: id7 }) => saved.execution(id7)) : selection2 ? [environment ?? once2?.execution ?? saved.execution(selection2)] : [];
+        if (!configurations.length) return { arguments: args };
+        const callerParams = execution.params ?? {};
+        const callerPrivate = execution.privateParams ?? {};
+        const allowed = execution.target?.allowedHosts ?? (execution.target?.initialURL ? [new URL(execution.target.initialURL).hostname] : []);
+        if (Object.keys(callerPrivate).length)
+          await library.resolveRunnerParameters(scope.data, scope.scope.id, {
+            ...execution,
+            target: { ...execution.target, allowedHosts: allowed }
+          });
+        const occupied = /* @__PURE__ */ new Set([
+          ...Object.keys(callerParams),
+          ...Object.keys(callerPrivate)
+        ]);
+        const parameterName = (base) => {
+          let name2 = base;
+          while (occupied.has(name2)) name2 += "_";
+          occupied.add(name2);
+          return name2;
+        };
+        const descriptors = [];
+        const secretNames = [];
+        execution.params = { ...callerParams };
+        execution.privateParams = { ...callerPrivate };
+        for (const chosen of configurations) {
+          const matchingOrigin = !chosen.application || new URL(chosen.application).origin === browserURL?.origin;
+          const privateAllowed = matchingOrigin && browserURL && chosen.allowedHosts.includes(browserURL.hostname) && allowed.every((host) => chosen.allowedHosts.includes(host));
+          if (!automatic && (!matchingOrigin || Object.keys(chosen.secrets).some(
+            (key) => !Object.hasOwn(callerPrivate, key)
+          ) && !privateAllowed))
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "This configuration belongs to another application. Choose a configuration for the browser target."
+            );
+          const fields = {};
+          const secrets = {};
+          chosen.configuration.overrides = automatic ? [] : [
+            .../* @__PURE__ */ new Set([
+              ...once2?.changed ?? [],
+              ...[
+                ...Object.keys(callerParams),
+                ...Object.keys(callerPrivate)
+              ].filter(
+                (key) => Object.hasOwn(chosen.params, key) || Object.hasOwn(chosen.secrets, key)
+              )
+            ])
+          ];
+          for (const key of [
+            ...Object.keys(chosen.params),
+            ...Object.keys(chosen.secrets)
+          ]) {
+            const isSecret = Object.hasOwn(chosen.secrets, key);
+            if (automatic && isSecret && !privateAllowed) continue;
+            if (Object.hasOwn(callerPrivate, key) || Object.hasOwn(callerParams, key)) {
+              if (isSecret && !Object.hasOwn(callerPrivate, key))
+                throw new library.ConfigurationError(
+                  "configuration_secret_editor",
+                  "Use the installed app sign-in guide to update the account."
+                );
+              fields[key] = key;
+              continue;
+            }
+            const name2 = automatic ? parameterName(`configuration_${chosen.configuration.id}_${key}`) : key;
+            fields[key] = name2;
+            if (Object.hasOwn(chosen.secrets, key))
+              secrets[name2] = chosen.secrets[key];
+            else execution.params[name2] = chosen.params[key];
+          }
+          descriptors.push({
+            id: chosen.configuration.id,
+            name: chosen.configuration.name,
+            url: chosen.application ?? null,
+            fields
+          });
+          if (Object.keys(secrets).length) {
+            const binding2 = await library.provisionRunnerParameters(
+              scope.data,
+              scope.scope.id,
+              { allowedHosts: chosen.allowedHosts, values: secrets }
+            );
+            for (const field of binding2.fields)
+              execution.privateParams[field] = {
+                bindingId: binding2.bindingId,
+                field
+              };
+            secretNames.push(...binding2.fields);
+          }
+        }
+        if (automatic)
+          execution.params[parameterName("availableConfigurations")] = JSON.stringify({ configurations: descriptors });
+        if (Object.keys(execution.privateParams).length) {
+          execution.target.allowedHosts = allowed;
+          await library.resolveRunnerParameters(
+            scope.data,
+            scope.scope.id,
+            execution
+          );
+        } else if (!raw?.privateParams && !raw?.exploration?.privateParams) {
+          delete execution.privateParams;
+        }
+        if (!planning) {
+          execution.options = {
+            ...execution.options,
+            secretParameterNames: [
+              .../* @__PURE__ */ new Set([
+                ...execution.options?.secretParameterNames ?? [],
+                ...secretNames
+              ])
+            ]
+          };
+          if (!automatic)
+            args.configurationUsed = configurations[0].configuration;
+        }
+        const prepared = await retain(once2?.token);
+        if (once2 && saved.selected(scope.scope.id) === null && !saved.pending(scope.scope.id))
+          await library.configurationPreference(
+            scope.data,
+            scope.scope.id,
+            false
+          );
+        return prepared;
+      } catch (error62) {
+        const value = safeError(error62);
+        return {
+          error: {
+            code: marked && !(error62 instanceof library.ConfigurationError) ? "configuration_original_unavailable" : value.error,
+            message: marked ? planning ? "The original planning settings are unavailable. Read the same planning answer before continuing." : "The original Run settings are unavailable. Read the same Run before continuing. Do not start a replacement." : value.message,
+            requestDispatched: marked ? null : false,
+            ...marked ? { existingRunId: recoveryRunId } : {}
+          }
+        };
+      }
+    },
+    async close() {
+      if (stopped) return;
+      stopped = true;
+      if (storePromise) (await storePromise.catch(() => null))?.close();
+    }
+  };
+}
+
+// apps/codex-plugin/src/issues.mjs
+import { randomBytes as randomBytes2 } from "node:crypto";
+import { lstat as lstat5 } from "node:fs/promises";
+import { join as join6 } from "node:path";
+
+// apps/codex-plugin/src/issue-user-authorization.mjs
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+var executeFile = promisify(execFile);
+var id6 = external_exports.union([githubIdSchema, external_exports.number().int().positive().safe()]).transform(String);
+var user = external_exports.object({
+  id: id6,
+  login: external_exports.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/)
+});
+var denied = () => Error("issue_publishing_account_unavailable");
+function issueUserAuthorization({
+  broker,
+  library,
+  signal,
+  request: request3 = fetch,
+  execute = executeFile
+}) {
+  async function ownerStillConnected(owner) {
+    signal?.throwIfAborted();
+    const result = await forwardCore(
+      broker,
+      "loki_connection_status",
+      {},
+      signal
+    );
+    const connection = coreConnectionSchema.parse(result.structuredContent);
+    if (connection.context.user.id !== owner.userId || connection.context.workspace.id !== owner.workspaceId)
+      throw denied();
+  }
+  async function metadata2(path, token) {
+    signal?.throwIfAborted();
+    const response2 = await request3("https://api.github.com" + path, {
+      method: "GET",
+      redirect: "error",
+      credentials: "omit",
+      referrerPolicy: "no-referrer",
+      signal: AbortSignal.any([
+        ...signal ? [signal] : [],
+        AbortSignal.timeout(15e3)
+      ]),
+      headers: {
+        authorization: "Bearer " + token,
+        accept: "application/vnd.github+json",
+        "user-agent": "Kaijan",
+        "x-github-api-version": "2026-03-10"
+      }
+    });
+    if (!response2.ok) {
+      await response2.body?.cancel();
+      throw denied();
+    }
+    const reader = response2.body?.getReader();
+    if (!reader) throw denied();
+    const chunks = [];
+    let length = 0;
+    try {
+      for (; ; ) {
+        const part = await reader.read();
+        if (part.done) break;
+        length += part.value.length;
+        if (length > 2097152) throw denied();
+        chunks.push(part.value);
+      }
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
+    return JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)),
+      (_key, value, context) => typeof value === "number" && !Number.isSafeInteger(value) && context?.source && /^[1-9][0-9]{0,19}$/.test(context.source) ? context.source : value
+    );
+  }
+  async function inspect(token, source3, expectedId) {
+    if (typeof token !== "string" || !token || token.length > 8192 || /[\r\n]/.test(token))
+      throw denied();
+    const account = user.parse(await metadata2("/user", token));
+    if (expectedId && account.id !== expectedId) throw denied();
+    const repository2 = external_exports.object({
+      id: id6,
+      full_name: external_exports.literal(kaijanIssueRepository),
+      private: external_exports.literal(false),
+      permissions: external_exports.object({ push: external_exports.boolean() })
+    }).parse(await metadata2("/repos/" + kaijanIssueRepository, token));
+    return {
+      token,
+      repositoryId: repository2.id,
+      expiresAt: null,
+      canUpload: repository2.permissions.push,
+      publisher: { githubUserId: account.id, login: account.login, source: source3 }
+    };
+  }
+  async function managed(owner, imagesRequired) {
+    const response2 = await broker.send("/github/credential", {
+      method: "POST",
+      body: "{}",
+      headers: { "content-type": "application/json" },
+      signal
+    });
+    if (!response2.ok) {
+      await response2.body?.cancel();
+      if ([401, 403, 404].includes(response2.status))
+        return { credential: null, githubUserId: null };
+      throw denied();
+    }
+    const grant2 = githubCredentialSchema.parse(await response2.json());
+    if (grant2.userId !== owner.userId || grant2.workspaceId !== owner.workspaceId || grant2.authority !== "github-app-user-intersection")
+      throw denied();
+    const current = await inspect(
+      grant2.accessToken,
+      "kaijan",
+      grant2.githubUserId
+    );
+    if (imagesRequired && !current.canUpload)
+      return { credential: null, githubUserId: grant2.githubUserId };
+    let permitted = false;
+    for (let page2 = 1; page2 <= 10; page2++) {
+      const result = external_exports.object({
+        installations: external_exports.array(
+          external_exports.object({
+            id: id6,
+            account: external_exports.object({ login: external_exports.string() }),
+            repository_selection: external_exports.enum(["all", "selected"]),
+            permissions: external_exports.object({ issues: external_exports.string().optional() })
+          })
+        )
+      }).parse(
+        await metadata2(
+          `/user/installations?per_page=100&page=${page2}`,
+          grant2.accessToken
+        )
+      );
+      for (const installation of result.installations) {
+        if (installation.account.login !== "katalon-studio" || installation.permissions.issues !== "write")
+          continue;
+        if (installation.repository_selection === "all") {
+          permitted = true;
+          break;
+        }
+        for (let repoPage = 1; repoPage <= 10; repoPage++) {
+          const repositories = external_exports.object({
+            repositories: external_exports.array(external_exports.object({ id: id6, full_name: external_exports.string() }))
+          }).parse(
+            await metadata2(
+              `/user/installations/${installation.id}/repositories?per_page=100&page=${repoPage}`,
+              grant2.accessToken
+            )
+          );
+          if (repositories.repositories.some(
+            (repo) => repo.id === current.repositoryId && repo.full_name === kaijanIssueRepository
+          )) {
+            permitted = true;
+            break;
+          }
+          if (repositories.repositories.length < 100) break;
+        }
+        if (permitted) break;
+      }
+      if (permitted || result.installations.length < 100) break;
+    }
+    return {
+      credential: permitted ? {
+        ...current,
+        expiresAt: grant2.expiresAt
+      } : null,
+      githubUserId: grant2.githubUserId
+    };
+  }
+  async function local(expectedId, imagesRequired) {
+    signal?.throwIfAborted();
+    let result;
+    try {
+      result = await execute(
+        "gh",
+        ["auth", "token", "--hostname", "github.com"],
+        {
+          encoding: "utf8",
+          timeout: 5e3,
+          signal,
+          maxBuffer: 16384,
+          windowsHide: true
+        }
+      );
+    } catch {
+      throw denied();
+    }
+    const current = await inspect(
+      result.stdout.trim(),
+      "local-github",
+      expectedId
+    );
+    if (imagesRequired && !current.canUpload) throw denied();
+    return current;
+  }
+  async function selected(owner, expected, imagesRequired) {
+    await ownerStillConnected(owner);
+    if (expected?.source === "local-github")
+      return local(expected.githubUserId, imagesRequired);
+    const managedGrant = await managed(owner, imagesRequired);
+    if (managedGrant.credential) return managedGrant.credential;
+    if (expected?.source === "kaijan") throw denied();
+    return local(managedGrant.githubUserId, imagesRequired);
+  }
+  return {
+    async identify(owner, { imagesRequired = false } = {}) {
+      return (await selected(owner, null, imagesRequired)).publisher;
+    },
+    authorize(owner, publisher, { imagesRequired = false } = {}) {
+      return library.directIssueAuthorization(
+        publisher,
+        () => selected(owner, publisher, imagesRequired),
+        { request: request3, signal }
+      );
+    }
+  };
+}
+
+// apps/codex-plugin/src/issue-transport.mjs
+function issueTransport({ library, broker, build, signal }) {
+  async function operation(owner, kind, value) {
+    const response2 = await broker.send("/product-issues", {
+      method: "POST",
+      signal,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        ...owner,
+        operation: kind,
+        ...kind === "prepare" ? { input: value } : { requestId: value }
+      })
+    });
+    let result;
+    try {
+      result = await response2.json();
+    } catch {
+      throw Error("issue_result_unavailable");
+    }
+    if (kind === "read" && response2.status === 404 && result?.error === "not_found")
+      return null;
+    if (!response2.ok) throw Error("issue_result_unavailable");
+    return result;
+  }
+  return library.createIssueDraftTransport(
+    {
+      read: (owner, requestId) => operation(owner, "read", requestId),
+      prepare: (owner, input3) => operation(owner, "prepare", input3),
+      publish: (owner, requestId) => operation(owner, "publish", requestId)
+    },
+    { origin: build.coreOrigin }
+  );
+}
+function scopedIssueTransport({
+  library,
+  broker,
+  build,
+  signal,
+  journal,
+  request: request3,
+  execute,
+  publicationRoute
+}) {
+  const legacy = issueTransport({ library, broker, build, signal });
+  if (publicationRoute === "github-app")
+    return {
+      requiresPublisher: false,
+      async submit(owner, input3, images, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.submit(owner, input3, images);
+      },
+      async read(owner, requestId, publisher) {
+        if (publisher) throw Error("issue_original_route_required");
+        return legacy.read(owner, requestId);
+      }
+    };
+  const authorization = issueUserAuthorization({
+    library,
+    broker,
+    signal,
+    request: request3,
+    execute
+  });
+  return {
+    requiresPublisher: true,
+    identify: (owner, options) => authorization.identify(owner, options),
+    async submit(owner, input3, images, publisher) {
+      if (!publisher) return legacy.submit(owner, input3, images);
+      return (await journal()).submit(
+        owner,
+        input3,
+        images,
+        publisher,
+        (selected) => authorization.authorize(owner, selected, {
+          imagesRequired: images.length > 0
+        })
+      );
+    },
+    async read(owner, requestId, publisher) {
+      return publisher ? (await journal()).read(owner, requestId) : legacy.read(owner, requestId);
+    }
+  };
+}
+
 // apps/codex-plugin/src/issue-screenshot.mjs
+import assert2 from "node:assert/strict";
+import { createHash as createHash5 } from "node:crypto";
 var issueScreenshotReference = reportArtifactInputSchema.omit({ offset: true }).required({ artifactId: true });
 async function selectIssueScreenshot(reports, reference2, imageId) {
   const input3 = issueScreenshotReference.parse(reference2);
@@ -37223,9 +37343,10 @@ async function createInstalledSession(root, build, data, broker, {
         );
       }
     } : hostLibrary,
-    ...host === "claude_code" ? { uiEnabled: false } : {},
-    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
-    uiMode: "panel"
+    // The private Claude forms worker can open the shared browser report.
+    // The ordinary Claude MCP session keeps its text tools and no UI resources.
+    ...host === "claude_code" && !inlineForms ? { uiEnabled: false } : {},
+    uiMode: host === "claude_code" && inlineForms ? "browser" : "panel"
   });
   session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
@@ -37453,23 +37574,20 @@ async function run() {
       if (input3.kind === "report") {
         if (!["launch", "preview"].includes(input3.operation))
           throw Error("Invalid report action");
-        const selected = await session.forRequest({ threadId });
-        const kinds = ["plan", "runner", "assessment"];
-        const selection2 = { reportId: input3.reportId, kinds };
-        const reports = selected.services.reports;
-        const preview = await reports.preview(selection2);
+        const { catalog } = await session.forRequest({ threadId });
+        const { reportId, previewURL } = await catalog.invoke(
+          "loki_report_open",
+          { reportId: input3.reportId },
+          { signal: lifetime.signal }
+        );
         lifetime.signal.throwIfAborted();
-        const receipt2 = await reports.export({
-          ...selection2,
-          previewSha256: preview.previewSha256
-        });
-        lifetime.signal.throwIfAborted();
-        const url2 = pathToFileURL2(receipt2.path).href;
         if (input3.operation === "launch") {
-          await promisify2(execFile2)("/usr/bin/open", [url2], { timeout: 1e4 });
+          await promisify2(execFile2)("/usr/bin/open", [previewURL], {
+            timeout: 1e4
+          });
         }
         response2.setHeader("Content-Type", "application/json");
-        response2.end(JSON.stringify({ reportId: receipt2.reportId, url: url2 }));
+        response2.end(JSON.stringify({ reportId, url: previewURL }));
         return;
       }
       const result = await invoke(input3, lifetime.signal);

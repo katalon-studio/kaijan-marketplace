@@ -76,11 +76,15 @@ invent a replacement ID to bypass this limit.
 | Host version       | Global `claude --version`                                                      | Embedded Claude Code row in `/status`; record the Desktop app version separately |
 | Interaction        | Terminal; optional `--print` automation                                        | Code conversation and native permission controls                                 |
 | Kaijan tests       | Same managed runtime, planning, authorized Runner and saved assessment methods | Same package and methods; three TodoMVC QA workflows observed                    |
-| Reports            | Inline card with mods; details open in the default browser. `--print` is text. | Inline card; **Open Kaijan report** opens HTML in the Browser pane.              |
+| Reports            | Inline card with mods; details open in the default browser. `--print` is text. | Inline card; **Open Kaijan report** follows the host's browser preference.       |
 | Records            | Bound to the actual Claude session                                             | Same binding rule; no automatic cross-session report transfer                    |
 | Telemetry          | Lifecycle host `claude_code`; MCP host follows its actual handshake            | Same contract; no asserted Code-tab surface field                                |
 
 In Desktop, select **Show details** to get the **Open Kaijan report** link.
+The original conversation serves the same interactive report HTML as Claude Code
+through a private local link. Select **Refresh link** if the link expires.
+The native pane is available for project history and when the browser view
+cannot open.
 
 The existing contract leaves `host_surface` unknown. Do not infer Desktop or CLI
 from a path, client name, prompt or environment guess. A text report read never

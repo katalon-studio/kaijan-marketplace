@@ -125,7 +125,9 @@ export function register(on, runInterruption) {
           if (!state.isCurrent()) return;
           if (
             result.reportId !== card.report.id ||
-            !/^file:\/\/\/[^\s()]+\.html$/.test(result.url)
+            !/^http:\/\/127\.0\.0\.1:\d{1,5}\/[a-f0-9]{64}\/(?:view\/[a-f0-9-]{36}\/)?$/.test(
+              result.url,
+            )
           )
             throw Error("Unexpected report output");
           if (e.surface === "desktop") card.detailUrl = result.url;
@@ -133,6 +135,7 @@ export function register(on, runInterruption) {
           return;
         } catch {
           if (!state.isCurrent()) return;
+          card.detailUrl = undefined;
           host.warn();
         } finally {
           card.opening = false;
