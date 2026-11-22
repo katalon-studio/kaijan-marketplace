@@ -39,6 +39,15 @@ ends at the plan. A full test
 request with sufficient inputs can proceed through execution and report under
 the same authority.
 
+<!-- codex-only -->
+
+In Codex, reuse the saved application under test, Test Environment and Test
+Data when they fit the current request. Look for existing records before
+creating another or asking the person for a value that is already available.
+Follow the person's explicit selection. If a missing input or a choice among
+matching records matters, ask for that decision.
+<!-- end-codex-only -->
+
 - Use [plan-tests](../plan-tests/SKILL.md) for requested planning or to prepare
   tests for a full request. Give it the original task and relevant attributed
   sources, including the actual frozen change when the request concerns a
@@ -49,11 +58,11 @@ the same authority.
   Standalone code review uses
   [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md).
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
-  saved Plan reference and selected test IDs, target and parameters. Kaijan
-  runs the selected tests, assesses retained evidence and saves a combined
-  report. Keep gaps for unexecuted tests visible and continue independent checks
-  with sufficient inputs. For execution outside Kaijan or a specific new piece
-  of evidence, use [assess-test-evidence](../../references/capability-skills/assess-test-evidence/SKILL.md).
+  saved Plan reference and selected test IDs. In Codex, the saved Plan supplies
+  the target and inputs. Kaijan runs the selected tests, assesses retained
+  evidence and saves a combined report. Keep gaps for unexecuted tests visible
+  and continue independent checks with sufficient inputs. Attribute any external
+  observations to their source.
 - Open the actual saved result with [review-report](../review-report/SKILL.md).
   Include the review findings and any partial preparation when requested.
   Keep execution status, actual observations, assessment and coverage distinct.

@@ -8,19 +8,42 @@ description: Propose practical tests for the caller's task and available applica
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
 to plan useful observable checks and expected results for the original task.
-When Codex advertises `testObjective`, pass the person's request in that
-field. Generate a `requestKey` and put the selected browser URL in
-`target.initialURL` or the selected Mac app's bundle ID in `target.app`.
-For a supplied `.app` path or first-time desktop setup, use the
-[macOS setup guide](../run-test/references/macos-appium-setup.md).
-Include `testData` when the person supplied concrete values. It accepts any
-JSON value. Explorer uses the selected target and test data during planning.
+<!-- codex-only -->
+
+In Codex, use `kaijan_test_inputs_read` to find and reuse the application under
+test, its Test Environment and its Test Data.
+Use a suitable existing record when available. Save the browser URL or Mac
+app bundle identifier and app account in Test Environment. Save the test
+values as the caller supplied them in Test Data. Ask which saved record to use
+when the caller's selection is unclear and the choice matters.
+
+For a site that requires sign-in, check the selected environment for the
+approved account before calling Plan. Guide the person to
+[save the login locally](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+if it is missing or needs an update. For a supplied `.app` path or first-time
+desktop setup, use the [macOS setup guide](../run-test/references/macos-appium-setup.md).
+
+In Codex, pass the person's request as `testObjective` with a `requestKey`,
+the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
+saved target, account and data in Plan and Run. After Setup, use its saved
+`application.workItem` as the objective and its resolved target to find or save
+the environment for the selected AUT.
+<!-- end-codex-only -->
+
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
 For work based on a saved source packet, pass its `contextId` from
 `loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
 `testObjective`. Use the returned `planId` when the person authorizes a Run.
+
+When the person selects the configured application's shared Main model, use
+`sourceModel: {application: true}`. Core supplies one combined context for its
+selected repositories. New planning reads the current model once. To continue
+saved work, use the context recorded in that Plan. A fresh read returns the
+current model even when the request includes an older `modelRef`.
+Keep local changes and browser observations separately attributed. A source
+model provides optional inferred context. Browser-only testing remains available.
 
 Include steps and preconditions when the available information supports them.
 Keep missing details open. A task in chat is enough to plan.
@@ -69,12 +92,14 @@ the plan.
   the original supported input when available. A raw report is retained evidence,
   not a planning packet.
 
-After Setup, use its saved `application.workItem` as the original task and read
-relevant source at its saved revision. For a saved free-text task, preserve it in
-`input.body`; use the original task text as `input.title` too when no separate
-title was supplied. Keep available code/context in separate attributed sources
-when needed. Setup IDs and `application.contextId` select configuration, not
-`nativeInputs.testPlanning`; do not pass them as the planning `contextId`.
+After Setup, read relevant source at its saved revision. Keep code and task
+context in separate attributed sources when needed. Use a Context Intake ID
+for Plan's `contextId`. Setup IDs and `application.contextId` identify saved
+application context.
+
+On hosts where Plan accepts `input`, use the saved `application.workItem` as
+the original task. For a saved free-text task, preserve it in `input.body`.
+Use the original task text for `input.title` when no title was supplied.
 A known pre-dispatch context-input refusal asks for corrected arguments. Reuse
 the saved task instead of asking the person to retype it or writing an unsaved
 substitute plan. Preserve an earlier uncertain outcome without replay.
@@ -110,13 +135,7 @@ new record with `supersedes`. Verify the revised expectations against the new
 source and show the revised report under its own answer ID. Preserve the
 original plan and report.
 
-## Preserve a baseline while adding tests
-
-When the experimental `loki_test_supplement` tool is available and additions
-are requested, use `test-plan-supplement-input/1` with the original `context`,
-`baseline: {text, uri, revision, plan_path?}` and
-`risks: [{id, text, uri, revision, attribution}]`. Supply the exact original
-baseline JSON in `text` and use `plan_path` for a wrapper when needed. An empty
-`risks` array is valid. Retained input uses `nativeInputs.testSupplement:
-{input, options?}`. Keep the baseline unchanged beside the returned additions,
-concerns and questions, or the original failure.
+For requested additions, use the same Plan flow. Keep the original objective,
+authorized context and tests, then include the new coverage the person requested.
+Save and show the revision with its own Plan ID. Earlier Runs keep their original
+Plan references.

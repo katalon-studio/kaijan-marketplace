@@ -9,7 +9,7 @@ import {
   sendFetch,
   zdrRequest,
 } from "@katalon-experiments/ai-client";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, open, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
@@ -114,6 +114,7 @@ export async function runWithMethod(
     env = process.env,
     signal,
     fetcher = fetch,
+    managedResponsesSession,
     beforeDispatch,
     mode,
   },
@@ -245,6 +246,7 @@ export async function runWithMethod(
       let nativeOperationValue, nativeOperationFailure;
       let nativeOperationFailed = false;
       let requestDeadline;
+      let session;
       try {
         nativeOperation: {
           try {
@@ -272,7 +274,42 @@ export async function runWithMethod(
               row.status = "not_dispatched";
               throw error;
             }
-            const response = await sendFetch(target, requestOptions, fetcher);
+            let webSocketRequest, webSocketResponse;
+            if (selected.mode === "work-item" && route === "responses")
+              session = managedResponsesSession?.({
+                connection: target,
+                storeResponses: request.store,
+                requestAI: (_body, signal) =>
+                  sendFetch(target, { ...requestOptions, signal }, fetcher),
+                async recordWebSocketFrame(phase, frame) {
+                  if (phase === "response") {
+                    webSocketResponse = frame;
+                    return;
+                  }
+                  try {
+                    const name = stage + ".websocket-request.json";
+                    await save(name, frame);
+                    for (const entry of [path.join(archive, name), archive]) {
+                      const file = await open(entry, "r");
+                      try {
+                        await file.sync();
+                      } finally {
+                        await file.close();
+                      }
+                    }
+                    webSocketRequest = frame;
+                  } catch (error) {
+                    // The managed session has not sent a frame yet.
+                    row.status = "not_dispatched";
+                    const failure = new RiskError("archive_write_failed");
+                    failure.cause = error;
+                    throw failure;
+                  }
+                },
+              });
+            const response = session
+              ? await session.send(request, requestOptions.signal)
+              : await sendFetch(target, requestOptions, fetcher);
             row.http_status = response.status;
             diagnosticStage = "response_capture";
             const captured = await captureResponse(response);
@@ -350,6 +387,15 @@ export async function runWithMethod(
             }
             diagnosticStage = "response_archive";
             try {
+              if (webSocketResponse !== undefined) {
+                await save(
+                  stage + ".websocket-response.json",
+                  webSocketResponse,
+                );
+                preservation.transport = "websocket";
+                preservation.wire_request_sha256 = sha256(webSocketRequest);
+                preservation.wire_response_sha256 = sha256(webSocketResponse);
+              }
               await writeFile(
                 path.join(archive, stage + ".response.bin"),
                 captured.bytes,
@@ -423,6 +469,8 @@ export async function runWithMethod(
       } catch (error) {
         nativeOperationFailed = true;
         nativeOperationFailure = error;
+      } finally {
+        session?.close();
       }
       {
         row.elapsed_seconds = Number(

@@ -62,7 +62,9 @@ readiness for the selected operation.
   managed sign-in or confirmed direct-development provider setup.
 - Check target login and private GitHub access separately. Follow
   [GitHub setup and recovery](references/github-setup.md) for GitHub work.
-  Use `work-item` for an existing Kaijan Work Item.
+- Use `loki_connection_status` to verify the live Kaijan account and workspace.
+  On an explicit disconnect request, use `loki_disconnect` through the host.
+  Verify the new connection after sign-in before starting dependent work.
 - If tools are missing after an update or the responding build is uncertain,
   follow [update recovery](references/update-recovery.md). Check callable tools
   and action readiness before new paid work. If the task requires a specific
