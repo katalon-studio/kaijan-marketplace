@@ -13,6 +13,17 @@ field. Generate a `requestKey` and put the selected browser URL in
 `target.initialURL` or the selected Mac app's bundle ID in `target.app`.
 For a supplied `.app` path or first-time desktop setup, use the
 [macOS setup guide](../run-test/references/macos-appium-setup.md).
+
+<!-- codex-only -->
+
+Before calling Plan for a Codex browser test that requires a username and
+password, check the website's saved Test Environment Config through
+`kaijan_configuration`. If the approved account is missing or needs an update,
+guide the person to [save the login locally](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+and confirm it is available before planning. Keep the username and password
+in the saved Configuration and pass the intended website to Plan.
+<!-- end-codex-only -->
+
 Include `testData` when the person supplied concrete values. It accepts any
 JSON value. Explorer uses the selected target and test data during planning.
 Tell the person Explorer's time limit before starting exploration. It defaults

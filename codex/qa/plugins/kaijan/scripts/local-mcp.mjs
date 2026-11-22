@@ -47661,7 +47661,7 @@ var allowedFields = {
 var tool = {
   name: "kaijan_configuration",
   title: "Read or update Configurations",
-  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and use the private login path for a missing or changed secret. A saved configuration is optional and never starts a test.",
+  description: "List, read, save, delete or select personal key\u2013value configurations. To create one, use save with a fresh UUID, revision 0, a name and ordinary values. To edit one, use the saved ID and revision. Keep existing secrets as references and follow the installed app sign-in guide for a missing or changed login. A saved configuration is optional and never starts a test.",
   inputSchema: external_exports.toJSONSchema(inputSchema),
   annotations: {
     readOnlyHint: false,
@@ -47764,7 +47764,7 @@ function createConfigurationSurface({ session, library, data }) {
           if (existingSecrets.some(({ key }) => Object.hasOwn(args.values, key)))
             throw new library.ConfigurationError(
               "configuration_secret_editor",
-              "Saved secrets cannot be replaced through Configuration. Use the private login path for this Run."
+              "This chat tool saves ordinary values. Use the installed app sign-in guide to update the account."
             );
           const entries = old.entries.map((entry) => ({
             key: entry.key,
@@ -47933,7 +47933,7 @@ function createConfigurationSurface({ session, library, data }) {
               if (isSecret && !Object.hasOwn(callerPrivate, key))
                 throw new library.ConfigurationError(
                   "configuration_secret_editor",
-                  "Use the private login path to override a saved secret."
+                  "Use the installed app sign-in guide to update the account."
                 );
               fields[key] = key;
               continue;
@@ -56848,7 +56848,7 @@ function customerExecutionInput(tool2, configurations, requireSavedPlan) {
       if (configurations)
         schema.properties.configurationId = {
           anyOf: [{ type: "string", format: "uuid" }, { type: "null" }],
-          description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or automatic delivery of saved groups. Use null for no saved configuration. Explicit params override saved values only for this Run. Secret edits use the Configuration form."
+          description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or automatic delivery of saved groups. Use null for no saved configuration. Explicit params override saved values only for this Run. Use the installed app sign-in guide to update the account."
         };
     }
     const limits = schema?.properties?.options?.properties?.limits;
@@ -56952,7 +56952,7 @@ function customerFailure(name, value = {}, runId2) {
   const [message, action2, instruction] = privateLogin ? [
     `${privateParameterMessages[code]} No new test execution was dispatched.`,
     "correct_private_parameters",
-    "Use the installed private-parameters command in this chat to set up the approved login for the authorized websites. Pass only its saved references. Use each input name once. Never print login values. Keep any original Run; do not replace work with unknown effects."
+    "Follow the installed app sign-in guide to update the authorized account. Never print login values. If the saved Plan has the old login, prepare a fresh Plan before starting a new authorized Run. Keep any original Run and check its effects before repeating a test."
   ] : browserHosts ? [
     "The browser host list is invalid or does not allow the initial page. No new test execution was dispatched.",
     "correct_browser_hosts",

@@ -32,10 +32,19 @@ explicit Configuration selection or opt-out. If several saved groups match the
 application and the intended group is unclear, ask which to use.
 
 Save an ordinary value through `kaijan_configuration` only if the person asks to
-save it. For a new or changed secret, use [private login parameters](../../references/private-parameters.md)
-or manual login. Keep raw secrets out of chat and tool arguments. On hosts that
-advertise full Runner input, use `params` for ordinary overrides and
-`privateParams` for scoped secret references.
+save it.
+
+<!-- codex-only -->
+
+In Codex, when the person chooses to save an app login from a local file, use the
+[Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+before starting the test.
+<!-- end-codex-only -->
+
+Keep raw secrets out of chat and tool arguments. On
+hosts that advertise full Runner input, use `params` for ordinary overrides and
+[`privateParams`](../../references/private-parameters.md)
+for scoped secret references.
 These overrides leave saved settings unchanged. The person can run without
 saving settings. Configuration selection never authorizes execution.
 
@@ -76,6 +85,19 @@ cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
+<!-- codex-only -->
+
+## Restart after an app login change
+
+In Codex, when a Run needs a new or replacement app login, guide the person to
+save it with the [Configuration command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
+If the person requests a restart, stop a Run that is still waiting and read
+the original result to see what already happened. When the intended checks
+are safe to repeat, prepare a fresh Plan for that scope with the updated
+Configuration and start a new Run. Keep the original Run and report. The
+earlier saved Plan retains its original login reference.
+<!-- end-codex-only -->
+
 ## Read or stop the original test
 
 Use `loki_test_get` through the execution and assessment result, and
@@ -85,7 +107,15 @@ Use `loki_test_get` through the execution and assessment result, and
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `loki_runner_answer` with the
 original run and clarification IDs, one answer key and the available authorized
-context. Match known questions when possible; partial answers and extra JSON
+context.
+
+<!-- codex-only -->
+
+For an app login that needs to be saved or changed, follow
+[Restart after an app login change](#restart-after-an-app-login-change).
+<!-- end-codex-only -->
+
+Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
 The original deadline still applies; a missing answer does not require
