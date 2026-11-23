@@ -32748,6 +32748,55 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// packages/contracts/dist/product-report.js
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
+
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
   applicationKey: external_exports.string().min(1),

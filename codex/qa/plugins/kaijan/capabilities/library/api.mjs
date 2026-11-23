@@ -92522,6 +92522,65 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// ../contracts/dist/product-report.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
+
 // ../contracts/dist/issue-image-type.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -101828,6 +101887,15 @@ function finalFeedbackInput(draft, requestId) {
 }
 
 // src/feedback-drafts.ts
+var storedFeedbackInput = productFeedbackInputSchema.extend({
+  _destination: external_exports.literal("tracking").optional()
+});
+function dispatchInput(serialized) {
+  const { _destination = "core", ...input3 } = storedFeedbackInput.parse(
+    JSON.parse(serialized)
+  );
+  return { input: input3, destination: _destination };
+}
 function pendingFields(changes, fields4) {
   return Object.fromEntries(
     Object.entries(changes).filter(
@@ -101983,9 +102051,7 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
       if (base.id !== row2.id || base.revision !== row2.revision || base.status !== "draft")
         throw Error("Invalid draft identity");
       if (row2.request_id) {
-        const selected2 = productFeedbackInputSchema.parse(
-          JSON.parse(row2.dispatch_input)
-        );
+        const { input: selected2 } = dispatchInput(row2.dispatch_input);
         if (selected2.requestId !== row2.request_id || !isDeepStrictEqual2(selected2, finalFeedbackInput(base, row2.request_id)))
           throw Error("The selected feedback changed");
         base.status = row2.receipt === null ? "unconfirmed" : "saved";
@@ -102195,7 +102261,7 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
       "SELECT request_id,input,receipt FROM dispatches WHERE draft_id=?"
     ).get(id8);
   }
-  freeze(id8, revision2, actor) {
+  freeze(id8, revision2, actor, destination) {
     if (!actor.canSend)
       throw new FeedbackDraftError(
         "send_denied",
@@ -102244,26 +102310,34 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
           }
         }
       };
-      if (Buffer.byteLength(JSON.stringify(envelope)) > 16384)
+      if (destination === "core" && Buffer.byteLength(JSON.stringify(envelope)) > 16384)
         throw new FeedbackDraftError(
           "feedback_too_large",
           "This feedback is too large to send. Shorten it before sending.",
           draft
         );
+      const stored2 = destination === "tracking" ? { ...input3, _destination: destination } : input3;
       this.db.prepare(
         "INSERT INTO dispatches(draft_id,request_id,input,reviewed_by) VALUES(?,?,?,?)"
-      ).run(id8, input3.requestId, JSON.stringify(input3), actor.kind);
+      ).run(id8, input3.requestId, JSON.stringify(stored2), actor.kind);
       return this.dispatch(id8);
     });
   }
   async send(id8, revision2, actor, transport2) {
-    const dispatch = this.freeze(id8, revision2, actor);
+    const dispatch = this.freeze(
+      id8,
+      revision2,
+      actor,
+      transport2.destination ?? "core"
+    );
     if (dispatch.receipt !== null) return this.get(id8, actor);
+    const { input: expected, destination } = dispatchInput(dispatch.input);
     let result;
     try {
       result = await transport2.submit(
         { userId: actor.userId, workspaceId: actor.workspaceId },
-        productFeedbackInputSchema.parse(JSON.parse(dispatch.input))
+        expected,
+        destination
       );
     } catch {
       throw new FeedbackDraftError(
@@ -102280,9 +102354,6 @@ var FeedbackDraftStore = class _FeedbackDraftStore {
         this.get(id8, actor)
       );
     const receipt4 = parsed.data.feedback;
-    const expected = productFeedbackInputSchema.parse(
-      JSON.parse(dispatch.input)
-    );
     const actual = reportContent(receipt4, expected);
     if (!isDeepStrictEqual2(actual, expected))
       throw new FeedbackDraftError(
@@ -102721,8 +102792,8 @@ var issuePublishSchema = issueGetSchema.extend({
 var issueDraftSchema = external_exports.strictObject({
   id: external_exports.uuid(),
   revision: external_exports.number().int().positive(),
-  repository: external_exports.literal(kaijanIssueRepository),
-  publicationRoute: external_exports.enum(["github-link", "github-app"]).optional(),
+  repository: external_exports.literal(kaijanIssueRepository).optional(),
+  publicationRoute: external_exports.enum(["github-link", "github-app", "tracking"]).optional(),
   temporary: external_exports.literal(true).optional(),
   fields: issueFieldsSchema,
   publisher: issuePublisherSchema.optional(),
@@ -102736,25 +102807,32 @@ var issueDraftSchema = external_exports.strictObject({
   }),
   // Selected means the exact final input is frozen locally. Unconfirmed
   // means Core has reserved its single external creation attempt.
-  status: external_exports.enum(["draft", "selected", "unconfirmed", "published"]),
+  status: external_exports.enum(["draft", "selected", "unconfirmed", "published", "saved"]),
   receipt: productIssueReceiptSchema.optional(),
+  reportReceipt: savedProductReportReceiptSchema.optional(),
   unsavedEdit: external_exports.strictObject({
     actor: external_exports.enum(["human", "agent"]),
     baseRevision: external_exports.number().int().positive(),
     changes: issueChangesSchema
   }).optional()
 }).superRefine((draft, context) => {
-  if (draft.temporary && !["github-link", "github-app"].includes(draft.publicationRoute ?? ""))
+  if (draft.temporary && !draft.publicationRoute)
     context.addIssue({
       code: "custom",
       path: ["temporary"],
       message: "Keep the selected publication route for this review."
     });
-  if (draft.publicationRoute === "github-app" && draft.publisher)
+  if (draft.publicationRoute === "tracking" === Boolean(draft.repository))
+    context.addIssue({
+      code: "custom",
+      path: ["repository"],
+      message: "Use the original issue destination."
+    });
+  if ((draft.publicationRoute === "tracking" || draft.publicationRoute === "github-app") && draft.publisher)
     context.addIssue({
       code: "custom",
       path: ["publisher"],
-      message: "The GitHub App submits this report, not a user credential."
+      message: "This report uses the existing Kaijan connection."
     });
   if (draft.publicationRoute === "github-link" && (draft.status !== "draft" || draft.publisher || draft.fields.images.length))
     context.addIssue({
@@ -102767,6 +102845,12 @@ var issueDraftSchema = external_exports.strictObject({
       code: "custom",
       path: ["receipt"],
       message: "Only a confirmed issue has a published link."
+    });
+  if (draft.status === "saved" !== Boolean(draft.reportReceipt) || (draft.publicationRoute === "tracking" ? draft.status === "published" || draft.status === "unconfirmed" : draft.status === "saved"))
+    context.addIssue({
+      code: "custom",
+      path: ["reportReceipt"],
+      message: "Keep the original saved report reference."
     });
 });
 var issueSelectionSchema = external_exports.strictObject({
@@ -102836,7 +102920,7 @@ function finalIssueInput(draft, requestId) {
 
 // src/issue-drafts.ts
 var digest20 = (input3) => createHash11("sha256").update(JSON.stringify(input3)).digest("hex");
-function dispatchInput(row2) {
+function dispatchInput2(row2) {
   const { _publisher, ...raw } = external_exports.strictObject({
     ...productIssueInputSchema.shape,
     _publisher: issuePublisherSchema.optional()
@@ -102906,7 +102990,7 @@ var IssueDraftStore = class _IssueDraftStore {
       return new _IssueDraftStore(
         void 0,
         db,
-        publicationRoute === "github-app" ? IssueImageStore.temporary() : void 0,
+        publicationRoute !== "github-link" ? IssueImageStore.temporary() : void 0,
         void 0,
         publicationRoute
       );
@@ -103051,17 +103135,23 @@ var IssueDraftStore = class _IssueDraftStore {
         throw Error("Invalid draft identity");
       const selected2 = this.dispatch(id8);
       if (selected2) {
-        const { input: input3, publisher } = dispatchInput(selected2);
+        const { input: input3, publisher } = dispatchInput2(selected2);
         if (selected2.request_id !== input3.requestId || !isDeepStrictEqual4(publisher, draft.publisher) || !isDeepStrictEqual4(input3, finalIssueInput(draft, input3.requestId)))
           throw Error("The selected content changed");
         draft.status = "selected";
         if (selected2.remote_status !== null) {
-          const status2 = this.checkedStatus(
-            input3,
-            JSON.parse(selected2.remote_status)
-          );
-          if (status2.state !== "awaiting_images") draft.status = status2.state;
-          if (status2.receipt) draft.receipt = status2.receipt;
+          const stored2 = JSON.parse(selected2.remote_status);
+          if (draft.publicationRoute === "tracking") {
+            const status2 = productReportReceiptSchema.parse(stored2);
+            if (status2.status === "saved") {
+              draft.status = "saved";
+              draft.reportReceipt = status2;
+            }
+          } else {
+            const status2 = this.checkedStatus(input3, stored2);
+            if (status2.state !== "awaiting_images") draft.status = status2.state;
+            if (status2.receipt) draft.receipt = status2.receipt;
+          }
         }
       }
       if (row2.attempt_changes !== null) {
@@ -103187,7 +103277,7 @@ var IssueDraftStore = class _IssueDraftStore {
       const draft = issueDraftSchema.parse({
         id: randomUUID6(),
         revision: 1,
-        repository: kaijanIssueRepository,
+        ...(this.path === void 0 ? this.temporaryRoute : publicationRoute) !== "tracking" ? { repository: kaijanIssueRepository } : {},
         ...publicationRoute ? { publicationRoute } : {},
         ...this.path === void 0 ? { temporary: true, publicationRoute: this.temporaryRoute } : {},
         fields: {
@@ -103384,7 +103474,7 @@ var IssueDraftStore = class _IssueDraftStore {
       if (draft.status === "draft")
         return this.imageStore.read(this.owner(actor), id8, imageId);
       const selected2 = this.dispatch(id8);
-      const { input: input3 } = dispatchInput(selected2);
+      const { input: input3 } = dispatchInput2(selected2);
       const image = input3.images.find((value) => value.id === imageId);
       if (!image)
         throw new IssueDraftError(
@@ -103413,7 +103503,7 @@ var IssueDraftStore = class _IssueDraftStore {
         "Keep the original publication route."
       );
     const current2 = this.get(id8, actor);
-    if (current2.publicationRoute !== "github-app")
+    if (current2.publicationRoute !== "github-app" && current2.publicationRoute !== "tracking")
       throw new IssueDraftError(
         "original_route_required",
         "Keep the original publication route.",
@@ -103423,7 +103513,7 @@ var IssueDraftStore = class _IssueDraftStore {
     const original = this.db.prepare("SELECT body,open_request FROM drafts WHERE id=?").get(id8);
     const saved = issueDraftSchema.parse(JSON.parse(original.body));
     delete saved.temporary;
-    const { input: input3 } = dispatchInput(selected2);
+    const { input: input3 } = dispatchInput2(selected2);
     const images = input3.images.map((image) => this.selectedImage(id8, image));
     const contributions = this.db.prepare(
       "SELECT revision,actor,changes FROM contributions WHERE draft_id=? ORDER BY revision"
@@ -103573,9 +103663,24 @@ var IssueDraftStore = class _IssueDraftStore {
   }
   accept(id8, actor, result) {
     return this.transaction(() => {
-      this.get(id8, actor);
+      const current2 = this.get(id8, actor);
       const dispatch = this.dispatch(id8);
-      const { input: input3, publisher } = dispatchInput(dispatch);
+      if (current2.publicationRoute === "tracking") {
+        const status3 = productReportReceiptSchema.safeParse(result);
+        const previous2 = dispatch.remote_status === null ? void 0 : productReportReceiptSchema.parse(
+          JSON.parse(dispatch.remote_status)
+        );
+        if (!status3.success || previous2 && status3.data.reference !== previous2.reference || previous2?.status === "saved" && status3.data.status === "saved" && status3.data.savedAt !== previous2.savedAt)
+          throw new IssueDraftError(
+            "receipt_mismatch",
+            "The issue reference changed. Keep the original report.",
+            current2
+          );
+        if (previous2?.status === "saved") return current2;
+        this.db.prepare("UPDATE dispatches SET remote_status=? WHERE draft_id=?").run(JSON.stringify(status3.data), id8);
+        return this.get(id8, actor);
+      }
+      const { input: input3, publisher } = dispatchInput2(dispatch);
       let status2;
       try {
         status2 = this.checkedStatus(input3, result);
@@ -103608,10 +103713,10 @@ var IssueDraftStore = class _IssueDraftStore {
   async publish(id8, revision2, actor, transport2) {
     const dispatch = this.freeze(id8, revision2, actor);
     const known = this.get(id8, actor);
-    if (known.status === "published") return known;
+    if (known.status === "published" || known.status === "saved") return known;
     if (known.status === "unconfirmed")
       return this.refresh(id8, actor, transport2);
-    const { input: input3, publisher } = dispatchInput(dispatch);
+    const { input: input3, publisher } = dispatchInput2(dispatch);
     let result;
     try {
       const images = this.transaction(() => {
@@ -103635,8 +103740,9 @@ var IssueDraftStore = class _IssueDraftStore {
   }
   async refresh(id8, actor, transport2) {
     const known = this.get(id8, actor), dispatch = this.dispatch(id8);
-    if (!dispatch || known.status === "published") return known;
-    const { input: input3, publisher } = dispatchInput(dispatch);
+    if (!dispatch || known.status === "published" || known.status === "saved")
+      return known;
+    const { input: input3, publisher } = dispatchInput2(dispatch);
     let result;
     try {
       result = await transport2.read(
@@ -103674,7 +103780,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath5 } from "node:url";
-var issueFormUri = "ui://kaijan/issue/form/v8.html";
+var issueFormUri = "ui://kaijan/issue/form/v9.html";
 var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v1.html",
   "ui://kaijan/issue/form/v2.html",
@@ -103682,7 +103788,8 @@ var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v4.html",
   "ui://kaijan/issue/form/v5.html",
   "ui://kaijan/issue/form/v6.html",
-  "ui://kaijan/issue/form/v7.html"
+  "ui://kaijan/issue/form/v7.html",
+  "ui://kaijan/issue/form/v8.html"
 ]);
 async function readIssueForm(uri2 = issueFormUri) {
   if (uri2 !== issueFormUri && !cachedIssueFormUris.includes(uri2))
@@ -103748,31 +103855,82 @@ function awsUploadHost(host) {
   const last = parts.at(-1);
   return last === "s3" || last.startsWith("s3-") && last.length > 3 || parts.at(-2) === "s3";
 }
-function createIssueDraftTransport(core, {
-  origin: origin2,
-  request: request3 = fetch,
-  now = Date.now
-}) {
+function selectedIssueImages(input3, images) {
+  if (images.length !== input3.images.length || new Set(images.map((selected2) => selected2.image.id)).size !== images.length)
+    throw invalid();
+  const byId = /* @__PURE__ */ new Map();
+  for (const image of input3.images) {
+    const selected2 = images.find((value) => value.image.id === image.id);
+    if (!selected2 || !isDeepStrictEqual5(selected2.image, image) || selected2.bytes.length !== image.bytes)
+      throw invalid();
+    const bytes2 = Buffer.from(selected2.bytes);
+    if (createHash12("sha256").update(bytes2).digest("hex") !== image.sha256)
+      throw invalid();
+    byId.set(image.id, { image: structuredClone(image), bytes: bytes2 });
+  }
+  return byId;
+}
+function createIssueImageUploader(prefix, { origin: origin2, request: request3 = fetch, now = Date.now }) {
   const configured = new URL(origin2);
   const local = configured.protocol === "http:" && ["127.0.0.1", "localhost"].includes(configured.hostname);
   if (configured.origin !== origin2 || configured.username || configured.password || configured.protocol !== "https:" && !local)
     throw Error("Use the package's fixed Core origin.");
+  function grant3(submissionId, image, value) {
+    const url2 = new URL(value.url);
+    const aws = url2.protocol === "https:" && awsUploadHost(url2.hostname);
+    const loopback = local && url2.origin === configured.origin;
+    const key5 = `/${prefix}/` + submissionId + "/" + image.id + "-" + image.sha256;
+    const expires = Date.parse(value.expiresAt), at2 = now();
+    const seconds = Number(url2.searchParams.get("X-Amz-Expires"));
+    if (!aws && !loopback || url2.username || url2.password || url2.hash || aws && url2.port && url2.port !== "443" || !url2.pathname.endsWith(key5) || url2.searchParams.get("X-Amz-Algorithm") !== "AWS4-HMAC-SHA256" || !/^[a-f0-9]{64}$/.test(url2.searchParams.get("X-Amz-Signature") ?? "") || !Number.isInteger(seconds) || seconds < 1 || seconds > 300 || !Number.isFinite(expires) || expires <= at2 || expires > at2 + 3e5 || value.headers["content-type"] !== image.mediaType || value.headers["content-length"] !== String(image.bytes) || value.headers["x-amz-checksum-sha256"] !== Buffer.from(image.sha256, "hex").toString("base64"))
+      throw invalid();
+    return url2;
+  }
+  return async (reference2, byId, uploads, signal) => {
+    if (uploads.length !== byId.size || new Set(uploads.map(({ imageId }) => imageId)).size !== uploads.length || uploads.some((upload) => !byId.has(upload.imageId)))
+      throw invalid();
+    const selected2 = uploads.map((upload) => {
+      const image = byId.get(upload.imageId);
+      return {
+        upload,
+        image,
+        url: grant3(reference2, image.image, upload)
+      };
+    });
+    for (const { upload, image, url: url2 } of selected2) {
+      let response;
+      try {
+        response = await request3(url2, {
+          method: "PUT",
+          headers: upload.headers,
+          body: Buffer.from(image.bytes),
+          redirect: "error",
+          credentials: "omit",
+          referrerPolicy: "no-referrer",
+          signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(3e4)]) : AbortSignal.timeout(3e4)
+        });
+      } catch {
+        throw new IssuePublicationError(
+          "image_upload_pending",
+          "An image upload could not be confirmed. Keep the selected images and check the original issue before retrying."
+        );
+      }
+      await response.body?.cancel();
+      if (!response.ok && response.status !== 412)
+        throw new IssuePublicationError(
+          "image_upload_pending",
+          "An image was not uploaded. Keep the original selection and retry its upload."
+        );
+    }
+  };
+}
+function createIssueDraftTransport(core, options2) {
+  const uploadImages = createIssueImageUploader("kaijan-issue-images", options2);
   function status2(input3, value, submissionId) {
     const result = productIssueStatusSchema.safeParse(value);
     if (!result.success || result.data.requestId !== input3.requestId || result.data.inputSha256 !== digest21(input3) || submissionId && result.data.submissionId !== submissionId)
       throw invalid();
     return result.data;
-  }
-  function grant3(input3, submissionId, image, value) {
-    const url2 = new URL(value.url);
-    const aws = url2.protocol === "https:" && awsUploadHost(url2.hostname);
-    const loopback = local && url2.origin === configured.origin;
-    const key5 = "/kaijan-issue-images/" + submissionId + "/" + image.id + "-" + image.sha256;
-    const expires = Date.parse(value.expiresAt), at2 = now();
-    const seconds = Number(url2.searchParams.get("X-Amz-Expires"));
-    if (!aws && !loopback || url2.username || url2.password || url2.hash || aws && url2.port && url2.port !== "443" || !url2.pathname.endsWith(key5) || url2.searchParams.get("X-Amz-Algorithm") !== "AWS4-HMAC-SHA256" || !/^[a-f0-9]{64}$/.test(url2.searchParams.get("X-Amz-Signature") ?? "") || !Number.isInteger(seconds) || seconds < 1 || seconds > 300 || !Number.isFinite(expires) || expires <= at2 || expires > at2 + 3e5 || value.headers["content-type"] !== image.mediaType || value.headers["content-length"] !== String(image.bytes) || value.headers["x-amz-checksum-sha256"] !== Buffer.from(image.sha256, "hex").toString("base64") || !input3.images.some((selected2) => isDeepStrictEqual5(selected2, image)))
-      throw invalid();
-    return url2;
   }
   return {
     async read(owner, requestId) {
@@ -103786,18 +103944,7 @@ function createIssueDraftTransport(core, {
     },
     async submit(owner, value, images) {
       const input3 = productIssueInputSchema.parse(value);
-      if (images.length !== input3.images.length || new Set(images.map((selected3) => selected3.image.id)).size !== images.length)
-        throw invalid();
-      const byId = /* @__PURE__ */ new Map();
-      for (const image of input3.images) {
-        const selected3 = images.find((value2) => value2.image.id === image.id);
-        if (!selected3 || !isDeepStrictEqual5(selected3.image, image) || selected3.bytes.length !== image.bytes)
-          throw invalid();
-        const bytes2 = Buffer.from(selected3.bytes);
-        if (createHash12("sha256").update(bytes2).digest("hex") !== image.sha256)
-          throw invalid();
-        byId.set(image.id, { image: structuredClone(image), bytes: bytes2 });
-      }
+      const byId = selectedIssueImages(input3, images);
       const previous2 = await core.read(owner, input3.requestId);
       const known = previous2 === null ? void 0 : status2(input3, previous2);
       if (known && known.state !== "awaiting_images") return known;
@@ -103808,41 +103955,7 @@ function createIssueDraftTransport(core, {
       const { uploads, ...rawStatus } = prepared.data;
       const current2 = status2(input3, rawStatus, known?.submissionId);
       if (current2.state !== "awaiting_images") return current2;
-      if (uploads.length !== input3.images.length || uploads.some((upload) => !byId.has(upload.imageId)))
-        throw invalid();
-      const selected2 = uploads.map((upload) => {
-        const image = byId.get(upload.imageId);
-        return {
-          upload,
-          image,
-          url: grant3(input3, current2.submissionId, image.image, upload)
-        };
-      });
-      for (const { upload, image, url: url2 } of selected2) {
-        let response;
-        try {
-          response = await request3(url2, {
-            method: "PUT",
-            headers: upload.headers,
-            body: Buffer.from(image.bytes),
-            redirect: "error",
-            credentials: "omit",
-            referrerPolicy: "no-referrer",
-            signal: AbortSignal.timeout(3e4)
-          });
-        } catch {
-          throw new IssuePublicationError(
-            "image_upload_pending",
-            "An image upload could not be confirmed. Keep the selected images and check the original issue before retrying."
-          );
-        }
-        await response.body?.cancel();
-        if (!response.ok && response.status !== 412)
-          throw new IssuePublicationError(
-            "image_upload_pending",
-            "An image was not uploaded. Keep the original selection and retry its upload."
-          );
-      }
+      await uploadImages(current2.submissionId, byId, uploads);
       return status2(
         input3,
         await core.publish(owner, input3.requestId),
@@ -170167,6 +170280,7 @@ export {
   createCapabilityServices,
   createContextIntake,
   createIssueDraftTransport,
+  createIssueImageUploader,
   createMapPreview,
   createRetainedMapBundle,
   createSourceAdapters,
@@ -170255,6 +170369,7 @@ export {
   runnerRequest,
   runnerResultSchema,
   runnerSettings,
+  selectedIssueImages,
   setAnalysisSettings,
   setRunnerSettings,
   setupCardUri,
