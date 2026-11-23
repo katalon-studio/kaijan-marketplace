@@ -60084,6 +60084,7 @@ function planningTemporaryFailureGuidance(answer) {
 var hash3 = (value) => createHash8("sha256").update(value).digest("hex");
 var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional4 = (value) => value.optional();
+var planDiskFullMessage = "The device ran out of disk space during planning. Kaijan could not confirm that a Plan was saved. Free disk space before starting new work.";
 var advisoryFamilies = {
   loki_test_plan: "testPlanning"
 };
@@ -60356,8 +60357,13 @@ function projectCustomerAdvisoryResult(fam, native, proposal, proposalEvidence) 
 function failure4(fam, code = "advisory_unavailable", answerId, dispatched = null, corrections = []) {
   const planningContext = fam === "testPlanning" && code === "planning_context_unavailable" && dispatched === false;
   if (planningContext) code = "invalid_arguments";
+  const planDiskFull = fam === "testPlanning" && code === "local_disk_full";
   if (code === "invalid_params") code = "invalid_arguments";
-  if (["answer_not_found_in_scope", "answer_not_complete"].includes(code))
+  if ([
+    "answer_not_found_in_scope",
+    "answer_not_complete",
+    "local_disk_full"
+  ].includes(code))
     code = "answer_unavailable";
   const safe = [
     "invalid_arguments",
@@ -60369,7 +60375,7 @@ function failure4(fam, code = "advisory_unavailable", answerId, dispatched = nul
   const correctionText = corrections.map(
     (item) => `${item.path.join(".") || "request"} (${item.expected.join(" or ")})`
   ).join("; ");
-  const message = planningContext ? "The selected context does not provide planning input in this chat. No test plan was started." : safe === "customer_read_restart" ? "The saved view changed or the page position is invalid. Read it again from offset zero." : safe === "request_key_conflict" ? "This request key belongs to different work. Keep the original key and input to recover that answer. Use a new key only for distinct authorized work; do not replay work with uncertain effects." : safe === "invalid_arguments" ? correctionText ? `Check these input fields: ${correctionText}. Use an allowed input option from the tool schema. The request was not sent.` : "The selected input is invalid. Correct the source or selection before requesting distinct work." : "This answer is unavailable. Return to the original chat and preserve the retained answer; do not replay uncertain work.";
+  const message = planDiskFull ? planDiskFullMessage : planningContext ? "The selected context does not provide planning input in this chat. No test plan was started." : safe === "customer_read_restart" ? "The saved view changed or the page position is invalid. Read it again from offset zero." : safe === "request_key_conflict" ? "This request key belongs to different work. Keep the original key and input to recover that answer. Use a new key only for distinct authorized work; do not replay work with uncertain effects." : safe === "invalid_arguments" ? correctionText ? `Check these input fields: ${correctionText}. Use an allowed input option from the tool schema. The request was not sent.` : "The selected input is invalid. Correct the source or selection before requesting distinct work." : "This answer is unavailable. Return to the original chat and preserve the retained answer; do not replay uncertain work.";
   return baseSchema.parse({
     schema: "kaijan.customer-advisory/1",
     family: fam,
@@ -60453,7 +60459,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
   if (["unknown", "cancelled"].includes(native.state))
     return baseSchema.parse({
       ...base,
-      message: native.state === "unknown" ? "The analysis outcome is uncertain. Preserve this answer; do not replay it." : "The analysis was cancelled. Preserve this answer and any retained evidence.",
+      message: native.state === "cancelled" ? "The analysis was cancelled. Preserve this answer and any retained evidence." : fam === "testPlanning" && native.reason === "local_disk_full" ? planDiskFullMessage : "The analysis outcome is uncertain. Preserve this answer; do not replay it.",
       recovery: {
         action: "read-original",
         instruction: "Use the retained answer in the original chat. Do not start replacement work to recover it."
