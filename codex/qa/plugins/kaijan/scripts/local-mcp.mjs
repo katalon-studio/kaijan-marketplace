@@ -43121,6 +43121,55 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// packages/contracts/dist/product-report.js
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
+
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
   applicationKey: external_exports.string().min(1),
@@ -47011,6 +47060,91 @@ async function forwardCore(broker, name, args, signal) {
   );
 }
 
+// apps/codex-plugin/src/product-report-transport.mjs
+async function requestProductReport(broker, owner2, operation, payload, signal) {
+  const response2 = await broker.send("/plugin-reports", {
+    method: "POST",
+    signal,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...owner2, operation, ...payload })
+  });
+  if (!response2.ok) throw Error("report_result_unavailable");
+  const schema = operation === "prepare" ? productReportPreparationSchema : productReportReceiptSchema;
+  return schema.parse(await response2.json());
+}
+async function savePreparedReport(broker, owner2, prepared, signal) {
+  const { reference: reference2 } = prepared.receipt;
+  const receipt3 = prepared.receipt.status === "saved" ? prepared.receipt : await requestProductReport(
+    broker,
+    owner2,
+    "save",
+    { reference: reference2 },
+    signal
+  );
+  if (receipt3.status !== "saved" || receipt3.reference !== reference2)
+    throw Error("report_receipt_mismatch");
+  return receipt3;
+}
+async function submitTrackedFeedback(broker, owner2, report, signal) {
+  const prepared = await requestProductReport(
+    broker,
+    owner2,
+    "prepare",
+    { input: { type: "feedback", report } },
+    signal
+  );
+  if (prepared.uploads.length) throw Error("unexpected_feedback_uploads");
+  const receipt3 = await savePreparedReport(broker, owner2, prepared, signal);
+  return {
+    feedback: {
+      ...report,
+      id: receipt3.reference,
+      createdAt: receipt3.savedAt,
+      status: "saved"
+    }
+  };
+}
+function trackedIssueTransport({
+  library,
+  broker,
+  build,
+  signal,
+  request: request3
+}) {
+  const upload = library.createIssueImageUploader("kaijan-report-images", {
+    origin: build.coreOrigin,
+    request: request3
+  });
+  return {
+    requiresPublisher: false,
+    read(owner2, requestId) {
+      return requestProductReport(broker, owner2, "read", { requestId }, signal);
+    },
+    async submit(owner2, report, images) {
+      const selected = library.selectedIssueImages(report, images);
+      const prepared = await requestProductReport(
+        broker,
+        owner2,
+        "prepare",
+        { input: { type: "issue", report } },
+        signal
+      );
+      if (prepared.receipt.status === "saved") {
+        if (prepared.uploads.length)
+          throw Error("unexpected_saved_report_uploads");
+        return prepared.receipt;
+      }
+      await upload(
+        prepared.receipt.reference,
+        selected,
+        prepared.uploads,
+        signal
+      );
+      return savePreparedReport(broker, owner2, prepared, signal);
+    }
+  };
+}
+
 // apps/codex-plugin/src/feedback.mjs
 var viewKey = "kaijan/feedback-view";
 var operations = ["open", "read", "update", "discard_edit"];
@@ -47023,6 +47157,7 @@ function createFeedbackSurface({
   library,
   broker,
   build,
+  destination = "core",
   now = Date.now
 }) {
   const stores = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map();
@@ -47266,7 +47401,15 @@ function createFeedbackSurface({
           );
         else {
           draft = await store.send(draftId, revision3, actor, {
-            submit(expected, feedback) {
+            destination,
+            submit(expected, feedback, originalDestination) {
+              if (originalDestination === "tracking")
+                return submitTrackedFeedback(
+                  broker,
+                  expected,
+                  feedback,
+                  signal
+                );
               return forwardCore(
                 {
                   send(path, options) {
@@ -52483,6 +52626,8 @@ function scopedIssueTransport({
   execute: execute2,
   publicationRoute
 }) {
+  if (publicationRoute === "tracking")
+    return trackedIssueTransport({ library, broker, build, signal, request: request3 });
   const legacy = issueTransport({ library, broker, build, signal });
   if (publicationRoute === "github-app")
     return {
@@ -52575,6 +52720,7 @@ function createIssueSurface({
   broker,
   build,
   now = Date.now,
+  newIssueRoute = "github-app",
   createTransport = scopedIssueTransport
 }) {
   const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
@@ -52674,12 +52820,12 @@ function createIssueSurface({
     describe3(
       "kaijan_issue_draft",
       "Review a Kaijan issue",
-      "Open or edit a report about Kaijan in this chat. Help prepare the observed failure, relevant context, expected behavior and steps from known facts. Open requires requestId and optional title, description and context. Unsent text and chosen images stay in this temporary review until Cancel or shutdown. The person reviews the text and screenshots, then confirms publication to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App, without opening GitHub. Only the confirmed submission is retained for receipt recovery. Read, status and discard_edit require draftId. Read is local; status checks only the original publication. Update requires draftId, revision and nonempty text changes. To collect a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId, and screenshot reportId/runId/artifactId from the same chat. This stages verified original PNG bytes for review and makes no public write. Never use filesystem paths or invent an artifact. The person can also choose images in the form. Keep refused edits. Earlier saved records keep their original recovery route."
+      "Open or edit a report about Kaijan in this chat. Use known facts for the observed failure, context, expected behavior and steps. Open requires requestId. Unsent text and images stay in the temporary review until Cancel or shutdown. The person reviews the text and images and confirms Send in the form. Read, status and discard_edit require draftId. Read is local. Status checks only the original submission. Update requires draftId, revision and text changes. To add a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId and the same chat's reportId, runId and artifactId. The person can also choose images. Never use paths or invent artifacts. Keep refused edits and the original recovery route for older reports."
     ),
     describe3(
       "kaijan_issue_publish",
       "Open Kaijan issue review",
-      "Open the current issue form for the person to review the exact text, context and chosen screenshots. The person confirms submission to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App. This tool does not publish or open GitHub. For an unconfirmed publication, check status on the original report."
+      "Open the current issue form for the person to review the exact text, context and screenshots. This tool only opens the form. The person confirms submission. For an unconfirmed submission, check status on the original report."
     ),
     describe3(
       "kaijan_issue_form_action",
@@ -52794,7 +52940,7 @@ function createIssueSurface({
     let store = temporaryStores.get(data);
     if (!store) {
       store = library.IssueDraftStore.temporary({
-        publicationRoute: "github-app"
+        publicationRoute: newIssueRoute
       });
       temporaryStores.set(data, store);
     }
@@ -52929,6 +53075,12 @@ function createIssueSurface({
         });
         let draft, chunk, githubUrl;
         const current = operation === "open" ? void 0 : store.get(draftId, actor);
+        if (newIssueRoute === "tracking" && current && current.publicationRoute !== "tracking" && (operation === "publish" || operation === "continue_on_github"))
+          throw new library.IssueDraftError(
+            "issue_publication_retired",
+            "This earlier issue can be reopened for reference. Open a new Kaijan report to send reviewed content.",
+            current
+          );
         const githubLink = current?.publicationRoute === "github-link";
         if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
           throw new library.IssueDraftError(
@@ -52949,10 +53101,10 @@ function createIssueSurface({
               ].join("\n")
             },
             actor,
-            "github-app"
+            newIssueRoute
           );
         else if (operation === "attach_screenshot") {
-          if (current.publicationRoute !== "github-app" || current.status !== "draft")
+          if (!["github-app", "tracking"].includes(current.publicationRoute) || current.status !== "draft")
             throw new library.IssueDraftError(
               "original_route_required",
               "Keep the original report and selected images.",
@@ -53047,7 +53199,7 @@ function createIssueSurface({
               }
             }
           }
-          if (operation === "publish" && current.temporary && current.publicationRoute === "github-app") {
+          if (operation === "publish" && current.temporary && ["github-app", "tracking"].includes(current.publicationRoute)) {
             const temporary = store;
             const durable = await publicationStore(scope.data);
             temporary.promoteReviewed(draftId, revision4, actor, durable);
@@ -53355,12 +53507,19 @@ async function createInstalledSession(root, build, data, broker, {
   }
   if (host === "codex" || inlineForms) {
     session.feedback = createFeedbackSurface({
+      destination: "tracking",
       session,
       library,
       broker,
       build
     });
-    session.issues = createIssueSurface({ session, library, broker, build });
+    session.issues = createIssueSurface({
+      session,
+      library,
+      broker,
+      build,
+      newIssueRoute: "tracking"
+    });
     const close = session.close.bind(session);
     session.close = async () => {
       if (host === "codex") await session.configurations.close();
