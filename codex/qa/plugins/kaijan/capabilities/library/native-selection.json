@@ -21,7 +21,7 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+        "node_modules/@katalon-experiments/ai-client/README.md": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a",
         "node_modules/@katalon-experiments/ai-client/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea",
@@ -145,7 +145,7 @@
         "github-capture/python_integer.mjs": "1d3341948089022f8c955c49eea14195c30f90a37ed1b2b0e2623776f504d664",
         "github-capture/unicode_bytes.mjs": "39b63c8199c79bbde04171c9759bb0eff592982e704842e62341898c9bf6c59c",
         "github-capture/unicode_properties.mjs": "7cbd7c76e2e6c03925b7f0c48dd7ec6ea19ea7f86b332cef444a7201de7f2d7e",
-        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+        "node_modules/@katalon-experiments/ai-client/README.md": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/index.mjs": "4cae6e0c82c7cc284f555e82cb40746b579ffc736c2ef21f9dfbb63b6128a823",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
@@ -324,7 +324,7 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+        "node_modules/@katalon-experiments/ai-client/README.md": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
         "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830",
@@ -497,7 +497,7 @@
         "node_modules/@katalon-experiments/ai-client/index.d.mts": "446c48c13d3984923a43ed62fb97894715d109cd48ab97a7d9ff2d1f913b9405",
         "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
         "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-        "node_modules/@katalon-experiments/ai-client/README.md": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+        "node_modules/@katalon-experiments/ai-client/README.md": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
         "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
         "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a",
         "work-item-instructions.mjs": "a30005bf5f2b5f7aa326b05cb08581c9004cf2692056445435b33593d772b032",
@@ -1391,7 +1391,7 @@
     },
     "change-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+      "sha256": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "work-item-risk/work-item-review.mjs": {
@@ -1486,7 +1486,7 @@
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+      "sha256": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/github-capture/authored_eligibility.mjs": {
@@ -1576,7 +1576,7 @@
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+      "sha256": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "pr-context/node_modules/@katalon-experiments/ai-client/index.d.mts": {
@@ -1905,7 +1905,7 @@
     },
     "planning/node_modules/@katalon-experiments/ai-client/README.md": {
       "source": "packages/provider-transport/README.md",
-      "sha256": "a7d2d9b9e90c68f0e1564f2ede1958f5c5a3acb464b9a8fc40742b4558e5b33b",
+      "sha256": "e8746b1a9e8d4b2b6b91f9096dd213087e9688c266a2f067930e568bff6dc68c",
       "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "planner-loop-source/experiments/context-finder/planning/supplement.mjs": {
