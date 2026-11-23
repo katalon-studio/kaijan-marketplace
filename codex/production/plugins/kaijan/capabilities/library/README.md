@@ -281,97 +281,17 @@ assessment/report route. Historical verification stays readable with its origina
 attribution and bytes; it is not reevaluated.
 See the [saved-result contract](../../docs/product-design/codex-reporting.md#executed-terminal-checks-and-real-prs).
 
-Original authorized GitHub PR/files reads can be retained through
-`loki_context_submit` with `nativeInputs.reportSources` (`loki.report-sources/1`).
-Pass its `sourceContextId` to the report selection. The optional report field accepts only a context compatible with `nativeInputs.reportSources`, not an arbitrary work-item context. Unbound reports may omit it with their original operation IDs and hashes. An unsupported context returns `report_source_context_unsupported`; no snapshot is created and no producer computation is needed. Report
-reads preserve historical check outcomes only from the original stored operation and validate
-source, observation, Plan/test IDs and PR head-or-merge revision associations.
+Attach the original authorized GitHub PR and files reads in `reportSources`
+(`loki.report-sources/1`) when calling `loki_report_show`. Historical PR-bound
+Runs keep their saved source context and outcomes. An unbound report can use
+only its original operation IDs and hashes. Read the attached original record
+with `loki_report_get({reportId, sourceOffset: 0})` and the returned offsets.
+Report reads validate source, observation, Plan/test IDs and PR revision
+associations.
 `view:"test-plan"` selects Test plan presentation in the caller's configured UI mode during initial report creation.
 The same scope-bound stores retain inputs, operations and report snapshots.
 
 Use `loki_report_open({reportId})` on Show details to read the same retained report without another card, snapshot or producer. Panel mode returns its projection directly. Explicit browser mode resolves a current private preview URL; that URL retains its idle/process lifetime. UI-disabled or unavailable reads fail clearly. The immutable reportId remains the durable navigation identity.
-
-## Reuse a retained browser execution
-
-The public `@loki/capabilities/runner` Node entry supports an optional,
-explicit reuse selection before a fresh browser run. `prepareReuse` discovers
-completed, validated captures in the existing private Runner operation store and
-same scope, or accepts specific prior receipt IDs in `runIds`. It does not mine
-global history or create a store. External experimental capture directories are
-not supported by this caller path.
-Discovery excludes operations without retained captures without making other
-eligible captures unavailable. Auxiliary host receipts are stored beside the
-native capture directory, not inside it.
-
-Pass `{ current, runIds? }`, where `current` is the complete fresh Runner
-request without `reuse`. Preparation dispatches neither a provider nor a
-browser. The `loki.runner-reuse-preview/1` response has state
-`approval-required`, `unavailable`, or `invalid-arguments`; a complete preview
-also contains `runIds`, `query`, `candidates`, `approvalSha256` and source and
-current-request binding information. Unavailable or invalid responses can omit
-those fields. The host builds authored-intent-only projections with the native
-redactor for all known parameter values and targets; observations and final
-claims are absent. The preview itself is private source material. Arbitrary
-prose is not automatically safe, and original capture permission does not grant
-permission to disclose it to a provider.
-
-Inspect the complete preview and approve only if authorized to disclose its text
-to OpenAI Decisions (`gpt-6-luna`) and execute
-the fresh task. Pass the exact preview IDs and hash with the unchanged current
-request. The binding is checked again against the exact source and current
-request. Full current parameters, target and authorization remain fresh; the
-selection is advisory and historical content is untrusted. Ordinary callers do
-not assemble capture directories, projections or provider callbacks.
-
-```js
-import { ComputerRunner } from "@loki/capabilities/runner";
-
-// The host supplies its existing private data root and configures providers.
-const runner = new ComputerRunner(privateDataRoot);
-const current = {
-  requestKey: "fresh-authorized-run-1",
-  scenarioId: "read-heading",
-  scenario: "Read the page heading without changing anything.",
-  params: {},
-  target: { initialURL: "https://example.com/" },
-};
-const preview = await runner.prepareReuse({ current }); // Or add runIds.
-if (preview.state !== "approval-required") throw new Error("Reuse unavailable");
-// Review the complete private preview and obtain disclosure and execution
-// authorization through the caller's own interaction before continuing.
-if (!(await reviewAndAuthorize(preview))) throw new Error("Not authorized");
-const result = await runner.start({
-  ...current,
-  reuse: { runIds: preview.runIds, approvalSha256: preview.approvalSha256 },
-});
-if (result.schema === "loki.runner-operation/1") {
-  const original = await runner.get({ runId: result.runId });
-  // If Stop is needed: await runner.stop({ runId: result.runId });
-  // Read the original terminal result, including resultRead chunks if present.
-} else {
-  // Inspect result.error and preserve any uncertain dispatch; do not replay.
-}
-```
-
-The shared catalog exposes the same flow through
-`loki_runner_reuse_prepare`, then `loki_test_execute`, `loki_test_get` and
-`loki_test_stop`. The test tools include assessment and a saved report. Pass the same fresh supplied-scenario request to `catalog.invoke`. Native browser
-execution uses OpenAI direct Responses with Terra low; selection uses OpenAI Decisions through the same connection. A NONE selection, unavailable or stale approved
-material, or selector/provider failure retains `reuse-not-executed` with
-`nativeDispatched: false`; there is no fallback execution. A malformed or
-missing approval inside `reuse` fails argument validation before dispatch; omitting
-`reuse` entirely requests ordinary execution. Same key and identical input
-recover the original operation after a lost reply. Never replay an unknown
-operation. Stop covers selection and native execution, but a request to stop does
-not confirm cancellation. Keep the native execution label separate from the assessment returned by the
-test flow. A direct Node-only execution still requires separately requested verification.
-This is a bounded library/catalog integration, with no UI,
-index, global history or new store, and does not establish installed-plugin
-acceptance.
-
-The selector retains a complete response up to 8 MiB. If reading fails or the
-response exceeds that capacity, its receipt retains an incomplete prefix and
-remaining fees are unknown; a valid-looking prefix is not final accounting.
 
 ## Passive Runner readiness
 

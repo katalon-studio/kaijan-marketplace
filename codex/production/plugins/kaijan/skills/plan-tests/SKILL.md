@@ -6,7 +6,7 @@ description: Propose practical tests for the caller's task and available applica
 # Propose tests from current work
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
-and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
+and the readiness returned by `kaijan_capabilities_list`. Use `kaijan_plan_create`
 to plan useful observable checks and expected results for the original task.
 <!-- codex-only -->
 
@@ -28,14 +28,23 @@ the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
 saved target, account and data in Plan and Run. After Setup, use its saved
 `application.workItem` as the objective and its resolved target to find or save
 the environment for the selected AUT.
+
+When the person selects an issue or pull request as the basis for testing,
+read it through the host's authorized source access. Call Plan with `input`
+in place of `testObjective`. Use the original `title`, `body` and `url`
+for a single source. For more than one source, use the original work item and
+the separate attributed `sources` in the advertised `pr-context-plan/3`
+format. Keep the person's request and application details intact. Pass
+authorized `repositories` or the original frozen `change` when needed so
+Kaijan can prepare related work and risk inside Plan. If a source is
+unavailable, keep its expectations unresolved.
 <!-- end-codex-only -->
 
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
-For work based on a saved source packet, pass its `contextId` from
-`loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
-`testObjective`. Use the returned `planId` when the person authorizes a Run.
+For work based on an already saved planning packet, pass its `contextId`.
+Use the returned `planId` when the person authorizes a Run.
 
 When the person selects the configured application's shared Main model, use
 `sourceModel: {application: true}`. Core supplies one combined context for its

@@ -9,7 +9,7 @@ description: Manage personal Kaijan Configurations through MCP for reusable appl
 
 In Codex, each Configuration is a Test Environment. Use
 `kaijan_test_inputs_read` with `autId` to find environments or
-`testEnvironmentId` to read one. Use `kaijan_configuration` for saves and
+`testEnvironmentId` to read one. Use `kaijan_test_environment_manage` for saves and
 deletes. When saving, supply the selected AUT ID and the browser
 `target.initialURL` or macOS `target.app` on the environment. Give Plan the
 saved environment ID. For a first Plan without a linked Test Environment,
@@ -24,7 +24,7 @@ Configurations belong to the local person and selected Kaijan environment.
 They remain available across chats and restarts on this device. They are not
 shared with the team or copied between QA and Production.
 
-For hosts with the full Plan and Runner inputs, use `kaijan_configuration`
+For hosts with the full Plan and Runner inputs, use `kaijan_test_environment_manage`
 to list, read, save, select or delete settings. The person chooses whether
 to save settings. Reuse one matching application configuration
 automatically; do not require another selection before each Run. Ask which one

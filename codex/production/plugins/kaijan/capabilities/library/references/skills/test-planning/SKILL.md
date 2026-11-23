@@ -46,21 +46,9 @@ or create permission for browser/test actions. Keep execution evidence separate.
 
 ## Preserve a baseline while adding tests
 
-Use explicit experimental `loki_test_supplement` when an original valid plan
-already exists. Supply `input.version: test-plan-supplement-input/1`, original
-`context`, `baseline: {text, uri, revision, plan_path?}` and `risks` records
-`{id, text, uri, revision, attribution}` (an empty array is valid). `text` is the
-complete exact original baseline JSON; the native API can use an explicit
-string-key `plan_path` for caller wrappers. Do not parse free prose into invented
-test IDs or fabricate a baseline. Keep full task/human-conversation testing
-context attributed in the original context packet. The native producer validates
-its source references against that context before dispatch.
-
-Read the result returned by `loki_test_supplement` and retain the unchanged baseline beside proposed
-additions, baseline concerns and unanswered questions. An addition never silently
-removes or edits an original test. Empty additions do not approve the baseline.
-Resolve conflicting or missing oracles visibly. Host request cancellation propagates to the native call.
-Saved input uses `nativeInputs.testSupplement: {input, options?}`.
+Use Plan to save additions or revisions. Include the original testing goal, the
+affected tests and the new source or evidence for the revision. The revised Plan
+receives its own saved ID. Earlier Runs keep their original Plan and test IDs.
 
 The agent decides which concerns can be expressed as web UI tests and what needs
 other inspection. Execute only within the user's separately authorized target,

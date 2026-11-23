@@ -1,3 +1,0 @@
-interface:
-  display_name: "Review change risks"
-  short_description: "Find risks and assumptions in code changes or requirements"
