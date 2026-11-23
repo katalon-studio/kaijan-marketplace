@@ -2,7 +2,7 @@
   "schema": "loki.capability-library-build/1",
   "package": "@loki/capabilities",
   "version": "0.1.0",
-  "nativeSelectionSha256": "f78bf65f28b893bce3fff73fc3cfd49553b4464e4ea39e50b60a4658661e3d50",
+  "nativeSelectionSha256": "e5634798adaf295f1abf2f147ef106f331f1de73d7128ce955bd673f2ebf31c6",
   "firstPartyInputs": {
     "packages/application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
     "packages/application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
@@ -366,7 +366,7 @@
     "packages/capabilities/ui/tsconfig.json": "e3feb24dc17c68eab600e94fbd9d147e1118eceede8c26ce17fbea8f0318279c",
     "packages/capabilities/ui/map.html": "8eee7a42dbe180bedfcbfc66286c0f3993845e12e44eeecb519e212632d33db6",
     "packages/capabilities/ui/map.css": "dd0428c0279ad6296615acc58a53b0bffeb295fbd24e08fae5ec44d9553e623a",
-    "packages/capabilities/provider-pins.json": "c8b841d56c7728020eabbdb2e7205945813caa51374888d8535d9034d33e6449",
+    "packages/capabilities/provider-pins.json": "366a14329dbe15ce2313aaab7fd25a83202aa6bf03af74eb1a5810f6b5cfd5de",
     "packages/capabilities/scripts/build.mjs": "ebcd47e4cf027d8357ec497ae8e3143b3c9ecbae1a0a110bfe199f0d46bf8a30",
     "packages/capabilities/scripts/runner-declarations.mjs": "0ecb617b2d6cb61912b090a865a966cd3aa47a6855f57c85a655a0dcb4d85e31",
     "packages/capabilities/src/runner-public.ts": "28696e19cf99e04f8f41eb5eb01f95cc1f748f476f639962515c6ebda0a07640",
