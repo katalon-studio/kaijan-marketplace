@@ -166,7 +166,7 @@
     "packages/capabilities/src/report-trace-state.ts": "137af4085f228ef4cd7184563293f661dc48dce4d5e8b5f3499cbfa694fb9cbd",
     "packages/capabilities/src/report-trace.ts": "65d015276a8629b63ae71567e6a09b1787826ab208b59bb1194bcd5748d309c8",
     "packages/capabilities/src/report-observations.ts": "8c124c1dce86f9847cb8170c31037e8e5341f847390d7c131c27df03a31688bb",
-    "packages/capabilities/src/test-plan-view.ts": "2e06afa40250d90b320f647c3de105ef86d2851cd0402944b4b243504eeeb912",
+    "packages/capabilities/src/test-plan-view.ts": "6030a801dec325de28e060ad350490144e1bd6143e660880c1074a54ca80b1c4",
     "packages/capabilities/src/report.ts": "243f631fc4c45f89e82f1bbb600981e4c80174470d6a8bf07ac5dcd34d08baac",
     "packages/capabilities/src/test-plan-ui.ts": "9672c3a9bc821d80f50acac1577a0c8d3f7b70e58972bb4b33c119f107d4713f",
     "packages/capabilities/src/report-ui.ts": "6758c395c146889a039e437eac8b8e74bd1961cc418e631a2c37a614ec5a2e79",
