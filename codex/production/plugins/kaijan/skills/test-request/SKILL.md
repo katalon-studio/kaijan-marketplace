@@ -55,8 +55,6 @@ matching records matters, ask for that decision.
   as relevant risks. Keep assumptions distinct from supplied requirements.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
   Save a Plan for a complete caller-supplied scenario before execution.
-  Standalone code review uses
-  [assess-change-risk](../../references/capability-skills/assess-change-risk/SKILL.md).
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
   saved Plan reference and selected test IDs. In Codex, the saved Plan supplies
   the target and inputs. Kaijan runs the selected tests, assesses retained
@@ -69,7 +67,7 @@ matching records matters, ask for that decision.
   Preserve the selected Plan, Run and Assessment identities. Report the
   specific missing source or input if it blocks a requested outcome.
 
-Check `loki_capabilities_list` for action availability and connection guidance.
+Check `kaijan_capabilities_list` for action availability and connection guidance.
 Verify the responding build, inference and application access separately when
 needed. Pass authorized related-work discovery scope to `plan-tests`.
 

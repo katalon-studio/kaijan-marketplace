@@ -14,7 +14,6 @@ export interface RunnerClientOptions {
     legacyOperationDirectory?: string;
 }
 export interface RunnerClient {
-    prepareReuse(input: unknown): Promise<Record<string, unknown>>;
     start(input: unknown): Promise<RunnerOutput>;
     get(input: unknown): Promise<RunnerOutput>;
     stop(input: unknown): Promise<RunnerOutput>;

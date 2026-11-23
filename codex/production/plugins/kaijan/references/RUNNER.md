@@ -6,7 +6,7 @@ The plugin calls the public Node `run(input, options)` API of
 selected official Playwright MCP tools, browser lifecycle, Stop and traces. The
 plugin invokes that API in one isolated Node process per execution, so native
 cleanup owns only that invocation’s browser/MCP children. It never invokes the
-component CLI or implements browser actions. Planning remains a proposal. Use `loki_test_execute` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
+component CLI or implements browser actions. Planning remains a proposal. Use `kaijan_run_start` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
 
 Codex starts a browser or desktop Run from the Plan's `planId` and the selected test IDs.
 The saved Plan supplies its application target, test data and private configuration
@@ -51,7 +51,7 @@ Resolve missing execution inputs before starting. `executionMethod` defaults to
 the complete scenario produced by the host.
 
 On hosts with the full Runner input, set `options.headless: true` on
-`loki_test_execute`. Omission keeps the headed default; `false` selects headed
+`kaijan_run_start`. Omission keeps the headed default; `false` selects headed
 execution. The option passes to the isolated Runner host, stays in the frozen
 request identity and appears in `executionConfig.headless` and
 `executionHost.headless`. It does not change the native scenario input. Desktop
@@ -150,7 +150,7 @@ A worker/native exception can instead yield `nativeResult: null` and operation
 remains `accepted | running | finished | unknown | not-started | stopped-before-start`;
 `finished` can retain an incomplete result and is not a pass.
 
-`loki_runner_get` returns `pendingClarification` as null or an object with
+`kaijan_run_read_execution` returns `pendingClarification` as null or an object with
 `schema: loki.runner.clarification/1`, `clarificationId`, `reason`, string arrays
 `completedSteps`, `remainingSteps`, `evidence`, `questions: {id, question, kind}[]`,
 `deadlineAt` and `state: live | unknown`. Question fields are strings. `live`
@@ -159,9 +159,9 @@ requires this host's running pending callback, no Stop and an unexpired deadline
 Stop or deadline cannot restore it. Existing lifecycle `state` fields remain unchanged.
 
 A live clarification also returns top-level `nextAction` with `kind: input-required`,
-`tool: loki_runner_answer`, the original `runId`, `clarificationId`, `deadlineAt`,
+`tool: kaijan_run_answer`, the original `runId`, `clarificationId`, `deadlineAt`,
 safe projected `questions` and an `instruction`. This requires caller action, not
-repeated polling. Combined `loki_test_get` exposes the same next action at the top
+repeated polling. Combined `kaijan_run_get` exposes the same next action at the top
 level and sets `status.execution: waiting-for-input`. Answer from known authorized
 context or suitable generated test data. Ask the person only when the task cannot
 be completed without their answer. Supply the available context even if another
@@ -169,7 +169,7 @@ answer is missing; do not stop independent work merely because the answer is
 partial. The original deadline still applies. Unknown, stopped or expired requests do not
 return a next action that authorizes an answer.
 
-For a live request, submit `loki_runner_answer({runId, clarificationId, answerKey,
+For a live request, submit `kaijan_run_answer({runId, clarificationId, answerKey,
 answers, sensitiveQuestionIds})`: runId and clarificationId are hex64 strings, answerKey is a nonempty
 string, and `answers: Record<string, unknown>` carries the available JSON values.
 It may cover some questions and include unmatched or additional context. Null or
@@ -232,8 +232,8 @@ Reading an old operation preserves its original `verification` and provenance;
 it does not run the removed evaluator or recompute the result.
 
 For a PR-bound case, first read the original PR and all selected changed-file
-pages through an authorized existing GitHub interface. Use `loki_context_submit`
-with `nativeInputs.reportSources` set to:
+pages through an authorized GitHub interface. Set `reportSources` on
+`kaijan_report_show` to:
 
 ```json
 {
@@ -250,12 +250,11 @@ with `nativeInputs.reportSources` set to:
 }
 ```
 
-The placeholders denote an object and array, not literal strings. Context Intake
-derives display fields/hashes from these original source inputs and accepts no
-execution outcomes. Select the returned sourceContextId with the original
-Plan/Runner references
-in `loki_report_show` and `view:"test-plan"`. Old Product check results are read only from their stored execution. Reopening never dispatches a producer. A PR with
-no associated run stays Not run. This adds no GitHub connection or write authority.
+Pass the original PR object and changed-file array in place of the placeholders.
+Select the saved Plan or Runner result in the same report call. A historical
+PR-bound Run keeps its original source context and check results. Use the exact
+report ID with `kaijan_report_get` to reopen it. Set `sourceOffset: 0` to read the
+attached original source record. A PR with no associated run stays Not run. This adds no GitHub connection or write authority.
 
 Runner records judgments during the selected test. Reopen the original report
 to review its results and observations. Keep caller-supplied observations
@@ -312,7 +311,7 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 ## Local macOS desktop execution
 
-`loki_test_execute` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
+`kaijan_run_start` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
 explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
 Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
 on the main display. The same get/Stop tools retain their durable run lifecycle.
@@ -335,7 +334,7 @@ in [local-capabilities.md](local-capabilities.md).
 
 ## Passive Runner readiness
 
-Call `loki_capabilities_list` with `{}` before authorized execution. The normal
+Call `kaijan_capabilities_list` with `{}` before authorized execution. The normal
 `kaijan.customer-capabilities/2` reply gives `testExecution.state` and its recovery
 `message`, alongside the other Kaijan actions. The action states are
 `available`, `setup-required` and `unavailable`. Read the separate
@@ -366,7 +365,7 @@ credential presence and tool discovery cannot.
 ## Host validation
 
 An ordinary installation has no fault plan. The existing public
-`loki_test_execute`, `loki_test_get` and `loki_test_stop` arguments are unchanged; the answer
+`kaijan_run_start`, `kaijan_run_get` and `kaijan_run_stop` arguments are unchanged; the answer
 interface is described above. No tool argument selects faults, endpoints, models
 or credentials. The following interface is only for a sealed, isolated
 host control. It is not a provider readiness check or a production fault API.

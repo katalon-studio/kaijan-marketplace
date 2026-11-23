@@ -19,7 +19,7 @@ execution. Have the user handle any approval requested by Codex. Keep
 application actions within the user's task. If the host refuses dispatch,
 tell the user which permission or approval blocked the Run and keep the saved Plan.
 
-Check readiness for the selected action with `loki_capabilities_list`.
+Check readiness for the selected action with `kaijan_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
 for the responding package when starting AI work. Managed AI uses the Kaijan
 grant and an explicit direct-development build uses its local provider setup.
@@ -31,7 +31,7 @@ select the relevant Configuration when available. Follow the person's explicit
 selection or opt-out. Ask which group to use when several match and the choice
 matters.
 
-Save an ordinary value through `kaijan_configuration` only if the person asks to
+Save an ordinary value through `kaijan_test_environment_manage` only if the person asks to
 save it.
 
 <!-- codex-only -->
@@ -48,7 +48,18 @@ for scoped secret references. Those hosts can Run without saved settings, and
 overrides leave any saved settings unchanged. Configuration selection never
 authorizes execution.
 
-Use `loki_test_execute` for the normal combined run, assessment and report.
+Codex uses an isolated browser by default. When Codex advertises
+`browserSession`, use `chrome-new-tab` if the person wants their signed-in
+Chrome at the saved URL. Use `chrome-shared-tab` if the task needs the current
+contents of a tab they already have open. Use the person's request in Codex to
+authorize this Run. The enabled Kaijan extension connects automatically. Skip
+instructions to choose or approve a tab in the extension. Screenshots from
+personal Chrome can include visible signed-in content. A sign-in requirement
+alone keeps the isolated default. Keep the same browser choice when recovering
+the original Run. If personal Chrome is unavailable, ask whether to use the
+isolated browser before starting a different Run.
+
+Use `kaijan_run_start` for the normal combined run, assessment and report.
 When Codex advertises `planId`, supply the exact `planId` returned by Plan,
 the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
@@ -74,9 +85,9 @@ Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
 Hostname restrictions are temporarily disabled for dogfooding. Do not require
 a list of sign-in or redirect hosts. Keep any local port in the URL. Supply
 credentials through [private login parameters](../../references/private-parameters.md)
-and pass only their `privateParams` references. Browser session attachment
-and persisted browser memory are unavailable. Use `options.headless: true`
-when headless execution is requested. Optional limits can lower the advertised
+and pass only their `privateParams` references. The full Runner input starts a
+fresh isolated browser. Use `options.headless: true` when headless execution is
+requested. Optional limits can lower the advertised
 bounds. Desktop requirements are below.
 
 Keep requested in-app cleanup in the scenario. App sign-out requires an
@@ -100,12 +111,12 @@ earlier saved Plan retains its original login reference.
 
 ## Read or stop the original test
 
-Use `loki_test_get` through the execution and assessment result, and
-`loki_test_stop` to stop the same test. Open the saved result with
+Use `kaijan_run_get` through the execution and assessment result, and
+`kaijan_run_stop` to stop the same test. Open the saved result with
 [report review](../review-report/SKILL.md).
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
-Only a live clarification can resume. Use `loki_runner_answer` with the
+Only a live clarification can resume. Use `kaijan_run_answer` with the
 original run and clarification IDs, one answer key and the available authorized
 context.
 

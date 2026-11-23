@@ -5,7 +5,13 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require() {
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __commonJS = (cb, mod) => function __require2() {
   try {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   } catch (e) {
@@ -7255,6 +7261,3689 @@ var require_dist = __commonJS({
   }
 });
 
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/constants.js
+var require_constants = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/constants.js"(exports, module) {
+    "use strict";
+    var BINARY_TYPES = ["nodebuffer", "arraybuffer", "fragments"];
+    var hasBlob = typeof Blob !== "undefined";
+    if (hasBlob) BINARY_TYPES.push("blob");
+    module.exports = {
+      BINARY_TYPES,
+      CLOSE_TIMEOUT: 3e4,
+      EMPTY_BUFFER: Buffer.alloc(0),
+      GUID: "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
+      hasBlob,
+      kForOnEventAttribute: /* @__PURE__ */ Symbol("kIsForOnEventAttribute"),
+      kListener: /* @__PURE__ */ Symbol("kListener"),
+      kStatusCode: /* @__PURE__ */ Symbol("status-code"),
+      kWebSocket: /* @__PURE__ */ Symbol("websocket"),
+      NOOP: () => {
+      }
+    };
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/buffer-util.js
+var require_buffer_util = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/buffer-util.js"(exports, module) {
+    "use strict";
+    var { EMPTY_BUFFER } = require_constants();
+    var FastBuffer = Buffer[Symbol.species];
+    function concat(list3, totalLength) {
+      if (list3.length === 0) return EMPTY_BUFFER;
+      if (list3.length === 1) return list3[0];
+      const target = Buffer.allocUnsafe(totalLength);
+      let offset = 0;
+      for (let i = 0; i < list3.length; i++) {
+        const buf = list3[i];
+        target.set(buf, offset);
+        offset += buf.length;
+      }
+      if (offset < totalLength) {
+        return new FastBuffer(target.buffer, target.byteOffset, offset);
+      }
+      return target;
+    }
+    function _mask(source3, mask, output2, offset, length) {
+      for (let i = 0; i < length; i++) {
+        output2[offset + i] = source3[i] ^ mask[i & 3];
+      }
+    }
+    function _unmask(buffer, mask) {
+      for (let i = 0; i < buffer.length; i++) {
+        buffer[i] ^= mask[i & 3];
+      }
+    }
+    function toArrayBuffer(buf) {
+      if (buf.length === buf.buffer.byteLength) {
+        return buf.buffer;
+      }
+      return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
+    }
+    function toBuffer(data) {
+      toBuffer.readOnly = true;
+      if (Buffer.isBuffer(data)) return data;
+      let buf;
+      if (data instanceof ArrayBuffer) {
+        buf = new FastBuffer(data);
+      } else if (ArrayBuffer.isView(data)) {
+        buf = new FastBuffer(data.buffer, data.byteOffset, data.byteLength);
+      } else {
+        buf = Buffer.from(data);
+        toBuffer.readOnly = false;
+      }
+      return buf;
+    }
+    module.exports = {
+      concat,
+      mask: _mask,
+      toArrayBuffer,
+      toBuffer,
+      unmask: _unmask
+    };
+    if (!process.env.WS_NO_BUFFER_UTIL) {
+      try {
+        const bufferUtil = __require("bufferutil");
+        module.exports.mask = function(source3, mask, output2, offset, length) {
+          if (length < 48) _mask(source3, mask, output2, offset, length);
+          else bufferUtil.mask(source3, mask, output2, offset, length);
+        };
+        module.exports.unmask = function(buffer, mask) {
+          if (buffer.length < 32) _unmask(buffer, mask);
+          else bufferUtil.unmask(buffer, mask);
+        };
+      } catch (e) {
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/limiter.js
+var require_limiter = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/limiter.js"(exports, module) {
+    "use strict";
+    var kDone = /* @__PURE__ */ Symbol("kDone");
+    var kRun = /* @__PURE__ */ Symbol("kRun");
+    var Limiter = class {
+      /**
+       * Creates a new `Limiter`.
+       *
+       * @param {Number} [concurrency=Infinity] The maximum number of jobs allowed
+       *     to run concurrently
+       */
+      constructor(concurrency) {
+        this[kDone] = () => {
+          this.pending--;
+          this[kRun]();
+        };
+        this.concurrency = concurrency || Infinity;
+        this.jobs = [];
+        this.pending = 0;
+      }
+      /**
+       * Adds a job to the queue.
+       *
+       * @param {Function} job The job to run
+       * @public
+       */
+      add(job) {
+        this.jobs.push(job);
+        this[kRun]();
+      }
+      /**
+       * Removes a job from the queue and runs it if possible.
+       *
+       * @private
+       */
+      [kRun]() {
+        if (this.pending === this.concurrency) return;
+        if (this.jobs.length) {
+          const job = this.jobs.shift();
+          this.pending++;
+          job(this[kDone]);
+        }
+      }
+    };
+    module.exports = Limiter;
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/permessage-deflate.js
+var require_permessage_deflate = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/permessage-deflate.js"(exports, module) {
+    "use strict";
+    var zlib = __require("zlib");
+    var bufferUtil = require_buffer_util();
+    var Limiter = require_limiter();
+    var { kStatusCode } = require_constants();
+    var FastBuffer = Buffer[Symbol.species];
+    var TRAILER = Buffer.from([0, 0, 255, 255]);
+    var kPerMessageDeflate = /* @__PURE__ */ Symbol("permessage-deflate");
+    var kTotalLength = /* @__PURE__ */ Symbol("total-length");
+    var kCallback = /* @__PURE__ */ Symbol("callback");
+    var kBuffers = /* @__PURE__ */ Symbol("buffers");
+    var kError = /* @__PURE__ */ Symbol("error");
+    var zlibLimiter;
+    var PerMessageDeflate2 = class {
+      /**
+       * Creates a PerMessageDeflate instance.
+       *
+       * @param {Object} [options] Configuration options
+       * @param {(Boolean|Number)} [options.clientMaxWindowBits] Advertise support
+       *     for, or request, a custom client window size
+       * @param {Boolean} [options.clientNoContextTakeover=false] Advertise/
+       *     acknowledge disabling of client context takeover
+       * @param {Number} [options.concurrencyLimit=10] The number of concurrent
+       *     calls to zlib
+       * @param {Boolean} [options.isServer=false] Create the instance in either
+       *     server or client mode
+       * @param {Number} [options.maxPayload=0] The maximum allowed message length
+       * @param {(Boolean|Number)} [options.serverMaxWindowBits] Request/confirm the
+       *     use of a custom server window size
+       * @param {Boolean} [options.serverNoContextTakeover=false] Request/accept
+       *     disabling of server context takeover
+       * @param {Number} [options.threshold=1024] Size (in bytes) below which
+       *     messages should not be compressed if context takeover is disabled
+       * @param {Object} [options.zlibDeflateOptions] Options to pass to zlib on
+       *     deflate
+       * @param {Object} [options.zlibInflateOptions] Options to pass to zlib on
+       *     inflate
+       */
+      constructor(options) {
+        this._options = options || {};
+        this._threshold = this._options.threshold !== void 0 ? this._options.threshold : 1024;
+        this._maxPayload = this._options.maxPayload | 0;
+        this._isServer = !!this._options.isServer;
+        this._deflate = null;
+        this._inflate = null;
+        this.params = null;
+        if (!zlibLimiter) {
+          const concurrency = this._options.concurrencyLimit !== void 0 ? this._options.concurrencyLimit : 10;
+          zlibLimiter = new Limiter(concurrency);
+        }
+      }
+      /**
+       * @type {String}
+       */
+      static get extensionName() {
+        return "permessage-deflate";
+      }
+      /**
+       * Create an extension negotiation offer.
+       *
+       * @return {Object} Extension parameters
+       * @public
+       */
+      offer() {
+        const params = {};
+        if (this._options.serverNoContextTakeover) {
+          params.server_no_context_takeover = true;
+        }
+        if (this._options.clientNoContextTakeover) {
+          params.client_no_context_takeover = true;
+        }
+        if (this._options.serverMaxWindowBits) {
+          params.server_max_window_bits = this._options.serverMaxWindowBits;
+        }
+        if (this._options.clientMaxWindowBits) {
+          params.client_max_window_bits = this._options.clientMaxWindowBits;
+        } else if (this._options.clientMaxWindowBits == null) {
+          params.client_max_window_bits = true;
+        }
+        return params;
+      }
+      /**
+       * Accept an extension negotiation offer/response.
+       *
+       * @param {Array} configurations The extension negotiation offers/reponse
+       * @return {Object} Accepted configuration
+       * @public
+       */
+      accept(configurations) {
+        configurations = this.normalizeParams(configurations);
+        this.params = this._isServer ? this.acceptAsServer(configurations) : this.acceptAsClient(configurations);
+        return this.params;
+      }
+      /**
+       * Releases all resources used by the extension.
+       *
+       * @public
+       */
+      cleanup() {
+        if (this._inflate) {
+          this._inflate.close();
+          this._inflate = null;
+        }
+        if (this._deflate) {
+          const callback = this._deflate[kCallback];
+          this._deflate.close();
+          this._deflate = null;
+          if (callback) {
+            callback(
+              new Error(
+                "The deflate stream was closed while data was being processed"
+              )
+            );
+          }
+        }
+      }
+      /**
+       *  Accept an extension negotiation offer.
+       *
+       * @param {Array} offers The extension negotiation offers
+       * @return {Object} Accepted configuration
+       * @private
+       */
+      acceptAsServer(offers) {
+        const opts = this._options;
+        const accepted = offers.find((params) => {
+          if (opts.serverNoContextTakeover === false && params.server_no_context_takeover || params.server_max_window_bits && (opts.serverMaxWindowBits === false || typeof opts.serverMaxWindowBits === "number" && opts.serverMaxWindowBits > params.server_max_window_bits) || typeof opts.clientMaxWindowBits === "number" && (typeof params.client_max_window_bits === "number" ? opts.clientMaxWindowBits > params.client_max_window_bits : !params.client_max_window_bits)) {
+            return false;
+          }
+          return true;
+        });
+        if (!accepted) {
+          throw new Error("None of the extension offers can be accepted");
+        }
+        if (opts.serverNoContextTakeover) {
+          accepted.server_no_context_takeover = true;
+        }
+        if (opts.clientNoContextTakeover) {
+          accepted.client_no_context_takeover = true;
+        }
+        if (typeof opts.serverMaxWindowBits === "number") {
+          accepted.server_max_window_bits = opts.serverMaxWindowBits;
+        }
+        if (typeof opts.clientMaxWindowBits === "number") {
+          accepted.client_max_window_bits = opts.clientMaxWindowBits;
+        } else if (accepted.client_max_window_bits === true || opts.clientMaxWindowBits === false) {
+          delete accepted.client_max_window_bits;
+        }
+        return accepted;
+      }
+      /**
+       * Accept the extension negotiation response.
+       *
+       * @param {Array} response The extension negotiation response
+       * @return {Object} Accepted configuration
+       * @private
+       */
+      acceptAsClient(response2) {
+        const params = response2[0];
+        if (this._options.clientNoContextTakeover === false && params.client_no_context_takeover) {
+          throw new Error('Unexpected parameter "client_no_context_takeover"');
+        }
+        if (!params.client_max_window_bits) {
+          if (typeof this._options.clientMaxWindowBits === "number") {
+            params.client_max_window_bits = this._options.clientMaxWindowBits;
+          }
+        } else if (this._options.clientMaxWindowBits === false || typeof this._options.clientMaxWindowBits === "number" && params.client_max_window_bits > this._options.clientMaxWindowBits) {
+          throw new Error(
+            'Unexpected or invalid parameter "client_max_window_bits"'
+          );
+        }
+        return params;
+      }
+      /**
+       * Normalize parameters.
+       *
+       * @param {Array} configurations The extension negotiation offers/reponse
+       * @return {Array} The offers/response with normalized parameters
+       * @private
+       */
+      normalizeParams(configurations) {
+        configurations.forEach((params) => {
+          Object.keys(params).forEach((key) => {
+            let value = params[key];
+            if (value.length > 1) {
+              throw new Error(`Parameter "${key}" must have only a single value`);
+            }
+            value = value[0];
+            if (key === "client_max_window_bits") {
+              if (value !== true) {
+                const num = +value;
+                if (!Number.isInteger(num) || num < 8 || num > 15) {
+                  throw new TypeError(
+                    `Invalid value for parameter "${key}": ${value}`
+                  );
+                }
+                value = num;
+              } else if (!this._isServer) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key}": ${value}`
+                );
+              }
+            } else if (key === "server_max_window_bits") {
+              const num = +value;
+              if (!Number.isInteger(num) || num < 8 || num > 15) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key}": ${value}`
+                );
+              }
+              value = num;
+            } else if (key === "client_no_context_takeover" || key === "server_no_context_takeover") {
+              if (value !== true) {
+                throw new TypeError(
+                  `Invalid value for parameter "${key}": ${value}`
+                );
+              }
+            } else {
+              throw new Error(`Unknown parameter "${key}"`);
+            }
+            params[key] = value;
+          });
+        });
+        return configurations;
+      }
+      /**
+       * Decompress data. Concurrency limited.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @public
+       */
+      decompress(data, fin, callback) {
+        zlibLimiter.add((done) => {
+          this._decompress(data, fin, (err, result2) => {
+            done();
+            callback(err, result2);
+          });
+        });
+      }
+      /**
+       * Compress data. Concurrency limited.
+       *
+       * @param {(Buffer|String)} data Data to compress
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @public
+       */
+      compress(data, fin, callback) {
+        zlibLimiter.add((done) => {
+          this._compress(data, fin, (err, result2) => {
+            done();
+            callback(err, result2);
+          });
+        });
+      }
+      /**
+       * Decompress data.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @private
+       */
+      _decompress(data, fin, callback) {
+        const endpoint = this._isServer ? "client" : "server";
+        if (!this._inflate) {
+          const key = `${endpoint}_max_window_bits`;
+          const windowBits = typeof this.params[key] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key];
+          this._inflate = zlib.createInflateRaw({
+            ...this._options.zlibInflateOptions,
+            windowBits
+          });
+          this._inflate[kPerMessageDeflate] = this;
+          this._inflate[kTotalLength] = 0;
+          this._inflate[kBuffers] = [];
+          this._inflate.on("error", inflateOnError);
+          this._inflate.on("data", inflateOnData);
+        }
+        this._inflate[kCallback] = callback;
+        this._inflate.write(data);
+        if (fin) this._inflate.write(TRAILER);
+        this._inflate.flush(() => {
+          const err = this._inflate[kError];
+          if (err) {
+            this._inflate.close();
+            this._inflate = null;
+            callback(err);
+            return;
+          }
+          const data2 = bufferUtil.concat(
+            this._inflate[kBuffers],
+            this._inflate[kTotalLength]
+          );
+          if (this._inflate._readableState.endEmitted) {
+            this._inflate.close();
+            this._inflate = null;
+          } else {
+            this._inflate[kTotalLength] = 0;
+            this._inflate[kBuffers] = [];
+            if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+              this._inflate.reset();
+            }
+          }
+          callback(null, data2);
+        });
+      }
+      /**
+       * Compress data.
+       *
+       * @param {(Buffer|String)} data Data to compress
+       * @param {Boolean} fin Specifies whether or not this is the last fragment
+       * @param {Function} callback Callback
+       * @private
+       */
+      _compress(data, fin, callback) {
+        const endpoint = this._isServer ? "server" : "client";
+        if (!this._deflate) {
+          const key = `${endpoint}_max_window_bits`;
+          const windowBits = typeof this.params[key] !== "number" ? zlib.Z_DEFAULT_WINDOWBITS : this.params[key];
+          this._deflate = zlib.createDeflateRaw({
+            ...this._options.zlibDeflateOptions,
+            windowBits
+          });
+          this._deflate[kTotalLength] = 0;
+          this._deflate[kBuffers] = [];
+          this._deflate.on("data", deflateOnData);
+        }
+        this._deflate[kCallback] = callback;
+        this._deflate.write(data);
+        this._deflate.flush(zlib.Z_SYNC_FLUSH, () => {
+          if (!this._deflate) {
+            return;
+          }
+          let data2 = bufferUtil.concat(
+            this._deflate[kBuffers],
+            this._deflate[kTotalLength]
+          );
+          if (fin) {
+            data2 = new FastBuffer(data2.buffer, data2.byteOffset, data2.length - 4);
+          }
+          this._deflate[kCallback] = null;
+          this._deflate[kTotalLength] = 0;
+          this._deflate[kBuffers] = [];
+          if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+            this._deflate.reset();
+          }
+          callback(null, data2);
+        });
+      }
+    };
+    module.exports = PerMessageDeflate2;
+    function deflateOnData(chunk) {
+      this[kBuffers].push(chunk);
+      this[kTotalLength] += chunk.length;
+    }
+    function inflateOnData(chunk) {
+      this[kTotalLength] += chunk.length;
+      if (this[kPerMessageDeflate]._maxPayload < 1 || this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload) {
+        this[kBuffers].push(chunk);
+        return;
+      }
+      this[kError] = new RangeError("Max payload size exceeded");
+      this[kError].code = "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH";
+      this[kError][kStatusCode] = 1009;
+      this.removeListener("data", inflateOnData);
+      this.reset();
+    }
+    function inflateOnError(err) {
+      this[kPerMessageDeflate]._inflate = null;
+      if (this[kError]) {
+        this[kCallback](this[kError]);
+        return;
+      }
+      err[kStatusCode] = 1007;
+      this[kCallback](err);
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/validation.js
+var require_validation2 = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/validation.js"(exports, module) {
+    "use strict";
+    var { isUtf8 } = __require("buffer");
+    var { hasBlob } = require_constants();
+    var tokenChars = [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 0 - 15
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 16 - 31
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      // 32 - 47
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      // 48 - 63
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      // 64 - 79
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      // 80 - 95
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      // 96 - 111
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0
+      // 112 - 127
+    ];
+    function isValidStatusCode(code) {
+      return code >= 1e3 && code <= 1014 && code !== 1004 && code !== 1005 && code !== 1006 || code >= 3e3 && code <= 4999;
+    }
+    function _isValidUTF8(buf) {
+      const len = buf.length;
+      let i = 0;
+      while (i < len) {
+        if ((buf[i] & 128) === 0) {
+          i++;
+        } else if ((buf[i] & 224) === 192) {
+          if (i + 1 === len || (buf[i + 1] & 192) !== 128 || (buf[i] & 254) === 192) {
+            return false;
+          }
+          i += 2;
+        } else if ((buf[i] & 240) === 224) {
+          if (i + 2 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || buf[i] === 224 && (buf[i + 1] & 224) === 128 || // Overlong
+          buf[i] === 237 && (buf[i + 1] & 224) === 160) {
+            return false;
+          }
+          i += 3;
+        } else if ((buf[i] & 248) === 240) {
+          if (i + 3 >= len || (buf[i + 1] & 192) !== 128 || (buf[i + 2] & 192) !== 128 || (buf[i + 3] & 192) !== 128 || buf[i] === 240 && (buf[i + 1] & 240) === 128 || // Overlong
+          buf[i] === 244 && buf[i + 1] > 143 || buf[i] > 244) {
+            return false;
+          }
+          i += 4;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
+    function isBlob(value) {
+      return hasBlob && typeof value === "object" && typeof value.arrayBuffer === "function" && typeof value.type === "string" && typeof value.stream === "function" && (value[Symbol.toStringTag] === "Blob" || value[Symbol.toStringTag] === "File");
+    }
+    module.exports = {
+      isBlob,
+      isValidStatusCode,
+      isValidUTF8: _isValidUTF8,
+      tokenChars
+    };
+    if (isUtf8) {
+      module.exports.isValidUTF8 = function(buf) {
+        return buf.length < 24 ? _isValidUTF8(buf) : isUtf8(buf);
+      };
+    } else if (!process.env.WS_NO_UTF_8_VALIDATE) {
+      try {
+        const isValidUTF8 = __require("utf-8-validate");
+        module.exports.isValidUTF8 = function(buf) {
+          return buf.length < 32 ? _isValidUTF8(buf) : isValidUTF8(buf);
+        };
+      } catch (e) {
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/receiver.js
+var require_receiver = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/receiver.js"(exports, module) {
+    "use strict";
+    var { Writable } = __require("stream");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var {
+      BINARY_TYPES,
+      EMPTY_BUFFER,
+      kStatusCode,
+      kWebSocket
+    } = require_constants();
+    var { concat, toArrayBuffer, unmask } = require_buffer_util();
+    var { isValidStatusCode, isValidUTF8 } = require_validation2();
+    var FastBuffer = Buffer[Symbol.species];
+    var GET_INFO = 0;
+    var GET_PAYLOAD_LENGTH_16 = 1;
+    var GET_PAYLOAD_LENGTH_64 = 2;
+    var GET_MASK = 3;
+    var GET_DATA = 4;
+    var INFLATING = 5;
+    var DEFER_EVENT = 6;
+    var Receiver2 = class extends Writable {
+      /**
+       * Creates a Receiver instance.
+       *
+       * @param {Object} [options] Options object
+       * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {String} [options.binaryType=nodebuffer] The type for binary data
+       * @param {Object} [options.extensions] An object containing the negotiated
+       *     extensions
+       * @param {Boolean} [options.isServer=false] Specifies whether to operate in
+       *     client or server mode
+       * @param {Number} [options.maxBufferedChunks=0] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=0] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=0] The maximum allowed message length
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       */
+      constructor(options = {}) {
+        super();
+        this._allowSynchronousEvents = options.allowSynchronousEvents !== void 0 ? options.allowSynchronousEvents : true;
+        this._binaryType = options.binaryType || BINARY_TYPES[0];
+        this._extensions = options.extensions || {};
+        this._isServer = !!options.isServer;
+        this._maxBufferedChunks = options.maxBufferedChunks | 0;
+        this._maxFragments = options.maxFragments | 0;
+        this._maxPayload = options.maxPayload | 0;
+        this._skipUTF8Validation = !!options.skipUTF8Validation;
+        this[kWebSocket] = void 0;
+        this._bufferedBytes = 0;
+        this._buffers = [];
+        this._compressed = false;
+        this._payloadLength = 0;
+        this._mask = void 0;
+        this._fragmented = 0;
+        this._masked = false;
+        this._fin = false;
+        this._opcode = 0;
+        this._totalPayloadLength = 0;
+        this._messageLength = 0;
+        this._numFragments = 0;
+        this._fragments = [];
+        this._errored = false;
+        this._loop = false;
+        this._state = GET_INFO;
+      }
+      /**
+       * Implements `Writable.prototype._write()`.
+       *
+       * @param {Buffer} chunk The chunk of data to write
+       * @param {String} encoding The character encoding of `chunk`
+       * @param {Function} cb Callback
+       * @private
+       */
+      _write(chunk, encoding, cb) {
+        if (this._opcode === 8 && this._state == GET_INFO) return cb();
+        if (this._maxBufferedChunks > 0 && this._buffers.length >= this._maxBufferedChunks) {
+          cb(
+            this.createError(
+              RangeError,
+              "Too many buffered chunks",
+              false,
+              1008,
+              "WS_ERR_TOO_MANY_BUFFERED_PARTS"
+            )
+          );
+          return;
+        }
+        this._bufferedBytes += chunk.length;
+        this._buffers.push(chunk);
+        this.startLoop(cb);
+      }
+      /**
+       * Consumes `n` bytes from the buffered data.
+       *
+       * @param {Number} n The number of bytes to consume
+       * @return {Buffer} The consumed bytes
+       * @private
+       */
+      consume(n) {
+        this._bufferedBytes -= n;
+        if (n === this._buffers[0].length) return this._buffers.shift();
+        if (n < this._buffers[0].length) {
+          const buf = this._buffers[0];
+          this._buffers[0] = new FastBuffer(
+            buf.buffer,
+            buf.byteOffset + n,
+            buf.length - n
+          );
+          return new FastBuffer(buf.buffer, buf.byteOffset, n);
+        }
+        const dst = Buffer.allocUnsafe(n);
+        do {
+          const buf = this._buffers[0];
+          const offset = dst.length - n;
+          if (n >= buf.length) {
+            dst.set(this._buffers.shift(), offset);
+          } else {
+            dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n), offset);
+            this._buffers[0] = new FastBuffer(
+              buf.buffer,
+              buf.byteOffset + n,
+              buf.length - n
+            );
+          }
+          n -= buf.length;
+        } while (n > 0);
+        return dst;
+      }
+      /**
+       * Starts the parsing loop.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      startLoop(cb) {
+        this._loop = true;
+        do {
+          switch (this._state) {
+            case GET_INFO:
+              this.getInfo(cb);
+              break;
+            case GET_PAYLOAD_LENGTH_16:
+              this.getPayloadLength16(cb);
+              break;
+            case GET_PAYLOAD_LENGTH_64:
+              this.getPayloadLength64(cb);
+              break;
+            case GET_MASK:
+              this.getMask();
+              break;
+            case GET_DATA:
+              this.getData(cb);
+              break;
+            case INFLATING:
+            case DEFER_EVENT:
+              this._loop = false;
+              return;
+          }
+        } while (this._loop);
+        if (!this._errored) cb();
+      }
+      /**
+       * Reads the first two bytes of a frame.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getInfo(cb) {
+        if (this._bufferedBytes < 2) {
+          this._loop = false;
+          return;
+        }
+        const buf = this.consume(2);
+        if ((buf[0] & 48) !== 0) {
+          const error63 = this.createError(
+            RangeError,
+            "RSV2 and RSV3 must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_RSV_2_3"
+          );
+          cb(error63);
+          return;
+        }
+        const compressed = (buf[0] & 64) === 64;
+        if (compressed && !this._extensions[PerMessageDeflate2.extensionName]) {
+          const error63 = this.createError(
+            RangeError,
+            "RSV1 must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_RSV_1"
+          );
+          cb(error63);
+          return;
+        }
+        this._fin = (buf[0] & 128) === 128;
+        this._opcode = buf[0] & 15;
+        this._payloadLength = buf[1] & 127;
+        if (this._opcode === 0) {
+          if (compressed) {
+            const error63 = this.createError(
+              RangeError,
+              "RSV1 must be clear",
+              true,
+              1002,
+              "WS_ERR_UNEXPECTED_RSV_1"
+            );
+            cb(error63);
+            return;
+          }
+          if (!this._fragmented) {
+            const error63 = this.createError(
+              RangeError,
+              "invalid opcode 0",
+              true,
+              1002,
+              "WS_ERR_INVALID_OPCODE"
+            );
+            cb(error63);
+            return;
+          }
+          this._opcode = this._fragmented;
+        } else if (this._opcode === 1 || this._opcode === 2) {
+          if (this._fragmented) {
+            const error63 = this.createError(
+              RangeError,
+              `invalid opcode ${this._opcode}`,
+              true,
+              1002,
+              "WS_ERR_INVALID_OPCODE"
+            );
+            cb(error63);
+            return;
+          }
+          this._compressed = compressed;
+        } else if (this._opcode > 7 && this._opcode < 11) {
+          if (!this._fin) {
+            const error63 = this.createError(
+              RangeError,
+              "FIN must be set",
+              true,
+              1002,
+              "WS_ERR_EXPECTED_FIN"
+            );
+            cb(error63);
+            return;
+          }
+          if (compressed) {
+            const error63 = this.createError(
+              RangeError,
+              "RSV1 must be clear",
+              true,
+              1002,
+              "WS_ERR_UNEXPECTED_RSV_1"
+            );
+            cb(error63);
+            return;
+          }
+          if (this._payloadLength > 125 || this._opcode === 8 && this._payloadLength === 1) {
+            const error63 = this.createError(
+              RangeError,
+              `invalid payload length ${this._payloadLength}`,
+              true,
+              1002,
+              "WS_ERR_INVALID_CONTROL_PAYLOAD_LENGTH"
+            );
+            cb(error63);
+            return;
+          }
+        } else {
+          const error63 = this.createError(
+            RangeError,
+            `invalid opcode ${this._opcode}`,
+            true,
+            1002,
+            "WS_ERR_INVALID_OPCODE"
+          );
+          cb(error63);
+          return;
+        }
+        if (!this._fin && !this._fragmented) this._fragmented = this._opcode;
+        this._masked = (buf[1] & 128) === 128;
+        if (this._isServer) {
+          if (!this._masked) {
+            const error63 = this.createError(
+              RangeError,
+              "MASK must be set",
+              true,
+              1002,
+              "WS_ERR_EXPECTED_MASK"
+            );
+            cb(error63);
+            return;
+          }
+        } else if (this._masked) {
+          const error63 = this.createError(
+            RangeError,
+            "MASK must be clear",
+            true,
+            1002,
+            "WS_ERR_UNEXPECTED_MASK"
+          );
+          cb(error63);
+          return;
+        }
+        if (this._payloadLength === 126) this._state = GET_PAYLOAD_LENGTH_16;
+        else if (this._payloadLength === 127) this._state = GET_PAYLOAD_LENGTH_64;
+        else this.haveLength(cb);
+      }
+      /**
+       * Gets extended payload length (7+16).
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getPayloadLength16(cb) {
+        if (this._bufferedBytes < 2) {
+          this._loop = false;
+          return;
+        }
+        this._payloadLength = this.consume(2).readUInt16BE(0);
+        this.haveLength(cb);
+      }
+      /**
+       * Gets extended payload length (7+64).
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getPayloadLength64(cb) {
+        if (this._bufferedBytes < 8) {
+          this._loop = false;
+          return;
+        }
+        const buf = this.consume(8);
+        const num = buf.readUInt32BE(0);
+        if (num > Math.pow(2, 53 - 32) - 1) {
+          const error63 = this.createError(
+            RangeError,
+            "Unsupported WebSocket frame: payload length > 2^53 - 1",
+            false,
+            1009,
+            "WS_ERR_UNSUPPORTED_DATA_PAYLOAD_LENGTH"
+          );
+          cb(error63);
+          return;
+        }
+        this._payloadLength = num * Math.pow(2, 32) + buf.readUInt32BE(4);
+        this.haveLength(cb);
+      }
+      /**
+       * Payload length has been read.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      haveLength(cb) {
+        if (this._payloadLength && this._opcode < 8) {
+          this._totalPayloadLength += this._payloadLength;
+          if (this._totalPayloadLength > this._maxPayload && this._maxPayload > 0) {
+            const error63 = this.createError(
+              RangeError,
+              "Max payload size exceeded",
+              false,
+              1009,
+              "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"
+            );
+            cb(error63);
+            return;
+          }
+        }
+        if (this._masked) this._state = GET_MASK;
+        else this._state = GET_DATA;
+      }
+      /**
+       * Reads mask bytes.
+       *
+       * @private
+       */
+      getMask() {
+        if (this._bufferedBytes < 4) {
+          this._loop = false;
+          return;
+        }
+        this._mask = this.consume(4);
+        this._state = GET_DATA;
+      }
+      /**
+       * Reads data bytes.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      getData(cb) {
+        let data = EMPTY_BUFFER;
+        if (this._payloadLength) {
+          if (this._bufferedBytes < this._payloadLength) {
+            this._loop = false;
+            return;
+          }
+          data = this.consume(this._payloadLength);
+          if (this._masked && (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0) {
+            unmask(data, this._mask);
+          }
+        }
+        if (this._opcode > 7) {
+          this.controlMessage(data, cb);
+          return;
+        }
+        if (this._maxFragments > 0 && ++this._numFragments > this._maxFragments) {
+          const error63 = this.createError(
+            RangeError,
+            "Too many message fragments",
+            false,
+            1008,
+            "WS_ERR_TOO_MANY_BUFFERED_PARTS"
+          );
+          cb(error63);
+          return;
+        }
+        if (this._compressed) {
+          this._state = INFLATING;
+          this.decompress(data, cb);
+          return;
+        }
+        if (data.length) {
+          this._messageLength = this._totalPayloadLength;
+          this._fragments.push(data);
+        }
+        this.dataMessage(cb);
+      }
+      /**
+       * Decompresses data.
+       *
+       * @param {Buffer} data Compressed data
+       * @param {Function} cb Callback
+       * @private
+       */
+      decompress(data, cb) {
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        perMessageDeflate.decompress(data, this._fin, (err, buf) => {
+          if (err) return cb(err);
+          if (buf.length) {
+            this._messageLength += buf.length;
+            if (this._messageLength > this._maxPayload && this._maxPayload > 0) {
+              const error63 = this.createError(
+                RangeError,
+                "Max payload size exceeded",
+                false,
+                1009,
+                "WS_ERR_UNSUPPORTED_MESSAGE_LENGTH"
+              );
+              cb(error63);
+              return;
+            }
+            this._fragments.push(buf);
+          }
+          this.dataMessage(cb);
+          if (this._state === GET_INFO) this.startLoop(cb);
+        });
+      }
+      /**
+       * Handles a data message.
+       *
+       * @param {Function} cb Callback
+       * @private
+       */
+      dataMessage(cb) {
+        if (!this._fin) {
+          this._state = GET_INFO;
+          return;
+        }
+        const messageLength = this._messageLength;
+        const fragments = this._fragments;
+        this._totalPayloadLength = 0;
+        this._messageLength = 0;
+        this._fragmented = 0;
+        this._numFragments = 0;
+        this._fragments = [];
+        if (this._opcode === 2) {
+          let data;
+          if (this._binaryType === "nodebuffer") {
+            data = concat(fragments, messageLength);
+          } else if (this._binaryType === "arraybuffer") {
+            data = toArrayBuffer(concat(fragments, messageLength));
+          } else if (this._binaryType === "blob") {
+            data = new Blob(fragments);
+          } else {
+            data = fragments;
+          }
+          if (this._allowSynchronousEvents) {
+            this.emit("message", data, true);
+            this._state = GET_INFO;
+          } else {
+            this._state = DEFER_EVENT;
+            setImmediate(() => {
+              this.emit("message", data, true);
+              this._state = GET_INFO;
+              this.startLoop(cb);
+            });
+          }
+        } else {
+          const buf = concat(fragments, messageLength);
+          if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+            const error63 = this.createError(
+              Error,
+              "invalid UTF-8 sequence",
+              true,
+              1007,
+              "WS_ERR_INVALID_UTF8"
+            );
+            cb(error63);
+            return;
+          }
+          if (this._state === INFLATING || this._allowSynchronousEvents) {
+            this.emit("message", buf, false);
+            this._state = GET_INFO;
+          } else {
+            this._state = DEFER_EVENT;
+            setImmediate(() => {
+              this.emit("message", buf, false);
+              this._state = GET_INFO;
+              this.startLoop(cb);
+            });
+          }
+        }
+      }
+      /**
+       * Handles a control message.
+       *
+       * @param {Buffer} data Data to handle
+       * @return {(Error|RangeError|undefined)} A possible error
+       * @private
+       */
+      controlMessage(data, cb) {
+        if (this._opcode === 8) {
+          if (data.length === 0) {
+            this._loop = false;
+            this.emit("conclude", 1005, EMPTY_BUFFER);
+            this.end();
+          } else {
+            const code = data.readUInt16BE(0);
+            if (!isValidStatusCode(code)) {
+              const error63 = this.createError(
+                RangeError,
+                `invalid status code ${code}`,
+                true,
+                1002,
+                "WS_ERR_INVALID_CLOSE_CODE"
+              );
+              cb(error63);
+              return;
+            }
+            const buf = new FastBuffer(
+              data.buffer,
+              data.byteOffset + 2,
+              data.length - 2
+            );
+            if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+              const error63 = this.createError(
+                Error,
+                "invalid UTF-8 sequence",
+                true,
+                1007,
+                "WS_ERR_INVALID_UTF8"
+              );
+              cb(error63);
+              return;
+            }
+            this._loop = false;
+            this.emit("conclude", code, buf);
+            this.end();
+          }
+          this._state = GET_INFO;
+          return;
+        }
+        if (this._allowSynchronousEvents) {
+          this.emit(this._opcode === 9 ? "ping" : "pong", data);
+          this._state = GET_INFO;
+        } else {
+          this._state = DEFER_EVENT;
+          setImmediate(() => {
+            this.emit(this._opcode === 9 ? "ping" : "pong", data);
+            this._state = GET_INFO;
+            this.startLoop(cb);
+          });
+        }
+      }
+      /**
+       * Builds an error object.
+       *
+       * @param {function(new:Error|RangeError)} ErrorCtor The error constructor
+       * @param {String} message The error message
+       * @param {Boolean} prefix Specifies whether or not to add a default prefix to
+       *     `message`
+       * @param {Number} statusCode The status code
+       * @param {String} errorCode The exposed error code
+       * @return {(Error|RangeError)} The error
+       * @private
+       */
+      createError(ErrorCtor, message, prefix, statusCode, errorCode) {
+        this._loop = false;
+        this._errored = true;
+        const err = new ErrorCtor(
+          prefix ? `Invalid WebSocket frame: ${message}` : message
+        );
+        Error.captureStackTrace(err, this.createError);
+        err.code = errorCode;
+        err[kStatusCode] = statusCode;
+        return err;
+      }
+    };
+    module.exports = Receiver2;
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/sender.js
+var require_sender = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/sender.js"(exports, module) {
+    "use strict";
+    var { Duplex } = __require("stream");
+    var { randomFillSync } = __require("crypto");
+    var {
+      types: { isUint8Array }
+    } = __require("util");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var { EMPTY_BUFFER, kWebSocket, NOOP } = require_constants();
+    var { isBlob, isValidStatusCode } = require_validation2();
+    var { mask: applyMask, toBuffer } = require_buffer_util();
+    var kByteLength = /* @__PURE__ */ Symbol("kByteLength");
+    var maskBuffer = Buffer.alloc(4);
+    var RANDOM_POOL_SIZE = 8 * 1024;
+    var randomPool;
+    var randomPoolPointer = RANDOM_POOL_SIZE;
+    var DEFAULT = 0;
+    var DEFLATING = 1;
+    var GET_BLOB_DATA = 2;
+    var Sender2 = class _Sender {
+      /**
+       * Creates a Sender instance.
+       *
+       * @param {Duplex} socket The connection socket
+       * @param {Object} [extensions] An object containing the negotiated extensions
+       * @param {Function} [generateMask] The function used to generate the masking
+       *     key
+       */
+      constructor(socket, extensions, generateMask) {
+        this._extensions = extensions || {};
+        if (generateMask) {
+          this._generateMask = generateMask;
+          this._maskBuffer = Buffer.alloc(4);
+        }
+        this._socket = socket;
+        this._firstFragment = true;
+        this._compress = false;
+        this._bufferedBytes = 0;
+        this._queue = [];
+        this._state = DEFAULT;
+        this.onerror = NOOP;
+        this[kWebSocket] = void 0;
+      }
+      /**
+       * Frames a piece of data according to the HyBi WebSocket protocol.
+       *
+       * @param {(Buffer|String)} data The data to frame
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @return {(Buffer|String)[]} The framed data
+       * @public
+       */
+      static frame(data, options) {
+        let mask;
+        let merge2 = false;
+        let offset = 2;
+        let skipMasking = false;
+        if (options.mask) {
+          mask = options.maskBuffer || maskBuffer;
+          if (options.generateMask) {
+            options.generateMask(mask);
+          } else {
+            if (randomPoolPointer === RANDOM_POOL_SIZE) {
+              if (randomPool === void 0) {
+                randomPool = Buffer.alloc(RANDOM_POOL_SIZE);
+              }
+              randomFillSync(randomPool, 0, RANDOM_POOL_SIZE);
+              randomPoolPointer = 0;
+            }
+            mask[0] = randomPool[randomPoolPointer++];
+            mask[1] = randomPool[randomPoolPointer++];
+            mask[2] = randomPool[randomPoolPointer++];
+            mask[3] = randomPool[randomPoolPointer++];
+          }
+          skipMasking = (mask[0] | mask[1] | mask[2] | mask[3]) === 0;
+          offset = 6;
+        }
+        let dataLength;
+        if (typeof data === "string") {
+          if ((!options.mask || skipMasking) && options[kByteLength] !== void 0) {
+            dataLength = options[kByteLength];
+          } else {
+            data = Buffer.from(data);
+            dataLength = data.length;
+          }
+        } else {
+          dataLength = data.length;
+          merge2 = options.mask && options.readOnly && !skipMasking;
+        }
+        let payloadLength = dataLength;
+        if (dataLength >= 65536) {
+          offset += 8;
+          payloadLength = 127;
+        } else if (dataLength > 125) {
+          offset += 2;
+          payloadLength = 126;
+        }
+        const target = Buffer.allocUnsafe(merge2 ? dataLength + offset : offset);
+        target[0] = options.fin ? options.opcode | 128 : options.opcode;
+        if (options.rsv1) target[0] |= 64;
+        target[1] = payloadLength;
+        if (payloadLength === 126) {
+          target.writeUInt16BE(dataLength, 2);
+        } else if (payloadLength === 127) {
+          target[2] = target[3] = 0;
+          target.writeUIntBE(dataLength, 4, 6);
+        }
+        if (!options.mask) return [target, data];
+        target[1] |= 128;
+        target[offset - 4] = mask[0];
+        target[offset - 3] = mask[1];
+        target[offset - 2] = mask[2];
+        target[offset - 1] = mask[3];
+        if (skipMasking) return [target, data];
+        if (merge2) {
+          applyMask(data, mask, target, offset, dataLength);
+          return [target];
+        }
+        applyMask(data, mask, data, 0, dataLength);
+        return [target, data];
+      }
+      /**
+       * Sends a close message to the other peer.
+       *
+       * @param {Number} [code] The status code component of the body
+       * @param {(String|Buffer)} [data] The message component of the body
+       * @param {Boolean} [mask=false] Specifies whether or not to mask the message
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      close(code, data, mask, cb) {
+        let buf;
+        if (code === void 0) {
+          buf = EMPTY_BUFFER;
+        } else if (typeof code !== "number" || !isValidStatusCode(code)) {
+          throw new TypeError("First argument must be a valid error code number");
+        } else if (data === void 0 || !data.length) {
+          buf = Buffer.allocUnsafe(2);
+          buf.writeUInt16BE(code, 0);
+        } else {
+          const length = Buffer.byteLength(data);
+          if (length > 123) {
+            throw new RangeError("The message must not be greater than 123 bytes");
+          }
+          buf = Buffer.allocUnsafe(2 + length);
+          buf.writeUInt16BE(code, 0);
+          if (typeof data === "string") {
+            buf.write(data, 2);
+          } else if (isUint8Array(data)) {
+            buf.set(data, 2);
+          } else {
+            throw new TypeError("Second argument must be a string or a Uint8Array");
+          }
+        }
+        const options = {
+          [kByteLength]: buf.length,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 8,
+          readOnly: false,
+          rsv1: false
+        };
+        if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, buf, false, options, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(buf, options), cb);
+        }
+      }
+      /**
+       * Sends a ping message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      ping(data, mask, cb) {
+        let byteLength;
+        let readOnly;
+        if (typeof data === "string") {
+          byteLength = Buffer.byteLength(data);
+          readOnly = false;
+        } else if (isBlob(data)) {
+          byteLength = data.size;
+          readOnly = false;
+        } else {
+          data = toBuffer(data);
+          byteLength = data.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (byteLength > 125) {
+          throw new RangeError("The data size must not be greater than 125 bytes");
+        }
+        const options = {
+          [kByteLength]: byteLength,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 9,
+          readOnly,
+          rsv1: false
+        };
+        if (isBlob(data)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data, false, options, cb]);
+          } else {
+            this.getBlobData(data, false, options, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data, false, options, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(data, options), cb);
+        }
+      }
+      /**
+       * Sends a pong message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      pong(data, mask, cb) {
+        let byteLength;
+        let readOnly;
+        if (typeof data === "string") {
+          byteLength = Buffer.byteLength(data);
+          readOnly = false;
+        } else if (isBlob(data)) {
+          byteLength = data.size;
+          readOnly = false;
+        } else {
+          data = toBuffer(data);
+          byteLength = data.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (byteLength > 125) {
+          throw new RangeError("The data size must not be greater than 125 bytes");
+        }
+        const options = {
+          [kByteLength]: byteLength,
+          fin: true,
+          generateMask: this._generateMask,
+          mask,
+          maskBuffer: this._maskBuffer,
+          opcode: 10,
+          readOnly,
+          rsv1: false
+        };
+        if (isBlob(data)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data, false, options, cb]);
+          } else {
+            this.getBlobData(data, false, options, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data, false, options, cb]);
+        } else {
+          this.sendFrame(_Sender.frame(data, options), cb);
+        }
+      }
+      /**
+       * Sends a data message to the other peer.
+       *
+       * @param {*} data The message to send
+       * @param {Object} options Options object
+       * @param {Boolean} [options.binary=false] Specifies whether `data` is binary
+       *     or text
+       * @param {Boolean} [options.compress=false] Specifies whether or not to
+       *     compress `data`
+       * @param {Boolean} [options.fin=false] Specifies whether the fragment is the
+       *     last one
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Function} [cb] Callback
+       * @public
+       */
+      send(data, options, cb) {
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        let opcode = options.binary ? 2 : 1;
+        let rsv1 = options.compress;
+        let byteLength;
+        let readOnly;
+        if (typeof data === "string") {
+          byteLength = Buffer.byteLength(data);
+          readOnly = false;
+        } else if (isBlob(data)) {
+          byteLength = data.size;
+          readOnly = false;
+        } else {
+          data = toBuffer(data);
+          byteLength = data.length;
+          readOnly = toBuffer.readOnly;
+        }
+        if (this._firstFragment) {
+          this._firstFragment = false;
+          if (rsv1 && perMessageDeflate && perMessageDeflate.params[perMessageDeflate._isServer ? "server_no_context_takeover" : "client_no_context_takeover"]) {
+            rsv1 = byteLength >= perMessageDeflate._threshold;
+          }
+          this._compress = rsv1;
+        } else {
+          rsv1 = false;
+          opcode = 0;
+        }
+        if (options.fin) this._firstFragment = true;
+        const opts = {
+          [kByteLength]: byteLength,
+          fin: options.fin,
+          generateMask: this._generateMask,
+          mask: options.mask,
+          maskBuffer: this._maskBuffer,
+          opcode,
+          readOnly,
+          rsv1
+        };
+        if (isBlob(data)) {
+          if (this._state !== DEFAULT) {
+            this.enqueue([this.getBlobData, data, this._compress, opts, cb]);
+          } else {
+            this.getBlobData(data, this._compress, opts, cb);
+          }
+        } else if (this._state !== DEFAULT) {
+          this.enqueue([this.dispatch, data, this._compress, opts, cb]);
+        } else {
+          this.dispatch(data, this._compress, opts, cb);
+        }
+      }
+      /**
+       * Gets the contents of a blob as binary data.
+       *
+       * @param {Blob} blob The blob
+       * @param {Boolean} [compress=false] Specifies whether or not to compress
+       *     the data
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      getBlobData(blob, compress, options, cb) {
+        this._bufferedBytes += options[kByteLength];
+        this._state = GET_BLOB_DATA;
+        blob.arrayBuffer().then((arrayBuffer) => {
+          if (this._socket.destroyed) {
+            const err = new Error(
+              "The socket was closed while the blob was being read"
+            );
+            process.nextTick(callCallbacks, this, err, cb);
+            return;
+          }
+          this._bufferedBytes -= options[kByteLength];
+          const data = toBuffer(arrayBuffer);
+          if (!compress) {
+            this._state = DEFAULT;
+            this.sendFrame(_Sender.frame(data, options), cb);
+            this.dequeue();
+          } else {
+            this.dispatch(data, compress, options, cb);
+          }
+        }).catch((err) => {
+          process.nextTick(onError, this, err, cb);
+        });
+      }
+      /**
+       * Dispatches a message.
+       *
+       * @param {(Buffer|String)} data The message to send
+       * @param {Boolean} [compress=false] Specifies whether or not to compress
+       *     `data`
+       * @param {Object} options Options object
+       * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+       *     FIN bit
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+       *     `data`
+       * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+       *     key
+       * @param {Number} options.opcode The opcode
+       * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+       *     modified
+       * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+       *     RSV1 bit
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      dispatch(data, compress, options, cb) {
+        if (!compress) {
+          this.sendFrame(_Sender.frame(data, options), cb);
+          return;
+        }
+        const perMessageDeflate = this._extensions[PerMessageDeflate2.extensionName];
+        this._bufferedBytes += options[kByteLength];
+        this._state = DEFLATING;
+        perMessageDeflate.compress(data, options.fin, (_, buf) => {
+          if (this._socket.destroyed) {
+            const err = new Error(
+              "The socket was closed while data was being compressed"
+            );
+            callCallbacks(this, err, cb);
+            return;
+          }
+          this._bufferedBytes -= options[kByteLength];
+          this._state = DEFAULT;
+          options.readOnly = false;
+          this.sendFrame(_Sender.frame(buf, options), cb);
+          this.dequeue();
+        });
+      }
+      /**
+       * Executes queued send operations.
+       *
+       * @private
+       */
+      dequeue() {
+        while (this._state === DEFAULT && this._queue.length) {
+          const params = this._queue.shift();
+          this._bufferedBytes -= params[3][kByteLength];
+          Reflect.apply(params[0], this, params.slice(1));
+        }
+      }
+      /**
+       * Enqueues a send operation.
+       *
+       * @param {Array} params Send operation parameters.
+       * @private
+       */
+      enqueue(params) {
+        this._bufferedBytes += params[3][kByteLength];
+        this._queue.push(params);
+      }
+      /**
+       * Sends a frame.
+       *
+       * @param {(Buffer | String)[]} list The frame to send
+       * @param {Function} [cb] Callback
+       * @private
+       */
+      sendFrame(list3, cb) {
+        if (list3.length === 2) {
+          this._socket.cork();
+          this._socket.write(list3[0]);
+          this._socket.write(list3[1], cb);
+          this._socket.uncork();
+        } else {
+          this._socket.write(list3[0], cb);
+        }
+      }
+    };
+    module.exports = Sender2;
+    function callCallbacks(sender, err, cb) {
+      if (typeof cb === "function") cb(err);
+      for (let i = 0; i < sender._queue.length; i++) {
+        const params = sender._queue[i];
+        const callback = params[params.length - 1];
+        if (typeof callback === "function") callback(err);
+      }
+    }
+    function onError(sender, err, cb) {
+      callCallbacks(sender, err, cb);
+      sender.onerror(err);
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/event-target.js
+var require_event_target = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/event-target.js"(exports, module) {
+    "use strict";
+    var { kForOnEventAttribute, kListener } = require_constants();
+    var kCode = /* @__PURE__ */ Symbol("kCode");
+    var kData = /* @__PURE__ */ Symbol("kData");
+    var kError = /* @__PURE__ */ Symbol("kError");
+    var kMessage = /* @__PURE__ */ Symbol("kMessage");
+    var kReason = /* @__PURE__ */ Symbol("kReason");
+    var kTarget = /* @__PURE__ */ Symbol("kTarget");
+    var kType = /* @__PURE__ */ Symbol("kType");
+    var kWasClean = /* @__PURE__ */ Symbol("kWasClean");
+    var Event2 = class {
+      /**
+       * Create a new `Event`.
+       *
+       * @param {String} type The name of the event
+       * @throws {TypeError} If the `type` argument is not specified
+       */
+      constructor(type) {
+        this[kTarget] = null;
+        this[kType] = type;
+      }
+      /**
+       * @type {*}
+       */
+      get target() {
+        return this[kTarget];
+      }
+      /**
+       * @type {String}
+       */
+      get type() {
+        return this[kType];
+      }
+    };
+    Object.defineProperty(Event2.prototype, "target", { enumerable: true });
+    Object.defineProperty(Event2.prototype, "type", { enumerable: true });
+    var CloseEvent = class extends Event2 {
+      /**
+       * Create a new `CloseEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {Number} [options.code=0] The status code explaining why the
+       *     connection was closed
+       * @param {String} [options.reason=''] A human-readable string explaining why
+       *     the connection was closed
+       * @param {Boolean} [options.wasClean=false] Indicates whether or not the
+       *     connection was cleanly closed
+       */
+      constructor(type, options = {}) {
+        super(type);
+        this[kCode] = options.code === void 0 ? 0 : options.code;
+        this[kReason] = options.reason === void 0 ? "" : options.reason;
+        this[kWasClean] = options.wasClean === void 0 ? false : options.wasClean;
+      }
+      /**
+       * @type {Number}
+       */
+      get code() {
+        return this[kCode];
+      }
+      /**
+       * @type {String}
+       */
+      get reason() {
+        return this[kReason];
+      }
+      /**
+       * @type {Boolean}
+       */
+      get wasClean() {
+        return this[kWasClean];
+      }
+    };
+    Object.defineProperty(CloseEvent.prototype, "code", { enumerable: true });
+    Object.defineProperty(CloseEvent.prototype, "reason", { enumerable: true });
+    Object.defineProperty(CloseEvent.prototype, "wasClean", { enumerable: true });
+    var ErrorEvent = class extends Event2 {
+      /**
+       * Create a new `ErrorEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {*} [options.error=null] The error that generated this event
+       * @param {String} [options.message=''] The error message
+       */
+      constructor(type, options = {}) {
+        super(type);
+        this[kError] = options.error === void 0 ? null : options.error;
+        this[kMessage] = options.message === void 0 ? "" : options.message;
+      }
+      /**
+       * @type {*}
+       */
+      get error() {
+        return this[kError];
+      }
+      /**
+       * @type {String}
+       */
+      get message() {
+        return this[kMessage];
+      }
+    };
+    Object.defineProperty(ErrorEvent.prototype, "error", { enumerable: true });
+    Object.defineProperty(ErrorEvent.prototype, "message", { enumerable: true });
+    var MessageEvent = class extends Event2 {
+      /**
+       * Create a new `MessageEvent`.
+       *
+       * @param {String} type The name of the event
+       * @param {Object} [options] A dictionary object that allows for setting
+       *     attributes via object members of the same name
+       * @param {*} [options.data=null] The message content
+       */
+      constructor(type, options = {}) {
+        super(type);
+        this[kData] = options.data === void 0 ? null : options.data;
+      }
+      /**
+       * @type {*}
+       */
+      get data() {
+        return this[kData];
+      }
+    };
+    Object.defineProperty(MessageEvent.prototype, "data", { enumerable: true });
+    var EventTarget = {
+      /**
+       * Register an event listener.
+       *
+       * @param {String} type A string representing the event type to listen for
+       * @param {(Function|Object)} handler The listener to add
+       * @param {Object} [options] An options object specifies characteristics about
+       *     the event listener
+       * @param {Boolean} [options.once=false] A `Boolean` indicating that the
+       *     listener should be invoked at most once after being added. If `true`,
+       *     the listener would be automatically removed when invoked.
+       * @public
+       */
+      addEventListener(type, handler, options = {}) {
+        for (const listener of this.listeners(type)) {
+          if (!options[kForOnEventAttribute] && listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+            return;
+          }
+        }
+        let wrapper;
+        if (type === "message") {
+          wrapper = function onMessage(data, isBinary) {
+            const event2 = new MessageEvent("message", {
+              data: isBinary ? data : data.toString()
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "close") {
+          wrapper = function onClose(code, message) {
+            const event2 = new CloseEvent("close", {
+              code,
+              reason: message.toString(),
+              wasClean: this._closeFrameReceived && this._closeFrameSent
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "error") {
+          wrapper = function onError(error63) {
+            const event2 = new ErrorEvent("error", {
+              error: error63,
+              message: error63.message
+            });
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else if (type === "open") {
+          wrapper = function onOpen() {
+            const event2 = new Event2("open");
+            event2[kTarget] = this;
+            callListener(handler, this, event2);
+          };
+        } else {
+          return;
+        }
+        wrapper[kForOnEventAttribute] = !!options[kForOnEventAttribute];
+        wrapper[kListener] = handler;
+        if (options.once) {
+          this.once(type, wrapper);
+        } else {
+          this.on(type, wrapper);
+        }
+      },
+      /**
+       * Remove an event listener.
+       *
+       * @param {String} type A string representing the event type to remove
+       * @param {(Function|Object)} handler The listener to remove
+       * @public
+       */
+      removeEventListener(type, handler) {
+        for (const listener of this.listeners(type)) {
+          if (listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+            this.removeListener(type, listener);
+            break;
+          }
+        }
+      }
+    };
+    module.exports = {
+      CloseEvent,
+      ErrorEvent,
+      Event: Event2,
+      EventTarget,
+      MessageEvent
+    };
+    function callListener(listener, thisArg, event2) {
+      if (typeof listener === "object" && listener.handleEvent) {
+        listener.handleEvent.call(listener, event2);
+      } else {
+        listener.call(thisArg, event2);
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/extension.js
+var require_extension = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/extension.js"(exports, module) {
+    "use strict";
+    var { tokenChars } = require_validation2();
+    function push(dest, name, elem) {
+      if (dest[name] === void 0) dest[name] = [elem];
+      else dest[name].push(elem);
+    }
+    function parse3(header) {
+      const offers = /* @__PURE__ */ Object.create(null);
+      let params = /* @__PURE__ */ Object.create(null);
+      let mustUnescape = false;
+      let isEscaping = false;
+      let inQuotes = false;
+      let extensionName;
+      let paramName;
+      let start = -1;
+      let code = -1;
+      let end = -1;
+      let i = 0;
+      for (; i < header.length; i++) {
+        code = header.charCodeAt(i);
+        if (extensionName === void 0) {
+          if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i;
+          } else if (i !== 0 && (code === 32 || code === 9)) {
+            if (end === -1 && start !== -1) end = i;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i}`);
+            }
+            if (end === -1) end = i;
+            const name = header.slice(start, end);
+            if (code === 44) {
+              push(offers, name, params);
+              params = /* @__PURE__ */ Object.create(null);
+            } else {
+              extensionName = name;
+            }
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i}`);
+          }
+        } else if (paramName === void 0) {
+          if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i;
+          } else if (code === 32 || code === 9) {
+            if (end === -1 && start !== -1) end = i;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i}`);
+            }
+            if (end === -1) end = i;
+            push(params, header.slice(start, end), true);
+            if (code === 44) {
+              push(offers, extensionName, params);
+              params = /* @__PURE__ */ Object.create(null);
+              extensionName = void 0;
+            }
+            start = end = -1;
+          } else if (code === 61 && start !== -1 && end === -1) {
+            paramName = header.slice(start, i);
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i}`);
+          }
+        } else {
+          if (isEscaping) {
+            if (tokenChars[code] !== 1) {
+              throw new SyntaxError(`Unexpected character at index ${i}`);
+            }
+            if (start === -1) start = i;
+            else if (!mustUnescape) mustUnescape = true;
+            isEscaping = false;
+          } else if (inQuotes) {
+            if (tokenChars[code] === 1) {
+              if (start === -1) start = i;
+            } else if (code === 34 && start !== -1) {
+              inQuotes = false;
+              end = i;
+            } else if (code === 92) {
+              isEscaping = true;
+            } else {
+              throw new SyntaxError(`Unexpected character at index ${i}`);
+            }
+          } else if (code === 34 && header.charCodeAt(i - 1) === 61) {
+            inQuotes = true;
+          } else if (end === -1 && tokenChars[code] === 1) {
+            if (start === -1) start = i;
+          } else if (start !== -1 && (code === 32 || code === 9)) {
+            if (end === -1) end = i;
+          } else if (code === 59 || code === 44) {
+            if (start === -1) {
+              throw new SyntaxError(`Unexpected character at index ${i}`);
+            }
+            if (end === -1) end = i;
+            let value = header.slice(start, end);
+            if (mustUnescape) {
+              value = value.replace(/\\/g, "");
+              mustUnescape = false;
+            }
+            push(params, paramName, value);
+            if (code === 44) {
+              push(offers, extensionName, params);
+              params = /* @__PURE__ */ Object.create(null);
+              extensionName = void 0;
+            }
+            paramName = void 0;
+            start = end = -1;
+          } else {
+            throw new SyntaxError(`Unexpected character at index ${i}`);
+          }
+        }
+      }
+      if (start === -1 || inQuotes || code === 32 || code === 9) {
+        throw new SyntaxError("Unexpected end of input");
+      }
+      if (end === -1) end = i;
+      const token = header.slice(start, end);
+      if (extensionName === void 0) {
+        push(offers, token, params);
+      } else {
+        if (paramName === void 0) {
+          push(params, token, true);
+        } else if (mustUnescape) {
+          push(params, paramName, token.replace(/\\/g, ""));
+        } else {
+          push(params, paramName, token);
+        }
+        push(offers, extensionName, params);
+      }
+      return offers;
+    }
+    function format(extensions) {
+      return Object.keys(extensions).map((extension2) => {
+        let configurations = extensions[extension2];
+        if (!Array.isArray(configurations)) configurations = [configurations];
+        return configurations.map((params) => {
+          return [extension2].concat(
+            Object.keys(params).map((k) => {
+              let values = params[k];
+              if (!Array.isArray(values)) values = [values];
+              return values.map((v) => v === true ? k : `${k}=${v}`).join("; ");
+            })
+          ).join("; ");
+        }).join(", ");
+      }).join(", ");
+    }
+    module.exports = { format, parse: parse3 };
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket.js
+var require_websocket = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket.js"(exports, module) {
+    "use strict";
+    var EventEmitter = __require("events");
+    var https = __require("https");
+    var http = __require("http");
+    var net = __require("net");
+    var tls = __require("tls");
+    var { randomBytes: randomBytes4, createHash: createHash12 } = __require("crypto");
+    var { Duplex, Readable: Readable2 } = __require("stream");
+    var { URL: URL3 } = __require("url");
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var Receiver2 = require_receiver();
+    var Sender2 = require_sender();
+    var { isBlob } = require_validation2();
+    var {
+      BINARY_TYPES,
+      CLOSE_TIMEOUT,
+      EMPTY_BUFFER,
+      GUID,
+      kForOnEventAttribute,
+      kListener,
+      kStatusCode,
+      kWebSocket,
+      NOOP
+    } = require_constants();
+    var {
+      EventTarget: { addEventListener, removeEventListener }
+    } = require_event_target();
+    var { format, parse: parse3 } = require_extension();
+    var { toBuffer } = require_buffer_util();
+    var kAborted = /* @__PURE__ */ Symbol("kAborted");
+    var protocolVersions = [8, 13];
+    var readyStates = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
+    var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
+    var WebSocket2 = class _WebSocket extends EventEmitter {
+      /**
+       * Create a new `WebSocket`.
+       *
+       * @param {(String|URL)} address The URL to which to connect
+       * @param {(String|String[])} [protocols] The subprotocols
+       * @param {Object} [options] Connection options
+       */
+      constructor(address, protocols, options) {
+        super();
+        this._binaryType = BINARY_TYPES[0];
+        this._closeCode = 1006;
+        this._closeFrameReceived = false;
+        this._closeFrameSent = false;
+        this._closeMessage = EMPTY_BUFFER;
+        this._closeTimer = null;
+        this._errorEmitted = false;
+        this._extensions = {};
+        this._paused = false;
+        this._protocol = "";
+        this._readyState = _WebSocket.CONNECTING;
+        this._receiver = null;
+        this._sender = null;
+        this._socket = null;
+        if (address !== null) {
+          this._bufferedAmount = 0;
+          this._isServer = false;
+          this._redirects = 0;
+          if (protocols === void 0) {
+            if (!options || options.protocols === void 0) {
+              protocols = [];
+            } else if (Array.isArray(options.protocols)) {
+              protocols = options.protocols;
+            } else {
+              protocols = [options.protocols];
+            }
+          } else if (!Array.isArray(protocols)) {
+            if (typeof protocols === "object" && protocols !== null) {
+              options = protocols;
+              if (options.protocols === void 0) {
+                protocols = [];
+              } else if (Array.isArray(options.protocols)) {
+                protocols = options.protocols;
+              } else {
+                protocols = [options.protocols];
+              }
+            } else {
+              protocols = [protocols];
+            }
+          }
+          initAsClient(this, address, protocols, options);
+        } else {
+          this._autoPong = options.autoPong;
+          this._closeTimeout = options.closeTimeout;
+          this._isServer = true;
+        }
+      }
+      /**
+       * For historical reasons, the custom "nodebuffer" type is used by the default
+       * instead of "blob".
+       *
+       * @type {String}
+       */
+      get binaryType() {
+        return this._binaryType;
+      }
+      set binaryType(type) {
+        if (!BINARY_TYPES.includes(type)) return;
+        this._binaryType = type;
+        if (this._receiver) this._receiver._binaryType = type;
+      }
+      /**
+       * @type {Number}
+       */
+      get bufferedAmount() {
+        if (!this._socket) return this._bufferedAmount;
+        return this._socket._writableState.length + this._sender._bufferedBytes;
+      }
+      /**
+       * @type {String}
+       */
+      get extensions() {
+        return Object.keys(this._extensions).join();
+      }
+      /**
+       * @type {Boolean}
+       */
+      get isPaused() {
+        return this._paused;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onclose() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onerror() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onopen() {
+        return null;
+      }
+      /**
+       * @type {Function}
+       */
+      /* istanbul ignore next */
+      get onmessage() {
+        return null;
+      }
+      /**
+       * @type {String}
+       */
+      get protocol() {
+        return this._protocol;
+      }
+      /**
+       * @type {Number}
+       */
+      get readyState() {
+        return this._readyState;
+      }
+      /**
+       * @type {String}
+       */
+      get url() {
+        return this._url;
+      }
+      /**
+       * Set up the socket and the internal resources.
+       *
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Object} options Options object
+       * @param {Boolean} [options.allowSynchronousEvents=false] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {Function} [options.generateMask] The function used to generate the
+       *     masking key
+       * @param {Number} [options.maxBufferedChunks=0] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=0] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=0] The maximum allowed message size
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       * @private
+       */
+      setSocket(socket, head, options) {
+        const receiver = new Receiver2({
+          allowSynchronousEvents: options.allowSynchronousEvents,
+          binaryType: this.binaryType,
+          extensions: this._extensions,
+          isServer: this._isServer,
+          maxBufferedChunks: options.maxBufferedChunks,
+          maxFragments: options.maxFragments,
+          maxPayload: options.maxPayload,
+          skipUTF8Validation: options.skipUTF8Validation
+        });
+        const sender = new Sender2(socket, this._extensions, options.generateMask);
+        this._receiver = receiver;
+        this._sender = sender;
+        this._socket = socket;
+        receiver[kWebSocket] = this;
+        sender[kWebSocket] = this;
+        socket[kWebSocket] = this;
+        receiver.on("conclude", receiverOnConclude);
+        receiver.on("drain", receiverOnDrain);
+        receiver.on("error", receiverOnError);
+        receiver.on("message", receiverOnMessage);
+        receiver.on("ping", receiverOnPing);
+        receiver.on("pong", receiverOnPong);
+        sender.onerror = senderOnError;
+        if (socket.setTimeout) socket.setTimeout(0);
+        if (socket.setNoDelay) socket.setNoDelay();
+        if (head.length > 0) socket.unshift(head);
+        socket.on("close", socketOnClose);
+        socket.on("data", socketOnData);
+        socket.on("end", socketOnEnd);
+        socket.on("error", socketOnError);
+        this._readyState = _WebSocket.OPEN;
+        this.emit("open");
+      }
+      /**
+       * Emit the `'close'` event.
+       *
+       * @private
+       */
+      emitClose() {
+        if (!this._socket) {
+          this._readyState = _WebSocket.CLOSED;
+          this.emit("close", this._closeCode, this._closeMessage);
+          return;
+        }
+        if (this._extensions[PerMessageDeflate2.extensionName]) {
+          this._extensions[PerMessageDeflate2.extensionName].cleanup();
+        }
+        this._receiver.removeAllListeners();
+        this._readyState = _WebSocket.CLOSED;
+        this.emit("close", this._closeCode, this._closeMessage);
+      }
+      /**
+       * Start a closing handshake.
+       *
+       *          +----------+   +-----------+   +----------+
+       *     - - -|ws.close()|-->|close frame|-->|ws.close()|- - -
+       *    |     +----------+   +-----------+   +----------+     |
+       *          +----------+   +-----------+         |
+       * CLOSING  |ws.close()|<--|close frame|<--+-----+       CLOSING
+       *          +----------+   +-----------+   |
+       *    |           |                        |   +---+        |
+       *                +------------------------+-->|fin| - - - -
+       *    |         +---+                      |   +---+
+       *     - - - - -|fin|<---------------------+
+       *              +---+
+       *
+       * @param {Number} [code] Status code explaining why the connection is closing
+       * @param {(String|Buffer)} [data] The reason why the connection is
+       *     closing
+       * @public
+       */
+      close(code, data) {
+        if (this.readyState === _WebSocket.CLOSED) return;
+        if (this.readyState === _WebSocket.CONNECTING) {
+          const msg = "WebSocket was closed before the connection was established";
+          abortHandshake(this, this._req, msg);
+          return;
+        }
+        if (this.readyState === _WebSocket.CLOSING) {
+          if (this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted)) {
+            this._socket.end();
+          }
+          return;
+        }
+        this._sender.close(code, data, !this._isServer, (err) => {
+          if (err) return;
+          this._closeFrameSent = true;
+          if (this._closeFrameReceived || this._receiver._writableState.errorEmitted) {
+            this._socket.end();
+          }
+        });
+        this._readyState = _WebSocket.CLOSING;
+        setCloseTimer(this);
+      }
+      /**
+       * Pause the socket.
+       *
+       * @public
+       */
+      pause() {
+        if (this.readyState === _WebSocket.CONNECTING || this.readyState === _WebSocket.CLOSED) {
+          return;
+        }
+        this._paused = true;
+        this._socket.pause();
+      }
+      /**
+       * Send a ping.
+       *
+       * @param {*} [data] The data to send
+       * @param {Boolean} [mask] Indicates whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when the ping is sent
+       * @public
+       */
+      ping(data, mask, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof data === "function") {
+          cb = data;
+          data = mask = void 0;
+        } else if (typeof mask === "function") {
+          cb = mask;
+          mask = void 0;
+        }
+        if (typeof data === "number") data = data.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data, cb);
+          return;
+        }
+        if (mask === void 0) mask = !this._isServer;
+        this._sender.ping(data || EMPTY_BUFFER, mask, cb);
+      }
+      /**
+       * Send a pong.
+       *
+       * @param {*} [data] The data to send
+       * @param {Boolean} [mask] Indicates whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when the pong is sent
+       * @public
+       */
+      pong(data, mask, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof data === "function") {
+          cb = data;
+          data = mask = void 0;
+        } else if (typeof mask === "function") {
+          cb = mask;
+          mask = void 0;
+        }
+        if (typeof data === "number") data = data.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data, cb);
+          return;
+        }
+        if (mask === void 0) mask = !this._isServer;
+        this._sender.pong(data || EMPTY_BUFFER, mask, cb);
+      }
+      /**
+       * Resume the socket.
+       *
+       * @public
+       */
+      resume() {
+        if (this.readyState === _WebSocket.CONNECTING || this.readyState === _WebSocket.CLOSED) {
+          return;
+        }
+        this._paused = false;
+        if (!this._receiver._writableState.needDrain) this._socket.resume();
+      }
+      /**
+       * Send a data message.
+       *
+       * @param {*} data The message to send
+       * @param {Object} [options] Options object
+       * @param {Boolean} [options.binary] Specifies whether `data` is binary or
+       *     text
+       * @param {Boolean} [options.compress] Specifies whether or not to compress
+       *     `data`
+       * @param {Boolean} [options.fin=true] Specifies whether the fragment is the
+       *     last one
+       * @param {Boolean} [options.mask] Specifies whether or not to mask `data`
+       * @param {Function} [cb] Callback which is executed when data is written out
+       * @public
+       */
+      send(data, options, cb) {
+        if (this.readyState === _WebSocket.CONNECTING) {
+          throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
+        }
+        if (typeof options === "function") {
+          cb = options;
+          options = {};
+        }
+        if (typeof data === "number") data = data.toString();
+        if (this.readyState !== _WebSocket.OPEN) {
+          sendAfterClose(this, data, cb);
+          return;
+        }
+        const opts = {
+          binary: typeof data !== "string",
+          mask: !this._isServer,
+          compress: true,
+          fin: true,
+          ...options
+        };
+        if (!this._extensions[PerMessageDeflate2.extensionName]) {
+          opts.compress = false;
+        }
+        this._sender.send(data || EMPTY_BUFFER, opts, cb);
+      }
+      /**
+       * Forcibly close the connection.
+       *
+       * @public
+       */
+      terminate() {
+        if (this.readyState === _WebSocket.CLOSED) return;
+        if (this.readyState === _WebSocket.CONNECTING) {
+          const msg = "WebSocket was closed before the connection was established";
+          abortHandshake(this, this._req, msg);
+          return;
+        }
+        if (this._socket) {
+          this._readyState = _WebSocket.CLOSING;
+          this._socket.destroy();
+        }
+      }
+    };
+    Object.defineProperty(WebSocket2, "CONNECTING", {
+      enumerable: true,
+      value: readyStates.indexOf("CONNECTING")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CONNECTING", {
+      enumerable: true,
+      value: readyStates.indexOf("CONNECTING")
+    });
+    Object.defineProperty(WebSocket2, "OPEN", {
+      enumerable: true,
+      value: readyStates.indexOf("OPEN")
+    });
+    Object.defineProperty(WebSocket2.prototype, "OPEN", {
+      enumerable: true,
+      value: readyStates.indexOf("OPEN")
+    });
+    Object.defineProperty(WebSocket2, "CLOSING", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSING")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CLOSING", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSING")
+    });
+    Object.defineProperty(WebSocket2, "CLOSED", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSED")
+    });
+    Object.defineProperty(WebSocket2.prototype, "CLOSED", {
+      enumerable: true,
+      value: readyStates.indexOf("CLOSED")
+    });
+    [
+      "binaryType",
+      "bufferedAmount",
+      "extensions",
+      "isPaused",
+      "protocol",
+      "readyState",
+      "url"
+    ].forEach((property) => {
+      Object.defineProperty(WebSocket2.prototype, property, { enumerable: true });
+    });
+    ["open", "error", "close", "message"].forEach((method) => {
+      Object.defineProperty(WebSocket2.prototype, `on${method}`, {
+        enumerable: true,
+        get() {
+          for (const listener of this.listeners(method)) {
+            if (listener[kForOnEventAttribute]) return listener[kListener];
+          }
+          return null;
+        },
+        set(handler) {
+          for (const listener of this.listeners(method)) {
+            if (listener[kForOnEventAttribute]) {
+              this.removeListener(method, listener);
+              break;
+            }
+          }
+          if (typeof handler !== "function") return;
+          this.addEventListener(method, handler, {
+            [kForOnEventAttribute]: true
+          });
+        }
+      });
+    });
+    WebSocket2.prototype.addEventListener = addEventListener;
+    WebSocket2.prototype.removeEventListener = removeEventListener;
+    module.exports = WebSocket2;
+    function initAsClient(websocket, address, protocols, options) {
+      const opts = {
+        allowSynchronousEvents: true,
+        autoPong: true,
+        closeTimeout: CLOSE_TIMEOUT,
+        protocolVersion: protocolVersions[1],
+        maxBufferedChunks: 256 * 1024,
+        maxFragments: 16 * 1024,
+        maxPayload: 100 * 1024 * 1024,
+        skipUTF8Validation: false,
+        perMessageDeflate: true,
+        followRedirects: false,
+        maxRedirects: 10,
+        ...options,
+        socketPath: void 0,
+        hostname: void 0,
+        protocol: void 0,
+        protocols: void 0,
+        timeout: void 0,
+        method: "GET",
+        host: void 0,
+        path: void 0,
+        port: void 0
+      };
+      websocket._autoPong = opts.autoPong;
+      websocket._closeTimeout = opts.closeTimeout;
+      if (!protocolVersions.includes(opts.protocolVersion)) {
+        throw new RangeError(
+          `Unsupported protocol version: ${opts.protocolVersion} (supported versions: ${protocolVersions.join(", ")})`
+        );
+      }
+      let parsedUrl;
+      if (address instanceof URL3) {
+        parsedUrl = address;
+      } else {
+        try {
+          parsedUrl = new URL3(address);
+        } catch {
+          throw new SyntaxError(`Invalid URL: ${address}`);
+        }
+      }
+      if (parsedUrl.protocol === "http:") {
+        parsedUrl.protocol = "ws:";
+      } else if (parsedUrl.protocol === "https:") {
+        parsedUrl.protocol = "wss:";
+      }
+      websocket._url = parsedUrl.href;
+      const isSecure = parsedUrl.protocol === "wss:";
+      const isIpcUrl = parsedUrl.protocol === "ws+unix:";
+      let invalidUrlMessage;
+      if (parsedUrl.protocol !== "ws:" && !isSecure && !isIpcUrl) {
+        invalidUrlMessage = `The URL's protocol must be one of "ws:", "wss:", "http:", "https:", or "ws+unix:"`;
+      } else if (isIpcUrl && !parsedUrl.pathname) {
+        invalidUrlMessage = "The URL's pathname is empty";
+      } else if (parsedUrl.hash) {
+        invalidUrlMessage = "The URL contains a fragment identifier";
+      }
+      if (invalidUrlMessage) {
+        const err = new SyntaxError(invalidUrlMessage);
+        if (websocket._redirects === 0) {
+          throw err;
+        } else {
+          emitErrorAndClose(websocket, err);
+          return;
+        }
+      }
+      const defaultPort = isSecure ? 443 : 80;
+      const key = randomBytes4(16).toString("base64");
+      const request3 = isSecure ? https.request : http.request;
+      const protocolSet = /* @__PURE__ */ new Set();
+      let perMessageDeflate;
+      opts.createConnection = opts.createConnection || (isSecure ? tlsConnect : netConnect);
+      opts.defaultPort = opts.defaultPort || defaultPort;
+      opts.port = parsedUrl.port || defaultPort;
+      opts.host = parsedUrl.hostname.startsWith("[") ? parsedUrl.hostname.slice(1, -1) : parsedUrl.hostname;
+      opts.headers = {
+        ...opts.headers,
+        "Sec-WebSocket-Version": opts.protocolVersion,
+        "Sec-WebSocket-Key": key,
+        Connection: "Upgrade",
+        Upgrade: "websocket"
+      };
+      opts.path = parsedUrl.pathname + parsedUrl.search;
+      opts.timeout = opts.handshakeTimeout;
+      if (opts.perMessageDeflate) {
+        perMessageDeflate = new PerMessageDeflate2({
+          ...opts.perMessageDeflate,
+          isServer: false,
+          maxPayload: opts.maxPayload
+        });
+        opts.headers["Sec-WebSocket-Extensions"] = format({
+          [PerMessageDeflate2.extensionName]: perMessageDeflate.offer()
+        });
+      }
+      if (protocols.length) {
+        for (const protocol of protocols) {
+          if (typeof protocol !== "string" || !subprotocolRegex.test(protocol) || protocolSet.has(protocol)) {
+            throw new SyntaxError(
+              "An invalid or duplicated subprotocol was specified"
+            );
+          }
+          protocolSet.add(protocol);
+        }
+        opts.headers["Sec-WebSocket-Protocol"] = protocols.join(",");
+      }
+      if (opts.origin) {
+        if (opts.protocolVersion < 13) {
+          opts.headers["Sec-WebSocket-Origin"] = opts.origin;
+        } else {
+          opts.headers.Origin = opts.origin;
+        }
+      }
+      if (parsedUrl.username || parsedUrl.password) {
+        opts.auth = `${parsedUrl.username}:${parsedUrl.password}`;
+      }
+      if (isIpcUrl) {
+        const parts = opts.path.split(":");
+        opts.socketPath = parts[0];
+        opts.path = parts[1];
+      }
+      let req;
+      if (opts.followRedirects) {
+        if (websocket._redirects === 0) {
+          websocket._originalIpc = isIpcUrl;
+          websocket._originalSecure = isSecure;
+          websocket._originalHostOrSocketPath = isIpcUrl ? opts.socketPath : parsedUrl.host;
+          const headers = options && options.headers;
+          options = { ...options, headers: {} };
+          if (headers) {
+            for (const [key2, value] of Object.entries(headers)) {
+              options.headers[key2.toLowerCase()] = value;
+            }
+          }
+        } else if (websocket.listenerCount("redirect") === 0) {
+          const isSameHost = isIpcUrl ? websocket._originalIpc ? opts.socketPath === websocket._originalHostOrSocketPath : false : websocket._originalIpc ? false : parsedUrl.host === websocket._originalHostOrSocketPath;
+          if (!isSameHost || websocket._originalSecure && !isSecure) {
+            delete opts.headers.authorization;
+            delete opts.headers.cookie;
+            if (!isSameHost) delete opts.headers.host;
+            opts.auth = void 0;
+          }
+        }
+        if (opts.auth && !options.headers.authorization) {
+          options.headers.authorization = "Basic " + Buffer.from(opts.auth).toString("base64");
+        }
+        req = websocket._req = request3(opts);
+        if (websocket._redirects) {
+          websocket.emit("redirect", websocket.url, req);
+        }
+      } else {
+        req = websocket._req = request3(opts);
+      }
+      if (opts.timeout) {
+        req.on("timeout", () => {
+          abortHandshake(websocket, req, "Opening handshake has timed out");
+        });
+      }
+      req.on("error", (err) => {
+        if (req === null || req[kAborted]) return;
+        req = websocket._req = null;
+        emitErrorAndClose(websocket, err);
+      });
+      req.on("response", (res) => {
+        const location = res.headers.location;
+        const statusCode = res.statusCode;
+        if (location && opts.followRedirects && statusCode >= 300 && statusCode < 400) {
+          if (++websocket._redirects > opts.maxRedirects) {
+            abortHandshake(websocket, req, "Maximum redirects exceeded");
+            return;
+          }
+          req.abort();
+          let addr;
+          try {
+            addr = new URL3(location, address);
+          } catch (e) {
+            const err = new SyntaxError(`Invalid URL: ${location}`);
+            emitErrorAndClose(websocket, err);
+            return;
+          }
+          initAsClient(websocket, addr, protocols, options);
+        } else if (!websocket.emit("unexpected-response", req, res)) {
+          abortHandshake(
+            websocket,
+            req,
+            `Unexpected server response: ${res.statusCode}`
+          );
+        }
+      });
+      req.on("upgrade", (res, socket, head) => {
+        websocket.emit("upgrade", res);
+        if (websocket.readyState !== WebSocket2.CONNECTING) return;
+        req = websocket._req = null;
+        const upgrade = res.headers.upgrade;
+        if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+          abortHandshake(websocket, socket, "Invalid Upgrade header");
+          return;
+        }
+        const digest20 = createHash12("sha1").update(key + GUID).digest("base64");
+        if (res.headers["sec-websocket-accept"] !== digest20) {
+          abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
+          return;
+        }
+        const serverProt = res.headers["sec-websocket-protocol"];
+        let protError;
+        if (serverProt !== void 0) {
+          if (!protocolSet.size) {
+            protError = "Server sent a subprotocol but none was requested";
+          } else if (!protocolSet.has(serverProt)) {
+            protError = "Server sent an invalid subprotocol";
+          }
+        } else if (protocolSet.size) {
+          protError = "Server sent no subprotocol";
+        }
+        if (protError) {
+          abortHandshake(websocket, socket, protError);
+          return;
+        }
+        if (serverProt) websocket._protocol = serverProt;
+        const secWebSocketExtensions = res.headers["sec-websocket-extensions"];
+        if (secWebSocketExtensions !== void 0) {
+          if (!perMessageDeflate) {
+            const message = "Server sent a Sec-WebSocket-Extensions header but no extension was requested";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          let extensions;
+          try {
+            extensions = parse3(secWebSocketExtensions);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Extensions header";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          const extensionNames = Object.keys(extensions);
+          if (extensionNames.length !== 1 || extensionNames[0] !== PerMessageDeflate2.extensionName) {
+            const message = "Server indicated an extension that was not requested";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          try {
+            perMessageDeflate.accept(extensions[PerMessageDeflate2.extensionName]);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Extensions header";
+            abortHandshake(websocket, socket, message);
+            return;
+          }
+          websocket._extensions[PerMessageDeflate2.extensionName] = perMessageDeflate;
+        }
+        websocket.setSocket(socket, head, {
+          allowSynchronousEvents: opts.allowSynchronousEvents,
+          generateMask: opts.generateMask,
+          maxBufferedChunks: opts.maxBufferedChunks,
+          maxFragments: opts.maxFragments,
+          maxPayload: opts.maxPayload,
+          skipUTF8Validation: opts.skipUTF8Validation
+        });
+      });
+      if (opts.finishRequest) {
+        opts.finishRequest(req, websocket);
+      } else {
+        req.end();
+      }
+    }
+    function emitErrorAndClose(websocket, err) {
+      websocket._readyState = WebSocket2.CLOSING;
+      websocket._errorEmitted = true;
+      websocket.emit("error", err);
+      websocket.emitClose();
+    }
+    function netConnect(options) {
+      options.path = options.socketPath;
+      return net.connect(options);
+    }
+    function tlsConnect(options) {
+      options.path = void 0;
+      if (!options.servername && options.servername !== "") {
+        options.servername = net.isIP(options.host) ? "" : options.host;
+      }
+      return tls.connect(options);
+    }
+    function abortHandshake(websocket, stream, message) {
+      websocket._readyState = WebSocket2.CLOSING;
+      const err = new Error(message);
+      Error.captureStackTrace(err, abortHandshake);
+      if (stream.setHeader) {
+        stream[kAborted] = true;
+        stream.abort();
+        if (stream.socket && !stream.socket.destroyed) {
+          stream.socket.destroy();
+        }
+        process.nextTick(emitErrorAndClose, websocket, err);
+      } else {
+        stream.destroy(err);
+        stream.once("error", websocket.emit.bind(websocket, "error"));
+        stream.once("close", websocket.emitClose.bind(websocket));
+      }
+    }
+    function sendAfterClose(websocket, data, cb) {
+      if (data) {
+        const length = isBlob(data) ? data.size : toBuffer(data).length;
+        if (websocket._socket) websocket._sender._bufferedBytes += length;
+        else websocket._bufferedAmount += length;
+      }
+      if (cb) {
+        const err = new Error(
+          `WebSocket is not open: readyState ${websocket.readyState} (${readyStates[websocket.readyState]})`
+        );
+        process.nextTick(cb, err);
+      }
+    }
+    function receiverOnConclude(code, reason) {
+      const websocket = this[kWebSocket];
+      websocket._closeFrameReceived = true;
+      websocket._closeMessage = reason;
+      websocket._closeCode = code;
+      if (websocket._socket[kWebSocket] === void 0) return;
+      websocket._socket.removeListener("data", socketOnData);
+      process.nextTick(resume, websocket._socket);
+      if (code === 1005) websocket.close();
+      else websocket.close(code, reason);
+    }
+    function receiverOnDrain() {
+      const websocket = this[kWebSocket];
+      if (!websocket.isPaused) websocket._socket.resume();
+    }
+    function receiverOnError(err) {
+      const websocket = this[kWebSocket];
+      if (websocket._socket[kWebSocket] !== void 0) {
+        websocket._socket.removeListener("data", socketOnData);
+        process.nextTick(resume, websocket._socket);
+        websocket.close(err[kStatusCode]);
+      }
+      if (!websocket._errorEmitted) {
+        websocket._errorEmitted = true;
+        websocket.emit("error", err);
+      }
+    }
+    function receiverOnFinish() {
+      this[kWebSocket].emitClose();
+    }
+    function receiverOnMessage(data, isBinary) {
+      this[kWebSocket].emit("message", data, isBinary);
+    }
+    function receiverOnPing(data) {
+      const websocket = this[kWebSocket];
+      if (websocket._autoPong) websocket.pong(data, !this._isServer, NOOP);
+      websocket.emit("ping", data);
+    }
+    function receiverOnPong(data) {
+      this[kWebSocket].emit("pong", data);
+    }
+    function resume(stream) {
+      stream.resume();
+    }
+    function senderOnError(err) {
+      const websocket = this[kWebSocket];
+      if (websocket.readyState === WebSocket2.CLOSED) return;
+      if (websocket.readyState === WebSocket2.OPEN) {
+        websocket._readyState = WebSocket2.CLOSING;
+        setCloseTimer(websocket);
+      }
+      this._socket.end();
+      if (!websocket._errorEmitted) {
+        websocket._errorEmitted = true;
+        websocket.emit("error", err);
+      }
+    }
+    function setCloseTimer(websocket) {
+      websocket._closeTimer = setTimeout(
+        websocket._socket.destroy.bind(websocket._socket),
+        websocket._closeTimeout
+      );
+    }
+    function socketOnClose() {
+      const websocket = this[kWebSocket];
+      this.removeListener("close", socketOnClose);
+      this.removeListener("data", socketOnData);
+      this.removeListener("end", socketOnEnd);
+      websocket._readyState = WebSocket2.CLOSING;
+      if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && this._readableState.length !== 0) {
+        const chunk = this.read(this._readableState.length);
+        websocket._receiver.write(chunk);
+      }
+      websocket._receiver.end();
+      this[kWebSocket] = void 0;
+      clearTimeout(websocket._closeTimer);
+      if (websocket._receiver._writableState.finished || websocket._receiver._writableState.errorEmitted) {
+        websocket.emitClose();
+      } else {
+        websocket._receiver.on("error", receiverOnFinish);
+        websocket._receiver.on("finish", receiverOnFinish);
+      }
+    }
+    function socketOnData(chunk) {
+      if (!this[kWebSocket]._receiver.write(chunk)) {
+        this.pause();
+      }
+    }
+    function socketOnEnd() {
+      const websocket = this[kWebSocket];
+      websocket._readyState = WebSocket2.CLOSING;
+      websocket._receiver.end();
+      this.end();
+    }
+    function socketOnError() {
+      const websocket = this[kWebSocket];
+      this.removeListener("error", socketOnError);
+      this.on("error", NOOP);
+      if (websocket) {
+        websocket._readyState = WebSocket2.CLOSING;
+        this.destroy();
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/stream.js
+var require_stream = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/stream.js"(exports, module) {
+    "use strict";
+    var WebSocket2 = require_websocket();
+    var { Duplex } = __require("stream");
+    function emitClose(stream) {
+      stream.emit("close");
+    }
+    function duplexOnEnd() {
+      if (!this.destroyed && this._writableState.finished) {
+        this.destroy();
+      }
+    }
+    function duplexOnError(err) {
+      this.removeListener("error", duplexOnError);
+      this.destroy();
+      if (this.listenerCount("error") === 0) {
+        this.emit("error", err);
+      }
+    }
+    function createWebSocketStream2(ws, options) {
+      let terminateOnDestroy = true;
+      const duplex = new Duplex({
+        ...options,
+        autoDestroy: false,
+        emitClose: false,
+        objectMode: false,
+        writableObjectMode: false
+      });
+      ws.on("message", function message(msg, isBinary) {
+        const data = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+        if (!duplex.push(data)) ws.pause();
+      });
+      ws.once("error", function error63(err) {
+        if (duplex.destroyed) return;
+        terminateOnDestroy = false;
+        duplex.destroy(err);
+      });
+      ws.once("close", function close() {
+        if (duplex.destroyed) return;
+        duplex.push(null);
+      });
+      duplex._destroy = function(err, callback) {
+        if (ws.readyState === ws.CLOSED) {
+          callback(err);
+          process.nextTick(emitClose, duplex);
+          return;
+        }
+        let called = false;
+        ws.once("error", function error63(err2) {
+          called = true;
+          callback(err2);
+        });
+        ws.once("close", function close() {
+          if (!called) callback(err);
+          process.nextTick(emitClose, duplex);
+        });
+        if (terminateOnDestroy) ws.terminate();
+      };
+      duplex._final = function(callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open6() {
+            duplex._final(callback);
+          });
+          return;
+        }
+        if (ws._socket === null) return;
+        if (ws._socket._writableState.finished) {
+          callback();
+          if (duplex._readableState.endEmitted) duplex.destroy();
+        } else {
+          ws._socket.once("finish", function finish2() {
+            callback();
+          });
+          ws.close();
+        }
+      };
+      duplex._read = function() {
+        if (ws.isPaused) ws.resume();
+      };
+      duplex._write = function(chunk, encoding, callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open6() {
+            duplex._write(chunk, encoding, callback);
+          });
+          return;
+        }
+        ws.send(chunk, callback);
+      };
+      duplex.on("end", duplexOnEnd);
+      duplex.on("error", duplexOnError);
+      return duplex;
+    }
+    module.exports = createWebSocketStream2;
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/subprotocol.js
+var require_subprotocol = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/subprotocol.js"(exports, module) {
+    "use strict";
+    var { tokenChars } = require_validation2();
+    function parse3(header) {
+      const protocols = /* @__PURE__ */ new Set();
+      let start = -1;
+      let end = -1;
+      let i = 0;
+      for (i; i < header.length; i++) {
+        const code = header.charCodeAt(i);
+        if (end === -1 && tokenChars[code] === 1) {
+          if (start === -1) start = i;
+        } else if (i !== 0 && (code === 32 || code === 9)) {
+          if (end === -1 && start !== -1) end = i;
+        } else if (code === 44) {
+          if (start === -1) {
+            throw new SyntaxError(`Unexpected character at index ${i}`);
+          }
+          if (end === -1) end = i;
+          const protocol2 = header.slice(start, end);
+          if (protocols.has(protocol2)) {
+            throw new SyntaxError(`The "${protocol2}" subprotocol is duplicated`);
+          }
+          protocols.add(protocol2);
+          start = end = -1;
+        } else {
+          throw new SyntaxError(`Unexpected character at index ${i}`);
+        }
+      }
+      if (start === -1 || end !== -1) {
+        throw new SyntaxError("Unexpected end of input");
+      }
+      const protocol = header.slice(start, i);
+      if (protocols.has(protocol)) {
+        throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+      }
+      protocols.add(protocol);
+      return protocols;
+    }
+    module.exports = { parse: parse3 };
+  }
+});
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket-server.js
+var require_websocket_server = __commonJS({
+  "node_modules/.pnpm/ws@8.22.0/node_modules/ws/lib/websocket-server.js"(exports, module) {
+    "use strict";
+    var EventEmitter = __require("events");
+    var http = __require("http");
+    var { Duplex } = __require("stream");
+    var { createHash: createHash12 } = __require("crypto");
+    var extension2 = require_extension();
+    var PerMessageDeflate2 = require_permessage_deflate();
+    var subprotocol2 = require_subprotocol();
+    var WebSocket2 = require_websocket();
+    var { CLOSE_TIMEOUT, GUID, kWebSocket } = require_constants();
+    var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
+    var RUNNING = 0;
+    var CLOSING = 1;
+    var CLOSED = 2;
+    var WebSocketServer2 = class extends EventEmitter {
+      /**
+       * Create a `WebSocketServer` instance.
+       *
+       * @param {Object} options Configuration options
+       * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+       *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+       *     multiple times in the same tick
+       * @param {Boolean} [options.autoPong=true] Specifies whether or not to
+       *     automatically send a pong in response to a ping
+       * @param {Number} [options.backlog=511] The maximum length of the queue of
+       *     pending connections
+       * @param {Boolean} [options.clientTracking=true] Specifies whether or not to
+       *     track clients
+       * @param {Number} [options.closeTimeout=30000] Duration in milliseconds to
+       *     wait for the closing handshake to finish after `websocket.close()` is
+       *     called
+       * @param {Function} [options.handleProtocols] A hook to handle protocols
+       * @param {String} [options.host] The hostname where to bind the server
+       * @param {Number} [options.maxBufferedChunks=262144] The maximum number of
+       *     buffered data chunks
+       * @param {Number} [options.maxFragments=16384] The maximum number of message
+       *     fragments
+       * @param {Number} [options.maxPayload=104857600] The maximum allowed message
+       *     size
+       * @param {Boolean} [options.noServer=false] Enable no server mode
+       * @param {String} [options.path] Accept only connections matching this path
+       * @param {(Boolean|Object)} [options.perMessageDeflate=false] Enable/disable
+       *     permessage-deflate
+       * @param {Number} [options.port] The port where to bind the server
+       * @param {(http.Server|https.Server)} [options.server] A pre-created HTTP/S
+       *     server to use
+       * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+       *     not to skip UTF-8 validation for text and close messages
+       * @param {Function} [options.verifyClient] A hook to reject connections
+       * @param {Function} [options.WebSocket=WebSocket] Specifies the `WebSocket`
+       *     class to use. It must be the `WebSocket` class or class that extends it
+       * @param {Function} [callback] A listener for the `listening` event
+       */
+      constructor(options, callback) {
+        super();
+        options = {
+          allowSynchronousEvents: true,
+          autoPong: true,
+          maxBufferedChunks: 256 * 1024,
+          maxFragments: 16 * 1024,
+          maxPayload: 100 * 1024 * 1024,
+          skipUTF8Validation: false,
+          perMessageDeflate: false,
+          handleProtocols: null,
+          clientTracking: true,
+          closeTimeout: CLOSE_TIMEOUT,
+          verifyClient: null,
+          noServer: false,
+          backlog: null,
+          // use default (511 as implemented in net.js)
+          server: null,
+          host: null,
+          path: null,
+          port: null,
+          WebSocket: WebSocket2,
+          ...options
+        };
+        if (options.port == null && !options.server && !options.noServer || options.port != null && (options.server || options.noServer) || options.server && options.noServer) {
+          throw new TypeError(
+            'One and only one of the "port", "server", or "noServer" options must be specified'
+          );
+        }
+        if (options.port != null) {
+          this._server = http.createServer((req, res) => {
+            const body = http.STATUS_CODES[426];
+            res.writeHead(426, {
+              "Content-Length": body.length,
+              "Content-Type": "text/plain"
+            });
+            res.end(body);
+          });
+          this._server.listen(
+            options.port,
+            options.host,
+            options.backlog,
+            callback
+          );
+        } else if (options.server) {
+          this._server = options.server;
+        }
+        if (this._server) {
+          const emitConnection = this.emit.bind(this, "connection");
+          this._removeListeners = addListeners(this._server, {
+            listening: this.emit.bind(this, "listening"),
+            error: this.emit.bind(this, "error"),
+            upgrade: (req, socket, head) => {
+              this.handleUpgrade(req, socket, head, emitConnection);
+            }
+          });
+        }
+        if (options.perMessageDeflate === true) options.perMessageDeflate = {};
+        if (options.clientTracking) {
+          this.clients = /* @__PURE__ */ new Set();
+          this._shouldEmitClose = false;
+        }
+        this.options = options;
+        this._state = RUNNING;
+      }
+      /**
+       * Returns the bound address, the address family name, and port of the server
+       * as reported by the operating system if listening on an IP socket.
+       * If the server is listening on a pipe or UNIX domain socket, the name is
+       * returned as a string.
+       *
+       * @return {(Object|String|null)} The address of the server
+       * @public
+       */
+      address() {
+        if (this.options.noServer) {
+          throw new Error('The server is operating in "noServer" mode');
+        }
+        if (!this._server) return null;
+        return this._server.address();
+      }
+      /**
+       * Stop the server from accepting new connections and emit the `'close'` event
+       * when all existing connections are closed.
+       *
+       * @param {Function} [cb] A one-time listener for the `'close'` event
+       * @public
+       */
+      close(cb) {
+        if (this._state === CLOSED) {
+          if (cb) {
+            this.once("close", () => {
+              cb(new Error("The server is not running"));
+            });
+          }
+          process.nextTick(emitClose, this);
+          return;
+        }
+        if (cb) this.once("close", cb);
+        if (this._state === CLOSING) return;
+        this._state = CLOSING;
+        if (this.options.noServer || this.options.server) {
+          if (this._server) {
+            this._removeListeners();
+            this._removeListeners = this._server = null;
+          }
+          if (this.clients) {
+            if (!this.clients.size) {
+              process.nextTick(emitClose, this);
+            } else {
+              this._shouldEmitClose = true;
+            }
+          } else {
+            process.nextTick(emitClose, this);
+          }
+        } else {
+          const server = this._server;
+          this._removeListeners();
+          this._removeListeners = this._server = null;
+          server.close(() => {
+            emitClose(this);
+          });
+        }
+      }
+      /**
+       * See if a given request should be handled by this server instance.
+       *
+       * @param {http.IncomingMessage} req Request object to inspect
+       * @return {Boolean} `true` if the request is valid, else `false`
+       * @public
+       */
+      shouldHandle(req) {
+        if (this.options.path) {
+          const index = req.url.indexOf("?");
+          const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
+          if (pathname !== this.options.path) return false;
+        }
+        return true;
+      }
+      /**
+       * Handle a HTTP Upgrade request.
+       *
+       * @param {http.IncomingMessage} req The request object
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Function} cb Callback
+       * @public
+       */
+      handleUpgrade(req, socket, head, cb) {
+        socket.on("error", socketOnError);
+        const key = req.headers["sec-websocket-key"];
+        const upgrade = req.headers.upgrade;
+        const version4 = +req.headers["sec-websocket-version"];
+        if (req.method !== "GET") {
+          const message = "Invalid HTTP method";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 405, message);
+          return;
+        }
+        if (upgrade === void 0 || upgrade.toLowerCase() !== "websocket") {
+          const message = "Invalid Upgrade header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+          return;
+        }
+        if (key === void 0 || !keyRegex.test(key)) {
+          const message = "Missing or invalid Sec-WebSocket-Key header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+          return;
+        }
+        if (version4 !== 13 && version4 !== 8) {
+          const message = "Missing or invalid Sec-WebSocket-Version header";
+          abortHandshakeOrEmitwsClientError(this, req, socket, 400, message, {
+            "Sec-WebSocket-Version": "13, 8"
+          });
+          return;
+        }
+        if (!this.shouldHandle(req)) {
+          abortHandshake(socket, 400);
+          return;
+        }
+        const secWebSocketProtocol = req.headers["sec-websocket-protocol"];
+        let protocols = /* @__PURE__ */ new Set();
+        if (secWebSocketProtocol !== void 0) {
+          try {
+            protocols = subprotocol2.parse(secWebSocketProtocol);
+          } catch (err) {
+            const message = "Invalid Sec-WebSocket-Protocol header";
+            abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+            return;
+          }
+        }
+        const secWebSocketExtensions = req.headers["sec-websocket-extensions"];
+        const extensions = {};
+        if (this.options.perMessageDeflate && secWebSocketExtensions !== void 0) {
+          const perMessageDeflate = new PerMessageDeflate2({
+            ...this.options.perMessageDeflate,
+            isServer: true,
+            maxPayload: this.options.maxPayload
+          });
+          try {
+            const offers = extension2.parse(secWebSocketExtensions);
+            if (offers[PerMessageDeflate2.extensionName]) {
+              perMessageDeflate.accept(offers[PerMessageDeflate2.extensionName]);
+              extensions[PerMessageDeflate2.extensionName] = perMessageDeflate;
+            }
+          } catch (err) {
+            const message = "Invalid or unacceptable Sec-WebSocket-Extensions header";
+            abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+            return;
+          }
+        }
+        if (this.options.verifyClient) {
+          const info = {
+            origin: req.headers[`${version4 === 8 ? "sec-websocket-origin" : "origin"}`],
+            secure: !!(req.socket.authorized || req.socket.encrypted),
+            req
+          };
+          if (this.options.verifyClient.length === 2) {
+            this.options.verifyClient(info, (verified, code, message, headers) => {
+              if (!verified) {
+                return abortHandshake(socket, code || 401, message, headers);
+              }
+              this.completeUpgrade(
+                extensions,
+                key,
+                protocols,
+                req,
+                socket,
+                head,
+                cb
+              );
+            });
+            return;
+          }
+          if (!this.options.verifyClient(info)) return abortHandshake(socket, 401);
+        }
+        this.completeUpgrade(extensions, key, protocols, req, socket, head, cb);
+      }
+      /**
+       * Upgrade the connection to WebSocket.
+       *
+       * @param {Object} extensions The accepted extensions
+       * @param {String} key The value of the `Sec-WebSocket-Key` header
+       * @param {Set} protocols The subprotocols
+       * @param {http.IncomingMessage} req The request object
+       * @param {Duplex} socket The network socket between the server and client
+       * @param {Buffer} head The first packet of the upgraded stream
+       * @param {Function} cb Callback
+       * @throws {Error} If called more than once with the same socket
+       * @private
+       */
+      completeUpgrade(extensions, key, protocols, req, socket, head, cb) {
+        if (!socket.readable || !socket.writable) return socket.destroy();
+        if (socket[kWebSocket]) {
+          throw new Error(
+            "server.handleUpgrade() was called more than once with the same socket, possibly due to a misconfiguration"
+          );
+        }
+        if (this._state > RUNNING) return abortHandshake(socket, 503);
+        const digest20 = createHash12("sha1").update(key + GUID).digest("base64");
+        const headers = [
+          "HTTP/1.1 101 Switching Protocols",
+          "Upgrade: websocket",
+          "Connection: Upgrade",
+          `Sec-WebSocket-Accept: ${digest20}`
+        ];
+        const ws = new this.options.WebSocket(null, void 0, this.options);
+        if (protocols.size) {
+          const protocol = this.options.handleProtocols ? this.options.handleProtocols(protocols, req) : protocols.values().next().value;
+          if (protocol) {
+            headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+            ws._protocol = protocol;
+          }
+        }
+        if (extensions[PerMessageDeflate2.extensionName]) {
+          const params = extensions[PerMessageDeflate2.extensionName].params;
+          const value = extension2.format({
+            [PerMessageDeflate2.extensionName]: [params]
+          });
+          headers.push(`Sec-WebSocket-Extensions: ${value}`);
+          ws._extensions = extensions;
+        }
+        this.emit("headers", headers, req);
+        socket.write(headers.concat("\r\n").join("\r\n"));
+        socket.removeListener("error", socketOnError);
+        ws.setSocket(socket, head, {
+          allowSynchronousEvents: this.options.allowSynchronousEvents,
+          maxBufferedChunks: this.options.maxBufferedChunks,
+          maxFragments: this.options.maxFragments,
+          maxPayload: this.options.maxPayload,
+          skipUTF8Validation: this.options.skipUTF8Validation
+        });
+        if (this.clients) {
+          this.clients.add(ws);
+          ws.on("close", () => {
+            this.clients.delete(ws);
+            if (this._shouldEmitClose && !this.clients.size) {
+              process.nextTick(emitClose, this);
+            }
+          });
+        }
+        cb(ws, req);
+      }
+    };
+    module.exports = WebSocketServer2;
+    function addListeners(server, map2) {
+      for (const event2 of Object.keys(map2)) server.on(event2, map2[event2]);
+      return function removeListeners() {
+        for (const event2 of Object.keys(map2)) {
+          server.removeListener(event2, map2[event2]);
+        }
+      };
+    }
+    function emitClose(server) {
+      server._state = CLOSED;
+      server.emit("close");
+    }
+    function socketOnError() {
+      this.destroy();
+    }
+    function abortHandshake(socket, code, message, headers) {
+      message = message || http.STATUS_CODES[code];
+      headers = {
+        Connection: "close",
+        "Content-Type": "text/html",
+        "Content-Length": Buffer.byteLength(message),
+        ...headers
+      };
+      socket.once("finish", socket.destroy);
+      socket.end(
+        `HTTP/1.1 ${code} ${http.STATUS_CODES[code]}\r
+` + Object.keys(headers).map((h) => `${h}: ${headers[h]}`).join("\r\n") + "\r\n\r\n" + message
+      );
+    }
+    function abortHandshakeOrEmitwsClientError(server, req, socket, code, message, headers) {
+      if (server.listenerCount("wsClientError")) {
+        const err = new Error(message);
+        Error.captureStackTrace(err, abortHandshakeOrEmitwsClientError);
+        server.emit("wsClientError", err, socket, req);
+      } else {
+        abortHandshake(socket, code, message, headers);
+      }
+    }
+  }
+});
+
 // apps/codex-plugin/src/local-mcp-entry.mjs
 import process8 from "node:process";
 
@@ -7328,7 +11017,7 @@ import { spawn } from "node:child_process";
 var KeychainUnavailableError = class extends Error {
   constructor() {
     super(
-      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Reconnect Kaijan. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
     this.name = "KeychainUnavailableError";
     this.code = "keychain_unavailable";
@@ -7718,9 +11407,6 @@ async function connectBroker(root, build, { home, launch } = {}) {
     logout: () => control("/logout")
   };
 }
-
-// apps/codex-plugin/src/telemetry/mcp.mjs
-import { randomUUID as randomUUID3 } from "node:crypto";
 
 // node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/external.js
 var external_exports = {};
@@ -8445,9 +12131,9 @@ function floatSafeRemainder(val, step2) {
   return ratio - roundedRatio;
 }
 var EVALUATING = /* @__PURE__ */ Symbol("evaluating");
-function defineLazy(object9, key, getter) {
+function defineLazy(object8, key, getter) {
   let value = void 0;
-  Object.defineProperty(object9, key, {
+  Object.defineProperty(object8, key, {
     get() {
       if (value === EVALUATING) {
         return void 0;
@@ -8459,7 +12145,7 @@ function defineLazy(object9, key, getter) {
       return value;
     },
     set(v) {
-      Object.defineProperty(object9, key, {
+      Object.defineProperty(object8, key, {
         value: v
         // configurable: true,
       });
@@ -23369,13 +27055,13 @@ function initializeContext(params) {
     external: params?.external ?? void 0
   };
 }
-function handleUnrepresentable(schema, ctx, json3, params, message) {
+function handleUnrepresentable(schema, ctx, json4, params, message) {
   const result2 = typeof ctx.unrepresentable === "function" ? ctx.unrepresentable({ zodSchema: schema, path: params.path, message }) : ctx.unrepresentable;
   if (result2 === "any")
     return false;
   if (result2 === void 0 || result2 === "throw")
     throw new Error(message);
-  Object.assign(json3, result2);
+  Object.assign(json4, result2);
   return true;
 }
 function processSchema(schema, ctx, _params = { path: [], schemaPath: [] }) {
@@ -23574,8 +27260,8 @@ function foldObjects(members2) {
   }
   const properties = {};
   const required2 = /* @__PURE__ */ new Set();
-  for (const object9 of objects) {
-    for (const key in object9.properties) {
+  for (const object8 of objects) {
+    for (const key in object8.properties) {
       if (Object.prototype.hasOwnProperty.call(properties, key))
         continue;
       const parts = [];
@@ -23589,18 +27275,18 @@ function foldObjects(members2) {
       const merged = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
       assignProp(properties, key, merged);
     }
-    for (const key of object9.required ?? [])
+    for (const key of object8.required ?? [])
       required2.add(key);
   }
   const folded = { type: "object", properties };
   if (required2.size)
     folded.required = [...required2];
-  if (objects.every((object9) => object9.additionalProperties === false)) {
+  if (objects.every((object8) => object8.additionalProperties === false)) {
     folded.additionalProperties = false;
   } else {
     const constraints = [];
-    for (const object9 of objects) {
-      const constraint = undeclaredConstraint(object9);
+    for (const object8 of objects) {
+      const constraint = undeclaredConstraint(object8);
       if (constraint && !constraints.some((seen) => JSON.stringify(seen) === JSON.stringify(constraint)))
         constraints.push(constraint);
     }
@@ -23611,12 +27297,12 @@ function foldObjects(members2) {
   }
   return folded;
 }
-function foldIntersection(json3) {
-  const allOf = json3.allOf;
+function foldIntersection(json4) {
+  const allOf = json4.allOf;
   if (!Array.isArray(allOf) || allOf.length < 2)
     return;
   for (const key of FOLDABLE_KEYS)
-    if (key in json3)
+    if (key in json4)
       return;
   const unions = allOf.filter((m) => UNION_KEYS.some((k) => Array.isArray(m[k])));
   let folded = null;
@@ -23635,8 +27321,8 @@ function foldIntersection(json3) {
   }
   if (!folded)
     return;
-  delete json3.allOf;
-  assignProps(json3, folded);
+  delete json4.allOf;
+  assignProps(json4, folded);
 }
 function finalize(ctx, schema) {
   const root = ctx.seen.get(schema);
@@ -23718,20 +27404,20 @@ function finalize(ctx, schema) {
     if (ctx.intersections.length) {
       const carriers = /* @__PURE__ */ new Map();
       for (const seen of ctx.seen.values()) {
-        for (const json3 of [seen.schema, seen.def]) {
-          const allOf = json3?.allOf;
+        for (const json4 of [seen.schema, seen.def]) {
+          const allOf = json4?.allOf;
           if (!Array.isArray(allOf))
             continue;
           const existing = carriers.get(allOf);
           if (existing)
-            existing.push(json3);
+            existing.push(json4);
           else
-            carriers.set(allOf, [json3]);
+            carriers.set(allOf, [json4]);
         }
       }
       for (const allOf of ctx.intersections) {
-        for (const json3 of carriers.get(allOf) ?? [])
-          foldIntersection(json3);
+        for (const json4 of carriers.get(allOf) ?? [])
+          foldIntersection(json4);
       }
     }
   }
@@ -23966,29 +27652,29 @@ var exactPatterns = /* @__PURE__ */ new Map([
 ]);
 var exactPattern = (p) => exactPatterns.get(p) ?? p;
 var stringProcessor = (schema, ctx, _json, _params) => {
-  const json3 = _json;
-  json3.type = "string";
+  const json4 = _json;
+  json4.type = "string";
   const { minimum, maximum, format, patterns, contentEncoding, laxFormat } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json3.minLength = minimum;
+    json4.minLength = minimum;
   if (typeof maximum === "number")
-    json3.maxLength = maximum;
+    json4.maxLength = maximum;
   if (format) {
-    json3.format = formatMap[format] ?? format;
-    if (json3.format === "")
-      delete json3.format;
+    json4.format = formatMap[format] ?? format;
+    if (json4.format === "")
+      delete json4.format;
     if (format === "time" || laxFormat) {
-      delete json3.format;
+      delete json4.format;
     }
   }
   if (contentEncoding)
-    json3.contentEncoding = contentEncoding;
+    json4.contentEncoding = contentEncoding;
   if (patterns && patterns.size > 0) {
     const patternList = [...patterns].map(exactPattern);
     if (patternList.length === 1)
-      json3.pattern = patternList[0].source;
+      json4.pattern = patternList[0].source;
     else if (patternList.length > 1) {
-      json3.allOf = [
+      json4.allOf = [
         ...patternList.map((regex) => ({
           ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
           pattern: regex.source
@@ -23998,31 +27684,31 @@ var stringProcessor = (schema, ctx, _json, _params) => {
   }
 };
 var numberProcessor = (schema, ctx, _json, params) => {
-  const json3 = _json;
+  const json4 = _json;
   const { minimum, maximum, multipleOf, exclusiveMaximum, exclusiveMinimum, isInt } = aggregateChecks(schema);
-  json3.type = isInt ? "integer" : "number";
+  json4.type = isInt ? "integer" : "number";
   const exMin = typeof exclusiveMinimum === "number" && exclusiveMinimum >= (minimum ?? Number.NEGATIVE_INFINITY);
   const exMax = typeof exclusiveMaximum === "number" && exclusiveMaximum <= (maximum ?? Number.POSITIVE_INFINITY);
   const legacy = ctx.target === "draft-04" || ctx.target === "openapi-3.0";
   if (exMin) {
     if (legacy) {
-      json3.minimum = exclusiveMinimum;
-      json3.exclusiveMinimum = true;
+      json4.minimum = exclusiveMinimum;
+      json4.exclusiveMinimum = true;
     } else {
-      json3.exclusiveMinimum = exclusiveMinimum;
+      json4.exclusiveMinimum = exclusiveMinimum;
     }
   } else if (typeof minimum === "number") {
-    json3.minimum = minimum;
+    json4.minimum = minimum;
   }
   if (exMax) {
     if (legacy) {
-      json3.maximum = exclusiveMaximum;
-      json3.exclusiveMaximum = true;
+      json4.maximum = exclusiveMaximum;
+      json4.exclusiveMaximum = true;
     } else {
-      json3.exclusiveMaximum = exclusiveMaximum;
+      json4.exclusiveMaximum = exclusiveMaximum;
     }
   } else if (typeof maximum === "number") {
-    json3.maximum = maximum;
+    json4.maximum = maximum;
   }
   if (multipleOf) {
     const divisors = /* @__PURE__ */ new Set();
@@ -24030,75 +27716,75 @@ var numberProcessor = (schema, ctx, _json, params) => {
       if (Number.isFinite(divisor) && divisor !== 0)
         divisors.add(Math.abs(divisor));
       else
-        handleUnrepresentable(schema, ctx, json3, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
+        handleUnrepresentable(schema, ctx, json4, params, `A multipleOf divisor of ${divisor} cannot be represented in JSON Schema`);
     }
     const [first, ...rest] = divisors;
     if (first !== void 0)
-      json3.multipleOf = first;
+      json4.multipleOf = first;
     if (rest.length)
-      json3.allOf = [...json3.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
+      json4.allOf = [...json4.allOf ?? [], ...rest.map((m) => ({ multipleOf: m }))];
   }
 };
-var booleanProcessor = (_schema, _ctx, json3, _params) => {
-  json3.type = "boolean";
+var booleanProcessor = (_schema, _ctx, json4, _params) => {
+  json4.type = "boolean";
 };
-var bigintProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "BigInt cannot be represented in JSON Schema");
+var bigintProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "BigInt cannot be represented in JSON Schema");
 };
-var symbolProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Symbols cannot be represented in JSON Schema");
+var symbolProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Symbols cannot be represented in JSON Schema");
 };
-var nullProcessor = (_schema, ctx, json3, _params) => {
+var nullProcessor = (_schema, ctx, json4, _params) => {
   if (ctx.target === "openapi-3.0") {
-    json3.type = "string";
-    json3.nullable = true;
-    json3.enum = [null];
+    json4.type = "string";
+    json4.nullable = true;
+    json4.enum = [null];
   } else {
-    json3.type = "null";
+    json4.type = "null";
   }
 };
-var undefinedProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Undefined cannot be represented in JSON Schema");
+var undefinedProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Undefined cannot be represented in JSON Schema");
 };
-var voidProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Void cannot be represented in JSON Schema");
+var voidProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Void cannot be represented in JSON Schema");
 };
-var neverProcessor = (_schema, _ctx, json3, _params) => {
-  json3.not = {};
+var neverProcessor = (_schema, _ctx, json4, _params) => {
+  json4.not = {};
 };
 var anyProcessor = (_schema, _ctx, _json, _params) => {
 };
 var unknownProcessor = (_schema, _ctx, _json, _params) => {
 };
-var dateProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Date cannot be represented in JSON Schema");
+var dateProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Date cannot be represented in JSON Schema");
 };
-var enumProcessor = (schema, _ctx, json3, _params) => {
+var enumProcessor = (schema, _ctx, json4, _params) => {
   const def = schema._zod.def;
   const values = getEnumValues(def.entries);
   if (values.length === 0) {
-    json3.not = {};
+    json4.not = {};
     return;
   }
   if (values.every((v) => typeof v === "number"))
-    json3.type = "number";
+    json4.type = "number";
   if (values.every((v) => typeof v === "string"))
-    json3.type = "string";
-  json3.enum = values;
+    json4.type = "string";
+  json4.enum = values;
 };
-var literalProcessor = (schema, ctx, json3, params) => {
+var literalProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   if (def.values.length === 0) {
-    json3.not = {};
+    json4.not = {};
     return;
   }
   const vals = [];
   for (const val of def.values) {
     if (val === void 0) {
-      if (handleUnrepresentable(schema, ctx, json3, params, "Literal `undefined` cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json4, params, "Literal `undefined` cannot be represented in JSON Schema"))
         return;
     } else if (typeof val === "bigint") {
-      if (handleUnrepresentable(schema, ctx, json3, params, "BigInt literals cannot be represented in JSON Schema"))
+      if (handleUnrepresentable(schema, ctx, json4, params, "BigInt literals cannot be represented in JSON Schema"))
         return;
       vals.push(Number(val));
     } else {
@@ -24108,37 +27794,37 @@ var literalProcessor = (schema, ctx, json3, params) => {
   if (vals.length === 0) {
   } else if (vals.length === 1) {
     const val = vals[0];
-    json3.type = val === null ? "null" : typeof val;
+    json4.type = val === null ? "null" : typeof val;
     if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-      json3.enum = [val];
+      json4.enum = [val];
     } else {
-      json3.const = val;
+      json4.const = val;
     }
   } else {
     if (vals.every((v) => typeof v === "number"))
-      json3.type = "number";
+      json4.type = "number";
     if (vals.every((v) => typeof v === "string"))
-      json3.type = "string";
+      json4.type = "string";
     if (vals.every((v) => typeof v === "boolean"))
-      json3.type = "boolean";
+      json4.type = "boolean";
     if (vals.every((v) => v === null))
-      json3.type = "null";
-    json3.enum = vals;
+      json4.type = "null";
+    json4.enum = vals;
   }
 };
-var nanProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "NaN cannot be represented in JSON Schema");
+var nanProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "NaN cannot be represented in JSON Schema");
 };
-var templateLiteralProcessor = (schema, _ctx, json3, _params) => {
-  const _json = json3;
+var templateLiteralProcessor = (schema, _ctx, json4, _params) => {
+  const _json = json4;
   const pattern = schema._zod.pattern;
   if (!pattern)
     throw new Error("Pattern not found in template literal");
   _json.type = "string";
   _json.pattern = pattern.source;
 };
-var fileProcessor = (schema, _ctx, json3, _params) => {
-  const _json = json3;
+var fileProcessor = (schema, _ctx, json4, _params) => {
+  const _json = json4;
   _json.type = "string";
   _json.format = "binary";
   _json.contentEncoding = "binary";
@@ -24156,34 +27842,34 @@ var fileProcessor = (schema, _ctx, json3, _params) => {
   else
     _json.anyOf = mime.map((m) => ({ contentMediaType: m }));
 };
-var successProcessor = (_schema, _ctx, json3, _params) => {
-  json3.type = "boolean";
+var successProcessor = (_schema, _ctx, json4, _params) => {
+  json4.type = "boolean";
 };
-var customProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Custom types cannot be represented in JSON Schema");
+var customProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Custom types cannot be represented in JSON Schema");
 };
-var functionProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Function types cannot be represented in JSON Schema");
+var functionProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Function types cannot be represented in JSON Schema");
 };
-var transformProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Transforms cannot be represented in JSON Schema");
+var transformProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Transforms cannot be represented in JSON Schema");
 };
-var mapProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Map cannot be represented in JSON Schema");
+var mapProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Map cannot be represented in JSON Schema");
 };
-var setProcessor = (schema, ctx, json3, params) => {
-  handleUnrepresentable(schema, ctx, json3, params, "Set cannot be represented in JSON Schema");
+var setProcessor = (schema, ctx, json4, params) => {
+  handleUnrepresentable(schema, ctx, json4, params, "Set cannot be represented in JSON Schema");
 };
 var arrayProcessor = (schema, ctx, _json, params) => {
-  const json3 = _json;
+  const json4 = _json;
   const def = schema._zod.def;
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json3.minItems = minimum;
+    json4.minItems = minimum;
   if (typeof maximum === "number")
-    json3.maxItems = maximum;
-  json3.type = "array";
-  json3.items = processSchema(def.element, ctx, {
+    json4.maxItems = maximum;
+  json4.type = "array";
+  json4.items = processSchema(def.element, ctx, {
     ...params,
     path: [...params.path, "items"]
   });
@@ -24199,17 +27885,17 @@ function inputOptin(schema) {
   return schema._zod.optin;
 }
 var objectProcessor = (schema, ctx, _json, params) => {
-  const json3 = _json;
+  const json4 = _json;
   const def = schema._zod.def;
   const shape = def.shape;
   const symbolKeys = Object.getOwnPropertySymbols(shape);
-  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json3, params, "Symbol keys cannot be represented in JSON Schema")) {
+  if (symbolKeys.length && handleUnrepresentable(schema, ctx, json4, params, "Symbol keys cannot be represented in JSON Schema")) {
     return;
   }
-  json3.type = "object";
-  json3.properties = {};
+  json4.type = "object";
+  json4.properties = {};
   for (const key in shape) {
-    assignProp(json3.properties, key, processSchema(shape[key], ctx, {
+    assignProp(json4.properties, key, processSchema(shape[key], ctx, {
       ...params,
       path: [...params.path, "properties", key]
     }));
@@ -24222,21 +27908,21 @@ var objectProcessor = (schema, ctx, _json, params) => {
     }
   }
   if (requiredKeys.length > 0) {
-    json3.required = requiredKeys;
+    json4.required = requiredKeys;
   }
   if (def.catchall?._zod.def.type === "never") {
-    json3.additionalProperties = false;
+    json4.additionalProperties = false;
   } else if (!def.catchall) {
     if (ctx.io === "output")
-      json3.additionalProperties = false;
+      json4.additionalProperties = false;
   } else if (def.catchall) {
-    json3.additionalProperties = processSchema(def.catchall, ctx, {
+    json4.additionalProperties = processSchema(def.catchall, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
   }
 };
-var unionProcessor = (schema, ctx, json3, params) => {
+var unionProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   const isExclusive = def.inclusive === false;
   const options = def.options.map((x, i) => processSchema(x, ctx, {
@@ -24244,12 +27930,12 @@ var unionProcessor = (schema, ctx, json3, params) => {
     path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
   }));
   if (isExclusive) {
-    json3.oneOf = options;
+    json4.oneOf = options;
   } else {
-    json3.anyOf = options;
+    json4.anyOf = options;
   }
 };
-var intersectionProcessor = (schema, ctx, json3, params) => {
+var intersectionProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   const a = processSchema(def.left, ctx, {
     ...params,
@@ -24264,13 +27950,13 @@ var intersectionProcessor = (schema, ctx, json3, params) => {
     ...isSimpleIntersection(a) ? a.allOf : [a],
     ...isSimpleIntersection(b) ? b.allOf : [b]
   ];
-  json3.allOf = allOf;
+  json4.allOf = allOf;
   ctx.intersections.push(allOf);
 };
 var tupleProcessor = (schema, ctx, _json, params) => {
-  const json3 = _json;
+  const json4 = _json;
   const def = schema._zod.def;
-  json3.type = "array";
+  json4.type = "array";
   const prefixPath = ctx.target === "draft-2020-12" ? "prefixItems" : "items";
   const restPath = ctx.target === "draft-2020-12" ? "items" : ctx.target === "openapi-3.0" ? "items" : "additionalItems";
   const prefixItems = def.items.map((x, i) => processSchema(x, ctx, {
@@ -24292,70 +27978,70 @@ var tupleProcessor = (schema, ctx, _json, params) => {
   const maxItems = def.items.length;
   const isClosed = !def.rest;
   if (ctx.target === "draft-2020-12") {
-    json3.prefixItems = prefixItems;
+    json4.prefixItems = prefixItems;
     if (isClosed) {
-      json3.items = false;
+      json4.items = false;
     } else if (rest) {
-      json3.items = rest;
+      json4.items = rest;
     }
     if (minItems > 0)
-      json3.minItems = minItems;
+      json4.minItems = minItems;
     if (isClosed)
-      json3.maxItems = maxItems;
+      json4.maxItems = maxItems;
   } else if (ctx.target === "openapi-3.0") {
-    json3.items = {
+    json4.items = {
       anyOf: prefixItems
     };
     if (rest) {
-      json3.items.anyOf.push(rest);
+      json4.items.anyOf.push(rest);
     }
     if (minItems > 0)
-      json3.minItems = minItems;
+      json4.minItems = minItems;
     if (isClosed)
-      json3.maxItems = maxItems;
+      json4.maxItems = maxItems;
   } else {
-    json3.items = prefixItems;
+    json4.items = prefixItems;
     if (isClosed) {
-      json3.additionalItems = false;
+      json4.additionalItems = false;
     } else if (rest) {
-      json3.additionalItems = rest;
+      json4.additionalItems = rest;
     }
     if (minItems > 0)
-      json3.minItems = minItems;
+      json4.minItems = minItems;
     if (isClosed)
-      json3.maxItems = maxItems;
+      json4.maxItems = maxItems;
   }
   const { minimum, maximum } = aggregateChecks(schema);
   if (typeof minimum === "number")
-    json3.minItems = minimum;
+    json4.minItems = minimum;
   if (typeof maximum === "number")
-    json3.maxItems = maximum;
+    json4.maxItems = maximum;
 };
-function stringifyKeyNames(bySchema, json3, visited) {
-  if (json3.$ref) {
-    if (visited.has(json3))
-      return json3;
-    visited.add(json3);
-    const def = bySchema.get(json3)?.def;
+function stringifyKeyNames(bySchema, json4, visited) {
+  if (json4.$ref) {
+    if (visited.has(json4))
+      return json4;
+    visited.add(json4);
+    const def = bySchema.get(json4)?.def;
     if (!def)
-      return json3;
+      return json4;
     const inlined = stringifyKeyNames(bySchema, def, visited);
-    return inlined === def ? json3 : inlined;
+    return inlined === def ? json4 : inlined;
   }
   for (const keyword of ["anyOf", "oneOf"]) {
-    const branches = json3[keyword];
+    const branches = json4[keyword];
     if (!Array.isArray(branches))
       continue;
     const mapped = branches.map((branch) => stringifyKeyNames(bySchema, branch, visited));
     if (mapped.some((branch, i) => branch !== branches[i]))
-      json3 = { ...json3, [keyword]: mapped };
+      json4 = { ...json4, [keyword]: mapped };
   }
-  const types2 = Array.isArray(json3.type) ? json3.type : [json3.type];
+  const types2 = Array.isArray(json4.type) ? json4.type : [json4.type];
   const numericType = !types2.includes("string") && types2.some((t) => t === "number" || t === "integer");
-  const values = json3.enum ?? (json3.const !== void 0 ? [json3.const] : void 0);
+  const values = json4.enum ?? (json4.const !== void 0 ? [json4.const] : void 0);
   if (!numericType && !values?.some((v) => typeof v === "number"))
-    return json3;
-  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id9, ...rest } = json3;
+    return json4;
+  const { minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, format, id: id9, ...rest } = json4;
   if (rest.enum)
     rest.enum = rest.enum.map((v) => typeof v === "number" ? String(v) : v);
   else if (typeof rest.const === "number")
@@ -24395,9 +28081,9 @@ function rewriteKeyNames(ctx) {
   }
 }
 var recordProcessor = (schema, ctx, _json, params) => {
-  const json3 = _json;
+  const json4 = _json;
   const def = schema._zod.def;
-  json3.type = "object";
+  json4.type = "object";
   const keyType = def.keyType;
   const patterns = aggregateChecks(keyType).patterns;
   if (def.mode === "loose" && patterns && patterns.size > 0) {
@@ -24405,13 +28091,13 @@ var recordProcessor = (schema, ctx, _json, params) => {
       ...params,
       path: [...params.path, "patternProperties", "*"]
     });
-    json3.patternProperties = {};
+    json4.patternProperties = {};
     for (const pattern of patterns) {
-      assignProp(json3.patternProperties, exactPattern(pattern).source, valueSchema);
+      assignProp(json4.patternProperties, exactPattern(pattern).source, valueSchema);
     }
   } else {
     if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-      json3.propertyNames = processSchema(def.keyType, ctx, {
+      json4.propertyNames = processSchema(def.keyType, ctx, {
         ...params,
         path: [...params.path, "propertyNames"]
       });
@@ -24423,7 +28109,7 @@ var recordProcessor = (schema, ctx, _json, params) => {
       }
       pending.push(schema);
     }
-    json3.additionalProperties = processSchema(def.valueType, ctx, {
+    json4.additionalProperties = processSchema(def.valueType, ctx, {
       ...params,
       path: [...params.path, "additionalProperties"]
     });
@@ -24433,19 +28119,19 @@ var recordProcessor = (schema, ctx, _json, params) => {
   if (keyValues && !def.partial && !omittableOnInput) {
     const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
     if (validKeyValues.length > 0) {
-      json3.required = validKeyValues.map(String);
+      json4.required = validKeyValues.map(String);
     }
   }
 };
-var nullableProcessor = (schema, ctx, json3, params) => {
+var nullableProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   const inner = processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   if (ctx.target === "openapi-3.0") {
     seen.ref = def.innerType;
-    json3.nullable = true;
+    json4.nullable = true;
   } else {
-    json3.anyOf = [inner, { type: "null" }];
+    json4.anyOf = [inner, { type: "null" }];
   }
 };
 var nonoptionalProcessor = (schema, ctx, _json, params) => {
@@ -24455,7 +28141,7 @@ var nonoptionalProcessor = (schema, ctx, _json, params) => {
   seen.ref = def.innerType;
 };
 var UNREPRESENTABLE_DEFAULT = /* @__PURE__ */ Symbol();
-function serializeDefaultValue(value, schema, ctx, json3, params) {
+function serializeDefaultValue(value, schema, ctx, json4, params) {
   let unrepresentable = false;
   const serialized = JSON.stringify(value, (_, val) => {
     if (typeof val !== "bigint")
@@ -24465,30 +28151,30 @@ function serializeDefaultValue(value, schema, ctx, json3, params) {
   });
   if (!unrepresentable)
     return JSON.parse(serialized);
-  handleUnrepresentable(schema, ctx, json3, params, "BigInt defaults cannot be represented in JSON Schema");
+  handleUnrepresentable(schema, ctx, json4, params, "BigInt defaults cannot be represented in JSON Schema");
   return UNREPRESENTABLE_DEFAULT;
 }
-var defaultProcessor = (schema, ctx, json3, params) => {
+var defaultProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json4, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json3.default = value;
+    json4.default = value;
 };
-var prefaultProcessor = (schema, ctx, json3, params) => {
+var prefaultProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
   if (ctx.io !== "input")
     return;
-  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json3, params);
+  const value = serializeDefaultValue(def.defaultValue, schema, ctx, json4, params);
   if (value !== UNREPRESENTABLE_DEFAULT)
-    json3._prefault = value;
+    json4._prefault = value;
 };
-var catchProcessor = (schema, ctx, json3, params) => {
+var catchProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
@@ -24497,10 +28183,10 @@ var catchProcessor = (schema, ctx, json3, params) => {
   try {
     catchValue = def.catchValue(void 0);
   } catch {
-    handleUnrepresentable(schema, ctx, json3, params, "Dynamic catch values are not supported in JSON Schema");
+    handleUnrepresentable(schema, ctx, json4, params, "Dynamic catch values are not supported in JSON Schema");
     return;
   }
-  json3.default = catchValue;
+  json4.default = catchValue;
 };
 var pipeProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -24510,12 +28196,12 @@ var pipeProcessor = (schema, ctx, _json, params) => {
   const seen = ctx.seen.get(schema);
   seen.ref = innerType;
 };
-var readonlyProcessor = (schema, ctx, json3, params) => {
+var readonlyProcessor = (schema, ctx, json4, params) => {
   const def = schema._zod.def;
   processSchema(def.innerType, ctx, params);
   const seen = ctx.seen.get(schema);
   seen.ref = def.innerType;
-  json3.readOnly = true;
+  json4.readOnly = true;
 };
 var promiseProcessor = (schema, ctx, _json, params) => {
   const def = schema._zod.def;
@@ -25157,7 +28843,7 @@ var _ZodString = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodString.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json3, params) => stringProcessor(inst, ctx, json3, params);
+    inst._zod.processJSONSchema = (ctx, json4, params) => stringProcessor(inst, ctx, json4, params);
   },
   /* @__PURE__ */ util_exports.derived({
     format: (inst) => aggregateChecks(inst).format ?? null,
@@ -25516,7 +29202,7 @@ var ZodNumber = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodNumber.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json3, params) => numberProcessor(inst, ctx, json3, params);
+    inst._zod.processJSONSchema = (ctx, json4, params) => numberProcessor(inst, ctx, json4, params);
     inst.isFinite = true;
   },
   /* @__PURE__ */ util_exports.derived({
@@ -25606,7 +29292,7 @@ function uint32(params) {
 var ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def) => {
   $ZodBoolean.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => booleanProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => booleanProcessor(inst, ctx, json4, params);
 });
 function boolean2(params) {
   return _boolean(ZodBoolean, params);
@@ -25616,7 +29302,7 @@ var ZodBigInt = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodBigInt.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json3, params) => bigintProcessor(inst, ctx, json3, params);
+    inst._zod.processJSONSchema = (ctx, json4, params) => bigintProcessor(inst, ctx, json4, params);
   },
   /* @__PURE__ */ util_exports.derived({
     minValue: (inst) => aggregateChecks(inst).minimum ?? null,
@@ -25674,7 +29360,7 @@ function uint64(params) {
 var ZodSymbol = /* @__PURE__ */ $constructor("ZodSymbol", (inst, def) => {
   $ZodSymbol.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => symbolProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => symbolProcessor(inst, ctx, json4, params);
 });
 function symbol(params) {
   return _symbol(ZodSymbol, params);
@@ -25682,7 +29368,7 @@ function symbol(params) {
 var ZodUndefined = /* @__PURE__ */ $constructor("ZodUndefined", (inst, def) => {
   $ZodUndefined.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => undefinedProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => undefinedProcessor(inst, ctx, json4, params);
 });
 function _undefined3(params) {
   return _undefined2(ZodUndefined, params);
@@ -25690,7 +29376,7 @@ function _undefined3(params) {
 var ZodNull = /* @__PURE__ */ $constructor("ZodNull", (inst, def) => {
   $ZodNull.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => nullProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => nullProcessor(inst, ctx, json4, params);
 });
 function _null3(params) {
   return _null2(ZodNull, params);
@@ -25698,7 +29384,7 @@ function _null3(params) {
 var ZodAny = /* @__PURE__ */ $constructor("ZodAny", (inst, def) => {
   $ZodAny.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => anyProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => anyProcessor(inst, ctx, json4, params);
 });
 function any() {
   return _any(ZodAny);
@@ -25706,7 +29392,7 @@ function any() {
 var ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def) => {
   $ZodUnknown.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => unknownProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => unknownProcessor(inst, ctx, json4, params);
 });
 function unknown() {
   return _unknown(ZodUnknown);
@@ -25714,7 +29400,7 @@ function unknown() {
 var ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def) => {
   $ZodNever.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => neverProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => neverProcessor(inst, ctx, json4, params);
 });
 function never(params) {
   return _never(ZodNever, params);
@@ -25722,7 +29408,7 @@ function never(params) {
 var ZodVoid = /* @__PURE__ */ $constructor("ZodVoid", (inst, def) => {
   $ZodVoid.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => voidProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => voidProcessor(inst, ctx, json4, params);
 });
 function _void2(params) {
   return _void(ZodVoid, params);
@@ -25732,7 +29418,7 @@ var ZodDate = /* @__PURE__ */ $constructor(
   (inst, def) => {
     $ZodDate.init(inst, def);
     ZodType.init(inst, def);
-    inst._zod.processJSONSchema = (ctx, json3, params) => dateProcessor(inst, ctx, json3, params);
+    inst._zod.processJSONSchema = (ctx, json4, params) => dateProcessor(inst, ctx, json4, params);
     inst.min = (value, params) => inst.check(_gte(value, params));
     inst.max = (value, params) => inst.check(_lte(value, params));
   },
@@ -25754,7 +29440,7 @@ var ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodArray.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => arrayProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => arrayProcessor(inst, ctx, json4, params);
   inst.element = def.element;
 }, {
   min(n, params) {
@@ -25784,7 +29470,7 @@ var ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodObjectJIT.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => objectProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => objectProcessor(inst, ctx, json4, params);
   util_exports.installLazyProp(inst, "shape", (self) => self._zod.def.shape, false);
 }, {
   keyof() {
@@ -25857,7 +29543,7 @@ function looseObject(shape, params) {
 var ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def) => {
   $ZodUnion.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
   inst.options = def.options;
 });
 function union(options, params) {
@@ -25870,7 +29556,7 @@ function union(options, params) {
 var ZodXor = /* @__PURE__ */ $constructor("ZodXor", (inst, def) => {
   ZodUnion.init(inst, def);
   $ZodXor.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => unionProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => unionProcessor(inst, ctx, json4, params);
   inst.options = def.options;
 });
 function xor(options, params) {
@@ -25896,7 +29582,7 @@ function discriminatedUnion(discriminator, options, params) {
 var ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def) => {
   $ZodIntersection.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => intersectionProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => intersectionProcessor(inst, ctx, json4, params);
 });
 function intersection(left, right) {
   return new ZodIntersection({
@@ -25909,7 +29595,7 @@ var ZodTuple = /* @__PURE__ */ $constructor("ZodTuple", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTuple.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => tupleProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => tupleProcessor(inst, ctx, json4, params);
 }, {
   rest(rest) {
     return this.clone({
@@ -25942,7 +29628,7 @@ var ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodRecord.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => recordProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => recordProcessor(inst, ctx, json4, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
 });
@@ -25984,7 +29670,7 @@ var ZodMap = /* @__PURE__ */ $constructor("ZodMap", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodMap.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => mapProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => mapProcessor(inst, ctx, json4, params);
   inst.keyType = def.keyType;
   inst.valueType = def.valueType;
   inst.min = (...args) => inst.check(_minSize(...args));
@@ -26004,7 +29690,7 @@ var ZodSet = /* @__PURE__ */ $constructor("ZodSet", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodSet.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => setProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => setProcessor(inst, ctx, json4, params);
   inst.min = (...args) => inst.check(_minSize(...args));
   inst.nonempty = (params) => inst.check(_minSize(1, params));
   inst.max = (...args) => inst.check(_maxSize(...args));
@@ -26020,7 +29706,7 @@ function set(valueType, params) {
 var ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def) => {
   $ZodEnum.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => enumProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => enumProcessor(inst, ctx, json4, params);
   inst.enum = def.entries;
   inst.options = [...inst._zod.values];
   const keys = new Set(Object.keys(def.entries));
@@ -26073,7 +29759,7 @@ function nativeEnum(entries, params) {
 var ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def) => {
   $ZodLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => literalProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => literalProcessor(inst, ctx, json4, params);
   inst.values = new Set(def.values);
   Object.defineProperty(inst, "value", {
     get() {
@@ -26094,7 +29780,7 @@ function literal(value, params) {
 var ZodFile = /* @__PURE__ */ $constructor("ZodFile", (inst, def) => {
   $ZodFile.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => fileProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => fileProcessor(inst, ctx, json4, params);
   inst.min = (size, params) => inst.check(_minSize(size, params));
   inst.max = (size, params) => inst.check(_maxSize(size, params));
   inst.mime = (types2, params) => inst.check(_mime(Array.isArray(types2) ? types2 : [types2], params));
@@ -26106,7 +29792,7 @@ var ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def) => {
   _ensureDefaultMemoizer();
   $ZodTransform.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => transformProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => transformProcessor(inst, ctx, json4, params);
   inst._zod.parse = (payload, _ctx) => {
     if (_ctx.direction === "backward") {
       throw new $ZodEncodeError(inst.constructor.name);
@@ -26145,7 +29831,7 @@ function transform(fn) {
 var ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def) => {
   $ZodOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function optional(innerType) {
@@ -26157,7 +29843,7 @@ function optional(innerType) {
 var ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def) => {
   $ZodExactOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => optionalProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => optionalProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function exactOptional(innerType) {
@@ -26169,7 +29855,7 @@ function exactOptional(innerType) {
 var ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def) => {
   $ZodNullable.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => nullableProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => nullableProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nullable(innerType) {
@@ -26184,7 +29870,7 @@ function nullish2(innerType) {
 var ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def) => {
   $ZodDefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => defaultProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => defaultProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeDefault = inst.unwrap;
 });
@@ -26200,7 +29886,7 @@ function _default2(innerType, defaultValue) {
 var ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def) => {
   $ZodPrefault.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => prefaultProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => prefaultProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function prefault(innerType, defaultValue) {
@@ -26215,7 +29901,7 @@ function prefault(innerType, defaultValue) {
 var ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def) => {
   $ZodNonOptional.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => nonoptionalProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => nonoptionalProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function nonoptional(innerType, params) {
@@ -26228,7 +29914,7 @@ function nonoptional(innerType, params) {
 var ZodSuccess = /* @__PURE__ */ $constructor("ZodSuccess", (inst, def) => {
   $ZodSuccess.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => successProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => successProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function success(innerType) {
@@ -26240,7 +29926,7 @@ function success(innerType) {
 var ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def) => {
   $ZodCatch.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => catchProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => catchProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
   inst.removeCatch = inst.unwrap;
 });
@@ -26254,7 +29940,7 @@ function _catch2(innerType, catchValue) {
 var ZodNaN = /* @__PURE__ */ $constructor("ZodNaN", (inst, def) => {
   $ZodNaN.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => nanProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => nanProcessor(inst, ctx, json4, params);
 });
 function nan(params) {
   return _nan(ZodNaN, params);
@@ -26262,7 +29948,7 @@ function nan(params) {
 var ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def) => {
   $ZodPipe.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => pipeProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => pipeProcessor(inst, ctx, json4, params);
   inst.in = def.in;
   inst.out = def.out;
 });
@@ -26304,7 +29990,7 @@ var ZodPreprocess = /* @__PURE__ */ $constructor("ZodPreprocess", (inst, def) =>
 var ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def) => {
   $ZodReadonly.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => readonlyProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => readonlyProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function readonly(innerType) {
@@ -26316,7 +30002,7 @@ function readonly(innerType) {
 var ZodTemplateLiteral = /* @__PURE__ */ $constructor("ZodTemplateLiteral", (inst, def) => {
   $ZodTemplateLiteral.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => templateLiteralProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => templateLiteralProcessor(inst, ctx, json4, params);
 });
 function templateLiteral(parts, params) {
   return new ZodTemplateLiteral({
@@ -26328,7 +30014,7 @@ function templateLiteral(parts, params) {
 var ZodLazy = /* @__PURE__ */ $constructor("ZodLazy", (inst, def) => {
   $ZodLazy.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => lazyProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => lazyProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.getter();
 });
 function lazy(getter) {
@@ -26340,7 +30026,7 @@ function lazy(getter) {
 var ZodPromise = /* @__PURE__ */ $constructor("ZodPromise", (inst, def) => {
   $ZodPromise.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => promiseProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => promiseProcessor(inst, ctx, json4, params);
   inst.unwrap = () => inst._zod.def.innerType;
 });
 function promise(innerType) {
@@ -26352,7 +30038,7 @@ function promise(innerType) {
 var ZodFunction = /* @__PURE__ */ $constructor("ZodFunction", (inst, def) => {
   $ZodFunction.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => functionProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => functionProcessor(inst, ctx, json4, params);
 });
 function _function(params) {
   return new ZodFunction({
@@ -26364,7 +30050,7 @@ function _function(params) {
 var ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def) => {
   $ZodCustom.init(inst, def);
   ZodType.init(inst, def);
-  inst._zod.processJSONSchema = (ctx, json3, params) => customProcessor(inst, ctx, json3, params);
+  inst._zod.processJSONSchema = (ctx, json4, params) => customProcessor(inst, ctx, json4, params);
 });
 function check(fn) {
   const ch = new $ZodCheck({
@@ -28000,6 +31686,15 @@ var localEnvelope = external_exports.strictObject({
   os_version: telemetryVersionSchema,
   arch: external_exports.enum(["arm64", "x64", "unknown"])
 });
+var explorerFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  outcome: external_exports.enum(["completed", "incomplete", "cancelled", "failed"])
+});
+var explorerFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Explorer Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: explorerFinishedPropertiesSchema
+});
 var mcpCapture = localEnvelope.extend({
   event: external_exports.literal("$mcp_tool_call"),
   event_version: external_exports.literal(2),
@@ -28090,7 +31785,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture,
   userInputReceivedCapture,
   assessmentFinishedCapture,
-  toolFailureDiagnosedCapture
+  toolFailureDiagnosedCapture,
+  explorerFinishedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -28098,6 +31794,7 @@ var ownership = {
   seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
 };
 var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var explorerFinishedEventSchema = explorerFinishedCapture.extend(ownership);
 var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   mcpCapture.extend(ownership),
   startedCapture.extend(ownership),
@@ -28113,7 +31810,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
   assessmentFinishedEventSchema,
-  toolFailureDiagnosedCapture.extend(ownership)
+  toolFailureDiagnosedCapture.extend(ownership),
+  explorerFinishedEventSchema
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -29842,7 +33540,7 @@ var PROMISE_FRAME_FILENAME = "node:internal/promise";
 var nodeStackLineParser = (line, platform3) => {
   const lineMatch = line.match(FULL_MATCH);
   if (lineMatch) {
-    let object9;
+    let object8;
     let method;
     let functionName;
     let typeName;
@@ -29852,18 +33550,18 @@ var nodeStackLineParser = (line, platform3) => {
       let methodStart = functionName.lastIndexOf(".");
       if ("." === functionName[methodStart - 1]) methodStart--;
       if (methodStart > 0) {
-        object9 = functionName.slice(0, methodStart);
+        object8 = functionName.slice(0, methodStart);
         method = functionName.slice(methodStart + 1);
-        const objectEnd = object9.indexOf(".Module");
+        const objectEnd = object8.indexOf(".Module");
         if (objectEnd > 0) {
           functionName = functionName.slice(objectEnd + 1);
-          object9 = object9.slice(0, objectEnd);
+          object8 = object8.slice(0, objectEnd);
         }
       }
       typeName = void 0;
     }
     if (method) {
-      typeName = object9;
+      typeName = object8;
       methodName = method;
     }
     if ("<anonymous>" === method) {
@@ -30417,14 +34115,14 @@ function normalizePositiveInteger(input3, fallback) {
   return normalized;
 }
 function normalizeAndSerializeStep(step2) {
-  let json3;
+  let json4;
   try {
-    json3 = safeJsonStringify(step2);
+    json4 = safeJsonStringify(step2);
   } catch {
     return;
   }
   try {
-    const parsed = JSON.parse(json3);
+    const parsed = JSON.parse(json4);
     if (!isObject2(parsed)) return;
     const parsedStep = parsed;
     const message = parsedStep[EXCEPTION_STEP_INTERNAL_FIELDS.MESSAGE];
@@ -30433,7 +34131,7 @@ function normalizeAndSerializeStep(step2) {
     if (!isString(timestamp) && !isNumber(timestamp)) return;
     return {
       step: parsedStep,
-      json: json3
+      json: json4
     };
   } catch {
     return;
@@ -32073,9 +35771,9 @@ var InconclusiveMatchError = class _InconclusiveMatchError extends Error {
     Object.setPrototypeOf(this, _InconclusiveMatchError.prototype);
   }
 };
-function readContextValue(read) {
+function readContextValue(read2) {
   try {
-    return read();
+    return read2();
   } catch (e) {
     if (e instanceof InconclusiveMatchError) throw new InconclusiveMatchError(e.message, "missing_context");
     throw e;
@@ -36085,10 +39783,10 @@ function getLiteralValue(schema) {
 var MCP_INSTRUCTIONS_KEY = "_mcp_instructions";
 var INSTRUCTIONS_FIELD_DESCRIPTION = "Server-issued metadata for this conversation.";
 var CONVERSATION_ID_FIELD_DESCRIPTION = "The server-issued conversation identifier.";
-function canDeclareOutputInstructions(outputSchema3) {
-  if (!outputSchema3 || "object" != typeof outputSchema3) return false;
-  if (isSchemaObjectLike(outputSchema3)) return false;
-  const schema = outputSchema3;
+function canDeclareOutputInstructions(outputSchema2) {
+  if (!outputSchema2 || "object" != typeof outputSchema2) return false;
+  if (isSchemaObjectLike(outputSchema2)) return false;
+  const schema = outputSchema2;
   if (schema.$ref || schema.oneOf || schema.allOf || schema.anyOf) return false;
   const { properties } = schema;
   if (void 0 !== properties && ("object" != typeof properties || null === properties || Array.isArray(properties))) return false;
@@ -36121,9 +39819,9 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
   const modifiedTool = {
     ...tool2
   };
-  const outputSchema3 = JSON.parse(JSON.stringify(original2));
-  if (!outputSchema3.properties) outputSchema3.properties = {};
-  outputSchema3.properties[MCP_INSTRUCTIONS_KEY] = {
+  const outputSchema2 = JSON.parse(JSON.stringify(original2));
+  if (!outputSchema2.properties) outputSchema2.properties = {};
+  outputSchema2.properties[MCP_INSTRUCTIONS_KEY] = {
     type: "object",
     description: INSTRUCTIONS_FIELD_DESCRIPTION,
     properties: {
@@ -36133,7 +39831,7 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
       }
     }
   };
-  modifiedTool.outputSchema = outputSchema3;
+  modifiedTool.outputSchema = outputSchema2;
   return modifiedTool;
 }
 function addInstructionsToOutputSchemas(tools2, logger = log) {
@@ -36221,12 +39919,12 @@ function analyticsOwnsParameter(inputSchema3, parameterName) {
   if ("_def" in schema || "_zod" in schema || "~standard" in schema) return canInjectAnalyticsParameter(void 0, parameterName);
   return canInjectAnalyticsParameter(schema, parameterName);
 }
-function getAnalyticsParameterOwnership(inputSchema3, outputSchema3) {
+function getAnalyticsParameterOwnership(inputSchema3, outputSchema2) {
   return {
     context: analyticsOwnsParameter(inputSchema3, "context"),
     conversationId: analyticsOwnsParameter(inputSchema3, "conversation_id"),
     llmModel: analyticsOwnsParameter(inputSchema3, "llm_model"),
-    outputInstructions: canDeclareOutputInstructions(outputSchema3)
+    outputInstructions: canDeclareOutputInstructions(outputSchema2)
   };
 }
 function stripOwnedAnalyticsArguments(args, ownership2) {
@@ -36627,7 +40325,7 @@ function resolveInputAliases(data, toolName2) {
   }
 }
 async function captureToolCall(params) {
-  const { server, data, request: request3, extra, execute: execute2, parameterOwnership, inputSchema: inputSchema3, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
+  const { server, data, request: request3, extra, execute: execute3, parameterOwnership, inputSchema: inputSchema3, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
   const resolvedEventType = eventType ?? MCPAnalyticsEventType.mcpToolsCall;
   const isVirtualAnalyticsTool = resolvedEventType === MCPAnalyticsEventType.mcpMissingCapability || resolvedEventType === MCPAnalyticsEventType.mcpFeedback;
   const ownership2 = getActiveAnalyticsParameterOwnership(data, request3.params?.name, parameterOwnership, isVirtualAnalyticsTool);
@@ -36656,7 +40354,7 @@ async function captureToolCall(params) {
   if (preparedEvent && omitCapturedParameters) preparedEvent.event.parameters = void 0;
   let result2;
   try {
-    result2 = await execute2(downstreamRequest);
+    result2 = await execute3(downstreamRequest);
   } catch (error63) {
     publishFailedToolEvent(server, preparedEvent, error63, startTime, conversation, data.logger);
     throw error63;
@@ -40822,27 +44520,47 @@ function createTelemetryCollector(broker, build) {
   };
 }
 
+// apps/codex-plugin/src/mcp-tool-names.mjs
+var publicNames = /* @__PURE__ */ new Map([
+  ["loki_connection_status", "kaijan_connection_get"],
+  ["loki_disconnect", "kaijan_connection_disconnect"],
+  ["kaijan_connect", "kaijan_connection_connect"],
+  ["kaijan_submit_feedback", "kaijan_feedback_submit"],
+  ["kaijan_get_feedback", "kaijan_feedback_get"],
+  ["kaijan_configuration", "kaijan_test_environment_manage"],
+  ["loki_capabilities_list", "kaijan_capabilities_list"],
+  ["loki_github_read", "kaijan_github_read"],
+  ["loki_github_source_read", "kaijan_github_source_read"],
+  ["kaijan_agent_feedback", "kaijan_agent_feedback_record"],
+  ["loki_setup_list", "kaijan_app_config_list"],
+  ["loki_setup_prepare", "kaijan_app_config_prepare"],
+  ["loki_setup_get", "kaijan_app_config_get"],
+  ["loki_setup_retry", "kaijan_app_config_retry"],
+  ["loki_setup_resolve", "kaijan_app_config_resolve"],
+  ["loki_advisory_result_read", "kaijan_result_read"],
+  ["loki_test_plan", "kaijan_plan_create"],
+  ["loki_test_execute", "kaijan_run_start"],
+  ["loki_test_get", "kaijan_run_get"],
+  ["loki_test_stop", "kaijan_run_stop"],
+  ["loki_runner_answer", "kaijan_run_answer"],
+  ["loki_runner_get", "kaijan_run_read_execution"],
+  ["loki_runner_stop", "kaijan_run_stop_execution"],
+  ["loki_report_show", "kaijan_report_show"],
+  ["loki_report_get", "kaijan_report_get"],
+  ["loki_report_artifact_read", "kaijan_report_read_artifact"],
+  ["loki_report_trace", "kaijan_report_trace"],
+  ["kaijan_project_history", "kaijan_project_history_manage"]
+]);
+var operationNames = new Map(
+  [...publicNames].map(([operationName, publicName]) => [
+    publicName,
+    operationName
+  ])
+);
+var publicToolName = (name) => publicNames.get(name) ?? name;
+var operationToolName = (name) => operationNames.get(name) ?? name;
+
 // apps/codex-plugin/src/telemetry/mcp.mjs
-function changeRiskMetrics(properties, callErrorCode) {
-  const response2 = properties.$mcp_response?.structuredContent;
-  const review = response2?.family === "changeRisk" && response2.result?.kind === "risk-review" ? response2.result : null;
-  const completed = !properties.$mcp_is_error && response2?.state === "complete" && (review?.status === "completed" || review?.status === "no_retained_cue");
-  const errorCode = completed ? null : callErrorCode ?? (review?.status === "refused" || response2?.state === "refused" ? "analysis_refused" : review?.status === "partial" ? "analysis_partial" : response2?.state === "cancelled" ? "operation_cancelled" : "advisory_unavailable");
-  const checked = changeRiskAnalyzedPropertiesSchema.safeParse({
-    analysis_id: randomUUID3(),
-    outcome: completed ? "completed" : "failed",
-    duration_ms: properties.$mcp_duration_ms,
-    files_changed_count: properties.change_risk_files_count ?? null,
-    // The current change review returns questions, without a severity or
-    // defect verdict. A validated review has zero separate findings.
-    findings_count: review ? 0 : null,
-    findings_by_severity: review ? {} : null,
-    questions_count: Array.isArray(review?.assumptions_to_confirm) ? review.assumptions_to_confirm.length : null,
-    error_code: errorCode,
-    error_message: errorCode ? toolFailureMessages[errorCode] : null
-  });
-  return checked.data;
-}
 function createLocalTelemetry(broker, build) {
   const collector = createTelemetryCollector(broker, build);
   let client;
@@ -40880,9 +44598,6 @@ function createLocalTelemetry(broker, build) {
           sendInitializeEvent: false,
           sendToolsListEvent: false,
           eventProperties: (request3) => ({
-            ...request3.params?.name === "loki_change_risk_analyze" && Array.isArray(request3.params?.arguments?.packet?.files) && request3.params.arguments.packet.files.length <= 1e5 ? {
-              change_risk_files_count: request3.params.arguments.packet.files.length
-            } : {},
             identity_epoch: collector.epoch(),
             invoked_by: ["user_request", "codex_initiated"].includes(
               request3.params?._meta?.["kaijan/invoked_by"]
@@ -40891,19 +44606,18 @@ function createLocalTelemetry(broker, build) {
           beforeSend: (event2) => {
             try {
               const properties = event2.properties;
-              if (event2.event !== "$mcp_tool_call" || controls.has(properties.$mcp_tool_name) || !properties.identity_epoch)
+              const operation = operationToolName(properties.$mcp_tool_name);
+              if (event2.event !== "$mcp_tool_call" || controls.has(operation) || !properties.identity_epoch)
                 return null;
-              const name = known.has(properties.$mcp_tool_name) ? properties.$mcp_tool_name : "unknown";
+              const name = known.has(operation) ? operation : "unknown";
               const errorCode = properties.$mcp_is_error && name.startsWith("loki_") ? mcpToolFailureCode(
                 properties.$mcp_response,
                 properties.$mcp_error_type
               ) : void 0;
-              const changeRisk = name === "loki_change_risk_analyze" ? changeRiskMetrics(properties, errorCode) : void 0;
               collector.captureMcp(
                 {
                   $mcp_tool_name: name,
                   ...errorCode ? { error_code: errorCode } : {},
-                  ...changeRisk ? { change_risk: changeRisk } : {},
                   $mcp_is_error: properties.$mcp_is_error,
                   $mcp_duration_ms: properties.$mcp_duration_ms,
                   $mcp_server_name: "kaijan-local",
@@ -41614,6 +45328,77 @@ import { performance as performance5 } from "node:perf_hooks";
 import { readFile as readFile3 } from "node:fs/promises";
 import { homedir as homedir2 } from "node:os";
 import { join as join10, resolve as resolve3 } from "node:path";
+
+// apps/codex-plugin/src/runtime-discovery.mjs
+import { join as join3 } from "node:path";
+import process2 from "node:process";
+
+// packages/capability-runtime/dist/storage.js
+import { constants as constants2 } from "node:fs";
+import { mkdir as mkdir3, open as open2, lstat as lstat4, rename as rename2, unlink as unlink3 } from "node:fs/promises";
+async function privateDirectory(path) {
+  await mkdir3(path, { recursive: true, mode: 448 });
+  await checkPrivateDirectory(path);
+}
+async function checkPrivateDirectory(path) {
+  const info = await lstat4(path);
+  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
+    throw new Error("The capability data directory is unsafe.");
+}
+async function boundedFile(path, maximum) {
+  const file2 = await open2(path, constants2.O_RDONLY | constants2.O_NOFOLLOW | constants2.O_NONBLOCK);
+  try {
+    const info = await file2.stat();
+    if (!info.isFile() || info.size > maximum)
+      throw new Error("The selected file is not a bounded regular file.");
+    const bytes = Buffer.alloc(maximum + 1);
+    let length = 0;
+    while (length <= maximum) {
+      const result2 = await file2.read(bytes, length, bytes.length - length, null);
+      if (!result2.bytesRead)
+        break;
+      length += result2.bytesRead;
+    }
+    if (length > maximum)
+      throw new Error("The selected file exceeds its limit.");
+    return bytes.subarray(0, length);
+  } finally {
+    await file2.close();
+  }
+}
+
+// apps/codex-plugin/src/runtime-discovery.mjs
+async function installedRuntimeDiscovery(root, identity4) {
+  let metadataMatches = null;
+  try {
+    const current = JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(
+        await boundedFile(join3(root, "loki-build.json"), 64 * 1024)
+      )
+    );
+    metadataMatches = Object.entries(identity4.artifact).every(
+      ([key, value]) => current[key] === value
+    );
+  } catch {
+  }
+  return {
+    ...identity4,
+    process: {
+      node: process2.version,
+      platform: process2.platform,
+      architecture: process2.arch
+    },
+    freshness: {
+      state: metadataMatches === false ? "stale" : "unknown",
+      installedMetadataMatches: metadataMatches,
+      reason: metadataMatches === false ? "Installed metadata changed after this process loaded. The responding identity is the loaded artifact above." : "No authoritative host selection/latest-artifact evidence is available. Matching metadata alone does not establish freshness or revalidate payload bytes.",
+      nextAction: "Compare the responding identity with the exact selected artifact. Read/reconcile any admitted run before supported host reconnect; preserve the same host-thread scope and originals. Connection-only scope cannot recover across restart. Never replay unknown effects to repair freshness."
+    }
+  };
+}
+
+// apps/codex-plugin/src/feedback.mjs
+import { randomBytes } from "node:crypto";
 
 // packages/contracts/dist/recording.js
 var recordingProtocol = "rrweb-v1";
@@ -42973,8 +46758,8 @@ var productIssueReceiptSchema = external_exports.strictObject({
   repository: external_exports.literal(kaijanIssueRepository),
   number: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER),
   url: external_exports.string().regex(/^https:\/\/github\.com\/katalon-studio\/kaijan-marketplace\/issues\/[1-9]\d*$/)
-}).superRefine((receipt2, context2) => {
-  if (receipt2.url !== `https://github.com/${kaijanIssueRepository}/issues/${receipt2.number}`)
+}).superRefine((receipt3, context2) => {
+  if (receipt3.url !== `https://github.com/${kaijanIssueRepository}/issues/${receipt3.number}`)
     context2.addIssue({
       code: "custom",
       path: ["url"],
@@ -43024,6 +46809,55 @@ var productIssuePreparationSchema = external_exports.strictObject({
       message: "Only the selected images can receive upload grants."
     });
 });
+
+// packages/contracts/dist/product-report.js
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
 
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
@@ -43471,182 +47305,6 @@ var aiModelsSchema = external_exports.looseObject({
   error: external_exports.never().optional(),
   data: external_exports.array(external_exports.looseObject({ id: external_exports.string().min(1) }))
 });
-
-// apps/codex-plugin/src/model-discovery.mjs
-var failureSchema = external_exports.strictObject({
-  error: external_exports.strictObject({
-    code: external_exports.enum(["model_discovery_unavailable", "model_discovery_invalid"]),
-    message: external_exports.string().min(1),
-    httpStatus: external_exports.number().int().min(100).max(599).optional()
-  })
-});
-var outputSchema = {
-  type: "object",
-  $id: "kaijan.ai-models/1",
-  anyOf: [external_exports.toJSONSchema(aiModelsSchema), external_exports.toJSONSchema(failureSchema)]
-};
-var ModelDiscoveryFailure = class extends Error {
-  constructor(code, message, httpStatus) {
-    super(message);
-    this.publicFailure = {
-      code,
-      message,
-      ...httpStatus ? { httpStatus } : {}
-    };
-  }
-};
-function modelHttpGuidance(status3) {
-  if (status3 === 401)
-    return "Model metadata requires a Core connection. Use kaijan_connect. Available models are unknown; no inference was requested.";
-  if (status3 === 403)
-    return "Model discovery was forbidden. Check AI permissions on the current Core grant and the service access policy. Available models are unknown; no inference was requested.";
-  if (status3 === 429)
-    return "Model discovery is rate limited. Wait before requesting metadata again. Available models are unknown; no inference was requested.";
-  if (status3 === 503)
-    return "Model metadata is unavailable. Check the local Auth Broker and Core AI service before requesting metadata again. Available models are unknown; no inference was requested.";
-  if (status3 >= 500)
-    return "The model metadata service is unavailable. Check the Core AI service before requesting metadata again. Available models are unknown; no inference was requested.";
-  return "Core rejected model discovery. Check the installed endpoint and requested metadata operation. Available models are unknown; no inference was requested.";
-}
-function withModelDiscovery(catalog, broker, InvalidParams) {
-  return {
-    ...catalog,
-    tools: [
-      ...catalog.tools,
-      {
-        name: "kaijan_ai_models",
-        description: "List AI models available through the authorized Core connection. Does not make a paid inference request.",
-        inputSchema: external_exports.toJSONSchema(external_exports.strictObject({})),
-        outputSchema,
-        annotations: {
-          readOnlyHint: true,
-          destructiveHint: false,
-          idempotentHint: true,
-          openWorldHint: false
-        }
-      }
-    ],
-    async invoke(name, input3, invocation) {
-      if (name !== "kaijan_ai_models")
-        return catalog.invoke(name, input3, invocation);
-      if (!external_exports.strictObject({}).safeParse(input3 ?? {}).success)
-        throw new InvalidParams(
-          "arguments: model discovery accepts no fields."
-        );
-      let response2;
-      try {
-        response2 = await broker.send("/ai/v1/models", {
-          signal: invocation?.signal
-        });
-      } catch {
-        throw new ModelDiscoveryFailure(
-          "model_discovery_unavailable",
-          "Model metadata is unavailable. Check the Core connection. Available models are unknown; no inference was requested."
-        );
-      }
-      if (!response2.ok)
-        throw new ModelDiscoveryFailure(
-          "model_discovery_unavailable",
-          modelHttpGuidance(response2.status),
-          response2.status
-        );
-      let value;
-      try {
-        value = await response2.json();
-      } catch {
-        throw new ModelDiscoveryFailure(
-          "model_discovery_invalid",
-          "Core returned invalid model metadata JSON. Available models are unknown; no inference was requested."
-        );
-      }
-      if (!aiModelsSchema.safeParse(value).success)
-        throw new ModelDiscoveryFailure(
-          "model_discovery_invalid",
-          "Core returned malformed model metadata. Available models are unknown; no inference was requested."
-        );
-      return value;
-    },
-    validateOutput(name, value) {
-      if (name === "kaijan_ai_models") {
-        external_exports.union([aiModelsSchema, failureSchema]).parse(value);
-        return;
-      }
-      return catalog.validateOutput?.(name, value);
-    }
-  };
-}
-var modelDiscoveryFailure = (error63) => error63 instanceof ModelDiscoveryFailure ? error63.publicFailure : null;
-
-// apps/codex-plugin/src/runtime-discovery.mjs
-import { join as join3 } from "node:path";
-import process2 from "node:process";
-
-// packages/capability-runtime/dist/storage.js
-import { constants as constants2 } from "node:fs";
-import { mkdir as mkdir3, open as open2, lstat as lstat4, rename as rename2, unlink as unlink3 } from "node:fs/promises";
-async function privateDirectory(path) {
-  await mkdir3(path, { recursive: true, mode: 448 });
-  await checkPrivateDirectory(path);
-}
-async function checkPrivateDirectory(path) {
-  const info = await lstat4(path);
-  if (!info.isDirectory() || info.uid !== process.getuid?.() || info.mode & 63)
-    throw new Error("The capability data directory is unsafe.");
-}
-async function boundedFile(path, maximum) {
-  const file2 = await open2(path, constants2.O_RDONLY | constants2.O_NOFOLLOW | constants2.O_NONBLOCK);
-  try {
-    const info = await file2.stat();
-    if (!info.isFile() || info.size > maximum)
-      throw new Error("The selected file is not a bounded regular file.");
-    const bytes = Buffer.alloc(maximum + 1);
-    let length = 0;
-    while (length <= maximum) {
-      const result2 = await file2.read(bytes, length, bytes.length - length, null);
-      if (!result2.bytesRead)
-        break;
-      length += result2.bytesRead;
-    }
-    if (length > maximum)
-      throw new Error("The selected file exceeds its limit.");
-    return bytes.subarray(0, length);
-  } finally {
-    await file2.close();
-  }
-}
-
-// apps/codex-plugin/src/runtime-discovery.mjs
-async function installedRuntimeDiscovery(root, identity4) {
-  let metadataMatches = null;
-  try {
-    const current = JSON.parse(
-      new TextDecoder("utf-8", { fatal: true }).decode(
-        await boundedFile(join3(root, "loki-build.json"), 64 * 1024)
-      )
-    );
-    metadataMatches = Object.entries(identity4.artifact).every(
-      ([key, value]) => current[key] === value
-    );
-  } catch {
-  }
-  return {
-    ...identity4,
-    process: {
-      node: process2.version,
-      platform: process2.platform,
-      architecture: process2.arch
-    },
-    freshness: {
-      state: metadataMatches === false ? "stale" : "unknown",
-      installedMetadataMatches: metadataMatches,
-      reason: metadataMatches === false ? "Installed metadata changed after this process loaded. The responding identity is the loaded artifact above." : "No authoritative host selection/latest-artifact evidence is available. Matching metadata alone does not establish freshness or revalidate payload bytes.",
-      nextAction: "Compare the responding identity with the exact selected artifact. Read/reconcile any admitted run before supported host reconnect; preserve the same host-thread scope and originals. Connection-only scope cannot recover across restart. Never replay unknown effects to repair freshness."
-    }
-  };
-}
-
-// apps/codex-plugin/src/feedback.mjs
-import { randomBytes } from "node:crypto";
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.32.1_supports-color@10.2.2_zod@4.6.7/node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
 function isZ4Schema2(s) {
@@ -46924,6 +50582,11 @@ var Server = class extends Protocol {
 };
 
 // apps/codex-plugin/src/core-tools.mjs
+var inputs = Object.fromEntries(
+  Object.entries(coreToolInputSchemas).filter(
+    ([name]) => name !== "loki_read_work_item"
+  )
+);
 function coreResult(name, value, isError2 = false) {
   const selected = isError2 ? coreToolErrorSchema.parse(value) : projectCoreToolSuccess(name, value);
   coreToolOutputSchema(name).parse(selected);
@@ -46933,16 +50596,7 @@ function coreResult(name, value, isError2 = false) {
     structuredContent: selected
   };
 }
-var failure2 = (name, args, error63, message, extra = {}) => coreResult(
-  name,
-  {
-    error: error63,
-    message,
-    ...extra,
-    ...name === "loki_read_work_item" ? { attemptedWorkItemId: args.workItemId } : {}
-  },
-  true
-);
+var failure2 = (name, error63, message, extra = {}) => coreResult(name, { error: error63, message, ...extra }, true);
 function protocolFailure(code, message) {
   const error63 = new McpError(code, message);
   error63.message = message;
@@ -46950,7 +50604,7 @@ function protocolFailure(code, message) {
 }
 function httpGuidance(status3) {
   if (status3 === 401)
-    return "Kaijan is not connected. Use kaijan_connect to sign in, then continue in this chat.";
+    return "Kaijan is not connected. Use kaijan_connection_connect to sign in, then continue in this chat.";
   if (status3 === 403)
     return "Core forbids this request. Check the required permission, authorized workspace and connection policy before retrying.";
   if (status3 === 429)
@@ -46966,16 +50620,15 @@ function httpGuidance(status3) {
 var upstreamErrors = {
   not_found: "The selected item is unavailable. Check its identifier and workspace access. Keep older snapshots separate.",
   permission_denied: "This operation is not permitted. Check the required permission and authorized workspace before continuing.",
-  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connect to select an authorized account.",
+  access_denied: "Workspace access is unavailable. Restore access or use kaijan_connection_connect to select an authorized account.",
   request_conflict: "This request ID belongs to different input. Preserve the original ID and input when recovering existing work. Use a new ID only for distinct authorized work.",
   invalid_request: "The selected input is invalid. Check the advertised fields and selected item before requesting distinct work.",
   internal_error: "The service could not complete this operation. Preserve the original request and result; do not replay work with uncertain effects."
 };
-function upstreamToolFailure(name, args, value) {
+function upstreamToolFailure(name, value) {
   const known = Object.hasOwn(upstreamErrors, value.error);
   return failure2(
     name,
-    args,
     known ? value.error : "core_operation_unavailable",
     known ? upstreamErrors[value.error] : "The service could not complete this operation. Check the selected item and connection. Preserve the original request and result; do not replay work with uncertain effects.",
     { category: "upstream" }
@@ -46986,8 +50639,6 @@ function invalidResponseGuidance(name, args) {
     return `The response does not confirm this feedback submission. Whether it was saved is unknown. Keep the original request ID ${args.requestId} and exact report text. Do not submit again to recover this response.`;
   if (name === "kaijan_get_feedback")
     return `The response does not match the selected feedback ID ${args.feedbackId}. Read that saved feedback again; do not create a replacement submission.`;
-  if (name === "loki_read_work_item")
-    return "Core returned a result that does not match this operation and Work Item. Read the intended item again; retain older snapshots separately.";
   return "Core returned a result that does not match this operation. Preserve the original request and result; do not replay work with uncertain effects.";
 }
 async function forwardCore(broker, name, args, signal) {
@@ -47007,7 +50658,6 @@ async function forwardCore(broker, name, args, signal) {
   } catch {
     return failure2(
       name,
-      args,
       "core_transport_unavailable",
       "Core did not return a response. Check the connection; do not replay an operation with uncertain effects.",
       { category: "transport" }
@@ -47017,21 +50667,20 @@ async function forwardCore(broker, name, args, signal) {
     const body2 = await response2.json().catch(() => null);
     if (response2.status === 503 && body2?.error === "connection_unavailable" && body2?.reason === "local_credential_storage") {
       const error63 = new CredentialStorageUnavailableError("read");
-      return failure2(name, args, error63.code, error63.message, {
+      return failure2(name, error63.code, error63.message, {
         category: "connection",
         httpStatus: 503
       });
     }
     if (response2.status === 503 && body2?.error === "keychain_unavailable") {
       const error63 = new KeychainUnavailableError();
-      return failure2(name, args, error63.code, error63.message, {
+      return failure2(name, error63.code, error63.message, {
         category: "connection",
         httpStatus: 503
       });
     }
     return failure2(
       name,
-      args,
       response2.status === 401 ? "connection_required" : "core_http_error",
       httpGuidance(response2.status),
       {
@@ -47046,7 +50695,6 @@ async function forwardCore(broker, name, args, signal) {
   } catch {
     return failure2(
       name,
-      args,
       "core_response_invalid",
       invalidResponseGuidance(name, args),
       { category: "upstream" }
@@ -47072,7 +50720,6 @@ async function forwardCore(broker, name, args, signal) {
   if (!envelope.success)
     return failure2(
       name,
-      args,
       "core_response_invalid",
       invalidResponseGuidance(name, args),
       { category: "upstream" }
@@ -47088,19 +50735,103 @@ async function forwardCore(broker, name, args, signal) {
     }
   }
   const parsed = (upstream.isError ? coreToolErrorSchema : coreToolUpstreamSuccessSchemas[name]).safeParse(value);
-  if (!parsed.success || !upstream.isError && name === "kaijan_submit_feedback" && value.feedback?.requestId.toLowerCase() !== args.requestId.toLowerCase() || !upstream.isError && name === "kaijan_get_feedback" && value.feedback?.id.toLowerCase() !== args.feedbackId.toLowerCase() || name === "loki_read_work_item" && (upstream.isError ? value.attemptedWorkItemId : value.item.id)?.toLowerCase() !== args.workItemId.toLowerCase())
+  if (!parsed.success || !upstream.isError && name === "kaijan_submit_feedback" && value.feedback?.requestId.toLowerCase() !== args.requestId.toLowerCase() || !upstream.isError && name === "kaijan_get_feedback" && value.feedback?.id.toLowerCase() !== args.feedbackId.toLowerCase())
     return failure2(
       name,
-      args,
       "core_response_invalid",
       invalidResponseGuidance(name, args),
       { category: "upstream" }
     );
-  if (upstream.isError) return upstreamToolFailure(name, args, parsed.data);
+  if (upstream.isError) return upstreamToolFailure(name, parsed.data);
   return coreResult(
     name,
     name === "loki_disconnect" ? { state: "signed_out" } : parsed.data
   );
+}
+
+// apps/codex-plugin/src/product-report-transport.mjs
+async function requestProductReport(broker, owner2, operation, payload, signal) {
+  const response2 = await broker.send("/plugin-reports", {
+    method: "POST",
+    signal,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...owner2, operation, ...payload })
+  });
+  if (!response2.ok) throw Error("report_result_unavailable");
+  const schema = operation === "prepare" ? productReportPreparationSchema : productReportReceiptSchema;
+  return schema.parse(await response2.json());
+}
+async function savePreparedReport(broker, owner2, prepared, signal) {
+  const { reference: reference2 } = prepared.receipt;
+  const receipt3 = prepared.receipt.status === "saved" ? prepared.receipt : await requestProductReport(
+    broker,
+    owner2,
+    "save",
+    { reference: reference2 },
+    signal
+  );
+  if (receipt3.status !== "saved" || receipt3.reference !== reference2)
+    throw Error("report_receipt_mismatch");
+  return receipt3;
+}
+async function submitTrackedFeedback(broker, owner2, report, signal) {
+  const prepared = await requestProductReport(
+    broker,
+    owner2,
+    "prepare",
+    { input: { type: "feedback", report } },
+    signal
+  );
+  if (prepared.uploads.length) throw Error("unexpected_feedback_uploads");
+  const receipt3 = await savePreparedReport(broker, owner2, prepared, signal);
+  return {
+    feedback: {
+      ...report,
+      id: receipt3.reference,
+      createdAt: receipt3.savedAt,
+      status: "saved"
+    }
+  };
+}
+function trackedIssueTransport({
+  library,
+  broker,
+  build,
+  signal,
+  request: request3
+}) {
+  const upload = library.createIssueImageUploader("kaijan-report-images", {
+    origin: build.coreOrigin,
+    request: request3
+  });
+  return {
+    requiresPublisher: false,
+    read(owner2, requestId) {
+      return requestProductReport(broker, owner2, "read", { requestId }, signal);
+    },
+    async submit(owner2, report, images) {
+      const selected = library.selectedIssueImages(report, images);
+      const prepared = await requestProductReport(
+        broker,
+        owner2,
+        "prepare",
+        { input: { type: "issue", report } },
+        signal
+      );
+      if (prepared.receipt.status === "saved") {
+        if (prepared.uploads.length)
+          throw Error("unexpected_saved_report_uploads");
+        return prepared.receipt;
+      }
+      await upload(
+        prepared.receipt.reference,
+        selected,
+        prepared.uploads,
+        signal
+      );
+      return savePreparedReport(broker, owner2, prepared, signal);
+    }
+  };
 }
 
 // apps/codex-plugin/src/feedback.mjs
@@ -47115,6 +50846,7 @@ function createFeedbackSurface({
   library,
   broker,
   build,
+  destination = "core",
   now = Date.now
 }) {
   const stores = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map();
@@ -47358,7 +51090,15 @@ function createFeedbackSurface({
           );
         else {
           draft = await store.send(draftId, revision3, actor, {
-            submit(expected, feedback) {
+            destination,
+            submit(expected, feedback, originalDestination) {
+              if (originalDestination === "tracking")
+                return submitTrackedFeedback(
+                  broker,
+                  expected,
+                  feedback,
+                  signal
+                );
               return forwardCore(
                 {
                   send(path, options) {
@@ -47417,7 +51157,7 @@ function createFeedbackSurface({
 // apps/codex-plugin/src/agent-feedback-store.mjs
 import { constants as constants3 } from "node:fs";
 import { open as open3, link as link2, unlink as unlink4, realpath as realpath2 } from "node:fs/promises";
-import { randomUUID as randomUUID4, createHash as createHash2 } from "node:crypto";
+import { randomUUID as randomUUID3, createHash as createHash2 } from "node:crypto";
 import { join as join4 } from "node:path";
 var bindingSchema = external_exports.strictObject({
   userId: external_exports.uuid(),
@@ -47450,7 +51190,7 @@ async function bindAgentFeedbackRequest(data, value) {
     directory,
     `${candidate.input.requestId.toLowerCase()}.json`
   );
-  const temporary = join4(directory, `.pending-${randomUUID4()}`);
+  const temporary = join4(directory, `.pending-${randomUUID3()}`);
   try {
     const file3 = await open3(temporary, "wx", 384);
     try {
@@ -47504,12 +51244,12 @@ async function bindAgentFeedbackRequest(data, value) {
 
 // apps/codex-plugin/src/agent-feedback.mjs
 var toolName = "kaijan_agent_feedback";
-var failureSchema2 = external_exports.strictObject({
+var failureSchema = external_exports.strictObject({
   error: external_exports.string(),
   message: external_exports.string(),
   requestId: external_exports.uuid().optional()
 });
-var resultSchema = external_exports.union([agentFeedbackReceiptSchema, failureSchema2]);
+var resultSchema = external_exports.union([agentFeedbackReceiptSchema, failureSchema]);
 var agentFeedbackInstructions = "Agent Feedback is available for your own observations about Kaijan. Choose whether, when and what to report; it is optional and never a task prerequisite. You may report helpful behavior, friction, missing capability or a suspected defect before or after a Run without asking for a per-report user confirmation. Keep the account short, state impact and uncertainty, and exclude whole chats, raw logs, screenshots and project files. Report text stays private in Core; enabled analytics receives trend metadata only. Continue the original task even when feedback is unavailable.";
 function createAgentFeedbackSurface({ session, broker, build, data }) {
   const lifetime = new AbortController();
@@ -47540,7 +51280,7 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
     }
     return void 0;
   }
-  async function execute2(raw, metadata2, signal) {
+  async function execute3(raw, metadata2, signal) {
     const parsed = agentFeedbackInputSchema.safeParse(raw);
     if (!parsed.success)
       return reply({
@@ -47585,10 +51325,10 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
         await response2.body?.cancel();
         return unavailable3(input3.requestId);
       }
-      const receipt2 = agentFeedbackReceiptSchema.parse(await response2.json());
-      if (receipt2.requestId.toLowerCase() !== input3.requestId.toLowerCase())
+      const receipt3 = agentFeedbackReceiptSchema.parse(await response2.json());
+      if (receipt3.requestId.toLowerCase() !== input3.requestId.toLowerCase())
         return unavailable3(input3.requestId);
-      return reply(receipt2);
+      return reply(receipt3);
     } catch {
       return unavailable3(input3.requestId);
     }
@@ -47614,7 +51354,7 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
     ],
     hasTool: (name) => name === toolName,
     invoke(_name, raw, metadata2, signal) {
-      const pending = execute2(
+      const pending = execute3(
         raw,
         metadata2,
         AbortSignal.any([lifetime.signal, ...signal ? [signal] : []])
@@ -47632,7 +51372,7 @@ function createAgentFeedbackSurface({ session, broker, build, data }) {
 }
 
 // apps/codex-plugin/src/configurations.mjs
-import { createHash as createHash3, randomUUID as randomUUID5 } from "node:crypto";
+import { createHash as createHash3, randomUUID as randomUUID4 } from "node:crypto";
 
 // packages/contracts/dist/report-evidence.js
 var digest4 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -47868,7 +51608,11 @@ var reportViewSchema = external_exports.object({
   evidenceContext: external_exports.object({
     contextId: digest6,
     recordSha256: digest6,
-    readTool: external_exports.literal("loki_context_get"),
+    readTool: external_exports.literal("loki_report_get"),
+    readArguments: external_exports.strictObject({
+      reportId: digest6,
+      sourceOffset: external_exports.literal(0)
+    }),
     provenance: external_exports.string()
   }).optional(),
   executionChecks: external_exports.array(reportExecutionSchema).optional()
@@ -49562,34 +53306,6 @@ var reportTraceOutputSchema = external_exports.union([
   reportTraceResultSchema,
   reportReadFailureSchema
 ]);
-var selectedKinds = external_exports.array(external_exports.enum(["plan", "runner", "assessment"])).min(1).max(3);
-var reportExportPreviewSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-preview/1"),
-  reportId: digest12,
-  previewSha256: digest12,
-  html: external_exports.string(),
-  omitted: external_exports.array(external_exports.string()),
-  redaction: external_exports.string(),
-  included: external_exports.array(external_exports.string())
-});
-var reportExportReceiptSchema = external_exports.object({
-  selectedKinds,
-  schema: external_exports.literal("loki.report-export-receipt/1"),
-  reportId: digest12,
-  sha256: digest12,
-  path: external_exports.string(),
-  delivery: external_exports.literal("local-file-only"),
-  uploaded: external_exports.literal(false)
-});
-var reportExportPreviewOutputSchema = external_exports.union([
-  reportExportPreviewSchema,
-  reportReadFailureSchema
-]);
-var reportExportOutputSchema = external_exports.union([
-  reportExportReceiptSchema,
-  reportReadFailureSchema
-]);
 
 // packages/contracts/dist/report-artifact.js
 var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
@@ -51114,13 +54830,12 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
   };
 }
 function projectCustomerTestPlanView(input3, sha256) {
-  const object9 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
-  const record5 = (value2) => object9(value2) ? value2 : {};
-  const value = testPlanViewSchema.omit({ plans: true, runs: true, pullRequests: true, assessments: true }).extend({
+  const object8 = (value2) => value2 !== null && typeof value2 === "object" && !Array.isArray(value2);
+  const record5 = (value2) => object8(value2) ? value2 : {};
+  const value = testPlanViewSchema.omit({ plans: true, runs: true, assessments: true }).extend({
     presentation: external_exports.literal("panel").optional(),
     plans: external_exports.array(external_exports.unknown()),
     runs: external_exports.array(external_exports.unknown()),
-    pullRequests: external_exports.unknown().optional(),
     assessments: external_exports.array(external_exports.unknown()).optional()
   }).parse(input3);
   const verifiedPlanningFailures = /* @__PURE__ */ new Set();
@@ -51143,7 +54858,7 @@ function projectCustomerTestPlanView(input3, sha256) {
         notice: "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan."
       };
     }
-    if (!object9(native) || !object9(native.plan) || native.version !== void 0 && native.version !== "pr-context-plan-result/5" || native.schema !== void 0 || record5(native.checks).version !== void 0 && record5(native.checks).version !== "pr-context-plan-result/5")
+    if (!object8(native) || !object8(native.plan) || native.version !== void 0 && native.version !== "pr-context-plan-result/5" || native.schema !== void 0 || record5(native.checks).version !== void 0 && record5(native.checks).version !== "pr-context-plan-result/5")
       return {
         ...identity4,
         plan: null,
@@ -51232,7 +54947,10 @@ function projectCustomerTestPlanView(input3, sha256) {
         interruptionNote: "The test stopped before it finished. Review the recorded steps before continuing."
       } : {}
     })),
-    pullRequests: value.pullRequests
+    pullRequests: value.pullRequests?.map(({ source: source3, ...pullRequest }) => ({
+      ...pullRequest,
+      source: { kind: source3.kind, sha256: source3.sha256 }
+    }))
   }, sha256, verifiedPlanningFailures);
 }
 
@@ -52084,7 +55802,7 @@ function createConfigurationSurface({ session, library, data }) {
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
-        const args = structuredClone(raw), explicit = savedInputs?.testEnvironmentId ?? args?.configurationId, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID5() : raw?.requestKey;
+        const args = structuredClone(raw), explicit = savedInputs?.testEnvironmentId ?? args?.configurationId, requestKey3 = planning && raw?.requestKey === void 0 ? randomUUID4() : raw?.requestKey;
         if (args && Object.hasOwn(args, "configurationUsed"))
           throw Error("host_metadata_only");
         if (args) delete args.configurationId;
@@ -52118,6 +55836,12 @@ function createConfigurationSurface({ session, library, data }) {
           );
         });
         const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
+        const configuredExecution = (prepared2) => {
+          if (!savedInputs || !Object.hasOwn(prepared2, "planningEnvironment"))
+            return { arguments: prepared2 };
+          const { planningEnvironment, ...argumentsForExecution } = prepared2;
+          return { arguments: argumentsForExecution, planningEnvironment };
+        };
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
@@ -52126,9 +55850,10 @@ function createConfigurationSurface({ session, library, data }) {
             requestKey3,
             true
           );
-          return { arguments: previous };
+          return configuredExecution(previous);
         }
         if (marked) throw Error("configuration_admission_unavailable");
+        const environment = savedInputs ? saved.execution(explicit) : void 0;
         const retain = async (onceToken) => {
           if (planning) args.requestKey = requestKey3;
           const prepared2 = saved.admission(
@@ -52136,7 +55861,14 @@ function createConfigurationSurface({ session, library, data }) {
             name,
             requestKey3,
             raw,
-            args,
+            environment ? {
+              ...args,
+              planningEnvironment: {
+                id: environment.configuration.id,
+                revision: environment.configuration.revision,
+                ...environment.autId ? { autId: environment.autId } : {}
+              }
+            } : args,
             onceToken
           );
           await library.configurationRunMarker(
@@ -52146,9 +55878,8 @@ function createConfigurationSurface({ session, library, data }) {
             requestKey3,
             true
           );
-          return { arguments: prepared2 };
+          return configuredExecution(prepared2);
         };
-        const environment = savedInputs ? saved.execution(explicit) : void 0;
         if (environment) {
           if (environment.desktopTarget)
             args.desktopTarget = environment.desktopTarget;
@@ -52340,7 +56071,7 @@ function issueUserAuthorization({
   library,
   signal,
   request: request3 = fetch,
-  execute: execute2 = executeFile
+  execute: execute3 = executeFile
 }) {
   async function ownerStillConnected(owner2) {
     signal?.throwIfAborted();
@@ -52496,7 +56227,7 @@ function issueUserAuthorization({
     signal?.throwIfAborted();
     let result2;
     try {
-      result2 = await execute2(
+      result2 = await execute3(
         "gh",
         ["auth", "token", "--hostname", "github.com"],
         {
@@ -52581,9 +56312,11 @@ function scopedIssueTransport({
   signal,
   journal,
   request: request3,
-  execute: execute2,
+  execute: execute3,
   publicationRoute
 }) {
+  if (publicationRoute === "tracking")
+    return trackedIssueTransport({ library, broker, build, signal, request: request3 });
   const legacy = issueTransport({ library, broker, build, signal });
   if (publicationRoute === "github-app")
     return {
@@ -52602,7 +56335,7 @@ function scopedIssueTransport({
     broker,
     signal,
     request: request3,
-    execute: execute2
+    execute: execute3
   });
   return {
     requiresPublisher: true,
@@ -52676,6 +56409,7 @@ function createIssueSurface({
   broker,
   build,
   now = Date.now,
+  newIssueRoute = "github-app",
   createTransport = scopedIssueTransport
 }) {
   const stores = /* @__PURE__ */ new Map(), journals = /* @__PURE__ */ new Map(), views = /* @__PURE__ */ new Map(), cleanupViews = /* @__PURE__ */ new Map(), temporaryStores = /* @__PURE__ */ new Map();
@@ -52775,12 +56509,12 @@ function createIssueSurface({
     describe3(
       "kaijan_issue_draft",
       "Review a Kaijan issue",
-      "Open or edit a report about Kaijan in this chat. Help prepare the observed failure, relevant context, expected behavior and steps from known facts. Open requires requestId and optional title, description and context. Unsent text and chosen images stay in this temporary review until Cancel or shutdown. The person reviews the text and screenshots, then confirms publication to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App, without opening GitHub. Only the confirmed submission is retained for receipt recovery. Read, status and discard_edit require draftId. Read is local; status checks only the original publication. Update requires draftId, revision and nonempty text changes. To collect a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId, and screenshot reportId/runId/artifactId from the same chat. This stages verified original PNG bytes for review and makes no public write. Never use filesystem paths or invent an artifact. The person can also choose images in the form. Keep refused edits. Earlier saved records keep their original recovery route."
+      "Open or edit a report about Kaijan in this chat. Use known facts for the observed failure, context, expected behavior and steps. Open requires requestId. Unsent text and images stay in the temporary review until Cancel or shutdown. The person reviews the text and images and confirms Send in the form. Read, status and discard_edit require draftId. Read is local. Status checks only the original submission. Update requires draftId, revision and text changes. To add a saved screenshot, attach_screenshot requires draftId, revision, a fresh requestId and the same chat's reportId, runId and artifactId. The person can also choose images. Never use paths or invent artifacts. Keep refused edits and the original recovery route for older reports."
     ),
     describe3(
       "kaijan_issue_publish",
       "Open Kaijan issue review",
-      "Open the current issue form for the person to review the exact text, context and chosen screenshots. The person confirms submission to public katalon-studio/kaijan-marketplace through Kaijan's GitHub App. This tool does not publish or open GitHub. For an unconfirmed publication, check status on the original report."
+      "Open the current issue form for the person to review the exact text, context and screenshots. This tool only opens the form. The person confirms submission. For an unconfirmed submission, check status on the original report."
     ),
     describe3(
       "kaijan_issue_form_action",
@@ -52895,7 +56629,7 @@ function createIssueSurface({
     let store = temporaryStores.get(data);
     if (!store) {
       store = library.IssueDraftStore.temporary({
-        publicationRoute: "github-app"
+        publicationRoute: newIssueRoute
       });
       temporaryStores.set(data, store);
     }
@@ -53030,6 +56764,12 @@ function createIssueSurface({
         });
         let draft, chunk, githubUrl;
         const current = operation === "open" ? void 0 : store.get(draftId, actor);
+        if (newIssueRoute === "tracking" && current && current.publicationRoute !== "tracking" && (operation === "publish" || operation === "continue_on_github"))
+          throw new library.IssueDraftError(
+            "issue_publication_retired",
+            "This earlier issue can be reopened for reference. Open a new Kaijan report to send reviewed content.",
+            current
+          );
         const githubLink = current?.publicationRoute === "github-link";
         if (githubLink && (operation === "publish" || operation.endsWith("_image") || operation === "update" && input3.changes.images !== void 0))
           throw new library.IssueDraftError(
@@ -53050,10 +56790,10 @@ function createIssueSurface({
               ].join("\n")
             },
             actor,
-            "github-app"
+            newIssueRoute
           );
         else if (operation === "attach_screenshot") {
-          if (current.publicationRoute !== "github-app" || current.status !== "draft")
+          if (!["github-app", "tracking"].includes(current.publicationRoute) || current.status !== "draft")
             throw new library.IssueDraftError(
               "original_route_required",
               "Keep the original report and selected images.",
@@ -53148,7 +56888,7 @@ function createIssueSurface({
               }
             }
           }
-          if (operation === "publish" && current.temporary && current.publicationRoute === "github-app") {
+          if (operation === "publish" && current.temporary && ["github-app", "tracking"].includes(current.publicationRoute)) {
             const temporary = store;
             const durable = await publicationStore(scope.data);
             temporary.promoteReviewed(draftId, revision4, actor, durable);
@@ -53277,6 +57017,298 @@ import { pathToFileURL } from "node:url";
 import process3 from "node:process";
 import { performance as performance3 } from "node:perf_hooks";
 import { createCapabilitySession } from "../capabilities/dist/runtime/capability-session.js";
+
+// apps/codex-plugin/src/chrome-run-browser.mjs
+import { execFile as execFile2 } from "node:child_process";
+import { promisify as promisify3 } from "node:util";
+
+// apps/codex-plugin/src/chrome-run-connection.mjs
+import { createServer } from "node:http";
+import { randomBytes as randomBytes3, randomUUID as randomUUID5, timingSafeEqual } from "node:crypto";
+
+// node_modules/.pnpm/ws@8.22.0/node_modules/ws/wrapper.mjs
+var import_stream = __toESM(require_stream(), 1);
+var import_extension = __toESM(require_extension(), 1);
+var import_permessage_deflate = __toESM(require_permessage_deflate(), 1);
+var import_receiver = __toESM(require_receiver(), 1);
+var import_sender2 = __toESM(require_sender(), 1);
+var import_subprotocol = __toESM(require_subprotocol(), 1);
+var import_websocket = __toESM(require_websocket(), 1);
+var import_websocket_server = __toESM(require_websocket_server(), 1);
+
+// packages/contracts/dist/chrome-run.js
+var chromeRunSession = external_exports.enum(["chrome-new-tab", "chrome-shared-tab"]);
+var coordinates = {
+  x: external_exports.number().nonnegative(),
+  y: external_exports.number().nonnegative()
+};
+var chromeRunAction = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("click"),
+    ...coordinates,
+    button: external_exports.enum(["left", "middle", "right"]).default("left")
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("type"),
+    text: external_exports.string().max(32768)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("move"), ...coordinates }),
+  external_exports.strictObject({ type: external_exports.literal("double_click"), ...coordinates }),
+  external_exports.strictObject({
+    type: external_exports.literal("drag"),
+    path: external_exports.array(external_exports.strictObject(coordinates)).min(2)
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("scroll"),
+    ...coordinates,
+    scroll_x: external_exports.number(),
+    scroll_y: external_exports.number()
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("keypress"),
+    key: external_exports.enum([
+      "Tab",
+      "Enter",
+      "Escape",
+      "Backspace",
+      "Delete",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "PageUp",
+      "PageDown",
+      "Space"
+    ]),
+    shift: external_exports.boolean().default(false)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("screenshot") })
+]);
+var chromeRunCommand = external_exports.strictObject({
+  type: external_exports.literal("action"),
+  id: external_exports.uuid(),
+  action: chromeRunAction
+});
+var chromeRunActionResult = external_exports.strictObject({
+  type: external_exports.literal("action-result"),
+  id: external_exports.uuid(),
+  png: external_exports.string().max(16 * 1024 * 1024).optional()
+});
+
+// apps/codex-plugin/src/chrome-run-connection.mjs
+var pngHeader = Buffer.from("89504e470d0a1a0a", "hex");
+async function openChromeRunConnection({
+  extensionId,
+  runId: runId2,
+  initialURL,
+  mode = "chrome-new-tab",
+  signal
+}) {
+  signal.throwIfAborted();
+  if (!/^[a-p]{32}$/.test(extensionId))
+    throw new Error("Invalid Chrome extension ID");
+  const origin = `chrome-extension://${extensionId}`;
+  const target = new URL(initialURL);
+  if (!["http:", "https:"].includes(target.protocol) || target.username || target.password)
+    throw new Error("Invalid Chrome test URL");
+  if (!/^[a-f0-9]{64}$/.test(runId2))
+    throw new Error("Invalid Chrome test identifier");
+  const start = {
+    type: "start",
+    runId: runId2,
+    initialURL,
+    mode: chromeRunSession.parse(mode)
+  };
+  const ticket = Buffer.from(randomBytes3(32).toString("base64url"));
+  const server = createServer((_req, res) => {
+    res.writeHead(404).end();
+  });
+  const ws = new import_websocket_server.default({
+    noServer: true,
+    maxPayload: 16 * 1024 * 1024 + 1024
+  });
+  const connected = Promise.withResolvers();
+  const closed2 = Promise.withResolvers();
+  void connected.promise.catch(() => {
+  });
+  let peer;
+  let ready = false;
+  let pending;
+  let closing;
+  const close = () => {
+    closing ??= (async () => {
+      signal.removeEventListener("abort", abort);
+      connected.reject(new Error("Chrome test connection ended"));
+      pending?.reject(new Error("Chrome action interrupted"));
+      for (const channel of ws.clients) channel.terminate();
+      await new Promise((resolve4) => ws.close(resolve4));
+      server.closeAllConnections();
+      await new Promise((resolve4) => server.close(resolve4));
+      closed2.resolve();
+    })();
+    return closing;
+  };
+  const abort = () => void close();
+  server.on("upgrade", (req, stream, head) => {
+    stream.on("error", () => stream.destroy());
+    if (closing || req.url !== "/run" || req.headers.host !== `127.0.0.1:${server.address().port}` || req.headers.origin !== origin) {
+      stream.end("HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n");
+      return;
+    }
+    ws.handleUpgrade(req, stream, head, (channel) => {
+      const authenticate = setTimeout(() => channel.terminate(), 2e3).unref();
+      channel.on("error", () => channel.terminate());
+      channel.once("close", (_code, reason) => {
+        clearTimeout(authenticate);
+        if (peer !== channel) return;
+        const outcome3 = reason.toString();
+        const known = [
+          "busy",
+          "site-changed",
+          "navigation-failed",
+          "tab-closed",
+          "detached",
+          "tab-unavailable",
+          "attach-failed",
+          "action-rejected",
+          "action-failed"
+        ];
+        if (known.includes(outcome3))
+          connected.reject(
+            new Error(`Chrome test connection ended (${outcome3})`)
+          );
+        void close();
+      });
+      channel.once("message", (value, binary) => {
+        clearTimeout(authenticate);
+        if (binary || peer || value.length !== ticket.length || !timingSafeEqual(value, ticket)) {
+          channel.close(1008);
+          return;
+        }
+        peer = channel;
+        ticket.fill(0);
+        channel.send(JSON.stringify(start));
+        channel.once("message", (raw, binary2) => {
+          try {
+            if (binary2) throw new Error();
+            const receipt3 = JSON.parse(raw.toString());
+            if (receipt3.type !== "connected" || receipt3.runId !== runId2 || receipt3.origin !== target.origin)
+              throw new Error();
+            ready = true;
+            channel.on("message", (value2, binary3) => {
+              try {
+                if (binary3 || !pending) throw new Error();
+                const result2 = chromeRunActionResult.parse(
+                  JSON.parse(value2.toString())
+                );
+                if (result2.id !== pending.id || result2.png !== void 0 !== pending.screenshot)
+                  throw new Error();
+                const png = result2.png === void 0 ? void 0 : Buffer.from(result2.png, "base64");
+                if (png && !png.subarray(0, pngHeader.length).equals(pngHeader))
+                  throw new Error();
+                const { resolve: resolve4 } = pending;
+                pending = void 0;
+                resolve4(png);
+              } catch {
+                channel.close(1008);
+              }
+            });
+            connected.resolve({
+              type: "connected",
+              runId: runId2,
+              origin: target.origin
+            });
+          } catch {
+            channel.close(1008);
+          }
+        });
+      });
+    });
+  });
+  try {
+    await new Promise((resolve4, reject) => {
+      server.once("error", reject);
+      server.listen(0, "127.0.0.1", resolve4);
+    });
+    signal.addEventListener("abort", abort, { once: true });
+    signal.throwIfAborted();
+    return {
+      connectURL: `${origin}/run-connect.html#${server.address().port}.${ticket.toString()}`,
+      connected: connected.promise,
+      closed: closed2.promise,
+      active: () => ready && !closing,
+      async perform(action2) {
+        if (!ready || closing || pending || peer.readyState !== import_websocket.default.OPEN)
+          throw new Error("Chrome test tab is unavailable");
+        const command = chromeRunCommand.parse({
+          type: "action",
+          id: randomUUID5(),
+          action: action2
+        });
+        const completion = Promise.withResolvers();
+        pending = {
+          ...completion,
+          id: command.id,
+          screenshot: action2.type === "screenshot"
+        };
+        peer.send(JSON.stringify(command), (error63) => {
+          if (error63) void close();
+        });
+        return completion.promise;
+      },
+      stop: () => {
+        if (!ready || peer.readyState !== import_websocket.default.OPEN) return close();
+        peer.send(JSON.stringify({ type: "stop" }));
+        return closed2.promise;
+      },
+      close
+    };
+  } catch (error63) {
+    await close();
+    throw error63;
+  }
+}
+
+// apps/codex-plugin/src/chrome-run-browser.mjs
+var execute = promisify3(execFile2);
+async function connectInChrome(url2, signal) {
+  if (process.platform !== "darwin")
+    throw new Error("Chrome connection is unavailable on this platform");
+  await execute("/usr/bin/open", ["-g", "-b", "com.google.Chrome", url2], {
+    signal
+  });
+}
+async function withChromeRunBrowser(options, run, { launchConnection = connectInChrome } = {}) {
+  const connection = await openChromeRunConnection(options);
+  try {
+    try {
+      await launchConnection(connection.connectURL, options.signal);
+    } catch {
+      options.signal.throwIfAborted();
+      throw new Error("Kaijan could not connect to the Chrome extension");
+    }
+    const receipt3 = await connection.connected;
+    options.signal.throwIfAborted();
+    return await run({
+      ...receipt3,
+      mode: options.mode ?? "chrome-new-tab",
+      perform: connection.perform,
+      active: connection.active,
+      closed: connection.closed,
+      stop: connection.stop
+    });
+  } finally {
+    try {
+      await connection.stop();
+    } finally {
+      await connection.close();
+    }
+  }
+}
+
+// apps/codex-plugin/src/installed-session.mjs
 var brand = (value) => typeof value === "string" ? value.replace(/\bLoki\b/g, "Kaijan") : value;
 var present = (entry) => {
   if (Array.isArray(entry)) return entry.map(present);
@@ -53297,6 +57329,15 @@ async function createInstalledSession(root, build, data, broker, {
   inlineForms = false
 } = {}) {
   const host = pluginHost(build);
+  const extensionId = build.chromeRunExtensions?.[build.profile];
+  const chromeRun = host === "codex" && process3.platform === "darwin" && typeof extensionId === "string" && /^[a-p]{32}$/.test(extensionId) && !runnerValidation ? ({ timeoutMs, signal, ...request3 }, run) => withChromeRunBrowser(
+    {
+      ...request3,
+      extensionId,
+      signal: AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
+    },
+    run
+  ) : void 0;
   const stage2 = (value) => {
     try {
       onStartupStage?.(value);
@@ -53340,11 +57381,12 @@ async function createInstalledSession(root, build, data, broker, {
   } : void 0;
   const hostLibrary = {
     ...library,
-    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. For optional shared Main source context in planning, use sourceModel with application:true to select the configured application. Core returns the current app model. Reopening a saved Plan uses the context already recorded in it. Keep local changes and browser observations separately attributed. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use loki_test_execute for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
+    capabilityInstructions: "Follow the caller-authorized project and task. Inspect capabilities for local context submit/read and compatible saved analysis input; retain only relevant context already available. An app model is optional for Setup and testing. For optional shared Main source context in planning, use sourceModel with application:true to select the configured application. Core returns the current app model. Reopening a saved Plan uses the context already recorded in it. Keep local changes and browser observations separately attributed. Standalone app model generation is unavailable in this release. Use supplied work-item and attributed code context for risk analysis, Functional and Change impact planning, Runner and evidence assessment. Do not start a separate app model build or request provider configuration for one. Keep source-inferred findings separate from observed test outcomes. An issue is enough for work-item uncertainty analysis and proposed test planning; do not fabricate code evidence. Proposed expectations, missing oracles and execution records remain distinct. Supplements preserve baseline bytes/IDs; supplied-evidence assessments are scoped unauthenticated model findings, never automatic acceptance. The agent executes only within its separate target authority, decides whether concerns fit web UI tests, and returns actual evidence. Use kaijan_run_start for authorized testing with assessment and a saved report; planning never dispatches it. No shared-memory ingestion is provided. Keep native judgments and source uncertainty distinct; never replay an operation with unknown effects. No separate Kaijan Desktop app is required. Use the installed owning skills and actual advertised tool schemas. Keep model names, reasoning settings, model/provider receipt commentary, cost amounts, estimates and cost-status messages out of normal user-facing replies and reports, including blocked work, no-call cases, and zero or unknown costs. Lead with the outcome, useful findings and next action. Preserve original model/settings and accounting privately for authorized operational use; provide technical diagnostics when explicitly requested. Keep actual findings, coverage limits, failures and recovery actions visible.",
     createCapabilityServices(scopedData, options) {
       return library.createCapabilityServices(scopedData, {
         ...options,
         ...build.browserViewer === true ? { browserViewer: true } : {},
+        ...chromeRun ? { chromeRun } : {},
         mapGeneration: false,
         ...readSourceModel ? { readSourceModel } : {},
         ...validation ? { runnerValidation: validation } : {},
@@ -53375,32 +57417,29 @@ async function createInstalledSession(root, build, data, broker, {
     data,
     payloadDigest: artifactDigest,
     packageIdentity: JSON.stringify(build),
-    library: broker ? {
+    library: workspaceResults ? {
       ...hostLibrary,
       createCapabilityCatalog(...args) {
         const catalog2 = hostLibrary.createCapabilityCatalog(...args);
-        return withModelDiscovery(
-          {
-            ...catalog2,
-            tools: [...catalog2.tools, ...workspaceResults?.tools ?? []],
-            async invoke(name, input3, invocation) {
-              if (workspaceResults?.tools.some((tool2) => tool2.name === name))
-                return workspaceResults.invoke(
-                  name,
-                  input3,
-                  invocation?.signal
-                );
-              return catalog2.invoke(name, input3, invocation);
-            }
-          },
-          broker,
-          library.CapabilityCatalogError
-        );
+        return {
+          ...catalog2,
+          tools: [...catalog2.tools, ...workspaceResults.tools],
+          async invoke(name, input3, invocation) {
+            if (workspaceResults.tools.some((tool2) => tool2.name === name))
+              return workspaceResults.invoke(
+                name,
+                input3,
+                invocation?.signal
+              );
+            return catalog2.invoke(name, input3, invocation);
+          }
+        };
       }
     } : hostLibrary,
-    ...host === "claude_code" ? { uiEnabled: false } : {},
-    // Preserve the selected Codex panel. Claude CLI reads saved data as text.
-    uiMode: "panel"
+    // The private Claude forms worker can open the shared browser report.
+    // The ordinary Claude MCP session keeps its text tools and no UI resources.
+    ...host === "claude_code" && !inlineForms ? { uiEnabled: false } : {},
+    uiMode: host === "claude_code" && inlineForms ? "browser" : "panel"
   });
   session.customerReportPresentation = host === "claude_code" ? "chat" : "panel";
   session.customerDiscoveryDirectDevelopment = host === "codex" && !broker && build.authArchitecture === void 0 && ["local", "qa"].includes(build.profile);
@@ -53459,12 +57498,19 @@ async function createInstalledSession(root, build, data, broker, {
   }
   if (host === "codex" || inlineForms) {
     session.feedback = createFeedbackSurface({
+      destination: "tracking",
       session,
       library,
       broker,
       build
     });
-    session.issues = createIssueSurface({ session, library, broker, build });
+    session.issues = createIssueSurface({
+      session,
+      library,
+      broker,
+      build,
+      newIssueRoute: "tracking"
+    });
     const close = session.close.bind(session);
     session.close = async () => {
       if (host === "codex") await session.configurations.close();
@@ -53495,8 +57541,6 @@ async function createInstalledSession(root, build, data, broker, {
       );
     }
   };
-  const originalFailure = session.failure.bind(session);
-  session.failure = (error63) => modelDiscoveryFailure(error63) ?? originalFailure(error63);
   const initialized = performance3.now();
   session.runtimeIdentity = Object.freeze({
     pluginVersion: build.pluginVersion,
@@ -53621,7 +57665,7 @@ var waitSchema = handleSchema.extend({
 var resolveSchema = handleSchema.extend({
   expectedRevision: revision2,
   expectedProfileRevision: identity3.optional().describe(
-    "Pass the exact configuration.target.profileRevision returned by loki_setup_get when present. Omit only when the saved configuration has no target-profile revision."
+    "Pass the exact configuration.target.profileRevision returned by kaijan_app_config_get when present. Omit only when the saved configuration has no target-profile revision."
   )
 });
 var handoffSchema = resolveSchema.extend({ requestKey });
@@ -54023,14 +58067,14 @@ async function openSetupStore(directory) {
 }
 
 // apps/codex-plugin/src/setup/source.mjs
-import { execFile as execFile2 } from "node:child_process";
-import { promisify as promisify3 } from "node:util";
+import { execFile as execFile3 } from "node:child_process";
+import { promisify as promisify4 } from "node:util";
 import { realpath as realpath4, lstat as lstat7 } from "node:fs/promises";
 import { isAbsolute as isAbsolute3 } from "node:path";
 import { randomUUID as randomUUID7 } from "node:crypto";
-var execute = promisify3(execFile2);
+var execute2 = promisify4(execFile3);
 async function resolveSourceRevision(source3, signal) {
-  const git = async (args, cleanup = false) => (await execute(
+  const git = async (args, cleanup = false) => (await execute2(
     "git",
     [
       "-c",
@@ -54118,7 +58162,7 @@ async function inspectSource(source3) {
       throw Error();
     const stat2 = await lstat7(source3.directory);
     if (!stat2.isDirectory()) throw Error();
-    const git = async (args) => (await execute(
+    const git = async (args) => (await execute2(
       "git",
       [
         "-c",
@@ -54245,12 +58289,12 @@ async function createSetup({
     durationKnown: telemetryStarts.has(value.contextId),
     durationMs: performance4.now() - telemetryStarts.get(value.contextId)
   });
-  const read = (input3) => store.get(input3.applicationId, input3.contextId);
-  async function summarize(receipt2, stop = false) {
-    let value = read(receipt2);
+  const read2 = (input3) => store.get(input3.applicationId, input3.contextId);
+  async function summarize(receipt3, stop = false) {
+    let value = read2(receipt3);
     if (!stop) {
       await verify(value);
-      value = read(receipt2);
+      value = read2(receipt3);
     }
     let nextAction3;
     switch (value.state) {
@@ -54281,13 +58325,13 @@ async function createSetup({
     }
     if (!mapper && value.map && active.has(value.state))
       nextAction3 = "This historical mapping state is retained. Map building is unavailable in this release; no map will restart. Preserve any unknown effects.";
-    if (stop && !receipt2.cancellationRequested) {
-      nextAction3 = receipt2.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
+    if (stop && !receipt3.cancellationRequested) {
+      nextAction3 = receipt3.runId === null ? "No cancellation was requested: this context has no map run. Read its retained status; this receipt does not mean that work stopped." : "No cancellation was requested for this retained run. Read its actual state; this receipt alone does not confirm a Stop.";
     }
     if (value.provenance.kind === "controlled-fixture")
       nextAction3 += " Controlled fixture only; no real application readiness or producer success is established.";
     return {
-      ...receipt2,
+      ...receipt3,
       state: value.state,
       missing: [...value.missing],
       nextAction: nextAction3,
@@ -54295,7 +58339,7 @@ async function createSetup({
     };
   }
   const edit = (input3, fn) => store.transaction(() => {
-    const value = read(input3);
+    const value = read2(input3);
     fn(value);
     store.put(value);
     return value;
@@ -54318,10 +58362,10 @@ async function createSetup({
       const configurationHash = digest18({ configuration: configuration2, provenance: provenance2 });
       const existing = store.matching(applicationId, configurationHash);
       if (existing && existing.schema === (mapper ? "loki.setup-context/3" : "loki.setup-context/4") && existing.state !== "superseded" && (!retry || existing.contextId !== input3.contextId)) {
-        const receipt3 = handle(existing);
-        store.receipt(scope, input3.requestKey, hash5, receipt3);
+        const receipt4 = handle(existing);
+        store.receipt(scope, input3.requestKey, hash5, receipt4);
         return {
-          receipt: { ...receipt3, reused: true },
+          receipt: { ...receipt4, reused: true },
           retainedSelection: existing.state === "ready" && /^[a-f0-9]{64}$/.test(existing.map?.data?.mapId ?? "") ? {
             transitionKey: existing.contextId,
             setupId: existing.contextId,
@@ -54329,7 +58373,7 @@ async function createSetup({
           } : null
         };
       }
-      const previousContext = retry ? read(input3) : null;
+      const previousContext = retry ? read2(input3) : null;
       if (previousContext && !retryable.has(previousContext.state))
         throw new SetupFailure("retry_not_required");
       const version4 = store.version(applicationId);
@@ -54359,9 +58403,9 @@ async function createSetup({
         store.put(previousContext);
       }
       store.put(value);
-      const receipt2 = handle(value);
-      store.receipt(scope, input3.requestKey, hash5, receipt2);
-      return { receipt: receipt2, value };
+      const receipt3 = handle(value);
+      store.receipt(scope, input3.requestKey, hash5, receipt3);
+      return { receipt: receipt3, value };
     });
   }
   function applyMap(input3, raw) {
@@ -54396,7 +58440,7 @@ async function createSetup({
   }
   async function initialize(value, signal, invocation) {
     try {
-      if (read(value).state !== "awaiting-authority") return;
+      if (read2(value).state !== "awaiting-authority") return;
       signal?.throwIfAborted();
       if (!mapper) {
         await verify(value);
@@ -54425,7 +58469,7 @@ async function createSetup({
         finished2(blocked, true);
         return;
       }
-      if (read(value).state !== "awaiting-authority") return;
+      if (read2(value).state !== "awaiting-authority") return;
       const authorization = await authorize(
         value.configuration,
         signal,
@@ -54450,7 +58494,7 @@ async function createSetup({
         throw new SetupFailure("source_authorization_scope_mismatch");
       signal?.throwIfAborted();
       await verify(value);
-      if (read(value).state !== "awaiting-authority") return;
+      if (read2(value).state !== "awaiting-authority") return;
       edit(value, (current) => {
         if (current.state !== "awaiting-authority") return;
         current.authorityRef = digest18({
@@ -54464,7 +58508,7 @@ async function createSetup({
         current.missing = [];
         current.progress = "Starting the selected map";
       });
-      if (read(value).state !== "admitting") return;
+      if (read2(value).state !== "admitting") return;
       try {
         signal?.throwIfAborted();
         const result2 = await mapper.start(
@@ -54476,7 +58520,7 @@ async function createSetup({
           }
         );
         applyMap(value, result2);
-        if (read(value).state === "stop-requested")
+        if (read2(value).state === "stop-requested")
           await api.stop({
             applicationId: value.applicationId,
             contextId: value.contextId,
@@ -54573,7 +58617,7 @@ async function createSetup({
       };
     },
     async get(raw) {
-      const input3 = handleSchema.parse(raw), value = read(input3);
+      const input3 = handleSchema.parse(raw), value = read2(input3);
       await verify(value);
       if (mapper && active.has(value.state)) {
         let result2;
@@ -54583,15 +58627,15 @@ async function createSetup({
             runId: value.map.runId
           });
         } catch {
-          return read(input3);
+          return read2(input3);
         }
         return applyMap(input3, result2);
       }
-      return read(input3);
+      return read2(input3);
     },
     async wait(raw, signal) {
       const { timeoutMs, ...input3 } = waitSchema.parse(raw);
-      const original2 = read(input3);
+      const original2 = read2(input3);
       const deadline = new AbortController();
       const bounded = AbortSignal.any([
         deadline.signal,
@@ -54621,7 +58665,7 @@ async function createSetup({
             if (bounded.aborted) abort();
           })
         ]);
-        return result2 ? applyMap(input3, result2) : read(input3);
+        return result2 ? applyMap(input3, result2) : read2(input3);
       } catch (error63) {
         if (signal?.aborted) {
           await Promise.race([
@@ -54638,7 +58682,7 @@ async function createSetup({
             })
           ]);
         } else if (!deadline.signal.aborted) throw error63;
-        return read(input3);
+        return read2(input3);
       } finally {
         clearTimeout(timer);
         bounded.removeEventListener("abort", abort);
@@ -54648,7 +58692,7 @@ async function createSetup({
     },
     async retry(raw, signal, invocation) {
       const observer = snapshotObserver();
-      const input3 = commandSchema.parse(raw), value = read(input3);
+      const input3 = commandSchema.parse(raw), value = read2(input3);
       await verify(value);
       const previous = store.command("retry", input3.requestKey, digest18(input3));
       if (previous) return summarize({ ...previous, recovered: true });
@@ -54685,14 +58729,14 @@ async function createSetup({
       const reserved = store.transaction(() => {
         const hash5 = digest18(input3), previous = store.command("stop", input3.requestKey, hash5);
         if (previous) {
-          const value2 = read(input3);
+          const value2 = read2(input3);
           return {
             receipt: { ...previous, recovered: true },
             value: value2,
             cancel: value2.state === "stop-requested"
           };
         }
-        const value = read(input3);
+        const value = read2(input3);
         const cancel = active.has(value.state);
         if (value.state === "awaiting-authority") {
           value.state = "stopped";
@@ -54705,13 +58749,13 @@ async function createSetup({
           value.progress = "Stop requested for this original map";
           store.put(value);
         }
-        const receipt2 = {
+        const receipt3 = {
           ...handle(value),
           runId: value.map?.runId ?? null,
           cancellationRequested: cancel
         };
-        store.receipt("stop", input3.requestKey, hash5, receipt2);
-        return { receipt: receipt2, value, cancel };
+        store.receipt("stop", input3.requestKey, hash5, receipt3);
+        return { receipt: receipt3, value, cancel };
       });
       if (stoppedBeforeAdmission) finished2(reserved.value, true);
       if (reserved.cancel && mapper) {
@@ -54729,7 +58773,7 @@ async function createSetup({
       return summarize(reserved.receipt, true);
     },
     async resolve(raw) {
-      const input3 = resolveSchema.parse(raw), value = read(input3);
+      const input3 = resolveSchema.parse(raw), value = read2(input3);
       await verify(value);
       if (value.configuration.source.revision !== input3.expectedRevision || value.configuration.target?.profileRevision !== input3.expectedProfileRevision)
         throw new SetupFailure("stale_application_context");
@@ -54818,12 +58862,12 @@ async function createSetup({
       const reserved = store.transaction(() => {
         const previous = store.command("handoff", input3.requestKey, hash5);
         if (previous) return { receipt: previous, recovered: true };
-        const receipt2 = {
+        const receipt3 = {
           ...payload,
           consumer: { state: "pending", provenance: provenance2 }
         };
-        store.receipt("handoff", input3.requestKey, hash5, receipt2);
-        return { receipt: receipt2, recovered: false };
+        store.receipt("handoff", input3.requestKey, hash5, receipt3);
+        return { receipt: receipt3, recovered: false };
       });
       if (reserved.receipt.consumer.state !== "pending")
         return { ...reserved.receipt, recovered: true };
@@ -54843,9 +58887,9 @@ async function createSetup({
         const prior = store.command("handoff", input3.requestKey, hash5);
         if (prior.consumer.state !== "pending")
           return { ...prior, recovered: true };
-        const receipt2 = { ...payload, consumer: result2 };
-        store.complete("handoff", input3.requestKey, hash5, receipt2);
-        return receipt2;
+        const receipt3 = { ...payload, consumer: result2 };
+        store.complete("handoff", input3.requestKey, hash5, receipt3);
+        return receipt3;
       });
     },
     close() {
@@ -54868,7 +58912,7 @@ var inputSchema2 = external_exports.strictObject({
   applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
   task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
 });
-var outputSchema2 = external_exports.strictObject({
+var outputSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.onboarding/1"),
   applicationURL: external_exports.string(),
   task: external_exports.string()
@@ -54881,7 +58925,7 @@ function createOnboarding(ui) {
       title: "Legacy Kaijan onboarding panel",
       description: "Open the legacy onboarding panel only when the person explicitly asks for that panel. Ordinary Kaijan Setup uses chat. Prefill the supplied application URL and request. Opening the panel does not save Setup or start a test.",
       inputSchema: external_exports.toJSONSchema(inputSchema2),
-      outputSchema: external_exports.toJSONSchema(outputSchema2),
+      outputSchema: external_exports.toJSONSchema(outputSchema),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -55255,13 +59299,15 @@ async function createSetupTools({
       (input3) => setup.get(input3),
       false
     ],
-    [
-      "loki_setup_wait",
-      "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
-      waitSchema,
-      (input3, signal) => setup.wait(input3, signal),
-      false
-    ],
+    ...mapper ? [
+      [
+        "loki_setup_wait",
+        "Wait up to timeoutMs (default/max 30000) for the original map; otherwise read its retained state. Timeout ends only the wait, not the producer. Native interruption requests Stop on this exact map and does not claim cancellation until confirmed. No analysis is restarted.",
+        waitSchema,
+        (input3, signal) => setup.wait(input3, signal),
+        false
+      ]
+    ] : [],
     [
       "loki_setup_retry",
       "Retry a known failed, stopped or blocked Setup after the user requests it or supplies its actual missing prerequisite. This can send the selected committed source to the configured provider within the original $10/5400-second scope. The native host applies its selected approval policy; no second mandatory form. Preserve the original revision/evidence and automatically admit the replacement when ready. Never replay uncertain effects.",
@@ -55269,13 +59315,15 @@ async function createSetupTools({
       (input3, signal, invocation) => setup.retry(input3, signal, invocation),
       false
     ],
-    [
-      "loki_setup_stop",
-      "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
-      commandSchema,
-      (input3) => setup.stop(input3),
-      false
-    ],
+    ...mapper ? [
+      [
+        "loki_setup_stop",
+        "Stop only this exact original Setup context/map. Repeated Stop recovers its receipt and cannot cancel a later context.",
+        commandSchema,
+        (input3) => setup.stop(input3),
+        false
+      ]
+    ] : [],
     [
       "loki_setup_resolve",
       "Resolve a ready context with explicit expected source and target-profile revisions. Read readiness.scope: a source-inferred work-item map has incomplete application coverage and no observed browser behavior. Returns source-bound references; a handle grants no browser/source/provider access.",
@@ -55283,13 +59331,15 @@ async function createSetupTools({
       (input3) => setup.resolve(input3),
       true
     ],
-    [
-      "loki_setup_handoff",
-      "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
-      handoffSchema,
-      (input3) => setup.handoff(input3),
-      false
-    ]
+    ...consumer ? [
+      [
+        "loki_setup_handoff",
+        "Send the selected ready context through the configured consumer port. Controlled acknowledgement is labelled; unavailable integration never silently falls back to a fixture.",
+        handoffSchema,
+        (input3) => setup.handoff(input3),
+        false
+      ]
+    ] : []
   ];
   const onboarding = createOnboarding(ui);
   const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
@@ -55368,12 +59418,6 @@ async function createSetupTools({
     tools: tools2,
     resources: ui?.resources ?? [],
     readResource: ui?.readResource,
-    // Configuration-only Setup returns synchronously. There is no mapping job
-    // to wait for or stop, and no handoff when no consumer is connected.
-    hiddenTools: [
-      ...!mapper ? ["loki_setup_wait", "loki_setup_stop"] : [],
-      ...!consumer ? ["loki_setup_handoff"] : []
-    ],
     invoke,
     setup,
     close: () => setup.close()
@@ -55477,8 +59521,8 @@ var StdioServerTransport = class {
   }
   send(message) {
     return new Promise((resolve4) => {
-      const json3 = serializeMessage(message);
-      if (this._stdout.write(json3)) {
+      const json4 = serializeMessage(message);
+      if (this._stdout.write(json4)) {
         resolve4();
       } else {
         this._stdout.once("drain", resolve4);
@@ -55615,12 +59659,7 @@ var alternatives = /* @__PURE__ */ new Map([
   ]
 ]);
 var sourceAlternatives = /* @__PURE__ */ new Map([
-  ["loki_pr_context_find_related", ["url", "context", "contextId"]],
-  ["loki_context_finder_find_related", ["url", "context", "contextId"]],
-  ["loki_change_risk_analyze", ["packet", "contextId"]],
-  ["loki_risk_finder_analyze", ["packet", "contextId"]],
-  ["loki_test_plan", ["input", "contextId"]],
-  ["loki_test_supplement", ["input", "contextId"]]
+  ["loki_test_plan", ["input", "contextId"]]
 ]);
 function sourceDefinition(tool2, fields, host = "Claude") {
   const { oneOf, ...root } = tool2.inputSchema;
@@ -55686,10 +59725,20 @@ ${guidance}`
 var requestKey2 = external_exports.string().min(1);
 var answerDigest = /^[a-f0-9]{64}$/;
 var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
+var sourceOptions = {
+  repositories: external_exports.array(external_exports.string()).optional(),
+  change: external_exports.record(external_exports.string(), external_exports.json()).optional(),
+  procedures: external_exports.array(external_exports.json()).optional(),
+  riskAnswers: external_exports.array(external_exports.json()).optional(),
+  agentInstructions: external_exports.string().optional(),
+  taskInstructions: external_exports.string().optional()
+};
 var planInput = external_exports.strictObject({
   requestKey: requestKey2,
   testObjective: external_exports.string().refine((text4) => Boolean(text4.trim())).optional(),
+  input: planningInputSchema.optional(),
   contextId: external_exports.string().regex(answerDigest).optional(),
+  ...sourceOptions,
   testEnvironmentId: external_exports.uuid().describe("The saved Test Environment ID."),
   testDataId: external_exports.uuid().optional().describe("The saved Test Data ID, when needed."),
   sourceModel: sourceModelSelectionSchema.optional().describe(
@@ -55698,22 +59747,34 @@ var planInput = external_exports.strictObject({
   explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
     "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
   )
-}).refine((input3) => Boolean(input3.testObjective) !== Boolean(input3.contextId));
+}).refine(
+  ({ testObjective, input: input3, contextId }) => [testObjective, input3, contextId].filter((value) => value !== void 0).length === 1
+);
 var runInput = external_exports.strictObject({
   requestKey: requestKey2,
   planId,
   testIds: external_exports.array(external_exports.string().min(1)).min(1),
+  browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe(
+    "For this browser Run only. Default to isolated. Use chrome-new-tab when the person wants their own Chrome session at the saved target URL. Use chrome-shared-tab when the task depends on the current state of a tab they already have open. A test account or a Chrome target alone does not select a personal session."
+  ),
   runnerTimeLimitMs: external_exports.int().min(defaultRunnerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
     "Optional longer execution time limit in milliseconds. Omit for the 10-minute default."
   )
 });
 function codexTestingToolDefinition(tool2) {
-  if (tool2.name === "loki_test_plan")
+  if (tool2.name === "loki_test_plan") {
+    const inputSchema3 = external_exports.toJSONSchema(planInput);
+    for (const name of Object.keys(sourceOptions)) {
+      const native = tool2.inputSchema?.properties?.[name];
+      if (native) inputSchema3.properties[name] = native;
+    }
     return {
       ...tool2,
-      description: "Save a test plan. Supply testObjective or the contextId containing the original planning input, plus the saved Test Environment ID and optional Test Data ID. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
-      inputSchema: external_exports.toJSONSchema(planInput)
+      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Kaijan prepares related work and change review inside Plan when you supply their source inputs. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      // Keep the source fields visible to Codex. The receiver checks exclusivity.
+      inputSchema: inputSchema3
     };
+  }
   if (tool2.name === "loki_test_execute")
     return {
       ...tool2,
@@ -55728,15 +59789,18 @@ function codexPlanArguments(args) {
   const {
     requestKey: requestKey3,
     testObjective,
+    input: input3,
     contextId,
     testEnvironmentId,
     testDataId,
     sourceModel,
-    explorerTimeLimitMs
+    explorerTimeLimitMs,
+    ...preparation2
   } = parsed.data;
   return {
     requestKey: requestKey3,
-    ...contextId ? { contextId } : { input: { title: testObjective, body: testObjective } },
+    ...contextId ? { contextId } : { input: input3 ?? { title: testObjective, body: testObjective } },
+    ...preparation2,
     savedTestInputs: {
       testEnvironmentId,
       ...testDataId === void 0 ? {} : { testDataId }
@@ -55748,11 +59812,12 @@ function codexPlanArguments(args) {
 function codexRunArguments(args) {
   const parsed = runInput.safeParse(args);
   if (!parsed.success) return void 0;
-  const { requestKey: requestKey3, planId: planId2, testIds, runnerTimeLimitMs } = parsed.data;
+  const { requestKey: requestKey3, planId: planId2, testIds, browserSession, runnerTimeLimitMs } = parsed.data;
   const [answerId, resultSha256] = planId2.split(".");
   return {
     requestKey: requestKey3,
     savedTests: { answerId, resultSha256, selectedTestIds: testIds },
+    ...browserSession === void 0 ? {} : { browserSession },
     ...runnerTimeLimitMs === void 0 ? {} : { options: { limits: { ms: runnerTimeLimitMs } } }
   };
 }
@@ -55826,11 +59891,11 @@ function hasCapturedAssessmentRejection(input3, joinPath) {
   const parsed = capturedAssessmentRejection.safeParse(input3);
   if (!parsed.success || parsed.data.persistence_failure === true)
     return false;
-  const { native_receipt: receipt2, native_artifacts: artifacts } = parsed.data;
+  const { native_receipt: receipt3, native_artifacts: artifacts } = parsed.data;
   const path = joinPath(parsed.data.native_artifact_directory, "response.bin");
   return artifacts.some((value) => {
     const artifact2 = responseArtifact.safeParse(value).data;
-    return artifact2 !== void 0 && artifact2.path === path && artifact2.bytes === receipt2.captured_bytes && artifact2.sha256 === receipt2.captured_sha256;
+    return artifact2 !== void 0 && artifact2.path === path && artifact2.bytes === receipt3.captured_bytes && artifact2.sha256 === receipt3.captured_sha256;
   });
 }
 function restoreVerifiedAssessmentRejection(view2, report) {
@@ -55863,7 +59928,7 @@ async function readCustomerProposalSource(family2, native, options) {
     answerId: native.answerId,
     resultSha256: native.resultSha256
   };
-  const { read, verify } = options.proposalReaders?.[family2] ?? {};
+  const { read: read2, verify } = options.proposalReaders?.[family2] ?? {};
   let transfer, field2;
   if (family2 === "testPlanning") {
     transfer = transferCustomerPlanningSource;
@@ -55875,10 +59940,10 @@ async function readCustomerProposalSource(family2, native, options) {
     transfer = transferCustomerRiskProof;
     field2 = "result";
   }
-  if (!transfer || typeof read !== "function" || typeof verify !== "function")
+  if (!transfer || typeof read2 !== "function" || typeof verify !== "function")
     return void 0;
   try {
-    const original2 = await read(reference2);
+    const original2 = await read2(reference2);
     if (original2?.answerId !== reference2.answerId || original2?.resultSha256 !== reference2.resultSha256 || family2 === "testPlanning" && !verify(original2))
       return void 0;
     return family2 === "testPlanning" ? transfer(original2, structuredClone(original2), verify) : transfer(original2[field2], structuredClone(original2[field2]), verify);
@@ -56000,12 +60065,12 @@ function customerInputCorrections(catalog, name, error63) {
 var temporaryStatuses = /* @__PURE__ */ new Set([502, 503, 504]);
 function planningTemporaryFailureMessage(native) {
   if (!hasCapturedPlanningFailure(native)) return void 0;
-  const receipt2 = native.receipt;
+  const receipt3 = native.receipt;
   if (temporaryStatuses.has(
-    receipt2.provider_http_status ?? receipt2.http_status
+    receipt3.provider_http_status ?? receipt3.http_status
   ) || native.reason === "provider_unavailable")
     return "Kaijan could not make a test plan because a service was unavailable. Keep this answer. You can ask for a new plan later.";
-  if (native.reason === "provider_output_limit_no_retry" && receipt2.http_status === 200 && receipt2.status === "output_limit" && receipt2.automatic_retry === false && receipt2.failure_diagnostic?.stage === "response_completion" && receipt2.failure_diagnostic?.reason === "max_output_tokens")
+  if (native.reason === "provider_output_limit_no_retry" && receipt3.http_status === 200 && receipt3.status === "output_limit" && receipt3.automatic_retry === false && receipt3.failure_diagnostic?.stage === "response_completion" && receipt3.failure_diagnostic?.reason === "max_output_tokens")
     return "The planning service reported a response limit before it finished. No test plan was saved. You can ask for a new plan. This does not run any tests.";
   return void 0;
 }
@@ -56026,15 +60091,14 @@ var hash3 = (value) => createHash8("sha256").update(value).digest("hex");
 var id7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var optional4 = (value) => value.optional();
 var advisoryFamilies = {
-  loki_pr_context_find_related: "prContext",
-  loki_context_finder_find_related: "prContext",
-  loki_change_risk_analyze: "changeRisk",
-  loki_risk_finder_analyze: "riskFinder",
-  loki_test_plan: "testPlanning",
-  loki_test_supplement: "testSupplement"
+  loki_test_plan: "testPlanning"
 };
 var family = external_exports.enum([
-  ...new Set(Object.values(advisoryFamilies)),
+  ...Object.values(advisoryFamilies),
+  "prContext",
+  "changeRisk",
+  "riskFinder",
+  "testSupplement",
   "suppliedEvidence"
 ]);
 var hasCustomerAdvisoryOutput = (name) => name in advisoryFamilies || name === "loki_advisory_result_read";
@@ -56164,7 +60228,7 @@ var customerAdvisoryOutputSchema = external_exports.union([
     projectionSha256: id7,
     resultRead: optional4(
       external_exports.object({
-        tool: external_exports.literal("loki_advisory_result_read"),
+        tool: external_exports.literal(publicToolName("loki_advisory_result_read")),
         arguments: readInput
       })
     )
@@ -56172,11 +60236,7 @@ var customerAdvisoryOutputSchema = external_exports.union([
   pageSchema3
 ]);
 var descriptions = {
-  prContext: "Find related issues and pull requests for the selected work. Sources and relations need review; they do not establish requirements or verified behavior.",
-  changeRisk: "Review a supplied change for consequential assumptions. Keep cited source and incomplete coverage distinct from verified defects.",
-  riskFinder: "Review a work item and its attributed context for consequential questions. This does not execute tests or verify implementation.",
-  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Optional sourceModel with application:true selects the configured application\u2019s combined Main source context across its selected repositories. Legacy repository (owner/name) or repositoryId selection remains supported. Core returns the current combined model for an application read. For a legacy repository request, omit modelRef for latest or use its saved reference. Keep local changes and browser observations separately attributed. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration.",
-  testSupplement: "Suggest additions to a selected baseline test plan. Preserve the baseline and distinguish risks from approved requirements. This does not execute tests."
+  testPlanning: "Plan practical checks of application behavior. Supply the original caller task and sources in input and any additional coding agent planning guidance in agentInstructions. Use the optional taskInstructions only for testing directions the caller actually supplied. Omit taskInstructions if the caller supplied none. Optional sourceModel with application:true selects the configured application\u2019s combined Main source context across its selected repositories. Legacy repository (owner/name) or repositoryId selection remains supported. Core returns the current combined model for an application read. For a legacy repository request, omit modelRef for latest or use its saved reference. Keep local changes and browser observations separately attributed. Planner uses the original request and agent guidance together. Kaijan retains the caller's testing directions for Run. Preserve original source text. Planning does not execute tests. When the host ends its wait during browser exploration, Kaijan saves the observed map and continues the original Plan. Recover it with the identical request and configuration."
 };
 function customerAdvisoryToolDefinition(tool2) {
   if (!hasCustomerAdvisoryOutput(tool2.name)) return void 0;
@@ -56184,40 +60244,12 @@ function customerAdvisoryToolDefinition(tool2) {
     name: tool2.name,
     title: tool2.title,
     description: tool2.name === "loki_advisory_result_read" ? "Read a saved advisory answer in this chat. Offsets address the customer projection, not original result bytes. Continue with the returned projection digest. Reading cannot replay analysis." : descriptions[advisoryFamilies[tool2.name]],
-    inputSchema: tool2.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : customerAdvisoryInput(tool2),
+    inputSchema: tool2.name === "loki_advisory_result_read" ? external_exports.toJSONSchema(readInput) : tool2.inputSchema,
     outputSchema: {
       ...external_exports.toJSONSchema(customerAdvisoryOutputSchema, { io: "input" }),
       type: "object"
     },
     annotations: tool2.annotations
-  };
-}
-function customerAdvisoryInput(tool2) {
-  if (advisoryFamilies[tool2.name] !== "prContext") return tool2.inputSchema;
-  const original2 = tool2.inputSchema.properties?.options;
-  if (!original2?.properties) return tool2.inputSchema;
-  const keys = [
-    "repositories",
-    "timeout",
-    "maxCandidates",
-    "maxDiscovered",
-    "commentOriginFilter",
-    "actorPolicy",
-    "followDiscovered",
-    "sourcePrivacy"
-  ];
-  return {
-    ...tool2.inputSchema,
-    properties: {
-      ...tool2.inputSchema.properties,
-      options: {
-        type: "object",
-        additionalProperties: false,
-        properties: Object.fromEntries(
-          keys.filter((key) => original2.properties[key]).map((key) => [key, original2.properties[key]])
-        )
-      }
-    }
   };
 }
 function preparationView(value) {
@@ -56263,7 +60295,7 @@ function planningAdmissionGuidance(native) {
     message,
     recovery: {
       action: "check-readiness",
-      instruction: needsUpdate ? "Update Kaijan and its connection together. Keep this answer and any saved preparation. Do not replay uncertain work." : "Use loki_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
+      instruction: needsUpdate ? "Update Kaijan and its connection together. Keep this answer and any saved preparation. Do not replay uncertain work." : "Use kaijan_capabilities_list to check readiness and follow its connection guidance. Keep this answer. Do not replay uncertain work."
     }
   } : void 0;
 }
@@ -56395,7 +60427,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
         message: "Kaijan is not ready for this analysis. Check connection readiness and complete the required setup.",
         recovery: {
           action: "check-readiness",
-          instruction: "Use loki_capabilities_list to check readiness, then complete Kaijan setup or sign in as required. Keep this answer. Request distinct authorized work only after setup is ready; do not replay uncertain work."
+          instruction: "Use kaijan_capabilities_list to check readiness, then complete Kaijan setup or sign in as required. Keep this answer. Request distinct authorized work only after setup is ready; do not replay uncertain work."
         }
       } : {},
       ...fam === "changeRisk" && native.result?.status === "refused" && native.result?.error_code === "invalid_patch" && native.result?.accounting?.calls_started === 0 && native.result?.accounting?.unknown_cost_calls === 0 && Array.isArray(native.result?.ledger) && native.result.ledger.length === 0 ? {
@@ -56436,7 +60468,7 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
   throw Error("Unknown advisory state");
 }
 async function readOriginal(catalog, fam, answerId, invocation, expected) {
-  let text4 = "", offset = 0, bytes = 0, total, digest21;
+  let text4 = "", offset = 0, bytes = 0, total, digest20;
   for (let pages = 0; pages < 32768; pages++) {
     invocation?.signal?.throwIfAborted();
     const value = await catalog.invoke(
@@ -56452,9 +60484,9 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
     const chunk = value.resultChunk;
     if (value.schema !== "loki.advisory-read/1" || value.state !== "complete" || value.answerId !== answerId || !id7.safeParse(value.resultSha256).success || !chunk || chunk.encoding !== "JSON text, UTF-16 offsets" || chunk.offset !== offset || typeof chunk.text !== "string" || !chunk.text.length || !chunk.text.isWellFormed() || !Number.isSafeInteger(chunk.totalCharacters) || chunk.totalCharacters > 20 * 1024 * 1024)
       throw Error("Invalid saved answer");
-    digest21 ??= value.resultSha256;
+    digest20 ??= value.resultSha256;
     total ??= chunk.totalCharacters;
-    if (digest21 !== value.resultSha256 || total !== chunk.totalCharacters)
+    if (digest20 !== value.resultSha256 || total !== chunk.totalCharacters)
       throw Error("Changed saved answer");
     text4 += chunk.text;
     offset += chunk.text.length;
@@ -56462,14 +60494,14 @@ async function readOriginal(catalog, fam, answerId, invocation, expected) {
     if (bytes > 20 * 1024 * 1024 || offset > total || chunk.nextOffset !== (offset === total ? null : offset))
       throw Error("Invalid saved answer length");
     if (chunk.nextOffset === null) {
-      if (hash3(text4) !== digest21 || expected !== void 0 && expected !== digest21)
+      if (hash3(text4) !== digest20 || expected !== void 0 && expected !== digest20)
         throw Object.assign(Error("Saved answer integrity failed"), {
           code: "answer_integrity_failed"
         });
       return {
         state: "complete",
         answerId,
-        resultSha256: digest21,
+        resultSha256: digest20,
         result: JSON.parse(text4)
       };
     }
@@ -56483,7 +60515,7 @@ function finish(dto) {
     projectionSha256,
     ...dto.state === "complete" && dto.answerId ? {
       resultRead: {
-        tool: "loki_advisory_result_read",
+        tool: publicToolName("loki_advisory_result_read"),
         arguments: {
           family: dto.family,
           answerId: dto.answerId,
@@ -56717,7 +60749,11 @@ var developmentTools = /* @__PURE__ */ new Set([
   "kaijan_ai_models",
   "loki_report_export_preview",
   "loki_report_export",
-  "loki_test_supplement"
+  "loki_test_supplement",
+  "loki_runner_reuse_prepare",
+  "loki_context_finder_find_related",
+  "loki_change_risk_analyze",
+  "loki_risk_finder_analyze"
 ]);
 var isCustomerToolAllowed = (name) => !developmentTools.has(name);
 var hash4 = (value) => createHash9("sha256").update(value).digest("hex");
@@ -56753,7 +60789,7 @@ var clarification = progress3.extend({
 });
 var nextAction2 = external_exports.object({
   kind: external_exports.literal("input-required"),
-  tool: external_exports.literal("loki_runner_answer"),
+  tool: external_exports.literal(publicToolName("loki_runner_answer")),
   runId: id8,
   clarificationId: id8,
   deadlineAt: external_exports.string(),
@@ -56932,7 +60968,7 @@ var projection2 = external_exports.strictObject({
   replayAllowed: external_exports.literal(false)
 });
 var readHint = external_exports.strictObject({
-  tool: external_exports.enum(["loki_test_get", "loki_runner_get"]),
+  tool: external_exports.enum(["loki_test_get", "loki_runner_get"].map(publicToolName)),
   arguments: external_exports.strictObject({
     runId: id8,
     offset: external_exports.literal(0),
@@ -56960,6 +60996,7 @@ function customerExecutionInput(tool2, configurations, requireSavedPlan) {
   const projectRequest = (schema) => {
     if (schema?.properties?.target) {
       delete schema.properties.configurationUsed;
+      delete schema.properties.browserSession;
       if (configurations)
         schema.properties.configurationId = {
           anyOf: [{ type: "string", format: "uuid" }, { type: "null" }],
@@ -56981,13 +61018,13 @@ function customerExecutionInput(tool2, configurations, requireSavedPlan) {
 function customerToolDefinition(tool2, { configurations = false, requireSavedPlan = true } = {}) {
   if (!isCustomerToolAllowed(tool2.name)) return null;
   if (!executionTools.has(tool2.name)) return tool2;
-  const read = tool2.name.endsWith("_get");
+  const read2 = tool2.name.endsWith("_get");
   return {
     name: tool2.name,
     title: tool2.title,
     annotations: tool2.annotations,
-    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use loki_test_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
-    inputSchema: read ? external_exports.toJSONSchema(
+    description: tool2.name.endsWith("_answer") ? "Answer the exact pending test question using the question IDs shown with it. A retained answer is not confirmation that the test resumed." : `${read2 ? "Read" : tool2.name.endsWith("_stop") ? "Stop" : "Run"} the selected authorized test. Execution and assessment remain separate. Preserve the same run after uncertain effects; never replay it. Read nextAction and answer pending questions before polling. ${tool2.name === "loki_test_get" ? "For an active Run, use waitMs=30000 to reduce status calls. Completion, Stop or a question ends the wait early. Timeout or cancellation ends only the read; use kaijan_run_stop to stop work. Omitted waitMs keeps the immediate read. Public offset reads never wait. A finished reply summarizes results. Use its resultRead arguments for the full saved evidence. " : ""}Paged reads contain customer results only; continue with their projectionSha256 and nextOffset.`,
+    inputSchema: read2 ? external_exports.toJSONSchema(
       external_exports.strictObject({
         runId: id8,
         offset: external_exports.number().int().nonnegative().optional(),
@@ -57011,6 +61048,11 @@ var privateParameterMessages = {
   private_parameter_revoked: "The saved private login was revoked."
 };
 var errorMessages = {
+  chrome_run_unavailable: [
+    "Kaijan couldn\u2019t start this test in your Chrome browser.",
+    "choose_browser_for_run",
+    "Offer to run the saved test in Kaijan\u2019s isolated browser if the person chooses it."
+  ],
   invalid_arguments: [
     "The test input is invalid.",
     "correct_arguments",
@@ -57159,7 +61201,7 @@ function executionResult(value, blockedReason) {
       message: "Execution could not finish. Keep the original run; effects may be unknown."
     } : {
       unresolvedInputs: value.unresolvedInputs,
-      message: "Execution did not start. Resolve the missing test inputs before requesting new work."
+      message: value.reason === "chrome_run_approval_unavailable" ? "The Chrome tab wasn\u2019t connected, so the test didn\u2019t run. Make sure the Kaijan recording extension is enabled in Chrome. If the test needs an open page, make sure the page is still open before starting a new run." : "Execution did not start. Resolve the missing test inputs before requesting new work."
     }
   });
 }
@@ -57404,9 +61446,9 @@ var customerPending = external_exports.strictObject({
   ]),
   questions: external_exports.array(customerQuestion)
 });
-async function bindPendingQuestions(value, read) {
+async function bindPendingQuestions(value, read2) {
   if (value?.schema === "kaijan.test-run/1") {
-    const execution2 = value.execution ? await bindPendingQuestions(value.execution, read) : value.execution;
+    const execution2 = value.execution ? await bindPendingQuestions(value.execution, read2) : value.execution;
     return {
       ...value,
       execution: execution2,
@@ -57418,9 +61460,9 @@ async function bindPendingQuestions(value, read) {
   if (!pending) return { ...value, nextAction: void 0 };
   let safe;
   try {
-    if (typeof read !== "function")
+    if (typeof read2 !== "function")
       throw Error("No scoped clarification reader");
-    const selected = await read({ runId: value.runId });
+    const selected = await read2({ runId: value.runId });
     if (selected?.runId !== value.runId) throw Error("Different run");
     safe = customerPending.parse(selected.pendingClarification);
     if (safe.clarificationId !== pending.clarificationId || safe.deadlineAt !== pending.deadlineAt)
@@ -57440,7 +61482,7 @@ async function bindPendingQuestions(value, read) {
     pendingClarification: safe,
     nextAction: safe.state === "live" && safe.bindingState !== "unavailable" && safe.questions.length ? {
       kind: "input-required",
-      tool: "loki_runner_answer",
+      tool: publicToolName("loki_runner_answer"),
       runId: value.runId,
       clarificationId: safe.clarificationId,
       deadlineAt: safe.deadlineAt,
@@ -57538,9 +61580,9 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         projected.browserCleanup = browserCleanup;
     }
     const dto = JSON.parse(JSON.stringify(projected));
-    const text4 = JSON.stringify(dto), digest21 = hash4(text4);
+    const text4 = JSON.stringify(dto), digest20 = hash4(text4);
     if (paging) {
-      if (projectionSha256 !== void 0 && projectionSha256 !== digest21 || args.offset >= text4.length || args.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[args.offset]))
+      if (projectionSha256 !== void 0 && projectionSha256 !== digest20 || args.offset >= text4.length || args.offset > 0 && /[\uDC00-\uDFFF]/.test(text4[args.offset]))
         return customerFailureOutput(
           name,
           { code: "customer_read_restart", requestDispatched: false },
@@ -57552,7 +61594,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
         schema: "kaijan.customer-execution-page/1",
         runId: dto.runId,
         resultSha256: dto.resultSha256,
-        projectionSha256: digest21,
+        projectionSha256: digest20,
         encoding: "JSON text, UTF-16 offsets",
         offset: args.offset,
         text: text4.slice(args.offset, end),
@@ -57564,14 +61606,16 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
     const reply = name === "loki_test_get" ? completedTestReply(dto) : dto;
     return customerOutputSchema.parse({
       ...reply,
-      projectionSha256: digest21,
+      projectionSha256: digest20,
       ...dto.runId && dto.kind !== "answer" && !dto.error ? {
         resultRead: {
-          tool: dto.kind === "test" ? "loki_test_get" : "loki_runner_get",
+          tool: publicToolName(
+            dto.kind === "test" ? "loki_test_get" : "loki_runner_get"
+          ),
           arguments: {
             runId: dto.runId,
             offset: 0,
-            projectionSha256: digest21
+            projectionSha256: digest20
           }
         }
       } : {}
@@ -57604,6 +61648,8 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
     })
   });
   if (!object6(args)) return invalid();
+  if (args.browserSession !== void 0 && !options.includeRunInputs)
+    return invalid();
   const saved = args.savedTests !== void 0;
   if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
     return invalid();
@@ -57631,11 +61677,24 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
       const exploration = resolved2.exploration;
       const target = resolved2.desktopTarget ?? exploration?.target;
       if (!target) return invalid("saved_target_unavailable", true);
+      if (args.browserSession && "app" in target)
+        return invalid("browser_session_requires_browser_target");
+      const browserSession = args.browserSession === "isolated" ? void 0 : args.browserSession;
+      if (browserSession && !options.chromeRunAvailable) {
+        return {
+          diagnosticReason: "chrome_run_unavailable",
+          error: customerFailureOutput(name, {
+            code: "chrome_run_unavailable",
+            requestDispatched: false
+          })
+        };
+      }
       const scenarioId = createHash10("sha256").update(JSON.stringify(selected)).digest("hex");
       return {
         arguments: {
           requestKey: args.requestKey,
           savedTests: selected,
+          ...browserSession ? { browserSession } : {},
           scenarioId,
           executionMethod: "app" in target ? "desktop-ui" : "browser-ui",
           target,
@@ -57816,6 +61875,162 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
 
 // apps/codex-plugin/src/customer-report-output.mjs
 import { createHash as createHash11 } from "node:crypto";
+
+// packages/component-contracts/index.mjs
+function snapshotJson(value) {
+  const check2 = (v, seen = /* @__PURE__ */ new Set()) => {
+    if (v === null || typeof v === "string" || typeof v === "boolean") return;
+    if (typeof v === "number" && Number.isFinite(v)) return;
+    if (typeof v !== "object" || seen.has(v) || !Array.isArray(v) && ![Object.prototype, null].includes(Object.getPrototypeOf(v)))
+      throw new Error("A component contract requires lossless JSON.");
+    const keys = Reflect.ownKeys(v);
+    const descriptors = Object.getOwnPropertyDescriptors(v);
+    if (Array.isArray(v) && (Object.getPrototypeOf(v) !== Array.prototype || keys.filter((key) => key !== "length").length !== v.length))
+      throw new Error("A component contract requires lossless JSON arrays.");
+    for (const key of keys) {
+      if (Array.isArray(v) && key === "length") continue;
+      const descriptor = descriptors[key];
+      if (typeof key !== "string" || !descriptor.enumerable || !Object.hasOwn(descriptor, "value"))
+        throw new Error(
+          "A component contract requires lossless JSON properties."
+        );
+      if (Array.isArray(v) && (!/^(0|[1-9][0-9]*)$/.test(key) || Number(key) >= v.length))
+        throw new Error("A component contract requires lossless JSON arrays.");
+    }
+    seen.add(v);
+    for (const child of Object.values(v)) check2(child, seen);
+    seen.delete(v);
+  };
+  check2(value);
+  const bytes = JSON.stringify(value);
+  if (bytes === void 0)
+    throw new Error("A component contract requires JSON.");
+  const copy = JSON.parse(bytes);
+  const freeze = (value2) => {
+    if (value2 && typeof value2 === "object") {
+      for (const child of Object.values(value2)) freeze(child);
+      Object.freeze(value2);
+    }
+    return value2;
+  };
+  return freeze(copy);
+}
+
+// packages/context-intake/contracts.mjs
+var json3 = external_exports.unknown().refine((value) => {
+  try {
+    snapshotJson(value);
+    return true;
+  } catch {
+    return false;
+  }
+}, "Expected lossless JSON.");
+var jsonObject4 = json3.refine(
+  (value) => value !== null && typeof value === "object" && !Array.isArray(value),
+  "Expected a JSON object."
+).meta({ type: "object", additionalProperties: {} });
+var contextIdSchema = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var contextSubmitSchema = external_exports.strictObject({
+  requestKey: external_exports.string().min(1),
+  kind: external_exports.string().min(1),
+  content: json3,
+  subject: json3.optional(),
+  origin: jsonObject4.optional(),
+  artifacts: external_exports.array(jsonObject4).optional(),
+  nativeInputs: jsonObject4.optional(),
+  outputFamily: external_exports.string().min(1).optional(),
+  supersedes: contextIdSchema.optional()
+}).meta({ $id: "urn:kaijan:context-submission:1" });
+var contextGetSchema = external_exports.strictObject({
+  contextId: contextIdSchema,
+  offset: external_exports.number().int().nonnegative().optional()
+}).meta({ $id: "urn:kaijan:context-get:1" });
+var intake = external_exports.strictObject({ route: external_exports.string(), observation: external_exports.string() });
+var consumption = external_exports.discriminatedUnion("state", [
+  external_exports.strictObject({
+    state: external_exports.literal("unsupported-consumption"),
+    missingInput: external_exports.string(),
+    reason: external_exports.string()
+  }),
+  external_exports.strictObject({
+    state: external_exports.literal("input-compatible"),
+    analysisReadiness: external_exports.literal("not-established"),
+    basis: external_exports.string()
+  }),
+  external_exports.strictObject({
+    state: external_exports.literal("missing-or-incompatible-input"),
+    reason: external_exports.string()
+  })
+]);
+var receipt2 = {
+  contextId: contextIdSchema,
+  recordSha256: contextIdSchema,
+  sourceUri: external_exports.string().regex(/^urn:kaijan:retained-context:[a-f0-9]{64}$/),
+  state: external_exports.literal("stored"),
+  receivedAt: external_exports.string(),
+  intake,
+  content: external_exports.literal("retained-original"),
+  sourceMetadata: external_exports.string(),
+  artifacts: external_exports.strictObject({
+    count: external_exports.number().int().nonnegative(),
+    resolution: external_exports.literal("unresolved-reference-only"),
+    parserSupport: external_exports.literal("not-invoked"),
+    references: external_exports.string()
+  }),
+  consumption: external_exports.record(external_exports.string(), consumption),
+  supersedes: contextIdSchema.nullable()
+};
+var contextReceiptSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.context-receipt/1"),
+  ...receipt2
+});
+var contextRecordSchema = external_exports.strictObject({
+  schema: external_exports.literal("loki.context-record/1"),
+  contextId: contextIdSchema,
+  receivedAt: external_exports.string(),
+  source: external_exports.strictObject({
+    schema: external_exports.literal("loki.component-source/1"),
+    kind: external_exports.literal("agent-context"),
+    nativeContract: external_exports.literal("loki.context-submission/1"),
+    // Original caller JSON stays open and lossless, not a normalized UI model.
+    content: jsonObject4,
+    intake,
+    contentSha256: contextIdSchema,
+    references: external_exports.array(external_exports.never())
+  })
+});
+var read = { schema: external_exports.literal("loki.context-read/1"), ...receipt2 };
+var contextReadSchema = external_exports.union([
+  external_exports.strictObject({ ...read, record: contextRecordSchema }),
+  external_exports.strictObject({
+    ...read,
+    recordRead: external_exports.strictObject({
+      nextOffset: external_exports.literal(0),
+      totalCharacters: external_exports.number().int().positive()
+    })
+  }),
+  external_exports.strictObject({
+    ...read,
+    recordChunk: external_exports.strictObject({
+      encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+      offset: external_exports.number().int().nonnegative(),
+      text: external_exports.string(),
+      nextOffset: external_exports.number().int().nonnegative().nullable(),
+      totalCharacters: external_exports.number().int().positive()
+    })
+  })
+]);
+var contextFailureSchema = external_exports.strictObject({
+  error: external_exports.strictObject({
+    code: external_exports.string().min(1),
+    message: external_exports.string(),
+    recovery: external_exports.strictObject({ action: external_exports.string(), instruction: external_exports.string() }).optional()
+  })
+});
+var contextSubmitOutputSchema = external_exports.union([contextReceiptSchema, contextFailureSchema]).meta({ $id: "urn:kaijan:context-submit-output:1" });
+var contextGetOutputSchema = external_exports.union([contextReadSchema, contextFailureSchema]).meta({ $id: "urn:kaijan:context-get-output:1" });
+
+// apps/codex-plugin/src/customer-report-output.mjs
 var tools = /* @__PURE__ */ new Set([
   "loki_report_get",
   "loki_report_open",
@@ -57955,7 +62170,7 @@ function projectCustomerReport(value) {
 function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
   const resourceUri = "ui://loki/test-plan/card/v87.html";
-  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result; loki_report_get only reads the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. This does not display a card; use loki_report_show to present it to the user. This does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
+  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the selected saved test plan or final report as data in its original chat. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original GitHub source record, then use the returned nextOffset to continue. Reading does not run tests or assessment." : presentation === "chat" ? "Read the exact saved test plan or final report as text in its original chat. This does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
     title: tool2.title,
@@ -57969,9 +62184,12 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
         "openai/widgetAccessible": true
       }
     } : {},
-    description: `${description} Use the total for passed tests. Use Passed, Failed and Incomplete for saved check outcomes.`,
+    description: `${description}${tool2.name === "loki_report_show" ? " To attach original GitHub PR and files reads, supply reportSources when saving the report." : ""} Use the total for passed tests. Use Passed, Failed and Incomplete for saved check outcomes.`,
     outputSchema: {
-      ...external_exports.toJSONSchema(customerReportOutputSchema, { io: "input" }),
+      ...external_exports.toJSONSchema(
+        tool2.name === "loki_report_get" ? external_exports.union([customerReportOutputSchema, contextReadSchema]) : customerReportOutputSchema,
+        { io: "input" }
+      ),
       type: "object"
     }
   };
@@ -58050,6 +62268,24 @@ function withSavedCard(result2, view2, summarizeCard) {
 async function invokeCustomerReportWithMetadata(catalog, name, args, invocation, options = {}) {
   if (!hasCustomerReportOutput(name))
     return { result: customerReportFailure() };
+  if (name === "loki_report_get" && args?.sourceOffset !== void 0) {
+    try {
+      invocation?.signal?.throwIfAborted();
+      const result2 = contextReadSchema.parse(
+        await catalog.invoke(name, args, invocation)
+      );
+      invocation?.signal?.throwIfAborted();
+      const consumption2 = { ...result2.consumption };
+      delete consumption2.testSupplement;
+      return { result: { ...result2, consumption: consumption2 } };
+    } catch (error63) {
+      return {
+        result: customerReportFailure(
+          error63?.code === "invalid_params" ? error63.code : "report_unavailable"
+        )
+      };
+    }
+  }
   if (name === "loki_report_get" || name === "loki_report_open" && options.presentation === "chat") {
     const selected = external_exports.strictObject({ reportId: external_exports.string().regex(/^[a-f0-9]{64}$/) }).safeParse(args);
     if (!selected.success)
@@ -58138,154 +62374,6 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
   }
 }
 
-// apps/codex-plugin/src/customer-preparation-output.mjs
-var digest20 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var object8 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var hasCustomerPreparationOutput = (name) => name === "loki_runner_reuse_prepare";
-var customerPreparationFailureSchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.customer-preparation-error/1"),
-  error: external_exports.strictObject({
-    code: external_exports.enum([
-      "preparation_invalid_selection",
-      "preparation_unavailable",
-      "preparation_changed"
-    ]),
-    message: external_exports.string(),
-    requestDispatched: external_exports.literal(false),
-    replayAllowed: external_exports.literal(false),
-    recovery: external_exports.string()
-  })
-});
-function customerPreparationFailure(code = "preparation_unavailable") {
-  const selected = [
-    "preparation_invalid_selection",
-    "preparation_changed"
-  ].includes(code) ? code : "preparation_unavailable";
-  return customerPreparationFailureSchema.parse({
-    schema: "kaijan.customer-preparation-error/1",
-    error: {
-      code: selected,
-      message: selected === "preparation_invalid_selection" ? "The saved evidence selection is invalid." : selected === "preparation_changed" ? "The saved evidence no longer matches this selection." : "This saved evidence is unavailable in this chat.",
-      requestDispatched: false,
-      replayAllowed: false,
-      recovery: "Prepare the exact saved report and run again in their original chat. Resolve missing task inputs there. Do not repeat application actions to recover evidence. No assessment or execution started."
-    }
-  });
-}
-var candidateSchema = external_exports.strictObject({
-  reference: external_exports.string().regex(/^execution:[a-f0-9]{64}$/),
-  task: external_exports.string(),
-  steps: external_exports.array(external_exports.string())
-});
-var reuseSummarySchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.customer-reuse-preparation/1"),
-  state: external_exports.enum(["approval-required", "unavailable"]),
-  currentTask: external_exports.string(),
-  runIds: external_exports.array(digest20),
-  approvalSha256: digest20,
-  currentRequestSha256: digest20,
-  candidates: external_exports.array(candidateSchema),
-  unavailableRunIds: external_exports.array(digest20),
-  omitted: external_exports.number().int().nonnegative(),
-  consent: external_exports.string(),
-  replayAllowed: external_exports.literal(false)
-});
-var customerPreparationOutputSchema = external_exports.union([reuseSummarySchema, customerPreparationFailureSchema]).meta({ $id: "urn:kaijan:customer-preparation-output:1" });
-function projectCustomerReusePreparation(value) {
-  try {
-    if (value?.schema !== "loki.runner-reuse-preview/1" || !["approval-required", "unavailable"].includes(value.state))
-      return customerPreparationFailure(
-        value?.state === "invalid-arguments" ? "preparation_invalid_selection" : void 0
-      );
-    const candidates = value.candidates.map((candidate) => {
-      if (candidate.projection?.author !== "capability-host:authored-intent" || candidate.projection?.revision !== "loki.runner-reuse-projection/1" || candidate.projection?.nonsecret !== true || candidate.historicalObservations?.summaries?.length !== 0 || candidate.historicalFinalClaim?.summary !== null)
-        throw Error("Unbound intent");
-      return {
-        reference: candidate.reference,
-        task: candidate.authoredTask.summary,
-        steps: candidate.procedure.steps
-      };
-    });
-    return reuseSummarySchema.parse({
-      schema: "kaijan.customer-reuse-preparation/1",
-      state: value.state,
-      currentTask: value.query.task,
-      runIds: value.runIds,
-      approvalSha256: value.approvalSha256,
-      currentRequestSha256: value.currentRequestSha256,
-      candidates,
-      unavailableRunIds: (value.unavailable ?? []).map((item) => item.runId),
-      omitted: (value.rejected?.length ?? 0) + (value.excludedOperations?.length ?? 0),
-      consent: "Review these saved task instructions before allowing Kaijan to use them for the new task. They describe intended steps, not observed success. Approve only content you are allowed to share with the service. To proceed, explicitly authorize execution with the identical current request and reuse:{runIds,approvalSha256}. Changed input or evidence requires a new preview. Preparation itself performs no application actions and grants no execution authority.",
-      replayAllowed: false
-    });
-  } catch {
-    return customerPreparationFailure();
-  }
-}
-function schemaWithoutProse(value, propertyMap = false) {
-  if (Array.isArray(value))
-    return value.map((item) => schemaWithoutProse(item));
-  if (!object8(value)) return value;
-  return Object.fromEntries(
-    Object.entries(value).filter(
-      ([key]) => propertyMap || !["description", "title", "examples", "$comment"].includes(key)
-    ).map(([key, item]) => [
-      key,
-      schemaWithoutProse(
-        item,
-        !propertyMap && [
-          "properties",
-          "patternProperties",
-          "$defs",
-          "definitions",
-          "dependentSchemas"
-        ].includes(key)
-      )
-    ])
-  );
-}
-function preparationInputSchema(tool2) {
-  const schema = schemaWithoutProse(tool2.inputSchema);
-  const limits = schema?.properties?.current?.properties?.options?.properties?.limits;
-  if (limits?.properties) {
-    limits.properties = Object.fromEntries(
-      Object.entries(limits.properties).filter(([key]) => key === "ms")
-    );
-  }
-  return schema;
-}
-function customerPreparationToolDefinition(tool2) {
-  if (!hasCustomerPreparationOutput(tool2.name)) return tool2;
-  return {
-    name: tool2.name,
-    title: "Review saved task reuse",
-    annotations: {
-      readOnlyHint: true,
-      destructiveHint: false,
-      openWorldHint: false
-    },
-    inputSchema: preparationInputSchema(tool2),
-    outputSchema: {
-      ...external_exports.toJSONSchema(customerPreparationOutputSchema),
-      type: "object"
-    },
-    description: "Preview caller-authored saved task instructions for reuse with the complete fresh current request. Review every candidate and approve only content authorized for sharing with the service. The unchanged approvalSha256 binds the complete private selection. Preparation does not execute; a separate explicit execution request with the identical current task and returned runIds/approvalSha256 is required. Missing evidence or changed approval must not trigger fallback or replay."
-  };
-}
-async function invokeCustomerPreparation(catalog, name, args, invocation) {
-  try {
-    if (!hasCustomerPreparationOutput(name))
-      return customerPreparationFailure();
-    invocation?.signal?.throwIfAborted();
-    return projectCustomerReusePreparation(
-      await catalog.invoke(name, args, invocation)
-    );
-  } catch {
-    return customerPreparationFailure();
-  }
-}
-
 // apps/codex-plugin/src/capability-mcp.mjs
 var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v38.html",
@@ -58371,7 +62459,7 @@ function capabilityMcpRegistration(session, setup) {
       ...session.projectHistory?.tools ?? [],
       ...controls
     ].filter(({ name }) => isCustomerToolAllowed(name)).map((tool2) => {
-      const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerPreparationOutput(tool2.name) ? customerPreparationToolDefinition(tool2) : hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
+      const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool2, {
         configurations: Boolean(session.configurations),
@@ -58392,31 +62480,6 @@ function capabilityMcpRegistration(session, setup) {
       ...session.projectHistory?.tools.map((tool2) => tool2.name) ?? []
     ]
   };
-}
-function capabilityMcpDiscovery(tools2, setup, host) {
-  const hidden = /* @__PURE__ */ new Set([
-    "loki_pr_context_find_related",
-    ...setup?.hiddenTools ?? []
-  ]);
-  const internalPreparation = /* @__PURE__ */ new Set([
-    "loki_context_submit",
-    "loki_context_get",
-    "loki_context_finder_find_related",
-    "loki_change_risk_analyze",
-    "loki_risk_finder_analyze",
-    // Existing direct callers can recover a preview. Codex models use the
-    // ordinary Plan and Run entry points.
-    ...host === "codex" ? ["loki_runner_reuse_prepare"] : []
-  ]);
-  return tools2.filter((tool2) => !hidden.has(tool2.name)).map(
-    (tool2) => internalPreparation.has(tool2.name) ? {
-      ...tool2,
-      _meta: {
-        ...tool2._meta,
-        ui: { ...tool2._meta?.ui, visibility: ["app"] }
-      }
-    } : tool2
-  );
 }
 function createCapabilityMcpServer(session, version4, setup, telemetry) {
   const { catalog } = session;
@@ -58441,7 +62504,7 @@ ${customerInstructions}` : customerInstructions
     enumerable: false
   });
   server.setRequestHandler(ListToolsRequestSchema, () => ({
-    tools: capabilityMcpDiscovery(tools2, setup, session.identity?.host)
+    tools: tools2.map((tool2) => ({ ...tool2, name: publicToolName(tool2.name) }))
   }));
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
@@ -58518,7 +62581,11 @@ ${customerInstructions}` : customerInstructions
       throw error63;
     }
   });
-  server.setRequestHandler(CallToolRequestSchema, async ({ params }, extra) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request3, extra) => {
+    const params = {
+      ...request3.params,
+      name: operationToolName(request3.params.name)
+    };
     let diagnosticOwner;
     try {
       diagnosticOwner = telemetry?.bind();
@@ -58589,19 +62656,6 @@ ${customerInstructions}` : customerInstructions
       diagnosticOwner
     );
     const scopedCatalog = failureDiagnostics.catalog;
-    if (hasCustomerPreparationOutput(params.name)) {
-      const result2 = await invokeCustomerPreparation(
-        scopedCatalog,
-        params.name,
-        params.arguments ?? {},
-        { signal: AbortSignal.any([extra.signal, lifetime.signal]) }
-      );
-      return {
-        ...result2.error ? { isError: true } : {},
-        structuredContent: result2,
-        content: [{ type: "text", text: JSON.stringify(result2) }]
-      };
-    }
     if (hasCustomerAdvisoryOutput(params.name)) {
       const invocation = {
         signal: AbortSignal.any([extra.signal, lifetime.signal])
@@ -58610,7 +62664,7 @@ ${customerInstructions}` : customerInstructions
       const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
       if (!args)
         throw invalidParams(
-          "Supply requestKey, the saved Test Environment ID, and either testObjective or contextId. Include the saved Test Data ID when needed."
+          "Supply requestKey, the saved Test Environment ID, and one of testObjective, input, or contextId. Include the saved Test Data ID when needed."
         );
       const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
         params.name,
@@ -58632,7 +62686,10 @@ ${customerInstructions}` : customerInstructions
         scopedCatalog,
         params.name,
         configured2.arguments,
-        invocation,
+        {
+          ...invocation,
+          ...configured2.planningEnvironment ? { planningEnvironment: configured2.planningEnvironment } : {}
+        },
         {
           codexTesting,
           connectionOnly: selected.scope?.kind === "connection",
@@ -58754,6 +62811,7 @@ ${customerInstructions}` : customerInstructions
         {
           requireSavedPlan: session.identity?.host !== "claude_code",
           includeRunInputs: codexSavedRun,
+          chromeRunAvailable: codexSavedRun && selected.services?.computerRunner?.supportsChromeRun?.() === true,
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
@@ -58892,11 +62950,6 @@ ${customerInstructions}` : customerInstructions
           signal: AbortSignal.any([extra.signal, lifetime.signal])
         }
       );
-      if ((params.name === "loki_context_submit" || params.name === "loki_context_get") && !isCustomerToolAllowed("loki_test_supplement")) {
-        const consumption = { ...result2.consumption };
-        delete consumption.testSupplement;
-        result2 = { ...result2, consumption };
-      }
       if (params.name === "loki_capabilities_list" && session.runtimeDiscovery) {
         result2 = {
           ...result2,

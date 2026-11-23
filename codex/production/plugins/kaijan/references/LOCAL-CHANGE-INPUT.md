@@ -41,7 +41,7 @@ const packet = {
 };
 ```
 
-Check loki_capabilities_list and submit the packet with optional requestKey correlation and
+Check kaijan_capabilities_list and submit the packet with optional requestKey correlation and
 mode direct through loki_change_risk_analyze. Use its advertised schema and
 owning skill for the returned answer, transport cancellation, completed-answer continuation, errors and fees. Reuse the same
 input/key after a lost reply; a changed snapshot is a new review condition.
