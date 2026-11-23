@@ -5,7 +5,7 @@
   "entrypoint": "api.mjs",
   "nativeSelectionSha256": "b8a35a5124b5741a2106744f2da36a14e0d79ae0fcea581bc2b4977c7fadbd9a",
   "files": {
-    "api.mjs": "2cf256ee724137078639e6588cb91626068d67baa1c0ff3ac3164fd039166e12",
+    "api.mjs": "cc80f2dec658320b225ba8f3516f5f52b7a63f11b96005d8da649ab442a4e311",
     "application-context-package.json": "d1c01b547d41d126c90ec22e7c5f7c3fc164bd89a748fe6777f43cc8e2ebd871",
     "application-context-query/index.d.mts": "495e4bf50f0cd65f620195c6adaf4490d46da2cbcae1eeb8219317ade1fd7c6f",
     "application-context-query/index.mjs": "5dbac778f64c4bb30c06af9f16485a59b4de7111481198352ccd9b26a175aab2",
@@ -249,7 +249,7 @@
     "node_modules/@katalon-loki/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
     "node_modules/@katalon-loki/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b",
     "node_modules/@katalon-loki/mac-computer-runner/README.md": "5768faa08eee791753c6e90393ded44f96a6245ae2b055d9a23bc4c409723dac",
-    "node_modules/@katalon-loki/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0",
+    "node_modules/@katalon-loki/mac-computer-runner/src/appium.mjs": "33c917056f548dfae8c2d675760d14fdaf1679c04cde26d2fd1f89224ee0b5cd",
     "node_modules/@katalon-loki/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051",
     "node_modules/@katalon-loki/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54",
     "node_modules/@katalon-loki/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa",
