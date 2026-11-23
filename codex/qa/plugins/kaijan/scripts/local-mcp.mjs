@@ -52038,7 +52038,6 @@ var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject2 = external_exports.record(external_exports.string(), external_exports.json());
 var count5 = external_exports.number().int().nonnegative();
 var defaultExplorerTimeLimitMs = 3e5;
-var defaultRunnerTimeLimitMs = 6e5;
 var maxExecutionTimerMs = 2 ** 31 - 1;
 var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
@@ -52110,7 +52109,7 @@ var runnerClarificationSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.clarification/1"),
   clarificationId: external_exports.string(),
   ...progress,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   state: external_exports.enum(["live", "unknown"]),
   redaction: external_exports.strictObject({
     schema: external_exports.literal("loki.runner.safe-projection/1"),
@@ -52212,7 +52211,7 @@ var runnerNextActionSchema = external_exports.strictObject({
   tool: external_exports.literal("loki_runner_answer"),
   runId: digest9,
   clarificationId: external_exports.string().min(1),
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   questions,
   instruction: external_exports.string()
 });
@@ -57336,14 +57335,7 @@ async function createInstalledSession(root, build, data, broker, {
 } = {}) {
   const host = pluginHost(build);
   const extensionId = build.chromeRunExtensions?.[build.profile];
-  const chromeRun = host === "codex" && process3.platform === "darwin" && typeof extensionId === "string" && /^[a-p]{32}$/.test(extensionId) && !runnerValidation ? ({ timeoutMs, signal, ...request3 }, run) => withChromeRunBrowser(
-    {
-      ...request3,
-      extensionId,
-      signal: AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
-    },
-    run
-  ) : void 0;
+  const chromeRun = host === "codex" && process3.platform === "darwin" && typeof extensionId === "string" && /^[a-p]{32}$/.test(extensionId) && !runnerValidation ? (request3, run) => withChromeRunBrowser({ ...request3, extensionId }, run) : void 0;
   const stage2 = (value) => {
     try {
       onStartupStage?.(value);
@@ -59762,9 +59754,6 @@ var runInput = external_exports.strictObject({
   testIds: external_exports.array(external_exports.string().min(1)).min(1),
   browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe(
     "For this browser Run only. Default to isolated. Use chrome-new-tab when the person wants their own Chrome session at the saved target URL. Use chrome-shared-tab when the task depends on the current state of a tab they already have open. A test account or a Chrome target alone does not select a personal session."
-  ),
-  runnerTimeLimitMs: external_exports.int().min(defaultRunnerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
-    "Optional longer execution time limit in milliseconds. Omit for the 10-minute default."
   )
 });
 function codexTestingToolDefinition(tool2) {
@@ -59784,7 +59773,7 @@ function codexTestingToolDefinition(tool2) {
   if (tool2.name === "loki_test_execute")
     return {
       ...tool2,
-      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. Runner has 10 minutes by default. Use runnerTimeLimitMs to increase the time limit before starting. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
+      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
       inputSchema: external_exports.toJSONSchema(runInput)
     };
   return tool2;
@@ -59818,13 +59807,12 @@ function codexPlanArguments(args) {
 function codexRunArguments(args) {
   const parsed = runInput.safeParse(args);
   if (!parsed.success) return void 0;
-  const { requestKey: requestKey3, planId: planId2, testIds, browserSession, runnerTimeLimitMs } = parsed.data;
+  const { requestKey: requestKey3, planId: planId2, testIds, browserSession } = parsed.data;
   const [answerId, resultSha256] = planId2.split(".");
   return {
     requestKey: requestKey3,
     savedTests: { answerId, resultSha256, selectedTestIds: testIds },
-    ...browserSession === void 0 ? {} : { browserSession },
-    ...runnerTimeLimitMs === void 0 ? {} : { options: { limits: { ms: runnerTimeLimitMs } } }
+    ...browserSession === void 0 ? {} : { browserSession }
   };
 }
 function codexPlanId(answerId, resultSha256) {
@@ -60790,7 +60778,7 @@ var clarification = progress3.extend({
   questions: external_exports.array(customerQuestion),
   bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
   clarificationId: id8,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   state: external_exports.enum(["live", "unknown"])
 });
 var nextAction2 = external_exports.object({
@@ -60798,7 +60786,7 @@ var nextAction2 = external_exports.object({
   tool: external_exports.literal(publicToolName("loki_runner_answer")),
   runId: id8,
   clarificationId: id8,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   questions: external_exports.array(customerQuestion)
 });
 var browserTest = runnerTestResultsSchema.element.extend({
@@ -61009,12 +60997,8 @@ function customerExecutionInput(tool2, configurations, requireSavedPlan) {
           description: "Optional personal Configuration ID for this Run. Omit to use the chat selection or automatic delivery of saved groups. Use null for no saved configuration. Explicit params override saved values only for this Run. Use the installed app sign-in guide to update the account."
         };
     }
-    const limits = schema?.properties?.options?.properties?.limits;
-    if (limits?.properties && Object.hasOwn(limits.properties, "calls")) {
-      delete limits.properties.calls;
-      if (Array.isArray(limits.required))
-        limits.required = limits.required.filter((name) => name !== "calls");
-    }
+    const options = schema?.properties?.options?.properties;
+    if (options) delete options.limits;
     for (const key of ["anyOf", "oneOf", "allOf"])
       if (Array.isArray(schema?.[key])) schema[key].forEach(projectRequest);
   };
@@ -61442,7 +61426,7 @@ function customerConfigurationFailure(name, value) {
 }
 var customerPending = external_exports.strictObject({
   clarificationId: id8,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   state: external_exports.enum(["live", "unknown"]),
   bindingState: external_exports.enum(["bound", "unverified", "unavailable"]),
   reason: external_exports.enum([

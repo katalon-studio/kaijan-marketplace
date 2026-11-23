@@ -173,7 +173,7 @@ export declare const runnerRecoverySchema: z.ZodObject<{
     }, z.core.$strict>>;
 }, z.core.$strict>;
 export declare const runnerClarificationSchema: z.ZodObject<{
-    deadlineAt: z.ZodString;
+    deadlineAt: z.ZodNullable<z.ZodString>;
     state: z.ZodEnum<{
         unknown: "unknown";
         live: "live";
@@ -710,7 +710,7 @@ export declare const runnerNextActionSchema: z.ZodObject<{
     tool: z.ZodLiteral<"loki_runner_answer">;
     runId: z.ZodString;
     clarificationId: z.ZodString;
-    deadlineAt: z.ZodString;
+    deadlineAt: z.ZodNullable<z.ZodString>;
     questions: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
         question: z.ZodString;
@@ -753,7 +753,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -809,7 +809,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -881,7 +881,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -937,7 +937,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -1288,7 +1288,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -1344,7 +1344,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -1415,7 +1415,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -1471,7 +1471,7 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -1579,7 +1579,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -1635,7 +1635,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -1707,7 +1707,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -1763,7 +1763,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -2114,7 +2114,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -2170,7 +2170,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
@@ -2241,7 +2241,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
     runId: z.ZodString;
     replayAllowed: z.ZodLiteral<false>;
     pendingClarification: z.ZodOptional<z.ZodNullable<z.ZodObject<{
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         state: z.ZodEnum<{
             unknown: "unknown";
             live: "live";
@@ -2297,7 +2297,7 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
         tool: z.ZodLiteral<"loki_runner_answer">;
         runId: z.ZodString;
         clarificationId: z.ZodString;
-        deadlineAt: z.ZodString;
+        deadlineAt: z.ZodNullable<z.ZodString>;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodString;
             question: z.ZodString;
