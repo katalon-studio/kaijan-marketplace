@@ -55,12 +55,13 @@ the requested draft with the matching draft tool. The tool opens a form for
 the person to edit and review in a separate pane. In the CLI, press
 Ctrl+X then Tab if it needs keyboard focus.
 
-The issue form names the public repository where the issue will appear.
+The issue form shares the user's reviewed text and images with the Kaijan team.
 Use **Choose images** to select PNG, JPEG or WebP files for this draft. Review
 the text and selected images with **Preview issue** before choosing
-**Publish issue**. Use the original draft to recover an unconfirmed
-submission. Only the person can send feedback or publish the issue from
-its form.
+**Send issue**. Use the original draft to recover an unconfirmed submission.
+Only the person can send feedback or an issue from its form. The saved form
+offers **Copy reference**. For feedback opened from a report with one eligible
+Run, **Include Run details** starts off.
 
 Lead with what was checked and the actual result. Show concise test titles,
 expected and observed behavior, useful evidence and any specific next action.

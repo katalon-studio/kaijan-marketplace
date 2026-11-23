@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "buildId": "6ea3cb75-9d0a-413d-9710-f5202af4ecf3",
-  "builtAt": "2026-11-23T05:14:48.057Z",
-  "sourceRevision": "422afa352544a30014b8596e14edf15bcac90755",
+  "buildId": "1a373f93-fab5-47c4-a6e3-f4e616b4b1f9",
+  "builtAt": "2026-11-23T22:16:33.338Z",
+  "sourceRevision": "ddca8ec7c28a24c64b08a4de8506a4e19563c93a",
   "sourceDirty": false,
   "profile": "qa",
   "coreOrigin": "https://loki-app.qa.katalon.com",
@@ -22,15 +22,15 @@
   "authArchitecture": "shared-broker-v1",
   "credentialStorage": "private-file-v1",
   "runtimeLayout": "installed",
-  "capabilityDigest": "636142d877a161efd568aa701459a81c7033dd8b3faefbd9e8af85ca285a9ea0",
-  "pluginVersion": "0.5.0-rc.449",
+  "capabilityDigest": "e21484b1b2860d4f58de5e17f986a9cb81b966df19be456baa8c9e71ae1874d3",
+  "pluginVersion": "0.5.0-rc.475",
   "mcpUrl": "https://loki-app.qa.katalon.com/mcp",
   "mcpServerName": "kaijan_core",
   "localMcpServerName": "kaijan_local",
   "capabilityTransport": {
     "format": "mcpb/1",
     "bundle": "servers/kaijan-local.mcpb",
-    "sha256": "d841a111a57d16c66bd7609ac4498ac86fa2d20ed8a46c9ae4f1818c56b5bef1",
+    "sha256": "8403f65d13a87877751503c16f2776d6f37b1e5880c6d7dc0a8824b0f28cdc2f",
     "privateHelperSha256": "5ebfc62920ea297c0816a1012f24b7722b50554dc0d6a6fce2fca5d7be732ccc"
   }
 }

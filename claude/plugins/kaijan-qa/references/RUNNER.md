@@ -8,7 +8,8 @@ plugin invokes that API in one isolated Node process per execution, so native
 cleanup owns only that invocation’s browser/MCP children. It never invokes the
 component CLI or implements browser actions. Planning remains a proposal. Use `kaijan_run_start` for authorized execution, assessment and a saved report. Runner remains an internal implementation of that flow.
 
-Claude Code starts a browser or desktop Run from the Plan's `planId` and the selected test IDs.
+Claude Code and Claude start a browser or desktop Run from the Plan's `planId` and
+the selected test IDs.
 The saved Plan supplies its application target, test data and private configuration
 references. Generate a fresh key for a new Run and reuse the key for recovery.
 
@@ -20,42 +21,9 @@ references. Generate a fresh key for a new Run and reuse the key for recovery.
 }
 ```
 
-Hosts that advertise the full Runner input can send the following request.
-
-```json
-{
-  "requestKey": "one-authorized-execution",
-  "scenarioId": "T1",
-  "savedTests": {
-    "answerId": "<saved Plan answer ID>",
-    "resultSha256": "<saved Plan result SHA-256>",
-    "selectedTestIds": ["T1"]
-  },
-  "params": {},
-  "target": {
-    "initialURL": "https://example.com",
-    "allowedHosts": ["example.com"]
-  },
-  "executionMethod": "browser-ui",
-  "options": { "limits": { "browserInputs": 5, "ms": 60000 } }
-}
-```
-
-The full Runner input accepts `savedTests` from the exact saved Plan in this chat and
-explicit friendly scalar `params`, including `{}`. Copy the answer ID, result
-digest and selected test IDs from the saved Plan. If the caller supplied a full
-test in chat, save it as a Plan first. The service loads the complete recorded
-test and freezes its scenario and parameters privately before execution.
-Resolve missing execution inputs before starting. `executionMethod` defaults to
-`browser-ui` and also supports `desktop-ui`. The native Node Runner API uses
-the complete scenario produced by the host.
-
-On hosts with the full Runner input, set `options.headless: true` on
-`kaijan_run_start`. Omission keeps the headed default; `false` selects headed
-execution. The option passes to the isolated Runner host, stays in the frozen
-request identity and appears in `executionConfig.headless` and
-`executionHost.headless`. It does not change the native scenario input. Desktop
-requests with this option return `not-executed` with zero provider calls.
+If the caller supplied a full test in chat, save it as a Plan first. Kaijan
+builds the private Runner scenario from the selected tests and supplies the
+execution inputs retained with the Plan.
 
 `target.initialURL` must be an absolute HTTP or HTTPS URL without embedded
 username/password. Caller-authorized local targets such as
@@ -67,17 +35,12 @@ The plugin bundles its Node runtime. Compatible Chromium is downloaded on first
 execution, then reused from Playwright's versioned user cache. It is not included
 in the plugin archive and
 does not require an installed Google Chrome. Browser preparation respects Stop
-and the execution time limit; download failure returns before browser launch or
+and has its own download timeout. Failure returns before browser launch or
 provider calls. Imports, tool discovery and analysis do not download browsers.
 
-On a host that advertises the full Runner input, the [installed login guide](private-parameters.md)
-describes how to prepare conversation-scoped `privateParams` references. The
-full Runner resolves these before dispatch and adds the names to
-`options.secretParameterNames`. Keep its ordinary inputs in `params`. Keep raw
-credentials out of MCP arguments. The adapter never reads unrelated browser
-profiles or live history. Existing-session attachment and persisted memory are
-not implemented by this delivered Runner. Its native limits remain 80 calls,
-150 returned browser inputs and ten minutes; options can lower those bounds.
+Runner resolves the authorized login references stored with the Plan. Keep raw
+credentials out of MCP arguments. Normal Run has no aggregate time, provider-call,
+or action cap.
 Native admission additionally limits serialized scenario text to 8000 characters,
 50 scalar params, 120-character names and 4000-character string values. Those are
 producer restrictions, not a claim of semantic safety or general capacity.
@@ -147,8 +110,8 @@ remains `accepted | running | finished | unknown | not-started | stopped-before-
 `kaijan_run_read_execution` returns `pendingClarification` as null or an object with
 `schema: loki.runner.clarification/1`, `clarificationId`, `reason`, string arrays
 `completedSteps`, `remainingSteps`, `evidence`, `questions: {id, question, kind}[]`,
-`deadlineAt` and `state: live | unknown`. Question fields are strings. `live`
-requires this host's running pending callback, no Stop and an unexpired deadline.
+`deadlineAt` and `state: live | unknown`. Question fields are strings. Normal Run
+returns `deadlineAt: null`. A live question requires this host’s active callback.
 `unknown` retains an unresolved request without live authority; restart, disconnect,
 Stop or deadline cannot restore it. Existing lifecycle `state` fields remain unchanged.
 
@@ -305,10 +268,9 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 ## Local macOS desktop execution
 
-`kaijan_run_start` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
-explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
-Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
-on the main display. The same get/Stop tools retain their durable run lifecycle.
+Select the Mac application when saving the Plan and start its selected tests
+with the same `planId` interface. Keep the target app on the main display.
+Run Get and Run Stop use the original Run ID.
 
 The packaged Appium/Mac2 backend uses the plugin's Node runtime. Xcode and macOS
 UI Automation/Accessibility permission are host prerequisites; no global Appium

@@ -1,6 +1,6 @@
 ---
 name: test-request
-description: Plan then test and report when the request needs a new plan, such as a work item, change review, or an incomplete scenario. For a complete caller-supplied scenario with an authorized target, use run-test directly to execute, assess, and save the report.
+description: Help people learn what Kaijan can do and get started, or use Kaijan to plan tests, test an application or change, and report the results. Also handles review of requirements or risks, assessment, and authorized fixes.
 ---
 
 # Carry the testing request to its result
@@ -48,8 +48,8 @@ the same authority.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
   Save a Plan for a complete caller-supplied scenario before execution.
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
-  saved Plan reference and selected test IDs. In Claude Code, the saved Plan supplies
-  the target and inputs. Kaijan runs the selected tests, assesses retained
+  saved Plan reference and selected test IDs. The saved Plan supplies the
+  target and inputs. Kaijan runs the selected tests, assesses retained
   evidence and saves a combined report. Keep gaps for unexecuted tests visible
   and continue independent checks with sufficient inputs. Attribute any external
   observations to their source.

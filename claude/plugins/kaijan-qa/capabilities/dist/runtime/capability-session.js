@@ -21285,7 +21285,7 @@ var runnerClarificationSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.clarification/1"),
   clarificationId: external_exports.string(),
   ...progress,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   state: external_exports.enum(["live", "unknown"]),
   redaction: external_exports.strictObject({
     schema: external_exports.literal("loki.runner.safe-projection/1"),
@@ -21387,7 +21387,7 @@ var runnerNextActionSchema = external_exports.strictObject({
   tool: external_exports.literal("loki_runner_answer"),
   runId: digest6,
   clarificationId: external_exports.string().min(1),
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   questions,
   instruction: external_exports.string()
 });
@@ -23663,6 +23663,16 @@ var desktopErrorSchema = external_exports.strictObject({
   message: external_exports.string().max(500),
   retryable: external_exports.boolean(),
   cliStarted: external_exports.boolean().nullable()
+});
+var desktopAiDestinations = ["openai", "openrouter"];
+var desktopAiReadinessSchema = external_exports.strictObject({
+  state: external_exports.enum(["ready", "configuration_required"]),
+  version: external_exports.string().max(80).nullable(),
+  destinations: external_exports.tuple([
+    external_exports.literal(desktopAiDestinations[0]),
+    external_exports.literal(desktopAiDestinations[1])
+  ]),
+  reason: external_exports.string().max(500).nullable()
 });
 var desktopConnectorKindSchema = external_exports.enum(["mcp", "cli", "extension"]);
 var desktopAuthSchema = external_exports.strictObject({
