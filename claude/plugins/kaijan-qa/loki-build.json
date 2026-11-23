@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "buildId": "6ea3cb75-9d0a-413d-9710-f5202af4ecf3",
+  "builtAt": "2026-11-23T05:14:48.057Z",
+  "sourceRevision": "422afa352544a30014b8596e14edf15bcac90755",
+  "sourceDirty": false,
+  "profile": "qa",
+  "coreOrigin": "https://loki-app.qa.katalon.com",
+  "pluginName": "kaijan-qa",
+  "marketplaceName": "kaijan-claude",
+  "runtimeClientId": "kaijan-claude-runtime",
+  "runtimeScopes": [
+    "session:read",
+    "work-items:read",
+    "ai:invoke",
+    "github:credential"
+  ],
+  "oauthClientId": "kaijan-claude-runtime",
+  "host": "claude_code",
+  "minimumClaudeVersion": "2.1.318",
+  "platform": "darwin-arm64",
+  "authArchitecture": "shared-broker-v1",
+  "credentialStorage": "private-file-v1",
+  "runtimeLayout": "installed",
+  "capabilityDigest": "636142d877a161efd568aa701459a81c7033dd8b3faefbd9e8af85ca285a9ea0",
+  "pluginVersion": "0.5.0-rc.449",
+  "mcpUrl": "https://loki-app.qa.katalon.com/mcp",
+  "mcpServerName": "kaijan_core",
+  "localMcpServerName": "kaijan_local",
+  "capabilityTransport": {
+    "format": "mcpb/1",
+    "bundle": "servers/kaijan-local.mcpb",
+    "sha256": "d841a111a57d16c66bd7609ac4498ac86fa2d20ed8a46c9ae4f1818c56b5bef1",
+    "privateHelperSha256": "5ebfc62920ea297c0816a1012f24b7722b50554dc0d6a6fce2fca5d7be732ccc"
+  }
+}
