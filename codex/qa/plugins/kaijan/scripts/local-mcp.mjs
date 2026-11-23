@@ -45224,6 +45224,12 @@ function createBoundLifecycle(telemetry) {
     if (!event2 || typeof event2 !== "object") return;
     const { kind, ...value } = event2;
     switch (kind) {
+      case "explorer-finished":
+        emit("Explorer Run Finished", {
+          run_id: value.runId,
+          outcome: value.outcome
+        });
+        break;
       case "user-input-requested":
         emit("User Input Requested", {
           input_kind: "clarification",
@@ -63000,7 +63006,7 @@ ${customerInstructions}` : customerInstructions
   });
   server.onclose = () => {
     lifetime.abort(new DOMException("MCP session closed.", "AbortError"));
-    void Promise.allSettled([...pendingSetup]).then(
+    return Promise.allSettled([...pendingSetup]).then(
       () => Promise.allSettled([
         Promise.resolve().then(() => session.close()),
         ...[...setupInstances].map(
@@ -63137,20 +63143,26 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
         broker.initialize().catch(() => {
         });
       };
+    let closing = false;
     close = () => {
-      server.close().catch(() => {
+      if (closing) return;
+      closing = true;
+      void server.close().catch(() => {
         process7.exitCode = 1;
       });
     };
-    process7.once("SIGINT", close);
-    process7.once("SIGTERM", close);
+    process7.on("SIGINT", close);
+    process7.on("SIGTERM", close);
     const closeSession = server.onclose;
+    let cleanup;
     server.onclose = () => {
-      closeSession?.();
-      telemetry?.close().catch(() => {
+      closing = true;
+      cleanup ??= Promise.resolve().then(() => closeSession?.()).finally(() => telemetry?.close()).catch(() => {
+      }).finally(() => {
+        process7.removeListener("SIGINT", close);
+        process7.removeListener("SIGTERM", close);
       });
-      process7.removeListener("SIGINT", close);
-      process7.removeListener("SIGTERM", close);
+      return cleanup;
     };
     startupStage = "init_services";
     await server.connect(

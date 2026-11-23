@@ -30708,7 +30708,7 @@ function openTelemetryOutbox({ directory, installationId }) {
     const selected = epoch();
     controller = new AbortController();
     try {
-      const rows = db.prepare(
+      let rows = db.prepare(
         "SELECT uuid,payload FROM events WHERE epoch=? AND created>=? ORDER BY rowid LIMIT ?"
       ).all(
         selected,
@@ -30729,6 +30729,14 @@ function openTelemetryOutbox({ directory, installationId }) {
         rotate();
         return;
       }
+      const explorer = batch.events.findIndex(
+        (event2) => event2.event === "Explorer Run Finished"
+      );
+      if (explorer !== -1) {
+        const boundary = explorer || 1;
+        rows = rows.slice(0, boundary);
+        batch.events = batch.events.slice(0, boundary);
+      }
       const response = await authorization.telemetryRequest({
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -30740,20 +30748,25 @@ function openTelemetryOutbox({ directory, installationId }) {
         await response.body?.cancel();
         return;
       }
-      if ([400, 403, 409, 413, 422].includes(response.status)) {
+      const unsupportedExplorer = explorer === 0 && response.status === 400;
+      if (!unsupportedExplorer && [400, 403, 409, 413, 422].includes(response.status)) {
         await response.body?.cancel();
         rotate();
         return;
       }
-      if (!response.ok) {
+      if (!unsupportedExplorer && !response.ok) {
         await response.body?.cancel();
         throw Error("telemetry_unavailable");
       }
-      const receipt2 = telemetryReceiptSchema.parse(await response.json());
-      const expected = new Set(rows.map((row) => row.uuid));
-      if (receipt2.accepted.length !== expected.size || receipt2.accepted.some((entry) => !expected.delete(entry.event_uuid)))
-        throw Error("invalid_telemetry_receipt");
+      if (unsupportedExplorer) await response.body?.cancel();
+      else {
+        const receipt2 = telemetryReceiptSchema.parse(await response.json());
+        const expected = new Set(rows.map((row) => row.uuid));
+        if (receipt2.accepted.length !== expected.size || receipt2.accepted.some((entry) => !expected.delete(entry.event_uuid)))
+          throw Error("invalid_telemetry_receipt");
+      }
       transaction(() => {
+        if (unsupportedExplorer) drop(rows.length);
         for (const row of rows)
           db.prepare("DELETE FROM events WHERE uuid=? AND epoch=?").run(
             row.uuid,
