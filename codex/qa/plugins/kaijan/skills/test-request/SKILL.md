@@ -56,8 +56,8 @@ matching records matters, ask for that decision.
   Open the saved Test plan with [review-report](../review-report/SKILL.md).
   Save a Plan for a complete caller-supplied scenario before execution.
 - For authorized execution, use [run-test](../run-test/SKILL.md) with the exact
-  saved Plan reference and selected test IDs. In Codex, the saved Plan supplies
-  the target and inputs. Kaijan runs the selected tests, assesses retained
+  saved Plan reference and selected test IDs. The saved Plan supplies the
+  target and inputs. Kaijan runs the selected tests, assesses retained
   evidence and saves a combined report. Keep gaps for unexecuted tests visible
   and continue independent checks with sufficient inputs. Attribute any external
   observations to their source.
