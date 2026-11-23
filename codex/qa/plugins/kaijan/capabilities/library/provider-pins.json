@@ -984,7 +984,7 @@
       "packages/computer-runner/src/browser-explorer.d.mts": "e8fa179640d306c61ed05cde89c338811c9b39fffc8f03700b819832baa0e50c",
       "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969",
       "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e",
-      "packages/computer-runner/src/browser-explorer.mjs": "0af194ec6893f5af637ce9996a86e97ca062ed63ed7ee5cf3f189134cfe1943e",
+      "packages/computer-runner/src/browser-explorer.mjs": "9ea6b7f544bb6a546eaadabd6719f651186f6d6525188713ff79eed460dadfa6",
       "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7",
       "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d",
       "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9",
@@ -993,7 +993,7 @@
       "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb",
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
-      "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb",
+      "packages/computer-runner/src/browser-explorer-driver.mjs": "9621a7f47d416e25bc334f7e0bd4c1a664beba89bdad58a974feb5adc99b223a",
       "packages/computer-runner/src/agent-loop.mjs": "06a16e093829c8d569629628f8641c53248e246f686e11c6ff4fc0008dca49ab"
     },
     "providerRetryPolicy": {
