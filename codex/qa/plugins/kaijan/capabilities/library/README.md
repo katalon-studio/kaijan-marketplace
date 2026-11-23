@@ -78,9 +78,12 @@ A multi-Plan selection does not guess a first plan.
 renderer. It preserves each selected full native Plan result and exact source
 ID/kind/digest from the existing immutable report reader. It does not use the
 bounded report excerpt or query a producer. Multiple selected Plans require a
-user selection; no latest-plan guess. Original Plan fields, partial results and
-unknown classification remain unchanged. The projection supplies `requestTestIndexes` from explicit requirement authority
-and resolved work-item intent references for both card and details. Unknown spec files/code/outcomes remain unavailable.
+user selection. The projection puts a test under **Change impact** when its
+expected result or a linked objective cites implementation evidence or a saved
+change review. It puts the remaining tests under **Functional**. The card and
+details use `requestTestIndexes` to identify the Functional tests. The saved
+Plan fields, partial results and underlying classification remain intact.
+Unknown spec files, code and outcomes remain unavailable.
 Manual test fields and per-check details remain in the original readers. The
 selected design shows executable source in successful rows and original failure
 output plus Test code/evidence in historical failure rows. Missing source is
