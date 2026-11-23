@@ -117,11 +117,10 @@ does not copy saved evidence back or invoke a second routine assessment. Open a 
 Plan-only requests do not execute. Full requests with sufficient inputs continue through
 their selected scenarios, evidence assessment and native report.
 
-Tell the person the time limit before starting Explorer or Runner in Codex.
-Explorer defaults to five minutes for browser and macOS targets. Runner defaults
-to ten minutes. Codex can use `explorerTimeLimitMs` on Plan or
-`runnerTimeLimitMs` on Run to increase a limit before starting that operation.
-The tools reject a duration below the stage's default.
+Tell the person the time limit before starting Explorer in Codex. Explorer
+defaults to five minutes for browser and macOS targets. Codex can use
+`explorerTimeLimitMs` on Plan to increase that limit before starting.
+Run accepts the selected tests and supports Stop.
 
 Plan retains original source internally. To read original GitHub source attached
 to a saved report, use its report ID and `sourceOffset: 0` with `kaijan_report_get`.

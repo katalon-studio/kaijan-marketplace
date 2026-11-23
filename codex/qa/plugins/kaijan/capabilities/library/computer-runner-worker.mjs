@@ -25569,7 +25569,7 @@ var runnerClarificationSchema = external_exports.strictObject({
   schema: external_exports.literal("loki.runner.clarification/1"),
   clarificationId: external_exports.string(),
   ...progress,
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   state: external_exports.enum(["live", "unknown"]),
   redaction: external_exports.strictObject({
     schema: external_exports.literal("loki.runner.safe-projection/1"),
@@ -25671,7 +25671,7 @@ var runnerNextActionSchema = external_exports.strictObject({
   tool: external_exports.literal("loki_runner_answer"),
   runId: digest6,
   clarificationId: external_exports.string().min(1),
-  deadlineAt: external_exports.string(),
+  deadlineAt: external_exports.string().nullable(),
   questions,
   instruction: external_exports.string()
 });
@@ -33329,7 +33329,7 @@ process.on("message", (message) => {
       }
       const input3 = frame.input;
       const limits = options.limits;
-      const originalWorkerDeadline = Date.now() + (limits?.ms ?? 6e5);
+      const originalWorkerDeadline = Date.now() + (limits?.ms ?? Infinity);
       let viewerControl;
       failures = workerFailureBoundary(
         controller,

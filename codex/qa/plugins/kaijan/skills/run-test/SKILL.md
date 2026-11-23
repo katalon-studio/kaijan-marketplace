@@ -65,8 +65,6 @@ the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
-Tell the person the Run's time limit before starting it. Runner defaults to ten
-minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
 
 For hosts that advertise the full Runner input, follow the instructions below.
 Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
@@ -87,8 +85,7 @@ a list of sign-in or redirect hosts. Keep any local port in the URL. Supply
 credentials through [private login parameters](../../references/private-parameters.md)
 and pass only their `privateParams` references. The full Runner input starts a
 fresh isolated browser. Use `options.headless: true` when headless execution is
-requested. Optional limits can lower the advertised
-bounds. Desktop requirements are below.
+requested. Desktop requirements are below.
 
 Keep requested in-app cleanup in the scenario. App sign-out requires an
 explicit request. Runner records cleanup of its own browser. The host owns
@@ -129,8 +126,8 @@ For an app login that needs to be saved or changed, follow
 Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
-The original deadline still applies; a missing answer does not require
-discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
+A missing answer does not require discarding other context or stopping
+independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
 for delivery and readback.
 
 Recover a lost reply with the same key and full original input. A new execution
@@ -166,9 +163,8 @@ use the [macOS setup guide](references/macos-appium-setup.md).
 Set `target.launch: true` only when launch is allowed.
 `false` requires a running app. Desktop requires configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
-Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
-keeps its state and stays open after the run. Browser clarification and
-Playwright trace do not apply to desktop.
+Appium/Mac2 are packaged. The app keeps its state and stays open after the run.
+Browser clarification and Playwright trace do not apply to desktop.
 
 ## Saved terminal observations
 

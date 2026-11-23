@@ -36,8 +36,7 @@ Hosts that advertise the full Runner input can send the following request.
     "initialURL": "https://example.com",
     "allowedHosts": ["example.com"]
   },
-  "executionMethod": "browser-ui",
-  "options": { "limits": { "browserInputs": 5, "ms": 60000 } }
+  "executionMethod": "browser-ui"
 }
 ```
 
@@ -67,7 +66,7 @@ The plugin bundles its Node runtime. Compatible Chromium is downloaded on first
 execution, then reused from Playwright's versioned user cache. It is not included
 in the plugin archive and
 does not require an installed Google Chrome. Browser preparation respects Stop
-and the execution time limit; download failure returns before browser launch or
+and has its own download timeout. Failure returns before browser launch or
 provider calls. Imports, tool discovery and analysis do not download browsers.
 <!-- codex-only -->
 
@@ -82,8 +81,8 @@ full Runner resolves these before dispatch and adds the names to
 `options.secretParameterNames`. Keep its ordinary inputs in `params`. Keep raw
 credentials out of MCP arguments. The adapter never reads unrelated browser
 profiles or live history. Existing-session attachment and persisted memory are
-not implemented by this delivered Runner. Its native limits remain 80 calls,
-150 returned browser inputs and ten minutes; options can lower those bounds.
+not implemented by this delivered Runner. Normal Run has no aggregate time,
+provider-call, or action cap.
 Native admission additionally limits serialized scenario text to 8000 characters,
 50 scalar params, 120-character names and 4000-character string values. Those are
 producer restrictions, not a claim of semantic safety or general capacity.
@@ -153,8 +152,8 @@ remains `accepted | running | finished | unknown | not-started | stopped-before-
 `kaijan_run_read_execution` returns `pendingClarification` as null or an object with
 `schema: loki.runner.clarification/1`, `clarificationId`, `reason`, string arrays
 `completedSteps`, `remainingSteps`, `evidence`, `questions: {id, question, kind}[]`,
-`deadlineAt` and `state: live | unknown`. Question fields are strings. `live`
-requires this host's running pending callback, no Stop and an unexpired deadline.
+`deadlineAt` and `state: live | unknown`. Question fields are strings. Normal Run
+returns `deadlineAt: null`. A live question requires this host’s active callback.
 `unknown` retains an unresolved request without live authority; restart, disconnect,
 Stop or deadline cannot restore it. Existing lifecycle `state` fields remain unchanged.
 
@@ -313,8 +312,8 @@ applications. A failed host/worker may have only partial files and no saved trac
 
 `kaijan_run_start` also accepts `executionMethod: "desktop-ui"`, `savedTests`,
 explicit friendly named `params`, and `target: {app: "com.example.App", launch: true}`.
-Use `options.limits.desktopInputs` instead of `browserInputs`. Keep the target app
-on the main display. The same get/Stop tools retain their durable run lifecycle.
+Keep the target app on the main display. The same get/Stop tools retain their
+durable run lifecycle.
 
 The packaged Appium/Mac2 backend uses the plugin's Node runtime. Xcode and macOS
 UI Automation/Accessibility permission are host prerequisites; no global Appium
