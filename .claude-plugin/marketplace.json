@@ -14,6 +14,16 @@
         "path": "claude/plugins/kaijan",
         "sha": "3ff3e7df17df142e75cf8582d4e1afe097f887f6"
       }
+    },
+    {
+      "name": "kaijan-qa",
+      "version": "0.5.0-rc.449",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/katalon-studio/kaijan-marketplace.git",
+        "path": "claude/plugins/kaijan-qa",
+        "sha": "07fcb547391d02a2c900e3dcf06b7f74d7a8fcff"
+      }
     }
   ]
 }
