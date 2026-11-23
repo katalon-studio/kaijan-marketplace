@@ -30346,13 +30346,12 @@ async function startBroker({
       else res.destroy();
     }
   });
-  if (pluginHost(build ?? {}) === "codex")
-    registerResponsesWebSocket(server, {
-      authorization,
-      active,
-      isClosing: () => closing,
-      metadata: inferenceMetadata
-    });
+  registerResponsesWebSocket(server, {
+    authorization,
+    active,
+    isClosing: () => closing,
+    metadata: inferenceMetadata
+  });
   await new Promise((resolve2, reject) => {
     server.once("error", reject);
     server.listen(socketPath, resolve2);
