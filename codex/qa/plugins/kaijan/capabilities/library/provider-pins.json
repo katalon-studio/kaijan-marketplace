@@ -994,7 +994,7 @@
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
       "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb",
-      "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031"
+      "packages/computer-runner/src/agent-loop.mjs": "06a16e093829c8d569629628f8641c53248e246f686e11c6ff4fc0008dca49ab"
     },
     "providerRetryPolicy": {
       "maxAttempts": 3,
