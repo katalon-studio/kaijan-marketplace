@@ -51992,6 +51992,12 @@ function createConfigurationSurface({ session, library, data }) {
           );
         });
         const previous = saved.admission(scope.scope.id, name, requestKey3, raw);
+        const configuredExecution = (prepared2) => {
+          if (!savedInputs || !Object.hasOwn(prepared2, "planningEnvironment"))
+            return { arguments: prepared2 };
+          const { planningEnvironment, ...argumentsForExecution } = prepared2;
+          return { arguments: argumentsForExecution, planningEnvironment };
+        };
         if (previous) {
           await library.configurationRunMarker(
             scope.data,
@@ -52000,9 +52006,10 @@ function createConfigurationSurface({ session, library, data }) {
             requestKey3,
             true
           );
-          return { arguments: previous };
+          return configuredExecution(previous);
         }
         if (marked) throw Error("configuration_admission_unavailable");
+        const environment = savedInputs ? saved.execution(explicit) : void 0;
         const retain = async (onceToken) => {
           if (planning) args.requestKey = requestKey3;
           const prepared2 = saved.admission(
@@ -52010,7 +52017,14 @@ function createConfigurationSurface({ session, library, data }) {
             name,
             requestKey3,
             raw,
-            args,
+            environment ? {
+              ...args,
+              planningEnvironment: {
+                id: environment.configuration.id,
+                revision: environment.configuration.revision,
+                ...environment.autId ? { autId: environment.autId } : {}
+              }
+            } : args,
             onceToken
           );
           await library.configurationRunMarker(
@@ -52020,9 +52034,8 @@ function createConfigurationSurface({ session, library, data }) {
             requestKey3,
             true
           );
-          return { arguments: prepared2 };
+          return configuredExecution(prepared2);
         };
-        const environment = savedInputs ? saved.execution(explicit) : void 0;
         if (environment) {
           if (environment.desktopTarget)
             args.desktopTarget = environment.desktopTarget;
@@ -58486,7 +58499,10 @@ ${customerInstructions}` : customerInstructions
         scopedCatalog,
         params.name,
         configured2.arguments,
-        invocation,
+        {
+          ...invocation,
+          ...configured2.planningEnvironment ? { planningEnvironment: configured2.planningEnvironment } : {}
+        },
         {
           codexTesting,
           connectionOnly: selected.scope?.kind === "connection",
