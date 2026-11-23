@@ -31,7 +31,7 @@
     "packages/contracts/dist/product-feedback.js": "5a1fdaa5178d7839dd92947bfcb9eda6e5d9890e664dead8f5fab3d93519fb73",
     "packages/contracts/dist/agent-feedback.js": "76c524538af89b07926c1efe23546a037a8f8d38755e9cf6f105d8c0992b9b50",
     "packages/contracts/dist/product-issue.js": "b21f3a4bba3dea3497daf9e128718287a1e3794391ba0c5f88cb661cc00009e4",
-    "packages/contracts/dist/product-report.js": "a2957fab6da147b8086f00bc08f6acdaf4eaf9fa0e7fa782c7a7a374f21e2883",
+    "packages/contracts/dist/product-report.js": "1174ac9ce0a1b0ddcb129f053af470121949b7cbf780549e786f3654ed172e4e",
     "packages/contracts/dist/issue-image-type.js": "7097069742a807ee2b760c673f611aa42f8e1a0c09bc97ac8938f45965ce13ab",
     "packages/contracts/dist/app-model.js": "e0bd0d0a569cfb6097eef32da003e69cdcd6556cb34ec6ea3732c6574af71e79",
     "packages/contracts/dist/workspace-customer.js": "6dfbc5f0e18fe2b80dbb2b194cc0ddfc1d5d1334cb2e32c8530a8f873e3d7614",
