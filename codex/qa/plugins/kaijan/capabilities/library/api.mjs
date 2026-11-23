@@ -90575,6 +90575,15 @@ var localEnvelope = external_exports.strictObject({
   os_version: telemetryVersionSchema,
   arch: external_exports.enum(["arm64", "x64", "unknown"])
 });
+var explorerFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  outcome: external_exports.enum(["completed", "incomplete", "cancelled", "failed"])
+});
+var explorerFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Explorer Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: explorerFinishedPropertiesSchema
+});
 var mcpCapture = localEnvelope.extend({
   event: external_exports.literal("$mcp_tool_call"),
   event_version: external_exports.literal(2),
@@ -90665,7 +90674,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture,
   userInputReceivedCapture,
   assessmentFinishedCapture,
-  toolFailureDiagnosedCapture
+  toolFailureDiagnosedCapture,
+  explorerFinishedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -90673,6 +90683,7 @@ var ownership = {
   seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
 };
 var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var explorerFinishedEventSchema = explorerFinishedCapture.extend(ownership);
 var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   mcpCapture.extend(ownership),
   startedCapture.extend(ownership),
@@ -90688,7 +90699,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
   assessmentFinishedEventSchema,
-  toolFailureDiagnosedCapture.extend(ownership)
+  toolFailureDiagnosedCapture.extend(ownership),
+  explorerFinishedEventSchema
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)

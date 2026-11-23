@@ -12,7 +12,7 @@
     "packages/source-adapters/index.mjs": "857b44d2be5e993d6c7589246bf4d3d53bfc1324a6081047a3886fec9b7280e8",
     "packages/component-contracts/index.mjs": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf",
     "packages/capabilities/src/lifecycle.ts": "f83d3efb74597dd497b2ed7ce9ef7d8beb243f3e0c5e6ad9a3e45af01cf5753e",
-    "packages/contracts/dist/telemetry.js": "8c903b5a44238238f8d208fa5b93091a848de3d730a2e13ffd922cc09d8c6a0f",
+    "packages/contracts/dist/telemetry.js": "7416b5fcb64b1f255388fe53eb83dea25a764a3e7bfc8f56caf3ab18d45cefc8",
     "packages/contracts/dist/recording.js": "a84199595edeeeccd78dca485f097d1d493b391f660314a8327eb66dc0639480",
     "packages/contracts/dist/work-items.js": "4c69340cb5d3fee434dc8e00aa88c205163393a2c943143c85849ac74fd66c22",
     "packages/contracts/dist/source.js": "f4b9a54f454a3705f20f016b0d26b58d9b1193a747a0a87ac7d4cf9a491f0b57",
