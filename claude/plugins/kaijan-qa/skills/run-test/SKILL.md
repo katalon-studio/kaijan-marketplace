@@ -1,6 +1,6 @@
 ---
 name: run-test
-description: Run and assess an authorized browser or macOS desktop test. Use directly when the caller supplied the target and complete actions, and when running selected cases from a saved Kaijan plan, including in a resumed conversation. Keep reading the same Run through execution and assessment, then reopen its final report. A running reply is progress within the requested test. Standalone Runner is for execution-only requests.
+description: Run selected tests from a saved Kaijan Plan in a browser or macOS desktop app. Read the result, reopen its report, or stop the same Run.
 ---
 
 # Run saved Plan tests
@@ -14,10 +14,6 @@ does not authorize execution.
 
 ## Run the selected checks
 
-In Claude Code, use a write-capable session with workspace write or Full Access for
-execution. Have the user handle any approval requested by Claude Code. Keep
-application actions within the user's task. If the host refuses dispatch,
-tell the user which permission or approval blocked the Run and keep the saved Plan.
 
 Check readiness for the selected action with `kaijan_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
@@ -26,71 +22,33 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-For hosts that advertise full Runner input, use the application and task to
-select the relevant Configuration when available. Follow the person's explicit
-selection or opt-out. Ask which group to use when several match and the choice
-matters.
-
 Save an ordinary value through `kaijan_test_environment_manage` only if the person asks to
 save it.
 
 
-Keep raw secrets out of chat and tool arguments. On
-hosts that advertise full Runner input, use `params` for ordinary overrides and
-[`privateParams`](../../references/private-parameters.md)
-for scoped secret references. Those hosts can Run without saved settings, and
-overrides leave any saved settings unchanged. Configuration selection never
-authorizes execution.
+Keep raw secrets out of chat and tool arguments. Use the app login selected
+when saving the Plan. Choosing a login does not authorize execution.
+
 
 Use `kaijan_run_start` for the normal combined run, assessment and report.
-When Claude Code advertises `planId`, supply the exact `planId` returned by Plan,
-the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
+Supply the exact `planId` returned by Plan, the selected `testIds`, and a
+fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
-Tell the person the Run's time limit before starting it. Runner defaults to ten
-minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
 
-For hosts that advertise the full Runner input, follow the instructions below.
-Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
-`{}`) and the authorized target. For one saved test, use its actual test ID as
-`scenarioId`.
-
-- `savedTests: {answerId, resultSha256, selectedTestIds}` loads the complete
-  selected Plan tests. Put the person's application actions, expected behavior,
-  permissions and changed restrictions in `guidance`, preserving their wording
-  and concrete limits even when no test steps changed. Keep the saved Plan and application
-  restrictions intact. Do not invent permission or copy the whole chat.
-  Add other relevant caller knowledge in `hostContext` separately.
-  This input cannot be combined with `scenario` or `planRef`.
-
-Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
-Hostname restrictions are temporarily disabled for dogfooding. Do not require
-a list of sign-in or redirect hosts. Keep any local port in the URL. Supply
-credentials through [private login parameters](../../references/private-parameters.md)
-and pass only their `privateParams` references. Browser session attachment
-and persisted browser memory are unavailable. Use `options.headless: true`
-when headless execution is requested. Optional limits can lower the advertised
-bounds. Desktop requirements are below.
-
-Keep requested in-app cleanup in the scenario. App sign-out requires an
+Keep requested in-app cleanup in the Plan's test steps. App sign-out requires an
 explicit request. Runner records cleanup of its own browser. The host owns
 cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
 
-## Keep Kaijan workflow separate from application actions
-
-The combined Kaijan operation owns assessment and saving its report. Keep requests to assess the Run, save the Kaijan report or reopen that report in your Kaijan tool workflow; do not put them in browser `guidance` as actions for the application under test. Preserve the original saved Plan, application actions, expectations, permissions and restrictions. If the person is testing the application's own report, save or export feature, keep those application checks in the scenario or `guidance`; they are real test requirements. This is a distinction by task and recipient, not a filter on words such as report or save.
-
 ## Read or stop the original test
 
-For a request to run, assess and report, keep reading the same Run until execution and assessment finish or a specific blocker needs the caller. A running reply continues the requested work. Keep the interactive CLI open while the Run is active. Open the final `report.reportId` from the finished combined Run; assessment may produce a different report from the one saved during execution.
-
-Use `kaijan_run_get` through the execution and assessment result, and
-`kaijan_run_stop` to stop the same test. Open the saved result with
-[report review](../review-report/SKILL.md).
+Use `kaijan_run_get` to read the same Run until it finishes or needs an
+answer. Use `kaijan_run_stop` to stop that Run. Open its saved report with
+[report review](../review-report/SKILL.md) using the final `report.reportId`.
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `kaijan_run_answer` with the
@@ -101,46 +59,40 @@ context.
 Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
-The original deadline still applies; a missing answer does not require
-discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
+A missing answer does not require discarding other context or stopping
+independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
 for delivery and readback.
 
 Recover a lost reply with the same key and full original input. A new execution
 uses a fresh key only after admitted work is settled, effects are known and the
 caller scope still authorizes it. For a blocked sign-in redirect, use the
-retained blocked host and actions. A verified sign-in host can be included in
-a new authorized run when the original confirms that login did not start.
+retained blocked host and actions. If the saved target needs an updated
+sign-in setting, save a Plan with that setting before starting another Run.
 For `runner_worker_launch_failed` with `not-executed`, retain the failed receipt,
 reconnect and verify the responding package before starting a new authorized
 run. Do not replay unknown actions or effects. Stop requires original readback
 for the actual cancellation, partial evidence and cleanup.
 
 Keep execution status, actual results, assessment and cleanup distinct.
-A combined run assesses its retained evidence internally. Open its
-`report.reportId` through [review-report](../review-report/SKILL.md), or show
-standalone execution by its exact run ID and digest. Use ordered full-result
+Runner saves a judgment for each selected test. Use ordered full-result
 reads when more evidence is needed. For customer wording, follow
 [Present assessed results](../../references/assessed-result-language.md).
 Use [the saved browser trace](../review-report/SKILL.md#view-a-saved-browser-trace)
 to inspect an existing recording.
 
-## macOS desktop scenarios
+## macOS desktop tests
 
 
-Use
-`executionMethod: "desktop-ui"` and the app target on hosts that advertise the
-full Runner input. If the caller supplies a `.app` path or needs first-time setup,
+Select the Mac app when saving the Plan. If the caller supplies a `.app` path
+or needs first-time setup,
 use the [macOS setup guide](references/macos-appium-setup.md).
-Set `target.launch: true` only when launch is allowed.
-`false` requires a running app. Desktop requires configured full Xcode, UI Automation and
+Permit app launch in the Plan only when authorized. Desktop requires
+configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
-Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
-keeps its state and stays open after the run. Browser clarification and
-Playwright trace do not apply to desktop.
+Appium/Mac2 are packaged. The app keeps its state and stays open after the run.
+Browser clarification and Playwright trace do not apply to desktop.
 
 ## Saved terminal observations
 
-Kaijan retains Runner observations for the normal Planner assessment and report.
-Do not supply caller-authored terminal predicates or verdicts. Old saved terminal
-verification stays readable with its original attribution; reading it does not
-execute or reassess a test.
+Runner saves observations and judgments with the Run. Older terminal
+verification keeps its original attribution when reopened.

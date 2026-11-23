@@ -27240,6 +27240,15 @@ var localEnvelope = external_exports.strictObject({
   os_version: telemetryVersionSchema,
   arch: external_exports.enum(["arm64", "x64", "unknown"])
 });
+var explorerFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  outcome: external_exports.enum(["completed", "incomplete", "cancelled", "failed"])
+});
+var explorerFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Explorer Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: explorerFinishedPropertiesSchema
+});
 var mcpCapture = localEnvelope.extend({
   event: external_exports.literal("$mcp_tool_call"),
   event_version: external_exports.literal(2),
@@ -27330,7 +27339,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture,
   userInputReceivedCapture,
   assessmentFinishedCapture,
-  toolFailureDiagnosedCapture
+  toolFailureDiagnosedCapture,
+  explorerFinishedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -27338,6 +27348,7 @@ var ownership = {
   seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
 };
 var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var explorerFinishedEventSchema = explorerFinishedCapture.extend(ownership);
 var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   mcpCapture.extend(ownership),
   startedCapture.extend(ownership),
@@ -27353,7 +27364,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
   assessmentFinishedEventSchema,
-  toolFailureDiagnosedCapture.extend(ownership)
+  toolFailureDiagnosedCapture.extend(ownership),
+  explorerFinishedEventSchema
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -28987,6 +28999,69 @@ var productIssuePreparationSchema = external_exports.strictObject({
     });
 });
 
+// packages/contracts/dist/product-report.js
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportImageExportQuerySchema = external_exports.strictObject({
+  after: external_exports.string().regex(/^(?:0|[1-9]\d{0,15})$/).refine((value) => Number.isSafeInteger(Number(value))).default("0")
+});
+var productReportImageExportSchema = external_exports.strictObject({
+  records: external_exports.array(external_exports.strictObject({
+    sequence: external_exports.int().positive(),
+    reference: external_exports.uuid(),
+    image_id: external_exports.uuid(),
+    filename: external_exports.string().max(120),
+    media_type: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    image_base64: external_exports.string().min(1).max(4 * Math.ceil(issueImageLimits.fileBytes / 3))
+  })).max(1),
+  next: external_exports.int().positive().nullable()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
+
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
   applicationKey: external_exports.string().min(1),
@@ -29615,19 +29690,12 @@ var boundIssueInput = external_exports.discriminatedUnion("operation", [
   })
 ]);
 var failure4 = (status, error62, message) => Response.json({ error: error62, message }, { status });
-async function forwardBoundIssue(authorization, value, signal, request = fetch) {
-  const parsed = boundIssueInput.safeParse(value);
-  if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data)) > 128 * 1024)
-    return failure4(
-      400,
-      "invalid_issue_request",
-      "Use the original complete issue request."
-    );
+async function captureReportGrant(authorization, expectedOwner, signal, kind) {
   if (signal?.aborted)
     return failure4(
       409,
-      "issue_cancelled",
-      "The action was cancelled. Your selected issue is kept."
+      `${kind}_cancelled`,
+      `The action was cancelled. Your selected ${kind} is kept.`
     );
   await authorization.ensure();
   const saved = authorization.saved, token = saved?.tokens?.access_token;
@@ -29635,7 +29703,7 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
     return failure4(
       401,
       "connection_required",
-      "Connect Kaijan before reporting an issue."
+      kind === "issue" ? "Connect Kaijan before reporting an issue." : "Connect Kaijan before sending a report."
     );
   const status = await authorization.request("/api/v1/runtime/mcp", {
     method: "POST",
@@ -29656,8 +29724,8 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
     await status.body?.cancel();
     return failure4(
       [401, 403].includes(status.status) ? status.status : 503,
-      "issue_connection_unavailable",
-      "Kaijan could not confirm the issue connection."
+      `${kind}_connection_unavailable`,
+      `Kaijan could not confirm the ${kind} connection.`
     );
   }
   let connection;
@@ -29681,28 +29749,46 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
   } catch {
     return failure4(
       503,
-      "issue_connection_unavailable",
-      "Kaijan could not confirm the issue connection."
+      `${kind}_connection_unavailable`,
+      `Kaijan could not confirm the ${kind} connection.`
     );
   }
-  if (connection.origin !== authorization.origin || connection.context.user.id !== parsed.data.userId || connection.context.workspace.id !== parsed.data.workspaceId)
+  if (connection.origin !== authorization.origin || connection.context.user.id !== expectedOwner.userId || connection.context.workspace.id !== expectedOwner.workspaceId)
     return failure4(
       409,
-      "issue_owner_mismatch",
-      "The connected account or workspace changed. Keep this issue and return to its original connection."
+      `${kind}_owner_mismatch`,
+      `The connected account or workspace changed. Keep this ${kind} and return to its original connection.`
     );
   if (authorization.saved !== saved || saved.tokens.access_token !== token || authorization.blocked || authorization.loggingOut || authorization.pending)
     return failure4(
       409,
-      "issue_connection_changed",
-      "The connection changed. Keep the selected issue and check the connection."
+      `${kind}_connection_changed`,
+      `The connection changed. Keep the selected ${kind} and check the connection.`
     );
   if (signal?.aborted)
     return failure4(
       409,
-      "issue_cancelled",
-      "The action was cancelled. Your selected issue is kept."
+      `${kind}_cancelled`,
+      `The action was cancelled. Your selected ${kind} is kept.`
     );
+  return { token };
+}
+async function forwardBoundIssue(authorization, value, signal, request = fetch) {
+  const parsed = boundIssueInput.safeParse(value);
+  if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data)) > 128 * 1024)
+    return failure4(
+      400,
+      "invalid_issue_request",
+      "Use the original complete issue request."
+    );
+  const grant2 = await captureReportGrant(
+    authorization,
+    parsed.data,
+    signal,
+    "issue"
+  );
+  if (grant2 instanceof Response) return grant2;
+  const { token } = grant2;
   const input3 = parsed.data, base = "/api/v1/runtime/product-issues";
   const path = input3.operation === "prepare" ? base + "/prepare" : base + "/" + input3.requestId + (input3.operation === "publish" ? "/publish" : "");
   try {
@@ -29722,6 +29808,62 @@ async function forwardBoundIssue(authorization, value, signal, request = fetch) 
       503,
       "issue_transport_unavailable",
       "Core did not confirm the issue result. Keep the original selected content and request."
+    );
+  }
+}
+var boundReportInput = external_exports.union([
+  external_exports.strictObject({
+    ...owner,
+    operation: external_exports.literal("prepare"),
+    input: productReportInputSchema
+  }),
+  productReportReferenceSchema.extend({
+    ...owner,
+    operation: external_exports.enum(["read", "save"])
+  }),
+  productReportRequestSchema.extend({
+    ...owner,
+    operation: external_exports.literal("read")
+  })
+]);
+async function forwardBoundReport(authorization, value, signal, request = fetch) {
+  const parsed = boundReportInput.safeParse(value);
+  if (!parsed.success || Buffer.byteLength(JSON.stringify(parsed.data)) > 128 * 1024)
+    return failure4(
+      400,
+      "invalid_report_request",
+      "Use the original reviewed report."
+    );
+  const input3 = parsed.data;
+  const grant2 = await captureReportGrant(
+    authorization,
+    input3,
+    signal,
+    "report"
+  );
+  if (grant2 instanceof Response) return grant2;
+  try {
+    return await request(
+      authorization.origin + "/api/v1/runtime/plugin-reports/" + input3.operation,
+      {
+        method: "POST",
+        redirect: "error",
+        signal,
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json",
+          authorization: "Bearer " + grant2.token
+        },
+        body: JSON.stringify(
+          input3.operation === "prepare" ? input3.input : "reference" in input3 ? { reference: input3.reference } : { requestId: input3.requestId }
+        )
+      }
+    );
+  } catch {
+    return failure4(
+      503,
+      "report_transport_unavailable",
+      "Kaijan could not confirm the report result. Keep the original content and try again."
     );
   }
 }
@@ -30213,7 +30355,8 @@ async function startBroker({
         else res.end();
         return;
       }
-      if (req.url === "/product-issues" && req.method === "POST") {
+      if ((req.url === "/product-issues" || req.url === "/plugin-reports") && req.method === "POST") {
+        const report = req.url === "/plugin-reports";
         const chunks2 = [];
         let size2 = 0;
         for await (const chunk of req) {
@@ -30226,9 +30369,12 @@ async function startBroker({
         try {
           value = JSON.parse(Buffer.concat(chunks2).toString("utf8"));
         } catch {
-          return json2(400, { error: "invalid_issue_request" });
+          return json2(400, {
+            error: report ? "invalid_report_request" : "invalid_issue_request"
+          });
         }
-        const response2 = await forwardBoundIssue(
+        const forward = report ? forwardBoundReport : forwardBoundIssue;
+        const response2 = await forward(
           authorization,
           value,
           AbortSignal.any([controller.signal, AbortSignal.timeout(6e4)])
@@ -30568,7 +30714,7 @@ function openTelemetryOutbox({ directory, installationId }) {
     const selected = epoch();
     controller = new AbortController();
     try {
-      const rows = db.prepare(
+      let rows = db.prepare(
         "SELECT uuid,payload FROM events WHERE epoch=? AND created>=? ORDER BY rowid LIMIT ?"
       ).all(
         selected,
@@ -30589,6 +30735,14 @@ function openTelemetryOutbox({ directory, installationId }) {
         rotate();
         return;
       }
+      const explorer = batch.events.findIndex(
+        (event2) => event2.event === "Explorer Run Finished"
+      );
+      if (explorer !== -1) {
+        const boundary = explorer || 1;
+        rows = rows.slice(0, boundary);
+        batch.events = batch.events.slice(0, boundary);
+      }
       const response = await authorization.telemetryRequest({
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -30600,20 +30754,25 @@ function openTelemetryOutbox({ directory, installationId }) {
         await response.body?.cancel();
         return;
       }
-      if ([400, 403, 409, 413, 422].includes(response.status)) {
+      const unsupportedExplorer = explorer === 0 && response.status === 400;
+      if (!unsupportedExplorer && [400, 403, 409, 413, 422].includes(response.status)) {
         await response.body?.cancel();
         rotate();
         return;
       }
-      if (!response.ok) {
+      if (!unsupportedExplorer && !response.ok) {
         await response.body?.cancel();
         throw Error("telemetry_unavailable");
       }
-      const receipt2 = telemetryReceiptSchema.parse(await response.json());
-      const expected = new Set(rows.map((row) => row.uuid));
-      if (receipt2.accepted.length !== expected.size || receipt2.accepted.some((entry) => !expected.delete(entry.event_uuid)))
-        throw Error("invalid_telemetry_receipt");
+      if (unsupportedExplorer) await response.body?.cancel();
+      else {
+        const receipt2 = telemetryReceiptSchema.parse(await response.json());
+        const expected = new Set(rows.map((row) => row.uuid));
+        if (receipt2.accepted.length !== expected.size || receipt2.accepted.some((entry) => !expected.delete(entry.event_uuid)))
+          throw Error("invalid_telemetry_receipt");
+      }
       transaction(() => {
+        if (unsupportedExplorer) drop(rows.length);
         for (const row of rows)
           db.prepare("DELETE FROM events WHERE uuid=? AND epoch=?").run(
             row.uuid,

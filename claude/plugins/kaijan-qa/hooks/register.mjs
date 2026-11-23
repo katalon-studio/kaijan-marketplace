@@ -97,6 +97,7 @@ function reportHost($, e) {
         rows: 28,
       }),
     closeForm: () => $.ui.close({ id: formPaneId }),
+    copy: (text) => $.ui.copy({ text, surface: e?.surface }),
     warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
     redraw: () => $.ui.invalidate("ui.render"),
     warn: () =>
@@ -177,7 +178,12 @@ export function register(on, runInterruption) {
       card,
       id,
       open,
-      forms.actions(host, id, state.isCurrent),
+      forms.actions(
+        host,
+        id,
+        state.isCurrent,
+        card.report.runs.length === 1 ? card.report.runs[0].id : undefined,
+      ),
       e.surface === "desktop" ? card.detailUrl : undefined,
     );
   };
@@ -200,11 +206,11 @@ export function register(on, runInterruption) {
     for (const [kind, description] of [
       [
         "feedback",
-        "Open the requested private Kaijan feedback draft in Claude. The person writes, reviews, and sends it from the form. This tool sends nothing.",
+        "Open a private Kaijan feedback draft in Claude. Supply runId only when the user requested details for that exact saved Run. The person reviews and sends from the form. This tool sends nothing.",
       ],
       [
         "issue",
-        "Open the requested Kaijan issue draft for review in Claude. The person can edit the draft and choose images before confirming publication. This tool publishes nothing.",
+        "Open the requested Kaijan issue draft for review in Claude. The person can edit the draft and choose images before confirming the submission. This tool only opens the form.",
       ],
     ]) {
       const { tool } = await $.tool.register({
@@ -212,7 +218,10 @@ export function register(on, runInterruption) {
         description,
         inputSchema: {
           type: "object",
-          properties: {},
+          properties:
+            kind === "feedback"
+              ? { runId: { type: "string", pattern: "^[a-f0-9]{64}$" } }
+              : {},
           additionalProperties: false,
         },
       });
@@ -258,6 +267,7 @@ export function register(on, runInterruption) {
         e.tool_use_id,
         kind,
         state.isCurrent,
+        kind === "feedback" ? e.runId : undefined,
       );
       if (!opened) return { deny: "Kaijan could not open the draft form." };
       return { result: "Opened the draft for user review." };

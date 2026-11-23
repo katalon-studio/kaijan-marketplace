@@ -30981,6 +30981,15 @@ var localEnvelope = external_exports.strictObject({
   os_version: telemetryVersionSchema,
   arch: external_exports.enum(["arm64", "x64", "unknown"])
 });
+var explorerFinishedPropertiesSchema = external_exports.strictObject({
+  run_id: telemetryOperationId,
+  outcome: external_exports.enum(["completed", "incomplete", "cancelled", "failed"])
+});
+var explorerFinishedCapture = localEnvelope.extend({
+  event: external_exports.literal("Explorer Run Finished"),
+  event_version: external_exports.literal(1),
+  properties: explorerFinishedPropertiesSchema
+});
 var mcpCapture = localEnvelope.extend({
   event: external_exports.literal("$mcp_tool_call"),
   event_version: external_exports.literal(2),
@@ -31071,7 +31080,8 @@ var localTelemetryCaptureSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture,
   userInputReceivedCapture,
   assessmentFinishedCapture,
-  toolFailureDiagnosedCapture
+  toolFailureDiagnosedCapture,
+  explorerFinishedCapture
 ]);
 var ownership = {
   install_id: external_exports.uuidv4(),
@@ -31079,6 +31089,7 @@ var ownership = {
   seq: external_exports.number().int().positive().max(Number.MAX_SAFE_INTEGER)
 };
 var assessmentFinishedEventSchema = assessmentFinishedCapture.extend(ownership);
+var explorerFinishedEventSchema = explorerFinishedCapture.extend(ownership);
 var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   mcpCapture.extend(ownership),
   startedCapture.extend(ownership),
@@ -31094,7 +31105,8 @@ var telemetryEventSchema = external_exports.discriminatedUnion("event", [
   userInputRequestedCapture.extend(ownership),
   userInputReceivedCapture.extend(ownership),
   assessmentFinishedEventSchema,
-  toolFailureDiagnosedCapture.extend(ownership)
+  toolFailureDiagnosedCapture.extend(ownership),
+  explorerFinishedEventSchema
 ]);
 var telemetryBatchSchema = external_exports.strictObject({
   events: external_exports.array(telemetryEventSchema).min(1).max(telemetryLimits.batchEvents)
@@ -32727,6 +32739,69 @@ var productIssuePreparationSchema = external_exports.strictObject({
       message: "Only the selected images can receive upload grants."
     });
 });
+
+// packages/contracts/dist/product-report.js
+var productReportInputSchema = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("feedback"),
+    report: productFeedbackInputSchema
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("issue"),
+    report: productIssueInputSchema,
+    diagnostics: productFeedbackInputSchema.shape.diagnostics
+  })
+]);
+var productReportPrincipalSchema = external_exports.strictObject({
+  userId: external_exports.uuid(),
+  workspaceId: external_exports.uuid(),
+  distinctId: external_exports.string().regex(/^core-user-v1-[a-f0-9]{64}$/)
+});
+var savedProductReportReceiptSchema = external_exports.strictObject({
+  reference: external_exports.uuid(),
+  status: external_exports.literal("saved"),
+  savedAt: external_exports.iso.datetime()
+});
+var productReportReceiptSchema = external_exports.discriminatedUnion("status", [
+  external_exports.strictObject({ reference: external_exports.uuid(), status: external_exports.literal("pending") }),
+  savedProductReportReceiptSchema
+]);
+var productReportPreparationSchema = external_exports.strictObject({
+  receipt: productReportReceiptSchema,
+  uploads: external_exports.array(productIssueUploadSchema).max(issueImageLimits.files)
+});
+var productReportReferenceSchema = external_exports.strictObject({
+  reference: external_exports.uuid()
+});
+var productReportImageExportQuerySchema = external_exports.strictObject({
+  after: external_exports.string().regex(/^(?:0|[1-9]\d{0,15})$/).refine((value) => Number.isSafeInteger(Number(value))).default("0")
+});
+var productReportImageExportSchema = external_exports.strictObject({
+  records: external_exports.array(external_exports.strictObject({
+    sequence: external_exports.int().positive(),
+    reference: external_exports.uuid(),
+    image_id: external_exports.uuid(),
+    filename: external_exports.string().max(120),
+    media_type: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    image_base64: external_exports.string().min(1).max(4 * Math.ceil(issueImageLimits.fileBytes / 3))
+  })).max(1),
+  next: external_exports.int().positive().nullable()
+});
+var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
+  productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
+  productReportReferenceSchema.extend({
+    action: external_exports.literal("transfer"),
+    imageId: external_exports.uuid(),
+    uploadUrl: external_exports.string().max(8192)
+  })
+]);
+var productReportRequestSchema = external_exports.strictObject({
+  requestId: external_exports.uuid()
+});
+var productReportLookupSchema = external_exports.union([
+  productReportReferenceSchema,
+  productReportRequestSchema
+]);
 
 // packages/contracts/dist/app-model.js
 var appModelIdentitySchema = external_exports.strictObject({
