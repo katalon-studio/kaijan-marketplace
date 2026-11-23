@@ -35,8 +35,8 @@ Reading a report does not invoke a producer.
 ## Present the result
 
 Follow the returned presentation. For `panel`, show the native inline card.
-**Show details** uses `loki_report_open` for the same report and requests native
-MCP Apps expansion. If it stays on **Opening Kaijan report**, use the host's
+Use **Show details** to open that same report in the native panel. If it stays on
+**Opening Kaijan report**, use the host's
 **Open app in tab** once if offered. If the panel remains unavailable or the
 user wants text, use `kaijan_report_get` for the exact report and show the requested
 details in chat. Verify actual rendering before saying it opened.
