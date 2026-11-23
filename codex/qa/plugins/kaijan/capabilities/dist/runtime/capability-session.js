@@ -23664,6 +23664,16 @@ var desktopErrorSchema = external_exports.strictObject({
   retryable: external_exports.boolean(),
   cliStarted: external_exports.boolean().nullable()
 });
+var desktopAiDestinations = ["openai", "openrouter"];
+var desktopAiReadinessSchema = external_exports.strictObject({
+  state: external_exports.enum(["ready", "configuration_required"]),
+  version: external_exports.string().max(80).nullable(),
+  destinations: external_exports.tuple([
+    external_exports.literal(desktopAiDestinations[0]),
+    external_exports.literal(desktopAiDestinations[1])
+  ]),
+  reason: external_exports.string().max(500).nullable()
+});
 var desktopConnectorKindSchema = external_exports.enum(["mcp", "cli", "extension"]);
 var desktopAuthSchema = external_exports.strictObject({
   connectorId: desktopIdSchema,
