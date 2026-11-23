@@ -125671,16 +125671,20 @@ var assessmentView = (value) => {
 };
 function requestTestIndexes(result) {
   const native2 = record9(result);
-  const intent = new Set(
-    list7(native2.evidence).filter((value) => {
-      const item2 = record9(value);
-      return item2.kind === "intent";
-    }).map((value) => text10(record9(value).id)).filter(Boolean)
+  const plan = record9(native2.plan);
+  const changeEvidence = new Set(
+    list7(native2.evidence).map(record9).filter(
+      (item2) => item2.kind === "implementation" || text10(item2.uri).startsWith("kaijan-answer://changeRisk/")
+    ).map((item2) => text10(item2.id)).filter(Boolean)
   );
-  return list7(record9(native2.plan).tests).flatMap((value, index2) => {
-    const expected = record9(record9(value).expected);
-    const refs6 = list7(expected.refs);
-    return expected.authority === "requirement" && refs6.length > 0 && refs6.every((ref5) => intent.has(text10(record9(ref5).evidence_id))) ? [index2] : [];
+  const citesChange = (refs6) => list7(refs6).some((ref5) => changeEvidence.has(text10(record9(ref5).evidence_id)));
+  const changeObjectives = new Set(
+    list7(plan.objectives).map(record9).filter((objective) => citesChange(objective.refs)).map((objective) => text10(objective.id)).filter(Boolean)
+  );
+  return list7(plan.tests).flatMap((value, index2) => {
+    const test = record9(value);
+    const linkedToChange = citesChange(record9(test.expected).refs) || list7(test.objective_ids).some((id8) => changeObjectives.has(text10(id8)));
+    return linkedToChange ? [] : [index2];
   });
 }
 function savedApplicationModel(result) {
