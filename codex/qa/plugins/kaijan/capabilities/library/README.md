@@ -176,13 +176,12 @@ can also be called as `buildCapabilityLibrary({ output })` from
 the normal TypeScript checks. The output must be new; failures preserve partial
 artifacts. No installation or network operation occurs during assembly.
 
-The builder reads `packages/context-finder/capability-selection.json`. That
-versioned manifest selects exact promoted source bytes and original provenance,
-including consumed derivatives that differ from newest experiment methods.
-No private `--planning-root` or `--pr-context-root` is needed. Every dynamic
-source, statically bundled native input and native data asset is hash checked.
-The static graph must remain inside `packages/`; the shared AI client is resolved
-from its promoted source rather than an arbitrary installed copy.
+The builder reads `packages/context-finder/capability-selection.json` to select
+promoted source paths, staging destinations and historical provenance. The Git
+checkout supplies first-party bytes. The build generates content digests from
+those bytes for saved-result provenance and artifact integrity. The static
+graph uses admitted source paths in `packages/`, including the promoted shared
+AI client. Independently downloaded inputs keep their integrity checks.
 
 The portable output contains `api.mjs`, `computer-runner-worker.mjs`, adjacent
 `map-ui.html`, native `change-risk/`, `pr-context/`, `planning/` and
