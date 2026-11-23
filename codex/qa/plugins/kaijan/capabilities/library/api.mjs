@@ -75,7 +75,7 @@ var init_define_LOKI_CHANGE_RISK_PINS = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "6c92a71040b4741439cf8eb1080bc8902d0e21f387babbd3b6eef41835fb5041", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "072655b6293573076290b016c8032295f8d6c25eeeb97fe65d968ef5f5f5ff75", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "e8fa179640d306c61ed05cde89c338811c9b39fffc8f03700b819832baa0e50c", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "0af194ec6893f5af637ce9996a86e97ca062ed63ed7ee5cf3f189134cfe1943e", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb", "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029", "packages/computer-runner/src/runner.mjs": "6bd5ee95f96acc5baeb90e481de342715ae6a27aa79bdba104649bc2c5da6853", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "6c92a71040b4741439cf8eb1080bc8902d0e21f387babbd3b6eef41835fb5041", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "072655b6293573076290b016c8032295f8d6c25eeeb97fe65d968ef5f5f5ff75", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "2d0da00346d4d24a5892f343036dcba48dea6defbccb5812cd3d746fbf2e8edd", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "ba8cf93b14d05d5a4eaca4058f7e60e5cb0472dbb9888baaaf27043bfb4e9403", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "e8fa179640d306c61ed05cde89c338811c9b39fffc8f03700b819832baa0e50c", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "0af194ec6893f5af637ce9996a86e97ca062ed63ed7ee5cf3f189134cfe1943e", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb", "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -83,7 +83,7 @@ var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
 var define_LOKI_MAC_RUNNER_PINS_default;
 var init_define_LOKI_MAC_RUNNER_PINS = __esm({
   "<define:LOKI_MAC_RUNNER_PINS>"() {
-    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029", "packages/computer-runner/src/runner.mjs": "1ecbbc31411b439249b61ac725685f13196e5ec4e02621f6f28eed5aa9a9bc0f", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7528c7a8b8865f827f3e8da8ef988ec0561b8db9f3e5dd32ff27b68cd4474720", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "6c92a71040b4741439cf8eb1080bc8902d0e21f387babbd3b6eef41835fb5041", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "072655b6293573076290b016c8032295f8d6c25eeeb97fe65d968ef5f5f5ff75", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "7aae31ae23e46c9c06e3a1b7b5046e23489a437007b8d5b78e8fe09c6adc0da8", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "bb981f80cab800176b6b593c0f811b7aacfb665bce62669eb4993e2c058bce4e", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "e8fa179640d306c61ed05cde89c338811c9b39fffc8f03700b819832baa0e50c", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "0af194ec6893f5af637ce9996a86e97ca062ed63ed7ee5cf3f189134cfe1943e", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb", "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "6f76bbc453dbeefeb51de6a496f41cb19ca299efb32a15c446efc371d5306f38", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
+    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029", "packages/computer-runner/src/runner.mjs": "6bd5ee95f96acc5baeb90e481de342715ae6a27aa79bdba104649bc2c5da6853", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "6c92a71040b4741439cf8eb1080bc8902d0e21f387babbd3b6eef41835fb5041", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "d220d54873ac328bb9c006d62cff5295c0678d57b8a050085842a2773d746190", "packages/computer-runner/src/execution-status.mjs": "072655b6293573076290b016c8032295f8d6c25eeeb97fe65d968ef5f5f5ff75", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "2b7072d77641854b68aa247b9619e73d66fd0a8c660b6b89a9fd84499da23d0d", "packages/computer-runner/src/case-evidence.mjs": "2d0da00346d4d24a5892f343036dcba48dea6defbccb5812cd3d746fbf2e8edd", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "a0c948dc3a2708ea0356985f6403ce9cbb946c10a8724982312fe9716bd33bf4", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "ba8cf93b14d05d5a4eaca4058f7e60e5cb0472dbb9888baaaf27043bfb4e9403", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "ec1864e0b3d3377fab8107f1a979a88966827ce2b128cb61335773a28506b3f8", "packages/provider-transport/responses-session.mjs": "235d269cbfee276745459568bdb2a604938bf43a5d1dbf416b0aa0dd21e47717", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "ac0b521c0203ae6b7f16064b573a522800c91710e64e24ddb5a15d5c1f07acea", "packages/provider-transport/retention.mjs": "55e202641d21289fcd59ef5b7b9326b87d51f7b717984c9a821bd39c269d19fb", "packages/computer-runner/src/browser-explorer.d.mts": "e8fa179640d306c61ed05cde89c338811c9b39fffc8f03700b819832baa0e50c", "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969", "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e", "packages/computer-runner/src/browser-explorer.mjs": "0af194ec6893f5af637ce9996a86e97ca062ed63ed7ee5cf3f189134cfe1943e", "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7", "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "6a92ace04b1ff5e1088226d8b23070f09583686e6c2ba52b1441d991ee9b55bb", "packages/computer-runner/src/agent-loop.mjs": "8ce61f90f3f811fb8963e06a6f871fb28a039fe655217de769083baa5d26a031", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "6f76bbc453dbeefeb51de6a496f41cb19ca299efb32a15c446efc371d5306f38", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "5daad8f203cbd190a0bca8f009e356de0a23b7531f21707ed07b3586e49daab0", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
   }
 });
 
@@ -11288,7 +11288,7 @@ var require_websocket = __commonJS({
       }
       const defaultPort = isSecure ? 443 : 80;
       const key5 = randomBytes8(16).toString("base64");
-      const request3 = isSecure ? https2.request : http2.request;
+      const request4 = isSecure ? https2.request : http2.request;
       const protocolSet = /* @__PURE__ */ new Set();
       let perMessageDeflate;
       opts.createConnection = opts.createConnection || (isSecure ? tlsConnect : netConnect);
@@ -11365,12 +11365,12 @@ var require_websocket = __commonJS({
         if (opts.auth && !options2.headers.authorization) {
           options2.headers.authorization = "Basic " + Buffer.from(opts.auth).toString("base64");
         }
-        req = websocket._req = request3(opts);
+        req = websocket._req = request4(opts);
         if (websocket._redirects) {
           websocket.emit("redirect", websocket.url, req);
         }
       } else {
-        req = websocket._req = request3(opts);
+        req = websocket._req = request4(opts);
       }
       if (opts.timeout) {
         req.on("timeout", () => {
@@ -15325,10 +15325,10 @@ var require_util2 = __commonJS({
       }
       return obj9;
     }
-    function errorRequest(client, request3, err) {
+    function errorRequest(client, request4, err) {
       try {
-        request3.onError(err);
-        assert6(request3.aborted);
+        request4.onError(err);
+        assert6(request4.aborted);
       } catch (err2) {
         client.emit("error", err2);
       }
@@ -16049,7 +16049,7 @@ var require_request = __commonJS({
         return this;
       }
     };
-    function processHeader(request3, key5, val) {
+    function processHeader(request4, key5, val) {
       if (val && (typeof val === "object" && !Array.isArray(val))) {
         throw new InvalidArgumentError(`invalid ${key5} header`);
       } else if (val === void 0) {
@@ -16096,24 +16096,24 @@ var require_request = __commonJS({
         }
       }
       if (headerName === "host") {
-        if (request3.host !== null) {
+        if (request4.host !== null) {
           throw new InvalidArgumentError("duplicate host header");
         }
         if (typeof val !== "string") {
           throw new InvalidArgumentError("invalid host header");
         }
-        request3.host = val;
+        request4.host = val;
       } else if (headerName === "content-length") {
-        if (request3.contentLength !== null) {
+        if (request4.contentLength !== null) {
           throw new InvalidArgumentError("duplicate content-length header");
         }
         if (!isValidContentLengthHeaderValue(val)) {
           throw new InvalidArgumentError("invalid content-length header");
         }
-        request3.contentLength = parseInt(val, 10);
-      } else if (request3.contentType === null && headerName === "content-type") {
-        request3.contentType = val;
-        request3.headers.push(key5, val);
+        request4.contentLength = parseInt(val, 10);
+      } else if (request4.contentType === null && headerName === "content-type") {
+        request4.contentType = val;
+        request4.headers.push(key5, val);
       } else if (headerName === "transfer-encoding" || headerName === "keep-alive" || headerName === "upgrade") {
         throw new InvalidArgumentError(`invalid ${headerName} header`);
       } else if (headerName === "connection") {
@@ -16127,13 +16127,13 @@ var require_request = __commonJS({
             throw new InvalidArgumentError("invalid connection header");
           }
           if (trimmed === "close") {
-            request3.reset = true;
+            request4.reset = true;
           }
         }
       } else if (headerName === "expect") {
         throw new NotSupportedError("expect header not supported");
       } else {
-        request3.headers.push(key5, val);
+        request4.headers.push(key5, val);
       }
     }
     module.exports = Request;
@@ -18916,11 +18916,11 @@ var require_util3 = __commonJS({
     function normalizeBinaryStringToUtf8(value) {
       return Buffer.from(value, "binary").toString("utf8");
     }
-    function requestCurrentURL(request3) {
-      return request3.urlList[request3.urlList.length - 1];
+    function requestCurrentURL(request4) {
+      return request4.urlList[request4.urlList.length - 1];
     }
-    function requestBadPort(request3) {
-      const url2 = requestCurrentURL(request3);
+    function requestBadPort(request4) {
+      const url2 = requestCurrentURL(request4);
       if (urlIsHttpHttpsScheme(url2) && badPortsSet.has(url2.port)) {
         return "blocked";
       }
@@ -18958,10 +18958,10 @@ var require_util3 = __commonJS({
       }
       return policy;
     }
-    function setRequestReferrerPolicyOnRedirect(request3, actualResponse) {
+    function setRequestReferrerPolicyOnRedirect(request4, actualResponse) {
       const policy = parseReferrerPolicy(actualResponse);
       if (policy !== "") {
-        request3.referrerPolicy = policy;
+        request4.referrerPolicy = policy;
       }
     }
     function crossOriginResourcePolicyCheck() {
@@ -18978,33 +18978,33 @@ var require_util3 = __commonJS({
       header2 = httpRequest.mode;
       httpRequest.headersList.set("sec-fetch-mode", header2, true);
     }
-    function appendRequestOriginHeader(request3) {
-      let serializedOrigin = request3.origin;
+    function appendRequestOriginHeader(request4) {
+      let serializedOrigin = request4.origin;
       if (serializedOrigin === "client" || serializedOrigin === void 0) {
         return;
       }
-      if (request3.responseTainting === "cors" || request3.mode === "websocket") {
-        request3.headersList.append("origin", serializedOrigin, true);
-      } else if (request3.method !== "GET" && request3.method !== "HEAD") {
-        switch (request3.referrerPolicy) {
+      if (request4.responseTainting === "cors" || request4.mode === "websocket") {
+        request4.headersList.append("origin", serializedOrigin, true);
+      } else if (request4.method !== "GET" && request4.method !== "HEAD") {
+        switch (request4.referrerPolicy) {
           case "no-referrer":
             serializedOrigin = null;
             break;
           case "no-referrer-when-downgrade":
           case "strict-origin":
           case "strict-origin-when-cross-origin":
-            if (request3.origin && urlHasHttpsScheme(request3.origin) && !urlHasHttpsScheme(requestCurrentURL(request3))) {
+            if (request4.origin && urlHasHttpsScheme(request4.origin) && !urlHasHttpsScheme(requestCurrentURL(request4))) {
               serializedOrigin = null;
             }
             break;
           case "same-origin":
-            if (!sameOrigin(request3, requestCurrentURL(request3))) {
+            if (!sameOrigin(request4, requestCurrentURL(request4))) {
               serializedOrigin = null;
             }
             break;
           default:
         }
-        request3.headersList.append("origin", serializedOrigin, true);
+        request4.headersList.append("origin", serializedOrigin, true);
       }
     }
     function coarsenTime(timestamp, crossOriginIsolatedCapability) {
@@ -19058,18 +19058,18 @@ var require_util3 = __commonJS({
         referrerPolicy: policyContainer.referrerPolicy
       };
     }
-    function determineRequestsReferrer(request3) {
-      const policy = request3.referrerPolicy;
+    function determineRequestsReferrer(request4) {
+      const policy = request4.referrerPolicy;
       assert6(policy);
       let referrerSource = null;
-      if (request3.referrer === "client") {
+      if (request4.referrer === "client") {
         const globalOrigin = getGlobalOrigin();
         if (!globalOrigin || globalOrigin.origin === "null") {
           return "no-referrer";
         }
         referrerSource = new URL(globalOrigin);
-      } else if (webidl.is.URL(request3.referrer)) {
-        referrerSource = request3.referrer;
+      } else if (webidl.is.URL(request4.referrer)) {
+        referrerSource = request4.referrer;
       }
       let referrerURL = stripURLForReferrer(referrerSource);
       const referrerOrigin = stripURLForReferrer(referrerSource, true);
@@ -19087,14 +19087,14 @@ var require_util3 = __commonJS({
         case "unsafe-url":
           return referrerURL;
         case "strict-origin": {
-          const currentURL = requestCurrentURL(request3);
+          const currentURL = requestCurrentURL(request4);
           if (isURLPotentiallyTrustworthy(referrerURL) && !isURLPotentiallyTrustworthy(currentURL)) {
             return "no-referrer";
           }
           return referrerOrigin;
         }
         case "strict-origin-when-cross-origin": {
-          const currentURL = requestCurrentURL(request3);
+          const currentURL = requestCurrentURL(request4);
           if (sameOrigin(referrerURL, currentURL)) {
             return referrerURL;
           }
@@ -19104,17 +19104,17 @@ var require_util3 = __commonJS({
           return referrerOrigin;
         }
         case "same-origin":
-          if (sameOrigin(request3, referrerURL)) {
+          if (sameOrigin(request4, referrerURL)) {
             return referrerURL;
           }
           return "no-referrer";
         case "origin-when-cross-origin":
-          if (sameOrigin(request3, referrerURL)) {
+          if (sameOrigin(request4, referrerURL)) {
             return referrerURL;
           }
           return referrerOrigin;
         case "no-referrer-when-downgrade": {
-          const currentURL = requestCurrentURL(request3);
+          const currentURL = requestCurrentURL(request4);
           if (isURLPotentiallyTrustworthy(referrerURL) && !isURLPotentiallyTrustworthy(currentURL)) {
             return "no-referrer";
           }
@@ -19181,7 +19181,7 @@ var require_util3 = __commonJS({
       if (url2.protocol === "blob:") return true;
       return isOriginPotentiallyTrustworthy(url2.origin);
     }
-    function tryUpgradeRequestToAPotentiallyTrustworthyURL(request3) {
+    function tryUpgradeRequestToAPotentiallyTrustworthyURL(request4) {
     }
     function sameOrigin(A, B) {
       if (A.origin === B.origin && A.origin === "null") {
@@ -19560,7 +19560,7 @@ var require_util3 = __commonJS({
       }
       return gettingDecodingSplitting(value);
     }
-    function hasAuthenticationEntry(request3) {
+    function hasAuthenticationEntry(request4) {
       return false;
     }
     function includesCredentials(url2) {
@@ -20844,11 +20844,11 @@ var require_client_h1 = __commonJS({
           util.destroy(socket, new SocketError("bad response", util.getSocketInfo(socket)));
           return -1;
         }
-        const request3 = client[kQueue][client[kRunningIdx]];
-        if (!request3) {
+        const request4 = client[kQueue][client[kRunningIdx]];
+        if (!request4) {
           return -1;
         }
-        request3.onResponseStarted();
+        request4.onResponseStarted();
         return 0;
       }
       /**
@@ -20910,9 +20910,9 @@ var require_client_h1 = __commonJS({
         assert6(!socket.destroyed);
         assert6(!this.paused);
         assert6((headers.length & 1) === 0);
-        const request3 = client[kQueue][client[kRunningIdx]];
-        assert6(request3);
-        assert6(request3.upgrade || request3.method === "CONNECT");
+        const request4 = client[kQueue][client[kRunningIdx]];
+        assert6(request4);
+        assert6(request4.upgrade || request4.method === "CONNECT");
         this.statusCode = 0;
         this.statusText = "";
         this.shouldKeepAlive = false;
@@ -20929,9 +20929,9 @@ var require_client_h1 = __commonJS({
         client[kQueue][client[kRunningIdx]++] = null;
         client.emit("disconnect", client[kUrl], [client], new InformationalError("upgrade"));
         try {
-          request3.onUpgrade(statusCode, headers, socket, statusText);
+          request4.onUpgrade(statusCode, headers, socket, statusText);
         } catch (err) {
-          util.errorRequest(client, request3, err);
+          util.errorRequest(client, request4, err);
           util.destroy(socket, err);
         }
         client[kResume]();
@@ -20951,8 +20951,8 @@ var require_client_h1 = __commonJS({
           util.destroy(socket, new SocketError("bad response", util.getSocketInfo(socket)));
           return -1;
         }
-        const request3 = client[kQueue][client[kRunningIdx]];
-        if (!request3) {
+        const request4 = client[kQueue][client[kRunningIdx]];
+        if (!request4) {
           return -1;
         }
         assert6(!this.upgrade);
@@ -20961,23 +20961,23 @@ var require_client_h1 = __commonJS({
           util.destroy(socket, new SocketError("bad response", util.getSocketInfo(socket)));
           return -1;
         }
-        if (upgrade && !request3.upgrade) {
+        if (upgrade && !request4.upgrade) {
           util.destroy(socket, new SocketError("bad upgrade", util.getSocketInfo(socket)));
           return -1;
         }
         assert6(this.timeoutType === TIMEOUT_HEADERS);
         this.statusCode = statusCode;
         this.shouldKeepAlive = shouldKeepAlive || // Override llhttp value which does not allow keepAlive for HEAD.
-        request3.method === "HEAD" && !socket[kReset] && this.connection.toLowerCase() === "keep-alive";
+        request4.method === "HEAD" && !socket[kReset] && this.connection.toLowerCase() === "keep-alive";
         if (this.statusCode >= 200) {
-          const bodyTimeout = request3.bodyTimeout != null ? request3.bodyTimeout : client[kBodyTimeout];
+          const bodyTimeout = request4.bodyTimeout != null ? request4.bodyTimeout : client[kBodyTimeout];
           this.setTimeout(bodyTimeout, TIMEOUT_BODY);
         } else if (this.timeout) {
           if (this.timeout.refresh) {
             this.timeout.refresh();
           }
         }
-        if (request3.method === "CONNECT") {
+        if (request4.method === "CONNECT") {
           assert6(client[kRunning] === 1);
           this.upgrade = true;
           return 2;
@@ -21008,11 +21008,11 @@ var require_client_h1 = __commonJS({
         } else {
           socket[kReset] = true;
         }
-        const pause = request3.onHeaders(statusCode, headers, this.resume, statusText) === false;
-        if (request3.aborted) {
+        const pause = request4.onHeaders(statusCode, headers, this.resume, statusText) === false;
+        if (request4.aborted) {
           return -1;
         }
-        if (request3.method === "HEAD") {
+        if (request4.method === "HEAD") {
           return 1;
         }
         if (statusCode < 200) {
@@ -21033,8 +21033,8 @@ var require_client_h1 = __commonJS({
         if (socket.destroyed) {
           return -1;
         }
-        const request3 = client[kQueue][client[kRunningIdx]];
-        assert6(request3);
+        const request4 = client[kQueue][client[kRunningIdx]];
+        assert6(request4);
         assert6(this.timeoutType === TIMEOUT_BODY);
         if (this.timeout) {
           if (this.timeout.refresh) {
@@ -21047,7 +21047,7 @@ var require_client_h1 = __commonJS({
           return -1;
         }
         this.bytesRead += buf.length;
-        if (request3.onData(buf) === false) {
+        if (request4.onData(buf) === false) {
           return constants7.ERROR.PAUSED;
         }
         return 0;
@@ -21065,8 +21065,8 @@ var require_client_h1 = __commonJS({
         }
         assert6(statusCode >= 100);
         assert6((this.headers.length & 1) === 0);
-        const request3 = client[kQueue][client[kRunningIdx]];
-        assert6(request3);
+        const request4 = client[kQueue][client[kRunningIdx]];
+        assert6(request4);
         this.statusCode = 0;
         this.statusText = "";
         this.bytesRead = 0;
@@ -21078,11 +21078,11 @@ var require_client_h1 = __commonJS({
         if (statusCode < 200) {
           return 0;
         }
-        if (request3.method !== "HEAD" && contentLength && bytesRead !== parseInt(contentLength, 10)) {
+        if (request4.method !== "HEAD" && contentLength && bytesRead !== parseInt(contentLength, 10)) {
           util.destroy(socket, new ResponseContentLengthMismatchError());
           return -1;
         }
-        request3.onComplete(headers);
+        request4.onComplete(headers);
         client[kQueue][client[kRunningIdx]++] = null;
         socket[kSocketUsed] = client[kPending] === 0;
         if (socket[kWriting]) {
@@ -21151,8 +21151,8 @@ var require_client_h1 = __commonJS({
       return {
         version: "h1",
         defaultPipelining: 1,
-        write(request3) {
-          return writeH1(client, request3);
+        write(request4) {
+          return writeH1(client, request4);
         },
         resume() {
           resumeH1(client);
@@ -21179,18 +21179,18 @@ var require_client_h1 = __commonJS({
          * @param {import('../core/request.js')} request
          * @returns {boolean}
          */
-        busy(request3) {
+        busy(request4) {
           if (socket[kWriting] || socket[kReset] || socket[kBlocking] || socket[kIdleSocketValidation] === 1) {
             return true;
           }
-          if (request3) {
-            if (client[kRunning] > 0 && !request3.idempotent) {
+          if (request4) {
+            if (client[kRunning] > 0 && !request4.idempotent) {
               return true;
             }
-            if (client[kRunning] > 0 && (request3.upgrade || request3.method === "CONNECT")) {
+            if (client[kRunning] > 0 && (request4.upgrade || request4.method === "CONNECT")) {
               return true;
             }
-            if (client[kRunning] > 0 && util.bodyLength(request3.body) !== 0 && (util.isStream(request3.body) || util.isAsyncIterable(request3.body) || util.isFormDataLike(request3.body))) {
+            if (client[kRunning] > 0 && util.bodyLength(request4.body) !== 0 && (util.isStream(request4.body) || util.isAsyncIterable(request4.body) || util.isFormDataLike(request4.body))) {
               return true;
             }
           }
@@ -21243,13 +21243,13 @@ var require_client_h1 = __commonJS({
         assert6(client[kPending] === 0);
         const requests = client[kQueue].splice(client[kRunningIdx]);
         for (let i2 = 0; i2 < requests.length; i2++) {
-          const request3 = requests[i2];
-          util.errorRequest(client, request3, err);
+          const request4 = requests[i2];
+          util.errorRequest(client, request4, err);
         }
       } else if (client[kRunning] > 0 && err.code !== "UND_ERR_INFO") {
-        const request3 = client[kQueue][client[kRunningIdx]];
+        const request4 = client[kQueue][client[kRunningIdx]];
         client[kQueue][client[kRunningIdx]++] = null;
-        util.errorRequest(client, request3, err);
+        util.errorRequest(client, request4, err);
       }
       client[kPendingIdx] = client[kRunningIdx];
       assert6(client[kRunning] === 0);
@@ -21317,8 +21317,8 @@ var require_client_h1 = __commonJS({
           }
         } else if (client[kRunning] > 0 && socket[kParser].statusCode < 200) {
           if (socket[kParser].timeoutType !== TIMEOUT_HEADERS) {
-            const request3 = client[kQueue][client[kRunningIdx]];
-            const headersTimeout = request3.headersTimeout != null ? request3.headersTimeout : client[kHeadersTimeout];
+            const request4 = client[kQueue][client[kRunningIdx]];
+            const headersTimeout = request4.headersTimeout != null ? request4.headersTimeout : client[kHeadersTimeout];
             socket[kParser].setTimeout(headersTimeout, TIMEOUT_HEADERS);
           }
         }
@@ -21327,26 +21327,26 @@ var require_client_h1 = __commonJS({
     function shouldSendContentLength(method2) {
       return method2 !== "GET" && method2 !== "HEAD" && method2 !== "OPTIONS" && method2 !== "TRACE" && method2 !== "CONNECT";
     }
-    function writeH1(client, request3) {
-      const { method: method2, path: path21, host, upgrade, blocking, reset: reset3 } = request3;
-      let { body: body2, headers, contentLength } = request3;
+    function writeH1(client, request4) {
+      const { method: method2, path: path21, host, upgrade, blocking, reset: reset3 } = request4;
+      let { body: body2, headers, contentLength } = request4;
       const expectsPayload = method2 === "PUT" || method2 === "POST" || method2 === "PATCH" || method2 === "QUERY" || method2 === "PROPFIND" || method2 === "PROPPATCH";
       if (util.isFormDataLike(body2)) {
         if (!extractBody) {
           extractBody = require_body().extractBody;
         }
         const [bodyStream, contentType] = extractBody(body2);
-        if (request3.contentType == null) {
+        if (request4.contentType == null) {
           headers.push("content-type", contentType);
         }
         body2 = bodyStream.stream;
         contentLength = bodyStream.length;
-      } else if (util.isBlobLike(body2) && request3.contentType == null) {
+      } else if (util.isBlobLike(body2) && request4.contentType == null) {
         const contentType = body2.type;
         if (contentType) {
           const contentTypeValue = `${contentType}`;
           if (!util.isValidHeaderValue(contentTypeValue)) {
-            util.errorRequest(client, request3, new InvalidArgumentError("invalid content-type header"));
+            util.errorRequest(client, request4, new InvalidArgumentError("invalid content-type header"));
             return false;
           }
           headers.push("content-type", contentTypeValue);
@@ -21358,14 +21358,14 @@ var require_client_h1 = __commonJS({
       const bodyLength = util.bodyLength(body2);
       contentLength = bodyLength ?? contentLength;
       if (contentLength === null) {
-        contentLength = request3.contentLength;
+        contentLength = request4.contentLength;
       }
       if (contentLength === 0 && !expectsPayload) {
         contentLength = null;
       }
-      if (shouldSendContentLength(method2) && contentLength > 0 && request3.contentLength !== null && request3.contentLength !== contentLength) {
+      if (shouldSendContentLength(method2) && contentLength > 0 && request4.contentLength !== null && request4.contentLength !== contentLength) {
         if (client[kStrictContentLength]) {
-          util.errorRequest(client, request3, new RequestContentLengthMismatchError());
+          util.errorRequest(client, request4, new RequestContentLengthMismatchError());
           return false;
         }
         process.emitWarning(new RequestContentLengthMismatchError());
@@ -21373,19 +21373,19 @@ var require_client_h1 = __commonJS({
       const socket = client[kSocket];
       clearIdleSocketValidation(socket);
       const abort = (err) => {
-        if (request3.aborted || request3.completed) {
+        if (request4.aborted || request4.completed) {
           return;
         }
-        util.errorRequest(client, request3, err || new RequestAbortedError());
+        util.errorRequest(client, request4, err || new RequestAbortedError());
         util.destroy(body2);
         util.destroy(socket, new InformationalError("aborted"));
       };
       try {
-        request3.onConnect(abort);
+        request4.onConnect(abort);
       } catch (err) {
-        util.errorRequest(client, request3, err);
+        util.errorRequest(client, request4, err);
       }
-      if (request3.aborted) {
+      if (request4.aborted) {
         return false;
       }
       if (method2 === "HEAD") {
@@ -21404,7 +21404,7 @@ var require_client_h1 = __commonJS({
         socket[kBlocking] = true;
       }
       if (socket.setTypeOfService) {
-        socket.setTypeOfService(request3.typeOfService);
+        socket.setTypeOfService(request4.typeOfService);
       }
       let header2 = `${method2} ${path21} HTTP/1.1\r
 `;
@@ -21439,31 +21439,31 @@ upgrade: ${upgrade}\r
         }
       }
       if (channels.sendHeaders.hasSubscribers) {
-        channels.sendHeaders.publish({ request: request3, headers: header2, socket });
+        channels.sendHeaders.publish({ request: request4, headers: header2, socket });
       }
       if (!body2 || bodyLength === 0) {
-        writeBuffer(abort, null, client, request3, socket, contentLength, header2, expectsPayload);
+        writeBuffer(abort, null, client, request4, socket, contentLength, header2, expectsPayload);
       } else if (util.isBuffer(body2)) {
-        writeBuffer(abort, body2, client, request3, socket, contentLength, header2, expectsPayload);
+        writeBuffer(abort, body2, client, request4, socket, contentLength, header2, expectsPayload);
       } else if (util.isBlobLike(body2)) {
         if (typeof body2.stream === "function") {
-          writeIterable(abort, body2.stream(), client, request3, socket, contentLength, header2, expectsPayload);
+          writeIterable(abort, body2.stream(), client, request4, socket, contentLength, header2, expectsPayload);
         } else {
-          writeBlob(abort, body2, client, request3, socket, contentLength, header2, expectsPayload);
+          writeBlob(abort, body2, client, request4, socket, contentLength, header2, expectsPayload);
         }
       } else if (util.isStream(body2)) {
-        writeStream(abort, body2, client, request3, socket, contentLength, header2, expectsPayload);
+        writeStream(abort, body2, client, request4, socket, contentLength, header2, expectsPayload);
       } else if (util.isIterable(body2)) {
-        writeIterable(abort, body2, client, request3, socket, contentLength, header2, expectsPayload);
+        writeIterable(abort, body2, client, request4, socket, contentLength, header2, expectsPayload);
       } else {
         assert6(false);
       }
       return true;
     }
-    function writeStream(abort, body2, client, request3, socket, contentLength, header2, expectsPayload) {
+    function writeStream(abort, body2, client, request4, socket, contentLength, header2, expectsPayload) {
       assert6(contentLength !== 0 || client[kRunning] === 0, "stream body cannot be pipelined");
       let finished2 = false;
-      const writer = new AsyncWriter({ abort, socket, request: request3, contentLength, client, expectsPayload, header: header2 });
+      const writer = new AsyncWriter({ abort, socket, request: request4, contentLength, client, expectsPayload, header: header2 });
       const onData = function(chunk) {
         if (finished2) {
           return;
@@ -21529,7 +21529,7 @@ upgrade: ${upgrade}\r
         setImmediate(onClose);
       }
     }
-    function writeBuffer(abort, body2, client, request3, socket, contentLength, header2, expectsPayload) {
+    function writeBuffer(abort, body2, client, request4, socket, contentLength, header2, expectsPayload) {
       try {
         if (!body2) {
           if (contentLength === 0) {
@@ -21549,18 +21549,18 @@ upgrade: ${upgrade}\r
 `, "latin1");
           socket.write(body2);
           socket.uncork();
-          request3.onBodySent(body2);
-          if (!expectsPayload && request3.reset !== false) {
+          request4.onBodySent(body2);
+          if (!expectsPayload && request4.reset !== false) {
             socket[kReset] = true;
           }
         }
-        request3.onRequestSent();
+        request4.onRequestSent();
         client[kResume]();
       } catch (err) {
         abort(err);
       }
     }
-    async function writeBlob(abort, body2, client, request3, socket, contentLength, header2, expectsPayload) {
+    async function writeBlob(abort, body2, client, request4, socket, contentLength, header2, expectsPayload) {
       assert6(contentLength === body2.size, "blob body must have content length");
       try {
         if (contentLength != null && contentLength !== body2.size) {
@@ -21573,9 +21573,9 @@ upgrade: ${upgrade}\r
 `, "latin1");
         socket.write(buffer);
         socket.uncork();
-        request3.onBodySent(buffer);
-        request3.onRequestSent();
-        if (!expectsPayload && request3.reset !== false) {
+        request4.onBodySent(buffer);
+        request4.onRequestSent();
+        if (!expectsPayload && request4.reset !== false) {
           socket[kReset] = true;
         }
         client[kResume]();
@@ -21583,7 +21583,7 @@ upgrade: ${upgrade}\r
         abort(err);
       }
     }
-    async function writeIterable(abort, body2, client, request3, socket, contentLength, header2, expectsPayload) {
+    async function writeIterable(abort, body2, client, request4, socket, contentLength, header2, expectsPayload) {
       assert6(contentLength !== 0 || client[kRunning] === 0, "iterator body cannot be pipelined");
       let callback = null;
       function onDrain() {
@@ -21602,7 +21602,7 @@ upgrade: ${upgrade}\r
         }
       });
       socket.on("close", onDrain).on("drain", onDrain);
-      const writer = new AsyncWriter({ abort, socket, request: request3, contentLength, client, expectsPayload, header: header2 });
+      const writer = new AsyncWriter({ abort, socket, request: request4, contentLength, client, expectsPayload, header: header2 });
       try {
         for await (const chunk of body2) {
           if (socket[kError]) {
@@ -21631,9 +21631,9 @@ upgrade: ${upgrade}\r
        * @param {boolean} arg.expectsPayload
        * @param {string} arg.header
        */
-      constructor({ abort, socket, request: request3, contentLength, client, expectsPayload, header: header2 }) {
+      constructor({ abort, socket, request: request4, contentLength, client, expectsPayload, header: header2 }) {
         this.socket = socket;
-        this.request = request3;
+        this.request = request4;
         this.contentLength = contentLength;
         this.client = client;
         this.bytesWritten = 0;
@@ -21647,7 +21647,7 @@ upgrade: ${upgrade}\r
        * @returns
        */
       write(chunk) {
-        const { socket, request: request3, contentLength, client, bytesWritten, expectsPayload, header: header2 } = this;
+        const { socket, request: request4, contentLength, client, bytesWritten, expectsPayload, header: header2 } = this;
         if (socket[kError]) {
           throw socket[kError];
         }
@@ -21666,7 +21666,7 @@ upgrade: ${upgrade}\r
         }
         socket.cork();
         if (bytesWritten === 0) {
-          if (!expectsPayload && request3.reset !== false) {
+          if (!expectsPayload && request4.reset !== false) {
             socket[kReset] = true;
           }
           if (contentLength === null) {
@@ -21686,7 +21686,7 @@ ${len.toString(16)}\r
         this.bytesWritten += len;
         const ret = socket.write(chunk);
         socket.uncork();
-        request3.onBodySent(chunk);
+        request4.onBodySent(chunk);
         if (!ret) {
           if (socket[kParser].timeout && socket[kParser].timeoutType === TIMEOUT_HEADERS) {
             if (socket[kParser].timeout.refresh) {
@@ -21700,8 +21700,8 @@ ${len.toString(16)}\r
        * @returns {void}
        */
       end() {
-        const { socket, contentLength, client, bytesWritten, expectsPayload, header: header2, request: request3 } = this;
-        request3.onRequestSent();
+        const { socket, contentLength, client, bytesWritten, expectsPayload, header: header2, request: request4 } = this;
+        request4.onRequestSent();
         socket[kWriting] = false;
         if (socket[kError]) {
           throw socket[kError];
@@ -21891,8 +21891,8 @@ var require_client_h2 = __commonJS({
          * @param {import('../core/request.js')} request
          * @returns {boolean}
         */
-        write(request3) {
-          return writeH2(client, request3);
+        write(request4) {
+          return writeH2(client, request4);
         },
         /**
          * @returns {void}
@@ -21921,14 +21921,14 @@ var require_client_h2 = __commonJS({
          * @param {import('../core/request.js')} request
          * @returns {boolean}
         */
-        busy(request3) {
-          if (request3 != null) {
+        busy(request4) {
+          if (request4 != null) {
             if (client[kRunning] > 0) {
-              if (request3.idempotent === false) return true;
-              if ((request3.upgrade === "websocket" || request3.method === "CONNECT") && session[kRemoteSettings] === false) return true;
-              if (util.bodyLength(request3.body) !== 0 && (util.isStream(request3.body) || util.isAsyncIterable(request3.body) || util.isFormDataLike(request3.body))) return true;
+              if (request4.idempotent === false) return true;
+              if ((request4.upgrade === "websocket" || request4.method === "CONNECT") && session[kRemoteSettings] === false) return true;
+              if (util.bodyLength(request4.body) !== 0 && (util.isStream(request4.body) || util.isAsyncIterable(request4.body) || util.isFormDataLike(request4.body))) return true;
             } else {
-              return (request3.upgrade === "websocket" || request3.method === "CONNECT") && session[kRemoteSettings] === false;
+              return (request4.upgrade === "websocket" || request4.method === "CONNECT") && session[kRemoteSettings] === false;
             }
           }
           return false;
@@ -22003,15 +22003,15 @@ var require_client_h2 = __commonJS({
       this.destroy(err);
       util.destroy(this[kSocket], err);
     }
-    function completeRequest(client, request3, resetPendingIdx = false) {
+    function completeRequest(client, request4, resetPendingIdx = false) {
       const queue = client[kQueue];
       const runningIdx = client[kRunningIdx];
-      if (runningIdx < client[kPendingIdx] && queue[runningIdx] === request3) {
+      if (runningIdx < client[kPendingIdx] && queue[runningIdx] === request4) {
         queue[runningIdx] = null;
         client[kRunningIdx] = runningIdx + 1;
         return;
       }
-      const index2 = queue.indexOf(request3, runningIdx);
+      const index2 = queue.indexOf(request4, runningIdx);
       if (index2 === -1 || index2 >= client[kPendingIdx]) {
         return;
       }
@@ -22030,10 +22030,10 @@ var require_client_h2 = __commonJS({
       this[kHTTP2Session] = null;
       util.destroy(this[kSocket], err);
       if (client[kRunningIdx] < client[kQueue].length) {
-        const request3 = client[kQueue][client[kRunningIdx]];
+        const request4 = client[kQueue][client[kRunningIdx]];
         client[kQueue][client[kRunningIdx]++] = null;
-        if (request3 != null) {
-          util.errorRequest(client, request3, err);
+        if (request4 != null) {
+          util.errorRequest(client, request4, err);
         }
         client[kPendingIdx] = client[kRunningIdx];
       }
@@ -22056,9 +22056,9 @@ var require_client_h2 = __commonJS({
         assert6(client[kPending] === 0);
         const requests = client[kQueue].splice(client[kRunningIdx]);
         for (let i2 = 0; i2 < requests.length; i2++) {
-          const request3 = requests[i2];
-          if (request3 != null) {
-            util.errorRequest(client, request3, err);
+          const request4 = requests[i2];
+          if (request4 != null) {
+            util.errorRequest(client, request4, err);
           }
         }
       }
@@ -22089,14 +22089,14 @@ var require_client_h2 = __commonJS({
     function shouldSendContentLength(method2) {
       return method2 !== "GET" && method2 !== "HEAD" && method2 !== "OPTIONS" && method2 !== "TRACE" && method2 !== "CONNECT";
     }
-    function writeH2(client, request3) {
-      const headersTimeout = request3.headersTimeout ?? client[kHeadersTimeout];
-      const bodyTimeout = request3.bodyTimeout ?? client[kBodyTimeout];
+    function writeH2(client, request4) {
+      const headersTimeout = request4.headersTimeout ?? client[kHeadersTimeout];
+      const bodyTimeout = request4.bodyTimeout ?? client[kBodyTimeout];
       const session = client[kHTTP2Session];
-      const { method: method2, path: path21, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request3;
-      let { body: body2 } = request3;
+      const { method: method2, path: path21, host, upgrade, expectContinue, signal, protocol, headers: reqHeaders } = request4;
+      let { body: body2 } = request4;
       if (upgrade != null && upgrade !== "websocket") {
-        util.errorRequest(client, request3, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
+        util.errorRequest(client, request4, new InvalidArgumentError(`Custom upgrade "${upgrade}" not supported over HTTP/2`));
         return false;
       }
       const headers = {};
@@ -22130,33 +22130,33 @@ var require_client_h2 = __commonJS({
       headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname3}${port ? `:${port}` : ""}`;
       headers[HTTP2_HEADER_METHOD] = method2;
       const abort = (err) => {
-        if (request3.aborted || request3.completed) {
+        if (request4.aborted || request4.completed) {
           return;
         }
         err = err || new RequestAbortedError();
-        util.errorRequest(client, request3, err);
+        util.errorRequest(client, request4, err);
         if (stream != null) {
           stream.removeAllListeners("data");
           stream.close();
           client[kOnError](err);
-          completeRequest(client, request3);
+          completeRequest(client, request4);
           client[kResume]();
         }
         util.destroy(body2, err);
       };
       try {
-        request3.onConnect(abort);
+        request4.onConnect(abort);
       } catch (err) {
-        util.errorRequest(client, request3, err);
+        util.errorRequest(client, request4, err);
       }
-      if (request3.aborted) {
+      if (request4.aborted) {
         return false;
       }
       if (upgrade || method2 === "CONNECT") {
         session.ref();
         if (upgrade === "websocket") {
           if (session[kEnableConnectProtocol] === false) {
-            util.errorRequest(client, request3, new InformationalError("HTTP/2: Extended CONNECT protocol not supported by server"));
+            util.errorRequest(client, request4, new InformationalError("HTTP/2: Extended CONNECT protocol not supported by server"));
             session.unref();
             return false;
           }
@@ -22174,12 +22174,12 @@ var require_client_h2 = __commonJS({
           stream.once("response", (headers2, _flags) => {
             const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
             try {
-              request3.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
+              request4.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
             } catch (err) {
               abort(err);
               return;
             }
-            completeRequest(client, request3);
+            completeRequest(client, request4);
           });
           stream.on("error", () => {
             if (stream.rstCode === NGHTTP2_REFUSED_STREAM || stream.rstCode === NGHTTP2_CANCEL) {
@@ -22199,12 +22199,12 @@ var require_client_h2 = __commonJS({
         stream.on("response", (headers2) => {
           const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
           try {
-            request3.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
+            request4.onUpgrade(statusCode, parseH2Headers(realHeaders), stream);
           } catch (err) {
             abort(err);
             return;
           }
-          completeRequest(client, request3);
+          completeRequest(client, request4);
         });
         stream.on("error", abort);
         stream.once("close", () => {
@@ -22229,14 +22229,14 @@ var require_client_h2 = __commonJS({
         contentLength = bodyStream.length;
       }
       if (contentLength == null) {
-        contentLength = request3.contentLength;
+        contentLength = request4.contentLength;
       }
       if (!expectsPayload) {
         contentLength = null;
       }
-      if (shouldSendContentLength(method2) && contentLength > 0 && request3.contentLength != null && request3.contentLength !== contentLength) {
+      if (shouldSendContentLength(method2) && contentLength > 0 && request4.contentLength != null && request4.contentLength !== contentLength) {
         if (client[kStrictContentLength]) {
-          util.errorRequest(client, request3, new RequestContentLengthMismatchError());
+          util.errorRequest(client, request4, new RequestContentLengthMismatchError());
           return false;
         }
         process.emitWarning(new RequestContentLengthMismatchError());
@@ -22252,7 +22252,7 @@ var require_client_h2 = __commonJS({
           header2 += `${key5}: ${headers[key5]}\r
 `;
         }
-        channels.sendHeaders.publish({ request: request3, headers: header2, socket: session[kSocket] });
+        channels.sendHeaders.publish({ request: request4, headers: header2, socket: session[kSocket] });
       }
       const shouldEndStream = method2 === "GET" || method2 === "HEAD" || body2 === null;
       if (expectContinue) {
@@ -22273,21 +22273,21 @@ var require_client_h2 = __commonJS({
       let responseReceived = false;
       stream.once("response", (headers2) => {
         const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers2;
-        request3.onResponseStarted();
+        request4.onResponseStarted();
         responseReceived = true;
         stream.setTimeout(bodyTimeout);
-        if (request3.aborted) {
+        if (request4.aborted) {
           stream.removeAllListeners("data");
           return;
         }
-        if (request3.onHeaders(Number(statusCode), parseH2Headers(realHeaders), stream.resume.bind(stream), "") === false) {
+        if (request4.onHeaders(Number(statusCode), parseH2Headers(realHeaders), stream.resume.bind(stream), "") === false) {
           stream.pause();
         }
         stream.on("data", (chunk) => {
-          if (request3.aborted || request3.completed) {
+          if (request4.aborted || request4.completed) {
             return;
           }
-          if (request3.onData(chunk) === false) {
+          if (request4.onData(chunk) === false) {
             stream.pause();
           }
         });
@@ -22295,14 +22295,14 @@ var require_client_h2 = __commonJS({
       stream.once("end", () => {
         stream.removeAllListeners("data");
         if (responseReceived) {
-          if (!request3.aborted && !request3.completed) {
-            request3.onComplete({});
+          if (!request4.aborted && !request4.completed) {
+            request4.onComplete({});
           }
-          completeRequest(client, request3);
+          completeRequest(client, request4);
           client[kResume]();
         } else {
           abort(new InformationalError("HTTP/2: stream half-closed (remote)"));
-          completeRequest(client, request3, true);
+          completeRequest(client, request4, true);
           client[kResume]();
         }
       });
@@ -22312,7 +22312,7 @@ var require_client_h2 = __commonJS({
         if (session[kOpenStreams] === 0) {
           session.unref();
         }
-        if (!request3.aborted && !request3.completed) {
+        if (!request4.aborted && !request4.completed) {
           abort(new InformationalError("HTTP/2: stream closed before the response was complete"));
         }
       });
@@ -22337,11 +22337,11 @@ var require_client_h2 = __commonJS({
         abort(err);
       });
       stream.once("trailers", (trailers) => {
-        if (request3.aborted || request3.completed) {
+        if (request4.aborted || request4.completed) {
           return;
         }
         stream.removeAllListeners("data");
-        request3.onComplete(trailers);
+        request4.onComplete(trailers);
       });
       return true;
       function writeBodyH2() {
@@ -22351,7 +22351,7 @@ var require_client_h2 = __commonJS({
             stream,
             null,
             client,
-            request3,
+            request4,
             client[kSocket],
             contentLength,
             expectsPayload
@@ -22362,7 +22362,7 @@ var require_client_h2 = __commonJS({
             stream,
             body2,
             client,
-            request3,
+            request4,
             client[kSocket],
             contentLength,
             expectsPayload
@@ -22374,7 +22374,7 @@ var require_client_h2 = __commonJS({
               stream,
               body2.stream(),
               client,
-              request3,
+              request4,
               client[kSocket],
               contentLength,
               expectsPayload
@@ -22385,7 +22385,7 @@ var require_client_h2 = __commonJS({
               stream,
               body2,
               client,
-              request3,
+              request4,
               client[kSocket],
               contentLength,
               expectsPayload
@@ -22399,7 +22399,7 @@ var require_client_h2 = __commonJS({
             stream,
             body2,
             client,
-            request3,
+            request4,
             contentLength
           );
         } else if (util.isIterable(body2)) {
@@ -22408,7 +22408,7 @@ var require_client_h2 = __commonJS({
             stream,
             body2,
             client,
-            request3,
+            request4,
             client[kSocket],
             contentLength,
             expectsPayload
@@ -22418,7 +22418,7 @@ var require_client_h2 = __commonJS({
         }
       }
     }
-    function writeBuffer(abort, h2stream, body2, client, request3, socket, contentLength, expectsPayload) {
+    function writeBuffer(abort, h2stream, body2, client, request4, socket, contentLength, expectsPayload) {
       try {
         if (body2 != null && util.isBuffer(body2)) {
           assert6(contentLength === body2.byteLength, "buffer body must have content length");
@@ -22426,18 +22426,18 @@ var require_client_h2 = __commonJS({
           h2stream.write(body2);
           h2stream.uncork();
           h2stream.end();
-          request3.onBodySent(body2);
+          request4.onBodySent(body2);
         }
         if (!expectsPayload) {
           socket[kReset] = true;
         }
-        request3.onRequestSent();
+        request4.onRequestSent();
         client[kResume]();
       } catch (error62) {
         abort(error62);
       }
     }
-    function writeStream(abort, socket, expectsPayload, h2stream, body2, client, request3, contentLength) {
+    function writeStream(abort, socket, expectsPayload, h2stream, body2, client, request4, contentLength) {
       assert6(contentLength !== 0 || client[kRunning] === 0, "stream body cannot be pipelined");
       const pipe2 = pipeline2(
         body2,
@@ -22448,7 +22448,7 @@ var require_client_h2 = __commonJS({
             abort(err);
           } else {
             util.removeAllListeners(pipe2);
-            request3.onRequestSent();
+            request4.onRequestSent();
             if (!expectsPayload) {
               socket[kReset] = true;
             }
@@ -22458,10 +22458,10 @@ var require_client_h2 = __commonJS({
       );
       util.addListener(pipe2, "data", onPipeData);
       function onPipeData(chunk) {
-        request3.onBodySent(chunk);
+        request4.onBodySent(chunk);
       }
     }
-    async function writeBlob(abort, h2stream, body2, client, request3, socket, contentLength, expectsPayload) {
+    async function writeBlob(abort, h2stream, body2, client, request4, socket, contentLength, expectsPayload) {
       assert6(contentLength === body2.size, "blob body must have content length");
       try {
         if (contentLength != null && contentLength !== body2.size) {
@@ -22472,8 +22472,8 @@ var require_client_h2 = __commonJS({
         h2stream.write(buffer);
         h2stream.uncork();
         h2stream.end();
-        request3.onBodySent(buffer);
-        request3.onRequestSent();
+        request4.onBodySent(buffer);
+        request4.onRequestSent();
         if (!expectsPayload) {
           socket[kReset] = true;
         }
@@ -22482,7 +22482,7 @@ var require_client_h2 = __commonJS({
         abort(err);
       }
     }
-    async function writeIterable(abort, h2stream, body2, client, request3, socket, contentLength, expectsPayload) {
+    async function writeIterable(abort, h2stream, body2, client, request4, socket, contentLength, expectsPayload) {
       assert6(contentLength !== 0 || client[kRunning] === 0, "iterator body cannot be pipelined");
       let callback = null;
       function onDrain() {
@@ -22507,13 +22507,13 @@ var require_client_h2 = __commonJS({
             throw socket[kError];
           }
           const res = h2stream.write(chunk);
-          request3.onBodySent(chunk);
+          request4.onBodySent(chunk);
           if (!res) {
             await waitForDrain();
           }
         }
         h2stream.end();
-        request3.onRequestSent();
+        request4.onRequestSent();
         if (!expectsPayload) {
           socket[kReset] = true;
         }
@@ -22809,10 +22809,10 @@ var require_client = __commonJS({
         this.once("connect", cb);
       }
       [kDispatch](opts, handler) {
-        const request3 = new Request(this[kUrl].origin, opts, handler);
-        this[kQueue].push(request3);
+        const request4 = new Request(this[kUrl].origin, opts, handler);
+        this[kQueue].push(request4);
         if (this[kResuming]) {
-        } else if (util.bodyLength(request3.body) == null && util.isIterable(request3.body)) {
+        } else if (util.bodyLength(request4.body) == null && util.isIterable(request4.body)) {
           this[kResuming] = 1;
           queueMicrotask(() => resume(this));
         } else {
@@ -22836,9 +22836,9 @@ var require_client = __commonJS({
         return new Promise((resolve11) => {
           const requests = this[kQueue].splice(this[kPendingIdx]);
           for (let i2 = 0; i2 < requests.length; i2++) {
-            const request3 = requests[i2];
-            if (request3 != null) {
-              util.errorRequest(this, request3, err);
+            const request4 = requests[i2];
+            if (request4 != null) {
+              util.errorRequest(this, request4, err);
             }
           }
           const callback = () => {
@@ -22863,9 +22863,9 @@ var require_client = __commonJS({
         assert6(client[kPendingIdx] === client[kRunningIdx]);
         const requests = client[kQueue].splice(client[kRunningIdx]);
         for (let i2 = 0; i2 < requests.length; i2++) {
-          const request3 = requests[i2];
-          if (request3 != null) {
-            util.errorRequest(client, request3, err);
+          const request4 = requests[i2];
+          if (request4 != null) {
+            util.errorRequest(client, request4, err);
           }
         }
         assert6(client[kSize] === 0);
@@ -22976,8 +22976,8 @@ var require_client = __commonJS({
       if (err.code === "ERR_TLS_CERT_ALTNAME_INVALID") {
         assert6(client[kRunning] === 0);
         while (client[kPending] > 0 && client[kQueue][client[kPendingIdx]].servername === client[kServerName]) {
-          const request3 = client[kQueue][client[kPendingIdx]++];
-          util.errorRequest(client, request3, err);
+          const request4 = client[kQueue][client[kPendingIdx]++];
+          util.errorRequest(client, request4, err);
         }
       } else {
         onError(client, err);
@@ -23032,15 +23032,15 @@ var require_client = __commonJS({
         if (client[kRunning] >= (getPipelining(client) || 1)) {
           return;
         }
-        const request3 = client[kQueue][client[kPendingIdx]];
-        if (request3 === null) {
+        const request4 = client[kQueue][client[kPendingIdx]];
+        if (request4 === null) {
           return;
         }
-        if (client[kUrl].protocol === "https:" && client[kServerName] !== request3.servername) {
+        if (client[kUrl].protocol === "https:" && client[kServerName] !== request4.servername) {
           if (client[kRunning] > 0) {
             return;
           }
-          client[kServerName] = request3.servername;
+          client[kServerName] = request4.servername;
           client[kHTTPContext]?.destroy(new InformationalError("servername changed"), () => {
             client[kHTTPContext] = null;
             resume(client);
@@ -23056,10 +23056,10 @@ var require_client = __commonJS({
         if (client[kHTTPContext].destroyed) {
           return;
         }
-        if (client[kHTTPContext].busy(request3)) {
+        if (client[kHTTPContext].busy(request4)) {
           return;
         }
-        if (!request3.aborted && client[kHTTPContext].write(request3)) {
+        if (!request4.aborted && client[kHTTPContext].write(request4)) {
           client[kPendingIdx]++;
         } else {
           client[kQueue].splice(client[kPendingIdx], 1);
@@ -24194,13 +24194,13 @@ var require_socks5_client = __commonJS({
         }
         debug("starting handshake with", this.authMethods.length, "auth methods");
         this.state = STATES.HANDSHAKING;
-        const request3 = Buffer13.alloc(2 + this.authMethods.length);
-        request3[0] = SOCKS_VERSION;
-        request3[1] = this.authMethods.length;
+        const request4 = Buffer13.alloc(2 + this.authMethods.length);
+        request4[0] = SOCKS_VERSION;
+        request4[1] = this.authMethods.length;
         this.authMethods.forEach((method2, i2) => {
-          request3[2 + i2] = method2;
+          request4[2 + i2] = method2;
         });
-        this.socket.write(request3);
+        this.socket.write(request4);
       }
       /**
        * Handle handshake response from server
@@ -24242,13 +24242,13 @@ var require_socks5_client = __commonJS({
         if (usernameBuffer.length > 255 || passwordBuffer.length > 255) {
           throw new InvalidArgumentError("Username or password too long");
         }
-        const request3 = Buffer13.alloc(3 + usernameBuffer.length + passwordBuffer.length);
-        request3[0] = 1;
-        request3[1] = usernameBuffer.length;
-        usernameBuffer.copy(request3, 2);
-        request3[2 + usernameBuffer.length] = passwordBuffer.length;
-        passwordBuffer.copy(request3, 3 + usernameBuffer.length);
-        this.socket.write(request3);
+        const request4 = Buffer13.alloc(3 + usernameBuffer.length + passwordBuffer.length);
+        request4[0] = 1;
+        request4[1] = usernameBuffer.length;
+        usernameBuffer.copy(request4, 2);
+        request4[2 + usernameBuffer.length] = passwordBuffer.length;
+        passwordBuffer.copy(request4, 3 + usernameBuffer.length);
+        this.socket.write(request4);
       }
       /**
        * Handle authentication response
@@ -24283,22 +24283,22 @@ var require_socks5_client = __commonJS({
         }
         debug("connecting to", address, port);
         this.state = STATES.CONNECTING;
-        const request3 = this.buildConnectRequest(COMMANDS.CONNECT, address, port);
-        this.socket.write(request3);
+        const request4 = this.buildConnectRequest(COMMANDS.CONNECT, address, port);
+        this.socket.write(request4);
       }
       /**
        * Build a SOCKS5 request
        */
       buildConnectRequest(command, address, port) {
         const { type: addressType, buffer: addressBuffer } = parseAddress(address);
-        const request3 = Buffer13.alloc(4 + addressBuffer.length + 2);
-        request3[0] = SOCKS_VERSION;
-        request3[1] = command;
-        request3[2] = 0;
-        request3[3] = addressType;
-        addressBuffer.copy(request3, 4);
-        request3.writeUInt16BE(port, 4 + addressBuffer.length);
-        return request3;
+        const request4 = Buffer13.alloc(4 + addressBuffer.length + 2);
+        request4[0] = SOCKS_VERSION;
+        request4[1] = command;
+        request4[2] = 0;
+        request4[3] = addressType;
+        addressBuffer.copy(request4, 4);
+        request4.writeUInt16BE(port, 4 + addressBuffer.length);
+        return request4;
       }
       /**
        * Handle CONNECT response
@@ -26098,10 +26098,10 @@ var require_api_request = __commonJS({
         }
       }
     };
-    function request3(opts, callback) {
+    function request4(opts, callback) {
       if (callback === void 0) {
         return new Promise((resolve11, reject) => {
-          request3.call(this, opts, (err, data2) => {
+          request4.call(this, opts, (err, data2) => {
             return err ? reject(err) : resolve11(data2);
           });
         });
@@ -26117,7 +26117,7 @@ var require_api_request = __commonJS({
         queueMicrotask(() => callback(err, { opaque }));
       }
     }
-    module.exports = request3;
+    module.exports = request4;
     module.exports.RequestHandler = RequestHandler;
   }
 });
@@ -28270,8 +28270,8 @@ var require_snapshot_recorder = __commonJS({
         if (this.isUrlExcluded(requestOpts)) {
           return;
         }
-        const request3 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
-        const hash39 = createRequestHash(request3);
+        const request4 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
+        const hash39 = createRequestHash(request4);
         const normalizedHeaders = normalizeHeaders(response.headers);
         const responseData = {
           statusCode: response.statusCode,
@@ -28289,7 +28289,7 @@ var require_snapshot_recorder = __commonJS({
           existingSnapshot.timestamp = (/* @__PURE__ */ new Date()).toISOString();
         } else {
           this.#snapshots.set(hash39, {
-            request: request3,
+            request: request4,
             responses: [responseData],
             // Always store as array for consistency
             callCount: 0,
@@ -28323,8 +28323,8 @@ var require_snapshot_recorder = __commonJS({
         if (this.isUrlExcluded(requestOpts)) {
           return void 0;
         }
-        const request3 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
-        const hash39 = createRequestHash(request3);
+        const request4 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
+        const hash39 = createRequestHash(request4);
         const snapshot2 = this.#snapshots.get(hash39);
         if (!snapshot2) return void 0;
         const currentCallCount = snapshot2.callCount || 0;
@@ -28419,8 +28419,8 @@ var require_snapshot_recorder = __commonJS({
        * @returns {boolean} - True if snapshot was deleted, false if not found
        */
       deleteSnapshot(requestOpts) {
-        const request3 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
-        const hash39 = createRequestHash(request3);
+        const request4 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
+        const hash39 = createRequestHash(request4);
         return this.#snapshots.delete(hash39);
       }
       /**
@@ -28429,8 +28429,8 @@ var require_snapshot_recorder = __commonJS({
        * @returns {SnapshotInfo|null} - Snapshot information or null if not found
        */
       getSnapshotInfo(requestOpts) {
-        const request3 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
-        const hash39 = createRequestHash(request3);
+        const request4 = formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions);
+        const hash39 = createRequestHash(request4);
         const snapshot2 = this.#snapshots.get(hash39);
         if (!snapshot2) return null;
         return {
@@ -28731,16 +28731,16 @@ var require_snapshot_agent = __commonJS({
        */
       #setupMockInterceptors() {
         for (const snapshot2 of this[kSnapshotRecorder].getSnapshots()) {
-          const { request: request3, responses, response } = snapshot2;
-          const url2 = new URL(request3.url);
+          const { request: request4, responses, response } = snapshot2;
+          const url2 = new URL(request4.url);
           const mockPool = this.get(url2.origin);
           const responseData = responses ? responses[0] : response;
           if (!responseData) continue;
           mockPool.intercept({
             path: url2.pathname + url2.search,
-            method: request3.method,
-            headers: request3.headers,
-            body: request3.body
+            method: request4.method,
+            headers: request4.headers,
+            body: request4.body
           }).reply(responseData.statusCode, responseData.body, {
             headers: responseData.headers,
             trailers: responseData.trailers
@@ -34476,7 +34476,7 @@ var require_request2 = __commonJS({
         webidl.argumentLengthCheck(arguments, 1, prefix);
         input3 = webidl.converters.RequestInfo(input3);
         init2 = webidl.converters.RequestInit(init2);
-        let request3 = null;
+        let request4 = null;
         let fallbackMode = null;
         const baseUrl = environmentSettingsObject.settingsObject.baseUrl;
         let signal = null;
@@ -34493,18 +34493,18 @@ var require_request2 = __commonJS({
               "Request cannot be constructed from a URL that includes credentials: " + input3
             );
           }
-          request3 = makeRequest({ urlList: [parsedURL] });
+          request4 = makeRequest({ urlList: [parsedURL] });
           fallbackMode = "cors";
         } else {
           assert6(webidl.is.Request(input3));
-          request3 = input3.#state;
+          request4 = input3.#state;
           signal = input3.#signal;
           this.#dispatcher = init2.dispatcher || input3.#dispatcher;
         }
         const origin2 = environmentSettingsObject.settingsObject.origin;
         let window2 = "client";
-        if (request3.window?.constructor?.name === "EnvironmentSettingsObject" && sameOrigin(request3.window, origin2)) {
-          window2 = request3.window;
+        if (request4.window?.constructor?.name === "EnvironmentSettingsObject" && sameOrigin(request4.window, origin2)) {
+          window2 = request4.window;
         }
         if (init2.window != null) {
           throw new TypeError(`'window' option '${window2}' must be null`);
@@ -34512,66 +34512,66 @@ var require_request2 = __commonJS({
         if ("window" in init2) {
           window2 = "no-window";
         }
-        request3 = makeRequest({
+        request4 = makeRequest({
           // URL request’s URL.
           // undici implementation note: this is set as the first item in request's urlList in makeRequest
           // method request’s method.
-          method: request3.method,
+          method: request4.method,
           // header list A copy of request’s header list.
           // undici implementation note: headersList is cloned in makeRequest
-          headersList: request3.headersList,
+          headersList: request4.headersList,
           // unsafe-request flag Set.
-          unsafeRequest: request3.unsafeRequest,
+          unsafeRequest: request4.unsafeRequest,
           // client This’s relevant settings object.
           client: environmentSettingsObject.settingsObject,
           // window window.
           window: window2,
           // priority request’s priority.
-          priority: request3.priority,
+          priority: request4.priority,
           // origin request’s origin. The propagation of the origin is only significant for navigation requests
           // being handled by a service worker. In this scenario a request can have an origin that is different
           // from the current client.
-          origin: request3.origin,
+          origin: request4.origin,
           // referrer request’s referrer.
-          referrer: request3.referrer,
+          referrer: request4.referrer,
           // referrer policy request’s referrer policy.
-          referrerPolicy: request3.referrerPolicy,
+          referrerPolicy: request4.referrerPolicy,
           // mode request’s mode.
-          mode: request3.mode,
+          mode: request4.mode,
           // credentials mode request’s credentials mode.
-          credentials: request3.credentials,
+          credentials: request4.credentials,
           // cache mode request’s cache mode.
-          cache: request3.cache,
+          cache: request4.cache,
           // redirect mode request’s redirect mode.
-          redirect: request3.redirect,
+          redirect: request4.redirect,
           // integrity metadata request’s integrity metadata.
-          integrity: request3.integrity,
+          integrity: request4.integrity,
           // keepalive request’s keepalive.
-          keepalive: request3.keepalive,
+          keepalive: request4.keepalive,
           // reload-navigation flag request’s reload-navigation flag.
-          reloadNavigation: request3.reloadNavigation,
+          reloadNavigation: request4.reloadNavigation,
           // history-navigation flag request’s history-navigation flag.
-          historyNavigation: request3.historyNavigation,
+          historyNavigation: request4.historyNavigation,
           // URL list A clone of request’s URL list.
-          urlList: [...request3.urlList]
+          urlList: [...request4.urlList]
         });
         const initHasKey = Object.keys(init2).length !== 0;
         if (initHasKey) {
-          if (request3.mode === "navigate") {
-            request3.mode = "same-origin";
+          if (request4.mode === "navigate") {
+            request4.mode = "same-origin";
           }
-          request3.reloadNavigation = false;
-          request3.historyNavigation = false;
-          request3.origin = "client";
-          request3.referrer = "client";
-          request3.referrerPolicy = "";
-          request3.url = request3.urlList[request3.urlList.length - 1];
-          request3.urlList = [request3.url];
+          request4.reloadNavigation = false;
+          request4.historyNavigation = false;
+          request4.origin = "client";
+          request4.referrer = "client";
+          request4.referrerPolicy = "";
+          request4.url = request4.urlList[request4.urlList.length - 1];
+          request4.urlList = [request4.url];
         }
         if (init2.referrer !== void 0) {
           const referrer = init2.referrer;
           if (referrer === "") {
-            request3.referrer = "no-referrer";
+            request4.referrer = "no-referrer";
           } else {
             let parsedReferrer;
             try {
@@ -34580,14 +34580,14 @@ var require_request2 = __commonJS({
               throw new TypeError(`Referrer "${referrer}" is not a valid URL.`, { cause: err });
             }
             if (parsedReferrer.protocol === "about:" && parsedReferrer.hostname === "client" || origin2 && !sameOrigin(parsedReferrer, environmentSettingsObject.settingsObject.baseUrl)) {
-              request3.referrer = "client";
+              request4.referrer = "client";
             } else {
-              request3.referrer = parsedReferrer;
+              request4.referrer = parsedReferrer;
             }
           }
         }
         if (init2.referrerPolicy !== void 0) {
-          request3.referrerPolicy = init2.referrerPolicy;
+          request4.referrerPolicy = init2.referrerPolicy;
         }
         let mode;
         if (init2.mode !== void 0) {
@@ -34602,33 +34602,33 @@ var require_request2 = __commonJS({
           });
         }
         if (mode != null) {
-          request3.mode = mode;
+          request4.mode = mode;
         }
         if (init2.credentials !== void 0) {
-          request3.credentials = init2.credentials;
+          request4.credentials = init2.credentials;
         }
         if (init2.cache !== void 0) {
-          request3.cache = init2.cache;
+          request4.cache = init2.cache;
         }
-        if (request3.cache === "only-if-cached" && request3.mode !== "same-origin") {
+        if (request4.cache === "only-if-cached" && request4.mode !== "same-origin") {
           throw new TypeError(
             "'only-if-cached' can be set only with 'same-origin' mode"
           );
         }
         if (init2.redirect !== void 0) {
-          request3.redirect = init2.redirect;
+          request4.redirect = init2.redirect;
         }
         if (init2.integrity != null) {
-          request3.integrity = String(init2.integrity);
+          request4.integrity = String(init2.integrity);
         }
         if (init2.keepalive !== void 0) {
-          request3.keepalive = Boolean(init2.keepalive);
+          request4.keepalive = Boolean(init2.keepalive);
         }
         if (init2.method !== void 0) {
           let method2 = init2.method;
           const mayBeNormalized = normalizedMethodRecords[method2];
           if (mayBeNormalized !== void 0) {
-            request3.method = mayBeNormalized;
+            request4.method = mayBeNormalized;
           } else {
             if (!isValidHTTPToken(method2)) {
               throw new TypeError(`'${method2}' is not a valid HTTP method.`);
@@ -34638,9 +34638,9 @@ var require_request2 = __commonJS({
               throw new TypeError(`'${method2}' HTTP method is unsupported.`);
             }
             method2 = normalizedMethodRecordsBase[upperCase] ?? method2;
-            request3.method = method2;
+            request4.method = method2;
           }
-          if (!patchMethodWarning && request3.method === "patch") {
+          if (!patchMethodWarning && request4.method === "patch") {
             process.emitWarning("Using `patch` is highly likely to result in a `405 Method Not Allowed`. `PATCH` is much more likely to succeed.", {
               code: "UNDICI-FETCH-patch"
             });
@@ -34650,7 +34650,7 @@ var require_request2 = __commonJS({
         if (init2.signal !== void 0) {
           signal = init2.signal;
         }
-        this.#state = request3;
+        this.#state = request4;
         const ac = new AbortController();
         this.#signal = ac.signal;
         if (signal != null) {
@@ -34668,12 +34668,12 @@ var require_request2 = __commonJS({
           }
         }
         this.#headers = new Headers2(kConstruct);
-        setHeadersList(this.#headers, request3.headersList);
+        setHeadersList(this.#headers, request4.headersList);
         setHeadersGuard(this.#headers, "request");
         if (mode === "no-cors") {
-          if (!corsSafeListedMethodsSet.has(request3.method)) {
+          if (!corsSafeListedMethodsSet.has(request4.method)) {
             throw new TypeError(
-              `'${request3.method} is unsupported in no-cors mode.`
+              `'${request4.method} is unsupported in no-cors mode.`
             );
           }
           setHeadersGuard(this.#headers, "request-no-cors");
@@ -34692,14 +34692,14 @@ var require_request2 = __commonJS({
           }
         }
         const inputBody = webidl.is.Request(input3) ? input3.#state.body : null;
-        if ((init2.body != null || inputBody != null) && (request3.method === "GET" || request3.method === "HEAD")) {
+        if ((init2.body != null || inputBody != null) && (request4.method === "GET" || request4.method === "HEAD")) {
           throw new TypeError("Request with GET/HEAD method cannot have body.");
         }
         let initBody = null;
         if (init2.body != null) {
           const [extractedBody, contentType] = extractBody(
             init2.body,
-            request3.keepalive
+            request4.keepalive
           );
           initBody = extractedBody;
           if (contentType && !getHeadersList(this.#headers).contains("content-type", true)) {
@@ -34711,12 +34711,12 @@ var require_request2 = __commonJS({
           if (initBody != null && init2.duplex == null) {
             throw new TypeError("RequestInit: duplex option is required when sending a body.");
           }
-          if (request3.mode !== "same-origin" && request3.mode !== "cors") {
+          if (request4.mode !== "same-origin" && request4.mode !== "cors") {
             throw new TypeError(
               'If request is made from ReadableStream, mode should be "same-origin" or "cors"'
             );
           }
-          request3.useCORSPreflightFlag = true;
+          request4.useCORSPreflightFlag = true;
         }
         let finalBody = inputOrInitBody;
         if (initBody == null && inputBody != null) {
@@ -34906,42 +34906,42 @@ var require_request2 = __commonJS({
        * @param {Request} request
        * @param {AbortSignal} newSignal
        */
-      static setRequestSignal(request3, newSignal) {
-        request3.#signal = newSignal;
-        return request3;
+      static setRequestSignal(request4, newSignal) {
+        request4.#signal = newSignal;
+        return request4;
       }
       /**
        * @param {Request} request
        */
-      static getRequestDispatcher(request3) {
-        return request3.#dispatcher;
+      static getRequestDispatcher(request4) {
+        return request4.#dispatcher;
       }
       /**
        * @param {Request} request
        * @param {import('../../dispatcher/dispatcher')} newDispatcher
        */
-      static setRequestDispatcher(request3, newDispatcher) {
-        request3.#dispatcher = newDispatcher;
+      static setRequestDispatcher(request4, newDispatcher) {
+        request4.#dispatcher = newDispatcher;
       }
       /**
        * @param {Request} request
        * @param {Headers} newHeaders
        */
-      static setRequestHeaders(request3, newHeaders) {
-        request3.#headers = newHeaders;
+      static setRequestHeaders(request4, newHeaders) {
+        request4.#headers = newHeaders;
       }
       /**
        * @param {Request} request
        */
-      static getRequestState(request3) {
-        return request3.#state;
+      static getRequestState(request4) {
+        return request4.#state;
       }
       /**
        * @param {Request} request
        * @param {any} newState
        */
-      static setRequestState(request3, newState) {
-        request3.#state = newState;
+      static setRequestState(request4, newState) {
+        request4.#state = newState;
       }
     };
     var { setRequestSignal, getRequestDispatcher, setRequestDispatcher, setRequestHeaders, getRequestState, setRequestState } = Request;
@@ -34996,23 +34996,23 @@ var require_request2 = __commonJS({
         headersList: init2.headersList ? new HeadersList(init2.headersList) : new HeadersList()
       };
     }
-    function cloneRequest(request3) {
-      const newRequest = makeRequest({ ...request3, body: null });
-      if (request3.body != null) {
-        newRequest.body = cloneBody(request3.body);
+    function cloneRequest(request4) {
+      const newRequest = makeRequest({ ...request4, body: null });
+      if (request4.body != null) {
+        newRequest.body = cloneBody(request4.body);
       }
       return newRequest;
     }
     function fromInnerRequest(innerRequest, dispatcher, signal, guard) {
-      const request3 = new Request(kConstruct);
-      setRequestState(request3, innerRequest);
-      setRequestDispatcher(request3, dispatcher);
-      setRequestSignal(request3, signal);
+      const request4 = new Request(kConstruct);
+      setRequestState(request4, innerRequest);
+      setRequestDispatcher(request4, dispatcher);
+      setRequestSignal(request4, signal);
       const headers = new Headers2(kConstruct);
-      setRequestHeaders(request3, headers);
+      setRequestHeaders(request4, headers);
       setHeadersList(headers, innerRequest.headersList);
       setHeadersGuard(headers, guard);
-      return request3;
+      return request4;
     }
     Object.defineProperties(Request.prototype, {
       method: kEnumerableProperty,
@@ -35423,14 +35423,14 @@ var require_fetch = __commonJS({
         p.reject(e2);
         return p.promise;
       }
-      const request3 = getRequestState(requestObject);
+      const request4 = getRequestState(requestObject);
       if (requestObject.signal.aborted) {
-        abortFetch(p, request3, null, requestObject.signal.reason, null);
+        abortFetch(p, request4, null, requestObject.signal.reason, null);
         return p.promise;
       }
-      const globalObject = request3.client.globalObject;
+      const globalObject = request4.client.globalObject;
       if (globalObject?.constructor?.name === "ServiceWorkerGlobalScope") {
-        request3.serviceWorkers = "none";
+        request4.serviceWorkers = "none";
       }
       let responseObject = null;
       let locallyAborted = false;
@@ -35442,7 +35442,7 @@ var require_fetch = __commonJS({
           assert6(controller != null);
           controller.abort(requestObject.signal.reason);
           const realResponse = responseObject?.deref();
-          abortFetch(p, request3, realResponse, requestObject.signal.reason, controller.controller);
+          abortFetch(p, request4, realResponse, requestObject.signal.reason, controller.controller);
         }
       );
       const processResponse = (response) => {
@@ -35450,7 +35450,7 @@ var require_fetch = __commonJS({
           return;
         }
         if (response.aborted) {
-          abortFetch(p, request3, responseObject, controller.serializedAbortReason, controller.controller);
+          abortFetch(p, request4, responseObject, controller.serializedAbortReason, controller.controller);
           return;
         }
         if (response.type === "error") {
@@ -35462,7 +35462,7 @@ var require_fetch = __commonJS({
         p = null;
       };
       controller = fetching({
-        request: request3,
+        request: request4,
         processResponseEndOfBody: handleFetchDone,
         processResponse,
         dispatcher: getRequestDispatcher(requestObject),
@@ -35509,12 +35509,12 @@ var require_fetch = __commonJS({
       );
     }
     var markResourceTiming = performance.markResourceTiming;
-    function abortFetch(p, request3, responseObject, error62, controller) {
+    function abortFetch(p, request4, responseObject, error62, controller) {
       if (p) {
         p.reject(error62);
       }
-      if (request3.body?.stream != null && isReadable(request3.body.stream)) {
-        request3.body.stream.cancel(error62).catch((err) => {
+      if (request4.body?.stream != null && isReadable(request4.body.stream)) {
+        request4.body.stream.cancel(error62).catch((err) => {
           if (err.code === "ERR_INVALID_STATE") {
             return;
           }
@@ -35530,7 +35530,7 @@ var require_fetch = __commonJS({
       }
     }
     function fetching({
-      request: request3,
+      request: request4,
       processRequestBodyChunkLength,
       processRequestEndOfBody,
       processResponse,
@@ -35545,9 +35545,9 @@ var require_fetch = __commonJS({
       assert6(dispatcher);
       let taskDestination = null;
       let crossOriginIsolatedCapability = false;
-      if (request3.client != null) {
-        taskDestination = request3.client.globalObject;
-        crossOriginIsolatedCapability = request3.client.crossOriginIsolatedCapability;
+      if (request4.client != null) {
+        taskDestination = request4.client.globalObject;
+        crossOriginIsolatedCapability = request4.client.crossOriginIsolatedCapability;
       }
       const currentTime = coarsenedSharedCurrentTime(crossOriginIsolatedCapability);
       const timingInfo = createOpaqueTimingInfo({
@@ -35555,7 +35555,7 @@ var require_fetch = __commonJS({
       });
       const fetchParams = {
         controller: new Fetch(dispatcher),
-        request: request3,
+        request: request4,
         timingInfo,
         processRequestBodyChunkLength,
         processRequestEndOfBody,
@@ -35567,79 +35567,79 @@ var require_fetch = __commonJS({
         // Keep requestObject alive to prevent its AbortController from being GC'd
         requestObject
       };
-      assert6(!request3.body || request3.body.stream);
-      if (request3.window === "client") {
-        request3.window = request3.client?.globalObject?.constructor?.name === "Window" ? request3.client : "no-window";
+      assert6(!request4.body || request4.body.stream);
+      if (request4.window === "client") {
+        request4.window = request4.client?.globalObject?.constructor?.name === "Window" ? request4.client : "no-window";
       }
-      if (request3.origin === "client") {
-        request3.origin = request3.client.origin;
+      if (request4.origin === "client") {
+        request4.origin = request4.client.origin;
       }
-      if (request3.policyContainer === "client") {
-        if (request3.client != null) {
-          request3.policyContainer = clonePolicyContainer(
-            request3.client.policyContainer
+      if (request4.policyContainer === "client") {
+        if (request4.client != null) {
+          request4.policyContainer = clonePolicyContainer(
+            request4.client.policyContainer
           );
         } else {
-          request3.policyContainer = makePolicyContainer();
+          request4.policyContainer = makePolicyContainer();
         }
       }
-      if (!request3.headersList.contains("accept", true)) {
+      if (!request4.headersList.contains("accept", true)) {
         const value = "*/*";
-        request3.headersList.append("accept", value, true);
+        request4.headersList.append("accept", value, true);
       }
-      if (!request3.headersList.contains("accept-language", true)) {
-        request3.headersList.append("accept-language", "*", true);
+      if (!request4.headersList.contains("accept-language", true)) {
+        request4.headersList.append("accept-language", "*", true);
       }
-      if (request3.priority === null) {
+      if (request4.priority === null) {
       }
-      if (subresourceSet.has(request3.destination)) {
+      if (subresourceSet.has(request4.destination)) {
       }
       mainFetch(fetchParams, false);
       return fetchParams.controller;
     }
     async function mainFetch(fetchParams, recursive2) {
       try {
-        const request3 = fetchParams.request;
+        const request4 = fetchParams.request;
         let response = null;
-        if (request3.localURLsOnly && !urlIsLocal(requestCurrentURL(request3))) {
+        if (request4.localURLsOnly && !urlIsLocal(requestCurrentURL(request4))) {
           response = makeNetworkError("local URLs only");
         }
-        tryUpgradeRequestToAPotentiallyTrustworthyURL(request3);
-        if (requestBadPort(request3) === "blocked") {
+        tryUpgradeRequestToAPotentiallyTrustworthyURL(request4);
+        if (requestBadPort(request4) === "blocked") {
           response = makeNetworkError("bad port");
         }
-        if (request3.referrerPolicy === "") {
-          request3.referrerPolicy = request3.policyContainer.referrerPolicy;
+        if (request4.referrerPolicy === "") {
+          request4.referrerPolicy = request4.policyContainer.referrerPolicy;
         }
-        if (request3.referrer !== "no-referrer") {
-          request3.referrer = determineRequestsReferrer(request3);
+        if (request4.referrer !== "no-referrer") {
+          request4.referrer = determineRequestsReferrer(request4);
         }
         if (response === null) {
-          const currentURL = requestCurrentURL(request3);
+          const currentURL = requestCurrentURL(request4);
           if (
             // - request’s current URL’s origin is same origin with request’s origin,
             //   and request’s response tainting is "basic"
-            sameOrigin(currentURL, request3.url) && request3.responseTainting === "basic" || // request’s current URL’s scheme is "data"
+            sameOrigin(currentURL, request4.url) && request4.responseTainting === "basic" || // request’s current URL’s scheme is "data"
             currentURL.protocol === "data:" || // - request’s mode is "navigate" or "websocket"
-            (request3.mode === "navigate" || request3.mode === "websocket")
+            (request4.mode === "navigate" || request4.mode === "websocket")
           ) {
-            request3.responseTainting = "basic";
+            request4.responseTainting = "basic";
             response = await schemeFetch(fetchParams);
-          } else if (request3.mode === "same-origin") {
+          } else if (request4.mode === "same-origin") {
             response = makeNetworkError('request mode cannot be "same-origin"');
-          } else if (request3.mode === "no-cors") {
-            if (request3.redirect !== "follow") {
+          } else if (request4.mode === "no-cors") {
+            if (request4.redirect !== "follow") {
               response = makeNetworkError(
                 'redirect mode cannot be "follow" for "no-cors" request'
               );
             } else {
-              request3.responseTainting = "opaque";
+              request4.responseTainting = "opaque";
               response = await schemeFetch(fetchParams);
             }
-          } else if (!urlIsHttpHttpsScheme(requestCurrentURL(request3))) {
+          } else if (!urlIsHttpHttpsScheme(requestCurrentURL(request4))) {
             response = makeNetworkError("URL scheme must be a HTTP(S) scheme");
           } else {
-            request3.responseTainting = "cors";
+            request4.responseTainting = "cors";
             response = await httpFetch(fetchParams);
           }
         }
@@ -35647,13 +35647,13 @@ var require_fetch = __commonJS({
           return response;
         }
         if (response.status !== 0 && !response.internalResponse) {
-          if (request3.responseTainting === "cors") {
+          if (request4.responseTainting === "cors") {
           }
-          if (request3.responseTainting === "basic") {
+          if (request4.responseTainting === "basic") {
             response = filterResponse(response, "basic");
-          } else if (request3.responseTainting === "cors") {
+          } else if (request4.responseTainting === "cors") {
             response = filterResponse(response, "cors");
-          } else if (request3.responseTainting === "opaque") {
+          } else if (request4.responseTainting === "opaque") {
             response = filterResponse(response, "opaque");
           } else {
             assert6(false);
@@ -35661,26 +35661,26 @@ var require_fetch = __commonJS({
         }
         let internalResponse = response.status === 0 ? response : response.internalResponse;
         if (internalResponse.urlList.length === 0) {
-          internalResponse.urlList.push(...request3.urlList);
+          internalResponse.urlList.push(...request4.urlList);
         }
-        if (!request3.timingAllowFailed) {
+        if (!request4.timingAllowFailed) {
           response.timingAllowPassed = true;
         }
-        if (response.type === "opaque" && internalResponse.status === 206 && internalResponse.rangeRequested && !request3.headers.contains("range", true)) {
+        if (response.type === "opaque" && internalResponse.status === 206 && internalResponse.rangeRequested && !request4.headers.contains("range", true)) {
           response = internalResponse = makeNetworkError();
         }
-        if (response.status !== 0 && (request3.method === "HEAD" || request3.method === "CONNECT" || nullBodyStatus.includes(internalResponse.status))) {
+        if (response.status !== 0 && (request4.method === "HEAD" || request4.method === "CONNECT" || nullBodyStatus.includes(internalResponse.status))) {
           internalResponse.body = null;
           fetchParams.controller.dump = true;
         }
-        if (request3.integrity) {
+        if (request4.integrity) {
           const processBodyError = (reason) => fetchFinale(fetchParams, makeNetworkError(reason));
-          if (request3.responseTainting === "opaque" || response.body == null) {
+          if (request4.responseTainting === "opaque" || response.body == null) {
             processBodyError(response.error);
             return;
           }
           const processBody = (bytes2) => {
-            if (!bytesMatch(bytes2, request3.integrity)) {
+            if (!bytesMatch(bytes2, request4.integrity)) {
               processBodyError("integrity mismatch");
               return;
             }
@@ -35699,8 +35699,8 @@ var require_fetch = __commonJS({
       if (isCancelled(fetchParams) && fetchParams.request.redirectCount === 0) {
         return Promise.resolve(makeAppropriateNetworkError(fetchParams));
       }
-      const { request: request3 } = fetchParams;
-      const { protocol: scheme } = requestCurrentURL(request3);
+      const { request: request4 } = fetchParams;
+      const { protocol: scheme } = requestCurrentURL(request4);
       switch (scheme) {
         case "about:": {
           return Promise.resolve(makeNetworkError("about scheme is not supported"));
@@ -35709,19 +35709,19 @@ var require_fetch = __commonJS({
           if (!resolveObjectURL) {
             resolveObjectURL = __require("node:buffer").resolveObjectURL;
           }
-          const blobURLEntry = requestCurrentURL(request3);
+          const blobURLEntry = requestCurrentURL(request4);
           if (blobURLEntry.search.length !== 0) {
             return Promise.resolve(makeNetworkError("NetworkError when attempting to fetch resource."));
           }
           const blob = resolveObjectURL(blobURLEntry.toString());
-          if (request3.method !== "GET" || !webidl.is.Blob(blob)) {
+          if (request4.method !== "GET" || !webidl.is.Blob(blob)) {
             return Promise.resolve(makeNetworkError("invalid method"));
           }
           const response = makeResponse();
           const fullLength = blob.size;
           const serializedFullLength = isomorphicEncode(`${fullLength}`);
           const type = blob.type;
-          if (!request3.headersList.contains("range", true)) {
+          if (!request4.headersList.contains("range", true)) {
             const bodyWithType = extractBody(blob);
             response.statusText = "OK";
             response.body = bodyWithType[0];
@@ -35729,7 +35729,7 @@ var require_fetch = __commonJS({
             response.headersList.set("content-type", type, true);
           } else {
             response.rangeRequested = true;
-            const rangeHeader = request3.headersList.get("range", true);
+            const rangeHeader = request4.headersList.get("range", true);
             const rangeValue = simpleRangeHeaderValue(rangeHeader, true);
             if (rangeValue === "failure") {
               return Promise.resolve(makeNetworkError("failed to fetch the data URL"));
@@ -35760,7 +35760,7 @@ var require_fetch = __commonJS({
           return Promise.resolve(response);
         }
         case "data:": {
-          const currentURL = requestCurrentURL(request3);
+          const currentURL = requestCurrentURL(request4);
           const dataURLStruct = dataURLProcessor(currentURL);
           if (dataURLStruct === "failure") {
             return Promise.resolve(makeNetworkError("failed to fetch the data URL"));
@@ -35849,41 +35849,41 @@ var require_fetch = __commonJS({
       }
     }
     async function httpFetch(fetchParams) {
-      const request3 = fetchParams.request;
+      const request4 = fetchParams.request;
       let response = null;
       let actualResponse = null;
       const timingInfo = fetchParams.timingInfo;
-      if (request3.serviceWorkers === "all") {
+      if (request4.serviceWorkers === "all") {
       }
       if (response === null) {
-        if (request3.redirect === "follow") {
-          request3.serviceWorkers = "none";
+        if (request4.redirect === "follow") {
+          request4.serviceWorkers = "none";
         }
         actualResponse = response = await httpNetworkOrCacheFetch(fetchParams);
-        if (request3.responseTainting === "cors" && corsCheck(request3, response) === "failure") {
+        if (request4.responseTainting === "cors" && corsCheck(request4, response) === "failure") {
           return makeNetworkError("cors failure");
         }
-        if (TAOCheck(request3, response) === "failure") {
-          request3.timingAllowFailed = true;
+        if (TAOCheck(request4, response) === "failure") {
+          request4.timingAllowFailed = true;
         }
       }
-      if ((request3.responseTainting === "opaque" || response.type === "opaque") && crossOriginResourcePolicyCheck(
-        request3.origin,
-        request3.client,
-        request3.destination,
+      if ((request4.responseTainting === "opaque" || response.type === "opaque") && crossOriginResourcePolicyCheck(
+        request4.origin,
+        request4.client,
+        request4.destination,
         actualResponse
       ) === "blocked") {
         return makeNetworkError("blocked");
       }
       if (redirectStatusSet.has(actualResponse.status)) {
-        if (request3.redirect !== "manual") {
+        if (request4.redirect !== "manual") {
           fetchParams.controller.connection.destroy(void 0, false);
         }
-        if (request3.redirect === "error") {
+        if (request4.redirect === "error") {
           response = makeNetworkError("unexpected redirect");
-        } else if (request3.redirect === "manual") {
+        } else if (request4.redirect === "manual") {
           response = actualResponse;
-        } else if (request3.redirect === "follow") {
+        } else if (request4.redirect === "follow") {
           response = await httpRedirectFetch(fetchParams, response);
         } else {
           assert6(false);
@@ -35893,13 +35893,13 @@ var require_fetch = __commonJS({
       return response;
     }
     function httpRedirectFetch(fetchParams, response) {
-      const request3 = fetchParams.request;
+      const request4 = fetchParams.request;
       const actualResponse = response.internalResponse ? response.internalResponse : response;
       let locationURL;
       try {
         locationURL = responseLocationURL(
           actualResponse,
-          requestCurrentURL(request3).hash
+          requestCurrentURL(request4).hash
         );
         if (locationURL == null) {
           return response;
@@ -35910,63 +35910,63 @@ var require_fetch = __commonJS({
       if (!urlIsHttpHttpsScheme(locationURL)) {
         return Promise.resolve(makeNetworkError("URL scheme must be a HTTP(S) scheme"));
       }
-      if (request3.redirectCount === 20) {
+      if (request4.redirectCount === 20) {
         return Promise.resolve(makeNetworkError("redirect count exceeded"));
       }
-      request3.redirectCount += 1;
-      if (request3.mode === "cors" && (locationURL.username || locationURL.password) && !sameOrigin(request3, locationURL)) {
+      request4.redirectCount += 1;
+      if (request4.mode === "cors" && (locationURL.username || locationURL.password) && !sameOrigin(request4, locationURL)) {
         return Promise.resolve(makeNetworkError('cross origin not allowed for request mode "cors"'));
       }
-      if (request3.responseTainting === "cors" && (locationURL.username || locationURL.password)) {
+      if (request4.responseTainting === "cors" && (locationURL.username || locationURL.password)) {
         return Promise.resolve(makeNetworkError(
           'URL cannot contain credentials for request mode "cors"'
         ));
       }
-      if (actualResponse.status !== 303 && request3.body != null && request3.body.source == null) {
+      if (actualResponse.status !== 303 && request4.body != null && request4.body.source == null) {
         return Promise.resolve(makeNetworkError());
       }
-      if ([301, 302].includes(actualResponse.status) && request3.method === "POST" || actualResponse.status === 303 && !GET_OR_HEAD.includes(request3.method)) {
-        request3.method = "GET";
-        request3.body = null;
+      if ([301, 302].includes(actualResponse.status) && request4.method === "POST" || actualResponse.status === 303 && !GET_OR_HEAD.includes(request4.method)) {
+        request4.method = "GET";
+        request4.body = null;
         for (const headerName of requestBodyHeader) {
-          request3.headersList.delete(headerName);
+          request4.headersList.delete(headerName);
         }
       }
-      if (!sameOrigin(requestCurrentURL(request3), locationURL)) {
-        request3.headersList.delete("authorization", true);
-        request3.headersList.delete("proxy-authorization", true);
-        request3.headersList.delete("cookie", true);
-        request3.headersList.delete("host", true);
+      if (!sameOrigin(requestCurrentURL(request4), locationURL)) {
+        request4.headersList.delete("authorization", true);
+        request4.headersList.delete("proxy-authorization", true);
+        request4.headersList.delete("cookie", true);
+        request4.headersList.delete("host", true);
       }
-      if (request3.body != null) {
-        assert6(request3.body.source != null);
-        request3.body = safelyExtractBody(request3.body.source)[0];
+      if (request4.body != null) {
+        assert6(request4.body.source != null);
+        request4.body = safelyExtractBody(request4.body.source)[0];
       }
       const timingInfo = fetchParams.timingInfo;
       timingInfo.redirectEndTime = timingInfo.postRedirectStartTime = coarsenedSharedCurrentTime(fetchParams.crossOriginIsolatedCapability);
       if (timingInfo.redirectStartTime === 0) {
         timingInfo.redirectStartTime = timingInfo.startTime;
       }
-      request3.urlList.push(locationURL);
-      setRequestReferrerPolicyOnRedirect(request3, actualResponse);
+      request4.urlList.push(locationURL);
+      setRequestReferrerPolicyOnRedirect(request4, actualResponse);
       return mainFetch(fetchParams, true);
     }
     async function httpNetworkOrCacheFetch(fetchParams, isAuthenticationFetch = false, isNewConnectionFetch = false) {
-      const request3 = fetchParams.request;
+      const request4 = fetchParams.request;
       let httpFetchParams = null;
       let httpRequest = null;
       let response = null;
       const httpCache = null;
       const revalidatingFlag = false;
-      if (request3.window === "no-window" && request3.redirect === "error") {
+      if (request4.window === "no-window" && request4.redirect === "error") {
         httpFetchParams = fetchParams;
-        httpRequest = request3;
+        httpRequest = request4;
       } else {
-        httpRequest = cloneRequest(request3);
+        httpRequest = cloneRequest(request4);
         httpFetchParams = { ...fetchParams };
         httpFetchParams.request = httpRequest;
       }
-      const includeCredentials = request3.credentials === "include" || request3.credentials === "same-origin" && request3.responseTainting === "basic";
+      const includeCredentials = request4.credentials === "include" || request4.credentials === "same-origin" && request4.responseTainting === "basic";
       const contentLength = httpRequest.body ? httpRequest.body.length : null;
       let contentLengthHeaderValue = null;
       if (httpRequest.body == null && ["POST", "PUT"].includes(httpRequest.method)) {
@@ -36053,14 +36053,14 @@ var require_fetch = __commonJS({
         response.rangeRequested = true;
       }
       response.requestIncludesCredentials = includeCredentials;
-      if (response.status === 401 && httpRequest.responseTainting !== "cors" && includeCredentials && (request3.useURLCredentials !== void 0 || isTraversableNavigable(request3.traversableForUserPrompts))) {
-        if (request3.body != null) {
-          if (request3.body.source == null) {
+      if (response.status === 401 && httpRequest.responseTainting !== "cors" && includeCredentials && (request4.useURLCredentials !== void 0 || isTraversableNavigable(request4.traversableForUserPrompts))) {
+        if (request4.body != null) {
+          if (request4.body.source == null) {
             return response;
           }
-          request3.body = safelyExtractBody(request3.body.source)[0];
+          request4.body = safelyExtractBody(request4.body.source)[0];
         }
-        if (request3.useURLCredentials === void 0 || isAuthenticationFetch) {
+        if (request4.useURLCredentials === void 0 || isAuthenticationFetch) {
           if (isCancelled(fetchParams)) {
             return makeAppropriateNetworkError(fetchParams);
           }
@@ -36070,7 +36070,7 @@ var require_fetch = __commonJS({
         response = await httpNetworkOrCacheFetch(fetchParams, true);
       }
       if (response.status === 407) {
-        if (request3.window === "no-window") {
+        if (request4.window === "no-window") {
           return makeNetworkError();
         }
         if (isCancelled(fetchParams)) {
@@ -36082,7 +36082,7 @@ var require_fetch = __commonJS({
         // response’s status is 421
         response.status === 421 && // isNewConnectionFetch is false
         !isNewConnectionFetch && // request’s body is null, or request’s body is non-null and request’s body’s source is non-null
-        (request3.body == null || request3.body.source != null)
+        (request4.body == null || request4.body.source != null)
       ) {
         if (isCancelled(fetchParams)) {
           return makeAppropriateNetworkError(fetchParams);
@@ -36112,21 +36112,21 @@ var require_fetch = __commonJS({
           }
         }
       };
-      const request3 = fetchParams.request;
+      const request4 = fetchParams.request;
       let response = null;
       const timingInfo = fetchParams.timingInfo;
       const httpCache = null;
       if (httpCache == null) {
-        request3.cache = "no-store";
+        request4.cache = "no-store";
       }
       const newConnection = forceNewConnection ? "yes" : "no";
-      if (request3.mode === "websocket") {
+      if (request4.mode === "websocket") {
       } else {
       }
       let requestBody = null;
-      if (request3.body == null && fetchParams.processRequestEndOfBody) {
+      if (request4.body == null && fetchParams.processRequestEndOfBody) {
         queueMicrotask(() => fetchParams.processRequestEndOfBody());
-      } else if (request3.body != null) {
+      } else if (request4.body != null) {
         const processBodyChunk = async function* (bytes2) {
           if (isCancelled(fetchParams)) {
             return;
@@ -36154,7 +36154,7 @@ var require_fetch = __commonJS({
         };
         requestBody = (async function* () {
           try {
-            for await (const bytes2 of request3.body.stream) {
+            for await (const bytes2 of request4.body.stream) {
               yield* processBodyChunk(bytes2);
             }
             processEndOfBody();
@@ -36261,7 +36261,7 @@ var require_fetch = __commonJS({
       }
       return response;
       function dispatch({ body: body2 }) {
-        const url2 = requestCurrentURL(request3);
+        const url2 = requestCurrentURL(request4);
         const agent = fetchParams.controller.dispatcher;
         const path21 = url2.pathname + url2.search;
         const hasTrailingQuestionMark = url2.search.length === 0 && url2.href[url2.href.length - url2.hash.length - 1] === "?";
@@ -36269,11 +36269,11 @@ var require_fetch = __commonJS({
           {
             path: hasTrailingQuestionMark ? `${path21}?` : path21,
             origin: url2.origin,
-            method: request3.method,
-            body: agent.isMockActive ? request3.body && (request3.body.source || request3.body.stream) : body2,
-            headers: request3.headersList.entries,
+            method: request4.method,
+            body: agent.isMockActive ? request4.body && (request4.body.source || request4.body.stream) : body2,
+            headers: request4.headersList.entries,
             maxRedirections: 0,
-            upgrade: request3.mode === "websocket" ? "websocket" : void 0
+            upgrade: request4.mode === "websocket" ? "websocket" : void 0
           },
           {
             body: null,
@@ -36309,9 +36309,9 @@ var require_fetch = __commonJS({
                 }
               }
               const location2 = headersList.get("location", true);
-              const willFollow = location2 && request3.redirect === "follow" && redirectStatusSet.has(status2);
+              const willFollow = location2 && request4.redirect === "follow" && redirectStatusSet.has(status2);
               const decoders = [];
-              if (request3.method !== "HEAD" && request3.method !== "CONNECT" && !nullBodyStatus.includes(status2) && !willFollow) {
+              if (request4.method !== "HEAD" && request4.method !== "CONNECT" && !nullBodyStatus.includes(status2) && !willFollow) {
                 const contentEncoding = headersList.get("content-encoding", true);
                 const codings = contentEncoding ? contentEncoding.toLowerCase().split(",") : [];
                 const maxContentEncodings = 5;
@@ -36528,31 +36528,31 @@ var require_cache3 = __commonJS({
         webidl.util.markAsUncloneable(this);
         this.#relevantRequestResponseList = arguments[1];
       }
-      async match(request3, options2 = {}) {
+      async match(request4, options2 = {}) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.match";
         webidl.argumentLengthCheck(arguments, 1, prefix);
-        request3 = webidl.converters.RequestInfo(request3);
+        request4 = webidl.converters.RequestInfo(request4);
         options2 = webidl.converters.CacheQueryOptions(options2, prefix, "options");
-        const p = this.#internalMatchAll(request3, options2, 1);
+        const p = this.#internalMatchAll(request4, options2, 1);
         if (p.length === 0) {
           return;
         }
         return p[0];
       }
-      async matchAll(request3 = void 0, options2 = {}) {
+      async matchAll(request4 = void 0, options2 = {}) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.matchAll";
-        if (request3 !== void 0) request3 = webidl.converters.RequestInfo(request3);
+        if (request4 !== void 0) request4 = webidl.converters.RequestInfo(request4);
         options2 = webidl.converters.CacheQueryOptions(options2, prefix, "options");
-        return this.#internalMatchAll(request3, options2);
+        return this.#internalMatchAll(request4, options2);
       }
-      async add(request3) {
+      async add(request4) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.add";
         webidl.argumentLengthCheck(arguments, 1, prefix);
-        request3 = webidl.converters.RequestInfo(request3);
-        const requests = [request3];
+        request4 = webidl.converters.RequestInfo(request4);
+        const requests = [request4];
         const responseArrayPromise = this.addAll(requests);
         return await responseArrayPromise;
       }
@@ -36562,19 +36562,19 @@ var require_cache3 = __commonJS({
         webidl.argumentLengthCheck(arguments, 1, prefix);
         const responsePromises = [];
         const requestList = [];
-        for (let request3 of requests) {
-          if (request3 === void 0) {
+        for (let request4 of requests) {
+          if (request4 === void 0) {
             throw webidl.errors.conversionFailed({
               prefix,
               argument: "Argument 1",
               types: ["undefined is not allowed"]
             });
           }
-          request3 = webidl.converters.RequestInfo(request3);
-          if (typeof request3 === "string") {
+          request4 = webidl.converters.RequestInfo(request4);
+          if (typeof request4 === "string") {
             continue;
           }
-          const r = getRequestState(request3);
+          const r = getRequestState(request4);
           if (!urlIsHttpHttpsScheme(r.url) || r.method !== "GET") {
             throw webidl.errors.exception({
               header: prefix,
@@ -36583,8 +36583,8 @@ var require_cache3 = __commonJS({
           }
         }
         const fetchControllers = [];
-        for (const request3 of requests) {
-          const r = getRequestState(new Request(request3));
+        for (const request4 of requests) {
+          const r = getRequestState(new Request(request4));
           if (!urlIsHttpHttpsScheme(r.url)) {
             throw webidl.errors.exception({
               header: prefix,
@@ -36661,17 +36661,17 @@ var require_cache3 = __commonJS({
         });
         return cacheJobPromise.promise;
       }
-      async put(request3, response) {
+      async put(request4, response) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.put";
         webidl.argumentLengthCheck(arguments, 2, prefix);
-        request3 = webidl.converters.RequestInfo(request3);
+        request4 = webidl.converters.RequestInfo(request4);
         response = webidl.converters.Response(response, prefix, "response");
         let innerRequest = null;
-        if (webidl.is.Request(request3)) {
-          innerRequest = getRequestState(request3);
+        if (webidl.is.Request(request4)) {
+          innerRequest = getRequestState(request4);
         } else {
-          innerRequest = getRequestState(new Request(request3));
+          innerRequest = getRequestState(new Request(request4));
         }
         if (!urlIsHttpHttpsScheme(innerRequest.url) || innerRequest.method !== "GET") {
           throw webidl.errors.exception({
@@ -36742,21 +36742,21 @@ var require_cache3 = __commonJS({
         });
         return cacheJobPromise.promise;
       }
-      async delete(request3, options2 = {}) {
+      async delete(request4, options2 = {}) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.delete";
         webidl.argumentLengthCheck(arguments, 1, prefix);
-        request3 = webidl.converters.RequestInfo(request3);
+        request4 = webidl.converters.RequestInfo(request4);
         options2 = webidl.converters.CacheQueryOptions(options2, prefix, "options");
         let r = null;
-        if (webidl.is.Request(request3)) {
-          r = getRequestState(request3);
+        if (webidl.is.Request(request4)) {
+          r = getRequestState(request4);
           if (r.method !== "GET" && !options2.ignoreMethod) {
             return false;
           }
         } else {
-          assert6(typeof request3 === "string");
-          r = getRequestState(new Request(request3));
+          assert6(typeof request4 === "string");
+          r = getRequestState(new Request(request4));
         }
         const operations = [];
         const operation2 = {
@@ -36788,25 +36788,25 @@ var require_cache3 = __commonJS({
        * @param {import('../../../types/cache').CacheQueryOptions} options
        * @returns {Promise<readonly Request[]>}
        */
-      async keys(request3 = void 0, options2 = {}) {
+      async keys(request4 = void 0, options2 = {}) {
         webidl.brandCheck(this, _Cache);
         const prefix = "Cache.keys";
-        if (request3 !== void 0) request3 = webidl.converters.RequestInfo(request3);
+        if (request4 !== void 0) request4 = webidl.converters.RequestInfo(request4);
         options2 = webidl.converters.CacheQueryOptions(options2, prefix, "options");
         let r = null;
-        if (request3 !== void 0) {
-          if (webidl.is.Request(request3)) {
-            r = getRequestState(request3);
+        if (request4 !== void 0) {
+          if (webidl.is.Request(request4)) {
+            r = getRequestState(request4);
             if (r.method !== "GET" && !options2.ignoreMethod) {
               return [];
             }
-          } else if (typeof request3 === "string") {
-            r = getRequestState(new Request(request3));
+          } else if (typeof request4 === "string") {
+            r = getRequestState(new Request(request4));
           }
         }
         const promise2 = createDeferredPromise();
         const requests = [];
-        if (request3 === void 0) {
+        if (request4 === void 0) {
           for (const requestResponse of this.#relevantRequestResponseList) {
             requests.push(requestResponse[0]);
           }
@@ -36818,9 +36818,9 @@ var require_cache3 = __commonJS({
         }
         queueMicrotask(() => {
           const requestList = [];
-          for (const request4 of requests) {
+          for (const request5 of requests) {
             const requestObject = fromInnerRequest(
-              request4,
+              request5,
               void 0,
               new AbortController().signal,
               "immutable"
@@ -36939,9 +36939,9 @@ var require_cache3 = __commonJS({
        * @param {import('../../../types/cache').CacheQueryOptions | undefined} options
        * @returns {boolean}
        */
-      #requestMatchesCachedItem(requestQuery, request3, response = null, options2) {
+      #requestMatchesCachedItem(requestQuery, request4, response = null, options2) {
         const queryURL = new URL(requestQuery.url);
-        const cachedURL = new URL(request3.url);
+        const cachedURL = new URL(request4.url);
         if (options2?.ignoreSearch) {
           cachedURL.search = "";
           queryURL.search = "";
@@ -36957,7 +36957,7 @@ var require_cache3 = __commonJS({
           if (fieldValue === "*") {
             return false;
           }
-          const requestValue = request3.headersList.get(fieldValue);
+          const requestValue = request4.headersList.get(fieldValue);
           const queryValue = requestQuery.headersList.get(fieldValue);
           if (requestValue !== queryValue) {
             return false;
@@ -36965,20 +36965,20 @@ var require_cache3 = __commonJS({
         }
         return true;
       }
-      #internalMatchAll(request3, options2, maxResponses = Infinity) {
+      #internalMatchAll(request4, options2, maxResponses = Infinity) {
         let r = null;
-        if (request3 !== void 0) {
-          if (webidl.is.Request(request3)) {
-            r = getRequestState(request3);
+        if (request4 !== void 0) {
+          if (webidl.is.Request(request4)) {
+            r = getRequestState(request4);
             if (r.method !== "GET" && !options2.ignoreMethod) {
               return [];
             }
-          } else if (typeof request3 === "string") {
-            r = getRequestState(new Request(request3));
+          } else if (typeof request4 === "string") {
+            r = getRequestState(new Request(request4));
           }
         }
         const responses = [];
-        if (request3 === void 0) {
+        if (request4 === void 0) {
           for (const requestResponse of this.#relevantRequestResponseList) {
             responses.push(requestResponse[1]);
           }
@@ -37080,21 +37080,21 @@ var require_cachestorage = __commonJS({
         }
         webidl.util.markAsUncloneable(this);
       }
-      async match(request3, options2 = {}) {
+      async match(request4, options2 = {}) {
         webidl.brandCheck(this, _CacheStorage);
         webidl.argumentLengthCheck(arguments, 1, "CacheStorage.match");
-        request3 = webidl.converters.RequestInfo(request3);
+        request4 = webidl.converters.RequestInfo(request4);
         options2 = webidl.converters.MultiCacheQueryOptions(options2);
         if (options2.cacheName != null) {
           if (this.#caches.has(options2.cacheName)) {
             const cacheList = this.#caches.get(options2.cacheName);
             const cache = new Cache(kConstruct, cacheList);
-            return await cache.match(request3, options2);
+            return await cache.match(request4, options2);
           }
         } else {
           for (const cacheList of this.#caches.values()) {
             const cache = new Cache(kConstruct, cacheList);
-            const response = await cache.match(request3, options2);
+            const response = await cache.match(request4, options2);
             if (response !== void 0) {
               return response;
             }
@@ -38381,7 +38381,7 @@ var require_connection = __commonJS({
     function establishWebSocketConnection(url2, protocols, client, handler, options2) {
       const requestURL = url2;
       requestURL.protocol = url2.protocol === "ws:" ? "http:" : "https:";
-      const request3 = makeRequest({
+      const request4 = makeRequest({
         urlList: [requestURL],
         client,
         serviceWorkers: "none",
@@ -38394,18 +38394,18 @@ var require_connection = __commonJS({
       });
       if (options2.headers) {
         const headersList = getHeadersList(new Headers2(options2.headers));
-        request3.headersList = headersList;
+        request4.headersList = headersList;
       }
       const keyValue = crypto.randomBytes(16).toString("base64");
-      request3.headersList.append("sec-websocket-key", keyValue, true);
-      request3.headersList.append("sec-websocket-version", "13", true);
+      request4.headersList.append("sec-websocket-key", keyValue, true);
+      request4.headersList.append("sec-websocket-version", "13", true);
       for (const protocol of protocols) {
-        request3.headersList.append("sec-websocket-protocol", protocol, true);
+        request4.headersList.append("sec-websocket-protocol", protocol, true);
       }
       const permessageDeflate = "permessage-deflate; client_max_window_bits";
-      request3.headersList.append("sec-websocket-extensions", permessageDeflate, true);
+      request4.headersList.append("sec-websocket-extensions", permessageDeflate, true);
       const controller = fetching({
-        request: request3,
+        request: request4,
         useParallelQueue: true,
         dispatcher: options2.dispatcher,
         processResponse(response) {
@@ -38452,7 +38452,7 @@ var require_connection = __commonJS({
           }
           const secProtocol = response.headersList.get("Sec-WebSocket-Protocol");
           if (secProtocol !== null) {
-            const requestProtocols = getDecodeSplit("sec-websocket-protocol", request3.headersList);
+            const requestProtocols = getDecodeSplit("sec-websocket-protocol", request4.headersList);
             if (requestProtocols === null || !requestProtocols.includes(secProtocol)) {
               failHandshake(handler, response, 1002, "Protocol was not set in the opening handshake.");
               return;
@@ -98649,24 +98649,24 @@ var ContextIntake = class {
     });
   }
   async submit(input3) {
-    const request3 = snapshotJson(input3);
-    contextSubmitSchema.parse(request3);
-    const contextId = this.#contextId(request3.requestKey);
+    const request4 = snapshotJson(input3);
+    contextSubmitSchema.parse(request4);
+    const contextId = this.#contextId(request4.requestKey);
     await directory(this.#root);
     try {
       const prior = await this.#raw(contextId);
-      if (canonical(prior.record.source.content) !== canonical(request3))
+      if (canonical(prior.record.source.content) !== canonical(request4))
         throw new ContextIntakeFailure("context_request_key_conflict");
       return this.#receipt(prior.record, prior.bytes);
     } catch (e2) {
       if (e2.code !== "ENOENT") throw e2;
     }
-    if (request3.supersedes !== void 0)
-      await this.#existing(request3.supersedes);
+    if (request4.supersedes !== void 0)
+      await this.#existing(request4.supersedes);
     const source5 = await this.#adapters.invoke("supplied", "import", {
       kind: "agent-context",
       nativeContract: "loki.context-submission/1",
-      content: request3,
+      content: request4,
       references: []
     });
     const record14 = {
@@ -98687,7 +98687,7 @@ var ContextIntake = class {
       await rm(pending, { recursive: true, force: true });
     }
     const saved = await this.#raw(contextId);
-    if (canonical(saved.record.source.content) !== canonical(request3))
+    if (canonical(saved.record.source.content) !== canonical(request4))
       throw new ContextIntakeFailure("context_request_key_conflict");
     return this.#receipt(saved.record, saved.bytes);
   }
@@ -99002,8 +99002,8 @@ function requestHttp(connection2, options2, callback, transport2) {
       callback
     );
   }
-  const request3 = transport2 ?? (new URL(connection2.url).protocol === "http:" ? http.request : https.request);
-  return request3(
+  const request4 = transport2 ?? (new URL(connection2.url).protocol === "http:" ? http.request : https.request);
+  return request4(
     connection2.url,
     {
       ...options2,
@@ -99035,14 +99035,14 @@ function responsesUsageEstimate(usage, model) {
 }
 var decisionsModel = "gpt-6-luna";
 var decisionsEndpoint = "https://api.openai.com/v1/decisions";
-function decisionsRequest(request3) {
+function decisionsRequest(request4) {
   return {
     model: decisionsModel,
     ...Object.fromEntries(
-      ["prompt_cache_key", "prompt_cache_options", "safety_identifier"].filter((key5) => Object.hasOwn(request3, key5)).map((key5) => [key5, request3[key5]])
+      ["prompt_cache_key", "prompt_cache_options", "safety_identifier"].filter((key5) => Object.hasOwn(request4, key5)).map((key5) => [key5, request4[key5]])
     ),
-    input: typeof request3.state === "string" ? request3.state : JSON.stringify(request3.state),
-    questions: Object.entries(request3.questions).map(([name, question3]) => {
+    input: typeof request4.state === "string" ? request4.state : JSON.stringify(request4.state),
+    questions: Object.entries(request4.questions).map(([name, question3]) => {
       if (question3.type === "boolean" || question3.type === "noul") {
         return {
           type: "predicate",
@@ -99564,28 +99564,28 @@ var GitHubData = class _GitHubData {
       throw new GitHubDataError("github_read_unavailable");
     }
   }
-  async fulfill(request3, context) {
-    if (request3.method !== "GET" || request3.url !== `https://api.github.com/${request3.endpoint}`)
+  async fulfill(request4, context) {
+    if (request4.method !== "GET" || request4.url !== `https://api.github.com/${request4.endpoint}`)
       throw new GitHubDataError("github_read_scope_rejected");
     const result = await this.request(
-      request3.endpoint,
+      request4.endpoint,
       AbortSignal.any([
         context.signal,
         AbortSignal.timeout(
-          Math.max(1, Date.parse(request3.deadline_at) - Date.now())
+          Math.max(1, Date.parse(request4.deadline_at) - Date.now())
         )
       ]),
       Math.min(
-        request3.max_response_bytes ?? maxResponseBytes,
+        request4.max_response_bytes ?? maxResponseBytes,
         maxResponseBytes
       )
     );
     const admitted = result.body === null || !("redactions" in publicReceipt(result));
     return {
-      protocol: request3.protocol,
-      run_id: request3.run_id,
-      id: request3.id,
-      url: request3.url,
+      protocol: request4.protocol,
+      run_id: request4.run_id,
+      id: request4.id,
+      url: request4.url,
       outcome: admitted ? "response" : "unavailable",
       http_status: result.status,
       body_complete: admitted && result.complete,
@@ -99754,10 +99754,10 @@ var GitHubData = class _GitHubData {
     };
   }
   async source(input3, signal) {
-    const request3 = githubSourceSchema.parse(input3);
+    const request4 = githubSourceSchema.parse(input3);
     try {
       return await new _GitHubData(this.data, this.transport).sourceFile(
-        request3,
+        request4,
         signal
       );
     } catch (error62) {
@@ -99772,11 +99772,11 @@ var GitHubData = class _GitHubData {
     }
   }
   async sourceFile(input3, signal) {
-    const request3 = githubSourceSchema.parse(input3);
-    const repo = `repos/${request3.repository}`;
+    const request4 = githubSourceSchema.parse(input3);
+    const repo = `repos/${request4.repository}`;
     const metadata4 = await this.json(repo, signal);
     const commit = await this.json(
-      `${repo}/commits/${encodeURIComponent(request3.revision)}`,
+      `${repo}/commits/${encodeURIComponent(request4.revision)}`,
       signal
     );
     const resolved2 = external_exports.object({
@@ -99787,7 +99787,7 @@ var GitHubData = class _GitHubData {
     }).parse(commit.value);
     const revision2 = resolved2.sha, trees = [];
     let treeSha = resolved2.commit.tree.sha, expectedBlob;
-    const segments = request3.path.split("/");
+    const segments = request4.path.split("/");
     if (segments.length > 128)
       throw new GitHubDataError("github_source_path_budget");
     for (const [index2, segment] of segments.entries()) {
@@ -99812,14 +99812,14 @@ var GitHubData = class _GitHubData {
       if (last) expectedBlob = entry.sha;
       else treeSha = entry.sha;
     }
-    const path21 = request3.path.split("/").map(encodeURIComponent).join("/");
+    const path21 = request4.path.split("/").map(encodeURIComponent).join("/");
     const response = await this.json(
       `${repo}/contents/${path21}?ref=${revision2}`,
       signal
     );
     const file3 = external_exports.object({
       type: external_exports.literal("file"),
-      path: external_exports.literal(request3.path),
+      path: external_exports.literal(request4.path),
       encoding: external_exports.string(),
       content: external_exports.string(),
       sha: external_exports.string().regex(/^[a-f0-9]{40}$/),
@@ -99865,10 +99865,10 @@ var GitHubData = class _GitHubData {
     return {
       schema: "kaijan.github-source-file/1",
       connection: this.principal,
-      repository: request3.repository,
+      repository: request4.repository,
       repositoryId: external_exports.object({ id: external_exports.number().int().positive().safe() }).parse(metadata4.value).id,
       revision: revision2,
-      path: request3.path,
+      path: request4.path,
       blobSha: file3.sha,
       sha256: sha256(bytes2),
       bytes: file3.size,
@@ -101615,10 +101615,10 @@ var ConfigurationStore = class _ConfigurationStore {
       temporary: true
     } : null;
   }
-  admission(scope, operation2, key5, input3, request3, onceToken) {
+  admission(scope, operation2, key5, input3, request4, onceToken) {
     this.guard();
     const inputHash = createHash9("sha256").update(canonicalJson(external_exports.json().parse(input3))).digest("hex");
-    if (request3 !== void 0) {
+    if (request4 !== void 0) {
       this.db.exec("BEGIN IMMEDIATE");
       try {
         const current2 = this.db.prepare(
@@ -101634,7 +101634,7 @@ var ConfigurationStore = class _ConfigurationStore {
               );
             this.db.prepare("DELETE FROM one_run_edits WHERE scope=? AND token=?").run(scope, onceToken);
           }
-          this.db.prepare("INSERT INTO admissions VALUES(?,?,?,?,?)").run(scope, operation2, key5, inputHash, this.seal(request3));
+          this.db.prepare("INSERT INTO admissions VALUES(?,?,?,?,?)").run(scope, operation2, key5, inputHash, this.seal(request4));
         }
         this.db.exec("COMMIT");
       } catch (error62) {
@@ -103870,7 +103870,7 @@ function selectedIssueImages(input3, images) {
   }
   return byId;
 }
-function createIssueImageUploader(prefix, { origin: origin2, request: request3 = fetch, now = Date.now }) {
+function createIssueImageUploader(prefix, { origin: origin2, request: request4 = fetch, now = Date.now }) {
   const configured = new URL(origin2);
   const local = configured.protocol === "http:" && ["127.0.0.1", "localhost"].includes(configured.hostname);
   if (configured.origin !== origin2 || configured.username || configured.password || configured.protocol !== "https:" && !local)
@@ -103900,7 +103900,7 @@ function createIssueImageUploader(prefix, { origin: origin2, request: request3 =
     for (const { upload, image, url: url2 } of selected2) {
       let response;
       try {
-        response = await request3(url2, {
+        response = await request4(url2, {
           method: "PUT",
           headers: upload.headers,
           body: Buffer.from(image.bytes),
@@ -104283,7 +104283,7 @@ async function json5(response, status2, maximum) {
   );
 }
 function directIssueAuthorization(publisher, credential2, {
-  request: request3 = fetch,
+  request: request4 = fetch,
   now = Date.now,
   signal
 } = {}) {
@@ -104327,7 +104327,7 @@ function directIssueAuthorization(publisher, credential2, {
       url2.searchParams.set("content_type", image.mediaType);
       url2.searchParams.set("repository_id", current2.repositoryId);
       uploadAttempts.add(image.id);
-      const response = await request3(url2.href, {
+      const response = await request4(url2.href, {
         method: "POST",
         redirect: "error",
         credentials: "omit",
@@ -104361,7 +104361,7 @@ function directIssueAuthorization(publisher, credential2, {
       if (createAttempted) throw unavailable2();
       const auth = headers();
       createAttempted = true;
-      const response = await request3(
+      const response = await request4(
         `https://api.github.com/repos/${kaijanIssueRepository}/issues`,
         {
           method: "POST",
@@ -104713,9 +104713,9 @@ async function revokeRunnerParameters(data2, scopeId, bindingId) {
     return { bindingId, revoked: true };
   });
 }
-async function resolveRunnerParameters(data2, scopeId, request3, onPrivateParameterResolved) {
+async function resolveRunnerParameters(data2, scopeId, request4, onPrivateParameterResolved) {
   return safe(async () => {
-    const parsed = external_exports.record(external_exports.string(), external_exports.json()).safeParse(request3);
+    const parsed = external_exports.record(external_exports.string(), external_exports.json()).safeParse(request4);
     if (!parsed.success) return fail2("private_parameter_invalid");
     const output2 = structuredClone(parsed.data);
     if (!Object.hasOwn(output2, "privateParams")) return output2;
@@ -104922,8 +104922,8 @@ var inlinePlanningInput = external_exports.looseObject({
   sources: external_exports.never().optional(),
   map: external_exports.null().optional()
 });
-async function retainInlinePlanningInput(intake2, request3, retainedContext) {
-  const frozen = snapshotJson(request3);
+async function retainInlinePlanningInput(intake2, request4, retainedContext) {
+  const frozen = snapshotJson(request4);
   const input3 = frozen.input;
   if (!input3 || typeof input3 !== "object" || Array.isArray(input3))
     return { request: frozen, storedContext: retainedContext };
@@ -105413,12 +105413,12 @@ async function readRiskCustomerView(data2, family, raw, catalog, resolve11) {
       (await privateFile(join12(directory3, "identity.json"), 1024 * 1024)).toString("utf8")
     )
   );
-  const request3 = external_exports.object({ packet: external_exports.json() }).parse(
+  const request4 = external_exports.object({ packet: external_exports.json() }).parse(
     JSON.parse(
       (await privateFile(join12(directory3, "input.json"), 32 * 1024 * 1024)).toString("utf8")
     )
   );
-  const packetSha256 = hash7(JSON.stringify(request3.packet));
+  const packetSha256 = hash7(JSON.stringify(request4.packet));
   const native2 = object6.parse(JSON.parse(bytes2.toString("utf8")));
   if (packetSha256 !== identity2.packetSha256 || native2[family === "changeRisk" ? "packet_sha256" : "input_sha256"] !== packetSha256)
     throw Error("Risk original packet changed");
@@ -105426,9 +105426,9 @@ async function readRiskCustomerView(data2, family, raw, catalog, resolve11) {
     ...reference2,
     result: projectRetainedRisk(
       native2,
-      request3.packet,
+      request4.packet,
       family,
-      family === "riskFinder" ? catalog(request3.packet) : void 0,
+      family === "riskFinder" ? catalog(request4.packet) : void 0,
       resolve11
     )
   };
@@ -105614,10 +105614,10 @@ function storedContinuationUnavailable() {
   );
 }
 function responseCreateFrame(body2) {
-  const request3 = { ...body2 };
-  delete request3.stream;
-  delete request3.background;
-  return { type: "response.create", ...request3 };
+  const request4 = { ...body2 };
+  delete request4.stream;
+  delete request4.background;
+  return { type: "response.create", ...request4 };
 }
 function reviewComputerInput(input3) {
   if (!input3.some((item2) => item2.type === "computer_call_output") || input3.flatMap((item2) => Array.isArray(item2.content) ? item2.content : []).filter((part) => part.type === "input_image").length < 2)
@@ -105645,16 +105645,16 @@ function reviewComputerInput(input3) {
     };
   });
 }
-function reviewWire(request3) {
-  if (request3.tool_choice !== "none") return request3;
-  const input3 = reviewComputerInput(request3.input);
-  if (input3 === request3.input) return request3;
+function reviewWire(request4) {
+  if (request4.tool_choice !== "none") return request4;
+  const input3 = reviewComputerInput(request4.input);
+  if (input3 === request4.input) return request4;
   return {
-    ...request3,
+    ...request4,
     input: input3,
     // No action is permitted in recap. An unused computer definition still
     // refuses multiple images even after its historical outputs are quoted.
-    ...request3.tool_choice === "none" ? { tools: request3.tools.filter((tool2) => tool2.type !== "computer") } : {}
+    ...request4.tool_choice === "none" ? { tools: request4.tools.filter((tool2) => tool2.type !== "computer") } : {}
   };
 }
 async function managedResponsesSocket({ socketPath, headers }) {
@@ -105763,19 +105763,19 @@ function createResponsesSession({
       turns.push(prior);
       id8 = prior.previous;
     }
-    const request3 = { ...body2 };
-    delete request3.previous_response_id;
+    const request4 = { ...body2 };
+    delete request4.previous_response_id;
     const input3 = structuredClone([
       ...turns.reverse().flatMap((turn) => [...turn.input, ...turn.output]),
       ...body2.input
     ]);
-    const needsComputer = input3.some((item2) => item2.type === "computer_call_output") && !request3.tools?.some((tool2) => tool2.type === "computer");
+    const needsComputer = input3.some((item2) => item2.type === "computer_call_output") && !request4.tools?.some((tool2) => tool2.type === "computer");
     return {
-      ...request3,
+      ...request4,
       input: input3,
       ...needsComputer ? {
-        tools: [...request3.tools ?? [], { type: "computer" }],
-        ...!request3.tools?.length ? { tool_choice: "none" } : {}
+        tools: [...request4.tools ?? [], { type: "computer" }],
+        ...!request4.tools?.length ? { tool_choice: "none" } : {}
       } : {}
     };
   }
@@ -105919,14 +105919,14 @@ function createResponsesSession({
     return response;
   }
   return {
-    async send(request3, signal, { review = false, inactivityTimeoutMs } = {}) {
+    async send(request4, signal, { review = false, inactivityTimeoutMs } = {}) {
       if (closed) throw new Error("Runner Responses session is closed");
       signal?.throwIfAborted();
-      const original = storeResponses ? structuredClone({ ...request3, store: true }) : managedWebSocket ? zdrRequest(request3) : structuredClone({
-        ...zdrRequest(request3),
+      const original = storeResponses ? structuredClone({ ...request4, store: true }) : managedWebSocket ? zdrRequest(request4) : structuredClone({
+        ...zdrRequest(request4),
         include: [
           .../* @__PURE__ */ new Set([
-            ...request3.include ?? [],
+            ...request4.include ?? [],
             "reasoning.encrypted_content"
           ])
         ]
@@ -106571,7 +106571,7 @@ async function readPlannerConversation(directory3, receipt4, providerIdentity) {
     join13(directory3, "response.bin"),
     16 * 1024 * 1024
   );
-  const request3 = external_exports.object({
+  const request4 = external_exports.object({
     store: external_exports.boolean(),
     model: external_exports.string(),
     input: external_exports.json().optional()
@@ -106594,7 +106594,7 @@ async function readPlannerConversation(directory3, receipt4, providerIdentity) {
     model_returned: external_exports.string(),
     body_complete: external_exports.literal(true)
   }).parse(receipt4);
-  if (original.captured_sha256 !== hash8(responseBytes) || original.response_id !== response.id || original.model_returned !== request3.model || response.model !== request3.model)
+  if (original.captured_sha256 !== hash8(responseBytes) || original.response_id !== response.id || original.model_returned !== request4.model || response.model !== request4.model)
     throw Error("The saved Planner response changed.");
   const binding2 = plannerConversationBindingSchema.parse({
     schema: "kaijan.planner-conversation/1",
@@ -106603,7 +106603,7 @@ async function readPlannerConversation(directory3, receipt4, providerIdentity) {
     responseSha256: hash8(responseBytes),
     responseId: response.id
   });
-  const input3 = typeof request3.input === "string" ? [{ role: "user", content: request3.input }] : Array.isArray(request3.input) ? request3.input : null;
+  const input3 = typeof request4.input === "string" ? [{ role: "user", content: request4.input }] : Array.isArray(request4.input) ? request4.input : null;
   const output2 = response.output?.filter((item2) => {
     if (!item2 || typeof item2 !== "object" || Array.isArray(item2)) return false;
     return item2.type !== "reasoning" || typeof item2.encrypted_content === "string";
@@ -115479,16 +115479,16 @@ function preparationHasUnknownUsage(preparation) {
   });
 }
 var digest26 = (bytes2) => createHash25("sha256").update(bytes2).digest("hex");
-function planningTaskInput(request3, prepare2) {
-  if (request3.taskInstructions === void 0 && request3.agentInstructions === void 0 && request3.testData === void 0)
-    return request3.input;
+function planningTaskInput(request4, prepare2) {
+  if (request4.taskInstructions === void 0 && request4.agentInstructions === void 0 && request4.testData === void 0)
+    return request4.input;
   const packet = {
-    ...object10(prepare2(request3.input)),
-    ...request3.taskInstructions === void 0 ? {} : { taskInstructions: request3.taskInstructions },
-    ...request3.agentInstructions === void 0 ? {} : { agentInstructions: request3.agentInstructions }
+    ...object10(prepare2(request4.input)),
+    ...request4.taskInstructions === void 0 ? {} : { taskInstructions: request4.taskInstructions },
+    ...request4.agentInstructions === void 0 ? {} : { agentInstructions: request4.agentInstructions }
   };
-  if (request3.testData === void 0) return packet;
-  const text15 = JSON.stringify(request3.testData);
+  if (request4.testData === void 0) return packet;
+  const text15 = JSON.stringify(request4.testData);
   const revision2 = digest26(text15);
   return prepare2({
     ...packet,
@@ -115505,8 +115505,8 @@ function planningTaskInput(request3, prepare2) {
     ]
   });
 }
-function planningSignal(request3, signal) {
-  const deadline = request3.options && object10(request3.options).deadline_ms;
+function planningSignal(request4, signal) {
+  const deadline = request4.options && object10(request4.options).deadline_ms;
   if (typeof deadline !== "number") return signal;
   const timeout = AbortSignal.timeout(deadline);
   return signal ? AbortSignal.any([signal, timeout]) : timeout;
@@ -115567,23 +115567,23 @@ var TestPlanning = class {
         resultContract: {
           component: "test-planning",
           nativeContract: "pr-context-plan/3",
-          sources: async (request3) => [
+          sources: async (request4) => [
             await this.sources.invoke("supplied", "import", {
               kind: "work-item-planning-input",
               nativeContract: "pr-context-plan/3-or-supplied-work-item",
-              content: request3.input,
-              references: request3.storedContext ? [object10(request3.storedContext).reference] : []
+              content: request4.input,
+              references: request4.storedContext ? [object10(request4.storedContext).reference] : []
             }),
-            ...request3.change !== void 0 ? [
+            ...request4.change !== void 0 ? [
               await this.sources.invoke("supplied", "import", {
                 kind: "frozen-code-change",
                 nativeContract: String(changeInputSchema.$id),
-                content: request3.change,
+                content: request4.change,
                 references: []
               })
             ] : [],
-            ...Array.isArray(request3.riskSources) ? await Promise.all(
-              request3.riskSources.map(
+            ...Array.isArray(request4.riskSources) ? await Promise.all(
+              request4.riskSources.map(
                 (source5) => this.sources.invoke("supplied", "import", {
                   kind: "selected-risk-answer",
                   nativeContract: "completed-advisory-answer",
@@ -115594,13 +115594,13 @@ var TestPlanning = class {
             ) : []
           ]
         },
-        verify: async (request3) => {
+        verify: async (request4) => {
           const api = await this.loadNative();
           try {
             api.prepare(
               planningInputWithRisks(
-                planningTaskInput(request3, api.prepare),
-                request3.riskSources,
+                planningTaskInput(request4, api.prepare),
+                request4.riskSources,
                 api.prepare
               )
             );
@@ -115610,10 +115610,10 @@ var TestPlanning = class {
             throw error62;
           }
         },
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const api = await this.loadNative();
           const startedAt = Date.now();
-          const timing = request3.options ? object10(request3.options) : {};
+          const timing = request4.options ? object10(request4.options) : {};
           const deadline = timing.deadline_ms;
           if (typeof deadline === "number")
             context = {
@@ -115648,12 +115648,12 @@ var TestPlanning = class {
               }
             };
           await privateDirectory(context.artifactDirectory);
-          const base = api.prepare(planningTaskInput(request3, api.prepare));
-          const extraSources = Array.isArray(request3.procedureSources) ? [...request3.procedureSources] : [];
+          const base = api.prepare(planningTaskInput(request4, api.prepare));
+          const extraSources = Array.isArray(request4.procedureSources) ? [...request4.procedureSources] : [];
           let sourceContext;
           let autAppModel;
           let sourceConnection;
-          if (request3.sourceModel) {
+          if (request4.sourceModel) {
             if (!this.dependencies.readSourceModel || !this.dependencies.prepareForPlanning)
               throw Error(
                 "Shared source context requires the authenticated planning connection."
@@ -115668,7 +115668,7 @@ var TestPlanning = class {
                 );
               sourceContext = sourceModelContextSchema.parse(
                 await this.dependencies.readSourceModel(
-                  sourceModelSelectionSchema.parse(request3.sourceModel),
+                  sourceModelSelectionSchema.parse(request4.sourceModel),
                   context.signal,
                   sourceConnection?.environment.LOKI_AI_CONNECTION_BINDING
                 )
@@ -115700,12 +115700,12 @@ var TestPlanning = class {
               attribution: "Shared Main source-derived application context; runtime behavior unverified. Local changes and browser observations remain separate."
             });
           }
-          if ((request3.exploration || request3.desktopTarget) && !this.dependencies.prepareForPlanning)
+          if ((request4.exploration || request4.desktopTarget) && !this.dependencies.prepareForPlanning)
             throw Error(
-              request3.exploration ? "Browser exploration requires planning preparation." : "Desktop exploration requires planning preparation."
+              request4.exploration ? "Browser exploration requires planning preparation." : "Desktop exploration requires planning preparation."
             );
-          const selection4 = planningExploration.optional().parse(request3.exploration);
-          const target3 = request3.desktopTarget ? desktopRunnerTargetSchema.parse(request3.desktopTarget) : selection4?.target;
+          const selection4 = planningExploration.optional().parse(request4.exploration);
+          const target3 = request4.desktopTarget ? desktopRunnerTargetSchema.parse(request4.desktopTarget) : selection4?.target;
           if (target3) {
             const privateInputHosts = /* @__PURE__ */ new Map();
             const resolved2 = await resolveRunnerParameters(
@@ -115737,7 +115737,7 @@ var TestPlanning = class {
                 new DOMException("Finish exploration", "AbortError")
               )
             );
-            const { planningEnvironment } = request3;
+            const { planningEnvironment } = request4;
             const configurationData = this.dependencies.configurationData;
             const autId = planningEnvironment?.autId;
             let priorAppModel;
@@ -115757,10 +115757,10 @@ var TestPlanning = class {
             }
             context.signal.throwIfAborted();
             const options2 = {
-              input: request3.input,
+              input: request4.input,
               ...sourceContext ? { sourceContext } : {},
               ...priorAppModel ? { priorAppModel } : {},
-              testData: request3.testData,
+              testData: request4.testData,
               params: external_exports.record(
                 external_exports.string(),
                 external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])
@@ -115812,7 +115812,7 @@ var TestPlanning = class {
                 schema: "loki.planning-failure/1",
                 reason: "exploration_incomplete",
                 message: observed.reason,
-                ...request3.taskInstructions === void 0 ? {} : { taskInstructions: request3.taskInstructions },
+                ...request4.taskInstructions === void 0 ? {} : { taskInstructions: request4.taskInstructions },
                 receipt_directory: directory3,
                 receipt: {
                   status: "exploration_incomplete",
@@ -115865,16 +115865,16 @@ var TestPlanning = class {
           }
           const preparation = this.dependencies.prepareForPlanning ? await this.dependencies.prepareForPlanning(
             base,
-            Array.isArray(request3.riskSources) ? request3.riskSources : [],
+            Array.isArray(request4.riskSources) ? request4.riskSources : [],
             sourceConnection ? { ...context, environment: sourceConnection.environment } : context,
-            request3.change,
-            request3.repositories,
+            request4.change,
+            request4.repositories,
             extraSources
           ) : void 0;
           const withPreparation = (result) => ({
             ...object10(result),
             ...preparation ? { preparation: retainedPlanningPreparation(preparation) } : {},
-            ...request3.taskInstructions === void 0 ? {} : { taskInstructions: request3.taskInstructions }
+            ...request4.taskInstructions === void 0 ? {} : { taskInstructions: request4.taskInstructions }
           });
           context.signal.throwIfAborted();
           try {
@@ -115886,8 +115886,8 @@ var TestPlanning = class {
             );
             const result = await api.plan(
               preparation?.input ?? planningInputWithRisks(
-                planningTaskInput(request3, api.prepare),
-                request3.riskSources,
+                planningTaskInput(request4, api.prepare),
+                request4.riskSources,
                 api.prepare
               ),
               // Preparation owns the parent and its linked-source captures.
@@ -115897,7 +115897,7 @@ var TestPlanning = class {
               {
                 modelSettings: context.identity.analysisSettings,
                 signal: context.signal,
-                ...request3.options ? object10(request3.options) : {},
+                ...request4.options ? object10(request4.options) : {},
                 retainPlannerConversation: true,
                 ...typeof deadline === "number" ? {
                   deadline_ms: Math.max(
@@ -115957,14 +115957,14 @@ var TestPlanning = class {
             throw error62;
           }
         },
-        validate: (result, request3) => {
+        validate: (result, request4) => {
           nativePlanningResultSchema.parse(result);
           const value = object10(result);
-          if (value.plan !== void 0 && value.taskInstructions !== request3.taskInstructions)
+          if (value.plan !== void 0 && value.taskInstructions !== request4.taskInstructions)
             throw Error("Planning changed the caller's task instructions.");
           if (value.preparation) {
             const base = this.native.prepare(
-              planningTaskInput(request3, this.native.prepare)
+              planningTaskInput(request4, this.native.prepare)
             );
             validatePlanningPreparation(
               {
@@ -115985,12 +115985,12 @@ var TestPlanning = class {
             this.native.prepare(
               value.preparation ? preparedPlanningInput(
                 this.native.prepare(
-                  planningTaskInput(request3, this.native.prepare)
+                  planningTaskInput(request4, this.native.prepare)
                 ),
                 value.preparation
               ) : planningInputWithRisks(
-                planningTaskInput(request3, this.native.prepare),
-                request3.riskSources,
+                planningTaskInput(request4, this.native.prepare),
+                request4.riskSources,
                 this.native.prepare
               )
             )
@@ -116092,39 +116092,39 @@ var TestPlanning = class {
   }
   async start(input3, storedContext) {
     const lifecycle2 = snapshotLifecycle(this.dependencies.lifecycle, "plan");
-    const request3 = JSON.parse(
+    const request4 = JSON.parse(
       JSON.stringify({
         ...planningRequest.parse(input3),
         ...storedContext ? { storedContext } : {}
       })
     );
-    const signal = planningSignal(request3);
-    if (request3.change !== void 0 && !this.dependencies.prepareForPlanning)
+    const signal = planningSignal(request4);
+    if (request4.change !== void 0 && !this.dependencies.prepareForPlanning)
       throw Error("Change preparation is unavailable in this planning host.");
-    if (request3.repositories !== void 0 && !this.dependencies.prepareForPlanning)
+    if (request4.repositories !== void 0 && !this.dependencies.prepareForPlanning)
       throw Error(
         "Related-work preparation is unavailable in this planning host."
       );
-    if (request3.procedures !== void 0 && !this.dependencies.prepareForPlanning)
+    if (request4.procedures !== void 0 && !this.dependencies.prepareForPlanning)
       throw Error(
         "Procedure preparation is unavailable in this planning host."
       );
-    await this.checkCaptureTime(request3.input);
+    await this.checkCaptureTime(request4.input);
     const risks = await readPlanningRisks(
-      request3.riskAnswers,
+      request4.riskAnswers,
       this.dependencies.readRiskAnswer
     );
-    if (risks.length) request3.riskSources = risks;
+    if (risks.length) request4.riskSources = risks;
     const procedures = await readPlanningProcedures(
-      request3.procedures,
+      request4.procedures,
       this.dependencies.readProcedure,
       signal
     );
-    if (procedures.length) request3.procedureSources = procedures;
+    if (procedures.length) request4.procedureSources = procedures;
     signal?.throwIfAborted();
     return this.operations.start(
-      request3.requestKey,
-      request3,
+      request4.requestKey,
+      request4,
       {
         analysisSettings: await analysisSettings(
           this.data,
@@ -116132,7 +116132,7 @@ var TestPlanning = class {
         ),
         source: planningPins?.sourceCommit ?? null,
         packageVersion: planningPins?.packageVersion ?? null,
-        inputSha256: digest26(JSON.stringify(request3)),
+        inputSha256: digest26(JSON.stringify(request4)),
         integration: "in-process"
       },
       lifecycle2,
@@ -116159,50 +116159,50 @@ var TestPlanning = class {
       throw Error(
         "Related-work preparation is unavailable in this planning host."
       );
-    const request3 = {
+    const request4 = {
       ...parsed,
       requestKey: "advisory-query",
       ...storedContext ? { storedContext } : {},
       ...invocation.planningEnvironment ? { planningEnvironment: invocation.planningEnvironment } : {}
     };
     const hostSignal = invocation.signal;
-    const signal = planningSignal(request3, invocation.signal);
+    const signal = planningSignal(request4, invocation.signal);
     if (signal) invocation = { ...invocation, signal };
-    if (request3.procedures !== void 0 && !this.dependencies.prepareForPlanning)
+    if (request4.procedures !== void 0 && !this.dependencies.prepareForPlanning)
       throw Error(
         "Procedure preparation is unavailable in this planning host."
       );
-    await this.checkCaptureTime(request3.input);
+    await this.checkCaptureTime(request4.input);
     const risks = await readPlanningRisks(
-      request3.riskAnswers,
+      request4.riskAnswers,
       this.dependencies.readRiskAnswer
     );
-    if (risks.length) request3.riskSources = risks;
+    if (risks.length) request4.riskSources = risks;
     const procedures = await readPlanningProcedures(
-      request3.procedures,
+      request4.procedures,
       this.dependencies.readProcedure,
       invocation.signal
     );
-    if (procedures.length) request3.procedureSources = procedures;
+    if (procedures.length) request4.procedureSources = procedures;
     invocation.signal?.throwIfAborted();
     const answer = await this.operations.query(
-      request3,
+      request4,
       {
         analysisSettings: await analysisSettings(
           this.data,
           this.dependencies.environment ?? process.env
         ),
         nativePins: planningPins,
-        preparation: this.dependencies.prepareForPlanning ? request3.repositories ? "related-context-and-risk/1" : request3.change ? "linked-context-and-change-risk/1" : "linked-context-and-risk/1" : null,
-        inputSha256: digest26(JSON.stringify(request3)),
+        preparation: this.dependencies.prepareForPlanning ? request4.repositories ? "related-context-and-risk/1" : request4.change ? "linked-context-and-change-risk/1" : "linked-context-and-risk/1" : null,
+        inputSha256: digest26(JSON.stringify(request4)),
         integration: "in-process"
       },
       {
         ...invocation,
-        ...(request3.exploration || request3.desktopTarget) && hostSignal ? { hostSignal } : {},
+        ...(request4.exploration || request4.desktopTarget) && hostSignal ? { hostSignal } : {},
         lifecycle: lifecycle2,
         environment: await this.environment(),
-        ...this.dependencies.prepareForPlanning && (request3.exploration !== void 0 || request3.desktopTarget !== void 0 || request3.sourceModel !== void 0 && (object10(request3.sourceModel).application === true || !object10(request3.sourceModel).modelRef) || request3.repositories !== void 0 || planningLinks(request3.input).some((link) => link.authorized)) ? { cache: false } : {},
+        ...this.dependencies.prepareForPlanning && (request4.exploration !== void 0 || request4.desktopTarget !== void 0 || request4.sourceModel !== void 0 && (object10(request4.sourceModel).application === true || !object10(request4.sourceModel).modelRef) || request4.repositories !== void 0 || planningLinks(request4.input).some((link) => link.authorized)) ? { cache: false } : {},
         ...typeof supplied.requestKey === "string" ? { correlationKey: supplied.requestKey } : {},
         ...this.queryInjectionScope ? { injectionScope: this.queryInjectionScope } : {}
       }
@@ -116259,22 +116259,22 @@ var TestPlanning = class {
     if (!("plan" in native2)) throw Error("A saved plan is unavailable");
     const api = await this.loadNative();
     object10(original.input);
-    const request3 = original.input, value = object10(native2);
-    const base = api.prepare(planningTaskInput(request3, api.prepare));
+    const request4 = original.input, value = object10(native2);
+    const base = api.prepare(planningTaskInput(request4, api.prepare));
     const originalPacket = api.prepare(
       planningInputWithRisks(
-        planningTaskInput(request3, api.prepare),
-        request3.riskSources,
+        planningTaskInput(request4, api.prepare),
+        request4.riskSources,
         api.prepare
       )
     );
     try {
-      if (value.taskInstructions !== request3.taskInstructions)
+      if (value.taskInstructions !== request4.taskInstructions)
         throw Error("Saved planning task instructions changed");
       const effective = value.preparation ? api.prepare(preparedPlanningInput(base, value.preparation)) : api.prepare(
         planningInputWithRisks(
-          planningTaskInput(request3, api.prepare),
-          request3.riskSources,
+          planningTaskInput(request4, api.prepare),
+          request4.riskSources,
           api.prepare
         )
       );
@@ -116284,7 +116284,7 @@ var TestPlanning = class {
           base
         );
         const added = external_exports.array(external_exports.json()).parse(object10(value.preparation).sources);
-        for (const risk of Array.isArray(request3.riskSources) ? request3.riskSources : [])
+        for (const risk of Array.isArray(request4.riskSources) ? request4.riskSources : [])
           if (!added.some(
             (source5) => canonicalJson(source5) === canonicalJson(risk)
           ))
@@ -116331,7 +116331,7 @@ var TestPlanning = class {
             throw Error(
               "Saved planning capture differs from its original source"
             );
-        if (object10(request3.input).captured_at !== void 0 && actual.captured_at !== expected.captured_at)
+        if (object10(request4.input).captured_at !== void 0 && actual.captured_at !== expected.captured_at)
           throw Error("Saved planning capture time changed");
       }
       if (value.input_hash !== api.planningInputHash(captured ?? packet))
@@ -116611,16 +116611,16 @@ var riskInputSchema = {
   }
 };
 var digest27 = (value) => createHash26("sha256").update(value).digest("hex");
-function riskRunIdentity(request3) {
+function riskRunIdentity(request4) {
   return {
     source: riskPins.sourceCommit,
     planningPins,
     packageVersion: riskPins.packageVersion,
     sourceManifestSha256: riskPins.sourceManifestSha256,
     schemaVersion: riskPins.schemaVersion,
-    mode: request3.mode ?? "guided",
-    selection: request3.mode === void 0 ? "default" : "explicit",
-    packetSha256: digest27(JSON.stringify(request3.packet))
+    mode: request4.mode ?? "guided",
+    selection: request4.mode === void 0 ? "default" : "explicit",
+    packetSha256: digest27(JSON.stringify(request4.packet))
   };
 }
 async function riskJson(path21, maximum) {
@@ -116696,25 +116696,25 @@ var ChangeRisk = class {
         resultContract: {
           component: "change-risk-finder",
           nativeContract: riskPins.schemaVersion,
-          sources: async (request3) => [
+          sources: async (request4) => [
             await this.sources.invoke("supplied", "import", {
               kind: "frozen-code-change",
               nativeContract: String(changeInputSchema.$id),
-              content: request3.packet,
-              references: request3.storedContext ? [request3.storedContext.reference] : [],
-              ...request3.packet.coverage === void 0 ? {} : { coverage: request3.packet.coverage }
+              content: request4.packet,
+              references: request4.storedContext ? [request4.storedContext.reference] : [],
+              ...request4.packet.coverage === void 0 ? {} : { coverage: request4.packet.coverage }
             })
           ]
         },
         verify: () => this.loadNative(),
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const api = this.native;
           if (!api) throw new Error("Native API not loaded.");
           const template2 = await riskJson(
             join16(
               this.root,
               "change-risk",
-              request3.mode === "direct" ? "frozen-direct-template.json" : "frozen-luna-template.json"
+              request4.mode === "direct" ? "frozen-direct-template.json" : "frozen-luna-template.json"
             )
           );
           const settings = object11(
@@ -116722,12 +116722,12 @@ var ChangeRisk = class {
           );
           object11(template2).model = settings.model;
           object11(template2).reasoning = { effort: settings.reasoning };
-          if (request3.store === false || context.query)
+          if (request4.store === false || context.query)
             object11(template2).store = false;
           const archive2 = await api.runtime.createArchive(
             context.artifactDirectory
           );
-          return api.runtime.run(request3.packet, {
+          return api.runtime.run(request4.packet, {
             template: template2,
             archive: archive2,
             env: {
@@ -116736,10 +116736,10 @@ var ChangeRisk = class {
             signal: context.signal,
             fetcher: this.fetcher,
             resolveApplicationSpan: await this.sourceResolver(),
-            ...request3.mode === void 0 ? {} : { mode: request3.mode }
+            ...request4.mode === void 0 ? {} : { mode: request4.mode }
           });
         },
-        validate: (result, request3, identity2) => this.validateResult(result, request3, identity2),
+        validate: (result, request4, identity2) => this.validateResult(result, request4, identity2),
         queryReusable: (result) => object11(object11(result).accounting).unknown_cost_calls === 0
       }
     );
@@ -116773,9 +116773,9 @@ var ChangeRisk = class {
     await this.loadNative();
     this.native.method.indexPacket(packet);
   }
-  validateResult(result, request3, identity2) {
+  validateResult(result, request4, identity2) {
     const api = this.native, receipt4 = object11(result);
-    if (!api || !api.validate(result) || receipt4.schema !== riskPins.schemaVersion || receipt4.version !== riskPins.packageVersion || receipt4.mode !== identity2.mode || receipt4.mode_selection !== identity2.selection || receipt4.method !== api.method.modeConfig(request3.mode).method || receipt4.packet_sha256 !== identity2.packetSha256)
+    if (!api || !api.validate(result) || receipt4.schema !== riskPins.schemaVersion || receipt4.version !== riskPins.packageVersion || receipt4.mode !== identity2.mode || receipt4.mode_selection !== identity2.selection || receipt4.method !== api.method.modeConfig(request4.mode).method || receipt4.packet_sha256 !== identity2.packetSha256)
       throw new Error("Native result disagrees with the frozen operation.");
   }
   async status() {
@@ -116816,7 +116816,7 @@ var ChangeRisk = class {
       ...supplied,
       requestKey: supplied.requestKey ?? "advisory-query"
     });
-    const request3 = JSON.parse(
+    const request4 = JSON.parse(
       JSON.stringify({
         ...parsed,
         requestKey: "advisory-query",
@@ -116829,9 +116829,9 @@ var ChangeRisk = class {
       this.environment ?? process.env
     );
     const answer = await this.operations.query(
-      request3,
+      request4,
       {
-        ...riskRunIdentity(request3),
+        ...riskRunIdentity(request4),
         nativePins: riskPins,
         analysisSettings: settings
       },
@@ -116870,7 +116870,7 @@ var ChangeRisk = class {
   }
   async start(input3, storedContext) {
     const parsed = riskRequest.parse(input3);
-    const request3 = {
+    const request4 = {
       requestKey: parsed.requestKey,
       ...storedContext ? { storedContext } : {},
       packet: parsed.packet,
@@ -116878,18 +116878,18 @@ var ChangeRisk = class {
       ...parsed.store === void 0 ? {} : { store: parsed.store }
     };
     await privateDirectory(this.data);
-    const runId2 = digest27(request3.requestKey);
+    const runId2 = digest27(request4.requestKey);
     const prior = await this.legacyStatus(runId2);
     if (prior) {
       const original = await riskJson(
         join16(this.data, "change-risk-runs", runId2, "request.json")
       );
-      if (canonicalJson(original) !== canonicalJson(request3))
+      if (canonicalJson(original) !== canonicalJson(request4))
         throw new Error("Request key belongs to different work.");
       return this.get({ runId: runId2 });
     }
-    const result = await this.operations.start(request3.requestKey, request3, {
-      ...riskRunIdentity(request3),
+    const result = await this.operations.start(request4.requestKey, request4, {
+      ...riskRunIdentity(request4),
       analysisSettings: await analysisSettings(
         this.data,
         this.environment ?? process.env
@@ -117237,10 +117237,10 @@ function originalIdentity2(result) {
   const identity2 = result.identity;
   return identity2 && typeof identity2 === "object" && !Array.isArray(identity2) ? { ...result, source: identity2.source ?? null } : result;
 }
-function nativeInput(request3) {
+function nativeInput(request4) {
   const input3 = {
-    ...request3.url ? { url: request3.url } : { supplied: request3.context },
-    ...request3.options ? object13(request3.options) : {}
+    ...request4.url ? { url: request4.url } : { supplied: request4.context },
+    ...request4.options ? object13(request4.options) : {}
   };
   return JSON.parse(JSON.stringify(input3));
 }
@@ -117280,41 +117280,41 @@ var PrContext = class {
         resultContract: {
           component: "pr-context-finder",
           nativeContract: "pr-context-related/1",
-          sources: async (request3) => [
+          sources: async (request4) => [
             await this.sources.invoke("supplied", "import", {
-              kind: request3.context ? "work-item-context" : "github-seed-reference",
-              nativeContract: request3.context ? "urn:loki:pr-context-related:1:input" : "github-seed-url/1",
-              content: request3.context ?? { url: request3.url },
+              kind: request4.context ? "work-item-context" : "github-seed-reference",
+              nativeContract: request4.context ? "urn:loki:pr-context-related:1:input" : "github-seed-url/1",
+              content: request4.context ?? { url: request4.url },
               references: [
-                ...request3.storedContext ? [object13(request3.storedContext).reference] : [],
+                ...request4.storedContext ? [object13(request4.storedContext).reference] : [],
                 {
                   location: "external",
-                  uri: request3.context ? object13(request3.context).source_uri : request3.url,
+                  uri: request4.context ? object13(request4.context).source_uri : request4.url,
                   basis: "supplied",
-                  ...request3.context ? {
-                    revision: object13(request3.context).revision,
-                    capturedAt: object13(request3.context).captured_at
+                  ...request4.context ? {
+                    revision: object13(request4.context).revision,
+                    capturedAt: object13(request4.context).captured_at
                   } : {}
                 }
               ]
             })
           ]
         },
-        verify: async (request3) => {
+        verify: async (request4) => {
           await this.loadNative();
-          this.native.normalize(this.input(request3));
+          this.native.normalize(this.input(request4));
         },
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const environment = context.environment ?? await this.environment();
           const github = new GitHubData(this.data);
           const result = await this.native.api.runRelatedWork(
-            this.input(request3),
+            this.input(request4),
             {
               signal: context.signal,
               artifactDirectory: context.artifactDirectory,
               env: { ...environment },
               ...this.dependencies.githubGet || github.configured() ? {
-                githubGet: this.dependencies.githubGet ?? ((request4, context2) => github.fulfill(request4, context2))
+                githubGet: this.dependencies.githubGet ?? ((request5, context2) => github.fulfill(request5, context2))
               } : {},
               ...this.dependencies.providerTransport ? { providerTransport: this.dependencies.providerTransport } : {},
               ...this.dependencies.nativeTransport ? { nativeTransport: this.dependencies.nativeTransport } : {}
@@ -117354,8 +117354,8 @@ var PrContext = class {
   dependencies;
   queryInjectionScope;
   native;
-  input(request3) {
-    const input3 = nativeInput(request3);
+  input(request4) {
+    const input3 = nativeInput(request4);
     if (new GitHubData(this.data).configured()) {
       if (input3.githubTransport === "gh")
         throw new Error(
@@ -117451,16 +117451,16 @@ var PrContext = class {
       ...supplied,
       requestKey: supplied.requestKey ?? "advisory-query"
     });
-    const request3 = {
+    const request4 = {
       ...parsed,
       requestKey: "advisory-query",
       ...storedContext ? { storedContext } : {}
     };
     const answer = await this.operations.query(
-      request3,
+      request4,
       {
         nativePins: relatedPins,
-        requestSha256: digest29(JSON.stringify(request3))
+        requestSha256: digest29(JSON.stringify(request4))
       },
       {
         ...invocation,
@@ -117485,24 +117485,24 @@ var PrContext = class {
     return this.operations.closeQueries();
   }
   async start(input3, storedContext) {
-    const request3 = JSON.parse(
+    const request4 = JSON.parse(
       JSON.stringify({
         ...relatedRequest.parse(input3),
         ...storedContext ? { storedContext } : {}
       })
     );
-    const runId2 = digest29(request3.requestKey), legacy = await this.legacyStatus(runId2);
+    const runId2 = digest29(request4.requestKey), legacy = await this.legacyStatus(runId2);
     if (legacy) {
       if (canonicalJson(
         await relatedJson(
           join18(this.data, "pr-context-runs", runId2, "request.json")
         )
-      ) !== canonicalJson(request3))
+      ) !== canonicalJson(request4))
         throw new Error("Request key belongs to different work.");
       return this.get({ runId: runId2 });
     }
     try {
-      return await this.operationsExisting(request3, runId2);
+      return await this.operationsExisting(request4, runId2);
     } catch (error62) {
       if (!(error62 instanceof Error && "code" in error62 && error62.code === "ENOENT"))
         throw error62;
@@ -117511,7 +117511,7 @@ var PrContext = class {
       source: relatedPins.sourceCommit,
       packageVersion: relatedPins.packageVersion,
       archiveSha256: relatedPins.archiveSha256,
-      requestSha256: digest29(JSON.stringify(request3)),
+      requestSha256: digest29(JSON.stringify(request4)),
       runtime: {
         name: "node",
         version: process.version,
@@ -117520,13 +117520,13 @@ var PrContext = class {
     };
     await privateDirectory(this.data);
     return originalIdentity2(
-      await this.operations.start(request3.requestKey, request3, identity2)
+      await this.operations.start(request4.requestKey, request4, identity2)
     );
   }
-  async operationsExisting(request3, runId2) {
+  async operationsExisting(request4, runId2) {
     const directory3 = join18(this.data, "pr-context-runs", runId2);
     await checkPrivateDirectory(directory3);
-    if (canonicalJson(await relatedJson(join18(directory3, "request.json"))) !== canonicalJson(request3))
+    if (canonicalJson(await relatedJson(join18(directory3, "request.json"))) !== canonicalJson(request4))
       throw new Error("Request key belongs to different work.");
     return originalIdentity2(await this.operations.get(runId2));
   }
@@ -117717,22 +117717,22 @@ var WorkItemRisk = class {
         resultContract: {
           component: "risk-finder",
           nativeContract: "risk-finder/work-item-result/1",
-          sources: async (request3) => [
+          sources: async (request4) => [
             await this.sources.invoke("supplied", "import", {
               kind: "work-item-evidence",
               nativeContract: "risk-finder/work-item-input/1",
-              content: request3.packet,
-              references: request3.storedContext ? [
-                external_exports.record(external_exports.string(), external_exports.json()).parse(request3.storedContext).reference
+              content: request4.packet,
+              references: request4.storedContext ? [
+                external_exports.record(external_exports.string(), external_exports.json()).parse(request4.storedContext).reference
               ] : []
             })
           ]
         },
-        verify: async (request3) => {
+        verify: async (request4) => {
           const api = await this.loadNative();
-          api.prepare(request3.packet);
+          api.prepare(request4.packet);
         },
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const api = await this.loadNative();
           const provider = context.environment ?? await this.environment();
           const env = provider.LOKI_AUTH_BROKER_SOCKET ? (await plannerProviderConnection(
@@ -117740,7 +117740,7 @@ var WorkItemRisk = class {
             provider,
             context.signal
           )).environment : provider;
-          return api.run(request3.packet, {
+          return api.run(request4.packet, {
             archive: context.artifactDirectory,
             env: { ...env },
             signal: context.signal,
@@ -117841,17 +117841,17 @@ var WorkItemRisk = class {
     }
   }
   start(input3, storedContext) {
-    const request3 = JSON.parse(
+    const request4 = JSON.parse(
       JSON.stringify({
         ...workItemRiskRequest.parse(input3),
         ...storedContext ? { storedContext } : {}
       })
     );
-    return this.operations.start(request3.requestKey, request3, {
+    return this.operations.start(request4.requestKey, request4, {
       source: pins.sourceCommit,
       planningSource: planningPins?.sourceCommit ?? null,
       evidenceType: "work-item",
-      packetSha256: digest27(JSON.stringify(request3.packet)),
+      packetSha256: digest27(JSON.stringify(request4.packet)),
       integration: "in-process"
     });
   }
@@ -117861,19 +117861,19 @@ var WorkItemRisk = class {
       ...supplied,
       requestKey: supplied.requestKey ?? "advisory-query"
     });
-    const request3 = {
+    const request4 = {
       ...parsed,
       requestKey: "advisory-query",
       ...storedContext ? { storedContext } : {}
     };
     const answer = await this.operations.query(
-      request3,
+      request4,
       {
         nativePins: pins,
         planningPins,
         relatedPins,
         evidenceType: "work-item",
-        packetSha256: digest27(JSON.stringify(request3.packet))
+        packetSha256: digest27(JSON.stringify(request4.packet))
       },
       {
         ...invocation,
@@ -118012,11 +118012,11 @@ var RetainedResponsesModel = class extends OpenAIResponsesModel {
   admitsCompletion(response) {
     return response.model === this._model && !response.error;
   }
-  async _fetchResponse(request3, stream) {
+  async _fetchResponse(request4, stream) {
     if (stream) throw new Error("Retained agent transport does not stream");
-    request3.signal?.throwIfAborted();
+    request4.signal?.throwIfAborted();
     const { requestData, signal } = this._buildResponsesCreateRequest(
-      request3,
+      request4,
       false
     );
     if (requestData.model !== this._model)
@@ -118051,8 +118051,8 @@ var RetainedResponsesModel = class extends OpenAIResponsesModel {
     omitUnknownTokenDetails(sdkResponse.usage?.output_tokens_details);
     return sdkResponse;
   }
-  async getResponse(request3) {
-    return super.getResponse({ ...request3, tracing: false });
+  async getResponse(request4) {
+    return super.getResponse({ ...request4, tracing: false });
   }
   getStreamedResponse() {
     throw new Error("Retained agent transport does not stream");
@@ -118602,15 +118602,15 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var header = (response, key5) => Object.entries(response.headers ?? {}).find(
   ([name]) => name.toLowerCase() === key5.toLowerCase()
 )?.[1];
-function native(request3, { signal } = {}) {
+function native(request4, { signal } = {}) {
   return new Promise((resolve11, reject) => {
     const req = requestHttp(
       {
-        url: request3.url,
-        headers: request3.headers,
-        ...request3.socketPath ? { socketPath: request3.socketPath } : {}
+        url: request4.url,
+        headers: request4.headers,
+        ...request4.socketPath ? { socketPath: request4.socketPath } : {}
       },
-      { method: request3.method, headers: request3.headers, signal },
+      { method: request4.method, headers: request4.headers, signal },
       (response) => resolve11({
         status: response.statusCode,
         headers: response.headers,
@@ -118619,7 +118619,7 @@ function native(request3, { signal } = {}) {
       })
     );
     req.setTimeout(
-      request3.inactivityTimeoutMs ?? request3.timeoutMs,
+      request4.inactivityTimeoutMs ?? request4.timeoutMs,
       () => req.destroy(
         Object.assign(Error("provider socket inactivity timeout"), {
           legacyType: "TimeoutError"
@@ -118627,7 +118627,7 @@ function native(request3, { signal } = {}) {
       )
     );
     req.once("error", reject);
-    req.end(request3.body);
+    req.end(request4.body);
   });
 }
 async function* responseChunks(response, size = 65536) {
@@ -118639,9 +118639,9 @@ async function* responseChunks(response, size = 65536) {
   }
 }
 var failureType = (error62) => error62.legacyType ?? (error62.name === "TimeoutError" ? "TimeoutError" : error62.name === "AbortError" ? "FilterStopped" : error62.code === "ETIMEDOUT" ? "TimeoutError" : "OSError");
-async function callTransport(transport2, request3, { signal } = {}) {
+async function callTransport(transport2, request4, { signal } = {}) {
   signal?.throwIfAborted();
-  if (!signal) return await transport2(request3, { signal });
+  if (!signal) return await transport2(request4, { signal });
   let stop;
   const interrupted = new Promise((_, reject) => {
     stop = () => reject(signal.reason);
@@ -118651,7 +118651,7 @@ async function callTransport(transport2, request3, { signal } = {}) {
     return await Promise.race([
       Promise.resolve().then(() => {
         signal.throwIfAborted();
-        return transport2(request3, { signal });
+        return transport2(request4, { signal });
       }),
       interrupted
     ]);
@@ -118984,25 +118984,25 @@ async function generate(packet, body2, root5, validate4, {
 function need2(condition, reason) {
   if (!condition) throw validationFailure(reason);
 }
-async function generateWithAgent(name, prepared, request3, root5, validate4, options2) {
-  const phase = name === "Runner" || request3.previous_response_id ? "assessment" : "supplement";
+async function generateWithAgent(name, prepared, request4, root5, validate4, options2) {
+  const phase = name === "Runner" || request4.previous_response_id ? "assessment" : "supplement";
   let retained2;
   const agent = new Agent2({
     name,
-    instructions: request3.instructions,
+    instructions: request4.instructions,
     modelSettings: {
-      reasoning: request3.reasoning,
-      ...request3.max_output_tokens === void 0 ? {} : { maxTokens: request3.max_output_tokens }
+      reasoning: request4.reasoning,
+      ...request4.max_output_tokens === void 0 ? {} : { maxTokens: request4.max_output_tokens }
     },
-    outputType: request3.text.format
+    outputType: request4.text.format
   });
   const runner = createRetainedAgentRunner({
-    model: request3.model,
-    store: request3.store,
+    model: request4.model,
+    store: request4.store,
     dispatch: async (body2) => {
       const expected = {
-        ...request3,
-        input: Array.isArray(request3.input) ? request3.input : [{ role: "user", content: request3.input }],
+        ...request4,
+        input: Array.isArray(request4.input) ? request4.input : [{ role: "user", content: request4.input }],
         include: [],
         tools: [],
         stream: false
@@ -119011,7 +119011,7 @@ async function generateWithAgent(name, prepared, request3, root5, validate4, opt
         isDeepStrictEqual10(JSON.parse(JSON.stringify(body2)), expected),
         `${phase}_sdk_request_changed`
       );
-      retained2 = await generate(prepared, request3, root5, validate4, options2);
+      retained2 = await generate(prepared, request4, root5, validate4, options2);
       const original = readBytes(path3.join(root5, "response.bin"));
       need2(
         createHash31("sha256").update(original).digest("hex") === retained2.receipt.captured_sha256,
@@ -119034,14 +119034,14 @@ async function generateWithAgent(name, prepared, request3, root5, validate4, opt
       };
     }
   });
-  const input3 = Array.isArray(request3.input) ? request3.input.map((item2) => ({
+  const input3 = Array.isArray(request4.input) ? request4.input.map((item2) => ({
     type: "unknown",
     providerData: item2,
     ...item2.id ? { id: item2.id } : {}
-  })) : request3.input;
+  })) : request4.input;
   await runner.run(agent, input3, {
     maxTurns: 1,
-    ...request3.previous_response_id ? { previousResponseId: request3.previous_response_id } : {}
+    ...request4.previous_response_id ? { previousResponseId: request4.previous_response_id } : {}
   });
   need2(retained2, `${name.toLowerCase()}_finished_without_retained_${phase}`);
   return retained2;
@@ -120129,12 +120129,12 @@ function requestSupplement(input3, options2 = {}) {
   ];
 }
 async function supplement(input3, outputDirectory, options2 = {}) {
-  const [prepared, request3] = requestSupplement(input3, options2);
+  const [prepared, request4] = requestSupplement(input3, options2);
   let projected;
   const { plan: candidate, ...result } = await generateWithAgent(
     "Planner",
     prepared,
-    request3,
+    request4,
     outputDirectory,
     (value) => {
       projected = projectSupplementProposal(value, prepared);
@@ -120352,19 +120352,19 @@ var TestSupplement = class {
         resultContract: {
           component: "test-planning",
           nativeContract: "test-plan-supplement-result/1",
-          sources: async (request3) => [
+          sources: async (request4) => [
             await sources.invoke("supplied", "import", {
               kind: "baseline-and-attributed-risks",
               nativeContract: "test-plan-supplement-input/1",
-              content: request3.input,
-              references: request3.storedContext ? [object20(request3.storedContext).reference] : []
+              content: request4.input,
+              references: request4.storedContext ? [object20(request4.storedContext).reference] : []
             })
           ]
         },
-        verify: (request3) => {
-          prepareSupplement(request3.input);
+        verify: (request4) => {
+          prepareSupplement(request4.input);
         },
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const options2 = {
             env: {
               ...context.environment ?? await this.environment(),
@@ -120373,12 +120373,12 @@ var TestSupplement = class {
             },
             modelSettings: context.identity.analysisSettings,
             signal: context.signal,
-            ...request3.options ? object20(request3.options) : {},
+            ...request4.options ? object20(request4.options) : {},
             ...this.dependencies.transport ? { transport: this.dependencies.transport } : {}
           };
           try {
             return await supplement(
-              request3.input,
+              request4.input,
               context.artifactDirectory,
               options2
             );
@@ -120397,7 +120397,7 @@ var TestSupplement = class {
           const value = object20(result);
           return value.schema === "test-plan-supplement-result/1" && object20(value.receipt).unknown_charge === false;
         },
-        validate: (result, request3) => {
+        validate: (result, request4) => {
           const value = object20(result);
           nativeSupplementResultSchema.parse(value);
           if (value.schema === "loki.supplement-failure/1") {
@@ -120406,7 +120406,7 @@ var TestSupplement = class {
           }
           if (value.schema !== "test-plan-supplement-result/1")
             throw Error("Wrong supplement contract");
-          const prepared = prepareSupplement(request3.input);
+          const prepared = prepareSupplement(request4.input);
           const checks = validateSupplement(value.supplement, prepared);
           if (canonicalJson(checks) !== canonicalJson(value.checks) || canonicalJson(prepared.baseline) !== canonicalJson(value.baseline))
             throw Error("Native supplement preservation changed");
@@ -120447,13 +120447,13 @@ var TestSupplement = class {
       ...supplied,
       requestKey: supplied.requestKey ?? "advisory-query"
     });
-    const request3 = {
+    const request4 = {
       ...parsed,
       requestKey: "advisory-query",
       ...storedContext ? { storedContext } : {}
     };
     const answer = await this.operations.query(
-      request3,
+      request4,
       {
         analysisSettings: await analysisSettings(
           this.data,
@@ -120461,7 +120461,7 @@ var TestSupplement = class {
         ),
         implementation: pins2,
         mode: "supplement",
-        inputSha256: createHash37("sha256").update(JSON.stringify(request3)).digest("hex"),
+        inputSha256: createHash37("sha256").update(JSON.stringify(request4)).digest("hex"),
         integration: "in-process"
       },
       {
@@ -120499,20 +120499,20 @@ var TestSupplement = class {
   }
   async start(input3, storedContext) {
     const parsed = supplementRequest.parse(input3);
-    const request3 = JSON.parse(
+    const request4 = JSON.parse(
       JSON.stringify({
         ...parsed,
         ...storedContext ? { storedContext } : {}
       })
     );
-    return this.operations.start(request3.requestKey, request3, {
+    return this.operations.start(request4.requestKey, request4, {
       analysisSettings: await analysisSettings(
         this.data,
         this.dependencies.environment ?? process.env
       ),
       implementation: pins2,
       mode: "supplement",
-      inputSha256: createHash37("sha256").update(JSON.stringify(request3)).digest("hex"),
+      inputSha256: createHash37("sha256").update(JSON.stringify(request4)).digest("hex"),
       integration: "in-process"
     });
   }
@@ -120986,8 +120986,8 @@ function customerResponse(schema, value) {
   return parsed.data;
 }
 var WorkspaceResults = class {
-  constructor(request3, allowLoopback = false) {
-    this.request = request3;
+  constructor(request4, allowLoopback = false) {
+    this.request = request4;
     this.allowLoopback = allowLoopback;
   }
   request;
@@ -121434,8 +121434,8 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var SourceModelClient = class {
-  constructor(request3) {
-    this.request = request3;
+  constructor(request4) {
+    this.request = request4;
   }
   request;
   async available(signal) {
@@ -122567,24 +122567,24 @@ async function bindPlannerRecapRuns(snapshot2, read5) {
     if (typeof result.input_sha256 !== "string" || !completed && !failed)
       continue;
     try {
-      const request3 = await read5(
+      const request4 = await read5(
         { answerId: entry.answerId, resultSha256: entry.resultSha256 },
         result.input_sha256
       );
-      if (!request3) continue;
+      if (!request4) continue;
       const run = snapshot2.entries.find(
-        (item2) => item2.kind === "runner" && item2.runId === request3.runId
+        (item2) => item2.kind === "runner" && item2.runId === request4.runId
       );
       if (!run) continue;
-      if (request3.recapSha256) {
+      if (request4.recapSha256) {
         const native2 = fields2(fields2(run.result).nativeResult);
         const reference2 = fields2(native2.plannerAssessment);
-        if (reference2.answerId === entry.answerId && reference2.resultSha256 === entry.resultSha256 && reference2.recapSha256 === request3.recapSha256 && isDeepStrictEqual14(fields2(native2.correlation).planRef, request3.planRef))
+        if (reference2.answerId === entry.answerId && reference2.resultSha256 === entry.resultSha256 && reference2.recapSha256 === request4.recapSha256 && isDeepStrictEqual14(fields2(native2.correlation).planRef, request4.planRef))
           verifiedRuns.set(entry, run);
-      } else if (request3.resultSha256) {
+      } else if (request4.resultSha256) {
         const selection4 = {
-          ...request3,
-          resultSha256: request3.resultSha256,
+          ...request4,
+          resultSha256: request4.resultSha256,
           reportId: snapshot2.reportId
         };
         const original = selectBrowserPlannerRecap(snapshot2, selection4);
@@ -122713,7 +122713,7 @@ var pendingElapsed = (start) => {
 var available = (status2) => status2.state === "running" && status2.stopRequested === false;
 var absent3 = (e2) => e2 instanceof Error && "code" in e2 && e2.code === "ENOENT";
 var configuredSecrets = (raw) => {
-  const request3 = external_exports.object({
+  const request4 = external_exports.object({
     params: external_exports.record(
       external_exports.string(),
       external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])
@@ -122721,15 +122721,15 @@ var configuredSecrets = (raw) => {
     options: external_exports.object({ secretParameterNames: external_exports.array(external_exports.string()).optional() }).passthrough().optional()
   }).passthrough().parse(raw);
   return [
-    ...(request3.options?.secretParameterNames ?? []).map((name) => {
-      if (!Object.hasOwn(request3.params, name))
+    ...(request4.options?.secretParameterNames ?? []).map((name) => {
+      if (!Object.hasOwn(request4.params, name))
         throw new RunnerProjectionError();
-      return String(request3.params[name]);
+      return String(request4.params[name]);
     }),
-    ...inferredParameterSecrets(request3.params)
+    ...inferredParameterSecrets(request4.params)
   ];
 };
-var configuredProtection = (request3) => redactor3(configuredSecrets(request3));
+var configuredProtection = (request4) => redactor3(configuredSecrets(request4));
 var RunnerClarifications = class {
   constructor(getOperation) {
     this.getOperation = getOperation;
@@ -122827,10 +122827,10 @@ var RunnerClarifications = class {
       const deadlineAt = new Date(
         executionDeadline?.() ?? originalDeadline
       ).toISOString();
-      const request3 = clarificationRequestSchema.parse(raw);
-      if (seen.has(request3.clarificationId))
+      const request4 = clarificationRequestSchema.parse(raw);
+      if (seen.has(request4.clarificationId))
         throw Error("Clarification already requested; do not replay");
-      seen.add(request3.clarificationId);
+      seen.add(request4.clarificationId);
       const remaining = Date.parse(deadlineAt) - Date.now();
       if (remaining <= 0) throw expired();
       const deadlineSignal = executionDeadlineSignal ?? AbortSignal.timeout(remaining);
@@ -122845,7 +122845,7 @@ var RunnerClarifications = class {
           "Clarification interrupted or already pending; do not replay"
         );
       }
-      const root5 = join24(directory3, "clarifications", request3.clarificationId);
+      const root5 = join24(directory3, "clarifications", request4.clarificationId);
       try {
         await boundedFile(join24(root5, "request.json"));
         throw Error("Clarification already requested; do not replay");
@@ -122855,7 +122855,7 @@ var RunnerClarifications = class {
       await atomicFile(
         root5,
         "request.json",
-        Buffer.from(JSON.stringify({ request: request3, deadlineAt }))
+        Buffer.from(JSON.stringify({ request: request4, deadlineAt }))
       );
       if (signal.aborted) {
         if (deadlineSignal.aborted) throw expired();
@@ -122864,7 +122864,7 @@ var RunnerClarifications = class {
       await atomicFile(
         directory3,
         "pending-clarification.json",
-        Buffer.from(JSON.stringify({ request: request3, deadlineAt, status: "waiting" }))
+        Buffer.from(JSON.stringify({ request: request4, deadlineAt, status: "waiting" }))
       );
       let answered = false;
       try {
@@ -122883,7 +122883,7 @@ var RunnerClarifications = class {
           this.active.set(directory3, {
             lifecycle: lifecycle2,
             pendingStartedAtMs,
-            request: request3,
+            request: request4,
             deadlineAt,
             // Original request/pending bytes keep their first announced deadline.
             // Only this live owner can extend admission with the selected Run clock.
@@ -122901,7 +122901,7 @@ var RunnerClarifications = class {
           else if (Date.now() < (executionDeadlineSignal && executionDeadline ? executionDeadline() : Date.parse(deadlineAt))) {
             observeLifecycle(lifecycle2, {
               kind: "user-input-requested",
-              requestKey: request3.clarificationId
+              requestKey: request4.clarificationId
             });
           }
         });
@@ -122913,7 +122913,7 @@ var RunnerClarifications = class {
           "pending-clarification.json",
           Buffer.from(
             JSON.stringify({
-              request: request3,
+              request: request4,
               deadlineAt,
               status: answered ? "answered" : superseded ? "superseded" : "interrupted"
             })
@@ -122942,12 +122942,12 @@ var RunnerClarifications = class {
     }
     if (!entry && ["answered", "superseded"].includes(retained2.status))
       return null;
-    const request3 = entry?.request ?? clarificationRequestSchema.parse(retained2.request);
+    const request4 = entry?.request ?? clarificationRequestSchema.parse(retained2.request);
     const deadlineAt = entry?.executionDeadline ? new Date(entry.executionDeadline()).toISOString() : entry?.deadlineAt ?? external_exports.iso.datetime().parse(retained2.deadlineAt);
     const protection = await this.protection(
       external_exports.string().parse(status2.receiptDirectory)
     );
-    const safe2 = projectClarification(request3, protection);
+    const safe2 = projectClarification(request4, protection);
     return plain({
       schema: safe2.schema,
       clarificationId: safe2.clarificationId,
@@ -122964,7 +122964,7 @@ var RunnerClarifications = class {
       state: available(status2) && entry && !entry.signal.aborted && Date.now() < Date.parse(deadlineAt) ? "live" : "unknown"
     });
   }
-  async customerQuestions(status2, request3) {
+  async customerQuestions(status2, request4) {
     const directory3 = external_exports.string().parse(status2.receiptDirectory);
     const original = JSON.parse(
       (await privateFile(join24(directory3, "request.json"))).toString("utf8")
@@ -122981,8 +122981,8 @@ var RunnerClarifications = class {
       identities.push(...clarificationPrivateIdentities(protocol));
     } catch {
     }
-    const questions2 = request3.questions.map((q) => ({
-      id: customerClarificationQuestionId(request3.clarificationId, q.id),
+    const questions2 = request4.questions.map((q) => ({
+      id: customerClarificationQuestionId(request4.clarificationId, q.id),
       ...unverifiedClarificationQuestion(q, protection, identities)
     }));
     return questions2;
@@ -123227,7 +123227,7 @@ var RunnerClarifications = class {
 async function reportProtection(data2, runId2) {
   external_exports.string().regex(/^[a-f0-9]{64}$/).parse(runId2);
   const directory3 = join25(data2, "computer-runner-runs", runId2);
-  const request3 = JSON.parse(
+  const request4 = JSON.parse(
     (await privateFile(join25(directory3, "request.json"), 16 * 1024 * 1024)).toString("utf8")
   );
   const target3 = external_exports.object({
@@ -123237,9 +123237,9 @@ async function reportProtection(data2, runId2) {
       external_exports.object({ app: external_exports.string() }),
       external_exports.object({ platform: external_exports.literal("macOS") })
     ])
-  }).parse(request3);
+  }).parse(request4);
   if (target3.executionMethod === "desktop-ui" && "platform" in target3.target)
-    return configuredProtection(request3);
+    return configuredProtection(request4);
   if ("initialURL" in target3.target && target3.executionMethod !== "desktop-ui" || "app" in target3.target && target3.executionMethod === "desktop-ui")
     return new RunnerClarifications(() => {
       throw Error("Report reads cannot resume Runner.");
@@ -123272,12 +123272,12 @@ function projectArtifactJson(input3, protection) {
 
 // src/runner-assessment-context.ts
 var privateKey = /(?:auth|credential|password|secret|token|cookie|session|api.?key|environment|(^|_)env($|_)|private|path|directory)/i;
-function projectAssessmentTask(request3, protection) {
-  const excluded = new Set(request3.options?.secretParameterNames ?? []);
-  for (const key5 of Object.keys(request3.params))
+function projectAssessmentTask(request4, protection) {
+  const excluded = new Set(request4.options?.secretParameterNames ?? []);
+  for (const key5 of Object.keys(request4.params))
     if (privateKey.test(key5)) excluded.add(key5);
   const additional = redactor4(
-    [...excluded].map((key5) => String(request3.params[key5] ?? ""))
+    [...excluded].map((key5) => String(request4.params[key5] ?? ""))
   );
   const text15 = (value) => additional.text(protection.text(value)).replace(
     /(?:sk-[A-Za-z0-9_-]{12,}|gh[pousr]_[A-Za-z0-9_]{12,}|github_pat_[A-Za-z0-9_]+)/g,
@@ -123314,23 +123314,23 @@ function projectAssessmentTask(request3, protection) {
     return additional.hasSecret(value) || protection.hasSecret(value) ? "[REDACTED]" : value;
   };
   const safe2 = (value) => project(projectArtifactJson(value, protection));
-  const planRef = request3.planRef ?? null;
-  if (text15(request3.scenarioId) !== request3.scenarioId || canonicalJson(safe2(planRef)) !== canonicalJson(planRef))
+  const planRef = request4.planRef ?? null;
+  if (text15(request4.scenarioId) !== request4.scenarioId || canonicalJson(safe2(planRef)) !== canonicalJson(planRef))
     throw Error("Protected task identity.");
   const selected2 = planRef && typeof planRef === "object" && !Array.isArray(planRef) ? planRef.selectedTestIds : void 0;
   if (selected2 !== void 0 && (!Array.isArray(selected2) || selected2.some((id8) => typeof id8 !== "string")))
     throw Error("Invalid selected tests.");
   return {
-    scenario: safe2(request3.scenario),
-    scenarioId: request3.scenarioId,
+    scenario: safe2(request4.scenario),
+    scenarioId: request4.scenarioId,
     params: safe2(
       Object.fromEntries(
-        Object.entries(request3.params).filter(
+        Object.entries(request4.params).filter(
           ([key5, value]) => !excluded.has(key5) && text15(key5) === key5 && canonicalJson(safe2(value)) === canonicalJson(value)
         )
       )
     ),
-    target: safe2(request3.target),
+    target: safe2(request4.target),
     planRef,
     selectedTestIds: selected2 ?? []
   };
@@ -124283,14 +124283,14 @@ async function readCompleteResult(get2, { runId: runId2, maxBytes, initial: init
       cause
     });
   };
-  const read5 = (request3) => {
+  const read5 = (request4) => {
     check2();
     return new Promise((resolve11, reject) => {
       const aborted2 = () => reject(active2.reason);
       active2.addEventListener("abort", aborted2, { once: true });
       Promise.resolve().then(() => {
         check2();
-        return get2(request3, { signal: active2 });
+        return get2(request4, { signal: active2 });
       }).then(resolve11, reject).finally(() => active2.removeEventListener("abort", aborted2));
     });
   };
@@ -124469,11 +124469,11 @@ var LocalViewServer = class {
       if (!/^\/[a-f0-9]{64}\/$/.test(prefix) || this.routes.has(prefix))
         throw Error("Invalid or duplicate local view route.");
       if (!this.server) {
-        const server = createServer((request3, response) => {
-          const prefix2 = request3.url?.match(/^\/[a-f0-9]{64}\//)?.[0];
+        const server = createServer((request4, response) => {
+          const prefix2 = request4.url?.match(/^\/[a-f0-9]{64}\//)?.[0];
           const route = prefix2 && this.routes.get(prefix2);
           if (!route) return void response.writeHead(404).end();
-          route(request3, response);
+          route(request4, response);
         });
         server.requestTimeout = 1e4;
         server.headersTimeout = 1e4;
@@ -124981,9 +124981,9 @@ async function projectReportTrace(original) {
     if (event3.type !== "resource-snapshot")
       throw Error("Unsupported network record");
     const snapshot2 = object24(event3.snapshot);
-    const request3 = object24(snapshot2.request), response = object24(snapshot2.response);
-    if (request3.postData)
-      references(object24(request3.postData), "_file", "_sha1");
+    const request4 = object24(snapshot2.request), response = object24(snapshot2.response);
+    if (request4.postData)
+      references(object24(request4.postData), "_file", "_sha1");
     if (response.content)
       references(object24(response.content), "_file", "_sha1");
     return {
@@ -125164,15 +125164,15 @@ async function serveReportTrace(assets, trace, host = new LocalViewServer()) {
   let origin2 = "";
   let closed = false;
   let lease;
-  const handle = (request3, response) => {
+  const handle = (request4, response) => {
     const deny = (status2 = 404) => {
       response.writeHead(status2).end();
     };
     void (async () => {
-      const target3 = new URL(request3.url ?? "/", origin2);
-      if (closed || request3.headers.host !== new URL(origin2).host || request3.headers.origin && request3.headers.origin !== origin2 || request3.headers["sec-fetch-site"] === "cross-site" || target3.origin !== origin2 || !target3.pathname.startsWith(prefix))
+      const target3 = new URL(request4.url ?? "/", origin2);
+      if (closed || request4.headers.host !== new URL(origin2).host || request4.headers.origin && request4.headers.origin !== origin2 || request4.headers["sec-fetch-site"] === "cross-site" || target3.origin !== origin2 || !target3.pathname.startsWith(prefix))
         return deny();
-      if (request3.method !== "GET" && request3.method !== "HEAD")
+      if (request4.method !== "GET" && request4.method !== "HEAD")
         return deny(405);
       const path21 = target3.pathname.slice(prefix.length);
       response.setHeader("Cache-Control", "no-store");
@@ -125185,11 +125185,11 @@ async function serveReportTrace(assets, trace, host = new LocalViewServer()) {
       );
       if (path21 === "case-focus.js" && !target3.search) {
         response.setHeader("Content-Type", "text/javascript; charset=utf-8");
-        response.writeHead(200).end(request3.method === "HEAD" ? void 0 : traceFocusScript);
+        response.writeHead(200).end(request4.method === "HEAD" ? void 0 : traceFocusScript);
       } else if (path21 === "trace.zip" && !target3.search) {
         let start = 0, end = trace.length - 1, status2 = 200;
-        if (request3.headers.range) {
-          const match = /^bytes=(\d*)-(\d*)$/.exec(request3.headers.range);
+        if (request4.headers.range) {
+          const match = /^bytes=(\d*)-(\d*)$/.exec(request4.headers.range);
           if (!match || !match[1] && !match[2]) return deny(416);
           start = match[1] ? Number(match[1]) : Math.max(0, trace.length - Number(match[2]));
           end = match[1] && match[2] ? Math.min(end, Number(match[2])) : end;
@@ -125205,7 +125205,7 @@ async function serveReportTrace(assets, trace, host = new LocalViewServer()) {
         response.setHeader("Content-Type", "application/zip");
         response.setHeader("Content-Length", end - start + 1);
         response.writeHead(status2).end(
-          request3.method === "HEAD" ? void 0 : trace.subarray(start, end + 1)
+          request4.method === "HEAD" ? void 0 : trace.subarray(start, end + 1)
         );
       } else {
         if (!files.has(path21)) return deny();
@@ -125225,7 +125225,7 @@ async function serveReportTrace(assets, trace, host = new LocalViewServer()) {
           types[extname(path21)] ?? "application/octet-stream"
         );
         response.setHeader("Content-Length", bytes2.length);
-        response.writeHead(200).end(request3.method === "HEAD" ? void 0 : bytes2);
+        response.writeHead(200).end(request4.method === "HEAD" ? void 0 : bytes2);
       }
     })().catch(() => {
       if (!response.headersSent) deny();
@@ -127308,6 +127308,77 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 
+// ../contracts/dist/chrome-run.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var chromeRunSession = external_exports.enum(["chrome-new-tab", "chrome-shared-tab"]);
+var coordinates = {
+  x: external_exports.number().nonnegative(),
+  y: external_exports.number().nonnegative()
+};
+var chromeRunAction = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("click"),
+    ...coordinates,
+    button: external_exports.enum(["left", "middle", "right"]).default("left")
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("type"),
+    text: external_exports.string().max(32768)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("move"), ...coordinates }),
+  external_exports.strictObject({ type: external_exports.literal("double_click"), ...coordinates }),
+  external_exports.strictObject({
+    type: external_exports.literal("drag"),
+    path: external_exports.array(external_exports.strictObject(coordinates)).min(2)
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("scroll"),
+    ...coordinates,
+    scroll_x: external_exports.number(),
+    scroll_y: external_exports.number()
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("keypress"),
+    key: external_exports.enum([
+      "Tab",
+      "Enter",
+      "Escape",
+      "Backspace",
+      "Delete",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "PageUp",
+      "PageDown",
+      "Space"
+    ]),
+    shift: external_exports.boolean().default(false)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("screenshot") })
+]);
+var chromeRunCommand = external_exports.strictObject({
+  type: external_exports.literal("action"),
+  id: external_exports.uuid(),
+  action: chromeRunAction
+});
+var chromeRunActionResult = external_exports.strictObject({
+  type: external_exports.literal("action-result"),
+  id: external_exports.uuid(),
+  png: external_exports.string().max(16 * 1024 * 1024).optional()
+});
+
 // src/runner-execution-budget.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -127674,12 +127745,12 @@ async function missing(path21) {
     throw error62;
   }
 }
-async function historicalRunnerRead(view, request3, result, scope) {
+async function historicalRunnerRead(view, request4, result, scope) {
   const directory3 = external_exports.string().min(1).parse(view.receiptDirectory);
   if (!await missing(join33(directory3, "runner-public-protection.json")))
     return false;
   if (result.status !== "returned" || "reuse" in result) return false;
-  const input3 = object27.parse(request3);
+  const input3 = object27.parse(request4);
   const options2 = input3.options === void 0 ? {} : object27.parse(input3.options);
   if ("reuse" in input3 || "secretParameterNames" in options2 || input3.unresolvedInputs !== void 0 && canonicalJson(input3.unresolvedInputs) !== "[]" || input3.executionMethod !== void 0 && input3.executionMethod !== "browser-ui" || !("initialURL" in object27.parse(input3.target)))
     return false;
@@ -128103,7 +128174,7 @@ function hostRunnerReview(send, review, signal) {
           signal.throwIfAborted();
           const result = await review(
             frame.info,
-            (request3) => waiting.request(send, { type: "runner-review-inspect", request: request3 }),
+            (request4) => waiting.request(send, { type: "runner-review-inspect", request: request4 }),
             void 0,
             signal
           );
@@ -128119,6 +128190,68 @@ function hostRunnerReview(send, review, signal) {
       return true;
     },
     close: () => waiting.close()
+  };
+}
+
+// src/chrome-run-channel.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var request3 = external_exports.strictObject({
+  type: external_exports.literal("chrome-tab-request"),
+  id: external_exports.uuid(),
+  action: external_exports.union([
+    chromeRunAction,
+    external_exports.strictObject({ type: external_exports.literal("stop") })
+  ])
+});
+function hostChromeRun(tab, send, signal) {
+  let busy = false;
+  void tab.closed.then(() => {
+    if (!signal.aborted) return send({ type: "chrome-tab-closed" });
+  }).catch(() => {
+  });
+  return (frame) => {
+    if (frame.type !== "chrome-tab-request") return false;
+    const command = request3.safeParse(frame);
+    if (!command.success) return true;
+    const { id: id8, action: action3 } = command.data;
+    const type = "chrome-tab-result";
+    void (async () => {
+      try {
+        if (action3.type === "stop") {
+          await tab.stop();
+          if (tab.active()) throw Error("Chrome is still connected");
+          await send({ type, id: id8 });
+          return;
+        }
+        signal.throwIfAborted();
+        if (busy || !tab.active()) throw Error("Chrome tab unavailable");
+        busy = true;
+        let image;
+        try {
+          image = await tab.perform(action3);
+        } finally {
+          busy = false;
+        }
+        await send({
+          type,
+          id: id8,
+          ...image ? { png: image.toString("base64") } : {}
+        });
+      } catch {
+        await send({ type, id: id8, error: "Chrome tab action could not complete" });
+      }
+    })().catch(() => {
+    });
+    return true;
   };
 }
 
@@ -128139,6 +128272,11 @@ var RunnerLaunchFailed = class extends Error {
   }
 };
 async function invokeComputerRunner(input3, options2, worker = new URL("./computer-runner-worker.mjs", import.meta.url)) {
+  const chromeMode = chromeRunSession.optional().parse(input3.browserSession);
+  if (chromeMode !== options2.chromeTab?.mode || chromeMode && input3.executionMethod === "desktop-ui")
+    throw new TypeError(
+      "Runner worker requires its matching Chrome attachment"
+    );
   if (options2.headless !== void 0 && typeof options2.headless !== "boolean")
     throw new TypeError("Host headless option must be boolean");
   if (input3.executionMethod === "desktop-ui" && options2.headless !== void 0)
@@ -128185,7 +128323,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
   );
   const clarificationErrors = [];
   let clarificationErrorWrites = Promise.resolve(), clarificationErrorsStored = 0;
-  const retainClarificationError = (request3, error62, answer) => {
+  const retainClarificationError = (request4, error62, answer) => {
     let message;
     try {
       message = String(error62);
@@ -128193,7 +128331,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
       message = "Unprintable clarification failure";
     }
     clarificationErrors.push({
-      request: request3,
+      request: request4,
       error: message,
       ...answer === void 0 ? {} : { answer }
     });
@@ -128263,6 +128401,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
       }
     };
     const review = options2.reviewRun ? hostRunnerReview(send, options2.reviewRun, lifetime.signal) : void 0;
+    const chrome = options2.chromeTab ? hostChromeRun(options2.chromeTab, send, contextSignal) : void 0;
     const sendContextReply = (reply, failed) => {
       if (!child.connected) {
         failed(Error("Application-context reply channel closed"));
@@ -128307,6 +128446,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
           return;
         }
         const frame = message;
+        if (sent && !resultReceived && chrome?.(frame)) return;
         if (review?.receive(frame)) return;
         if (frame.type === "owner-transition") {
           if (registration && sent && !ownerObserved && !ownerTerminal && !stopRequested2 && !options2.signal.aborted && !resultReceived && ownerFrame.safeParse(message).success) {
@@ -128323,15 +128463,15 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
           try {
             if (!options2.requestClarification || !sent || resultReceived || contextSignal.aborted || Date.now() >= clarificationDeadline())
               throw Error("Unregistered or late clarification");
-            const request3 = clarificationRequestSchema.parse(frame.request);
-            if (clarificationSeen.has(request3.clarificationId)) {
+            const request4 = clarificationRequestSchema.parse(frame.request);
+            if (clarificationSeen.has(request4.clarificationId)) {
               retainClarificationError(
                 frame.request,
                 Error("Duplicate clarification dispatch")
               );
               return;
             }
-            clarificationSeen.add(request3.clarificationId);
+            clarificationSeen.add(request4.clarificationId);
             const handler = options2.requestClarification;
             const controller = new AbortController();
             const signal = AbortSignal.any([
@@ -128343,7 +128483,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
             ]);
             let returnedAnswer;
             const hostWork = Promise.resolve().then(
-              () => handler(request3, signal)
+              () => handler(request4, signal)
             );
             clarificationHandlers.add(hostWork);
             void hostWork.finally(() => clarificationHandlers.delete(hostWork)).catch(() => {
@@ -128365,7 +128505,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
                   send({
                     ...answer,
                     type: "runner-clarification-answer",
-                    clarificationId: request3.clarificationId
+                    clarificationId: request4.clarificationId
                   });
               } finally {
                 signal.removeEventListener("abort", abort);
@@ -128381,11 +128521,11 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
               if (!resultReceived)
                 send({
                   type: "runner-clarification-error",
-                  clarificationId: request3.clarificationId,
+                  clarificationId: request4.clarificationId,
                   code: "clarification_failed"
                 });
             });
-            clarificationCalls.set(request3.clarificationId, {
+            clarificationCalls.set(request4.clarificationId, {
               controller,
               work,
               hostWork
@@ -128548,6 +128688,7 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
               } : {},
               ...options2.headless === void 0 ? {} : { headless: options2.headless },
               ...options2.browserViewer ? { browserViewer: true } : {},
+              ...chromeMode ? { chromeTab: chromeMode } : {},
               ...options2.runnerValidation ? { runnerValidation: options2.runnerValidation } : {}
             }
           });
@@ -128824,11 +128965,11 @@ async function readRunnerConversation(directory3) {
   for (const name of requests) {
     const responseName = name.replace("request-", "response-");
     if (!names.includes(responseName)) continue;
-    const request3 = await json7(name);
+    const request4 = await json7(name);
     try {
       const response = await json7(responseName);
       if (typeof response.id === "string" && Array.isArray(response.output))
-        turns.set(response.id, { request: request3, response });
+        turns.set(response.id, { request: request4, response });
     } catch (error62) {
       if (!(error62 instanceof SyntaxError)) throw error62;
     }
@@ -128862,8 +129003,8 @@ async function readRunnerConversation(directory3) {
   return {
     initial: chain[0]?.request ?? finalRequest,
     input: [
-      ...chain.flatMap(({ request: request3, response }) => [
-        ...list8(request3.input),
+      ...chain.flatMap(({ request: request4, response }) => [
+        ...list8(request4.input),
         ...list8(response.output)
       ]),
       ...list8(finalRequest.input),
@@ -129067,32 +129208,32 @@ function parseRunnerValidationBinding(value) {
   }
   return binding2;
 }
-function selectRunnerValidation(binding2, scopeId, request3) {
-  if (request3.executionMethod !== void 0 && request3.executionMethod !== "browser-ui")
+function selectRunnerValidation(binding2, scopeId, request4) {
+  if (request4.executionMethod !== void 0 && request4.executionMethod !== "browser-ui")
     throw Error(
       "Validation binding supports browser execution only; no dispatch"
     );
   if (scopeId !== binding2.scopeId)
     throw Error("Validation context mismatch; no dispatch");
-  const requestedHeadless = request3.options?.headless;
+  const requestedHeadless = request4.options?.headless;
   if (requestedHeadless !== void 0 && requestedHeadless !== (binding2.headless ?? false))
     throw Error("Validation headless mode mismatch; no dispatch");
   const selected2 = binding2.operations.find(
-    (item2) => item2.requestKey === request3.requestKey
+    (item2) => item2.requestKey === request4.requestKey
   );
-  if (!selected2 || selected2.requestSha256 !== digest39(canonicalJson(request3)))
+  if (!selected2 || selected2.requestSha256 !== digest39(canonicalJson(request4)))
     throw Error("Validation operation mismatch; no dispatch");
   return selected2;
 }
-function runnerValidationOperation(binding2, scopeId, request3, nativeInput2, route) {
-  const selected2 = selectRunnerValidation(binding2, scopeId, request3);
+function runnerValidationOperation(binding2, scopeId, request4, nativeInput2, route) {
+  const selected2 = selectRunnerValidation(binding2, scopeId, request4);
   if (route !== binding2.route)
     throw Error("Validation route mismatch; no dispatch");
   return {
     schema: "loki.runner-validation-worker/1",
     bindingId: binding2.id,
     bindingSha256: runnerValidationIdentity(binding2).bindingSha256,
-    runId: digest39(JSON.stringify([scopeId, request3.requestKey])),
+    runId: digest39(JSON.stringify([scopeId, request4.requestKey])),
     requestKey: selected2.requestKey,
     nativeInputSha256: digest39(canonicalJson(nativeInput2)),
     route,
@@ -129269,6 +129410,7 @@ var runnerRequest = external_exports.strictObject({
   /** Explicit caller readiness, never inferred by interpreting scenario prose. */
   unresolvedInputs: external_exports.array(external_exports.string()).optional(),
   executionMethod: external_exports.string().optional(),
+  browserSession: chromeRunSession.optional(),
   options: external_exports.strictObject({
     headless: external_exports.boolean().optional().describe(
       "Browser execution only. Omit to use the installed package's default."
@@ -129314,60 +129456,64 @@ var ComputerRunner = class {
       join40(data2, "computer-runner-runs"),
       { inlineBytes: 24 * 1024, chunkCharacters: 8e3 },
       {
-        verify: async (request3) => {
-          const value = runnerRequest.parse(request3);
+        verify: async (request4) => {
+          const value = runnerRequest.parse(request4);
           if (checkedPlanReferenceSchema.safeParse(value.planRef).success)
             await verifySelectedPlan(value.planRef, this.dependencies.readPlan);
           return Promise.resolve();
         },
         execute: async (raw, context) => {
-          const request3 = runnerRequest.parse(raw);
+          const request4 = runnerRequest.parse(raw);
           const provider = await this.provider();
           const controlled = this.dependencies.runnerValidation?.route === "controlled";
-          const blocked = request3.unresolvedInputs?.length ? "unresolved_execution_inputs" : request3.executionMethod !== void 0 && !["browser-ui", "desktop-ui"].includes(request3.executionMethod) ? "unsupported_execution_method" : request3.executionMethod === "desktop-ui" !== "app" in request3.target ? "execution_method_target_mismatch" : (request3.executionMethod === "desktop-ui" ? request3.options?.limits?.browserInputs !== void 0 : request3.options?.limits?.desktopInputs !== void 0) ? "execution_method_limits_mismatch" : request3.executionMethod === "desktop-ui" && request3.options?.headless !== void 0 ? "execution_method_options_mismatch" : !provider.apiKey && !provider.brokerSocket && !controlled ? "OPENAI_API_KEY_not_configured" : null;
+          const chromeRun = request4.browserSession ? this.dependencies.chromeRun : void 0;
+          const otherBlock = request4.unresolvedInputs?.length ? "unresolved_execution_inputs" : request4.executionMethod !== void 0 && !["browser-ui", "desktop-ui"].includes(request4.executionMethod) ? "unsupported_execution_method" : request4.executionMethod === "desktop-ui" !== "app" in request4.target ? "execution_method_target_mismatch" : (request4.executionMethod === "desktop-ui" ? request4.options?.limits?.browserInputs !== void 0 : request4.options?.limits?.desktopInputs !== void 0) ? "execution_method_limits_mismatch" : request4.executionMethod === "desktop-ui" && request4.options?.headless !== void 0 ? "execution_method_options_mismatch" : !provider.apiKey && !provider.brokerSocket && !controlled ? "OPENAI_API_KEY_not_configured" : null;
+          const blocked = request4.browserSession && (!chromeRun || !("initialURL" in request4.target)) ? "chrome_run_unavailable" : otherBlock;
           if (blocked)
             return {
               schema: "loki.computer-runner-operation/1",
               status: "not-executed",
               reason: blocked,
-              scenarioId: request3.scenarioId,
-              unresolvedInputs: request3.unresolvedInputs ?? [],
-              executionMethod: request3.executionMethod ?? "browser-ui",
+              scenarioId: request4.scenarioId,
+              unresolvedInputs: request4.unresolvedInputs ?? [],
+              executionMethod: request4.executionMethod ?? "browser-ui",
               nativeResult: null,
               assessmentFragment: null,
               providerCallsStarted: 0
             };
-          const desktop = request3.executionMethod === "desktop-ui";
+          const desktop = request4.executionMethod === "desktop-ui";
           await this.clarifications.prepare(context);
           const nativeInput2 = {
-            executionMethod: request3.executionMethod ?? "browser-ui",
-            requestId: request3.requestKey,
-            scenarioId: request3.scenarioId,
-            scenario: request3.scenario,
-            params: request3.params,
-            target: request3.target,
-            ...request3.planRef === void 0 ? {} : { planRef: request3.planRef }
+            executionMethod: request4.executionMethod ?? "browser-ui",
+            requestId: request4.requestKey,
+            scenarioId: request4.scenarioId,
+            scenario: request4.scenario,
+            ...request4.browserSession ? { browserSession: request4.browserSession } : {},
+            params: request4.params,
+            target: request4.target,
+            ...request4.planRef === void 0 ? {} : { planRef: request4.planRef }
           };
           if (context.signal.aborted)
             return {
               schema: "loki.computer-runner-operation/1",
               status: "not-executed",
               reason: "stopped",
-              scenarioId: request3.scenarioId,
+              scenarioId: request4.scenarioId,
               unresolvedInputs: [],
-              executionMethod: request3.executionMethod ?? "browser-ui",
+              executionMethod: request4.executionMethod ?? "browser-ui",
               nativeResult: null,
               assessmentFragment: null,
               providerCallsStarted: 0
             };
           let returned, executionHost = null;
+          let chromeApprovalPending = false;
           const observeDispatch = () => {
             const lifecycle2 = context.lifecycle;
             if (!lifecycle2 || !context.owner || this.observedDispatch.has(lifecycle2))
               return;
             this.observedDispatch.add(lifecycle2);
             const selected2 = checkedPlanReferenceSchema.safeParse(
-              request3.planRef
+              request4.planRef
             );
             const plan = selected2.success ? selected2.data : null;
             observeLifecycle(lifecycle2, {
@@ -129382,7 +129528,7 @@ var ComputerRunner = class {
               } : null
             });
           };
-          const originalExecutionDeadline = Date.now() + (request3.options?.limits?.ms ?? defaultRunnerTimeLimitMs);
+          const originalExecutionDeadline = Date.now() + (request4.options?.limits?.ms ?? defaultRunnerTimeLimitMs);
           const viewerBudget = !desktop && this.dependencies.browserViewer && !this.dependencies.runnerValidation ? new RunnerExecutionBudget(originalExecutionDeadline) : void 0;
           try {
             const connection2 = provider.brokerSocket ? await readManagedPlannerConnection(
@@ -129413,20 +129559,20 @@ var ComputerRunner = class {
                   reviewSignal
                 )
               } : {},
-              ...request3.options,
+              ...request4.options,
               ...!desktop && this.dependencies.browserViewer && !this.dependencies.runnerValidation ? {
                 browserViewer: true,
-                headless: request3.options?.headless ?? true,
+                headless: request4.options?.headless ?? true,
                 onBrowserControl: (status2) => {
                   viewerBudget?.update(status2);
                 }
               } : {},
               ...context.identity.runnerAssessment === true ? { runnerAssessment: true } : {},
               ...context.identity.assessmentRecap === true ? { assessmentRecap: true } : {},
-              telemetryPlanId: checkedPlanReferenceSchema.safeParse(request3.planRef).data?.answerId ?? null,
+              telemetryPlanId: checkedPlanReferenceSchema.safeParse(request4.planRef).data?.answerId ?? null,
               requestClarification: this.clarifications.bind(
                 context,
-                request3.options?.limits?.ms ?? defaultRunnerTimeLimitMs,
+                request4.options?.limits?.ms ?? defaultRunnerTimeLimitMs,
                 viewerBudget?.deadlineAt,
                 viewerBudget?.signal
               ),
@@ -129435,9 +129581,9 @@ var ComputerRunner = class {
                   this.applicationContext,
                   context,
                   this.dependencies.operationScope ?? "",
-                  request3.requestKey,
-                  request3.scenarioId,
-                  request3.options?.limits?.ms ?? defaultRunnerTimeLimitMs
+                  request4.requestKey,
+                  request4.scenarioId,
+                  request4.options?.limits?.ms ?? defaultRunnerTimeLimitMs
                 )
               } : {},
               ...this.dependencies.runnerValidation ? { headless: this.dependencies.runnerValidation.headless } : {},
@@ -129445,29 +129591,50 @@ var ComputerRunner = class {
                 runnerValidation: runnerValidationOperation(
                   this.dependencies.runnerValidation,
                   this.dependencies.operationScope ?? "",
-                  object29(request3),
+                  object29(request4),
                   object29(nativeInput2),
                   controlled ? "controlled" : provider.brokerSocket ? "managed-broker" : "direct-openai"
                 )
               } : {}
             };
             context.signal.throwIfAborted();
-            if (this.dependencies.run) {
+            if (this.dependencies.run && !chromeRun) {
               observeDispatch();
               returned = await this.dependencies.run(
                 object29(nativeInput2),
                 options2
               );
             } else {
-              const isolated = await invokeComputerRunner(object29(nativeInput2), {
-                ...options2,
-                ...context.owner ? {
-                  ownerTransition: {
-                    runId: context.owner.id,
-                    onNativeDispatch: observeDispatch
-                  }
-                } : {}
-              });
+              const invoke = (tab) => {
+                context.signal.throwIfAborted();
+                chromeApprovalPending = false;
+                return invokeComputerRunner(object29(nativeInput2), {
+                  ...options2,
+                  ...tab ? { chromeTab: tab } : {},
+                  ...context.owner ? {
+                    ownerTransition: {
+                      runId: context.owner.id,
+                      onNativeDispatch: observeDispatch
+                    }
+                  } : {}
+                });
+              };
+              let isolated;
+              if (chromeRun && request4.browserSession && "initialURL" in request4.target) {
+                chromeApprovalPending = true;
+                isolated = await chromeRun(
+                  {
+                    mode: request4.browserSession,
+                    runId: context.owner?.id ?? hash26(request4.requestKey),
+                    initialURL: request4.target.initialURL,
+                    signal: context.signal,
+                    timeoutMs: request4.options?.limits?.ms ?? 6e5
+                  },
+                  invoke
+                );
+              } else {
+                isolated = await invoke();
+              }
               returned = isolated.result;
               executionHost = isolated.executionHost;
             }
@@ -129482,14 +129649,15 @@ var ComputerRunner = class {
                 })
               )
             );
-            if (error62 instanceof RunnerLaunchFailed) {
+            if (error62 instanceof RunnerLaunchFailed || chromeApprovalPending) {
+              const reason = chromeApprovalPending ? "chrome_run_approval_unavailable" : "runner_worker_launch_failed";
               return {
                 schema: "loki.computer-runner-operation/1",
                 status: "not-executed",
-                reason: "runner_worker_launch_failed",
-                scenarioId: request3.scenarioId,
+                reason,
+                scenarioId: request4.scenarioId,
                 unresolvedInputs: [],
-                executionMethod: request3.executionMethod ?? "browser-ui",
+                executionMethod: request4.executionMethod ?? "browser-ui",
                 nativeResult: null,
                 assessmentFragment: null,
                 providerCallsStarted: 0
@@ -129535,9 +129703,9 @@ var ComputerRunner = class {
           if (typeof nativeResult.testVerdict !== "string")
             throw Error("Native Runner verdict label is missing");
           const correlation = object29(nativeResult.correlation);
-          if (correlation.requestId !== request3.requestKey || correlation.scenarioId !== request3.scenarioId)
+          if (correlation.requestId !== request4.requestKey || correlation.scenarioId !== request4.scenarioId)
             throw Error("Runner correlation changed");
-          const evidencePrefix = `runner-${hash26(request3.requestKey)}`;
+          const evidencePrefix = `runner-${hash26(request4.requestKey)}`;
           const evidence2 = [
             {
               id: `${evidencePrefix}-summary`,
@@ -129585,10 +129753,10 @@ var ComputerRunner = class {
           const provenance3 = {
             component: desktop ? "mac-computer-runner" : "computer-runner",
             implementation: desktop ? desktopPins : pins3,
-            requestSha256: hash26(canonicalJson(object29(request3))),
-            requestId: request3.requestKey,
-            scenarioId: request3.scenarioId,
-            planRef: request3.planRef ?? null,
+            requestSha256: hash26(canonicalJson(object29(request4))),
+            requestId: request4.requestKey,
+            scenarioId: request4.scenarioId,
+            planRef: request4.planRef ?? null,
             executionState: nativeResult.executionState ?? null,
             testVerdict: nativeResult.testVerdict ?? null,
             memory: "not-implemented",
@@ -129618,12 +129786,12 @@ var ComputerRunner = class {
             nativeResult,
             executionConfig: {
               ...context.identity.runnerSettings ?? defaultRunnerSettings,
-              executionMethod: request3.executionMethod ?? "browser-ui",
+              executionMethod: request4.executionMethod ?? "browser-ui",
               browser: desktop ? null : "chromium",
               ...desktop ? {} : {
-                headless: this.dependencies.runnerValidation ? this.dependencies.runnerValidation.headless ?? false : request3.options?.headless ?? Boolean(this.dependencies.browserViewer)
+                headless: this.dependencies.runnerValidation ? this.dependencies.runnerValidation.headless ?? false : request4.options?.headless ?? Boolean(this.dependencies.browserViewer)
               },
-              target: object29(request3.target),
+              target: object29(request4.target),
               automaticRetries: 0,
               providerRetryPolicy: nativeResult.providerRetryPolicy ?? null,
               trigger: "explicit-tool-call"
@@ -129632,7 +129800,7 @@ var ComputerRunner = class {
               outcomes: [
                 {
                   id: `${evidencePrefix}-outcome`,
-                  test_id: request3.scenarioId,
+                  test_id: request4.scenarioId,
                   status: nativeResult.testVerdict,
                   text: runnerModelClaim(
                     terminal2,
@@ -129647,9 +129815,9 @@ var ComputerRunner = class {
                 }
               ],
               evidence: evidence2,
-              target: "app" in request3.target ? { app: request3.target.app, platform: "macOS" } : {
-                requestedOrigin: new URL(request3.target.initialURL).origin,
-                initialURLSha256: hash26(request3.target.initialURL),
+              target: "app" in request4.target ? { app: request4.target.app, platform: "macOS" } : {
+                requestedOrigin: new URL(request4.target.initialURL).origin,
+                initialURLSha256: hash26(request4.target.initialURL),
                 observed: terminalObservation === null ? null : object29(terminalObservation).url ?? null
               },
               provenance: provenance3
@@ -129686,17 +129854,17 @@ var ComputerRunner = class {
           });
         },
         validate: (result, raw) => {
-          const request3 = runnerRequest.parse(raw);
+          const request4 = runnerRequest.parse(raw);
           const value = runnerResultSchema.parse(result);
           if (value.schema !== "loki.computer-runner-operation/1")
             throw Error("Wrong Runner receiver contract");
           if (value.nativeResult === null) return;
           const native2 = object29(value.nativeResult), correlation = object29(native2.correlation);
-          if (correlation.scenarioId !== request3.scenarioId || correlation.requestId !== request3.requestKey)
+          if (correlation.scenarioId !== request4.scenarioId || correlation.requestId !== request4.requestKey)
             throw Error("Runner correlation changed");
           if (object29(
             external_exports.array(external_exports.json()).parse(object29(value.assessmentFragment).outcomes)[0]
-          ).test_id !== request3.scenarioId)
+          ).test_id !== request4.scenarioId)
             throw Error("Assessment test identity changed");
         }
       },
@@ -129818,6 +129986,9 @@ var ComputerRunner = class {
       } : {}
     };
   }
+  supportsChromeRun() {
+    return this.dependencies.chromeRun !== void 0;
+  }
   async start(input3, invocation) {
     const lifecycle2 = snapshotLifecycle(
       this.dependencies.lifecycle,
@@ -129836,16 +130007,16 @@ var ComputerRunner = class {
     } catch (error62) {
       return runnerFailure("execute", error62, false, true);
     }
-    let request3 = structuredClone(parsed.data);
-    const privateSubmissionSha256 = request3.privateParams ? hash26(canonicalJson(object29(request3))) : void 0;
+    let request4 = structuredClone(parsed.data);
+    const privateSubmissionSha256 = request4.privateParams ? hash26(canonicalJson(object29(request4))) : void 0;
     let dispatched = false;
     try {
       if (privateSubmissionSha256) {
         const runId2 = hash26(
           this.dependencies.operationScope ? JSON.stringify([
             this.dependencies.operationScope,
-            request3.requestKey
-          ]) : request3.requestKey
+            request4.requestKey
+          ]) : request4.requestKey
         );
         let existing;
         dispatched = null;
@@ -129860,11 +130031,11 @@ var ComputerRunner = class {
             throw new RequestKeyConflict("execution", runId2);
           return await this.view(existing);
         }
-        request3 = runnerRequest.parse(
+        request4 = runnerRequest.parse(
           await resolveRunnerParameters(
             this.data,
             this.dependencies.operationScope ?? "",
-            request3
+            request4
           )
         );
       }
@@ -129872,7 +130043,7 @@ var ComputerRunner = class {
         selectRunnerValidation(
           this.dependencies.runnerValidation,
           this.dependencies.operationScope ?? "",
-          object29(request3)
+          object29(request4)
         );
       const validation = this.dependencies.runnerValidation ? runnerValidationIdentity(this.dependencies.runnerValidation) : void 0;
       const applicationContext = await runnerContextIdentity(
@@ -129883,20 +130054,20 @@ var ComputerRunner = class {
       if (invocation?.reviewRun) {
         const scope = this.dependencies.operationScope ?? "";
         const id8 = hash26(
-          scope ? JSON.stringify([scope, request3.requestKey]) : request3.requestKey
+          scope ? JSON.stringify([scope, request4.requestKey]) : request4.requestKey
         );
         this.reviewers.set(id8, invocation.reviewRun);
       }
       const result = await this.operations.start(
-        request3.requestKey,
-        object29(request3),
+        request4.requestKey,
+        object29(request4),
         {
-          implementation: request3.executionMethod === "desktop-ui" ? desktopPins : pins3,
+          implementation: request4.executionMethod === "desktop-ui" ? desktopPins : pins3,
           ...settings.model === "gpt-6.1-terra" && settings.reasoning === "low" && settings.effortRecovery === void 0 ? {} : { runnerSettings: settings },
-          integration: "isolated-public-Node-API",
+          integration: request4.browserSession ? "attached-chrome" : "isolated-public-Node-API",
           ...invocation?.runnerAssessment ? { runnerAssessment: true } : {},
           ...invocation?.assessmentRecap ? { assessmentRecap: true } : {},
-          inputSha256: hash26(canonicalJson(object29(request3))),
+          inputSha256: hash26(canonicalJson(object29(request4))),
           ...privateSubmissionSha256 ? { privateSubmissionSha256 } : {},
           ...validation ? { validationContext: validation } : {},
           applicationContext
@@ -129935,8 +130106,8 @@ var ComputerRunner = class {
         hash26(
           this.dependencies.operationScope ? JSON.stringify([
             this.dependencies.operationScope,
-            request3.requestKey
-          ]) : request3.requestKey
+            request4.requestKey
+          ]) : request4.requestKey
         )
       );
     }
@@ -129944,14 +130115,14 @@ var ComputerRunner = class {
   async scopedGet(runId2, offset2) {
     const status2 = await this.operations.get(runId2, offset2);
     const directory3 = external_exports.string().min(1).parse(status2.receiptDirectory);
-    const request3 = retainedRunnerRequest.parse(
+    const request4 = retainedRunnerRequest.parse(
       JSON.parse(
         (await boundedFile(join40(directory3, "request.json"))).toString("utf8")
       )
     );
     const scope = this.dependencies.operationScope ?? "";
     if (hash26(
-      scope ? JSON.stringify([scope, request3.requestKey]) : request3.requestKey
+      scope ? JSON.stringify([scope, request4.requestKey]) : request4.requestKey
     ) !== runId2)
       throw new OperationNotFound();
     return status2;
@@ -129989,7 +130160,7 @@ var ComputerRunner = class {
           (await boundedFile(join40(directory3, "request.json"))).toString("utf8")
         )
       );
-      const request3 = retainedRunnerRequest.parse(raw);
+      const request4 = retainedRunnerRequest.parse(raw);
       const requestSha256 = hash26(canonicalJson(raw));
       const identity2 = object29(
         JSON.parse(
@@ -129998,7 +130169,7 @@ var ComputerRunner = class {
       );
       const scope = this.dependencies.operationScope ?? "";
       if (identity2.inputSha256 !== requestSha256 || canonicalJson(identity2) !== canonicalJson(status2.identity) || hash26(
-        scope ? JSON.stringify([scope, request3.requestKey]) : request3.requestKey
+        scope ? JSON.stringify([scope, request4.requestKey]) : request4.requestKey
       ) !== status2.runId)
         throw Error("Original request changed.");
       const bytes2 = await boundedFile(
@@ -130010,20 +130181,20 @@ var ComputerRunner = class {
       const originalResult = object29(JSON.parse(bytes2.toString("utf8")));
       const result = runnerResultSchema.parse(originalResult);
       const provenance3 = object29(object29(result.assessmentFragment).provenance);
-      if (provenance3.requestSha256 !== requestSha256 || provenance3.scenarioId !== request3.scenarioId || provenance3.requestId !== request3.requestKey || "planRef" in provenance3 && canonicalJson(provenance3.planRef) !== canonicalJson(request3.planRef ?? null))
+      if (provenance3.requestSha256 !== requestSha256 || provenance3.scenarioId !== request4.scenarioId || provenance3.requestId !== request4.requestKey || "planRef" in provenance3 && canonicalJson(provenance3.planRef) !== canonicalJson(request4.planRef ?? null))
         throw Error("Original context correlation changed.");
-      const protection = "app" in request3.target || await historicalRunnerRead(
+      const protection = "app" in request4.target || await historicalRunnerRead(
         status2,
         raw,
         result,
         this.dependencies.operationScope ?? ""
-      ) ? configuredProtection(request3) : await this.clarifications.protection(directory3);
-      const cleanupEvidence = "app" in request3.target ? void 0 : await readAssessmentCleanup(
+      ) ? configuredProtection(request4) : await this.clarifications.protection(directory3);
+      const cleanupEvidence = "app" in request4.target ? void 0 : await readAssessmentCleanup(
         this.data,
         external_exports.string().parse(status2.runId),
         result.nativeResult
       );
-      const expectation = request3.planRef === null || request3.planRef === void 0 ? structuredExpectation.safeParse(request3.scenario) : void 0;
+      const expectation = request4.planRef === null || request4.planRef === void 0 ? structuredExpectation.safeParse(request4.scenario) : void 0;
       const executionEvidence = await readExecutionPresentation(
         this.data,
         external_exports.string().parse(status2.runId),
@@ -130067,7 +130238,7 @@ var ComputerRunner = class {
         provenance: "caller-supplied-runner-scenario",
         ...expectation?.success ? { expectationAuthority: expectation.data.expected.authority } : {},
         ...projectAssessmentTask(
-          { ...request3, target: object29(request3.target) },
+          { ...request4, target: object29(request4.target) },
           protection
         ),
         executionEvidence,
@@ -130163,28 +130334,28 @@ var ComputerRunner = class {
     };
   }
   async answerCustomerClarification(input3) {
-    const request3 = runnerAnswer.safeParse(input3);
-    if (!request3.success)
+    const request4 = runnerAnswer.safeParse(input3);
+    if (!request4.success)
       throw Object.assign(
         new Error("Invalid clarification answer arguments."),
         { code: "invalid_params", requestDispatched: false }
       );
-    return this.answerWith(request3.data, true);
+    return this.answerWith(request4.data, true);
   }
   async answer(input3) {
     return this.answerWith(runnerAnswer.parse(input3), false);
   }
-  async answerWith(request3, customer) {
+  async answerWith(request4, customer) {
     try {
       return runnerAnswerOutput.parse(
-        await (customer ? this.clarifications.answerCustomer(request3) : this.clarifications.answer(request3))
+        await (customer ? this.clarifications.answerCustomer(request4) : this.clarifications.answer(request4))
       );
     } catch (error62) {
       return runnerAnswerOutput.parse({
         schema: "loki.runner.clarification-error/1",
-        runId: request3.runId,
-        clarificationId: request3.clarificationId,
-        answerKey: request3.answerKey,
+        runId: request4.runId,
+        clarificationId: request4.clarificationId,
+        answerKey: request4.answerKey,
         error: {
           code: error62 instanceof ClarificationRejection ? error62.code : "answer_effect_unestablished"
         },
@@ -130726,14 +130897,14 @@ var ApplicationMapContext = class {
     return this.importMap(input3, false);
   }
   async importMap(input3, select) {
-    const request3 = mapLoadSchema.parse(input3);
+    const request4 = mapLoadSchema.parse(input3);
     const original = await readLocalBytes({
-      ...request3,
+      ...request4,
       maxBytes: 8 * 1024 * 1024
     });
-    if (hash27(original) !== request3.sha256)
+    if (hash27(original) !== request4.sha256)
       throw new Error("Supplied map hash differs from selected bytes.");
-    const format3 = request3.format ?? "projection";
+    const format3 = request4.format ?? "projection";
     const source5 = JSON.parse(
       new TextDecoder("utf-8", { fatal: true }).decode(original)
     );
@@ -130741,12 +130912,12 @@ var ApplicationMapContext = class {
       format3 === "retained-bundle" ? projectRetainedMapBundle(source5) : source5
     );
     const projection2 = Buffer.from(JSON.stringify(map2));
-    const previous2 = this.interpretations.get(request3.sha256);
+    const previous2 = this.interpretations.get(request4.sha256);
     if (previous2 && (previous2.format !== format3 || previous2.projectionSha256 !== hash27(projection2)))
       throw new Error("Map source already has another frozen interpretation.");
     if (!this.data) throw new Error("No private map storage configured.");
     await privateDirectory(this.data);
-    const maps = join41(this.data, "map-artifacts"), directory3 = join41(maps, request3.sha256);
+    const maps = join41(this.data, "map-artifacts"), directory3 = join41(maps, request4.sha256);
     await privateDirectory(maps);
     const pending = await mkdtemp3(join41(maps, ".pending-"));
     try {
@@ -130763,8 +130934,8 @@ var ApplicationMapContext = class {
         references: [
           {
             location: "local",
-            path: request3.path,
-            sha256: request3.sha256,
+            path: request4.path,
+            sha256: request4.sha256,
             basis: "supplied",
             revision: map2.revision
           }
@@ -130782,7 +130953,7 @@ var ApplicationMapContext = class {
         nativeReference: {
           location: "local",
           path: join41(directory3, "original.json"),
-          sha256: request3.sha256,
+          sha256: request4.sha256,
           basis: "observed"
         }
       });
@@ -130805,7 +130976,7 @@ var ApplicationMapContext = class {
       await checkPrivateDirectory(directory3);
       if (hash27(
         await boundedFile(join41(directory3, "original.json"), 8 * 1024 * 1024)
-      ) !== request3.sha256)
+      ) !== request4.sha256)
         throw new Error(
           "Existing map bytes differ; original evidence preserved.",
           { cause: error62 }
@@ -130832,15 +131003,15 @@ var ApplicationMapContext = class {
       await atomicFile(
         maps,
         "selected.json",
-        Buffer.from(JSON.stringify({ mapId: request3.sha256 }))
+        Buffer.from(JSON.stringify({ mapId: request4.sha256 }))
       );
-    this.maps.set(request3.sha256, map2);
-    this.interpretations.set(request3.sha256, {
+    this.maps.set(request4.sha256, map2);
+    this.interpretations.set(request4.sha256, {
       format: format3,
       projectionSha256: hash27(projection2)
     });
-    if (select) this.selected = request3.sha256;
-    return select ? this.status() : { mapId: request3.sha256 };
+    if (select) this.selected = request4.sha256;
+    return select ? this.status() : { mapId: request4.sha256 };
   }
   async load(requestedMapId) {
     let mapId = requestedMapId ?? this.selected;
@@ -133640,7 +133811,7 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
     summary: scalar,
     limitations: arr2(scalar, 32)
   });
-  const request3 = {
+  const request4 = {
     model: settings.model,
     reasoning: { effort: settings.reasoning },
     store: false,
@@ -133677,11 +133848,11 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
     }
   };
   if (images.length)
-    request3.input = [
+    request4.input = [
       {
         role: "user",
         content: [
-          { type: "input_text", text: request3.input },
+          { type: "input_text", text: request4.input },
           ...orderedImages.flatMap((image) => [
             {
               type: "input_text",
@@ -133696,7 +133867,7 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
         ]
       }
     ];
-  const wire = utf8(encodedJson(request3));
+  const wire = utf8(encodedJson(request4));
   return {
     schema: SUPPLIED_TEST_EVIDENCE,
     ...recordVersion >= 2 ? { assessment_instructions_version: recordVersion } : {},
@@ -133713,7 +133884,7 @@ function prepareEvidence(input3, options2, citationSchemaVersion, recordVersion 
     // Rebuilt from the original input for local validation, never sent to the
     // model. Retained formats keep their original inline request bytes.
     ...recordVersion >= 12 ? { validation_schema: schema } : {},
-    request: request3,
+    request: request4,
     request_sha256: hash32(wire),
     request_bytes: wire.length
   };
@@ -134148,14 +134319,14 @@ function preparePlannerRecap(input3, retainedRequestSha256) {
       Array.isArray(input3.plannerHistory) && input3.plannerHistory.length,
       "Original Planner context required"
     );
-  const { request: request3, tests: tests2 } = input3;
-  const ids2 = request3.planRef.selectedTestIds;
+  const { request: request4, tests: tests2 } = input3;
+  const ids2 = request4.planRef.selectedTestIds;
   assert4(ids2.length > 0 && new Set(ids2).size === ids2.length);
   assert4(
     tests2.length === ids2.length && tests2.every((test) => ids2.includes(test.id))
   );
   assert4(new Set(tests2.map((test) => test.id)).size === ids2.length);
-  const steps = request3.recap.steps;
+  const steps = request4.recap.steps;
   assert4(Array.isArray(steps) && (delegated || steps.length > 0));
   assert4(steps.every((step) => typeof step === "string"));
   const stepNumbers = list11({
@@ -134237,7 +134408,7 @@ function preparePlannerRecap(input3, retainedRequestSha256) {
         content: JSON.stringify(
           delegated ? {
             steps,
-            runner_test_results: request3.runnerTestResults ?? []
+            runner_test_results: request4.runnerTestResults ?? []
           } : steps
         )
       }
@@ -134300,8 +134471,8 @@ function projectPlannerRecap(prepared, candidate) {
     schemaErrors2.filter((error62) => !associationError(error62)),
     []
   );
-  const { request: request3, tests: tests2 } = verified.input;
-  const ids2 = request3.planRef.selectedTestIds;
+  const { request: request4, tests: tests2 } = verified.input;
+  const ids2 = request4.planRef.selectedTestIds;
   assert4(
     candidate.test_results.length === ids2.length,
     "Every selected test needs one result"
@@ -134312,25 +134483,25 @@ function projectPlannerRecap(prepared, candidate) {
   );
   const citations2 = (numbers) => {
     return numbers.map((number4) => ({
-      source_id: request3.recap.evidenceId,
+      source_id: request4.recap.evidenceId,
       from_line: number4,
       through_line: number4
     }));
   };
   const bindings2 = (numbers) => numbers.map((number4) => {
-    const value = request3.recap.steps[number4 - 1];
+    const value = request4.recap.steps[number4 - 1];
     return {
       status: "bound",
       sourceKind: "execution_record",
       pointer: {
-        sourceId: request3.recap.evidenceId,
-        sourceSha256: request3.resultSha256,
-        jsonPointer: `${request3.recap.stepsPointer}/${number4 - 1}`
+        sourceId: request4.recap.evidenceId,
+        sourceSha256: request4.resultSha256,
+        jsonPointer: `${request4.recap.stepsPointer}/${number4 - 1}`
       },
       provenance: {
         role: "runner_recap",
-        runId: request3.runId,
-        resultSha256: request3.resultSha256
+        runId: request4.runId,
+        resultSha256: request4.resultSha256
       },
       rendered: { text: value, sha256: hash34(value) }
     };
@@ -134349,16 +134520,16 @@ function projectPlannerRecap(prepared, candidate) {
     }
     return {
       test_id: id8,
-      outcome_ids: [request3.runId],
+      outcome_ids: [request4.runId],
       expected,
       verdict: row2.verdict,
       actual: row2.actual,
       reason: conciseResults ? "" : row2.reason,
-      evidence_ids: row2.recap_steps.length ? [request3.recap.evidenceId] : [],
+      evidence_ids: row2.recap_steps.length ? [request4.recap.evidenceId] : [],
       citations: citations2(row2.recap_steps),
       literal_bindings: bindings2(row2.recap_steps),
       observed_steps: row2.recap_steps.map((number4) => ({
-        description: request3.recap.steps[number4 - 1],
+        description: request4.recap.steps[number4 - 1],
         citations: citations2([number4]),
         literal_bindings: bindings2([number4])
       })),
@@ -134378,7 +134549,7 @@ function projectPlannerRecap(prepared, candidate) {
   for (const [index2, row2] of (candidate.additional_checks ?? []).entries()) {
     assert4(row2.title.trim(), "An additional check needs a title");
     assert4(row2.expected.trim(), "An additional check needs an expected result");
-    const id8 = `additional-check-${hash34(JSON.stringify([request3.runId, index2, row2]))}`;
+    const id8 = `additional-check-${hash34(JSON.stringify([request4.runId, index2, row2]))}`;
     assert4(!ids2.includes(id8), "Additional check ID overlaps a selected test");
     additionalIds.push(id8);
     results.push({
@@ -134419,7 +134590,7 @@ function projectPlannerRecap(prepared, candidate) {
       original_finding: {
         claim: row2.claim,
         test_ids: linkedTests,
-        outcome_ids: [request3.runId],
+        outcome_ids: [request4.runId],
         citations: citations2(row2.recap_steps)
       },
       literal_bindings: bindings2(row2.recap_steps),
@@ -134451,15 +134622,15 @@ function projectAvailablePlannerRecap(prepared, candidate) {
   assert4(
     candidate && typeof candidate === "object" && !Array.isArray(candidate)
   );
-  const { request: request3, tests: tests2 } = prepared.input;
-  const ids2 = request3.planRef.selectedTestIds;
+  const { request: request4, tests: tests2 } = prepared.input;
+  const ids2 = request4.planRef.selectedTestIds;
   const delegated = prepared.input.schema === "kaijan.planner-recap-assessment/12" || prepared.input.schema === "kaijan.planner-recap-assessment/13" || prepared.input.schema === "kaijan.planner-recap-assessment/14";
   const associated = prepared.input.schema === "kaijan.planner-recap-assessment/14";
   const { runner_inspection_steps: inspectionSteps, ...plannerCandidate } = candidate;
   delete plannerCandidate.runner_test_results;
   if (associated) delete plannerCandidate.runner_test_definitions;
   const recapSteps = [
-    ...request3.recap.steps,
+    ...request4.recap.steps,
     ...delegated && Array.isArray(inspectionSteps) ? inspectionSteps.filter((step) => typeof step === "string") : []
   ];
   const errors = schemaErrors(
@@ -134475,24 +134646,24 @@ function projectAvailablePlannerRecap(prepared, candidate) {
     (number4) => Number.isSafeInteger(number4) && number4 >= 1 && number4 <= recapSteps.length
   );
   const citations2 = (numbers) => numbers.map((number4) => ({
-    source_id: request3.recap.evidenceId,
+    source_id: request4.recap.evidenceId,
     from_line: number4,
     through_line: number4
   }));
-  const bindings2 = (numbers) => (request3.recapSha256 ? [] : numbers).map((number4) => {
+  const bindings2 = (numbers) => (request4.recapSha256 ? [] : numbers).map((number4) => {
     const value = recapSteps[number4 - 1];
     return {
       status: "bound",
       sourceKind: "execution_record",
       pointer: {
-        sourceId: request3.recap.evidenceId,
-        sourceSha256: request3.resultSha256,
-        jsonPointer: `${request3.recap.stepsPointer}/${number4 - 1}`
+        sourceId: request4.recap.evidenceId,
+        sourceSha256: request4.resultSha256,
+        jsonPointer: `${request4.recap.stepsPointer}/${number4 - 1}`
       },
       provenance: {
         role: "runner_recap",
-        runId: request3.runId,
-        resultSha256: request3.resultSha256
+        runId: request4.runId,
+        resultSha256: request4.resultSha256
       },
       rendered: { text: value, sha256: hash34(value) }
     };
@@ -134506,12 +134677,12 @@ function projectAvailablePlannerRecap(prepared, candidate) {
     const rowErrors = at2(path21);
     return {
       test_id: id8,
-      outcome_ids: [request3.runId],
+      outcome_ids: [request4.runId],
       expected,
       verdict: row2.verdict,
       actual: typeof row2.actual === "string" ? row2.actual : null,
       reason: "",
-      evidence_ids: numbers.length ? [request3.recap.evidenceId] : [],
+      evidence_ids: numbers.length ? [request4.recap.evidenceId] : [],
       citations: citations2(numbers),
       literal_bindings: bindings2(numbers),
       observed_steps: numbers.map((number4) => ({
@@ -134526,7 +134697,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
     };
   };
   const runnerAnswers = delegated ? [
-    ...array5(request3.runnerTestResults),
+    ...array5(request4.runnerTestResults),
     ...array5(candidate.runner_test_results)
   ] : [];
   const answeredIds = /* @__PURE__ */ new Set();
@@ -134595,7 +134766,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
       added.add(id8);
     };
     for (const [index2, row2] of array5(candidate.additional_checks).entries()) {
-      const id8 = typeof row2?.test_id === "string" && !ids2.includes(row2.test_id) ? row2.test_id : `additional-check-${hash34(JSON.stringify([request3.runId, index2, row2]))}`;
+      const id8 = typeof row2?.test_id === "string" && !ids2.includes(row2.test_id) ? row2.test_id : `additional-check-${hash34(JSON.stringify([request4.runId, index2, row2]))}`;
       const original = originalAnswers.find((answer) => answer.test_id === id8);
       append(id8, original ?? row2, row2, `$.additional_checks[${index2}]`);
       additionalIds.push(added.has(id8) ? id8 : void 0);
@@ -134605,7 +134776,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
         append(row2.test_id, row2, void 0, `$.runner_test_results[${index2}]`);
   } else {
     for (const [index2, row2] of array5(candidate.additional_checks).entries()) {
-      const id8 = `additional-check-${hash34(JSON.stringify([request3.runId, index2, row2]))}`;
+      const id8 = `additional-check-${hash34(JSON.stringify([request4.runId, index2, row2]))}`;
       const result = projectResult(
         row2,
         id8,
@@ -134648,7 +134819,7 @@ function projectAvailablePlannerRecap(prepared, candidate) {
         original_finding: {
           claim: row2.claim,
           test_ids: linkedTests,
-          outcome_ids: [request3.runId],
+          outcome_ids: [request4.runId],
           citations: citations2(numbers)
         },
         resolved_recap_steps: numbers,
@@ -135432,13 +135603,13 @@ var TestRun = class {
         resultBytes: 60 * 1024 * 1024
       },
       {
-        verify: (request3) => {
-          runnerRequest.parse(request3);
+        verify: (request4) => {
+          runnerRequest.parse(request4);
           return Promise.resolve();
         },
-        execute: async (request3, context) => {
+        execute: async (request4, context) => {
           const result = await this.execute(
-            runnerRequest.parse(request3),
+            runnerRequest.parse(request4),
             context
           );
           const capKey = context.identity.hostTurnPlan;
@@ -135495,15 +135666,15 @@ var TestRun = class {
       this.scopeId ? JSON.stringify([this.scopeId, requestKey]) : requestKey
     );
   }
-  async execute(request3, context) {
-    const runId2 = this.id(request3.requestKey);
+  async execute(request4, context) {
+    const runId2 = this.id(request4.requestKey);
     const result = initial();
     this.live.set(runId2, result);
     const requestedPlan = checkedPlanReferenceSchema.safeParse(
-      request3.planRef
+      request4.planRef
     ).data;
     const selected2 = {
-      ids: requestedPlan?.selectedTestIds ?? [request3.scenarioId],
+      ids: requestedPlan?.selectedTestIds ?? [request4.scenarioId],
       planId: requestedPlan?.answerId ?? null,
       planResultSha256: requestedPlan?.resultSha256 ?? null
     };
@@ -135568,7 +135739,7 @@ var TestRun = class {
       return {
         title: "Kaijan test run",
         operations,
-        ...request3.sourceContextId ? { sourceContextId: request3.sourceContextId } : {}
+        ...request4.sourceContextId ? { sourceContextId: request4.sourceContextId } : {}
       };
     };
     const readExecution = async (initial2, signal) => {
@@ -135597,7 +135768,7 @@ var TestRun = class {
       );
       result.status.assessment = stopped3 ? "stopped" : complete ? "complete" : "input-unavailable";
       result.preparation = {
-        source: request3.executionMethod === "desktop-ui" ? "runner-desktop-session" : "runner-browser-session",
+        source: request4.executionMethod === "desktop-ui" ? "runner-desktop-session" : "runner-browser-session",
         runId: runId2
       };
       result.assessment = {
@@ -135624,7 +135795,7 @@ var TestRun = class {
         } catch {
         }
         if (result.status.report === "not-saved") {
-          const plan = checkedPlanReferenceSchema.safeParse(request3.planRef);
+          const plan = checkedPlanReferenceSchema.safeParse(request4.planRef);
           result.status.report = "saving";
           try {
             const report = await this.services.reports.show(
@@ -135643,11 +135814,11 @@ var TestRun = class {
     try {
       if (context.signal.aborted) return await stopped2();
       result.status.execution = "starting";
-      let executionRequest = request3;
-      if (context.identity.scenarioSource === "saved-plan" && typeof request3.scenario === "object" && request3.scenario !== null && !Array.isArray(request3.scenario) && typeof request3.scenario.taskInstructions === "string") {
-        const { taskInstructions, ...scenario } = request3.scenario;
+      let executionRequest = request4;
+      if (context.identity.scenarioSource === "saved-plan" && typeof request4.scenario === "object" && request4.scenario !== null && !Array.isArray(request4.scenario) && typeof request4.scenario.taskInstructions === "string") {
+        const { taskInstructions, ...scenario } = request4.scenario;
         executionRequest = {
-          ...request3,
+          ...request4,
           scenario: { ...scenario, planningTaskInstructions: taskInstructions }
         };
       }
@@ -135757,12 +135928,12 @@ var TestRun = class {
   async scopedGet(runId2, offset2) {
     const status2 = await this.operations.get(runId2, offset2);
     const directory3 = external_exports.string().parse(status2.receiptDirectory);
-    const request3 = retainedRunnerRequest.parse(
+    const request4 = retainedRunnerRequest.parse(
       JSON.parse(
         (await boundedFile(join44(directory3, "request.json"))).toString("utf8")
       )
     );
-    if (this.id(request3.requestKey) !== runId2) throw new OperationNotFound();
+    if (this.id(request4.requestKey) !== runId2) throw new OperationNotFound();
     return status2;
   }
   async view(status2, offset2) {
@@ -135918,7 +136089,7 @@ var TestRun = class {
           submitted.target.allowedHosts
         );
       runId2 = this.id(submitted.requestKey);
-      let request3;
+      let request4;
       if ("savedTests" in submitted) {
         try {
           const { savedTests, guidance, hostContext, ...base } = submitted;
@@ -135932,7 +136103,7 @@ var TestRun = class {
             ...guidance === void 0 ? {} : { callerGuidance: guidance },
             ...hostContext === void 0 ? {} : { hostContext }
           };
-          request3 = runnerRequest.parse({
+          request4 = runnerRequest.parse({
             ...base,
             scenario,
             planRef: selected2.reference
@@ -135943,7 +136114,7 @@ var TestRun = class {
             { cause: error62 }
           );
         }
-      } else request3 = submitted;
+      } else request4 = submitted;
       const plan = "savedTests" in submitted ? submitted.savedTests : void 0;
       const capKey = hostTurnId && plan ? hash36(
         JSON.stringify([
@@ -135975,12 +136146,12 @@ var TestRun = class {
       }
       return await this.view(
         await this.operations.start(
-          request3.requestKey,
-          object36(request3),
+          request4.requestKey,
+          object36(request4),
           {
             integration: "kaijan.test-run/1",
             ...capKey ? { hostTurnPlan: capKey } : {},
-            inputSha256: hash36(canonicalJson(object36(request3))),
+            inputSha256: hash36(canonicalJson(object36(request4))),
             ..."savedTests" in submitted ? { scenarioSource: "saved-plan" } : {}
           },
           lifecycle2
@@ -135992,12 +136163,12 @@ var TestRun = class {
   }
   async get(input3, signal) {
     try {
-      const request3 = testRunRead.parse(input3);
-      const deadline = performance5.now() + (request3.offset === void 0 ? request3.waitMs : 0);
+      const request4 = testRunRead.parse(input3);
+      const deadline = performance5.now() + (request4.offset === void 0 ? request4.waitMs : 0);
       for (; ; ) {
         const result = await this.view(
-          await this.scopedGet(request3.runId, request3.offset),
-          request3.offset
+          await this.scopedGet(request4.runId, request4.offset),
+          request4.offset
         );
         const remaining = deadline - performance5.now();
         if (remaining <= 0 || signal?.aborted || result.state !== "accepted" && result.state !== "running" || result.stopRequested || result.nextAction)
@@ -136321,8 +136492,8 @@ function providerContract() {
     decision_context_limit: 105e4
   };
 }
-function lunaDispatch(request3, env = process2.env) {
-  if (request3.model !== "gpt-6-luna" || request3.reasoning?.effort !== "medium" || Object.hasOwn(request3, "provider"))
+function lunaDispatch(request4, env = process2.env) {
+  if (request4.model !== "gpt-6-luna" || request4.reasoning?.effort !== "medium" || Object.hasOwn(request4, "provider"))
     throw Error("Only native OpenAI Luna medium is supported");
   return {
     ...providerConnection(
@@ -136331,14 +136502,14 @@ function lunaDispatch(request3, env = process2.env) {
       env
     ),
     key: env.OPENAI_API_KEY,
-    request: zdrRequest(request3)
+    request: zdrRequest(request4)
   };
 }
-function lunaWireRequest(request3) {
-  return request3;
+function lunaWireRequest(request4) {
+  return request4;
 }
-function isLunaProviderRequest(request3) {
-  return request3.model === "gpt-6-luna" && ["low", "medium"].includes(request3.reasoning?.effort) && !Object.hasOwn(request3, "provider");
+function isLunaProviderRequest(request4) {
+  return request4.model === "gpt-6-luna" && ["low", "medium"].includes(request4.reasoning?.effort) && !Object.hasOwn(request4, "provider");
 }
 function assertJevRouting(response) {
   if (response?.providerMetadata?.openai_decisions) return;
@@ -136402,9 +136573,9 @@ function nativeDecisionResult(native2, body2, raw, response) {
     }
   };
 }
-async function evaluate(request3, { env = process2.env, fetch: fetch3 = modelFetch } = {}) {
+async function evaluate(request4, { env = process2.env, fetch: fetch3 = modelFetch } = {}) {
   requireModelCredentials(env);
-  const body2 = decisionsRequest(request3);
+  const body2 = decisionsRequest(request4);
   const connection2 = providerConnection(
     decisionsEndpoint,
     env.OPENAI_API_KEY,
@@ -136416,7 +136587,7 @@ async function evaluate(request3, { env = process2.env, fetch: fetch3 = modelFet
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body2),
-      signal: request3.abortSignal
+      signal: request4.abortSignal
     },
     fetch3
   );
@@ -136511,8 +136682,8 @@ async function providerCatalog({
 
 // ../ui-modeler/lib/events-budget.mjs
 import { Buffer as Buffer5 } from "node:buffer";
-function lunaUpperUsd(request3) {
-  return (Buffer5.byteLength(JSON.stringify(request3)) + 8192) * 0.25 / 1e6 + request3.max_output_tokens * 0.75 / 1e6;
+function lunaUpperUsd(request4) {
+  return (Buffer5.byteLength(JSON.stringify(request4)) + 8192) * 0.25 / 1e6 + request4.max_output_tokens * 0.75 / 1e6;
 }
 function lunaCharge(usage) {
   if (!usage || !Number.isInteger(usage.input_tokens) || !Number.isInteger(usage.output_tokens))
@@ -160258,26 +160429,26 @@ function archive(dir, {
       store: false,
       text: { format: options2.textFormat ?? { type: "json_object" } }
     };
-    const dispatch = lunaDispatch(canonical4, env), request3 = dispatch.request;
+    const dispatch = lunaDispatch(canonical4, env), request4 = dispatch.request;
     if (await exists(name + "/request")) {
       const savedRequest = await read5(name + "/request");
-      const expected = typeof savedRequest?.store === "boolean" ? { ...request3, store: savedRequest.store } : request3;
+      const expected = typeof savedRequest?.store === "boolean" ? { ...request4, store: savedRequest.store } : request4;
       if (hash38(expected) !== hash38(savedRequest))
         throw Error("Immutable request mismatch");
       if (await exists(name + "/parsed")) return read5(name + "/parsed");
       throw Error("Prior unfinished attempt preserved");
     }
-    const cacheKey = { kind: "native-responses-request/1", request: request3 };
+    const cacheKey = { kind: "native-responses-request/1", request: request4 };
     const previous2 = await analysisCache2?.get(cacheKey);
     if (previous2) {
-      if (hash38(previous2.request) !== hash38(request3) || responseCharge(previous2.response) === null)
+      if (hash38(previous2.request) !== hash38(request4) || responseCharge(previous2.response) === null)
         throw Error("Cached native response identity/accounting differs");
       const result = decodeFinalResponse(previous2.response).value;
       if (options2.isReusable && !options2.isReusable(result))
         throw Error(
           "Cached native response fails the caller's evidence contract"
         );
-      await save3(name + "/request", request3);
+      await save3(name + "/request", request4);
       await save3(name + "/response", previous2.response);
       await save3(name + "/parsed", result);
       await save3(name + "/original-provider-receipt", previous2.receipt);
@@ -160301,7 +160472,7 @@ function archive(dir, {
       run: dir,
       request: name
     });
-    await save3(name + "/request", request3);
+    await save3(name + "/request", request4);
     const started = Date.now();
     await save3(name + "/transport", {
       ...transportProtocol,
@@ -160318,7 +160489,7 @@ function archive(dir, {
           "Content-Type": "application/json",
           ...dispatch.openrouter ?? dispatch.url.startsWith("https://openrouter.ai/") ? { "X-OpenRouter-Metadata": "enabled" } : {}
         },
-        body: JSON.stringify(request3),
+        body: JSON.stringify(request4),
         signal: globalThis.AbortSignal.any(
           [signal, globalThis.AbortSignal.timeout(6e5)].filter(Boolean)
         )
@@ -160347,7 +160518,7 @@ function archive(dir, {
       const accounting_reason = usd === null ? lunaCharge(u) === 0 ? "Non-completed response reports zero usage; actual charge unverified" : "Missing or invalid usage; actual charge unverified" : null;
       const receipt4 = {
         model,
-        wire_model: request3.model,
+        wire_model: request4.model,
         response_model: data2.model ?? null,
         endpoint: dispatch.url,
         status: data2.status ?? "error",
@@ -160376,7 +160547,7 @@ function archive(dir, {
       if (usd !== null) {
         if (!options2.isReusable || options2.isReusable(result))
           await analysisCache2?.put(cacheKey, {
-            request: request3,
+            request: request4,
             response: data2,
             receipt: receipt4,
             evidence: { run: dir, request: name }
@@ -160406,14 +160577,14 @@ function archive(dir, {
 // ../ui-modeler/lib/folder-run-budget.mjs
 var accessUnavailable = (error62) => [401, 402, 403].includes(error62.statusCode) || String(error62.message).includes("A positive credit balance is required");
 var jevReservationPolicy = "full-request-utf8-with-protocol-reserve/2";
-function folderJevUpperUsd(request3) {
-  if (request3.model === "gpt-6-luna")
-    return (Buffer6.byteLength(JSON.stringify(request3)) + 8192) * 0.25 / 1e6;
-  return Math.max(64e3, Buffer6.byteLength(JSON.stringify(request3)) + 8192) * 42e-9;
+function folderJevUpperUsd(request4) {
+  if (request4.model === "gpt-6-luna")
+    return (Buffer6.byteLength(JSON.stringify(request4)) + 8192) * 0.25 / 1e6;
+  return Math.max(64e3, Buffer6.byteLength(JSON.stringify(request4)) + 8192) * 42e-9;
 }
-function folderSchemaAccountingRequest(request3) {
-  const schema = request3.text?.format?.schema;
-  if (!schema?.$defs) return request3;
+function folderSchemaAccountingRequest(request4) {
+  const schema = request4.text?.format?.schema;
+  if (!schema?.$defs) return request4;
   function expand(value, ancestors = /* @__PURE__ */ new Set()) {
     if (Array.isArray(value)) return value.map((v) => expand(v, ancestors));
     if (!value || typeof value !== "object") return value;
@@ -160439,7 +160610,7 @@ function folderSchemaAccountingRequest(request3) {
       ])
     );
   }
-  const accounting = globalThis.structuredClone(request3);
+  const accounting = globalThis.structuredClone(request4);
   accounting.text.format.schema = expand(schema);
   return accounting;
 }
@@ -160540,7 +160711,7 @@ var FolderRunBudget = class {
     });
     this.admissionWaitMs += this.now() - started;
   }
-  async call(kind, request3, invoke, accountingRequest = request3) {
+  async call(kind, request4, invoke, accountingRequest = request4) {
     this.check();
     this.checkAdmissionDeadline();
     const upper = kind === "luna" ? lunaUpperUsd(accountingRequest) : folderJevUpperUsd(accountingRequest);
@@ -160556,9 +160727,9 @@ var FolderRunBudget = class {
     const entry = {
       id: this.calls.length,
       kind,
-      request_sha256: hash38(request3),
-      request_utf8_bytes: Buffer6.byteLength(JSON.stringify(request3)),
-      ...hash38(accountingRequest) !== hash38(request3) ? {
+      request_sha256: hash38(request4),
+      request_utf8_bytes: Buffer6.byteLength(JSON.stringify(request4)),
+      ...hash38(accountingRequest) !== hash38(request4) ? {
         accounting_request_sha256: hash38(accountingRequest),
         accounting_request_utf8_bytes: Buffer6.byteLength(
           JSON.stringify(accountingRequest)
@@ -160648,17 +160819,17 @@ var FolderRunBudget = class {
   }
   fetch(client) {
     return async (url2, options2) => {
-      const request3 = JSON.parse(options2.body);
+      const request4 = JSON.parse(options2.body);
       let accountingRequest;
       try {
-        accountingRequest = folderSchemaAccountingRequest(request3);
+        accountingRequest = folderSchemaAccountingRequest(request4);
       } catch (error62) {
         error62.notDispatched = true;
         throw error62;
       }
       return this.call(
         "luna",
-        request3,
+        request4,
         async (signal) => {
           const response = await client(url2, {
             ...options2,
@@ -160674,18 +160845,18 @@ var FolderRunBudget = class {
     };
   }
   evaluate(client) {
-    return async (request3) => this.call(
+    return async (request4) => this.call(
       "jev",
       {
-        model: request3.model,
-        state: request3.state,
-        questions: request3.questions
+        model: request4.model,
+        state: request4.state,
+        questions: request4.questions
       },
       async (signal) => {
         const response = await client({
-          ...request3,
+          ...request4,
           abortSignal: globalThis.AbortSignal.any(
-            [request3.abortSignal, signal].filter(Boolean)
+            [request4.abortSignal, signal].filter(Boolean)
           )
         });
         return { response, accountingResponse: response };
@@ -161754,14 +161925,14 @@ async function screenFolderSource({
         return;
       }
       items = fresh;
-      const base = "seed/" + index2, request3 = seedRequest(items, {
+      const base = "seed/" + index2, request4 = seedRequest(items, {
         questionPolicy: declarativePageSeedPolicy
       });
-      await a.save(base + "/request", request3);
+      await a.save(base + "/request", request4);
       let rows4;
       try {
         const r = await jev({
-          ...request3,
+          ...request4,
           maxRetries: 0,
           abortSignal: globalThis.AbortSignal.timeout(6e4)
         });
@@ -161833,7 +162004,7 @@ async function recordFolderDiscoveryPlan({
   const discoveryRequestPlan = prepared.inputs.map((original, index2) => {
     const payload = bindingInput(original, corpus);
     payload.input = expressionInput(payload.input, sourceRoleContract);
-    const request3 = {
+    const request4 = {
       model: "gpt-6-luna",
       reasoning: { effort: "medium" },
       instructions: expressionInstructions(payload.input),
@@ -161845,8 +162016,8 @@ async function recordFolderDiscoveryPlan({
     return {
       index: index2,
       reused: acceptedDiscoveryScopes.has(index2),
-      request_utf8_bytes: Buffer9.byteLength(JSON.stringify(request3)),
-      reserved_upper_usd: lunaUpperUsd(request3)
+      request_utf8_bytes: Buffer9.byteLength(JSON.stringify(request4)),
+      reserved_upper_usd: lunaUpperUsd(request4)
     };
   });
   await a.save("discovery/request-plan", {
@@ -162272,8 +162443,8 @@ function fulfillBindingReads(requests, sources, corpus, limits = bindingReadLimi
     end: s.end
   }));
   const accepted = [], unavailable5 = [];
-  for (const request3 of requests) {
-    const f = files.get(request3.path);
+  for (const request4 of requests) {
+    const f = files.get(request4.path);
     let reason = null, next2 = null;
     if (!f) reason = "captured path unavailable";
     else if (f.text.length > limits.file_characters)
@@ -162287,10 +162458,10 @@ function fulfillBindingReads(requests, sources, corpus, limits = bindingReadLimi
         reason = "unique source budget";
     }
     if (reason) {
-      unavailable5.push({ ...request3, reason });
+      unavailable5.push({ ...request4, reason });
       continue;
     }
-    accepted.push({ path: request3.path, characters: f.text.length });
+    accepted.push({ path: request4.path, characters: f.text.length });
     ranges = next2;
   }
   return { sources: bindingSources(corpus, ranges), accepted, unavailable: unavailable5 };
@@ -162748,11 +162919,11 @@ function refuseUnresolvedRequests(fetch3, hashes) {
 }
 function refuseUnresolvedEvaluations(evaluate2, hashes) {
   const blocked = new Set(hashes);
-  return async (request3) => {
+  return async (request4) => {
     const identity2 = {
-      model: request3.model,
-      state: request3.state,
-      questions: request3.questions
+      model: request4.model,
+      state: request4.state,
+      questions: request4.questions
     };
     if (blocked.has(hash38(identity2))) {
       const error62 = Error(
@@ -162762,7 +162933,7 @@ function refuseUnresolvedEvaluations(evaluate2, hashes) {
       error62.notDispatched = true;
       throw error62;
     }
-    return evaluate2(request3);
+    return evaluate2(request4);
   };
 }
 
@@ -164414,7 +164585,7 @@ async function screenVisibleRound({
       (items, j) => ({ items, j })
     ),
     async ({ items, j }) => {
-      const b = roundBase + "/filter/" + j, request3 = {
+      const b = roundBase + "/filter/" + j, request4 = {
         model: "gpt-6-luna",
         state: { page: screening.page, chunks: items },
         questions: Object.fromEntries(
@@ -164424,11 +164595,11 @@ async function screenVisibleRound({
           ])
         )
       };
-      await a.save(b + "/request", request3);
+      await a.save(b + "/request", request4);
       let rows4;
       try {
         const response = await runEvaluate({
-          ...request3,
+          ...request4,
           maxRetries: 0,
           abortSignal: globalThis.AbortSignal.timeout(6e4)
         });
@@ -165832,9 +166003,9 @@ async function loadMapReviews(run, protocol, corpus, registry2, results, map2) {
       }
       if (![0, 1].includes(accepted.attempt))
         throw Error("Invalid accepted page review attempt");
-      const request3 = records[accepted.attempt + "/request"], response = records[accepted.attempt + "/response"], parsed = records[accepted.attempt + "/parsed"];
-      if (!request3 || !response || !parsed) continue;
-      const payload = JSON.parse(request3.input), expectedPayload = {
+      const request4 = records[accepted.attempt + "/request"], response = records[accepted.attempt + "/response"], parsed = records[accepted.attempt + "/parsed"];
+      if (!request4 || !response || !parsed) continue;
+      const payload = JSON.parse(request4.input), expectedPayload = {
         output_format: "JSON",
         ...binding2.context,
         claims: Object.fromEntries(
@@ -165848,10 +166019,10 @@ async function loadMapReviews(run, protocol, corpus, registry2, results, map2) {
         ];
       }
       equal5(payload, expectedPayload, "page review context and claims");
-      if (request3.instructions !== folderPageReviewPrompt || !isLunaProviderRequest(request3, generation2.provider_mode))
+      if (request4.instructions !== folderPageReviewPrompt || !isLunaProviderRequest(request4, generation2.provider_mode))
         throw Error("Page review request contract differs");
       equal5(
-        request3.text.format,
+        request4.text.format,
         folderPageReviewFormat(payload),
         "page review format"
       );
@@ -165870,7 +166041,7 @@ async function loadMapReviews(run, protocol, corpus, registry2, results, map2) {
           identity: {
             generation_protocol_hash: binding2.source_protocol_hash,
             input_hash: hash38(payload),
-            request_hash: hash38(request3),
+            request_hash: hash38(request4),
             response_hash: hash38(response)
           },
           evidence_documents: [
@@ -166426,12 +166597,12 @@ async function expandJevPageContext({
   await pool(
     plan.groups.map((items, index2) => ({ items, index: index2 })),
     async ({ items, index: index2 }) => {
-      const b = base + "/" + index2, request3 = pageContextRequest(state2.input.page, items);
-      await store2.save(b + "/request", request3);
+      const b = base + "/" + index2, request4 = pageContextRequest(state2.input.page, items);
+      await store2.save(b + "/request", request4);
       let rows4;
       try {
         const response = await evaluate2({
-          ...request3,
+          ...request4,
           maxRetries: 0,
           abortSignal: globalThis.AbortSignal.timeout(6e4)
         });
@@ -166611,12 +166782,12 @@ async function runFolderWorkflow({
   const wrapFetch = (dispatch) => (url2, options2) => refuseUnresolvedRequests(ledger.fetch(dispatch), blockedRequests)(
     url2,
     options2
-  ), jev = (request3) => refuseUnresolvedEvaluations(
+  ), jev = (request4) => refuseUnresolvedEvaluations(
     ledger.evaluate(
-      services?.evaluate ?? ((request4) => evaluate(request4, { env }))
+      services?.evaluate ?? ((request5) => evaluate(request5, { env }))
     ),
     blockedRequests
-  )(request3), makeArchive = (dir) => archive(dir, {
+  )(request4), makeArchive = (dir) => archive(dir, {
     fetch: services?.fetch ?? modelFetch,
     wrapFetch,
     env,
@@ -167656,10 +167827,10 @@ async function sourceIndexFromArchive(run, protocol, map2, corpus, results, { re
       const input3 = await a.read(b + "/input"), ids2 = await a.read(b + "/source-identities"), ranges = rangesFor(input3, ids2);
       let dispatch_evidence = "saved_input_only";
       if (await a.exists(b + "/attempt0/request")) {
-        const request3 = await a.read(b + "/attempt0/request");
-        if (!isLunaProviderRequest(request3, p.model_provider) || hash38(JSON.parse(request3.input)) !== hash38({ output_format: "JSON", ...input3 }))
+        const request4 = await a.read(b + "/attempt0/request");
+        if (!isLunaProviderRequest(request4, p.model_provider) || hash38(JSON.parse(request4.input)) !== hash38({ output_format: "JSON", ...input3 }))
           throw Error("Source provenance request differs");
-        if (p.prompt_hash && hash38(request3.instructions) !== p.prompt_hash)
+        if (p.prompt_hash && hash38(request4.instructions) !== p.prompt_hash)
           throw Error("Source provenance prompt differs");
         dispatch_evidence = await a.exists(b + "/attempt0/response") ? "response_recorded" : await a.exists(b + "/attempt0/error") ? "error_recorded" : "request_only";
       }
@@ -167972,8 +168143,8 @@ async function visiblePageResult(a, index2, protocol) {
     if (!await a.exists(b + "/result")) continue;
     const result = await a.read(b + "/result");
     if (result.validation !== "valid") return { result };
-    const input3 = await a.read(b + "/input"), request3 = await a.read(b + "/attempt0/request"), response = await a.read(b + "/attempt0/response"), parsed = await a.read(b + "/attempt0/parsed");
-    if (response.status !== "completed" || result.round !== round || result.format_version !== protocol.format_version || hash38(decodeFinalResponse(response).value) !== hash38(parsed) || hash38(parsed) !== hash38(result.judgment) || hash38(result.input) !== hash38(input3) || !isLunaProviderRequest(request3, protocol.model_provider) || hash38(JSON.parse(request3.input)) !== hash38({ output_format: "JSON", ...input3 }) || hash38(request3.instructions) !== protocol.prompt_hash || hash38(request3.text.format) !== hash38(
+    const input3 = await a.read(b + "/input"), request4 = await a.read(b + "/attempt0/request"), response = await a.read(b + "/attempt0/response"), parsed = await a.read(b + "/attempt0/parsed");
+    if (response.status !== "completed" || result.round !== round || result.format_version !== protocol.format_version || hash38(decodeFinalResponse(response).value) !== hash38(parsed) || hash38(parsed) !== hash38(result.judgment) || hash38(result.input) !== hash38(input3) || !isLunaProviderRequest(request4, protocol.model_provider) || hash38(JSON.parse(request4.input)) !== hash38({ output_format: "JSON", ...input3 }) || hash38(request4.instructions) !== protocol.prompt_hash || hash38(request4.text.format) !== hash38(
       visibleContractFormat(input3, protocol.format_version, {
         citationPolicy: protocol.citation_policy,
         controlSiteAccountingPolicy: protocol.control_site_accounting_policy
@@ -168009,8 +168180,8 @@ async function exportVisibleRun(run, output2, { validationPolicyUpgrade, readCon
         throw Error("Visible control-site result policy differs");
     }
     if (validationPolicyUpgrade && duplicateReadUpgrade(recovered.result)) {
-      const r = recovered.result, b = "pages/" + i2 + "/round" + r.round, input3 = await a.read(b + "/input"), request3 = await a.read(b + "/attempt0/request"), response = await a.read(b + "/attempt0/response"), parsed = await a.read(b + "/attempt0/parsed");
-      if (hash38(input3) !== hash38(r.input) || hash38(parsed) !== hash38(r.judgment) || hash38(decodeFinalResponse(response).value) !== hash38(parsed) || hash38(JSON.parse(request3.input)) !== hash38({ output_format: "JSON", ...input3 }) || hash38(request3.instructions) !== p.prompt_hash || hash38(request3.text.format) !== hash38(
+      const r = recovered.result, b = "pages/" + i2 + "/round" + r.round, input3 = await a.read(b + "/input"), request4 = await a.read(b + "/attempt0/request"), response = await a.read(b + "/attempt0/response"), parsed = await a.read(b + "/attempt0/parsed");
+      if (hash38(input3) !== hash38(r.input) || hash38(parsed) !== hash38(r.judgment) || hash38(decodeFinalResponse(response).value) !== hash38(parsed) || hash38(JSON.parse(request4.input)) !== hash38({ output_format: "JSON", ...input3 }) || hash38(request4.instructions) !== p.prompt_hash || hash38(request4.text.format) !== hash38(
         visibleFormat(input3, p.format_version, {
           citationPolicy: p.citation_policy
         })
@@ -168181,10 +168352,10 @@ async function screenFocusedPaths({
     groups.map((items2, index2) => ({ items: items2, index: index2 })),
     async ({ items: items2, index: index2 }) => {
       check2();
-      const request3 = pathScreenRequest(items2, workItem, hints), base = "path-screen/batch" + index2;
-      const key5 = { kind: focusedPathScreenPolicy, request: request3 };
+      const request4 = pathScreenRequest(items2, workItem, hints), base = "path-screen/batch" + index2;
+      const key5 = { kind: focusedPathScreenPolicy, request: request4 };
       const previous2 = await cache?.get(key5);
-      await store2.save(base + "/request", request3);
+      await store2.save(base + "/request", request4);
       if (previous2) {
         await store2.save(base + "/original-response", previous2.response);
         await store2.save(base + "/reuse", {
@@ -168211,7 +168382,7 @@ async function screenFocusedPaths({
       let response;
       try {
         response = await evaluate2({
-          ...request3,
+          ...request4,
           maxRetries: 0,
           abortSignal: globalThis.AbortSignal.timeout(6e4)
         });
@@ -168960,7 +169131,7 @@ async function discoverWorkItemSource({
     store: store2,
     cache,
     evidenceDirectory: path20.join(output2, "raw/focus"),
-    evaluate: ledger.evaluate((request3) => evaluate2(request3, { env })),
+    evaluate: ledger.evaluate((request4) => evaluate2(request4, { env })),
     maxRequestBytes: Math.min(24e3, j.context_window - 4096),
     check: () => ledger.check()
   });
@@ -169218,31 +169389,31 @@ var UiModeler = class {
   }
   async query(input3, invocation = {}) {
     const lifecycle2 = snapshotLifecycle(this.lifecycle, "map", invocation);
-    const request3 = mapGenerateSchema.parse(input3), startedAt = Date.now();
+    const request4 = mapGenerateSchema.parse(input3), startedAt = Date.now();
     invocation.signal?.throwIfAborted();
-    const folder = await realpath17(request3.folder);
+    const folder = await realpath17(request4.folder);
     const captureSignal = globalThis.AbortSignal.any(
       [
         invocation.signal,
-        globalThis.AbortSignal.timeout(request3.seconds * 1e3)
+        globalThis.AbortSignal.timeout(request4.seconds * 1e3)
       ].filter((signal) => Boolean(signal))
     );
     const captured = await captureFolder(folder, {
       output: join45(this.data, "ui-modeler-queries"),
-      deadline: startedAt + request3.seconds * 1e3,
+      deadline: startedAt + request4.seconds * 1e3,
       signal: captureSignal
     });
     const corpus = external_exports.json().parse(captured);
     const prepared = {
       folder,
-      workItem: request3.workItem,
+      workItem: request4.workItem,
       hints: {
-        ...request3.changedFiles ? { changed_files: request3.changedFiles } : {},
-        ...request3.diff ? { diff: request3.diff } : {},
-        ...request3.entryPoints ? { entry_points: request3.entryPoints } : {}
+        ...request4.changedFiles ? { changed_files: request4.changedFiles } : {},
+        ...request4.diff ? { diff: request4.diff } : {},
+        ...request4.entryPoints ? { entry_points: request4.entryPoints } : {}
       },
-      limitUsd: request3.limitUsd,
-      seconds: request3.seconds,
+      limitUsd: request4.limitUsd,
+      seconds: request4.seconds,
       corpus
     };
     const signature = JSON.stringify(prepared);
@@ -169271,7 +169442,7 @@ var UiModeler = class {
           ...invocation,
           lifecycle: lifecycle2,
           environment: await providerEnvironment(this.data),
-          ...request3.requestKey ? { correlationKey: request3.requestKey } : {}
+          ...request4.requestKey ? { correlationKey: request4.requestKey } : {}
         }
       );
     } finally {
@@ -169315,6 +169486,7 @@ function createCapabilityServices(data2, options2 = {}) {
     ...options2.lifecycle ? { lifecycle: options2.lifecycle } : {}
   }), contextIntake = options2.contextIntake ?? createContextIntake(data2, options2.scopeId), computerRunner = new ComputerRunner(data2, {
     ...options2.browserViewer ? { browserViewer: true } : {},
+    ...options2.chromeRun ? { chromeRun: options2.chromeRun } : {},
     ...options2.lifecycle ? { lifecycle: options2.lifecycle } : {},
     operationScope: options2.scopeId ?? "",
     ...runnerValidation ? { runnerValidation } : {},
@@ -169432,7 +169604,7 @@ function createCapabilityCatalog(services, options2 = {}) {
     testSupplement
   };
   async function plan(args, invocation = {}) {
-    const { contextId, ...request3 } = validateAdvisoryInput(
+    const { contextId, ...request4 } = validateAdvisoryInput(
       external_exports.record(external_exports.string(), external_exports.json()),
       args
     );
@@ -169452,8 +169624,8 @@ function createCapabilityCatalog(services, options2 = {}) {
         external_exports.record(external_exports.string(), external_exports.json()),
         saved.input
       );
-      const savedRequest = { ...stored2, ...request3 };
-      const requested = request3.options;
+      const savedRequest = { ...stored2, ...request4 };
+      const requested = request4.options;
       const original = stored2.options;
       if (requested?.explorerTimeLimitMs !== void 0 && original) {
         savedRequest.options = {
@@ -169481,9 +169653,9 @@ function createCapabilityCatalog(services, options2 = {}) {
         retained2?.storedContext ?? source5
       );
     } else {
-      const retained2 = await retainInlinePlanningInput(contextIntake, request3);
+      const retained2 = await retainInlinePlanningInput(contextIntake, request4);
       result = await testPlanning.query(
-        retained2?.request ?? request3,
+        retained2?.request ?? request4,
         invocation,
         retained2?.storedContext
       );
@@ -169590,7 +169762,7 @@ function createCapabilityCatalog(services, options2 = {}) {
         show: () => testPlans ? Promise.resolve(testPlans) : services.reports.view(snapshot2),
         traceLinks: true,
         call: async (raw) => {
-          const request3 = external_exports.discriminatedUnion("name", [
+          const request4 = external_exports.discriminatedUnion("name", [
             external_exports.strictObject({
               name: external_exports.literal("loki_report_trace"),
               arguments: reportTrace,
@@ -169602,9 +169774,9 @@ function createCapabilityCatalog(services, options2 = {}) {
               _meta: external_exports.record(external_exports.string(), external_exports.unknown()).optional()
             })
           ]).parse(raw);
-          if (request3.arguments.reportId !== snapshot2.reportId)
+          if (request4.arguments.reportId !== snapshot2.reportId)
             throw Error("Different report");
-          return request3.name === "loki_report_trace" ? services.reports.trace(request3.arguments) : services.reports.customerArtifact(request3.arguments);
+          return request4.name === "loki_report_trace" ? services.reports.trace(request4.arguments) : services.reports.customerArtifact(request4.arguments);
         }
       }))();
       previews.set(key5, cached2);

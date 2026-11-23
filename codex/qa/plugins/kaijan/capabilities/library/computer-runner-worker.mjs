@@ -2998,7 +2998,7 @@ var require_websocket = __commonJS({
       }
       const defaultPort = isSecure ? 443 : 80;
       const key = randomBytes2(16).toString("base64");
-      const request3 = isSecure ? https.request : http.request;
+      const request4 = isSecure ? https.request : http.request;
       const protocolSet = /* @__PURE__ */ new Set();
       let perMessageDeflate;
       opts.createConnection = opts.createConnection || (isSecure ? tlsConnect : netConnect);
@@ -3075,12 +3075,12 @@ var require_websocket = __commonJS({
         if (opts.auth && !options.headers.authorization) {
           options.headers.authorization = "Basic " + Buffer.from(opts.auth).toString("base64");
         }
-        req = websocket._req = request3(opts);
+        req = websocket._req = request4(opts);
         if (websocket._redirects) {
           websocket.emit("redirect", websocket.url, req);
         }
       } else {
-        req = websocket._req = request3(opts);
+        req = websocket._req = request4(opts);
       }
       if (opts.timeout) {
         req.on("timeout", () => {
@@ -31725,33 +31725,33 @@ function createWorkerClarification(send2, operationSignal) {
   };
   operationSignal.addEventListener("abort", failAll, { once: true });
   const requestClarification = async (raw, signal) => {
-    const request3 = clarificationRequestSchema.parse(raw);
-    if (closed || operationSignal.aborted || signal.aborted || seen.has(request3.clarificationId))
+    const request4 = clarificationRequestSchema.parse(raw);
+    if (closed || operationSignal.aborted || signal.aborted || seen.has(request4.clarificationId))
       throw Error(
         "Clarification unavailable or already requested; do not replay"
       );
-    seen.add(request3.clarificationId);
+    seen.add(request4.clarificationId);
     const combined = AbortSignal.any([operationSignal, signal]);
     let abort = () => {
     };
     const response = new Promise((resolve2, reject) => {
-      pending.set(request3.clarificationId, {
+      pending.set(request4.clarificationId, {
         resolve: resolve2,
         reject
       });
       abort = () => {
         const cancellation = browserControlCancellation(signal);
         if (!operationSignal.aborted && cancellation) {
-          cancellations.set(request3.clarificationId, () => {
-            pending.delete(request3.clarificationId);
+          cancellations.set(request4.clarificationId, () => {
+            pending.delete(request4.clarificationId);
             reject(cancellation);
           });
           void send2({
             type: "runner-clarification-cancel",
-            clarificationId: request3.clarificationId
+            clarificationId: request4.clarificationId
           }).catch((cause) => {
-            cancellations.delete(request3.clarificationId);
-            pending.delete(request3.clarificationId);
+            cancellations.delete(request4.clarificationId);
+            pending.delete(request4.clarificationId);
             reject(
               Object.assign(
                 Error("Clarification cancellation was not acknowledged", {
@@ -31765,7 +31765,7 @@ function createWorkerClarification(send2, operationSignal) {
           });
           return;
         }
-        pending.delete(request3.clarificationId);
+        pending.delete(request4.clarificationId);
         reject(Error("Clarification wait interrupted; do not replay"));
       };
       combined.addEventListener("abort", abort, { once: true });
@@ -31775,14 +31775,14 @@ function createWorkerClarification(send2, operationSignal) {
     });
     try {
       if (combined.aborted) throw Error("Clarification interrupted");
-      await send2({ type: "runner-clarification-request", request: request3 });
+      await send2({ type: "runner-clarification-request", request: request4 });
       const answer = await response;
       if (operationSignal.aborted || signal.aborted && !browserControlCancellation(signal))
         throw Error("Clarification interrupted");
       return answer;
     } finally {
       combined.removeEventListener("abort", abort);
-      pending.delete(request3.clarificationId);
+      pending.delete(request4.clarificationId);
     }
   };
   return {
@@ -31907,10 +31907,10 @@ function storedContinuationUnavailable() {
   );
 }
 function responseCreateFrame(body) {
-  const request3 = { ...body };
-  delete request3.stream;
-  delete request3.background;
-  return { type: "response.create", ...request3 };
+  const request4 = { ...body };
+  delete request4.stream;
+  delete request4.background;
+  return { type: "response.create", ...request4 };
 }
 function reviewComputerInput(input3) {
   if (!input3.some((item) => item.type === "computer_call_output") || input3.flatMap((item) => Array.isArray(item.content) ? item.content : []).filter((part) => part.type === "input_image").length < 2)
@@ -31938,16 +31938,16 @@ function reviewComputerInput(input3) {
     };
   });
 }
-function reviewWire(request3) {
-  if (request3.tool_choice !== "none") return request3;
-  const input3 = reviewComputerInput(request3.input);
-  if (input3 === request3.input) return request3;
+function reviewWire(request4) {
+  if (request4.tool_choice !== "none") return request4;
+  const input3 = reviewComputerInput(request4.input);
+  if (input3 === request4.input) return request4;
   return {
-    ...request3,
+    ...request4,
     input: input3,
     // No action is permitted in recap. An unused computer definition still
     // refuses multiple images even after its historical outputs are quoted.
-    ...request3.tool_choice === "none" ? { tools: request3.tools.filter((tool2) => tool2.type !== "computer") } : {}
+    ...request4.tool_choice === "none" ? { tools: request4.tools.filter((tool2) => tool2.type !== "computer") } : {}
   };
 }
 async function managedResponsesSocket({ socketPath, headers }) {
@@ -32056,19 +32056,19 @@ function createResponsesSession({
       turns.push(prior);
       id4 = prior.previous;
     }
-    const request3 = { ...body };
-    delete request3.previous_response_id;
+    const request4 = { ...body };
+    delete request4.previous_response_id;
     const input3 = structuredClone([
       ...turns.reverse().flatMap((turn) => [...turn.input, ...turn.output]),
       ...body.input
     ]);
-    const needsComputer = input3.some((item) => item.type === "computer_call_output") && !request3.tools?.some((tool2) => tool2.type === "computer");
+    const needsComputer = input3.some((item) => item.type === "computer_call_output") && !request4.tools?.some((tool2) => tool2.type === "computer");
     return {
-      ...request3,
+      ...request4,
       input: input3,
       ...needsComputer ? {
-        tools: [...request3.tools ?? [], { type: "computer" }],
-        ...!request3.tools?.length ? { tool_choice: "none" } : {}
+        tools: [...request4.tools ?? [], { type: "computer" }],
+        ...!request4.tools?.length ? { tool_choice: "none" } : {}
       } : {}
     };
   }
@@ -32212,14 +32212,14 @@ function createResponsesSession({
     return response;
   }
   return {
-    async send(request3, signal, { review: review2 = false, inactivityTimeoutMs } = {}) {
+    async send(request4, signal, { review: review2 = false, inactivityTimeoutMs } = {}) {
       if (closed) throw new Error("Runner Responses session is closed");
       signal?.throwIfAborted();
-      const original = storeResponses ? structuredClone({ ...request3, store: true }) : managedWebSocket ? zdrRequest(request3) : structuredClone({
-        ...zdrRequest(request3),
+      const original = storeResponses ? structuredClone({ ...request4, store: true }) : managedWebSocket ? zdrRequest(request4) : structuredClone({
+        ...zdrRequest(request4),
         include: [
           .../* @__PURE__ */ new Set([
-            ...request3.include ?? [],
+            ...request4.include ?? [],
             "reasoning.encrypted_content"
           ])
         ]
@@ -33051,6 +33051,166 @@ function workerRunnerReview(send2, signal) {
   };
 }
 
+// src/chrome-run-channel.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+import { randomUUID as randomUUID4 } from "node:crypto";
+
+// ../contracts/dist/chrome-run.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_CHANGE_RISK_PINS();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var chromeRunSession = external_exports.enum(["chrome-new-tab", "chrome-shared-tab"]);
+var coordinates = {
+  x: external_exports.number().nonnegative(),
+  y: external_exports.number().nonnegative()
+};
+var chromeRunAction = external_exports.discriminatedUnion("type", [
+  external_exports.strictObject({
+    type: external_exports.literal("click"),
+    ...coordinates,
+    button: external_exports.enum(["left", "middle", "right"]).default("left")
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("type"),
+    text: external_exports.string().max(32768)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("move"), ...coordinates }),
+  external_exports.strictObject({ type: external_exports.literal("double_click"), ...coordinates }),
+  external_exports.strictObject({
+    type: external_exports.literal("drag"),
+    path: external_exports.array(external_exports.strictObject(coordinates)).min(2)
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("scroll"),
+    ...coordinates,
+    scroll_x: external_exports.number(),
+    scroll_y: external_exports.number()
+  }),
+  external_exports.strictObject({
+    type: external_exports.literal("keypress"),
+    key: external_exports.enum([
+      "Tab",
+      "Enter",
+      "Escape",
+      "Backspace",
+      "Delete",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "PageUp",
+      "PageDown",
+      "Space"
+    ]),
+    shift: external_exports.boolean().default(false)
+  }),
+  external_exports.strictObject({ type: external_exports.literal("screenshot") })
+]);
+var chromeRunCommand = external_exports.strictObject({
+  type: external_exports.literal("action"),
+  id: external_exports.uuid(),
+  action: chromeRunAction
+});
+var chromeRunActionResult = external_exports.strictObject({
+  type: external_exports.literal("action-result"),
+  id: external_exports.uuid(),
+  png: external_exports.string().max(16 * 1024 * 1024).optional()
+});
+
+// src/chrome-run-channel.ts
+var request3 = external_exports.strictObject({
+  type: external_exports.literal("chrome-tab-request"),
+  id: external_exports.uuid(),
+  action: external_exports.union([
+    chromeRunAction,
+    external_exports.strictObject({ type: external_exports.literal("stop") })
+  ])
+});
+function workerChromeRun(mode, send2, signal) {
+  let active = true;
+  let pending;
+  const disconnect = () => {
+    active = false;
+    if (pending && !pending.stopping) {
+      const { reject } = pending;
+      pending = void 0;
+      reject(Error("The Chrome tab is no longer connected"));
+    }
+  };
+  signal.addEventListener("abort", disconnect, { once: true });
+  const dispatch = (action2) => {
+    const stopping = action2.type === "stop";
+    if (!stopping) signal.throwIfAborted();
+    if (pending || !stopping && !active)
+      throw Error("Chrome tab is unavailable for another action");
+    const frame = request3.parse({
+      type: "chrome-tab-request",
+      id: randomUUID4(),
+      action: action2
+    });
+    const completion = Promise.withResolvers();
+    pending = { id: frame.id, stopping, ...completion };
+    void Promise.resolve().then(() => send2(frame)).catch((error62) => {
+      if (pending?.id !== frame.id) return;
+      pending = void 0;
+      completion.reject(error62);
+    });
+    return completion.promise;
+  };
+  return {
+    tab: {
+      mode,
+      active: () => active && !signal.aborted,
+      perform: async (action2) => dispatch(action2),
+      stop: async () => {
+        await dispatch({ type: "stop" });
+        active = false;
+      }
+    },
+    receive(frame) {
+      if (frame.type === "chrome-tab-closed") {
+        disconnect();
+        return true;
+      }
+      if (frame.type !== "chrome-tab-result") return false;
+      if (!pending || pending.id !== frame.id) return true;
+      const { resolve: resolve2, reject } = pending;
+      pending = void 0;
+      if (typeof frame.error === "string") reject(Error(frame.error));
+      else
+        resolve2(
+          typeof frame.png === "string" ? Buffer.from(frame.png, "base64") : void 0
+        );
+      return true;
+    },
+    close() {
+      disconnect();
+      const stopping = pending;
+      pending = void 0;
+      stopping?.reject(Error("Chrome worker channel closed"));
+      signal.removeEventListener("abort", disconnect);
+    }
+  };
+}
+
 // src/computer-runner-worker.ts
 import {
   attachBrowserViewer
@@ -33117,14 +33277,17 @@ var send = (message) => new Promise((resolve2) => {
   }
 });
 var review = workerRunnerReview(send, reportController.signal);
+var chrome;
 process.on("disconnect", () => {
   controller.abort();
   reportController.abort();
+  chrome?.close();
   if (!started) process.exit(0);
 });
 process.on("message", (message) => {
   if (!message || typeof message !== "object" || !("type" in message)) return;
   const frame = message;
+  if (chrome?.receive(frame)) return;
   if (review.receive(frame)) return;
   if (frame.type === "runner-clarification-answer" || frame.type === "runner-clarification-error" || frame.type === "runner-clarification-cancelled") {
     try {
@@ -33216,6 +33379,7 @@ process.on("message", (message) => {
       };
       const {
         browserViewer,
+        chromeTab,
         runnerValidation,
         requestClarification: clarificationEnabled,
         applicationContext: contextRegistration,
@@ -33227,6 +33391,12 @@ process.on("message", (message) => {
       void _ownerTransition;
       void _telemetryPlanId;
       void _brokerBinding;
+      if (chromeTab !== void 0) {
+        const mode = chromeRunSession.parse(chromeTab);
+        if (input3.executionMethod === "desktop-ui" || input3.browserSession !== mode)
+          throw Error("Chrome attachment does not match the Run");
+        chrome = workerChromeRun(mode, send, controller.signal);
+      }
       if (clarificationEnabled === true) {
         clarification = createWorkerClarification(send, controller.signal);
       }
@@ -33248,7 +33418,8 @@ process.on("message", (message) => {
       const requestClarification = clarification?.requestClarification;
       const runOptions = {
         ...nativeOptions,
-        ...browserViewer === true && input3.executionMethod !== "desktop-ui" ? {
+        ...chrome ? { chromeTab: chrome.tab } : {},
+        ...browserViewer === true && input3.executionMethod !== "desktop-ui" && !chrome ? {
           onBrowserReady: (browser) => {
             viewerControl = browser.control;
             return attachBrowserViewer(browser, {
@@ -33306,12 +33477,14 @@ process.on("message", (message) => {
       await contextReplyWrites;
       await send({ type: "result", result });
       review.close();
+      chrome?.close();
       if (failures?.failed)
         throw Error("Background worker failure during result handoff");
       clarification?.close();
       applicationContext?.close();
       process.exit(0);
     } catch (error62) {
+      chrome?.close();
       clarification?.close();
       applicationContext?.close();
       await clarificationReplyWrites;
