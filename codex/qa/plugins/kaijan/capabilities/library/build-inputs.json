@@ -369,7 +369,7 @@
     "packages/capabilities/ui/tsconfig.json": "e3feb24dc17c68eab600e94fbd9d147e1118eceede8c26ce17fbea8f0318279c",
     "packages/capabilities/ui/map.html": "8eee7a42dbe180bedfcbfc66286c0f3993845e12e44eeecb519e212632d33db6",
     "packages/capabilities/ui/map.css": "dd0428c0279ad6296615acc58a53b0bffeb295fbd24e08fae5ec44d9553e623a",
-    "packages/capabilities/provider-pins.json": "ac7176f1ac0c652dd3bfe5e2a7ef0561112816d82cdb8ac0f4f81bc78d813c79",
+    "packages/capabilities/provider-pins.json": "0fb0186c35179583b7680770cb78a45096a3e225750bf3d78bcb1c46c8c35f04",
     "packages/capabilities/scripts/build.mjs": "ebcd47e4cf027d8357ec497ae8e3143b3c9ecbae1a0a110bfe199f0d46bf8a30",
     "packages/capabilities/scripts/runner-declarations.mjs": "0ecb617b2d6cb61912b090a865a966cd3aa47a6855f57c85a655a0dcb4d85e31",
     "packages/capabilities/src/runner-public.ts": "28696e19cf99e04f8f41eb5eb01f95cc1f748f476f639962515c6ebda0a07640",

@@ -787,7 +787,7 @@
     "integration": "public Node run(input, options)",
     "files": {
       "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029",
-      "packages/computer-runner/src/runner.mjs": "6bd5ee95f96acc5baeb90e481de342715ae6a27aa79bdba104649bc2c5da6853",
+      "packages/computer-runner/src/runner.mjs": "ff7402623266a219a562dd817cf4abf86984beb0ab1f90b96597302fdd315262",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
       "packages/computer-runner/README.md": "3216f0d9de2e36391f582636d592b15c471f7c731bdb3338aa89fa2512bc3caf",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
