@@ -55817,7 +55817,7 @@ function createConfigurationSurface({ session, library, data }) {
     async prepareExecution(name, raw, metadata2) {
       const planning = name === "loki_test_plan";
       const savedInputs = planning ? raw?.savedTestInputs : void 0;
-      if (!planning && !["loki_runner_execute", "loki_test_execute"].includes(name) || planning && !raw?.exploration && !savedInputs)
+      if (!planning && name !== "loki_runner_execute" || planning && !raw?.exploration && !savedInputs)
         return { arguments: raw };
       let marked = false, recoveryRunId;
       try {
@@ -55915,7 +55915,7 @@ function createConfigurationSurface({ session, library, data }) {
             args.testData = saved.readTestData(savedInputs.testDataId).data;
         }
         const execution2 = planning ? args.exploration : args;
-        const runSchema = planning ? library.advisoryToolRequests.testPlanning : name === "loki_test_execute" ? library.testRunRequest : library.runnerRequest;
+        const runSchema = planning ? library.advisoryToolRequests.testPlanning : library.runnerRequest;
         if (!runSchema.safeParse(args).success)
           throw new library.ConfigurationError(
             "configuration_run_input",
@@ -59662,10 +59662,6 @@ async function bindProfileState(build, args, home) {
 // apps/codex-plugin/src/claude-tool-schema.mjs
 var alternatives = /* @__PURE__ */ new Map([
   [
-    "loki_test_execute",
-    "Supply either scenario (with optional planRef) or savedTests (with optional guidance and hostContext), never both. requestKey, scenarioId, params and target are required in either form. The receiver validates the complete selected form before starting work."
-  ],
-  [
     "loki_report_show",
     "Supply either reportId to read an existing report, or title and operations to save a report from retained results, never both. view is optional in either form; sourceContextId and mapId belong only to the title/operations form. The receiver validates the complete selected form."
   ]
@@ -59765,13 +59761,15 @@ var planInput = external_exports.strictObject({
 var runInput = external_exports.strictObject({
   requestKey: requestKey2,
   planId,
-  testIds: external_exports.array(external_exports.string().min(1)).min(1),
+  testIds: external_exports.array(external_exports.string().min(1)).min(1)
+});
+var codexRunInput = runInput.extend({
   browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe(
     "For this browser Run only. Default to isolated. Use chrome-new-tab when the person wants their own Chrome session at the saved target URL. Use chrome-shared-tab when the task depends on the current state of a tab they already have open. A test account or a Chrome target alone does not select a personal session."
   )
 });
-function codexTestingToolDefinition(tool2) {
-  if (tool2.name === "loki_test_plan") {
+function testingToolDefinition(tool2, host) {
+  if (tool2.name === "loki_test_plan" && host === "codex") {
     const inputSchema3 = external_exports.toJSONSchema(planInput);
     for (const name of Object.keys(sourceOptions)) {
       const native = tool2.inputSchema?.properties?.[name];
@@ -59788,7 +59786,7 @@ function codexTestingToolDefinition(tool2) {
     return {
       ...tool2,
       description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
-      inputSchema: external_exports.toJSONSchema(runInput)
+      inputSchema: external_exports.toJSONSchema(host === "codex" ? codexRunInput : runInput)
     };
   return tool2;
 }
@@ -59818,8 +59816,8 @@ function codexPlanArguments(args) {
     ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
   };
 }
-function codexRunArguments(args) {
-  const parsed = runInput.safeParse(args);
+function savedPlanRunArguments(args, host) {
+  const parsed = (host === "codex" ? codexRunInput : runInput).safeParse(args);
   if (!parsed.success) return void 0;
   const { requestKey: requestKey3, planId: planId2, testIds, browserSession } = parsed.data;
   const [answerId, resultSha256] = planId2.split(".");
@@ -59829,7 +59827,7 @@ function codexRunArguments(args) {
     ...browserSession === void 0 ? {} : { browserSession }
   };
 }
-function codexPlanId(answerId, resultSha256) {
+function savedPlanId(answerId, resultSha256) {
   if (typeof answerId === "string" && answerDigest.test(answerId) && typeof resultSha256 === "string" && answerDigest.test(resultSha256))
     return `${answerId}.${resultSha256}`;
 }
@@ -60605,8 +60603,8 @@ async function invokeCustomerAdvisory(catalog, name, args = {}, invocation, opti
         options
       ) : void 0
     );
-    if (options.codexTesting && family2 === "testPlanning" && dto.result?.status === "proposed_plan") {
-      const planId2 = codexPlanId(dto.answerId, dto.resultSha256);
+    if (family2 === "testPlanning" && dto.result?.status === "proposed_plan") {
+      const planId2 = savedPlanId(dto.answerId, dto.resultSha256);
       if (planId2) dto.planId = planId2;
     }
     if (options.connectionOnly === true && family2 === "testPlanning" && dto.result?.status === "proposed_plan")
@@ -60996,17 +60994,10 @@ var customerOutputSchema = external_exports.union([
   }),
   projection2
 ]).meta({ $id: "urn:kaijan:customer-execution-output:1" });
-function customerExecutionInput(tool2, configurations, requireSavedPlan) {
+function customerExecutionInput(tool2, configurations) {
   if (!["loki_runner_execute", "loki_test_execute"].includes(tool2.name))
     return tool2.inputSchema;
-  let input3 = structuredClone(tool2.inputSchema);
-  if (requireSavedPlan && tool2.name === "loki_test_execute") {
-    const { anyOf, ...root } = input3;
-    const saved = anyOf?.find(
-      (branch) => branch.required?.includes("savedTests")
-    );
-    if (saved) input3 = { ...root, ...saved };
-  }
+  const input3 = structuredClone(tool2.inputSchema);
   const projectRequest = (schema) => {
     if (schema?.properties?.target) {
       delete schema.properties.configurationUsed;
@@ -61025,7 +61016,7 @@ function customerExecutionInput(tool2, configurations, requireSavedPlan) {
   projectRequest(input3);
   return input3;
 }
-function customerToolDefinition(tool2, { configurations = false, requireSavedPlan = true } = {}) {
+function customerToolDefinition(tool2, { configurations = false } = {}) {
   if (!isCustomerToolAllowed(tool2.name)) return null;
   if (!executionTools.has(tool2.name)) return tool2;
   const read2 = tool2.name.endsWith("_get");
@@ -61042,7 +61033,7 @@ function customerToolDefinition(tool2, { configurations = false, requireSavedPla
         ...tool2.name === "loki_test_get" ? { waitMs: external_exports.number().int().min(0).max(3e4).default(0) } : {}
       }),
       { io: "input" }
-    ) : customerExecutionInput(tool2, configurations, requireSavedPlan),
+    ) : customerExecutionInput(tool2, configurations),
     outputSchema: {
       ...external_exports.toJSONSchema(customerOutputSchema, { io: "input" }),
       type: "object"
@@ -61661,8 +61652,7 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
   if (args.browserSession !== void 0 && !options.includeRunInputs)
     return invalid();
   const saved = args.savedTests !== void 0;
-  if (name === "loki_test_execute" && !saved && options.requireSavedPlan !== false)
-    return invalid();
+  if (name === "loki_test_execute" && !saved) return invalid();
   const checked = args.planRef !== void 0 && object6(args.planRef) && selectionKeys.some((key2) => Object.hasOwn(args.planRef, key2));
   if (!saved && !checked) return { arguments: args };
   if (saved && (name !== "loki_test_execute" || args.planRef !== void 0 || args.scenario !== void 0))
@@ -62474,13 +62464,16 @@ function capabilityMcpRegistration(session, setup) {
       const definition = customerDiscoveryTool(tool2) ?? customerAdvisoryToolDefinition(tool2) ?? (hasCustomerReportOutput(tool2.name) ? customerReportToolDefinition(tool2, {
         presentation: session.customerReportPresentation
       }) : customerToolDefinition(tool2, {
-        configurations: Boolean(session.configurations),
-        requireSavedPlan: session.identity?.host !== "claude_code"
+        configurations: Boolean(session.configurations)
       }));
       return definition;
-    }).filter(Boolean).map(
-      (tool2) => session.identity?.host === "claude_code" ? claudeToolDefinition(tool2) : session.identity?.host === "codex" ? codexTestingToolDefinition(codexToolDefinition(tool2)) : tool2
-    ),
+    }).filter(Boolean).map((tool2) => {
+      const host = session.identity?.host;
+      const definition = testingToolDefinition(tool2, host);
+      if (host === "claude_code") return claudeToolDefinition(definition);
+      if (host === "codex") return codexToolDefinition(definition);
+      return definition;
+    }),
     // Draft activity stays local. Core's existing completed-feedback event is
     // the feedback record; do not upload autosave/progress metrics from forms.
     observabilityControls: [
@@ -62703,7 +62696,6 @@ ${customerInstructions}` : customerInstructions
           ...configured2.planningEnvironment ? { planningEnvironment: configured2.planningEnvironment } : {}
         },
         {
-          codexTesting,
           connectionOnly: selected.scope?.kind === "connection",
           proposalReaders: Object.fromEntries(
             [
@@ -62805,8 +62797,9 @@ ${customerInstructions}` : customerInstructions
       };
     }
     if (hasCustomerExecutionOutput(params.name)) {
-      const codexSavedRun = session.identity?.host === "codex" && params.name === "loki_test_execute";
-      const args = codexSavedRun ? codexRunArguments(params.arguments ?? {}) : params.arguments ?? {};
+      const host = session.identity?.host;
+      const savedRun = params.name === "loki_test_execute";
+      const args = savedRun ? savedPlanRunArguments(params.arguments ?? {}, host) : params.arguments ?? {};
       if (!session.configurations && ["loki_runner_execute", "loki_test_execute"].includes(params.name) && Object.hasOwn(params.arguments ?? {}, "configurationUsed"))
         throw invalidParams(
           "configurationUsed is internal Run metadata. Omit it from this request."
@@ -62814,16 +62807,15 @@ ${customerInstructions}` : customerInstructions
       const turnId = params._meta?.["x-codex-turn-metadata"]?.turn_id;
       const invocation = {
         signal: AbortSignal.any([extra.signal, lifetime.signal]),
-        ...codexSavedRun && typeof params._meta?.threadId === "string" && typeof turnId === "string" && turnId.trim() ? { hostTurnId: turnId } : {}
+        ...savedRun && host === "codex" && typeof params._meta?.threadId === "string" && typeof turnId === "string" && turnId.trim() ? { hostTurnId: turnId } : {}
       };
       const resolved2 = await resolveCustomerPlanArguments(
         params.name,
         args,
         invocation,
         {
-          requireSavedPlan: session.identity?.host !== "claude_code",
-          includeRunInputs: codexSavedRun,
-          chromeRunAvailable: codexSavedRun && selected.services?.computerRunner?.supportsChromeRun?.() === true,
+          includeRunInputs: savedRun,
+          chromeRunAvailable: host === "codex" && selected.services?.computerRunner?.supportsChromeRun?.() === true,
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )
@@ -62839,7 +62831,7 @@ ${customerInstructions}` : customerInstructions
           content: [{ type: "text", text: JSON.stringify(resolved2.error) }]
         };
       }
-      const configured2 = session.configurations && !codexSavedRun ? await session.configurations.prepareExecution(
+      const configured2 = session.configurations && !savedRun ? await session.configurations.prepareExecution(
         params.name,
         resolved2.arguments,
         params._meta
@@ -62859,7 +62851,7 @@ ${customerInstructions}` : customerInstructions
         scopedCatalog,
         params.name,
         configured2.arguments,
-        invocation,
+        savedRun ? { ...invocation, guidanceFromSavedPlan: true } : invocation,
         {
           readAssessmentPresentation: selected.services?.suppliedEvidence?.readCustomerAssessment?.bind(
             selected.services.suppliedEvidence
