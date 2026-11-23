@@ -8,7 +8,7 @@ credentials and private verification reports stay outside this repository.
 | Platform | Status | Location |
 | --- | --- | --- |
 | Codex | Available packages are listed in its marketplace | [codex](codex/) |
-| Claude | Reserved; no installable package yet | [claude](claude/) |
+| Claude | Public release pending | — |
 | Kiro | Reserved; no installable package yet | [kiro](kiro/) |
 
 Codex desktop: open Plugins → Add → Add a marketplace. Set Source to
