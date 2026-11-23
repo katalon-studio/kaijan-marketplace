@@ -92565,6 +92565,20 @@ var productReportPreparationSchema = external_exports.strictObject({
 var productReportReferenceSchema = external_exports.strictObject({
   reference: external_exports.uuid()
 });
+var productReportImageExportQuerySchema = external_exports.strictObject({
+  after: external_exports.string().regex(/^(?:0|[1-9]\d{0,15})$/).refine((value) => Number.isSafeInteger(Number(value))).default("0")
+});
+var productReportImageExportSchema = external_exports.strictObject({
+  records: external_exports.array(external_exports.strictObject({
+    sequence: external_exports.int().positive(),
+    reference: external_exports.uuid(),
+    image_id: external_exports.uuid(),
+    filename: external_exports.string().max(120),
+    media_type: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    image_base64: external_exports.string().min(1).max(4 * Math.ceil(issueImageLimits.fileBytes / 3))
+  })).max(1),
+  next: external_exports.int().positive().nullable()
+});
 var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
   productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
   productReportReferenceSchema.extend({
