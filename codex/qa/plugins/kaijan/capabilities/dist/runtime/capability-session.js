@@ -21928,6 +21928,18 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
+var reportSourceReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.report-source-read/1"),
+  reportId: digest9,
+  recordSha256: digest9,
+  recordChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: count4,
+    text: external_exports.string(),
+    nextOffset: count4.nullable(),
+    totalCharacters: count4
+  })
+});
 var related = customerRelatedResultSchema.shape;
 var contextFinderPlan = { planSourceId: digest9, planResultSha256: digest9 };
 var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
