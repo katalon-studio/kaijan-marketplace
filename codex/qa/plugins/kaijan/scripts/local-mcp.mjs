@@ -32015,8 +32015,8 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
-  const completedWebSocketUsage = value.inference_route === "responses" && value.http_status === 101 && value.native_response_outcome === "completed";
-  if (native && (value.transport_outcome !== "body_complete" || !completedWebSocketUsage && (value.http_status === null || value.http_status < 200 || value.http_status >= 300)))
+  const websocketUsage = value.inference_route === "responses" && value.http_status === 101 && (value.native_response_outcome === "completed" || value.native_response_outcome === "incomplete" || value.native_response_outcome === "output_limit");
+  if (native && (value.transport_outcome !== "body_complete" || !websocketUsage && (value.http_status === null || value.http_status < 200 || value.http_status >= 300)))
     return false;
   if (!native && [
     value.model,
@@ -53683,7 +53683,16 @@ var classifiedPlanningRejection = capturedPlanningFailure.extend({
 }).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
 var planningServiceRejectionNotice = "The planning service rejected the request. No test plan was saved.";
 var hasCapturedPlanningFailure = (value) => capturedPlanningFailure.safeParse(value).success;
-var planningRejectionMessage = (value) => planningRejection.safeParse(value).success || classifiedPlanningRejection.safeParse(value).success ? planningServiceRejectionNotice : void 0;
+var explorerHttpRejection = capturedPlanningFailure.pick({ schema: true }).extend({
+  receipt: external_exports.object({
+    status: external_exports.literal("exploration_provider_http_rejected")
+  })
+});
+var planningRejectionMessage = (value) => {
+  if (explorerHttpRejection.safeParse(value).success)
+    return "An AI request was rejected during exploration. No test plan was saved. Keep this answer. You can reopen it in this chat.";
+  return planningRejection.safeParse(value).success || classifiedPlanningRejection.safeParse(value).success ? planningServiceRejectionNotice : void 0;
+};
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
 var proof2 = /* @__PURE__ */ new WeakMap();
 var json2 = (value) => JSON.stringify(value);
@@ -54875,10 +54884,18 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
       executionReport: run.executionReport === null || run.executionReport === void 0 ? run.executionReport : executionReport.parse({
         ...projectCustomerExecutionProgress(run.executionReport),
         ...run.executionReport.test_results ? {
-          test_results: run.executionReport.test_results.map((row) => ({
-            ...row,
-            test_id: run.planSourceId ? customerPlanningId("T", row.test_id, sha256, true) : row.test_id
-          }))
+          test_results: run.executionReport.test_results.map((row) => {
+            if (!run.planSourceId)
+              return row;
+            const publicId = customerPlanningId("T", row.test_id, sha256, true);
+            if (run.selectedTestIds.includes(publicId))
+              return { ...row, test_id: publicId };
+            const nativeAlias = customerPlanningId("T", row.test_id, sha256);
+            return {
+              ...row,
+              test_id: run.selectedTestIds.includes(nativeAlias) ? nativeAlias : publicId
+            };
+          })
         } : {}
       }),
       assessments: run.assessments?.map((row) => {
@@ -60627,6 +60644,10 @@ async function relatedPresentation(fam, native, options) {
   );
 }
 function customerPlanningConfigurationFailure(value, codexTesting) {
+  if (value.code === "configuration_run_conflict")
+    return finish(
+      failure4("testPlanning", "request_key_conflict", void 0, false)
+    );
   const uncertain = value.requestDispatched !== false;
   return finish(
     baseSchema.parse({
