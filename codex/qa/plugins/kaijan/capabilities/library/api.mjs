@@ -94964,6 +94964,18 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count5 = external_exports.number().int().nonnegative();
+var reportSourceReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.report-source-read/1"),
+  reportId: digest12,
+  recordSha256: digest12,
+  recordChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: count5,
+    text: external_exports.string(),
+    nextOffset: count5.nullable(),
+    totalCharacters: count5
+  })
+});
 var related = customerRelatedResultSchema.shape;
 var contextFinderPlan = { planSourceId: digest12, planResultSha256: digest12 };
 var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
@@ -116405,6 +116417,18 @@ var TestPlanning = class {
   readQuery(answerId, offset2) {
     return this.operations.readQuery(answerId, offset2);
   }
+  async readOriginalSource(reference2) {
+    const original = await this.operations.readQueryInput(reference2);
+    if (original.state !== "ready") return void 0;
+    const input3 = original.input.input;
+    if (!planningInputSchema.safeParse(input3).success) return void 0;
+    return {
+      answerId: original.answerId,
+      resultSha256: original.resultSha256,
+      inputSha256: original.inputSha256,
+      input: input3
+    };
+  }
   /** Browser and desktop exploration can save the same failure receipt. */
   async hasOriginalBrowserExploration(reference2) {
     const original = await this.operations.readQueryInput(reference2);
@@ -126364,7 +126388,7 @@ var reportSelection = external_exports.strictObject({
 var reportHandle = external_exports.strictObject({ reportId: digest36 });
 var reportGet = reportHandle.extend({
   sourceOffset: external_exports.number().int().nonnegative().optional().describe(
-    "Use 0 to start reading the report's original GitHub source record. Continue at the returned nextOffset."
+    "Use 0 to read the saved Plan input or attached GitHub source. Continue at the returned nextOffset."
   )
 });
 var reportShow = preserveAdvisoryInput(
@@ -170586,9 +170610,13 @@ function createCapabilityCatalog(services, options2 = {}) {
     },
     {
       name: "loki_report_get",
-      output: external_exports.union([reportReadOutputSchema, contextReadSchema]),
+      output: external_exports.union([
+        reportReadOutputSchema,
+        contextReadSchema,
+        reportSourceReadSchema
+      ]),
       title: "Read exact report",
-      description: "Read the exact saved report in its original conversation without opening any UI. Returns saved tests, steps, expectations and available results with their original source IDs and digests. Set sourceOffset to 0 to read its original GitHub source record, then continue at each returned nextOffset. No new report, provider call, test execution or replay.",
+      description: "Read the exact saved report in its original conversation without opening any UI. Returns saved tests, steps, expectations and available results with their original source IDs and digests. Set sourceOffset to 0 to read the saved Plan input or attached GitHub source, then continue at each returned nextOffset. No new report, provider call, test execution or replay.",
       input: reportGet,
       readOnly: true,
       call: async (args) => {
@@ -170596,7 +170624,38 @@ function createCapabilityCatalog(services, options2 = {}) {
         const snapshot2 = await services.reports.get(reportId);
         if (sourceOffset === void 0)
           return services.reports.view(snapshot2);
-        if (!snapshot2.evidenceContext) throw new ReportReadFailure();
+        if (!snapshot2.evidenceContext) {
+          const sources = (await Promise.all(
+            snapshot2.entries.map(async (entry) => {
+              if (entry.kind !== "plan" || !entry.answerId || !entry.resultSha256)
+                return void 0;
+              return testPlanning.readOriginalSource?.({
+                answerId: entry.answerId,
+                resultSha256: entry.resultSha256
+              });
+            })
+          )).filter((source5) => source5 !== void 0);
+          const text15 = JSON.stringify(sources);
+          if (!sources.length || sourceOffset >= text15.length)
+            throw new ReportReadFailure();
+          const end = jsonTextChunkEnd(
+            text15,
+            sourceOffset,
+            Math.min(text15.length, sourceOffset + 8e3)
+          );
+          return {
+            schema: "kaijan.report-source-read/1",
+            reportId,
+            recordSha256: createHash86("sha256").update(text15).digest("hex"),
+            recordChunk: {
+              encoding: "JSON text, UTF-16 offsets",
+              offset: sourceOffset,
+              text: text15.slice(sourceOffset, end),
+              nextOffset: end < text15.length ? end : null,
+              totalCharacters: text15.length
+            }
+          };
+        }
         const original = await contextIntake.get({
           contextId: snapshot2.evidenceContext.contextId,
           offset: sourceOffset

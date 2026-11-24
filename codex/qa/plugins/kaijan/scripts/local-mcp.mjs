@@ -53067,6 +53067,18 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest12 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count7 = external_exports.number().int().nonnegative();
+var reportSourceReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.report-source-read/1"),
+  reportId: digest12,
+  recordSha256: digest12,
+  recordChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: count7,
+    text: external_exports.string(),
+    nextOffset: count7.nullable(),
+    totalCharacters: count7
+  })
+});
 var related = customerRelatedResultSchema.shape;
 var contextFinderPlan = { planSourceId: digest12, planResultSha256: digest12 };
 var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
@@ -62281,7 +62293,7 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (presentation === "chat" && tool2.name === "loki_report_open")
     return void 0;
   const resourceUri = "ui://loki/test-plan/card/v87.html";
-  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the text and metadata of the selected saved test plan or final report in its original chat. Read available saved screenshots with kaijan_report_read_artifact. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original GitHub source record, then use the returned nextOffset to continue. Reading does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
+  const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the text and metadata of the selected saved test plan or final report in its original chat. Read available saved screenshots with kaijan_report_read_artifact. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original Plan input or GitHub source attached to the report, then use the returned nextOffset to continue. Reading does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
     title: tool2.title,
@@ -62298,7 +62310,11 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
     description: `${description}${tool2.name === "loki_report_show" ? " Attach original GitHub REST pull request and changed-file records as reportSources when available. Otherwise omit reportSources and show the same saved result." : ""} Use the total for passed tests. Use Passed, Failed and Incomplete for saved check outcomes.`,
     outputSchema: {
       ...external_exports.toJSONSchema(
-        tool2.name === "loki_report_get" ? external_exports.union([customerReportOutputSchema, contextReadSchema]) : customerReportOutputSchema,
+        tool2.name === "loki_report_get" ? external_exports.union([
+          customerReportOutputSchema,
+          contextReadSchema,
+          reportSourceReadSchema
+        ]) : customerReportOutputSchema,
         { io: "input" }
       ),
       type: "object"
@@ -62382,10 +62398,11 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
   if (name === "loki_report_get" && args?.sourceOffset !== void 0) {
     try {
       invocation?.signal?.throwIfAborted();
-      const result2 = contextReadSchema.parse(
-        await catalog.invoke(name, args, invocation)
-      );
+      const raw = await catalog.invoke(name, args, invocation);
       invocation?.signal?.throwIfAborted();
+      const source3 = reportSourceReadSchema.safeParse(raw);
+      if (source3.success) return { result: source3.data };
+      const result2 = contextReadSchema.parse(raw);
       const consumption2 = { ...result2.consumption };
       delete consumption2.testSupplement;
       return { result: { ...result2, consumption: consumption2 } };
