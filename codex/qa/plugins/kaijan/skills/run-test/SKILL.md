@@ -60,6 +60,7 @@ Use `kaijan_run_start` for the normal combined run, assessment and report.
 Supply the exact `planId` returned by Plan, the selected `testIds`, and a
 fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
+Put the person's current Run instructions and limits in `runInstructions`.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
 

@@ -21896,6 +21896,31 @@ var customerRelatedResultSchema = external_exports.object({
   message: optional2(external_exports.string())
 });
 
+// ../contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+var chromeDisconnectNotice = "The run stopped because it lost its connection to the Chrome tab.";
+var chromeDisconnectTerminal = external_exports.object({
+  actor: external_exports.literal("harness"),
+  reason: external_exports.enum([
+    "Error: The connected Chrome tab is no longer connected",
+    "Error: The Chrome tab is no longer connected"
+  ])
+});
+var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+
 // ../contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
   steps: external_exports.array(external_exports.string()),
@@ -22003,6 +22028,7 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
   ...reportExecutionRejectionNoticeSchema.options,
   reportResponseLimitNotice,
+  chromeDisconnectNotice,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 var testPlanViewSchema = external_exports.object({
@@ -22553,23 +22579,6 @@ var customerRiskSchema = external_exports.object({
   coverage: external_exports.literal("Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage.")
 });
 
-// ../contracts/dist/customer-execution-presentation.js
-var customerExecutionEvidenceSchema = external_exports.object({
-  observations: external_exports.array(customerAssessmentQuoteSchema),
-  actions: external_exports.array(customerRecordedActionSchema),
-  cleanup: customerAssessmentQuoteSchema.optional(),
-  notice: external_exports.string()
-});
-var progress2 = external_exports.object({
-  test_results: runnerTestResultsSchema.optional(),
-  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
-  reason: external_exports.string().optional(),
-  completedSteps: external_exports.array(external_exports.string()).optional(),
-  remainingSteps: external_exports.array(external_exports.string()).optional(),
-  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
-});
-
 // ../contracts/dist/customer-advisory.js
 var diagnostic = /\b(?:gpt-\d[\w.-]*|execution_status|computer_call|function_call|response_id|call_id|input_tokens|output_tokens|reasoning[_ ]effort|unknown_cost_calls|knownCostUsd|estimatedCost|providerRetryPolicy)\b|\b(?:provider|runner)\s+(?:identity|protocol|settings|receipt|usage|cost|accounting|mismatch|response)\b|\bmodel\s+(?:identity|mismatch)\b/i;
 var customerOmittedDetail = "Some saved details cannot be displayed. Coverage is limited; review the original application sources.";
@@ -22999,6 +23008,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     state: operationState,
     plan: customerPlanSchema.nullable(),
     planningFailure: external_exports.literal("service-rejected").optional(),
+    planningExplorationIncomplete: external_exports.literal(true).optional(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
       "This saved plan is unavailable in the supported view. Other saved results remain available.",
@@ -23039,7 +23049,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
     executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional(),
-    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional()
+    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional(),
+    chromeDisconnectNotice: external_exports.literal(chromeDisconnectNotice).optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
@@ -23176,6 +23187,11 @@ var reportWithoutContextFinder = customerReportSchema.omit({
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
+});
+var incompleteExploration = external_exports.object({
+  schema: external_exports.literal("loki.planning-failure/1"),
+  reason: external_exports.literal("exploration_incomplete"),
+  receipt: external_exports.object({ status: external_exports.literal("exploration_incomplete") })
 });
 
 // ../contracts/dist/customer-supplement.js
