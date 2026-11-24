@@ -94988,6 +94988,7 @@ var reportExecutionRejectionNoticeSchema = external_exports.enum([
   "The run stopped without using the app controls. The test service rejected a request. Ask Kaijan to read this saved result in chat.",
   "The run stopped because the test service rejected a request. Ask Kaijan to read this saved result in chat."
 ]);
+var reportResponseLimitNotice = "The run stopped because the test service reached its response limit.";
 var reportOutcomeNoticeSchema = external_exports.enum([
   "The test stopped when the app tried to open a website that was not allowed for this test.",
   "The test stopped because it could not confirm whether the page was allowed for this test.",
@@ -94997,6 +94998,7 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The connection expired. Reconnect before retrying.",
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
   ...reportExecutionRejectionNoticeSchema.options,
+  reportResponseLimitNotice,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 var testPlanViewSchema = external_exports.object({
@@ -96809,7 +96811,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     assertions: assertions.nullable().optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
-    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional()
+    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional(),
+    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
@@ -125654,9 +125657,12 @@ function projectReportObservations(result) {
 var record9 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 var list7 = (value) => Array.isArray(value) ? value : [];
 var text10 = (value) => typeof value === "string" ? value : "";
-function executionRejectionNotice(original, native2, terminal2) {
-  if (original.status !== "returned" || native2.executionState !== "incomplete" || terminal2.actor !== "API" || terminal2.reason !== "HTTP 429")
+function executionServiceNotice(original, native2, terminal2) {
+  if (original.status !== "returned" || native2.executionState !== "incomplete" || terminal2.actor !== "API")
     return void 0;
+  if (terminal2.reason === "incomplete" && record9(terminal2.details).reason === "max_output_tokens")
+    return reportResponseLimitNotice;
+  if (terminal2.reason !== "HTTP 429") return void 0;
   const withoutAppControls = terminal2.call === 1 && native2.mcpToolRequests === 0 && native2.returnedBrowserInputs === 0;
   if (record9(native2.trace).saved === true)
     return withoutAppControls ? "The run stopped without using the app controls. The test service rejected a request. Open View run trace to review the saved page." : "The run stopped because the test service rejected a request. Open View run trace to review the saved actions.";
@@ -125771,7 +125777,7 @@ function projectTestPlans(snapshot2, runnerContexts) {
       const start = testPlanViewSchema.shape.runs.element.shape.startedAt.safeParse(
         record9(original.executionHost).startedAt
       );
-      const outcomeNotice = navigationStopNotice(original, native2, terminal2) ?? executionRejectionNotice(original, native2, terminal2) ?? (original.status === "not-executed" && original.reason === "OPENAI_API_KEY_not_configured" ? "Execution did not start because its connection is not configured." : original.status === "native-exception" && record9(original.error).message === "The target application is unavailable." ? "The target application is unavailable." : terminal2.reason === "Authentication expired. Reconnect before retrying." ? "The connection expired. Reconnect before retrying." : terminal2.reason === "HTTP 503" ? "The test service is temporarily unavailable. Check the saved outcome before retrying." : original.status === "native-exception" ? "The test could not finish. Review the saved observations before retrying." : void 0);
+      const outcomeNotice = navigationStopNotice(original, native2, terminal2) ?? executionServiceNotice(original, native2, terminal2) ?? (original.status === "not-executed" && original.reason === "OPENAI_API_KEY_not_configured" ? "Execution did not start because its connection is not configured." : original.status === "native-exception" && record9(original.error).message === "The target application is unavailable." ? "The target application is unavailable." : terminal2.reason === "Authentication expired. Reconnect before retrying." ? "The connection expired. Reconnect before retrying." : terminal2.reason === "HTTP 503" ? "The test service is temporarily unavailable. Check the saved outcome before retrying." : original.status === "native-exception" ? "The test could not finish. Review the saved observations before retrying." : void 0);
       const planRef = record9(correlation.planRef);
       const selected2 = (correlation.planRef === null || correlation.planRef === void 0) && typeof native2.task === "string" && native2.task.length > 0 ? [correlation.scenarioId] : Array.isArray(correlation.selectedTestIds) ? correlation.selectedTestIds : planRef.selectedTestIds;
       const selectedTestIds = list7(selected2).filter(
