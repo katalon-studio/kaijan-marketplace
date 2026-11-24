@@ -61,8 +61,9 @@ Keep missing details open. A task in chat is enough to plan.
 
 On Codex, use the advertised fields above and the original user request.
 For hosts that advertise `input` and `contextId`, use the following planning
-input guidance. For browser exploration on those hosts, provide the authorized
-URL in `exploration.target.initialURL` and any supplied exploration parameters.
+input guidance. Send the authorized browser URL in `exploration.target.initialURL`
+and include any supplied exploration parameters only if the Plan schema
+advertises `exploration`.
 
 Use one supported input form. Preserve original text, attribution and source
 roles. Put application behavior and context in `input`. Include the optional

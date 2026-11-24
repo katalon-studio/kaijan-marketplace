@@ -52648,8 +52648,8 @@ var customerAssessmentQuoteSchema = external_exports.object({
 });
 var assessmentSourceUnavailable = "The cited source is retained but cannot be shown in this view. Its absence does not establish a pass, failure or permission to repeat actions.";
 function customerCleanupText(facts) {
-  const closure = facts.cleaned ? "The test browser was confirmed closed." : "The test browser was not confirmed closed at the cleanup check.";
-  return closure + (facts.deadlineExceeded ? " The cleanup time limit was reached." : "");
+  const cleanup = facts.cleaned ? "Cleanup of this Run's browser resources was confirmed." : "Cleanup of this Run's browser resources was not confirmed at the cleanup check.";
+  return cleanup + (facts.deadlineExceeded ? " The cleanup time limit was reached." : "");
 }
 function projectAssessmentQuotes(values = []) {
   return values.map((value) => {
@@ -52992,6 +52992,73 @@ function projectCustomerRelatedResult(input3) {
   return parsed;
 }
 
+// packages/contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+var chromeDisconnectNotice = "The run stopped because it lost its connection to the Chrome tab.";
+var chromeDisconnectTerminal = external_exports.object({
+  actor: external_exports.literal("harness"),
+  reason: external_exports.enum([
+    "Error: The connected Chrome tab is no longer connected",
+    "Error: The Chrome tab is no longer connected"
+  ])
+});
+function recordedChromeDisconnectNotice(state2, terminal2) {
+  return state2 === "incomplete" && chromeDisconnectTerminal.safeParse(terminal2).success ? chromeDisconnectNotice : void 0;
+}
+function projectCustomerExecutionEvidence(input3) {
+  const parsed = customerExecutionEvidenceSchema.safeParse(input3);
+  const value = parsed.success ? copyAssessmentPresentationProof(input3, parsed.data) : { observations: [], actions: [], cleanup: void 0, notice: "" };
+  return {
+    observations: projectAssessmentQuotes(value.observations),
+    actions: projectAssessmentActions(value.actions),
+    ...value.cleanup ? { cleanup: projectAssessmentQuotes([value.cleanup])[0] } : {},
+    notice: value.observations.length || value.actions.length ? "Application evidence is shown separately from the test result. An action return does not prove its expected effect; indexes give order within one source only." : "Application observations and action records are unavailable in this view. This does not establish a pass or permission to repeat actions."
+  };
+}
+function customerExecutionStatus(state2, effects, blockedReason, terminal2) {
+  const message = recordedChromeDisconnectNotice(state2, terminal2) ?? (state2 === "completed" || state2 === "complete" ? "Execution finished." : state2 === "cancelled" || state2 === "stopped" ? "The test stopped before it finished." : state2 === "blocked" ? "Kaijan could not continue execution. Check that the target is open and that Kaijan has permission to use it. Review the saved run before trying again." : state2 === "stuck" ? "The test could not continue." : state2 === "incomplete" ? blockedReason === "initial_navigation_blocked" ? "Kaijan could not open the target page. Check that the app is running and its address is reachable. Review the saved run before trying again." : "The test did not finish." : state2 === "needs_input" ? "The test needs more information." : "The execution result is not confirmed.");
+  return message + (effects === "uncertain" ? " Some action effects remain uncertain." : "");
+}
+var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+function projectCustomerExecutionProgress(input3) {
+  const value = progress2.parse(input3);
+  return {
+    ...value.test_results ? { test_results: value.test_results } : {},
+    ...value.status ? { status: value.status } : {},
+    ...value.effects ? { effects: value.effects } : {},
+    reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
+    completedSteps: value.completedSteps ?? [],
+    remainingSteps: value.remainingSteps ?? [],
+    questions: value.questions ?? []
+  };
+}
+function transferVerifiedExecutionEvidence(input3, verifySource) {
+  const value = customerExecutionEvidenceSchema.parse(input3);
+  const original2 = input3;
+  const transfer = (source3, target) => {
+    if (verifySource?.(source3) === true && equalAssessmentSourceValues(source3, target))
+      retainVerifiedAssessmentSource(target);
+  };
+  value.observations.forEach((quote, index) => transfer(original2.observations[index], quote));
+  value.actions.forEach((action2, index) => transfer(original2.actions[index], action2));
+  if (value.cleanup)
+    transfer(original2.cleanup, value.cleanup);
+  return projectCustomerExecutionEvidence(value);
+}
+
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
   steps: external_exports.array(external_exports.string()),
@@ -53099,6 +53166,7 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
   ...reportExecutionRejectionNoticeSchema.options,
   reportResponseLimitNotice,
+  chromeDisconnectNotice,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 var testPlanViewSchema = external_exports.object({
@@ -53772,62 +53840,6 @@ function transferCustomerRiskEvidence(source3, target, verify = getVerifiedCusto
     if (Object.hasOwn(source3, key))
       transferCustomerRiskEvidence(source3[key], target[key], verify);
   return target;
-}
-
-// packages/contracts/dist/customer-execution-presentation.js
-var customerExecutionEvidenceSchema = external_exports.object({
-  observations: external_exports.array(customerAssessmentQuoteSchema),
-  actions: external_exports.array(customerRecordedActionSchema),
-  cleanup: customerAssessmentQuoteSchema.optional(),
-  notice: external_exports.string()
-});
-function projectCustomerExecutionEvidence(input3) {
-  const parsed = customerExecutionEvidenceSchema.safeParse(input3);
-  const value = parsed.success ? copyAssessmentPresentationProof(input3, parsed.data) : { observations: [], actions: [], cleanup: void 0, notice: "" };
-  return {
-    observations: projectAssessmentQuotes(value.observations),
-    actions: projectAssessmentActions(value.actions),
-    ...value.cleanup ? { cleanup: projectAssessmentQuotes([value.cleanup])[0] } : {},
-    notice: value.observations.length || value.actions.length ? "Application evidence is shown separately from the test result. An action return does not prove its expected effect; indexes give order within one source only." : "Application observations and action records are unavailable in this view. This does not establish a pass or permission to repeat actions."
-  };
-}
-function customerExecutionStatus(state2, effects, blockedReason) {
-  const message = state2 === "completed" || state2 === "complete" ? "Execution finished." : state2 === "cancelled" || state2 === "stopped" ? "The test stopped before it finished." : state2 === "blocked" ? "Kaijan could not continue execution. Check that the target is open and that Kaijan has permission to use it. Review the saved run before trying again." : state2 === "stuck" ? "The test could not continue." : state2 === "incomplete" ? blockedReason === "initial_navigation_blocked" ? "Kaijan could not open the target page. Check that the app is running and its address is reachable. Review the saved run before trying again." : "The test did not finish." : state2 === "needs_input" ? "The test needs more information." : "The execution result is not confirmed.";
-  return message + (effects === "uncertain" ? " Some action effects remain uncertain." : "");
-}
-var progress2 = external_exports.object({
-  test_results: runnerTestResultsSchema.optional(),
-  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
-  reason: external_exports.string().optional(),
-  completedSteps: external_exports.array(external_exports.string()).optional(),
-  remainingSteps: external_exports.array(external_exports.string()).optional(),
-  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
-});
-function projectCustomerExecutionProgress(input3) {
-  const value = progress2.parse(input3);
-  return {
-    ...value.test_results ? { test_results: value.test_results } : {},
-    ...value.status ? { status: value.status } : {},
-    ...value.effects ? { effects: value.effects } : {},
-    reason: value.reason ?? customerExecutionStatus(value.status, value.effects),
-    completedSteps: value.completedSteps ?? [],
-    remainingSteps: value.remainingSteps ?? [],
-    questions: value.questions ?? []
-  };
-}
-function transferVerifiedExecutionEvidence(input3, verifySource) {
-  const value = customerExecutionEvidenceSchema.parse(input3);
-  const original2 = input3;
-  const transfer = (source3, target) => {
-    if (verifySource?.(source3) === true && equalAssessmentSourceValues(source3, target))
-      retainVerifiedAssessmentSource(target);
-  };
-  value.observations.forEach((quote, index) => transfer(original2.observations[index], quote));
-  value.actions.forEach((action2, index) => transfer(original2.actions[index], action2));
-  if (value.cleanup)
-    transfer(original2.cleanup, value.cleanup);
-  return projectCustomerExecutionEvidence(value);
 }
 
 // packages/contracts/dist/customer-advisory.js
@@ -54615,6 +54627,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     state: operationState,
     plan: customerPlanSchema.nullable(),
     planningFailure: external_exports.literal("service-rejected").optional(),
+    planningExplorationIncomplete: external_exports.literal(true).optional(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
       "This saved plan is unavailable in the supported view. Other saved results remain available.",
@@ -54655,7 +54668,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
     executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional(),
-    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional()
+    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional(),
+    chromeDisconnectNotice: external_exports.literal(chromeDisconnectNotice).optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
@@ -54793,6 +54807,12 @@ var reportWithoutContextFinder = customerReportSchema.omit({
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
 });
+var incompleteExploration = external_exports.object({
+  schema: external_exports.literal("loki.planning-failure/1"),
+  reason: external_exports.literal("exploration_incomplete"),
+  receipt: external_exports.object({ status: external_exports.literal("exploration_incomplete") })
+});
+var isIncompleteExploration = (value) => incompleteExploration.safeParse(value).success;
 function projectReportResult(input3, sha256, verifiedPlanningFailures) {
   const value = copyCustomerPlanningSource(input3, copyAssessmentPresentationProof(input3, transferCustomerRiskEvidence(input3, reportWithoutContextFinder.parse(input3))));
   const entries = reportContextFinderInput.safeParse(input3).data?.contextFinder ?? [];
@@ -54810,6 +54830,8 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
     plans: value.plans.map((saved, index) => {
       const source3 = { ...saved };
       delete source3.planningFailure;
+      delete source3.planningExplorationIncomplete;
+      const cause = verifiedPlanningFailures?.get(index);
       const plan2 = source3.plan === null ? null : projectCustomerPlan(source3.plan, source3.evidence, sha256);
       const unavailable3 = plan2?.presentation?.detailsAvailable === false;
       const evidence2 = projectCustomerSavedPlanEvidence(source3.evidence, sha256)?.map((row) => {
@@ -54822,7 +54844,8 @@ function projectReportResult(input3, sha256, verifiedPlanningFailures) {
       });
       return {
         ...source3,
-        ...verifiedPlanningFailures?.has(index) ? { planningFailure: "service-rejected" } : {},
+        ...cause === "service-rejected" ? { planningFailure: "service-rejected" } : {},
+        ...cause === "exploration-incomplete" ? { planningExplorationIncomplete: true } : {},
         evidence: evidence2,
         coverage: source3.coverage ? {
           ...source3.coverage,
@@ -54876,7 +54899,7 @@ function projectCustomerTestPlanView(input3, sha256) {
     runs: external_exports.array(external_exports.unknown()),
     assessments: external_exports.array(external_exports.unknown()).optional()
   }).parse(input3);
-  const verifiedPlanningFailures = /* @__PURE__ */ new Set();
+  const verifiedPlanningFailures = /* @__PURE__ */ new Map();
   const plans = value.plans.map((source3, index) => {
     const native = source3.result;
     const identity4 = {
@@ -54887,9 +54910,15 @@ function projectCustomerTestPlanView(input3, sha256) {
       requestTestIndexes: source3.requestTestIndexes,
       ...source3.applicationModel ? { applicationModel: source3.applicationModel } : {}
     };
-    if (record5(native).schema === "loki.planning-failure/1") {
-      if (source3.sourceKind === "answer" && source3.state === "complete" && source3.resultSha256 && planningRejectionMessage(native) && hasCustomerPlanningSource(source3))
-        verifiedPlanningFailures.add(index);
+    const failure6 = record5(native);
+    if (failure6.schema === "loki.planning-failure/1") {
+      if (source3.sourceKind === "answer" && source3.state === "complete" && source3.resultSha256 && hasCustomerPlanningSource(source3)) {
+        if (planningRejectionMessage(native)) {
+          verifiedPlanningFailures.set(index, "service-rejected");
+        } else if (isIncompleteExploration(native)) {
+          verifiedPlanningFailures.set(index, "exploration-incomplete");
+        }
+      }
       return {
         ...identity4,
         plan: null,
@@ -59780,7 +59809,8 @@ var planInput = external_exports.strictObject({
 var runInput = external_exports.strictObject({
   requestKey: requestKey2,
   planId,
-  testIds: external_exports.array(external_exports.string().min(1)).min(1)
+  testIds: external_exports.array(external_exports.string().min(1)).min(1),
+  runInstructions: external_exports.string().min(1).optional().describe("The person's current instructions and limits for this Run.")
 });
 var codexRunInput = runInput.extend({
   browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe(
@@ -59804,14 +59834,19 @@ function testingToolDefinition(tool2, host) {
   if (tool2.name === "loki_test_execute")
     return {
       ...tool2,
-      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
+      description: "Run the selected test cases from the exact saved Plan using its target and test data. Use the planId and test IDs returned by Plan. Use runInstructions for the person's current instructions and limits. A new Run uses a fresh requestKey. Reuse that key for an interrupted call.",
       inputSchema: external_exports.toJSONSchema(host === "codex" ? codexRunInput : runInput)
     };
   return tool2;
 }
 function codexPlanArguments(args) {
   const parsed = planInput.safeParse(args);
-  if (!parsed.success) return void 0;
+  if (!parsed.success)
+    return {
+      error: parsed.error.issues.some(
+        ({ path }) => path[0] === "explorerTimeLimitMs"
+      ) ? `Omit explorerTimeLimitMs for the five-minute default, or supply a whole number from ${defaultExplorerTimeLimitMs} to ${maxExecutionTimerMs} milliseconds.` : "Supply requestKey, the saved Test Environment ID, and one of testObjective, input, or contextId. Include the saved Test Data ID when needed."
+    };
   const {
     requestKey: requestKey3,
     testObjective,
@@ -59824,25 +59859,28 @@ function codexPlanArguments(args) {
     ...preparation2
   } = parsed.data;
   return {
-    requestKey: requestKey3,
-    ...contextId ? { contextId } : { input: input3 ?? { title: testObjective, body: testObjective } },
-    ...preparation2,
-    savedTestInputs: {
-      testEnvironmentId,
-      ...testDataId === void 0 ? {} : { testDataId }
-    },
-    ...sourceModel === void 0 ? {} : { sourceModel },
-    ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
+    arguments: {
+      requestKey: requestKey3,
+      ...contextId ? { contextId } : { input: input3 ?? { title: testObjective, body: testObjective } },
+      ...preparation2,
+      savedTestInputs: {
+        testEnvironmentId,
+        ...testDataId === void 0 ? {} : { testDataId }
+      },
+      ...sourceModel === void 0 ? {} : { sourceModel },
+      ...explorerTimeLimitMs === void 0 ? {} : { options: { explorerTimeLimitMs } }
+    }
   };
 }
 function savedPlanRunArguments(args, host) {
   const parsed = (host === "codex" ? codexRunInput : runInput).safeParse(args);
   if (!parsed.success) return void 0;
-  const { requestKey: requestKey3, planId: planId2, testIds, browserSession } = parsed.data;
+  const { requestKey: requestKey3, planId: planId2, testIds, runInstructions, browserSession } = parsed.data;
   const [answerId, resultSha256] = planId2.split(".");
   return {
     requestKey: requestKey3,
     savedTests: { answerId, resultSha256, selectedTestIds: testIds },
+    ...runInstructions === void 0 ? {} : { guidance: runInstructions },
     ...browserSession === void 0 ? {} : { browserSession }
   };
 }
@@ -60721,17 +60759,18 @@ var customerBrowserCleanupSchema = external_exports.strictObject({
   deadlineExceeded: external_exports.boolean().nullable(),
   message: external_exports.string()
 });
-var unknown2 = () => ({
+var unknown2 = (attachedChrome = false) => ({
   scope: "this-run-browser",
   state: "unknown",
   deadlineExceeded: null,
-  message: "Browser closure could not be confirmed."
+  message: attachedChrome ? "Chrome tab detachment could not be confirmed." : "Browser closure could not be confirmed."
 });
 var context = external_exports.object({
   state: external_exports.literal("ready"),
   runId: digest19,
   resultSha256: digest19,
   target: external_exports.object({ app: external_exports.string().min(1).optional() }).optional(),
+  browserSession: chromeRunSession.optional(),
   cleanupEvidence: external_exports.unknown().optional()
 });
 var cleanupEvidence = external_exports.object({
@@ -60750,14 +60789,16 @@ async function customerBrowserCleanup(execution2, readContext) {
     if (value.runId !== execution2.runId || value.resultSha256 !== execution2.resultSha256)
       return unknown2();
     if (value.target?.app !== void 0) return void 0;
-    const { cleaned, deadlineExceeded } = cleanupEvidence.parse(
-      value.cleanupEvidence
-    ).record;
+    const attachedChrome = value.browserSession !== void 0;
+    const evidence2 = cleanupEvidence.safeParse(value.cleanupEvidence);
+    if (!evidence2.success) return unknown2(attachedChrome);
+    const { cleaned, deadlineExceeded } = evidence2.data.record;
+    const message = attachedChrome ? cleaned ? "Kaijan detached from the Chrome tab." : "Chrome tab detachment was not confirmed at the cleanup check." : cleaned ? "The test browser was confirmed closed." : "The test browser was not confirmed closed at the cleanup check.";
     return customerBrowserCleanupSchema.parse({
       scope: "this-run-browser",
       state: cleaned ? "complete" : "incomplete",
       deadlineExceeded,
-      message: (cleaned ? "The test browser was confirmed closed." : "The test browser was not confirmed closed at the cleanup check.") + (deadlineExceeded ? " The cleanup time limit was reached." : "")
+      message: message + (deadlineExceeded ? " The cleanup time limit was reached." : "")
     });
   } catch {
     return unknown2();
@@ -61199,7 +61240,8 @@ function executionResult(value, blockedReason) {
       answer: executionLimit && effects !== "uncertain" ? savedExecutionLimitReasons[executionLimit] : customerExecutionStatus(
         native.executionState,
         effects,
-        blockedReason
+        blockedReason,
+        native.terminal
       ),
       ...executionLimit ? { executionLimit } : {},
       ...unstarted?.length ? { notStartedTestIds: unstarted.map(planTestId) } : {},
@@ -61709,6 +61751,12 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
         };
       }
       const scenarioId = createHash10("sha256").update(JSON.stringify(selected)).digest("hex");
+      const planningObjective = typeof resolved2.testObjective === "string" ? resolved2.testObjective : void 0;
+      const guidance = args.guidance ?? planningObjective;
+      const hostContext = {
+        ...resolved2.testData === void 0 ? {} : { testData: resolved2.testData },
+        ...args.guidance === void 0 || planningObjective === void 0 ? {} : { planningObjective }
+      };
       return {
         arguments: {
           requestKey: args.requestKey,
@@ -61720,8 +61768,8 @@ async function resolveCustomerPlanArguments(name, args, invocation, options = {}
           params: exploration?.params ?? {},
           ...args.options === void 0 ? {} : { options: args.options },
           ...exploration?.privateParams === void 0 ? {} : { privateParams: exploration.privateParams },
-          ...typeof resolved2.testObjective === "string" ? { guidance: resolved2.testObjective } : {},
-          ...resolved2.testData === void 0 ? {} : { hostContext: { testData: resolved2.testData } }
+          ...guidance === void 0 ? {} : { guidance },
+          ...Object.keys(hostContext).length ? { hostContext } : {}
         }
       };
     }
@@ -62205,7 +62253,7 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
         "openai/widgetAccessible": true
       }
     } : {},
-    description: `${description}${tool2.name === "loki_report_show" ? " To attach original GitHub PR and files reads, supply reportSources when saving the report." : ""} Use the total for passed tests. Use Passed, Failed and Incomplete for saved check outcomes.`,
+    description: `${description}${tool2.name === "loki_report_show" ? " Attach original GitHub REST pull request and changed-file records as reportSources when available. Otherwise omit reportSources and show the same saved result." : ""} Use the total for passed tests. Use Passed, Failed and Incomplete for saved check outcomes.`,
     outputSchema: {
       ...external_exports.toJSONSchema(
         tool2.name === "loki_report_get" ? external_exports.union([customerReportOutputSchema, contextReadSchema]) : customerReportOutputSchema,
@@ -62379,11 +62427,13 @@ async function invokeCustomerReportWithMetadata(catalog, name, args, invocation,
             run.outcomeNotice
           );
           const responseLimit = run.outcomeNotice === reportResponseLimitNotice;
-          if (!notice2.success && !responseLimit) return run;
+          const chromeDisconnected = run.outcomeNotice === chromeDisconnectNotice;
+          if (!notice2.success && !responseLimit && !chromeDisconnected)
+            return run;
           return {
             ...run,
             outcomeNotice: "The test could not finish. Review the saved observations before retrying.",
-            ...notice2.success ? { executionRejectionNotice: notice2.data } : { responseLimitNotice: reportResponseLimitNotice }
+            ...notice2.success ? { executionRejectionNotice: notice2.data } : responseLimit ? { responseLimitNotice: reportResponseLimitNotice } : { chromeDisconnectNotice }
           };
         })
       } : result2,
@@ -62686,11 +62736,9 @@ ${customerInstructions}` : customerInstructions
         signal: AbortSignal.any([extra.signal, lifetime.signal])
       };
       const codexTesting = session.identity?.host === "codex";
-      const args = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : params.arguments ?? {};
-      if (!args)
-        throw invalidParams(
-          "Supply requestKey, the saved Test Environment ID, and one of testObjective, input, or contextId. Include the saved Test Data ID when needed."
-        );
+      const parsed = codexTesting && params.name === "loki_test_plan" ? codexPlanArguments(params.arguments ?? {}) : { arguments: params.arguments ?? {} };
+      if (parsed.error) throw invalidParams(parsed.error);
+      const args = parsed.arguments;
       const configured2 = session.configurations && params.name === "loki_test_plan" ? await session.configurations.prepareExecution(
         params.name,
         args,
@@ -62871,7 +62919,7 @@ ${customerInstructions}` : customerInstructions
         scopedCatalog,
         params.name,
         configured2.arguments,
-        savedRun ? { ...invocation, guidanceFromSavedPlan: true } : invocation,
+        savedRun && args.guidance === void 0 ? { ...invocation, guidanceFromSavedPlan: true } : invocation,
         {
           readAssessmentPresentation: selected.services?.suppliedEvidence?.readCustomerAssessment?.bind(
             selected.services.suppliedEvidence
