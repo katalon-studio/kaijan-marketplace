@@ -951,7 +951,7 @@
     },
     "files": {
       "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029",
-      "packages/computer-runner/src/runner.mjs": "ea1bbca62834d247c5de1ccff12f992685e3f7c01e36c2e89781c96bd23f4bab",
+      "packages/computer-runner/src/runner.mjs": "d0ab37233de36aba6bc5bbb7d5755a93a86f2938fea6afba9d528258ced66fc3",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
       "packages/computer-runner/README.md": "c34ea4d9294fde6c307e0d5078430a0fbc27996ef939e7041e54fba6e28b4d71",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
