@@ -106795,7 +106795,7 @@ async function capturePlannerConversation(directory3, receipt4, providerIdentity
 var object7 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
 var hash9 = (value) => createHash21("sha256").update(value).digest("hex");
 var planningRepositories = external_exports.array(
-  external_exports.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/)
+  external_exports.string().regex(/^[A-Za-z0-9][A-Za-z0-9_.-]*\/[A-Za-z0-9][A-Za-z0-9_.-]*$/).describe("GitHub repository identifier in the form owner/repository.")
 ).min(1).refine(
   (values) => new Set(values.map((value) => value.toLowerCase())).size === values.length,
   "Supply each authorized repository once."

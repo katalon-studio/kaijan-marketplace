@@ -106,7 +106,7 @@
     "packages/capabilities/src/change-input.ts": "af55e8b54efe6b88567b57e2e7d334e03e02b059cbab750e9b2440522ca58690",
     "packages/contracts/dist/core-mcp.js": "89a666c99f1f08472cabc3dab790287fa70f4ecfd661d39e90af1e22c606cb01",
     "packages/capabilities/src/planning-conversation.ts": "48d4909d45ff5ec3f4c5aac9c7346eb007fa70e8ddc31ef52c3827173c07108b",
-    "packages/capabilities/src/planning-related-preparation.ts": "9aa4fa9faa1b7c6048f2436e9c524bd4513c7a8c7dec762cb40a2acdd569c8a6",
+    "packages/capabilities/src/planning-related-preparation.ts": "4fed9fff7d99a2afee1a276f7dd4ec0d76fea9a9e4ee57543fbb5af5d3da5871",
     "packages/capabilities/src/planning-procedure-context.ts": "12846470353ccfc8b9a79514032c35068e289313645c80c664a23d46cda6d5c5",
     "packages/capabilities/src/planning-failure-diagnostics.ts": "c54343d4d2df7e5b9bc87486e63fe073787d21accc459f2d716ee32baeee2360",
     "packages/capabilities/src/planning-risk-context.ts": "15852e2d5c369eabd432809cc801620724ebe8103a031f1cb2ba958d426d29e5",
