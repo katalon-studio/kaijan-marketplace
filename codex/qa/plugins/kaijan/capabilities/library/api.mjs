@@ -161011,12 +161011,12 @@ import { URL as URL4 } from "node:url";
 import { TextDecoder as TextDecoder2 } from "node:util";
 import { createHash as createHash77 } from "node:crypto";
 var digest46 = (raw) => createHash77("sha256").update(raw).digest("hex");
-function repositoryIdentity(repo, { deadline = null } = {}) {
-  const runtime2 = inventoryRuntime(deadline);
+function repositoryIdentity(repo, { deadline = null, signal, env } = {}) {
+  const runtime2 = inventoryRuntime(deadline, signal);
   const result = runtime2.sync(
     "git",
     ["-C", repo, "remote", "get-url", "origin"],
-    { encoding: "utf8" }
+    { encoding: "utf8", env }
   );
   if (result.status !== 0) return {};
   let remote = result.stdout.trim();
@@ -161103,6 +161103,93 @@ async function census(entries, origin2, preserveAliases = false) {
   }
   return { origin: origin2, inventory: inventory2, sources };
 }
+async function* gitEntries(repo, revision2, { deadline = null, signal, env, prepare: prepare2 } = {}) {
+  const runtime2 = inventoryRuntime(deadline, signal);
+  const git = (args, options2 = {}) => runtime2.exec("git", ["-C", repo, ...args], {
+    maxBuffer: Infinity,
+    env,
+    ...options2
+  });
+  const listing = new TextDecoder2("utf-8", { fatal: true, ignoreBOM: true });
+  const rows4 = listing.decode(git(["ls-tree", "-rz", revision2])).split("\0").filter(Boolean).map((row2) => {
+    const tab = row2.indexOf("	"), [mode, kind, oid] = row2.slice(0, tab).split(" ");
+    return { mode, kind, oid, name: row2.slice(tab + 1) };
+  });
+  if (prepare2) await prepare2(rows4, git);
+  const child = runtime2.spawn("git", ["-C", repo, "cat-file", "--batch"], {
+    stdio: ["pipe", "pipe", "ignore"],
+    env
+  });
+  let failure2 = null;
+  child.stdin.on("error", (error62) => {
+    failure2 ??= error62;
+  });
+  const closed = new Promise((resolve11) => {
+    child.on("error", (e2) => {
+      failure2 = e2.name === "AbortError" ? signal?.reason ?? runtime2.failure() : e2;
+      resolve11(-1);
+    });
+    child.on("close", resolve11);
+  });
+  const stream = child.stdout[Symbol.asyncIterator]();
+  let pending = Buffer.alloc(0);
+  const fill = async () => {
+    const next2 = await stream.next();
+    if (next2.done) throw failure2 ?? new ValueError("Truncated Git blob");
+    pending = Buffer.concat([pending, next2.value]);
+  };
+  const line = async () => {
+    while (!pending.includes(10)) await fill();
+    const i2 = pending.indexOf(10), value = pending.subarray(0, i2).toString("ascii");
+    pending = pending.subarray(i2 + 1);
+    return value;
+  };
+  const take = async (n) => {
+    while (pending.length < n) await fill();
+    const value = Buffer.from(pending.subarray(0, n));
+    pending = pending.subarray(n);
+    return value;
+  };
+  let exitCode;
+  try {
+    for (const { mode, kind, oid, name } of rows4) {
+      runtime2.check();
+      if (kind !== "blob") {
+        yield [
+          name,
+          Buffer.alloc(0),
+          { mode, git_oid: oid, unsupported_kind: kind }
+        ];
+        continue;
+      }
+      child.stdin.write(oid + "\n");
+      const [id8, actual, length] = (await line()).split(" ");
+      const size = Number(length);
+      if (id8 !== oid || actual !== "blob" || !Number.isSafeInteger(size) || size < 0)
+        throw new ValueError("Expected the selected local Git blob");
+      const raw = await take(size);
+      if ((await take(1))[0] !== 10) throw new ValueError("Truncated Git blob");
+      yield [
+        name,
+        raw,
+        {
+          mode,
+          git_oid: oid,
+          ...mode === "120000" ? { unsupported_kind: "symlink_not_followed" } : {}
+        }
+      ];
+    }
+  } catch (error62) {
+    child.kill();
+    throw error62;
+  } finally {
+    child.stdin.end();
+    exitCode = await closed;
+  }
+  runtime2.check();
+  if (exitCode !== 0)
+    throw failure2 ?? new ValueError("Git capture did not complete");
+}
 
 // ../ui-modeler/scripts/ui_folder_inventory.mjs
 var inside2 = (root5, file3) => file3 === root5 || file3.startsWith(root5 + path13.sep);
@@ -161124,8 +161211,37 @@ async function snapshot(folder, output2, revision2 = null, { deadline = null, si
     encoding: "utf8",
     maxBuffer: Infinity
   });
-  if (revision2)
-    throw Error("Git-revision capture belongs to the experimental adapter");
+  if (revision2 !== null) {
+    if (!/^[0-9a-f]{40}$/.test(revision2))
+      throw new ValueError("Select a full local commit identity");
+    const env = {
+      PATH: process.env.PATH,
+      GIT_NO_LAZY_FETCH: "1",
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_ALLOW_PROTOCOL: "",
+      GIT_TERMINAL_PROMPT: "0",
+      GIT_CONFIG_NOSYSTEM: "1",
+      GIT_CONFIG_GLOBAL: "/dev/null"
+    };
+    const commit = runtime2.exec(
+      "git",
+      ["-C", folder, "rev-parse", "--verify", revision2 + "^{commit}"],
+      { encoding: "utf8", env }
+    ).trim();
+    if (commit !== revision2)
+      throw new ValueError("Select a full local commit identity");
+    const options2 = { deadline, signal, env };
+    return census(
+      gitEntries(folder, commit, options2),
+      {
+        repo: folder,
+        revision: commit,
+        mode: "git_revision",
+        ...repositoryIdentity(folder, options2)
+      },
+      true
+    );
+  }
   const probe = runtime2.sync(
     "git",
     ["-C", folder, "rev-parse", "--show-toplevel"],
@@ -168897,11 +169013,11 @@ function freezeCapture(value) {
   }
   return value;
 }
-async function captureFolder(folder, { output: output2, deadline = null, signal } = {}) {
+async function captureFolder(folder, { output: output2, revision: revision2 = null, deadline = null, signal } = {}) {
   if (!path20.isAbsolute(folder) || !path20.isAbsolute(output2))
     throw Error("Absolute source and private output paths required");
   const corpus = freezeCapture(
-    await snapshot(folder, output2, null, { deadline, signal })
+    await snapshot(folder, output2, revision2, { deadline, signal })
   );
   captures.set(corpus, {
     folder: await fs12.realpath(folder),
