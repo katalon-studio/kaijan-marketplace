@@ -23,8 +23,8 @@ approved account before calling Plan. Guide the person to
 if it is missing or needs an update. For a supplied `.app` path or first-time
 desktop setup, use the [macOS setup guide](../run-test/references/macos-appium-setup.md).
 
-In Codex, pass the person's request as `testObjective` with a `requestKey`,
-the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
+For a chat-only task in Codex, pass the person's request as `testObjective`
+with a `requestKey`, the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
 saved target, account and data in Plan and Run. After Setup, use its saved
 `application.workItem` as the objective and its resolved target to find or save
 the environment for the selected AUT.
@@ -38,6 +38,13 @@ format. Keep the person's request and application details intact. Pass
 authorized `repositories` or the original frozen `change` when needed so
 Kaijan can prepare related work and risk inside Plan. If a source is
 unavailable, keep its expectations unresolved.
+
+When the person asks to test selected local code changes, use the attributed
+`pr-context-plan/3` input. Keep the person's original request as the work item.
+Include the actual diff of the selected changes as an `implementation` source
+with its source location and captured revision. Use the separately supplied
+frozen `change` for change review. Keep the saved target and the caller's action
+limits with the request.
 <!-- end-codex-only -->
 
 Tell the person Explorer's time limit before starting exploration. It defaults

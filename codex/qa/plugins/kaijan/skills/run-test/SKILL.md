@@ -12,6 +12,11 @@ can already authorize the selected target and actions. Save the Plan with
 complete scenario in chat. A plan-only request
 does not authorize execution.
 
+When the person requests one saved test, compare the requested action and
+outcome with the saved test steps and expected results. Send only the matching
+test's ID. If no single test clearly matches, ask which one to run before
+dispatch.
+
 ## Run the selected checks
 
 <!-- codex-only -->
