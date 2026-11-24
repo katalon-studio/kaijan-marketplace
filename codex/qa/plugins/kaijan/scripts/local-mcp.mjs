@@ -57105,6 +57105,7 @@ var import_websocket_server = __toESM(require_websocket_server(), 1);
 
 // packages/contracts/dist/chrome-run.js
 var chromeRunSession = external_exports.enum(["chrome-new-tab", "chrome-shared-tab"]);
+var chromeRunTabUnavailableReason = "chrome_run_tab_unavailable";
 var coordinates = {
   x: external_exports.number().nonnegative(),
   y: external_exports.number().nonnegative()
@@ -57244,7 +57245,9 @@ async function openChromeRunConnection({
         ];
         if (known.includes(outcome3))
           connected.reject(
-            new Error(`Chrome test connection ended (${outcome3})`)
+            new Error(`Chrome test connection ended (${outcome3})`, {
+              cause: mode === "chrome-shared-tab" && !ready && outcome3 === "tab-unavailable" ? chromeRunTabUnavailableReason : void 0
+            })
           );
         void close();
       });
@@ -57703,6 +57706,11 @@ var configurationSchema2 = external_exports.strictObject({
 var prepareSchema = external_exports.strictObject({
   requestKey,
   configuration: configurationSchema2.extend({
+    target: targetSchema.extend({
+      profileRevision: identity3.optional().describe(
+        "Omit for a new target. Setup assigns its own revision. Reuse only an exact Setup target revision returned by kaijan_app_config_get for this target. The Test Environment revision is a separate value."
+      )
+    }).optional(),
     source: sourceSchema.extend({
       revision: external_exports.string().min(1).max(512).default("main").describe(
         "Use HEAD for the current checkout commit, or supply a branch, a full Git ref or an exact commit. Omit to select main."
@@ -61217,6 +61225,9 @@ function hasSavedPlanSelection(value) {
   return checks?.provenance === "product-terminal-checks/1" && id8.safeParse(checks.planRef?.answerId).success && id8.safeParse(checks.planRef?.resultSha256).success;
 }
 var planTestId = (value) => customerPlanningId("T", value, hash4);
+function chromeConnectionUnavailable(value) {
+  return value?.status === "not-executed" && (value.reason === "chrome_run_approval_unavailable" || value.reason === chromeRunTabUnavailableReason);
+}
 function executionResult(value, blockedReason) {
   if (!value || ![
     "returned",
@@ -61263,7 +61274,7 @@ function executionResult(value, blockedReason) {
       message: "Execution could not finish. Keep the original run; effects may be unknown."
     } : {
       unresolvedInputs: value.unresolvedInputs,
-      message: value.reason === "chrome_run_approval_unavailable" ? "The Chrome tab wasn\u2019t connected, so the test didn\u2019t run. Make sure the Kaijan recording extension is enabled in Chrome. If the test needs an open page, make sure the page is still open before starting a new run." : "Execution did not start. Resolve the missing test inputs before requesting new work."
+      message: chromeConnectionUnavailable(value) ? "The Chrome tab wasn\u2019t connected, so the test didn\u2019t run. Make sure the Kaijan recording extension is enabled in Chrome and that the page is open if the test needs an existing tab. You can choose to use Kaijan\u2019s isolated browser instead." : "Execution did not start. Resolve the missing test inputs before requesting new work."
     }
   });
 }
@@ -61599,10 +61610,7 @@ async function invokeCustomerExecution(catalog, name, args = {}, invocation, opt
       const readContext = typeof options.readCleanupContext === "function" ? (reference2) => retained ??= Promise.resolve().then(
         () => options.readCleanupContext(reference2)
       ) : void 0;
-      const browserCleanup = await customerBrowserCleanup(
-        execution2,
-        readContext
-      );
+      const browserCleanup = execution2?.resultValidated === true && execution2.result?.status === "not-executed" && execution2.result.reason === chromeRunTabUnavailableReason ? void 0 : await customerBrowserCleanup(execution2, readContext);
       let context2;
       try {
         context2 = retained ? await retained : execution2?.state === "finished" && (isRunnerAssessment(hydrated.preparation) || projected.result?.executionReport || projected.execution?.result?.executionReport) && readContext ? await readContext({ runId: execution2.runId }) : void 0;
@@ -61849,6 +61857,7 @@ var customerDiscoverySchema = external_exports.strictObject({
   testPlanning: readiness,
   additionalTests: readiness,
   testExecution: readiness,
+  personalChromeSupported: external_exports.boolean().optional(),
   connection: external_exports.strictObject({
     state: external_exports.enum(["current", "reconnect-required", "not-checked"]),
     message: external_exports.string()
@@ -61880,7 +61889,7 @@ function customerDiscoveryTool(tool2) {
     }
   };
 }
-function projectCustomerDiscovery(value, directDevelopment = false) {
+function projectCustomerDiscovery(value, { directDevelopment = false, personalChromeSupported } = {}) {
   const valid = value?.schema === "loki.capability-discovery/1";
   const native = valid ? value : {};
   const freshness = native.runtime?.freshness;
@@ -61906,6 +61915,7 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     testPlanning: planning,
     additionalTests: planning.state === "available" ? { state: "available", message: "Save a revised Plan to add tests." } : planning,
     testExecution: native.testRun?.available === true && native.computerRunner?.state === "configured" && native.computerRunner?.providerConfigured === true ? configured() : native.testRun?.available === true && native.computerRunner?.state === "blocked" ? setupRequired : unavailable3,
+    ...typeof personalChromeSupported === "boolean" ? { personalChromeSupported } : {},
     connection: freshness?.state === "stale" || freshness?.installedMetadataMatches === false ? {
       state: "reconnect-required",
       message: directDevelopment ? "Reload Kaijan in this chat using the installed Setup guidance. Keep original test and report references; do not repeat work with an unknown outcome." : "Reconnect Kaijan in this chat. Keep original test and report references; do not repeat work with an unknown outcome."
@@ -61916,7 +61926,7 @@ function projectCustomerDiscovery(value, directDevelopment = false) {
     validation: "Not checked by this request."
   });
 }
-async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, directDevelopment = false) {
+async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, options) {
   try {
     const native = await catalog.invoke(
       "loki_capabilities_list",
@@ -61933,10 +61943,10 @@ async function invokeCustomerDiscovery(catalog, invocation, runtimeDiscovery, di
     }
     return projectCustomerDiscovery(
       { ...native, ...runtime ? { runtime } : {} },
-      directDevelopment
+      options
     );
   } catch {
-    return projectCustomerDiscovery(null, directDevelopment);
+    return projectCustomerDiscovery(null, options);
   }
 }
 
@@ -62498,6 +62508,9 @@ function invalidParams(message, data) {
   error63.message = message;
   return error63;
 }
+function supportsPersonalChrome(selected) {
+  return selected.services?.computerRunner?.supportsChromeRun?.() === true;
+}
 function capabilityMcpRegistration(session, setup) {
   const controls = session.customerReportPresentation !== "chat" && typeof session.catalog.reportRenderControl === "function" ? [
     {
@@ -62856,7 +62869,10 @@ ${customerInstructions}` : customerInstructions
           signal: AbortSignal.any([extra.signal, lifetime.signal])
         },
         session.runtimeDiscovery?.bind(session),
-        session.customerDiscoveryDirectDevelopment === true
+        {
+          directDevelopment: session.customerDiscoveryDirectDevelopment === true,
+          personalChromeSupported: session.identity?.host === "codex" ? supportsPersonalChrome(selected) : void 0
+        }
       );
       return {
         ...result2.error ? { isError: true } : {},
@@ -62883,7 +62899,7 @@ ${customerInstructions}` : customerInstructions
         invocation,
         {
           includeRunInputs: savedRun,
-          chromeRunAvailable: host === "codex" && selected.services?.computerRunner?.supportsChromeRun?.() === true,
+          chromeRunAvailable: host === "codex" && supportsPersonalChrome(selected),
           resolveSelection: selected.services?.testPlanning?.resolveCustomerSelection?.bind(
             selected.services.testPlanning
           )

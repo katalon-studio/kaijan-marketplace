@@ -14,6 +14,8 @@ does not build or require application maps.
   canonical source directory. For a new configuration, use
   `kaijan_app_config_prepare` with the source directory, revision selection, original
   `workItem` when supplied, optional target and stable `requestKey`.
+- For a new target, send its `url` and `profileId` and omit `profileRevision`.
+  Setup assigns that revision independently of the Test Environment revision.
 - Default a new source selection to latest main and honor an explicit branch,
   PR ref or commit. Keep the resolved SHA. The host resolves the committed
   source without switching the checkout or executing it. An unavailable

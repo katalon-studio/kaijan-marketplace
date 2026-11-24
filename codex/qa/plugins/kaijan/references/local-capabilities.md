@@ -141,6 +141,9 @@ Call `kaijan_capabilities_list` with `{}`. The normal reply uses
 - `unavailable`: follow the returned recovery message. This reply does not establish
   that the action can run.
 
+Current Codex replies include `personalChromeSupported` for the installed host
+and profile. The matching extension and tab connection are checked at Run.
+
 Read `connection.state` and `connection.message` separately. A
 `reconnect-required` result gives recovery guidance; `not-checked` does not verify
 sign-in or whether the installed plugin is current. The reply's `validation` is
