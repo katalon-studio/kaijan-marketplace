@@ -107,7 +107,7 @@
     "packages/capabilities/src/planning-conversation.ts": "48d4909d45ff5ec3f4c5aac9c7346eb007fa70e8ddc31ef52c3827173c07108b",
     "packages/capabilities/src/planning-related-preparation.ts": "9aa4fa9faa1b7c6048f2436e9c524bd4513c7a8c7dec762cb40a2acdd569c8a6",
     "packages/capabilities/src/planning-procedure-context.ts": "12846470353ccfc8b9a79514032c35068e289313645c80c664a23d46cda6d5c5",
-    "packages/capabilities/src/planning-failure-diagnostics.ts": "1e42595b8d4c9c33d50b75c7119d2a30037055a95235c07ae29cdfe4c426a673",
+    "packages/capabilities/src/planning-failure-diagnostics.ts": "c54343d4d2df7e5b9bc87486e63fe073787d21accc459f2d716ee32baeee2360",
     "packages/capabilities/src/planning-risk-context.ts": "15852e2d5c369eabd432809cc801620724ebe8103a031f1cb2ba958d426d29e5",
     "packages/capabilities/src/planning-change-preparation.ts": "d078b722bc7629d1156f62011bbd37fda889dc4785c8ecf618769ce4333e4a3e",
     "packages/capabilities/src/planning-preparation.ts": "32cd45e6ebdd5e568686cfc37cebecf9781ccbcf218907652f1e0b085ab7c795",

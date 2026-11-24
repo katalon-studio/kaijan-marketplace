@@ -30217,6 +30217,7 @@ async function startBroker({
         return json2(200, {
           owner_diagnostics: true,
           failure_diagnostics: true,
+          plan_preparation_diagnostics: true,
           epoch: telemetry?.lease({
             unsettled: Boolean(
               authorization.ready && !authorization.credentialsLoaded || authorization.pending || authorization.blocked || authorization.loggingOut

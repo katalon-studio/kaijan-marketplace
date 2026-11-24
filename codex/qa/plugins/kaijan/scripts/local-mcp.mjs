@@ -44407,7 +44407,7 @@ import { randomUUID as randomUUID2 } from "node:crypto";
 import { platform as platform2, release as release2, arch } from "node:os";
 function createTelemetryCollector(broker, build) {
   const host = pluginHost(build);
-  let lease = null, stopped = false, ownerDiagnosticsSupported = false, failureDiagnosticsSupported = false;
+  let lease = null, stopped = false, ownerDiagnosticsSupported = false, failureDiagnosticsSupported = false, planPreparationDiagnosticsSupported = false;
   const pending = /* @__PURE__ */ new Set();
   const refresh = async () => {
     try {
@@ -44421,6 +44421,7 @@ function createTelemetryCollector(broker, build) {
       const health = response2.ok ? await response2.json() : null;
       ownerDiagnosticsSupported = health?.owner_diagnostics === true;
       failureDiagnosticsSupported = health?.failure_diagnostics === true;
+      planPreparationDiagnosticsSupported = build.profile === "qa" && health?.plan_preparation_diagnostics === true;
       const parsed = telemetryIdentityEpochSchema.safeParse(health?.epoch);
       if (health?.disabled === true) lease = null;
       else if (parsed.success) lease = parsed.data;
@@ -44430,6 +44431,7 @@ function createTelemetryCollector(broker, build) {
       lease = null;
       ownerDiagnosticsSupported = false;
       failureDiagnosticsSupported = false;
+      planPreparationDiagnosticsSupported = false;
     }
   };
   const ready = refresh();
@@ -44450,6 +44452,10 @@ function createTelemetryCollector(broker, build) {
         if (event2 === "Test Plan Generated")
           delete supportedProperties.transport_reason;
         else delete supportedProperties.assessment_status;
+      }
+      if (event2 === "Test Plan Generated" && !planPreparationDiagnosticsSupported && Object.hasOwn(supportedProperties, "preparation_failure")) {
+        supportedProperties = { ...supportedProperties };
+        delete supportedProperties.preparation_failure;
       }
       const clientVersion = telemetryVersionSchema.safeParse(
         observation.clientVersion
@@ -44915,7 +44921,8 @@ var planCompletion = external_exports.strictObject({
   failureDiagnostics: external_exports.strictObject({
     failure_stage: planningFailureStageSchema.optional(),
     validation_rule: planningValidationRuleSchema.optional(),
-    transport_reason: planningTransportReasonSchema.optional()
+    transport_reason: planningTransportReasonSchema.optional(),
+    preparation_failure: planningPreparationFailureSchema.optional()
   }).optional()
 }).refine(
   (value) => value.outcome === "failed" ? value.casesTotal === null && value.casesMissingExpectedResult === null : value.casesMissingExpectedResult === null || value.casesTotal !== null && value.casesMissingExpectedResult <= value.casesTotal
