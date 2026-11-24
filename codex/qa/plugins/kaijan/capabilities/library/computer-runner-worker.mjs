@@ -26964,9 +26964,12 @@ var classifiedPlanningRejection = capturedPlanningFailure.extend({
     automatic_retry: external_exports.literal(false)
   })
 }).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
-var explorerHttpRejection = capturedPlanningFailure.pick({ schema: true }).extend({
+var explorerRejection = capturedPlanningFailure.pick({ schema: true }).extend({
   receipt: external_exports.object({
-    status: external_exports.literal("exploration_provider_http_rejected")
+    status: external_exports.enum([
+      "exploration_provider_http_rejected",
+      "exploration_provider_response_rejected"
+    ])
   })
 });
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";

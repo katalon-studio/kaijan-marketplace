@@ -53683,14 +53683,18 @@ var classifiedPlanningRejection = capturedPlanningFailure.extend({
 }).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
 var planningServiceRejectionNotice = "The planning service rejected the request. No test plan was saved.";
 var hasCapturedPlanningFailure = (value) => capturedPlanningFailure.safeParse(value).success;
-var explorerHttpRejection = capturedPlanningFailure.pick({ schema: true }).extend({
+var explorerRejection = capturedPlanningFailure.pick({ schema: true }).extend({
   receipt: external_exports.object({
-    status: external_exports.literal("exploration_provider_http_rejected")
+    status: external_exports.enum([
+      "exploration_provider_http_rejected",
+      "exploration_provider_response_rejected"
+    ])
   })
 });
 var planningRejectionMessage = (value) => {
-  if (explorerHttpRejection.safeParse(value).success)
-    return "An AI request was rejected during exploration. No test plan was saved. Keep this answer. You can reopen it in this chat.";
+  const exploration = explorerRejection.safeParse(value);
+  if (exploration.success)
+    return exploration.data.receipt.status === "exploration_provider_http_rejected" ? "An AI request was rejected during exploration. No test plan was saved. Keep this answer. You can reopen it in this chat." : "Explorer could not use the AI service\u2019s response. No test plan was saved. You can reopen this answer in this chat or ask for a new plan.";
   return planningRejection.safeParse(value).success || classifiedPlanningRejection.safeParse(value).success ? planningServiceRejectionNotice : void 0;
 };
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
