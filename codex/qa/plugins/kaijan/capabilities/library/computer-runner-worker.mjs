@@ -26340,6 +26340,7 @@ var reportExecutionRejectionNoticeSchema = external_exports.enum([
   "The run stopped without using the app controls. The test service rejected a request. Ask Kaijan to read this saved result in chat.",
   "The run stopped because the test service rejected a request. Ask Kaijan to read this saved result in chat."
 ]);
+var reportResponseLimitNotice = "The run stopped because the test service reached its response limit.";
 var reportOutcomeNoticeSchema = external_exports.enum([
   "The test stopped when the app tried to open a website that was not allowed for this test.",
   "The test stopped because it could not confirm whether the page was allowed for this test.",
@@ -26349,6 +26350,7 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The connection expired. Reconnect before retrying.",
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
   ...reportExecutionRejectionNoticeSchema.options,
+  reportResponseLimitNotice,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 var testPlanViewSchema = external_exports.object({
@@ -27478,7 +27480,8 @@ var customerReportSchema = testPlanViewSchema.pick({
     assertions: assertions.nullable().optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
-    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional()
+    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional(),
+    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
