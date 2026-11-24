@@ -125984,8 +125984,6 @@ function requestTestIndexes(result) {
 }
 function savedApplicationModel(result) {
   const saved = record9(result);
-  const cumulative = testPlanViewSchema.shape.plans.element.shape.applicationModel.unwrap().safeParse(saved.autAppModel);
-  if (cumulative.success) return cumulative.data;
   const source5 = list7(saved.evidence).map(record9).find(
     (row2) => row2.kind === "context" && typeof row2.revision === "string" && row2.source_id === "application-model-" + row2.revision && typeof row2.quote === "string" && createHash51("sha256").update(row2.quote).digest("hex") === row2.revision
   );
