@@ -32015,7 +32015,8 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
-  if (native && (value.transport_outcome !== "body_complete" || value.http_status === null || value.http_status < 200 || value.http_status >= 300))
+  const completedWebSocketUsage = value.inference_route === "responses" && value.http_status === 101 && value.native_response_outcome === "completed";
+  if (native && (value.transport_outcome !== "body_complete" || !completedWebSocketUsage && (value.http_status === null || value.http_status < 200 || value.http_status >= 300)))
     return false;
   if (!native && [
     value.model,
@@ -59834,6 +59835,12 @@ function testingToolDefinition(tool2, host) {
     }
     return {
       ...tool2,
+      annotations: {
+        ...tool2.annotations,
+        readOnlyHint: false,
+        destructiveHint: true,
+        openWorldHint: true
+      },
       description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Kaijan prepares related work and change review inside Plan when you supply their source inputs. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       // Keep the source fields visible to Codex. The receiver checks exclusivity.
       inputSchema: inputSchema3

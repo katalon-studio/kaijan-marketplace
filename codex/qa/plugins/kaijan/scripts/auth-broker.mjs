@@ -27577,7 +27577,8 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
-  if (native && (value.transport_outcome !== "body_complete" || value.http_status === null || value.http_status < 200 || value.http_status >= 300))
+  const completedWebSocketUsage = value.inference_route === "responses" && value.http_status === 101 && value.native_response_outcome === "completed";
+  if (native && (value.transport_outcome !== "body_complete" || !completedWebSocketUsage && (value.http_status === null || value.http_status < 200 || value.http_status >= 300)))
     return false;
   if (!native && [
     value.model,
