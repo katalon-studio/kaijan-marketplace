@@ -27064,6 +27064,12 @@ var planningTransportReasonSchema = external_exports.enum([
   "socket_timeout",
   "unknown"
 ]);
+var planningPreparationFailureSchema = external_exports.enum([
+  "application_model_access_denied",
+  "application_model_unavailable",
+  "desktop_xcode_setup_required",
+  "exploration_incomplete"
+]);
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -27089,11 +27095,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   provider_http_status: providerHttpStatusSchema.optional(),
   failure_stage: planningFailureStageSchema.optional(),
   validation_rule: planningValidationRuleSchema.optional(),
-  transport_reason: planningTransportReasonSchema.optional()
+  transport_reason: planningTransportReasonSchema.optional(),
+  preparation_failure: planningPreparationFailureSchema.optional()
 }).refine((value) => {
-  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0) && value.outcome !== "failed")
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0 || value.preparation_failure !== void 0) && value.outcome !== "failed")
     return false;
   if (value.transport_reason !== void 0 && value.error_code !== "transport_failure_no_retry")
+    return false;
+  if (value.preparation_failure !== void 0 && value.error_code !== "planning_failed")
     return false;
   if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
     return false;
