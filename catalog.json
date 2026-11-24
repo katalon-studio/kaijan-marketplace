@@ -25,11 +25,11 @@
       "channel": {
         "schema": "kaijan-marketplace-channel/1",
         "profile": "qa",
-        "version": "2026.1124.73353",
-        "buildId": "401c1119-13cf-42c8-a866-d24b4eec0d14",
-        "sourceRevision": "37f42efce3a515f9c1cb3175711e780f5fd05372",
-        "treeDigest": "10870ff169359ecebee84e13e1c85ae5200424226e5b2901c94f61e85d970bad",
-        "run": "45348962816",
+        "version": "2026.1124.75251",
+        "buildId": "3316bc85-f561-46b2-85ae-d99a6b9e8cba",
+        "sourceRevision": "103f7d2abc908f2cf33cf4bd94dbbe32ea3853d7",
+        "treeDigest": "2fb7b58fdbf3e99d3a9936f66d01ed8fcbf481b5715b43bad88a574f295cbf9d",
+        "run": "45351411780",
         "attempt": "1"
       }
     }

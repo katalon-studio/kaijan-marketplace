@@ -44,16 +44,25 @@ when saving the Plan. Choosing a login does not authorize execution.
 
 <!-- codex-only -->
 
-Codex uses an isolated browser by default. When Codex advertises
-`browserSession`, use `chrome-new-tab` if the person wants their signed-in
-Chrome at the saved URL. Use `chrome-shared-tab` if the task needs the current
-contents of a tab they already have open. Use the person's request in Codex to
-authorize this Run. The enabled Kaijan extension connects automatically. Skip
-instructions to choose or approve a tab in the extension. Screenshots from
-personal Chrome can include visible signed-in content. A sign-in requirement
-alone keeps the isolated default. Keep the same browser choice when recovering
-the original Run. If personal Chrome is unavailable, ask whether to use the
-isolated browser before starting a different Run.
+Codex uses an isolated browser by default. Personal Chrome is available on
+macOS with the Local or QA Kaijan profile and its matching enabled extension.
+When the person asks about using personal Chrome, check
+`kaijan_capabilities_list` and read `personalChromeSupported`. A false value
+means personal Chrome is unavailable in the current setup. If they want to
+start a Run, ask whether to use the isolated browser. A true value means the
+current setup supports personal Chrome. The extension and tab are checked when
+the Run starts. If the field is absent, support is unverified.
+
+When personal Chrome is available and the person requests it, use
+`chrome-new-tab` for their signed-in Chrome at the saved URL or
+`chrome-shared-tab` for the current contents of a tab they already have open.
+Use the person's request in Codex to authorize this Run. The enabled Kaijan
+extension connects automatically. Skip instructions to choose or approve a tab
+in the extension. Screenshots from personal Chrome can include visible signed-in
+content. A sign-in requirement alone keeps the isolated default. Keep the same
+browser choice when recovering the original Run. If the Chrome connection is
+unavailable, ask whether to use the isolated browser before starting a different
+Run.
 <!-- end-codex-only -->
 
 Use `kaijan_run_start` for the normal combined run, assessment and report.

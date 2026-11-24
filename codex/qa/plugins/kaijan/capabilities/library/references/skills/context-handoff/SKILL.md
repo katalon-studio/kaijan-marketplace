@@ -65,12 +65,11 @@ Keep the earlier context ID. Otherwise identify the missing fields; do not
 fabricate packet fields, turn raw reports into code evidence or fetch unresolved
 references automatically.
 
-Explicit experimental consumers also include `nativeInputs.testSupplement` and
-`nativeInputs.suppliedEvidence`, each containing the exact `{input, options?}`
-object without requestKey. Intake runs the maintained offline producer preparation;
-compatibility still does not prove semantic validity or an observed pass. Follow
-[test planning](../test-planning/SKILL.md) for immutable supplements and
-[test evidence](../test-evidence/SKILL.md) for returned observations. Original
-conversation/task context remains attributed, and references remain unresolved.
+The experimental `nativeInputs.suppliedEvidence` consumer takes the exact
+`{input, options?}` object without requestKey. Intake runs the maintained offline
+producer preparation. Compatibility still does not prove semantic validity or an
+observed pass. Follow [test evidence](../test-evidence/SKILL.md) for returned
+observations. Original conversation/task context remains attributed, and references
+remain unresolved.
 
 Advisory consumers return their native answer in the same awaited call. Use the completed-answer reader only if the host truncates presentation; cancel the host request for user Stop. Context submit remains an explicit persistent write.
