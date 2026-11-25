@@ -973,7 +973,7 @@
       "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c",
       "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8",
       "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a",
-      "packages/computer-runner/src/request-instructions.mjs": "b8e2334215c1937b5b623b1947c747cb2758e9718087e82c35361f074e27343c",
+      "packages/computer-runner/src/request-instructions.mjs": "7dfb0cbfd4e89eed590eaf50cd551252526a8de94de325df49469323357dd37c",
       "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300",
       "packages/computer-runner/src/browser-recap.mjs": "aaee04bf2da11a89f4daabf888d52637c9a4381acb40c866005dabceb1881884",
       "packages/provider-transport/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9",
