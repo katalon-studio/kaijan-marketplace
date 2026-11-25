@@ -33,14 +33,10 @@ configuration. They are not Context Intake IDs and must not be passed as
 `kaijan_plan_create.contextId`. Reuse the exact saved `application.workItem` text as
 the original task, with relevant source from the saved revision.
 
-<!-- codex-only -->
-
-In Codex, use that task as `testObjective`. Use the resolved Setup target to
+Use that task as `testObjective`. Use the resolved Setup target to
 find or save the Test Environment for the selected application under test.
 Pass that environment ID to Plan.
-<!-- end-codex-only -->
 
-On hosts where Plan accepts `input`, use the saved task in `input`.
 Do not ask the person to repeat a task already saved.
 If no original task is saved or supplied in chat, ask for that missing task.
 

@@ -15,6 +15,12 @@ source and the testing goal already known, so the person can correct them.
 Keep the saved summary and any follow-up in chat. Do not open a Setup card,
 the legacy onboarding panel or a native Question for Setup.
 
+In Claude, an explicit Setup skill invocation includes connecting Kaijan.
+Check `kaijan_connection_get` before asking for a testing goal. If Kaijan is
+disconnected or its grant expired, call the available
+`kaijan_connection_connect` tool to start browser sign-in. Let the person
+complete consent, then verify the connection. Reuse a healthy connection.
+
 If the available Setup tool offers Kaijan Browser, mention it as an optional
 part of first-time Setup. When the person chooses to install it, call
 `kaijan_app_config_prepare` with only `browserViewer: "install"`. Report whether the

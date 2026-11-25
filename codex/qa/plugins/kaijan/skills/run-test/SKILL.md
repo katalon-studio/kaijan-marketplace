@@ -37,12 +37,9 @@ available Local tools without a new AI request.
 Save an ordinary value through `kaijan_test_environment_manage` only if the person asks to
 save it.
 
-<!-- codex-only -->
-
-In Codex, when the person chooses to save an app login from a local file, use the
+When the person chooses to save an app login from a local file, use the
 [Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
 before saving the Plan.
-<!-- end-codex-only -->
 
 Keep raw secrets out of chat and tool arguments. Use the app login selected
 when saving the Plan. Choosing a login does not authorize execution.
@@ -84,18 +81,15 @@ cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
-<!-- codex-only -->
-
 ## Restart after an app login change
 
-In Codex, when a Run needs a new or replacement app login, guide the person to
+When a Run needs a new or replacement app login, guide the person to
 save it with the [Configuration command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
 If the person requests a restart, stop a Run that is still waiting and read
 the original result to see what already happened. When the intended checks
 are safe to repeat, prepare a fresh Plan for that scope with the updated
 Configuration and start a new Run. Keep the original Run and report. The
 earlier saved Plan retains its original login reference.
-<!-- end-codex-only -->
 
 ## Read or stop the original test
 
@@ -108,11 +102,8 @@ Only a live clarification can resume. Use `kaijan_run_answer` with the
 original run and clarification IDs, one answer key and the available authorized
 context.
 
-<!-- codex-only -->
-
 For an app login that needs to be saved or changed, follow
 [Restart after an app login change](#restart-after-an-app-login-change).
-<!-- end-codex-only -->
 
 Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated

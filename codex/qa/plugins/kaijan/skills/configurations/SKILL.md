@@ -5,9 +5,7 @@ description: Manage personal Kaijan Configurations through MCP for reusable appl
 
 # Personal Configurations
 
-<!-- codex-only -->
-
-In Codex, each Configuration is a Test Environment. Use
+Each Configuration is a Test Environment. Use
 `kaijan_test_inputs_read` with `autId` to find environments or
 `testEnvironmentId` to read one. Use `kaijan_test_environment_manage` for saves and
 deletes. When saving, supply the selected AUT ID and the browser
@@ -20,7 +18,6 @@ if you cannot verify it.
 Give Plan the saved environment ID. For a first Plan without a linked Test Environment,
 save one for the selected AUT and, if it needs sign-in, use the local
 Configuration save command with that AUT ID.
-<!-- end-codex-only -->
 
 Use an exact saved ID when the person asks to edit a Test Environment. If
 several match, ask which one. Saving settings never starts a test.
@@ -29,49 +26,18 @@ Configurations belong to the local person and selected Kaijan environment.
 They remain available across chats and restarts on this device. They are not
 shared with the team or copied between QA and Production.
 
-For hosts with the full Plan and Runner inputs, use `kaijan_test_environment_manage`
-to list, read, save, select or delete settings. The person chooses whether
-to save settings. Reuse one matching application configuration
-automatically; do not require another selection before each Run. Ask which one
-to use when several match. Without appropriate saved settings, continue the
-normal test flow. Use `operation: "list"` before asking the person to repeat
-settings that may already be saved.
-Supply the known application URL to find its configurations. Read an exact ID
-when needed. Ordinary entries contain their typed values. A secret entry
-contains availability and a reference. Keep raw secrets out of chat and tool
-arguments.
+When the person chooses to save a new or changed app login from a local
+environment file, use the [Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
+Save before starting Plan or Run. Keep raw secrets out of chat and tool arguments.
 
-<!-- codex-only -->
-
-In Codex, when the person chooses to save a new or changed app login
-from a local environment file, use the [Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
-Save before starting Plan or Run.
-<!-- end-codex-only -->
-
-The person can save any key names. Do not require a fixed URL, username or
-password schema. Keep their existing names and types. For agent edits, `save`
-updates only the supplied ordinary `values`. Retain `id` and `revision` from the
-latest read. A new configuration uses a fresh UUID and revision `0`. The
-person supplies or approves the values. A conflict requires a fresh read, not
-an automatic overwrite. Delete only when requested, using the saved revision.
-
-For hosts with the full Plan and Runner inputs, use `operation: "select", id`
-when the person chooses a particular configuration for this chat. Use
-`id: null` when the person wants no saved configuration. Explain the selected
-name before an authorized Run. Ask which to use if several match the same
-application. Use `operation: "select", automatic: true` to return to automatic
-matching. Keep the selected target and account clear.
-
-Run tools with full Runner inputs use one matching application configuration
-automatically. An explicit chat selection takes precedence. Runs
-without an appropriate configuration keep their normal path. Configuration adds no report content or schema.
-An explicit `configurationId` selects one configuration for that Run; `null`
-uses none. Ordinary `params` and existing scoped `privateParams` references
-can override saved defaults for one Run. A configuration does not authorize Run.
-Follow [Run](../run-test/SKILL.md) for the person's execution scope.
+The person can save any key names. Keep their existing names and types. To
+edit ordinary values, supply the saved ID and latest revision. A new Test
+Environment uses a fresh UUID and revision `0`. The person supplies or
+approves the values. Read the current revision after a conflict. Delete only
+when requested, using the saved revision.
 
 Keep the original request key and input after an uncertain reply. The original
-Run retains its selected revision even if the person edits or deletes the
-configuration. Read that Run instead of creating a replacement. Ask only for
-missing, changed or rejected values. Never treat a login failure as permission
-to replace the saved account or replay actions with uncertain effects.
+Plan retains its selected settings, and Run reads them from the saved Plan.
+Read the original answer before retrying. Ask only for missing, changed or
+rejected values. Never treat a login failure as permission to replace the saved
+account or replay actions with uncertain effects.

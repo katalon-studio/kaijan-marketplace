@@ -1890,9 +1890,11 @@ body.light .dz-nb .f {
 }
 
 .dz-wrap-app-model {
-  max-width: none;
   height: 100dvh;
   padding-bottom: 24px;
+}
+:root:not([data-kaijan-browser-report]) .dz-wrap-app-model {
+  max-width: none;
 }
 .dz-wrap-app-model .dz-main {
   display: flex;
