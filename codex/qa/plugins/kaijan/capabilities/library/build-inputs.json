@@ -174,7 +174,7 @@
     "packages/capabilities/src/validation.ts": "4954909251c9639de6c362a64aec05c80ce62c009ea5220b080a8011146fc541",
     "packages/contracts/dist/chrome-run.js": "ac5c689c87725ed92f13446f3cce8c51821341f32c4235fe75ad060f0060c5f0",
     "packages/capabilities/src/runner-execution-budget.ts": "be3f896b1d68eb572693f122d155d96560d9b9475ace85ddb28bc22d1a5ea453",
-    "packages/capabilities/src/execution-presentation.ts": "c96aa2c35250a899b3fe81a8b4e5a2229eccc07062f43d90f46f3340ba99d928",
+    "packages/capabilities/src/execution-presentation.ts": "2b0d4a137709349bb482336b623d99a06a161cde655c95d9b076f6ca4431a814",
     "packages/capabilities/src/runner-historical-read.ts": "3abde68a6f6cf78c637f40b09a414c44fbead72d42e8029b070f7ec613698567",
     "packages/capabilities/src/runner-clarification-evidence.ts": "461cb311e16961e5c56d53d221bfca519b75038552bc120164d67d1b3021d4c9",
     "packages/capabilities/src/runner-cleanup-evidence.ts": "12b353626ca12d99e922c080b0eb95ec575d7f8a896ff6fc697729e636844ecb",
