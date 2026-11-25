@@ -130799,6 +130799,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath9 } from "node:url";
+var standaloneMapUi = false;
 var mapUiUri = "ui://loki/app-map/v6.html";
 var mapUiMime = "text/html;profile=mcp-app";
 var mapUiMetadata = {
@@ -130806,6 +130807,10 @@ var mapUiMetadata = {
   "openai/outputTemplate": mapUiUri
 };
 async function readMapUi() {
+  if (!standaloneMapUi)
+    throw new Error(
+      "Standalone map presentation is unavailable in this package."
+    );
   const bytes2 = await boundedFile(
     fileURLToPath9(new URL("./map-ui.html", import.meta.url)),
     1024 * 1024
@@ -168446,7 +168451,7 @@ function createCapabilityCatalog(services, options2 = {}) {
   const browserUi = uiEnabled && options2.uiMode === "browser";
   const panelUi = uiEnabled && options2.uiMode === "panel";
   const testPlanUi = browserUi || panelUi;
-  const componentUi = uiEnabled && !testPlanUi;
+  const componentUi = uiEnabled && !testPlanUi && standaloneMapUi;
   const {
     prContext,
     changeRisk,
