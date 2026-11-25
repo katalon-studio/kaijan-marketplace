@@ -52074,7 +52074,7 @@ var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
     return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
-  }, "An application bundle ID is required."),
+  }, "An application bundle ID is required.").describe("The installed macOS application's bundle identifier (CFBundleIdentifier)."),
   launch: external_exports.boolean().optional()
 });
 var questions = external_exports.array(external_exports.strictObject({
@@ -55793,7 +55793,16 @@ function createConfigurationSurface({ session, library, data }) {
           await scopeFor(metadata2);
           return response(useSavedTestInput(await store(), name, raw));
         }
-        const args = configurationInput.parse(raw);
+        const parsed = configurationInput.safeParse(raw);
+        if (!parsed.success) {
+          if (codex && raw?.operation === "save" && typeof raw.target?.app === "string" && !desktopRunnerTargetSchema.shape.app.safeParse(raw.target.app).success)
+            throw new library.ConfigurationError(
+              "configuration_target",
+              "Use the installed Mac app\u2019s bundle identifier (CFBundleIdentifier)."
+            );
+          throw parsed.error;
+        }
+        const args = parsed.data;
         if (Object.keys(args).some(
           (key) => key !== "operation" && !allowedFields[args.operation].includes(key)
         ))

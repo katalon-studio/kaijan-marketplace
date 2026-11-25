@@ -37,16 +37,28 @@ Use the selected project, local directory and saved context. If needed, use the
 host project inventory. Resolve a consequential ambiguity with a short question
 in chat. Wait for the person's selection before using a different project.
 
-Use the Kaijan connection available to this chat. Follow
-`application-setup` in this conversation to save the selected source, original
-goal and optional target. Setup returns saved configuration without a map.
-Continue the user's explicit task when its own prerequisites are met.
+Use the Kaijan connection available to this chat. When the task uses a
+selected Git checkout, follow `application-setup` to save the source,
+original goal and optional target. Source Setup saves configuration without a
+map.
+
+When the person wants to set up a browser or Mac app without selected Git
+source and the Local tools are available, use `kaijan_test_inputs_read` to find
+its saved application and Test Environment. Reuse matching records. If needed,
+save the application with `kaijan_aut_manage` and its target with
+`kaijan_test_environment_manage`. Follow the `configurations` skill for the saved target.
+For an explicit Plan request, follow the `plan-tests` skill with the original
+task and saved environment. Continue the user's task when its own
+prerequisites are met.
 
 When the person asks only for a summary, skip reconciliation or any new save.
-Find the selected Setup with `kaijan_app_config_list`. For a ready Setup, use
-`kaijan_app_config_resolve` with the saved source and target-profile revisions, then
-summarize the saved application and goal in ordinary chat. If Setup is pending
-or blocked, state that status and the specific next step when known.
+For saved application and environment settings without Git source, read them
+with `kaijan_test_inputs_read` and summarize those records in chat. For saved
+source context, find the selected Setup with `kaijan_app_config_list`. For a
+ready Setup, use `kaijan_app_config_resolve` with its saved source and
+target-profile revisions. Summarize the saved application and goal in ordinary
+chat. If Setup is pending or blocked, state that status and the specific next
+step when known.
 
 ## Check the connection for the selected action
 
