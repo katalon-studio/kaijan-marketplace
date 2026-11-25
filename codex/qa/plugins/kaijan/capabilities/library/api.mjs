@@ -127856,12 +127856,8 @@ async function readExecutionPresentation(data2, runId2, result, protection, clea
     const file3 = manifest.files.find(
       (entry) => entry.path === "mcp-tool-calls.json"
     );
-    if (!file3 || file3.bytes > 16 * 1024 * 1024)
-      throw Error("Page observations unavailable");
-    const bytes2 = await privateFile(
-      join32(directory3, file3.path),
-      16 * 1024 * 1024
-    );
+    if (!file3) throw Error("Page observations unavailable");
+    const bytes2 = await privateFile(join32(directory3, file3.path), file3.bytes);
     if (bytes2.length !== file3.bytes || hash22(bytes2) !== file3.sha256)
       throw Error("Page observations changed");
     const projected = projectIntermediatePageObservations(
@@ -127920,12 +127916,8 @@ Observed: ${tab.observedAt}` : [
       native2
     );
     const file3 = manifest.files.find((entry) => entry.path === "actions.json");
-    if (!file3 || file3.bytes > 16 * 1024 * 1024)
-      throw Error("Action evidence unavailable");
-    const bytes2 = await privateFile(
-      join32(directory3, "actions.json"),
-      16 * 1024 * 1024
-    );
+    if (!file3) throw Error("Action evidence unavailable");
+    const bytes2 = await privateFile(join32(directory3, file3.path), file3.bytes);
     if (bytes2.length !== file3.bytes || hash22(bytes2) !== file3.sha256)
       throw Error("Action evidence changed");
     const projected = projectApplicationArtifact(
