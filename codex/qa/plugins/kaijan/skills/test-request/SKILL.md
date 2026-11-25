@@ -39,14 +39,11 @@ ends at the plan. A full test
 request with sufficient inputs can proceed through execution and report under
 the same authority.
 
-<!-- codex-only -->
-
-In Codex, reuse the saved application under test, Test Environment and Test
+Reuse the saved application under test, Test Environment and Test
 Data when they fit the current request. Look for existing records before
 creating another or asking the person for a value that is already available.
 Follow the person's explicit selection. If a missing input or a choice among
 matching records matters, ask for that decision.
-<!-- end-codex-only -->
 
 - Use [plan-tests](../plan-tests/SKILL.md) for requested planning or to prepare
   tests for a full request. Give it the original task and relevant attributed
