@@ -291,7 +291,7 @@
     "packages/ui-modeler/lib/map-invocation.mjs": "7e09c322f76d104d3dbc6d24a05e3870846756a59c54ed57ddbe24ba248a0f84",
     "packages/ui-modeler/index.mjs": "0967ead034d58b2c89e1e66ffdd1ee3db15a493c436e747e30fad8bb9fe969e1",
     "packages/capabilities/src/ui-modeler.ts": "e1fe035541c9bcbf61ab0bbb3c52a66ff79e2169b3430eab12149652dd0942f0",
-    "packages/capabilities/src/api.ts": "71971fb398ae77bd05ae685d7de0a3a5ab5e1473cb4c14b4fe5b36a4fbcf3ca8",
+    "packages/capabilities/src/api.ts": "67a67b4bc04cbbb05a6821dc3d4964b497d00676b81f97dc33b6553b3ace1d76",
     "packages/capabilities/src/runner-clarification-worker.ts": "b02f0fd299900e3f568271f7ed3d5e72d1624c87199506fb237f70df73dea60b",
     "packages/capabilities/src/runner-context-worker.ts": "11686b2c008373b2bb2c222f4b3a9e210ae8590cd388948a52142b33bf1485d4",
     "packages/capabilities/src/runner-worker-failure.ts": "dff7e33325918874b9b1ad65d70020ca293b4eded042c15886574524fa1cf48d",
