@@ -1,6 +1,6 @@
 // Native presentation of the validated saved report. No model, storage or tool
 // calls belong here; navigation only changes this report's local view state.
-export function reportCard(elements, card, id, onPress, forms, detailUrl) {
+export function reportCard(elements, card, id, onPress, forms) {
   const { Box, Text, Button } = elements;
   const report = card.report;
   return Box({
@@ -20,25 +20,11 @@ export function reportCard(elements, card, id, onPress, forms, detailUrl) {
             weight: "semibold",
             children: ["Kaijan"],
           }),
-          Box({
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "sm",
-            children: [
-              ...(detailUrl
-                ? [
-                    elements.Markdown({
-                      text: `[Open Kaijan report](${detailUrl})`,
-                    }),
-                  ]
-                : []),
-              Button({
-                key: "kaijan-details-" + id,
-                label: detailUrl ? "Refresh link" : "Show details",
-                variant: detailUrl ? "secondary" : "primary",
-                onPress,
-              }),
-            ],
+          Button({
+            key: "kaijan-details-" + id,
+            label: "Show details",
+            variant: "primary",
+            onPress,
           }),
         ],
       }),

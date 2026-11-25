@@ -76,15 +76,14 @@ invent a replacement ID to bypass this limit.
 | Host version       | Global `claude --version`                                                      | Embedded Claude Code row in `/status`; record the Desktop app version separately |
 | Interaction        | Terminal; optional `--print` automation                                        | Code conversation and native permission controls                                 |
 | Kaijan tests       | Same managed runtime, planning, authorized Runner and saved assessment methods | Same package and methods; three TodoMVC QA workflows observed                    |
-| Reports            | Inline card with mods; details open in the default browser. `--print` is text. | Inline card; **Open Kaijan report** follows the host's browser preference.       |
+| Reports            | Inline card with mods; details open in the default browser. `--print` is text. | Inline card; **Show details** opens the saved report in the right pane.          |
 | Records            | Bound to the actual Claude session                                             | Same binding rule; no automatic cross-session report transfer                    |
 | Telemetry          | Lifecycle host `claude_code`; MCP host follows its actual handshake            | Same contract; no asserted Code-tab surface field                                |
 
-In Desktop, select **Show details** to get the **Open Kaijan report** link.
-The original conversation serves the same interactive report HTML as Claude Code
-through a private local link. Select **Refresh link** if the link expires.
-The native pane is available for project history and when the browser view
-cannot open.
+In Desktop, select **Show details** to open the saved report in the right pane.
+From the interactive CLI, **Show details** opens the shared Claude Code report HTML
+in the default browser. Project history and the CLI browser fallback use the
+native pane.
 
 The existing contract leaves `host_surface` unknown. Do not infer Desktop or CLI
 from a path, client name, prompt or environment guess. A text report read never

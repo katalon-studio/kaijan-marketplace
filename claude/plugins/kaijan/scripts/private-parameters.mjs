@@ -151,6 +151,7 @@ async function main() {
   let temporary, child, interrupted;
   let outcome;
   const inlineForms = process.argv[2] === "--inline-forms";
+  const configuration = process.argv[2] === "--configuration";
   const signals = ["SIGINT", "SIGTERM", "SIGHUP"];
   const handlers = signals.map((signal2) => {
     const handler = () => {
@@ -174,9 +175,9 @@ async function main() {
         [
           join3(
             payload,
-            inlineForms ? "scripts/inline-forms.mjs" : "scripts/private-parameters.mjs"
+            inlineForms ? "scripts/inline-forms.mjs" : configuration ? "scripts/configuration.mjs" : "scripts/private-parameters.mjs"
           ),
-          ...inlineForms ? [process.argv[3] ?? "", join3(temporary, "form.sock")] : process.argv.slice(2)
+          ...inlineForms ? [process.argv[3] ?? "", join3(temporary, "form.sock")] : process.argv.slice(configuration ? 3 : 2)
         ],
         { stdio: "inherit", env: process.env }
       );
