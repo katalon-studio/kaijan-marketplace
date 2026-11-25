@@ -22476,7 +22476,7 @@ var browserRefresh = external_exports.object({
   response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
   completedAt: external_exports.string().optional(),
   error: external_exports.string().optional(),
-  completion: external_exports.literal("unverified").optional()
+  completion: external_exports.enum(["unverified", "cancelled-by-beforeunload"]).optional()
 });
 var action = external_exports.object({
   index: external_exports.number().int().positive(),
