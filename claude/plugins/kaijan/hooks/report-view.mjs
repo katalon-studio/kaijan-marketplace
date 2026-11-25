@@ -268,7 +268,7 @@ export function reportPane(elements, report, state) {
           : "Commit not recorded",
         { color: "inactive", size: "footnote" },
       ),
-      ...(run.notice ? [text(run.notice)] : []),
+      ...run.notices.map((notice) => text(notice)),
       ...(run.tests.length ? [heading("Tests")] : []),
       ...run.tests.map((item) => detail(item, `run-${run.id}-${item.id}`)),
       ...(run.recap.length
@@ -288,7 +288,7 @@ export function reportPane(elements, report, state) {
       ...section("Not completed", run.remainingSteps),
       ...(!run.recap.length &&
       run.reason &&
-      ![run.notice, ...run.completedSteps, ...run.remainingSteps].includes(
+      ![...run.notices, ...run.completedSteps, ...run.remainingSteps].includes(
         run.reason,
       )
         ? section("Saved execution details", [run.reason])

@@ -37,7 +37,7 @@ never claim a recent-task search when no supported tool returned one.
 
 ## Match context to installed Kaijan actions
 
-Check `loki_capabilities_list` and the relevant installed owning skills/tools.
+Check `kaijan_capabilities_list` and the relevant installed owning skills/tools.
 Derive useful actions from the work context and their actual input/output
 contracts, not from a fixed menu or a chat title alone. Conditional examples:
 
