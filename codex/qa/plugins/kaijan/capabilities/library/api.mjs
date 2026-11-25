@@ -101882,12 +101882,13 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath2 } from "node:url";
-var feedbackFormUri = "ui://kaijan/feedback/form/v5.html";
+var feedbackFormUri = "ui://kaijan/feedback/form/v6.html";
 var cachedFeedbackFormUris = Object.freeze([
   "ui://kaijan/feedback/form/v1.html",
   "ui://kaijan/feedback/form/v2.html",
   "ui://kaijan/feedback/form/v3.html",
-  "ui://kaijan/feedback/form/v4.html"
+  "ui://kaijan/feedback/form/v4.html",
+  "ui://kaijan/feedback/form/v5.html"
 ]);
 async function readFeedbackForm(uri2 = feedbackFormUri) {
   if (uri2 !== feedbackFormUri && !cachedFeedbackFormUris.includes(uri2))
@@ -103262,7 +103263,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath3 } from "node:url";
-var issueFormUri = "ui://kaijan/issue/form/v9.html";
+var issueFormUri = "ui://kaijan/issue/form/v10.html";
 var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v1.html",
   "ui://kaijan/issue/form/v2.html",
@@ -103271,7 +103272,8 @@ var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v5.html",
   "ui://kaijan/issue/form/v6.html",
   "ui://kaijan/issue/form/v7.html",
-  "ui://kaijan/issue/form/v8.html"
+  "ui://kaijan/issue/form/v8.html",
+  "ui://kaijan/issue/form/v9.html"
 ]);
 async function readIssueForm(uri2 = issueFormUri) {
   if (uri2 !== issueFormUri && !cachedIssueFormUris.includes(uri2))
