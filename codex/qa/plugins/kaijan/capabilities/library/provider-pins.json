@@ -981,10 +981,10 @@
       "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd",
       "packages/provider-transport/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4",
       "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4",
-      "packages/computer-runner/src/browser-explorer.d.mts": "ffee97ec188b6dc51838569ce8087d8ecd4d4ad64c819a7321ae6416b402aec6",
+      "packages/computer-runner/src/browser-explorer.d.mts": "b5d1378bed0dffabdef71c6d9a0147c34ec8ebdb1c0c3fa6ea1cd195e409346e",
       "packages/computer-runner/src/agent-context.mjs": "d8230d79a573d1697b98a51d0f4d85e454089ce25a500d22fadffd139f996969",
       "packages/computer-runner/src/application-ui-model.mjs": "5fd942f39e006d8fd844f79389f2621ce90940aaee57edb016af056b24649b3e",
-      "packages/computer-runner/src/browser-explorer.mjs": "a47242bbdcb047a4047318f4e06af37c186673c7220e0b78be486a8b41daa1a2",
+      "packages/computer-runner/src/browser-explorer.mjs": "868a3d83aff318470957ef4ff02b6abdfab8ec0edae9941f5db3cf04fbc9e6d5",
       "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7",
       "packages/computer-runner/src/exploration-map.mjs": "a0f7cd6bff080982176c60add361bb16e594aa05af8d1972e0663d1f458e628d",
       "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9",
@@ -993,7 +993,7 @@
       "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb",
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
-      "packages/computer-runner/src/browser-explorer-driver.mjs": "ae15e95d585cd080e172c231be138c86f7ca8812ab73658a42b3be9dbd0a9f66",
+      "packages/computer-runner/src/browser-explorer-driver.mjs": "bf718d98d90f68560954586486820df55c29003edf9de22e15cc6cb44ff252a1",
       "packages/computer-runner/src/agent-loop.mjs": "09a2a1494916c38ecac7991f0cc24c2828a1154f4a4722dc3755979c41b2184d"
     },
     "providerRetryPolicy": {
