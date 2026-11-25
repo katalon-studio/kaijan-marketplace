@@ -8,7 +8,7 @@
       "schemaVersion": "change-risk-finder/result/4",
       "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
       "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
-      "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
+      "scope": "Schemas for supplied change evidence and retained Change Risk results. New review execution stays in the experiment.",
       "decision": "https://github.com/katalon-studio/loki/issues/1685#issuecomment-6407244037",
       "transportMigration": {
         "baselineSourceCommit": "953060f7fe7a557495c0071638c43ebd761eeed7",
@@ -1161,26 +1161,6 @@
     }
   },
   "files": {
-    "change-risk/runtime.mjs": {
-      "source": "packages/risk-finder/runtime.mjs",
-      "originalSha256": "88ec36963adff67b049029c0107df559f4479c889bb4dc7de1939ed2f00b672f"
-    },
-    "change-risk/method.mjs": {
-      "source": "packages/risk-finder/method.mjs",
-      "originalSha256": "4b6230fa1b690d46dab3280269eaa7d37a968d31c4d43c4bd9458484e895e0ab"
-    },
-    "change-risk/question-output.mjs": {
-      "source": "packages/risk-finder/question-output.mjs",
-      "originalSha256": "46617696fcc4f12f68ebe9b0cd6bffa7453cfcb9ad553ab061f50f37376c1c96"
-    },
-    "change-risk/frozen-direct-template.json": {
-      "source": "packages/risk-finder/frozen-direct-template.json",
-      "originalSha256": "4625168dc45b6a9f02194560a34a5c6035ff4eac492c56122dce358ea32486e1"
-    },
-    "change-risk/frozen-luna-template.json": {
-      "source": "packages/risk-finder/frozen-luna-template.json",
-      "originalSha256": "702984be62e24420364e57f4711a57a0e2b8e55ae8d96aa32fa670c969d1d58b"
-    },
     "change-risk/input.schema.json": {
       "source": "packages/risk-finder/input.schema.json",
       "originalSha256": "3206a2bec72a0dfadb2d872f8783fc920c768fa2031795f7d92c3ecc70a7c6db"
@@ -1188,42 +1168,6 @@
     "change-risk/output.schema.json": {
       "source": "packages/risk-finder/output.schema.json",
       "originalSha256": "a6164207bb1e2c21b8ae2d766fac39bc1156212c4ca3793a69d042f1e7de72f5"
-    },
-    "change-risk/invocation.schema.json": {
-      "source": "packages/risk-finder/invocation.schema.json",
-      "originalSha256": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/package.json": {
-      "source": "packages/provider-transport/package.json",
-      "originalSha256": "4ac33ebdebdad528edee19f764b222ceec272503d9de885b64eac1952a39043d"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/index.mjs": {
-      "source": "packages/provider-transport/index.mjs",
-      "originalSha256": "d3e6bb8c551e6fcdbf298df3299f88dc8fac494e08b64fec2d212f5d00e147e3"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/index.d.mts": {
-      "source": "packages/provider-transport/index.d.mts",
-      "originalSha256": "9d0f6dbc4082ad27b8dd2d3e8841df26c8c2747f13caa3b150cbf0c716e18ca0"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/agents.d.mts": {
-      "source": "packages/provider-transport/agents.d.mts",
-      "derivation": "Change-risk Planner SDK transport (#3752)."
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/agents.mjs": {
-      "source": "packages/provider-transport/agents.mjs",
-      "derivation": "Change-risk Planner SDK transport (#3752)."
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.mjs": {
-      "source": "packages/provider-transport/litellm-route.mjs",
-      "originalSha256": "db3c001ad126d538ca804f3ce4396aefb5b1d12251a671064a9031c520cd10f1"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": {
-      "source": "packages/provider-transport/litellm-route.d.mts",
-      "originalSha256": "fae2170964687a3201f1a88cf8b84451a5da292b91d6d4fd76ad42def1c43d4d"
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/README.md": {
-      "source": "packages/provider-transport/README.md",
-      "originalSha256": "145665183a147b323d709444ae2f0945e5f2455898548723e453ef0c86bc1473"
     },
     "work-item-risk/work-item-review.mjs": {
       "source": "packages/risk-finder/work-item-review.mjs",
@@ -1711,9 +1655,6 @@
       "source": "packages/context-finder/selected/related/pr-context-finder/related/source-sanitizer-api.d.mts",
       "originalSha256": "f47afe8e3a3f285babf5f92ff551bbfd60609867e2204a16017fd95b1fd79c60"
     },
-    "change-risk/node_modules/@katalon-experiments/ai-client/broker-channel.mjs": {
-      "source": "packages/provider-transport/broker-channel.mjs"
-    },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/broker-channel.mjs": {
       "source": "packages/provider-transport/broker-channel.mjs"
     },
@@ -1737,10 +1678,6 @@
     },
     "planning/pr-context-finder/planning/planning-source.mjs": {
       "source": "packages/context-finder/selected/planning/pr-context-finder/planning/planning-source.mjs"
-    },
-    "change-risk/source-relations.mjs": {
-      "source": "packages/risk-finder/source-relations.mjs",
-      "originalSha256": "9d4f69bea362eeae5ad7d896c378c6284e761962f55e4fe097e2880865f6a047"
     },
     "work-item-risk/source-relations.mjs": {
       "source": "packages/risk-finder/source-relations.mjs",
@@ -1783,9 +1720,6 @@
     "pr-context/pr-context-finder/related/related-work-planner.mjs": {
       "source": "packages/context-finder/selected/related/pr-context-finder/related/related-work-planner.mjs",
       "derivation": "Shared tool-free Planner SDK turn for related-work queries and ranking (#3808)."
-    },
-    "change-risk/node_modules/@katalon-experiments/ai-client/retention.mjs": {
-      "source": "packages/provider-transport/retention.mjs"
     },
     "work-item-risk/node_modules/@katalon-experiments/ai-client/retention.mjs": {
       "source": "packages/provider-transport/retention.mjs"
