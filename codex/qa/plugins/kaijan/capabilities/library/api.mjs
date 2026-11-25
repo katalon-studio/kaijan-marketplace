@@ -126481,46 +126481,6 @@ async function readTestPlanUi() {
   );
 }
 
-// src/report-ui.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath10 } from "node:url";
-var reportUiUri = "ui://loki/report/v17.html";
-var reportUiMetadata = {
-  ui: { resourceUri: reportUiUri },
-  "openai/outputTemplate": reportUiUri
-};
-async function readReportUi(uri2 = reportUiUri) {
-  return {
-    contents: [
-      {
-        uri: uri2,
-        mimeType: "text/html;profile=mcp-app",
-        text: (await boundedFile(
-          fileURLToPath10(new URL("./report-ui.html", import.meta.url)),
-          1024 * 1024
-        )).toString("utf8"),
-        _meta: {
-          "openai/ui": {
-            availableDisplayModes: ["inline", "fullscreen"]
-          },
-          ui: {
-            prefersBorder: true,
-            csp: { connectDomains: [], resourceDomains: [] }
-          }
-        }
-      }
-    ]
-  };
-}
-
 // src/api.ts
 import { isAbsolute as isAbsolute15, join as join46 } from "node:path";
 
@@ -127360,7 +127320,7 @@ import { randomBytes as randomBytes5 } from "node:crypto";
 import { fork } from "node:child_process";
 import { open as open14, appendFile } from "node:fs/promises";
 import { dirname as dirname10, join as join35 } from "node:path";
-import { fileURLToPath as fileURLToPath11 } from "node:url";
+import { fileURLToPath as fileURLToPath10 } from "node:url";
 import {
   validateApplicationContextQuery,
   runnerContextSchema
@@ -127633,10 +127593,10 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
   };
   try {
     stderr = await open14(stderrPath, "wx", 384);
-    const child = fork(fileURLToPath11(worker), [], {
+    const child = fork(fileURLToPath10(worker), [], {
       execPath: process.execPath,
       execArgv: [],
-      cwd: dirname10(fileURLToPath11(worker)),
+      cwd: dirname10(fileURLToPath10(worker)),
       env: {
         ...process.env.PATH ? { PATH: process.env.PATH } : {},
         ...process.env.HOME ? { HOME: process.env.HOME } : {},
@@ -130948,7 +130908,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath12 } from "node:url";
+import { fileURLToPath as fileURLToPath11 } from "node:url";
 var mapUiUri = "ui://loki/app-map/v6.html";
 var mapUiMime = "text/html;profile=mcp-app";
 var mapUiMetadata = {
@@ -130957,7 +130917,7 @@ var mapUiMetadata = {
 };
 async function readMapUi() {
   const bytes2 = await boundedFile(
-    fileURLToPath12(new URL("./map-ui.html", import.meta.url)),
+    fileURLToPath11(new URL("./map-ui.html", import.meta.url)),
     1024 * 1024
   );
   return {
@@ -135448,7 +135408,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash84, createHmac as createHmac2, randomBytes as randomBytes7 } from "node:crypto";
 import { join as join45, isAbsolute as isAbsolute14 } from "node:path";
 import { open as open16, realpath as realpath17 } from "node:fs/promises";
-import { fileURLToPath as fileURLToPath13 } from "node:url";
+import { fileURLToPath as fileURLToPath12 } from "node:url";
 
 // ../ui-modeler/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -168244,7 +168204,7 @@ var mapGenerateSchema = external_exports.strictObject({
   requestKey: external_exports.string().min(1).max(200).optional()
 });
 var digest47 = (value) => createHash84("sha256").update(value).digest("hex");
-var integrationIdentity2 = boundedFile(fileURLToPath13(import.meta.url)).then(
+var integrationIdentity2 = boundedFile(fileURLToPath12(import.meta.url)).then(
   digest47
 );
 var object41 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
@@ -168613,14 +168573,6 @@ function createCapabilityCatalog(services, options2 = {}) {
   const reportViews = createReportViewRegistry();
   const resultViews = /* @__PURE__ */ new WeakMap();
   const selectedFacts = (value) => {
-    const full = reportViewSchema.safeParse(value);
-    if (full.success)
-      return {
-        reportId: full.data.reportId,
-        hasPlan: full.data.sections.some((s) => s.kind === "plan"),
-        hasResults: full.data.sections.some((s) => s.kind === "runner"),
-        hasMap: Boolean(full.data.mapId)
-      };
     const panel = reportPanelSchema.safeParse(value);
     if (panel.success)
       return {
@@ -168751,15 +168703,15 @@ function createCapabilityCatalog(services, options2 = {}) {
     return url2.href;
   }
   async function openReportPreview(snapshot2, lifecycle2) {
-    const testPlans = browserUi ? await services.reports.customerTestPlanView(snapshot2) : null;
-    const customerView = testPlans ? restoreVerifiedAssessmentRejection(
+    const testPlans = await services.reports.customerTestPlanView(snapshot2);
+    const customerView = restoreVerifiedAssessmentRejection(
       testPlans,
       projectCustomerTestPlanView(
         testPlans,
         (text15) => createHash85("sha256").update(text15).digest("hex")
       )
-    ) : null;
-    const discovery = customerView?.contextFinder;
+    );
+    const discovery = customerView.contextFinder;
     const key5 = "report:" + snapshot2.reportId + (discovery ? ":" + createHash85("sha256").update(JSON.stringify(discovery)).digest("hex") : "");
     const discoveryLinks = (discovery ?? []).flatMap((entry) => {
       if (entry.state !== "ready") return [];
@@ -168781,26 +168733,26 @@ function createCapabilityCatalog(services, options2 = {}) {
         mapId: snapshot2.reportId,
         ...snapshot2.mapId ? { readMapId: snapshot2.mapId } : {},
         title: "Kaijan report",
-        component: browserUi ? await readTestPlanUi() : (await readReportUi()).contents[0].text,
-        ...browserUi ? {
-          embeddedAssets: true,
-          clipboardWrite: true,
-          allowedLinkUrls: [
-            ...discoveryLinks,
-            ...(snapshot2.evidenceContext?.input.pullRequests ?? []).flatMap((pr) => [
+        component: await readTestPlanUi(),
+        embeddedAssets: true,
+        clipboardWrite: true,
+        allowedLinkUrls: [
+          ...discoveryLinks,
+          ...(snapshot2.evidenceContext?.input.pullRequests ?? []).flatMap(
+            (pr) => [
               pr.url,
               ...pr.files.map(
                 (file3) => `https://github.com/${pr.repository}/blob/${pr.head.sha}/${file3.path.split("/").map(encodeURIComponent).join("/")}`
               )
-            ])
-          ]
-        } : {},
+            ]
+          )
+        ],
         read: (args) => {
           if (!snapshot2.mapId)
             throw new Error("No map selected for this report.");
           return context.readMap({ ...args, mapId: snapshot2.mapId });
         },
-        show: () => customerView ? Promise.resolve(customerView) : services.reports.view(snapshot2),
+        show: () => Promise.resolve(customerView),
         traceLinks: true,
         call: async (raw) => {
           const request4 = external_exports.discriminatedUnion("name", [
@@ -168830,12 +168782,12 @@ function createCapabilityCatalog(services, options2 = {}) {
       if (previews.get(key5) === cached2) previews.delete(key5);
       return openReportPreview(snapshot2, lifecycle2);
     }
-    const projected = browserUi ? { ...testPlans, presentation: "panel" } : await services.reports.view(snapshot2);
+    const projected = { ...testPlans, presentation: "panel" };
     const facts = selectedFacts(projected);
     const metadata4 = facts ? reportViews.register(
       {
         ...facts,
-        viewKind: browserUi ? "test_plan_details" : "full_report",
+        viewKind: "test_plan_details",
         presentation: "loopback_url"
       },
       lifecycle2
@@ -169096,8 +169048,8 @@ function createCapabilityCatalog(services, options2 = {}) {
       name: "loki_report_show",
       output: reportShowOutputSchema,
       resultSchema: reportShowSuccessSchema,
-      title: uiEnabled ? "Kaijan report" : "Read Kaijan report for chat",
-      description: (panelUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the inline saved report card; an original Runner-only report needs no Plan; Show details directly reads this same immutable report and requests native MCP Apps expansion. Codex owns the side panel and its close/return controls. No browser navigation, prompt, assistant turn, provider call or producer replay. Keep the selected design and unavailable data slots." : browserUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the selected Test plan summary in native chat. Show details opens the returned private previewURL in Codex's browser at right; no MCP side panel or fullscreen request. Keep original identities and the selected design; bind groups only to explicit source data and leave unavailable fields blank. Select sourceContextId for original GitHub PR/files retained by nativeInputs.reportSources. Product check results come only from the selected persisted Runner operations. Reopen by reportId without running tools again." : uiEnabled ? "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. No execution, provider call or replay. Open the returned local previewURL in Codex browser at right when the host does not render the resource. Use native chat controls for execution decisions." : "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Direct-library legacy operation references also use genuine runId, never a query answerId. Returns report data for direct presentation in chat. No panels, browser previews, execution, provider calls or replay. Use readable conclusions and evidence links.") + " Attach original GitHub REST pull request and changed-file records as reportSources when available. Otherwise omit reportSources and show the same saved result. For a historical PR-bound Run, keep its existing sourceContextId or omit it so the report uses the Run's saved source. Reopen a report by its original reportId.",
+      title: testPlanUi ? "Kaijan report" : "Read Kaijan report for chat",
+      description: (panelUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the inline saved report card; an original Runner-only report needs no Plan; Show details directly reads this same immutable report and requests native MCP Apps expansion. Codex owns the side panel and its close/return controls. No browser navigation, prompt, assistant turn, provider call or producer replay. Keep the selected design and unavailable data slots." : browserUi ? "Read exact retained Plan/Runner/Assessment results without inference. Show the selected Test plan summary in native chat. Show details opens the returned private previewURL in Codex's browser at right; no MCP side panel or fullscreen request. Keep original identities and the selected design; bind groups only to explicit source data and leave unavailable fields blank. Select sourceContextId for original GitHub PR/files retained by nativeInputs.reportSources. Product check results come only from the selected persisted Runner operations. Reopen by reportId without running tools again." : "Read retained results and create an immutable user-managed report snapshot. For plan/assessment use the completed query answerId (and resultSha256); Runner uses its original runId. Use the original runId for any retained operation reference. Returns report data for direct presentation in chat. No panels, browser previews, execution, provider calls or replay. Use readable conclusions and evidence links.") + " Attach original GitHub REST pull request and changed-file records as reportSources when available. Otherwise omit reportSources and show the same saved result. For a historical PR-bound Run, keep its existing sourceContextId or omit it so the report uses the Run's saved source. Reopen a report by its original reportId.",
       input: reportShow,
       readOnly: false,
       call: async (args, invocation = {}) => {
@@ -169124,14 +169076,14 @@ function createCapabilityCatalog(services, options2 = {}) {
           );
         }
         const view = await services.reports.view(snapshot2);
-        if (!uiEnabled)
+        if (!testPlanUi)
           return {
             ...view,
             presentation: "chat",
             instructions: "Present the result directly in chat. Do not open a panel or browser preview."
           };
-        const testPlans = testPlanUi ? await services.reports.customerTestPlanView(snapshot2) : null;
-        if (testPlans && !testPlans.plans.length && !testPlans.runs.length && !(panelUi && snapshot2.mapId))
+        const testPlans = await services.reports.customerTestPlanView(snapshot2);
+        if (!testPlans.plans.length && !testPlans.runs.length && !(panelUi && snapshot2.mapId))
           return {
             ...view,
             presentation: "chat",
@@ -169139,29 +169091,22 @@ function createCapabilityCatalog(services, options2 = {}) {
           };
         const preview = panelUi ? void 0 : await openReportPreview(snapshot2, invocation.lifecycle);
         return {
-          ...testPlans ? {
-            schema: "loki.report-card/1",
-            mapId: snapshot2.mapId ?? null,
-            reportId: snapshot2.reportId,
-            title: snapshot2.title,
-            createdAt: snapshot2.createdAt,
-            originalResults: snapshot2.entries.map((entry) => ({
-              kind: entry.kind,
-              answerId: entry.answerId ?? null,
-              runId: entry.runId ?? null,
-              resultSha256: entry.resultSha256
-            })),
-            sourceContextId: snapshot2.evidenceContext?.contextId ?? null
-          } : view,
+          schema: "loki.report-card/1",
+          mapId: snapshot2.mapId ?? null,
+          reportId: snapshot2.reportId,
+          title: snapshot2.title,
+          createdAt: snapshot2.createdAt,
+          originalResults: snapshot2.entries.map((entry) => ({
+            kind: entry.kind,
+            answerId: entry.answerId ?? null,
+            runId: entry.runId ?? null,
+            resultSha256: entry.resultSha256
+          })),
+          sourceContextId: snapshot2.evidenceContext?.contextId ?? null,
           ...preview ? { previewURL: preview.url } : {},
-          presentation: panelUi ? "panel" : browserUi ? "browser" : "component",
-          ...!testPlans ? {
-            presentationNotice: "Local read-only report; not a public share link"
-          } : {},
-          ...testPlans ? {
-            testPlanSummary: testPlanCardSummary(testPlans, panelUi),
-            instructions: panelUi ? "Show the native inline Kaijan card without a duplicate Markdown result. Show details directly reads loki_report_open and requests supported MCP Apps expansion into the native side panel. Do not open a browser, send a follow-up prompt, or replay producers. Native Codex owns panel expansion, close and return controls. If the card stays on Opening Kaijan report and Codex shows Open app in tab, use that native control once in the owning chat. If the panel still does not open or the control is unavailable, call loki_report_get with this reportId in the same chat. Say the panel did not open and present the requested saved details in chat. Keep missing data unavailable." : "Show the inline Kaijan Test plan card when supported. Its Show details action directly reads loki_report_open for this saved reportId and requests the host link API without a prompt or assistant turn. Native tab placement/focus requires actual host support; a generic link receipt is not proof. Do not repeat the card as a second chat result or replace its direct action with a follow-up prompt. If the host cannot render the card, present the actual title/count and private link in chat. A separately requested manual opening can use open_in_codex browser/right. No custom side panel, fullscreen request, provider execution or host setting change. Copy actions copy local data only; previewURL is private, not a public share link."
-          } : {}
+          presentation: panelUi ? "panel" : "browser",
+          testPlanSummary: testPlanCardSummary(testPlans, panelUi),
+          instructions: panelUi ? "Show the native inline Kaijan card without a duplicate Markdown result. Show details directly reads loki_report_open and requests supported MCP Apps expansion into the native side panel. Do not open a browser, send a follow-up prompt, or replay producers. Native Codex owns panel expansion, close and return controls. If the card stays on Opening Kaijan report and Codex shows Open app in tab, use that native control once in the owning chat. If the panel still does not open or the control is unavailable, call loki_report_get with this reportId in the same chat. Say the panel did not open and present the requested saved details in chat. Keep missing data unavailable." : "Show the inline Kaijan Test plan card when supported. Its Show details action directly reads loki_report_open for this saved reportId and requests the host link API without a prompt or assistant turn. Native tab placement/focus requires actual host support; a generic link receipt is not proof. Do not repeat the card as a second chat result or replace its direct action with a follow-up prompt. If the host cannot render the card, present the actual title/count and private link in chat. A separately requested manual opening can use open_in_codex browser/right. No custom side panel, fullscreen request, provider execution or host setting change. Copy actions copy local data only; previewURL is private, not a public share link."
         };
       }
     },
@@ -169319,7 +169264,7 @@ function createCapabilityCatalog(services, options2 = {}) {
       name: tool2.name,
       title: tool2.title,
       description: tool2.description,
-      ...uiEnabled && tool2.name === "loki_report_show" ? { _meta: testPlanUi ? testPlanCardMetadata : reportUiMetadata } : {},
+      ...testPlanUi && tool2.name === "loki_report_show" ? { _meta: testPlanCardMetadata } : {},
       ...uiEnabled && testPlanUi && tool2.name === "loki_report_open" ? {
         _meta: {
           ui: { visibility: ["model", "app"] },
@@ -169351,10 +169296,7 @@ function createCapabilityCatalog(services, options2 = {}) {
         ].includes(tool2.name)
       }
     })),
-    resources: componentUi ? [
-      { uri: reportUiUri, name: "Kaijan report", mimeType: mapUiMime },
-      ...mapsEnabled ? [{ uri: mapUiUri, name: "Application map", mimeType: mapUiMime }] : []
-    ] : testPlanUi ? [
+    resources: componentUi && mapsEnabled ? [{ uri: mapUiUri, name: "Application map", mimeType: mapUiMime }] : testPlanUi ? [
       {
         uri: testPlanCardUri,
         name: "Kaijan Test plan",
@@ -169368,8 +169310,6 @@ function createCapabilityCatalog(services, options2 = {}) {
         throw new CapabilityCatalogError(
           testPlanUi ? "This resource is unavailable in Test plan presentation mode." : "Custom UI is disabled; present tool results in chat."
         );
-      if (uri2 === reportUiUri || uri2 === "ui://loki/report/v16.html" || uri2 === "ui://loki/report/v15.html")
-        return readReportUi(uri2);
       if (!mapsEnabled || uri2 !== mapUiUri)
         throw new CapabilityCatalogError("Unknown Loki resource.");
       return readMapUi();
@@ -169393,14 +169333,13 @@ function createCapabilityCatalog(services, options2 = {}) {
         isView ? { ...invocation, lifecycle: viewLifecycle } : invocation
       );
       if (isView && uiEnabled && result && typeof result === "object") {
-        const full = componentUi && name === "loki_report_show" ? reportViewSchema.safeParse(result) : null;
         const panel = panelUi && name === "loki_report_open" ? reportPanelSchema.safeParse(result) : null;
-        const facts = full?.success || panel?.success ? selectedFacts(result) : null;
+        const facts = panel?.success ? selectedFacts(result) : null;
         if (facts) {
           const metadata4 = reportViews.register(
             {
               ...facts,
-              viewKind: full?.success ? "full_report" : "test_plan_details",
+              viewKind: "test_plan_details",
               presentation: "mcp_app"
             },
             viewLifecycle
