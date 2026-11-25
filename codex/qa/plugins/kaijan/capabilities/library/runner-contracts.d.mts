@@ -16,6 +16,17 @@ export declare const runnerTestResultsSchema: z.ZodArray<z.ZodObject<{
         no_expected_behavior: "no_expected_behavior";
     }>>;
     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+    expectation_result: z.ZodOptional<z.ZodEnum<{
+        met: "met";
+        not_met: "not_met";
+        not_specified: "not_specified";
+    }>>;
+    findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        observation: z.ZodString;
+        reason: z.ZodString;
+        what_to_check: z.ZodString;
+        evidence: z.ZodArray<z.ZodString>;
+    }, z.core.$strict>>>;
     actual: z.ZodString;
     execution_details: z.ZodString;
     warning: z.ZodNullable<z.ZodString>;
@@ -137,6 +148,17 @@ export declare const runnerExecutionReportSchema: z.ZodPreprocess<z.ZodUnion<rea
             no_expected_behavior: "no_expected_behavior";
         }>>;
         bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+        expectation_result: z.ZodOptional<z.ZodEnum<{
+            met: "met";
+            not_met: "not_met";
+            not_specified: "not_specified";
+        }>>;
+        findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            observation: z.ZodString;
+            reason: z.ZodString;
+            what_to_check: z.ZodString;
+            evidence: z.ZodArray<z.ZodString>;
+        }, z.core.$strict>>>;
         actual: z.ZodString;
         execution_details: z.ZodString;
         warning: z.ZodNullable<z.ZodString>;
@@ -373,6 +395,17 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
                 no_expected_behavior: "no_expected_behavior";
             }>>;
             bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+            expectation_result: z.ZodOptional<z.ZodEnum<{
+                met: "met";
+                not_met: "not_met";
+                not_specified: "not_specified";
+            }>>;
+            findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                observation: z.ZodString;
+                reason: z.ZodString;
+                what_to_check: z.ZodString;
+                evidence: z.ZodArray<z.ZodString>;
+            }, z.core.$strict>>>;
             actual: z.ZodString;
             execution_details: z.ZodString;
             warning: z.ZodNullable<z.ZodString>;
@@ -598,6 +631,17 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                     no_expected_behavior: "no_expected_behavior";
                 }>>;
                 bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                expectation_result: z.ZodOptional<z.ZodEnum<{
+                    met: "met";
+                    not_met: "not_met";
+                    not_specified: "not_specified";
+                }>>;
+                findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                    observation: z.ZodString;
+                    reason: z.ZodString;
+                    what_to_check: z.ZodString;
+                    evidence: z.ZodArray<z.ZodString>;
+                }, z.core.$strict>>>;
                 actual: z.ZodString;
                 execution_details: z.ZodString;
                 warning: z.ZodNullable<z.ZodString>;
@@ -1178,6 +1222,17 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                         no_expected_behavior: "no_expected_behavior";
                     }>>;
                     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                    expectation_result: z.ZodOptional<z.ZodEnum<{
+                        met: "met";
+                        not_met: "not_met";
+                        not_specified: "not_specified";
+                    }>>;
+                    findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                        observation: z.ZodString;
+                        reason: z.ZodString;
+                        what_to_check: z.ZodString;
+                        evidence: z.ZodArray<z.ZodString>;
+                    }, z.core.$strict>>>;
                     actual: z.ZodString;
                     execution_details: z.ZodString;
                     warning: z.ZodNullable<z.ZodString>;
@@ -2004,6 +2059,17 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                         no_expected_behavior: "no_expected_behavior";
                     }>>;
                     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
+                    expectation_result: z.ZodOptional<z.ZodEnum<{
+                        met: "met";
+                        not_met: "not_met";
+                        not_specified: "not_specified";
+                    }>>;
+                    findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                        observation: z.ZodString;
+                        reason: z.ZodString;
+                        what_to_check: z.ZodString;
+                        evidence: z.ZodArray<z.ZodString>;
+                    }, z.core.$strict>>>;
                     actual: z.ZodString;
                     execution_details: z.ZodString;
                     warning: z.ZodNullable<z.ZodString>;
