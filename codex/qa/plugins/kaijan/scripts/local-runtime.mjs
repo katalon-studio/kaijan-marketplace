@@ -55683,7 +55683,7 @@ function testingToolDefinition(tool2, host) {
         destructiveHint: true,
         openWorldHint: true
       },
-      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Kaijan prepares related work and change review inside Plan when you supply their source inputs. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Plan uses any supplied code change as implementation context and prepares related work when you provide repositories. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       // Keep the source fields visible to Codex. The receiver checks exclusivity.
       inputSchema: inputSchema3
     };
@@ -61847,7 +61847,6 @@ var customerDiscoveryInputSchema = external_exports.strictObject({});
 var customerDiscoverySchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-capabilities/2"),
   context: readiness,
-  changeReview: readiness,
   relatedWork: readiness,
   workItemReview: readiness,
   testPlanning: readiness,
@@ -61905,7 +61904,6 @@ function projectCustomerDiscovery(value, { directDevelopment = false, personalCh
       state: "available",
       message: "Save relevant task context that the caller has authorized."
     } : unavailable3,
-    changeReview: action2(native.changeRisk),
     relatedWork: action2(native.prContext),
     workItemReview: action2(native.riskFinder),
     testPlanning: planning,

@@ -86,8 +86,9 @@ caller's requirements.
   sources suffice. Explorer discovers routes and Planner chooses scenarios.
 - Use `change` for the actual frozen change, including source identity, coverage
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
-  for Git patches and provided snapshots. Kaijan prepares risk analysis and
-  resolves missing explicit in-scope GitHub links during planning. Include any
+  for Git patches and provided snapshots. Planner uses the change as
+  implementation context. Kaijan resolves missing explicit in-scope GitHub links
+  during planning. Include any
   relevant source already available. For authorized related-work discovery,
   supply `repositories` as `owner/repository` identifiers, with the original
   work item's repository first when known. Keep full issue or pull request URLs

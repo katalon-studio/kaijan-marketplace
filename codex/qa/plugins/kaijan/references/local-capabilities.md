@@ -132,7 +132,7 @@ the selected operations. Reopen the saved report by its original report ID.
 
 Call `kaijan_capabilities_list` with `{}`. The normal reply uses
 `kaijan.customer-capabilities/2`. Each action has a `state` and `message`:
-`context`, `changeReview`, `relatedWork`, `workItemReview`, `testPlanning`,
+`context`, `relatedWork`, `workItemReview`, `testPlanning`,
 `additionalTests` and `testExecution`.
 
 - `available`: the action is available for an authorized task. Application access

@@ -47,7 +47,7 @@
     "schemaVersion": "change-risk-finder/result/4",
     "sourceManifestSha256": "15dfe4754ec67c4e9dafc3d06326d9d197d80a14d96c020ceb7f32b7ab495446",
     "upstreamSourceManifestSha256": "714ba1eddbc1a9eec836043e9be0ec3423aa82a365b29eee4872486c537a4a8e",
-    "scope": "Exact canonical native runtime.run closure for all supported direct/guided plugin operations; standalone CRF CLI/research methods remain separately owned. Current method/runtime source overlay #1935; original transport/native manifest identities remain baseline provenance.",
+    "scope": "Schemas for supplied change evidence and retained Change Risk results. New review execution stays in the experiment.",
     "decision": "https://github.com/katalon-studio/loki/issues/1685#issuecomment-6407244037",
     "transportMigration": {
       "baselineSourceCommit": "953060f7fe7a557495c0071638c43ebd761eeed7",
@@ -107,25 +107,8 @@
       "scope": "Human-selected temporary nonblocking risk output: retain all available rows, unfamiliar relation wording/operands and original responses; format-only non-strict output guidance. Exact source proofs are conditional; unsupported wording does not create verified evidence. Prompt, model, transport accounting and historical records remain unchanged."
     },
     "files": {
-      "runtime.mjs": "0a65530fa1302decadb8800eca68ad0530808d89fc52517db1f216acc1b9b1f5",
-      "method.mjs": "e52dc403aac6f85531bd5ecaa8a5c6716a1b75cb38fa250437e56f4234639426",
-      "question-output.mjs": "88adcc84d3986fea152dab949e37b225701819dc861bad1f4aa99999b147acf9",
-      "frozen-direct-template.json": "bed2758122264d56a6361d5c9b9831662642b1acd28781ceaf62ccfcd1a11e08",
-      "frozen-luna-template.json": "f1a664115af09282e20f4798d7413ca06f556db9789adf8d02215cb84b9db56b",
       "input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5",
-      "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49",
-      "invocation.schema.json": "30031b932d18f42d84745fcb73338736eeaa3a1805d32b42f002eecfce33afb5",
-      "node_modules/@katalon-experiments/ai-client/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd",
-      "node_modules/@katalon-experiments/ai-client/index.mjs": "f3a780378f61e8eda0560467134e5fa0d0667bdc1414c967328e92facb20bec4",
-      "node_modules/@katalon-experiments/ai-client/index.d.mts": "d026db4bf45abb01eaa06cd2c886f8ea38d842f441c67f9170895268d0096cec",
-      "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60",
-      "node_modules/@katalon-experiments/ai-client/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4",
-      "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
-      "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03",
-      "node_modules/@katalon-experiments/ai-client/README.md": "ccf0f2712a2e0f9cd61b24ae8e6ff6799378d1948dc0ff80a1ca0b01d843e4be",
-      "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "9e2365939892879e7e59fdcd654ad002a385e53decee47eed7bd9f06783e0669",
-      "source-relations.mjs": "2d441973badb154c433e2ba0139d9e229c31f6e7bad774b5e220cbcc0941534a",
-      "node_modules/@katalon-experiments/ai-client/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4"
+      "output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49"
     }
   },
   "prContext": {

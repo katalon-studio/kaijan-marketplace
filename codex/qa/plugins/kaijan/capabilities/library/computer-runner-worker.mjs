@@ -59,12 +59,6 @@ var init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA = __esm({
   }
 });
 
-// <define:LOKI_CHANGE_RISK_PINS>
-var init_define_LOKI_CHANGE_RISK_PINS = __esm({
-  "<define:LOKI_CHANGE_RISK_PINS>"() {
-  }
-});
-
 // <define:LOKI_COMPUTER_RUNNER_PINS>
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
@@ -113,7 +107,6 @@ var require_constants = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -146,7 +139,6 @@ var require_buffer_util = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -231,7 +223,6 @@ var require_limiter = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -291,7 +282,6 @@ var require_permessage_deflate = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -684,7 +674,6 @@ var require_validation = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -895,7 +884,6 @@ var require_receiver = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -1528,7 +1516,6 @@ var require_sender = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -2031,7 +2018,6 @@ var require_event_target = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -2270,7 +2256,6 @@ var require_extension = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -2433,7 +2418,6 @@ var require_websocket = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -3352,7 +3336,6 @@ var require_stream = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -3460,7 +3443,6 @@ var require_subprotocol = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -3515,7 +3497,6 @@ var require_websocket_server = __commonJS({
     "use strict";
     init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
     init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-    init_define_LOKI_CHANGE_RISK_PINS();
     init_define_LOKI_COMPUTER_RUNNER_PINS();
     init_define_LOKI_MAC_RUNNER_PINS();
     init_define_LOKI_PLANNER_LOOP_PINS();
@@ -3923,7 +3904,6 @@ var require_websocket_server = __commonJS({
 // src/computer-runner-worker.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -3935,7 +3915,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/index.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -4208,7 +4187,6 @@ __export(external_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -4535,7 +4513,6 @@ __export(core_exports2, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -4547,7 +4524,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -4638,7 +4614,6 @@ __export(util_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -5547,7 +5522,6 @@ function config(newConfig) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/parse.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -5559,7 +5533,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/errors.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -5921,7 +5894,6 @@ var safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync($ZodRealError);
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -5933,7 +5905,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/checks.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -6012,7 +5983,6 @@ __export(regexes_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -6603,7 +6573,6 @@ var $ZodCheckOverwrite = /* @__PURE__ */ $constructor("$ZodCheckOverwrite", (ins
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/doc.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -6654,7 +6623,6 @@ ${content.join("\n")}
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/versions.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9113,7 +9081,6 @@ function handleRefineResult(result, payload, input3, inst) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/memoizer.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9466,7 +9433,6 @@ __export(locales_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9478,7 +9444,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ar.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9600,7 +9565,6 @@ function ar_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/az.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9721,7 +9685,6 @@ function az_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -9900,7 +9863,6 @@ function be_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bg.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10036,7 +9998,6 @@ function bg_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bn.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10160,7 +10121,6 @@ function bn_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ca.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10284,7 +10244,6 @@ function ca_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ckb.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10427,7 +10386,6 @@ function ckb_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/cs.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10554,7 +10512,6 @@ function cs_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/da.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10685,7 +10642,6 @@ function da_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/de.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10809,7 +10765,6 @@ function de_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/el.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -10932,7 +10887,6 @@ function el_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/en.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11067,7 +11021,6 @@ function en_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/eo.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11192,7 +11145,6 @@ function eo_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/es.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11339,7 +11291,6 @@ function es_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fa.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11469,7 +11420,6 @@ function fa_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fi.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11597,7 +11547,6 @@ function fi_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11737,7 +11686,6 @@ function fr_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr-CA.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11860,7 +11808,6 @@ function fr_CA_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/gu.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -11984,7 +11931,6 @@ function gu_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/he.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12196,7 +12142,6 @@ function he_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hi.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12318,7 +12263,6 @@ function hi_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hr.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12455,7 +12399,6 @@ function hr_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hu.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12579,7 +12522,6 @@ function hu_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12748,7 +12690,6 @@ function hy_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/id.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12870,7 +12811,6 @@ function id_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/is.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -12995,7 +12935,6 @@ function is_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/it.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13119,7 +13058,6 @@ function it_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ja.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13242,7 +13180,6 @@ function ja_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ka.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13370,7 +13307,6 @@ function ka_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kh.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13382,7 +13318,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/km.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13513,7 +13448,6 @@ function kh_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kn.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13639,7 +13573,6 @@ function kn_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ko.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13766,7 +13699,6 @@ function ko_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/lt.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -13984,7 +13916,6 @@ function lt_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/mk.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14109,7 +14040,6 @@ function mk_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ms.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14232,7 +14162,6 @@ function ms_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ne.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14354,7 +14283,6 @@ function ne_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nl.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14480,7 +14408,6 @@ function nl_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nn.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14604,7 +14531,6 @@ function nn_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/no.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14728,7 +14654,6 @@ function no_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ota.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14853,7 +14778,6 @@ function ota_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ps.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -14983,7 +14907,6 @@ function ps_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pl.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15108,7 +15031,6 @@ function pl_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15262,7 +15184,6 @@ function pt_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt-BR.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15417,7 +15338,6 @@ function pt_BR_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ro.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15550,7 +15470,6 @@ function ro_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15729,7 +15648,6 @@ function ru_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sk.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15856,7 +15774,6 @@ function sk_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sl.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -15981,7 +15898,6 @@ function sl_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sv.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16107,7 +16023,6 @@ function sv_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ta.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16233,7 +16148,6 @@ function ta_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tg.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16360,7 +16274,6 @@ function tg_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/th.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16486,7 +16399,6 @@ function th_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tk.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16604,7 +16516,6 @@ function tk_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tr.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16725,7 +16636,6 @@ function tr_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ua.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16737,7 +16647,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uk.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16866,7 +16775,6 @@ function ua_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ur.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -16992,7 +16900,6 @@ function ur_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uz.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17116,7 +17023,6 @@ function uz_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/vi.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17240,7 +17146,6 @@ function vi_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-CN.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17365,7 +17270,6 @@ function zh_CN_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-TW.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17488,7 +17392,6 @@ function zh_TW_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/yo.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17611,7 +17514,6 @@ function yo_default() {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -17671,7 +17573,6 @@ var globalRegistry = globalThis.__zod_globalRegistry;
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/compile.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -19291,7 +19192,6 @@ function generateTransformCheck(doc, ctx, schema, accessor) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/api.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -20360,7 +20260,6 @@ function _stringFormat(Class2, format, fnOrRegex, _params = {}) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -20900,7 +20799,6 @@ var createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params) =
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-processors.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -21658,7 +21556,6 @@ function toJSONSchema(input3, params) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-generator.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -21747,7 +21644,6 @@ var JSONSchemaGenerator = class {
 var json_schema_exports = {};
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -21938,7 +21834,6 @@ __export(schemas_exports2, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -21983,7 +21878,6 @@ __export(checks_exports2, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -21995,7 +21889,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/parse.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -22007,7 +21900,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/errors.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -23542,7 +23434,6 @@ function preprocess(fn, schema) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/compat.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -23578,7 +23469,6 @@ var ZodFirstPartyTypeKind;
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/from-json-schema.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -23601,7 +23491,6 @@ __export(iso_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24358,7 +24247,6 @@ function fromJSONSchema(schema, params) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/deep-partial.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24370,7 +24258,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/visit.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24547,7 +24434,6 @@ function deepPartial(schema) {
 // ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/in-out.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24595,7 +24481,6 @@ __export(coerce_exports, {
 });
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24625,7 +24510,6 @@ import { dirname as dirname5 } from "node:path";
 // src/storage.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24724,7 +24608,6 @@ async function atomicFile(directory, name, bytes) {
 // src/runner-clarification-worker.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24736,7 +24619,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // src/runner-clarification.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24748,7 +24630,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // src/runner-parameter-protection.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24760,7 +24641,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/local.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24772,7 +24652,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/report-evidence.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24925,7 +24804,6 @@ var reportSourcesSchema = external_exports.strictObject({
 // ../contracts/dist/terminal-checks.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -24944,7 +24822,6 @@ var checkedPlanReferenceSchema = external_exports.strictObject({
 // ../contracts/dist/report-view.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25058,7 +24935,6 @@ var reportReadOutputSchema = external_exports.union([
 // ../contracts/dist/advisory-read.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25114,7 +24990,6 @@ var advisoryReadOutputSchema = external_exports.union([advisoryReadSchema, advis
 // ../contracts/dist/advisory.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25455,7 +25330,6 @@ var advisoryExecutionFailureSchema = external_exports.strictObject({
 // ../contracts/dist/runner.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25467,7 +25341,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/clarification-presentation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25784,7 +25657,6 @@ var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerEr
 // ../contracts/dist/assessment-preparation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -25974,7 +25846,6 @@ var assessmentPrepareOutputSchema = preserveAdvisoryInput(external_exports.union
 // ../contracts/dist/test-run.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26025,7 +25896,6 @@ var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunEr
 // ../contracts/dist/report-presentation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26037,7 +25907,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/customer-assessment-presentation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26049,7 +25918,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/customer-source-display.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26148,7 +26016,6 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 // ../contracts/dist/customer-related.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26255,7 +26122,6 @@ var customerRelatedResultSchema = external_exports.object({
 // ../contracts/dist/customer-execution-presentation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26655,7 +26521,6 @@ var reportTraceOutputSchema = external_exports.union([
 // ../contracts/dist/report-results.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26667,7 +26532,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/report-artifact.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26836,7 +26700,6 @@ var customerCaseEvidenceSchema = external_exports.object({
 // ../contracts/dist/report-render.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26858,7 +26721,6 @@ var reportRenderAckSchema = reportRenderMetadataSchema.extend({
 // ../contracts/dist/case-evidence.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26932,7 +26794,6 @@ var caseEvidenceSchema = external_exports.object({
 // ../contracts/dist/customer-report.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26944,7 +26805,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/customer-planning.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -26997,7 +26857,6 @@ var unavailablePlanDetailsNotice = "This saved plan's test details are unavailab
 // ../contracts/dist/customer-risk.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -27042,7 +26901,6 @@ var customerRiskSchema = external_exports.object({
 // ../contracts/dist/customer-advisory.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -27667,7 +27525,6 @@ var incompleteExploration = external_exports.object({
 // ../contracts/dist/customer-supplement.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28110,7 +27967,6 @@ var localResponseSchema = external_exports.discriminatedUnion("ok", [
 // src/runner-clarification-presentation.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28127,7 +27983,6 @@ import { redactor } from "@katalon-loki/computer-runner/redaction";
 // src/application-url-protection.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28139,7 +27994,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // src/operations.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28151,7 +28005,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../component-contracts/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28163,7 +28016,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/index.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -28175,7 +28027,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/telemetry.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29069,7 +28920,6 @@ var coreTelemetryActorSchema = external_exports.strictObject({
 // ../contracts/dist/recording.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29154,7 +29004,6 @@ var recordingStatusSchema = external_exports.discriminatedUnion("phase", [
 // ../contracts/dist/work-items.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29203,7 +29052,6 @@ var workItemDetailSchema = external_exports.object({
 // ../contracts/dist/source.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29357,7 +29205,6 @@ var sourceJobCompleteSchema = external_exports.strictObject({
 // ../contracts/dist/analysis.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29369,7 +29216,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/map-review.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29426,7 +29272,6 @@ var mapReviewSchema = external_exports.strictObject({
 // ../contracts/dist/application-source.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29709,7 +29554,6 @@ var analysisJobInputSchema = external_exports.strictObject({
 // ../contracts/dist/analysis-customer.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29809,7 +29653,6 @@ var customerAnalysisResultSchema = external_exports.object({
 // ../contracts/dist/privacy.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29821,7 +29664,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/workspace-results.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29963,7 +29805,6 @@ var resultListQuerySchema = external_exports.strictObject({
 // ../contracts/dist/replay.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -29975,7 +29816,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/recording-session.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30163,7 +30003,6 @@ var sessionReplayManifestSchema = external_exports.strictObject({
 // ../contracts/dist/customer-replay.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30340,7 +30179,6 @@ var customerReplayChunkSchema = external_exports.strictObject({
 // ../contracts/dist/replay-representation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30407,7 +30245,6 @@ var commentSchema = commentCreateSchema.extend({
 // ../contracts/dist/recording-upload.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30458,7 +30295,6 @@ var customerSessionUploadReceiptSchema = external_exports.strictObject({
 // ../contracts/dist/github.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30488,7 +30324,6 @@ var githubRejectionResultSchema = external_exports.strictObject({
 // ../contracts/dist/product-feedback.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30521,7 +30356,6 @@ var productFeedbackSchema = productFeedbackInputSchema.extend({
 // ../contracts/dist/agent-feedback.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30565,7 +30399,6 @@ var agentFeedbackReceiptSchema = external_exports.strictObject({
 // ../contracts/dist/product-issue.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30667,7 +30500,6 @@ var productIssuePreparationSchema = external_exports.strictObject({
 // ../contracts/dist/product-report.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30740,7 +30572,6 @@ var productReportLookupSchema = external_exports.union([
 // ../contracts/dist/issue-image-type.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30752,7 +30583,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../contracts/dist/app-model.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30797,7 +30627,6 @@ var appModelRevisionSchema = appModelCollectionSchema.extend({
 // ../contracts/dist/workspace-customer.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -30893,7 +30722,6 @@ var customerWorkspaceListSchema = external_exports.strictObject({
 // ../contracts/dist/source-model.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31141,7 +30969,6 @@ function snapshotJson(value) {
 // src/request-errors.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31153,7 +30980,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../context-intake/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31165,7 +30991,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../context-intake/contracts.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31289,7 +31114,6 @@ var contextGetOutputSchema = external_exports.union([contextReadSchema, contextF
 // ../source-adapters/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31301,7 +31125,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../github-capture/github_packet.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31335,7 +31158,6 @@ var families = Object.freeze({
 // src/github.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31347,7 +31169,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../provider-transport/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31359,7 +31180,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // ../provider-transport/retention.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31386,7 +31206,6 @@ function zdrRequest(body, provider = "openai") {
 // ../provider-transport/broker-channel.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31448,7 +31267,6 @@ async function channelFetch(socketPath, path, options = {}) {
 // ../provider-transport/litellm-route.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31551,7 +31369,6 @@ function sendFetch(connection, options, transport = globalThis.fetch) {
 // src/provider.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31617,7 +31434,6 @@ var maxResponseBytes = 16 * 1024 * 1024;
 // src/completed-read-errors.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31629,7 +31445,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 // src/query.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31655,7 +31470,6 @@ function canonicalJson(value) {
 // src/lifecycle.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31676,7 +31490,6 @@ import { createHash as createHash3 } from "node:crypto";
 // src/runner-answer-contracts.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31925,7 +31738,6 @@ function createWorkerClarification(send2, operationSignal) {
 // ../provider-transport/agents.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31940,7 +31752,6 @@ import { OpenAIResponsesModel } from "@openai/agents-openai";
 // ../provider-transport/responses-session.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -31954,7 +31765,6 @@ import { createConnection } from "node:net";
 // ../../node_modules/.pnpm/ws@8.22.0/node_modules/ws/wrapper.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -32422,7 +32232,6 @@ function createResponsesSession({
 // src/runner-context-worker.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -32561,7 +32370,6 @@ function createWorkerApplicationContext(value, send2, operationSignal) {
 // src/runner-validation.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -32943,7 +32751,6 @@ async function createRunnerValidationSender(supplied, input3, artifacts, route, 
 // src/runner-worker-failure.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -33036,7 +32843,6 @@ function workerFailureBoundary(controller2, artifactDirectory, deadlineAt, send2
 // src/runner-review-channel.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -33131,7 +32937,6 @@ function workerRunnerReview(send2, signal) {
 // src/chrome-run-channel.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
@@ -33144,7 +32949,6 @@ import { randomUUID as randomUUID4 } from "node:crypto";
 // ../contracts/dist/chrome-run.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_CHANGE_RISK_PINS();
 init_define_LOKI_COMPUTER_RUNNER_PINS();
 init_define_LOKI_MAC_RUNNER_PINS();
 init_define_LOKI_PLANNER_LOOP_PINS();
