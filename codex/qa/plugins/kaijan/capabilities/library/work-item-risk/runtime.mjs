@@ -7,7 +7,7 @@ import {
   decisionsUsageEstimate,
   providerConnection,
   sendFetch,
-  zdrRequest,
+  storeKaijanResponses,
 } from "@katalon-experiments/ai-client";
 import { mkdir, mkdtemp, open, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -209,7 +209,7 @@ export async function runWithMethod(
       request =
         route === "decisions"
           ? decisionsRequest(request)
-          : zdrRequest(request, "openai");
+          : { ...request, store: storeKaijanResponses };
       if (
         route === "responses" &&
         (!["gpt-6-luna", "gpt-6.1-terra"].includes(request.model) ||

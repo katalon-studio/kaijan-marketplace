@@ -1,3 +1,4 @@
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import {
   changeRiskCatalog,
   availableRiskPresentation,
@@ -664,7 +665,7 @@ function assumptionsRequestBody(
     model,
     reasoning,
     max_output_tokens,
-    store: false,
+    store: storeKaijanResponses,
     text,
     input: [
       {
@@ -709,17 +710,14 @@ async function reviewAssumptions(call, stage, request, sources) {
     },
     outputType: request.text.format,
   });
-  // Current calls explicitly disable provider storage, including old templates.
-  const store = false;
   let result;
   const runner = createRetainedAgentRunner({
     model: request.model,
-    store,
+    store: request.store,
     dispatch: async (wire) => {
       insist(
         isDeepStrictEqual(JSON.parse(JSON.stringify(wire)), {
           ...request,
-          store,
           include: [],
           tools: [],
           stream: false,

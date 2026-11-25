@@ -1,4 +1,6 @@
-// Product inference always uses stateless responses and ZDR provider routing.
+export const storeKaijanResponses = true;
+
+// Explicit stateless compatibility for callers outside the current product flows.
 // Account/project enrollment still belongs to the provider's policy owner.
 export function zdrRequest(body, provider = "openai") {
   return {

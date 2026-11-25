@@ -31359,6 +31359,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
+var storeKaijanResponses = true;
 function zdrRequest(body, provider = "openai") {
   return {
     ...body,
@@ -31921,7 +31922,6 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import OpenAI from "openai";
 import { Agent, Runner, computerTool, tool } from "@openai/agents-core";
 import { OpenAIResponsesModel } from "@openai/agents-openai";
-var storeTestAgentResponses = true;
 
 // ../provider-transport/responses-session.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -32278,7 +32278,7 @@ function createResponsesSession({
     async send(request4, signal, { review: review2 = false, inactivityTimeoutMs } = {}) {
       if (closed) throw new Error("Runner Responses session is closed");
       signal?.throwIfAborted();
-      const original = storeResponses ? structuredClone({ ...request4, store: true }) : managedWebSocket ? zdrRequest(request4) : structuredClone({
+      const original = storeResponses ? structuredClone({ ...request4, store: storeKaijanResponses }) : managedWebSocket ? zdrRequest(request4) : structuredClone({
         ...zdrRequest(request4),
         include: [
           .../* @__PURE__ */ new Set([
@@ -33510,7 +33510,7 @@ process.on("message", (message) => {
         } : managed ? {
           providerSession: createManagedResponsesSession({
             connection: selectedConnection(),
-            storeResponses: storeTestAgentResponses,
+            storeResponses: storeKaijanResponses,
             omitContent: () => privateContent,
             requestAI: selectedSender
           }),

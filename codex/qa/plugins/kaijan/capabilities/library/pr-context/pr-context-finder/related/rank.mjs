@@ -1,3 +1,4 @@
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import { DEFAULT_BUDGETS, PROVIDER_PROFILE } from "./budgets.mjs";
 import { check, hash } from "./records.mjs";
 import { references } from "./reference-api.mjs";
@@ -102,7 +103,7 @@ export function buildRelatedWorkRankingRequest(snapshot) {
   const catalog = new Map(snapshot.evidence.map((e) => [e.id, e]));
   return {
     model: MODEL,
-    store: false,
+    store: storeKaijanResponses,
     reasoning: { effort: "medium" },
     max_output_tokens: PROVIDER_PROFILE.ranking_output_tokens,
     input: [
