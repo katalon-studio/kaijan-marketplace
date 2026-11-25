@@ -23168,9 +23168,18 @@ async function run() {
       }
       const input3 = JSON.parse(Buffer.concat(chunks).toString("utf8"));
       if (input3.kind === "report") {
-        if (!["launch", "preview"].includes(input3.operation))
+        if (!["launch", "link"].includes(input3.operation))
           throw Error("Invalid report action");
         const { catalog } = await session.forRequest({ threadId });
+        if (input3.operation === "link") {
+          const result2 = await catalog.reportLaunchLink(
+            { reportId: input3.reportId },
+            lifetime.signal
+          );
+          response.setHeader("Content-Type", "application/json");
+          response.end(JSON.stringify(result2));
+          return;
+        }
         const { reportId, previewURL } = await catalog.invoke(
           "loki_report_open",
           { reportId: input3.reportId },

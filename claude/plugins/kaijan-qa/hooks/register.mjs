@@ -149,9 +149,34 @@ export function register(on, runInterruption) {
     return { cards, reads, isCurrent: () => active && current === generation };
   };
 
-  const drawCard = (host, e, card, id, state) => {
+  const drawCard = async (host, e, card, id, state) => {
+    const desktop = e.surface === "desktop" && !card.projectHistory;
+    if (desktop) {
+      card.detailsLink ??= forms
+        .request(host, {
+          kind: "report",
+          operation: "link",
+          reportId: card.report.id,
+        })
+        .then(({ reportId, url }) => {
+          if (
+            reportId !== card.report.id ||
+            typeof url !== "string" ||
+            !/^http:\/\/127\.0\.0\.1:\d{1,5}\/[a-f0-9]{64}\/$/.test(url)
+          )
+            throw Error("Unexpected report link");
+          return url;
+        })
+        .catch(() => {
+          card.detailsLink = undefined;
+          return undefined;
+        });
+    }
+    const detailsLink = desktop ? await card.detailsLink : undefined;
+    if (!state.isCurrent()) return undefined;
     const open = async () => {
       if (!state.isCurrent() || card.opening) return;
+      if (desktop) host.warn();
       if (e.surface === "terminal" && !card.projectHistory) {
         card.opening = true;
         try {
@@ -194,6 +219,7 @@ export function register(on, runInterruption) {
         state.isCurrent,
         card.report.runs.length === 1 ? card.report.runs[0].id : undefined,
       ),
+      detailsLink,
     );
   };
 
@@ -355,7 +381,8 @@ export function register(on, runInterruption) {
       if (card) {
         const id = call.tool_use_id ?? `${e.requestId}-${card.report.id}`;
         grouped.add(id);
-        matches.push(drawCard(host, e, card, id, state));
+        const rendered = await drawCard(host, e, card, id, state);
+        if (rendered) matches.push(rendered);
       }
     }
     const original = await next(e);
@@ -390,9 +417,11 @@ export function register(on, runInterruption) {
     }
     const card = await findCard($, e.props, id, state);
     if (!state.isCurrent() || !card) return original;
+    const rendered = await drawCard(host, e, card, id, state);
+    if (!rendered) return original;
     return Box({
       flexDirection: "column",
-      children: [original, drawCard(host, e, card, id, state)],
+      children: [original, rendered],
     });
   });
   on("ui.render", { component: "Placed" }, async ($, e, next) => {

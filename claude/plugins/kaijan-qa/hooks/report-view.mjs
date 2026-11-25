@@ -1,7 +1,7 @@
 // Native presentation of the validated saved report. No model, storage or tool
 // calls belong here; navigation only changes this report's local view state.
-export function reportCard(elements, card, id, onPress, forms) {
-  const { Box, Text, Button } = elements;
+export function reportCard(elements, card, id, onPress, forms, detailsLink) {
+  const { Box, Text, Button, Markdown } = elements;
   const report = card.report;
   return Box({
     flexDirection: "column",
@@ -20,12 +20,14 @@ export function reportCard(elements, card, id, onPress, forms) {
             weight: "semibold",
             children: ["Kaijan"],
           }),
-          Button({
-            key: "kaijan-details-" + id,
-            label: "Show details",
-            variant: "primary",
-            onPress,
-          }),
+          detailsLink
+            ? Markdown({ text: `[Show details](${detailsLink})` })
+            : Button({
+                key: "kaijan-details-" + id,
+                label: "Show details",
+                variant: "primary",
+                onPress,
+              }),
         ],
       }),
       ...(report.planCard
@@ -192,6 +194,22 @@ export function reportPane(elements, report, state) {
                   ]),
                 ]),
                 ...section("Prerequisites", item.prerequisites ?? []),
+                ...(item.findings?.length
+                  ? [
+                      heading("Bug findings"),
+                      ...item.findings.map((finding) =>
+                        column([
+                          text(finding.observation, { weight: "semibold" }),
+                          text(finding.reason),
+                          ...field("What to check", finding.what_to_check),
+                          ...field(
+                            "Saved evidence",
+                            finding.evidence.join(", "),
+                          ),
+                        ]),
+                      ),
+                    ]
+                  : []),
                 ...(item.steps?.length
                   ? [
                       heading("Planned steps"),
@@ -255,6 +273,7 @@ export function reportPane(elements, report, state) {
         { color: "inactive", size: "footnote" },
       ),
       ...run.notices.map((notice) => text(notice)),
+      ...(run.findingCount ? [text(run.findingCount)] : []),
       ...(run.tests.length ? [heading("Tests")] : []),
       ...run.tests.map((item) => detail(item, `run-${run.id}-${item.id}`)),
       ...(run.recap.length
