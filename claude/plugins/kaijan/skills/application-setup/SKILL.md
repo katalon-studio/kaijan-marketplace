@@ -10,17 +10,19 @@ Use the selected project and original task in this conversation. Follow the
 Setup saves source and task context. A target is optional. This release
 does not build or require application maps.
 
-- Use `loki_setup_list` for a possible saved configuration at the selected
+- Use `kaijan_app_config_list` for a possible saved configuration at the selected
   canonical source directory. For a new configuration, use
-  `loki_setup_prepare` with the source directory, revision selection, original
+  `kaijan_app_config_prepare` with the source directory, revision selection, original
   `workItem` when supplied, optional target and stable `requestKey`.
+- For a new target, send its `url` and `profileId` and omit `profileRevision`.
+  Setup assigns that revision independently of the Test Environment revision.
 - Default a new source selection to latest main and honor an explicit branch,
   PR ref or commit. Keep the resolved SHA. The host resolves the committed
   source without switching the checkout or executing it. An unavailable
   upstream cannot verify latest main. Record dirty source separately when a
   later task depends on it.
-- Read the returned application and context IDs with `loki_setup_get`.
-  Use the saved source revision as `expectedRevision` in `loki_setup_resolve`.
+- Read the returned application and context IDs with `kaijan_app_config_get`.
+  Use the saved source revision as `expectedRevision` in `kaijan_app_config_resolve`.
   If the saved target has `profileRevision`, pass that exact value as
   `expectedProfileRevision`. The returned configuration and readiness describe
   saved context. Keep pending or refused connections and their stated recovery
@@ -28,7 +30,7 @@ does not build or require application maps.
 
 The returned Setup and `application.contextId` values identify saved application
 configuration. They are not Context Intake IDs and must not be passed as
-`loki_test_plan.contextId`. Reuse the exact saved `application.workItem` text as
+`kaijan_plan_create.contextId`. Reuse the exact saved `application.workItem` text as
 the original task, with relevant source from the saved revision.
 
 

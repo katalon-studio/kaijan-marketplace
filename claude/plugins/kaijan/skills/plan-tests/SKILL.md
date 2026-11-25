@@ -6,15 +6,14 @@ description: Use when the user asks to plan tests, create a test plan, or propos
 # Propose tests from current work
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md)
-and the readiness returned by `loki_capabilities_list`. Use `loki_test_plan`
+and the readiness returned by `kaijan_capabilities_list`. Use `kaijan_plan_create`
 to plan useful observable checks and expected results for the original task.
 
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
-For work based on a saved source packet, pass its `contextId` from
-`loki_context_submit` with compatible `nativeInputs.testPlanning` in place of
-`testObjective`. Use the returned `planId` when the person authorizes a Run.
+For work based on an already saved planning packet, pass its `contextId`.
+Use the returned `planId` when the person authorizes a Run.
 
 When the person selects the configured application's shared Main model, use
 `sourceModel: {application: true}`. Core supplies one combined context for its
@@ -41,8 +40,9 @@ the recipient and purpose; do not filter words such as report or save.
 
 On Claude Code, use the advertised fields above and the original user request.
 For hosts that advertise `input` and `contextId`, use the following planning
-input guidance. For browser exploration on those hosts, provide the authorized
-URL in `exploration.target.initialURL` and any supplied exploration parameters.
+input guidance. Send the authorized browser URL in `exploration.target.initialURL`
+and include any supplied exploration parameters only if the Plan schema
+advertises `exploration`.
 
 Use one supported input form. Preserve original text, attribution and source
 roles. Put application behavior and context in `input`. Include the optional
@@ -67,9 +67,10 @@ the plan.
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
   for Git patches and provided snapshots. Kaijan prepares risk analysis and
   resolves missing explicit in-scope GitHub links during planning. Include any
-  relevant source already available. Supply `repositories` only for authorized
-  related-work discovery, with the original work item's repository first when
-  known.
+  relevant source already available. For authorized related-work discovery,
+  supply `repositories` as `owner/repository` identifiers, with the original
+  work item's repository first when known. Keep full issue or pull request URLs
+  in their original source records.
 - Reuse an exact saved risk answer with
   `riskAnswers: [{family, answerId, resultSha256?}]` (family `changeRisk` or
   `riskFinder`). Use `procedures` for relevant past steps, either

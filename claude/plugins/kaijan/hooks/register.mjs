@@ -2,6 +2,10 @@ import { nativeReport, resultCaption } from "./report-model.mjs";
 import { reportToolPrefix, reportServer } from "./report-config.mjs";
 import { reportCard, reportPane } from "./report-view.mjs";
 import { createReportForms } from "./inline-forms.mjs";
+import {
+  operationToolName,
+  publicToolName,
+} from "./mcp-tool-names.mjs";
 
 const paneId = "kaijan-report";
 const formPaneId = "kaijan-form";
@@ -11,14 +15,20 @@ const reportTools = new Set([
   "loki_report_get",
   "kaijan_project_history",
 ]);
-const isReportTool = (name) =>
-  typeof name === "string" &&
-  name.startsWith(reportToolPrefix) &&
-  reportTools.has(name.slice(reportToolPrefix.length));
+const reportOperation = (name) =>
+  typeof name === "string" && name.startsWith(reportToolPrefix)
+    ? operationToolName(name.slice(reportToolPrefix.length))
+    : undefined;
+const isReportTool = (name) => reportTools.has(reportOperation(name));
+const isProjectHistory = (name) =>
+  reportOperation(name) === "kaijan_project_history";
+const reportCallNames = [
+  ...new Set([...reportTools, ...Array.from(reportTools, publicToolName)]),
+].map((name) => reportToolPrefix + name);
 
 async function findCard($, call, id, state) {
   if (!state.isCurrent()) return undefined;
-  const history = call.tool === `${reportToolPrefix}kaijan_project_history`;
+  const history = isProjectHistory(call.tool);
   if (history && call.input?.operation !== "read") return undefined;
   const { cards, reads } = state;
   const saved =
@@ -45,7 +55,9 @@ async function findCard($, call, id, state) {
         $.mcp
           .call(
             reportServer,
-            recoverHistory ? "kaijan_project_history" : "loki_report_get",
+            publicToolName(
+              recoverHistory ? "kaijan_project_history" : "loki_report_get",
+            ),
             recoverHistory ? { operation: "read", entryId } : { reportId },
           )
           .catch(() => undefined),
@@ -85,6 +97,7 @@ function reportHost($, e) {
         rows: 28,
       }),
     closeForm: () => $.ui.close({ id: formPaneId }),
+    copy: (text) => $.ui.copy({ text, surface: e?.surface }),
     warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
     redraw: () => $.ui.invalidate("ui.render"),
     warn: () =>
@@ -165,7 +178,12 @@ export function register(on, runInterruption) {
       card,
       id,
       open,
-      forms.actions(host, id, state.isCurrent),
+      forms.actions(
+        host,
+        id,
+        state.isCurrent,
+        card.report.runs.length === 1 ? card.report.runs[0].id : undefined,
+      ),
       e.surface === "desktop" ? card.detailUrl : undefined,
     );
   };
@@ -188,11 +206,11 @@ export function register(on, runInterruption) {
     for (const [kind, description] of [
       [
         "feedback",
-        "Open the requested private Kaijan feedback draft in Claude. The person writes, reviews, and sends it from the form. This tool sends nothing.",
+        "Open a private Kaijan feedback draft in Claude. Supply runId only when the user requested details for that exact saved Run. The person reviews and sends from the form. This tool sends nothing.",
       ],
       [
         "issue",
-        "Open the requested Kaijan issue draft for review in Claude. The person can edit the draft and choose images before confirming publication. This tool publishes nothing.",
+        "Open the requested Kaijan issue draft for review in Claude. The person can edit the draft and choose images before confirming the submission. This tool only opens the form.",
       ],
     ]) {
       const { tool } = await $.tool.register({
@@ -200,7 +218,10 @@ export function register(on, runInterruption) {
         description,
         inputSchema: {
           type: "object",
-          properties: {},
+          properties:
+            kind === "feedback"
+              ? { runId: { type: "string", pattern: "^[a-f0-9]{64}$" } }
+              : {},
           additionalProperties: false,
         },
       });
@@ -246,6 +267,7 @@ export function register(on, runInterruption) {
         e.tool_use_id,
         kind,
         state.isCurrent,
+        kind === "feedback" ? e.runId : undefined,
       );
       if (!opened) return { deny: "Kaijan could not open the draft form." };
       return { result: "Opened the draft for user review." };
@@ -254,7 +276,7 @@ export function register(on, runInterruption) {
   on(
     "tool.call",
     {
-      tool: /^mcp__plugin_kaijan(?:-qa|-local)?_kaijan_local__(?:loki_report_(?:show|open|get)|kaijan_project_history)$/,
+      tool: reportCallNames,
     },
     async ($, e, next) => {
       const current = generation;
@@ -262,8 +284,7 @@ export function register(on, runInterruption) {
       if (
         !e.agentId &&
         isReportTool(e.tool) &&
-        (e.tool !== `${reportToolPrefix}kaijan_project_history` ||
-          e.operation === "read") &&
+        (!isProjectHistory(e.tool) || e.operation === "read") &&
         current === generation &&
         !answer.deny &&
         !answer.isError
@@ -279,9 +300,13 @@ export function register(on, runInterruption) {
             typeof e.reportId === "string" &&
             /^[a-f0-9]{64}$/.test(e.reportId)
           ) {
-            output = await $.mcp.call(reportServer, "loki_report_get", {
-              reportId: e.reportId,
-            });
+            output = await $.mcp.call(
+              reportServer,
+              publicToolName("loki_report_get"),
+              {
+                reportId: e.reportId,
+              },
+            );
             report = nativeReport(output);
             if (report?.id !== e.reportId) report = undefined;
           }
@@ -289,8 +314,7 @@ export function register(on, runInterruption) {
             cards.set(e.tool_use_id, {
               output,
               report,
-              projectHistory:
-                e.tool === `${reportToolPrefix}kaijan_project_history`,
+              projectHistory: isProjectHistory(e.tool),
             });
             if (cards.size > 100) cards.delete(cards.keys().next().value);
             $.ui.invalidate("ui.render");

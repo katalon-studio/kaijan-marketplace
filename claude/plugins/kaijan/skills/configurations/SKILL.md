@@ -13,7 +13,7 @@ Configurations belong to the local person and selected Kaijan environment.
 They remain available across chats and restarts on this device. They are not
 shared with the team or copied between QA and Production.
 
-For hosts with the full Plan and Runner inputs, use `kaijan_configuration`
+For hosts with the full Plan and Runner inputs, use `kaijan_test_environment_manage`
 to list, read, save, select or delete settings. The person chooses whether
 to save settings. Reuse one matching application configuration
 automatically; do not require another selection before each Run. Ask which one

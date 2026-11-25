@@ -66,7 +66,7 @@ import { spawn } from "node:child_process";
 var KeychainUnavailableError = class extends Error {
   constructor() {
     super(
-      "Kaijan cannot read your saved sign-in from macOS Keychain. Use kaijan_connect to reconnect. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
+      "Kaijan cannot read your saved sign-in from macOS Keychain. Reconnect Kaijan. If macOS asks for access, review its prompt. Your saved sign-in has not been removed."
     );
     this.name = "KeychainUnavailableError";
     this.code = "keychain_unavailable";

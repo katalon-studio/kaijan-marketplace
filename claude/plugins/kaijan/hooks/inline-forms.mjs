@@ -5,7 +5,7 @@ const requests = {
   feedback:
     "Open a private Kaijan feedback draft. I will write and review the feedback.",
   issue:
-    "Help me report a problem with Kaijan itself to katalon-studio/kaijan-marketplace. Prepare a draft for me to review. Do not publish it.",
+    "Help me report a problem with Kaijan itself. Open a draft for me to review before I send it.",
 };
 
 export function createReportForms() {
@@ -69,14 +69,18 @@ export function createReportForms() {
     ],
   };
 
-  function actions(host, id, active) {
+  function actions(host, id, active, runId) {
     const { Box, Button } = host.elements;
     const open = async (kind) => {
       if (!active() || opening) return;
       const current = generation;
       opening = true;
       try {
-        const result = await host.submit(requests[kind]);
+        const text =
+          kind === "feedback" && runId
+            ? `${requests.feedback} Offer the details for Run ${runId}.`
+            : requests[kind];
+        const result = await host.submit(text);
         if (result.drop) throw Error(result.drop);
       } catch {
         if (active()) host.warnForm();
@@ -103,7 +107,7 @@ export function createReportForms() {
     ];
   }
 
-  async function openDraft(host, callId, kind, active) {
+  async function openDraft(host, callId, kind, active, runId) {
     if (!active() || forms.get(selectedForm)?.busy) return false;
     const state = forms.get(kind) ?? { kind, edits: {} };
     state.callId = callId;
@@ -115,7 +119,11 @@ export function createReportForms() {
       const opened = await host.openForm(kind);
       if (opened?.deny || !active()) return false;
       if (!state.draft) {
-        const draft = await request(host, { kind, operation: "open" });
+        const draft = await request(host, {
+          kind,
+          operation: "open",
+          ...(runId && { runId }),
+        });
         state.draft = draft.draft;
         state.error = draft.error ? draft.message : undefined;
       }
@@ -179,8 +187,14 @@ export function createReportForms() {
     };
     const field = (key) => state.edits[key] ?? state.draft?.fields[key];
     const issue = state.kind === "issue";
+    const trackedIssue = issue && state.draft?.publicationRoute === "tracking";
     const closed = ["saved", "published"].includes(state.draft?.status);
     const receipt = state.draft?.receipt;
+    const reference = issue
+      ? state.draft?.reportReceipt?.reference
+      : receipt?.id;
+    const run = issue ? undefined : state.draft?.context?.run;
+    const includeRun = Boolean(field("includeRun"));
     const busy = state.busy;
     const recover = state.submission && !closed;
     const submissionAction = () => {
@@ -325,7 +339,9 @@ export function createReportForms() {
         }),
         caption(
           issue
-            ? "Selected text and images will be public in katalon-studio/kaijan-marketplace."
+            ? state.draft?.repository
+              ? "Selected text and images will be public in katalon-studio/kaijan-marketplace."
+              : "Selected text and images will be shared with the Kaijan team."
             : "Draft kept on this device. Select Send when ready.",
         ),
         ...(host.terminal && !closed && !recover
@@ -339,6 +355,25 @@ export function createReportForms() {
               caption(
                 `Included: Kaijan ${state.draft.context.pluginVersion} · ${state.draft.context.os}.`,
               ),
+              ...(run && !recover
+                ? [
+                    button(
+                      "include-run",
+                      `Include Run details: ${includeRun ? "On" : "Off"}`,
+                      async () => {
+                        state.edits.includeRun = !includeRun;
+                      },
+                    ),
+                    ...(includeRun
+                      ? [
+                          caption(`Run reference: ${run.operationId}`),
+                          ...(run.errorCode
+                            ? [caption(`Error code: ${run.errorCode}`)]
+                            : []),
+                        ]
+                      : []),
+                  ]
+                : []),
             ]
           : []),
         ...(state.error ? [caption(state.error)] : []),
@@ -346,7 +381,19 @@ export function createReportForms() {
           ? [
               issue && receipt?.url
                 ? Link({ href: receipt.url, label: "Open published issue" })
-                : caption(issue ? "Issue published." : "Feedback saved."),
+                : caption(issue ? "Issue saved." : "Feedback saved."),
+              ...(reference ? [caption(`Reference: ${reference}`)] : []),
+              ...(reference && host.copy
+                ? [
+                    button("copy-reference", "Copy reference", async () => {
+                      const result = await host.copy(reference);
+                      state.notice = result.isCopied
+                        ? "Reference copied."
+                        : "Select and copy the reference.";
+                    }),
+                  ]
+                : []),
+              ...(state.notice ? [caption(state.notice)] : []),
             ]
           : []),
         ...(busy
@@ -380,11 +427,22 @@ export function createReportForms() {
                               : "Retry send"
                             : issue
                               ? state.reviewed
-                                ? "Publish issue"
+                                ? trackedIssue
+                                  ? "Send issue"
+                                  : "Publish issue"
                                 : "Preview issue"
                               : "Send",
                           () => submit(shownAction, Boolean(recover)),
                         ),
+                        ...(recover &&
+                        trackedIssue &&
+                        state.draft.status === "selected"
+                          ? [
+                              button("retry-issue", "Retry submission", () =>
+                                change("publish"),
+                              ),
+                            ]
+                          : []),
                       ]
                     : []),
                 ],
