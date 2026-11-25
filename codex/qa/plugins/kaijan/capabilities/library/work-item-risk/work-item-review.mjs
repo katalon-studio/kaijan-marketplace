@@ -1,3 +1,4 @@
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import { Agent } from "@openai/agents-core";
 import { createRetainedAgentRunner } from "@katalon-experiments/ai-client/agents";
 import { isDeepStrictEqual } from "node:util";
@@ -274,7 +275,7 @@ export function createWorkItemRisk(dependencies) {
     const request = {
       model: MODEL,
       reasoning: { effort: "medium" },
-      store: false,
+      store: storeKaijanResponses,
       text: {
         format: {
           type: "json_schema",

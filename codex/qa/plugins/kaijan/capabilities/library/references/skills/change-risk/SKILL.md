@@ -66,7 +66,7 @@ separate work-item mode above.
    fresh-key replay. The separate-analysis recovery rule below applies only to a
    distinct read-only analysis within current caller authority; it is not a retry
    of the refused computation.
-   At most three calls run sequentially, with no automatic retry or cumulative dollar cap. Fixed Responses requests use store:false. A new correlation key does not bypass immutable-answer caching. Native capacity refusal retains the supplied coverage; preserve complete refusals as well as assessments. Changed input or package/configuration under an existing correlation key is refused. Private legacy operation APIs retain historical receipts separately.
+   At most three calls run sequentially, with no automatic retry or cumulative dollar cap. Fixed Responses requests use `store: true`. A new correlation key does not bypass immutable-answer caching. Native capacity refusal retains the supplied coverage; preserve complete refusals as well as assessments. Changed input or package/configuration under an existing correlation key is refused. Private legacy operation APIs retain historical receipts separately.
    A completed native `invalid_patch` refusal with `accounting.calls_started=0`,
    `accounting.unknown_cost_calls=0` and an empty `ledger` proves this rejection
    preceded provider dispatch. Read `inputRecovery` for the field, format and

@@ -3,6 +3,7 @@ import {
   unanchoredSearchInstructions,
 } from "./query-prompt.mjs";
 import { Buffer } from "node:buffer";
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import { check, hash, RelatedError } from "./records.mjs";
 import { MODEL, outputText } from "./rank.mjs";
 import { SEARCH_LIMITS, searchQueries } from "./search-intent.mjs";
@@ -121,7 +122,7 @@ export function modelIdentity(
   check(
     request.model === MODEL &&
       request.reasoning?.effort === "medium" &&
-      request.store === false,
+      request.store === storeKaijanResponses,
     "provider_request_policy_mismatch",
   );
   check(
