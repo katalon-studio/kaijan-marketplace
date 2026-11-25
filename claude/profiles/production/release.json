@@ -3,9 +3,9 @@
   "profile": "production",
   "build": {
     "schemaVersion": 1,
-    "buildId": "47b682d7-0d35-4f56-8aa1-3bdff07ea2ee",
-    "builtAt": "2026-11-22T07:59:05.713Z",
-    "sourceRevision": "40a3517cac539af47d4f9885ac3c233d290ee79f",
+    "buildId": "42d55b4c-225e-4f30-a2ad-ee9d30e83567",
+    "builtAt": "2026-11-25T03:53:19.614Z",
+    "sourceRevision": "7e638bb48876691b851957b7d3f308d37e70633f",
     "sourceDirty": false,
     "profile": "production",
     "profileMode": "runtime-env/1",
@@ -26,26 +26,26 @@
     "authArchitecture": "shared-broker-v1",
     "credentialStorage": "private-file-v1",
     "runtimeLayout": "installed",
-    "capabilityDigest": "ff5830c50b50f84f485f38c6e9f4e1ba3f48ee368c9a1f170cdd7ffd9342fdce",
-    "pluginVersion": "0.5.0-rc.429",
+    "capabilityDigest": "e967a79696955340752d0fdb4cb3c76ffc9b2eb9c1179aa64bea706d5612e4f3",
+    "pluginVersion": "2026.1125.34617",
     "mcpUrl": "https://kaijan.ai/mcp",
     "mcpServerName": "kaijan_core",
     "localMcpServerName": "kaijan_local",
     "capabilityTransport": {
       "format": "mcpb/1",
       "bundle": "servers/kaijan-local.mcpb",
-      "sha256": "53aa96ba9cd402c98c6e1a402b667f034a3a3dd4c77a2aa4379c846df94a1f7e",
+      "sha256": "84051879a8890ceb41a2e3565a5cde5fc98aaa32af6a36b9b5ec1c2f26581f93",
       "privateHelperSha256": "5ebfc62920ea297c0816a1012f24b7722b50554dc0d6a6fce2fca5d7be732ccc"
     }
   },
-  "source": "40a3517cac539af47d4f9885ac3c233d290ee79f",
-  "payloadCommit": "3ff3e7df17df142e75cf8582d4e1afe097f887f6",
+  "source": "7e638bb48876691b851957b7d3f308d37e70633f",
+  "payloadCommit": "f39616b03c01f69d4cc7e24c395033c597c4109e",
   "candidate": {
-    "run": "45000268870",
+    "run": "45542249612",
     "attempt": "1",
-    "digest": "4a70070dd5731429f5bcd009b7101109b262b22b28b9893782dc1fe5d9f0f31a",
-    "artifact": "kaijan-claude-45000268870-1"
+    "digest": "ef38e1fd9f1770872cb75283226f9f3582684d45db8c5ca0167310189ac2b801",
+    "artifact": "kaijan-claude-45542249612-1"
   },
-  "archiveDigest": "815664de72b32a4cd2da9b777892085d8f5ea015f49f13560722ff1887568ce4",
-  "profileChecksumDigest": "53fc0d5321e0ccd39ec700ebf25794601558f86ba2a489792eda39f8def21268"
+  "archiveDigest": "c0ed84877d6d97917af06893c066c0c037d2136bf7d327aa6d8076b88a54c9ec",
+  "profileChecksumDigest": "e6d707c7171293362e138e25db711ed25b224d59dcf4ecb045ae5a7ba81dfa4e"
 }
