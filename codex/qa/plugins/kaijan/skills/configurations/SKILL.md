@@ -11,8 +11,13 @@ In Codex, each Configuration is a Test Environment. Use
 `kaijan_test_inputs_read` with `autId` to find environments or
 `testEnvironmentId` to read one. Use `kaijan_test_environment_manage` for saves and
 deletes. When saving, supply the selected AUT ID and the browser
-`target.initialURL` or macOS `target.app` on the environment. Give Plan the
-saved environment ID. For a first Plan without a linked Test Environment,
+`target.initialURL` or the Mac app's bundle identifier in `target.app`.
+Before saving a Mac environment, follow the
+[macOS target guide](../run-test/references/macos-appium-setup.md#check-xcode-and-the-target)
+to find the bundle identifier for the selected app. Ask for the identifier
+if you cannot verify it.
+
+Give Plan the saved environment ID. For a first Plan without a linked Test Environment,
 save one for the selected AUT and, if it needs sign-in, use the local
 Configuration save command with that AUT ID.
 <!-- end-codex-only -->

@@ -93921,7 +93921,7 @@ var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
     return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
-  }, "An application bundle ID is required."),
+  }, "An application bundle ID is required.").describe("The installed macOS application's bundle identifier (CFBundleIdentifier)."),
   launch: external_exports.boolean().optional()
 });
 var questions = external_exports.array(external_exports.strictObject({
