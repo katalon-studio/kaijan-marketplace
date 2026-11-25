@@ -27,14 +27,11 @@ For an exact report already in this chat, use the existing reader:
 Use the exact retained reportId or original answer/run IDs from this chat.
 Call `kaijan_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
-The plugin's inline card shows the saved result. For reports in the original
-conversation, **Show details** prepares the interactive report on Desktop.
-Select **Open Kaijan report** to open it in the browser selected by Claude.
-If the local link expires, select **Refresh link**. In the interactive CLI,
-**Show details** opens the same report in your browser. Resume the original
-conversation after restarting Claude to use the same saved report. If the
-browser view is unavailable, Claude shows the saved details in its own pane.
-Project history also uses that pane.
+The plugin's inline card shows the saved result. In Desktop Code,
+**Show details** opens the report in the right pane. In the interactive CLI,
+**Show details** opens the shared report HTML in the default browser. Resume
+the original conversation after restarting Claude to use the same saved
+report. Project history and the CLI browser fallback use the native pane.
 
 The interactive report uses Kaijan's shared report renderer. Its private
 browser link stays on this device and is available while the session serves
@@ -51,9 +48,9 @@ browser or pane rendered without observing it.
 
 Use **Kaijan feedback** on the card to request a private editable draft in a new
 chat turn. Use **Report issue** for a problem with Kaijan itself. Claude opens
-the requested draft with the matching draft tool. The tool opens a form for
-the person to edit and review in a separate pane. In the CLI, press
-Ctrl+X then Tab if it needs keyboard focus.
+the requested draft with the matching draft tool. Edit and review the form
+in chat. If the interactive CLI uses the fallback pane, press Ctrl+X then
+Tab to edit.
 
 The issue form shares the user's reviewed text and images with the Kaijan team.
 Use **Choose images** to select PNG, JPEG or WebP files for this draft. Review

@@ -72,10 +72,11 @@ async function findCard($, call, id, state) {
   return card;
 }
 
-function reportHost($, e) {
+function reportHost($, e, surfaces = []) {
   return {
     elements: e ? $.ui.resolve(e) : undefined,
     terminal: e?.surface === "terminal",
+    desktop: e?.surface === "desktop",
     sessionId: () => $.session.id(),
     start: (thread) =>
       $.process.spawn({
@@ -88,14 +89,28 @@ function reportHost($, e) {
       }),
     fetch: (options) => $.http.fetch("http://localhost/form", options),
     submit: (text) => $.prompt.submit({ text, asUser: true }),
-    openForm: (kind) =>
-      $.ui.open({
+    async openForm(kind, callId) {
+      // Desktop supports tool rows in chat even when it cannot draw Placed rows.
+      if (surfaces.includes("desktop")) return { requestId: callId };
+      try {
+        const placement = await $.ui.place({ id: `kaijan-form-${callId}` });
+        if (placement?.isPlaced && placement.requestId)
+          return { requestId: placement.requestId };
+      } catch {
+        // Try the terminal pane if this host cannot place the draft in chat.
+      }
+      const pane = await $.ui.open({
         id: formPaneId,
         title: kind === "issue" ? "Report a Kaijan issue" : "Kaijan feedback",
         focus: true,
         columns: 64,
         rows: 28,
-      }),
+      });
+      if (pane?.deny) return pane;
+      if (pane?.isPlaced) return {};
+      await $.ui.close({ id: formPaneId });
+      return { deny: true };
+    },
     closeForm: () => $.ui.close({ id: formPaneId }),
     copy: (text) => $.ui.copy({ text, surface: e?.surface }),
     warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
@@ -137,15 +152,12 @@ export function register(on, runInterruption) {
   const drawCard = (host, e, card, id, state) => {
     const open = async () => {
       if (!state.isCurrent() || card.opening) return;
-      if (
-        (e.surface === "desktop" || e.surface === "terminal") &&
-        !card.projectHistory
-      ) {
+      if (e.surface === "terminal" && !card.projectHistory) {
         card.opening = true;
         try {
           const result = await forms.request(host, {
             kind: "report",
-            operation: e.surface === "desktop" ? "preview" : "launch",
+            operation: "launch",
             reportId: card.report.id,
           });
           if (!state.isCurrent()) return;
@@ -156,12 +168,10 @@ export function register(on, runInterruption) {
             )
           )
             throw Error("Unexpected report output");
-          if (e.surface === "desktop") card.detailUrl = result.url;
           host.redraw();
           return;
         } catch {
           if (!state.isCurrent()) return;
-          card.detailUrl = undefined;
           host.warn();
         } finally {
           card.opening = false;
@@ -184,7 +194,6 @@ export function register(on, runInterruption) {
         state.isCurrent,
         card.report.runs.length === 1 ? card.report.runs[0].id : undefined,
       ),
-      e.surface === "desktop" ? card.detailUrl : undefined,
     );
   };
 
@@ -263,7 +272,7 @@ export function register(on, runInterruption) {
           deny: "Open the draft in an interactive Claude Code session.",
         };
       const opened = await forms.openDraft(
-        reportHost($),
+        reportHost($, undefined, surfaces),
         e.tool_use_id,
         kind,
         state.isCurrent,
@@ -329,16 +338,24 @@ export function register(on, runInterruption) {
   on("ui.render", { component: "ToolGroup" }, async ($, e, next) => {
     const state = cardState();
     if (!state.isCurrent()) return next(e);
+    const host = reportHost($, e);
     const matches = [];
     for (const call of e.props.calls) {
-      if (!isReportTool(call.tool) || call.isErrored || call.isRunning)
-        continue;
+      if (call.isErrored || call.isRunning) continue;
+      if (draftTools.has(call.tool) && call.tool_use_id) {
+        const form = forms.view(host, state.isCurrent, call.tool_use_id);
+        if (form) {
+          grouped.add(call.tool_use_id);
+          matches.push(form);
+        }
+      }
+      if (!isReportTool(call.tool)) continue;
       const card = await findCard($, call, call.tool_use_id, state);
       if (!state.isCurrent()) return next(e);
       if (card) {
         const id = call.tool_use_id ?? `${e.requestId}-${card.report.id}`;
         grouped.add(id);
-        matches.push({ card, id });
+        matches.push(drawCard(host, e, card, id, state));
       }
     }
     const original = await next(e);
@@ -346,36 +363,44 @@ export function register(on, runInterruption) {
     const { Box } = $.ui.resolve(e);
     return Box({
       flexDirection: "column",
-      children: [
-        original,
-        ...matches.map(({ card, id }) =>
-          drawCard(reportHost($, e), e, card, id, state),
-        ),
-      ],
+      children: [original, ...matches],
     });
   });
   on("ui.render", { component: "ToolUse" }, async ($, e, next) => {
     const state = cardState();
     if (!state.isCurrent()) return next(e);
     const original = await next(e);
+    const id = e.props.tool_use_id ?? e.requestId;
     if (
       !state.isCurrent() ||
-      grouped.has(e.requestId) ||
-      !isReportTool(e.props.tool) ||
+      grouped.has(id) ||
       e.props.isErrored ||
       e.props.isRunning
     )
       return original;
-    const card = await findCard($, e.props, e.requestId, state);
+    const isDraft = draftTools.has(e.props.tool);
+    if (!isDraft && !isReportTool(e.props.tool)) return original;
+    const host = reportHost($, e);
+    const { Box } = host.elements;
+    if (isDraft) {
+      const form = forms.view(host, state.isCurrent, id);
+      return form
+        ? Box({ flexDirection: "column", children: [original, form] })
+        : original;
+    }
+    const card = await findCard($, e.props, id, state);
     if (!state.isCurrent() || !card) return original;
-    const { Box } = $.ui.resolve(e);
     return Box({
       flexDirection: "column",
-      children: [
-        original,
-        drawCard(reportHost($, e), e, card, e.requestId, state),
-      ],
+      children: [original, drawCard(host, e, card, id, state)],
     });
+  });
+  on("ui.render", { component: "Placed" }, async ($, e, next) => {
+    if (!active) return next(e);
+    return (
+      forms.view(reportHost($, e), cardState().isCurrent, e.requestId) ??
+      next(e)
+    );
   });
   on("ui.render", { component: "Pane" }, async ($, e, next) => {
     if (e.requestId === formPaneId && active)

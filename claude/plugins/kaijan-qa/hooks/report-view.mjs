@@ -1,6 +1,6 @@
 // Native presentation of the validated saved report. No model, storage or tool
 // calls belong here; navigation only changes this report's local view state.
-export function reportCard(elements, card, id, onPress, forms, detailUrl) {
+export function reportCard(elements, card, id, onPress, forms) {
   const { Box, Text, Button } = elements;
   const report = card.report;
   return Box({
@@ -20,25 +20,11 @@ export function reportCard(elements, card, id, onPress, forms, detailUrl) {
             weight: "semibold",
             children: ["Kaijan"],
           }),
-          Box({
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "sm",
-            children: [
-              ...(detailUrl
-                ? [
-                    elements.Markdown({
-                      text: `[Open Kaijan report](${detailUrl})`,
-                    }),
-                  ]
-                : []),
-              Button({
-                key: "kaijan-details-" + id,
-                label: detailUrl ? "Refresh link" : "Show details",
-                variant: detailUrl ? "secondary" : "primary",
-                onPress,
-              }),
-            ],
+          Button({
+            key: "kaijan-details-" + id,
+            label: "Show details",
+            variant: "primary",
+            onPress,
           }),
         ],
       }),
@@ -268,7 +254,7 @@ export function reportPane(elements, report, state) {
           : "Commit not recorded",
         { color: "inactive", size: "footnote" },
       ),
-      ...(run.notice ? [text(run.notice)] : []),
+      ...run.notices.map((notice) => text(notice)),
       ...(run.tests.length ? [heading("Tests")] : []),
       ...run.tests.map((item) => detail(item, `run-${run.id}-${item.id}`)),
       ...(run.recap.length
@@ -288,7 +274,7 @@ export function reportPane(elements, report, state) {
       ...section("Not completed", run.remainingSteps),
       ...(!run.recap.length &&
       run.reason &&
-      ![run.notice, ...run.completedSteps, ...run.remainingSteps].includes(
+      ![...run.notices, ...run.completedSteps, ...run.remainingSteps].includes(
         run.reason,
       )
         ? section("Saved execution details", [run.reason])

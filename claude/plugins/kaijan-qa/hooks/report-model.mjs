@@ -20383,7 +20383,7 @@ var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
     return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
-  }, "An application bundle ID is required."),
+  }, "An application bundle ID is required.").describe("The installed macOS application's bundle identifier (CFBundleIdentifier)."),
   launch: external_exports.boolean().optional()
 });
 var questions = external_exports.array(external_exports.strictObject({
@@ -21096,6 +21096,31 @@ var customerRelatedResultSchema = external_exports.object({
   message: optional2(external_exports.string())
 });
 
+// packages/contracts/dist/customer-execution-presentation.js
+var customerExecutionEvidenceSchema = external_exports.object({
+  observations: external_exports.array(customerAssessmentQuoteSchema),
+  actions: external_exports.array(customerRecordedActionSchema),
+  cleanup: customerAssessmentQuoteSchema.optional(),
+  notice: external_exports.string()
+});
+var chromeDisconnectNotice = "The run stopped because it lost its connection to the Chrome tab.";
+var chromeDisconnectTerminal = external_exports.object({
+  actor: external_exports.literal("harness"),
+  reason: external_exports.enum([
+    "Error: The connected Chrome tab is no longer connected",
+    "Error: The Chrome tab is no longer connected"
+  ])
+});
+var progress2 = external_exports.object({
+  test_results: runnerTestResultsSchema.optional(),
+  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
+  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
+  reason: external_exports.string().optional(),
+  completedSteps: external_exports.array(external_exports.string()).optional(),
+  remainingSteps: external_exports.array(external_exports.string()).optional(),
+  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
+});
+
 // packages/contracts/dist/report-presentation.js
 var reportExecutionRecapSchema = external_exports.object({
   steps: external_exports.array(external_exports.string()),
@@ -21103,6 +21128,18 @@ var reportExecutionRecapSchema = external_exports.object({
 });
 var digest9 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count4 = external_exports.number().int().nonnegative();
+var reportSourceReadSchema = external_exports.strictObject({
+  schema: external_exports.literal("kaijan.report-source-read/1"),
+  reportId: digest9,
+  recordSha256: digest9,
+  recordChunk: external_exports.strictObject({
+    encoding: external_exports.literal("JSON text, UTF-16 offsets"),
+    offset: count4,
+    text: external_exports.string(),
+    nextOffset: count4.nullable(),
+    totalCharacters: count4
+  })
+});
 var related = customerRelatedResultSchema.shape;
 var contextFinderPlan = { planSourceId: digest9, planResultSha256: digest9 };
 var reportContextFinderLinkSchema = external_exports.string().regex(/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/(issues|pull)\/[1-9]\d*\/?$/);
@@ -21192,6 +21229,7 @@ var reportExecutionRejectionNoticeSchema = external_exports.enum([
   "The run stopped without using the app controls. The test service rejected a request. Ask Kaijan to read this saved result in chat.",
   "The run stopped because the test service rejected a request. Ask Kaijan to read this saved result in chat."
 ]);
+var reportResponseLimitNotice = "The run stopped because the test service reached its response limit.";
 var reportOutcomeNoticeSchema = external_exports.enum([
   "The test stopped when the app tried to open a website that was not allowed for this test.",
   "The test stopped because it could not confirm whether the page was allowed for this test.",
@@ -21201,6 +21239,8 @@ var reportOutcomeNoticeSchema = external_exports.enum([
   "The connection expired. Reconnect before retrying.",
   "The test service is temporarily unavailable. Check the saved outcome before retrying.",
   ...reportExecutionRejectionNoticeSchema.options,
+  reportResponseLimitNotice,
+  chromeDisconnectNotice,
   "The test could not finish. Review the saved observations before retrying."
 ]);
 function savedRunProgressCaption(state) {
@@ -21762,7 +21802,7 @@ var browserRefresh = external_exports.object({
   response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
   completedAt: external_exports.string().optional(),
   error: external_exports.string().optional(),
-  completion: external_exports.literal("unverified").optional()
+  completion: external_exports.enum(["unverified", "cancelled-by-beforeunload"]).optional()
 });
 var action = external_exports.object({
   index: external_exports.number().int().positive(),
@@ -21841,6 +21881,14 @@ var classifiedPlanningRejection = capturedPlanningFailure.extend({
   })
 }).refine((value) => value.reason === "inference_request_rejected" ? value.receipt.http_status === 429 && value.receipt.provider_http_status === void 0 : value.receipt.provider_http_status !== void 0);
 var planningServiceRejectionNotice = "The planning service rejected the request. No test plan was saved.";
+var explorerRejection = capturedPlanningFailure.pick({ schema: true }).extend({
+  receipt: external_exports.object({
+    status: external_exports.enum([
+      "exploration_provider_http_rejected",
+      "exploration_provider_response_rejected"
+    ])
+  })
+});
 var unavailablePlanDetailsNotice = "This saved plan's test details are unavailable. Ask Kaijan to create a new plan from the current work item. The saved plan will stay unchanged.";
 
 // packages/contracts/dist/customer-risk.js
@@ -21876,23 +21924,6 @@ var customerRiskSchema = external_exports.object({
   assumptions_to_confirm: external_exports.array(finding),
   interpretation: external_exports.literal("Questions to review against the cited sources; not verified defects, approved requirements, tests or observed behavior. An empty list does not establish safety."),
   coverage: external_exports.literal("Only the selected source was assessed. Citation matching does not establish semantic support or complete risk coverage.")
-});
-
-// packages/contracts/dist/customer-execution-presentation.js
-var customerExecutionEvidenceSchema = external_exports.object({
-  observations: external_exports.array(customerAssessmentQuoteSchema),
-  actions: external_exports.array(customerRecordedActionSchema),
-  cleanup: customerAssessmentQuoteSchema.optional(),
-  notice: external_exports.string()
-});
-var progress2 = external_exports.object({
-  test_results: runnerTestResultsSchema.optional(),
-  status: external_exports.enum(["needs_input", "stuck", "blocked", "complete"]).optional(),
-  effects: external_exports.enum(["known", "uncertain"]).optional().catch(void 0),
-  reason: external_exports.string().optional(),
-  completedSteps: external_exports.array(external_exports.string()).optional(),
-  remainingSteps: external_exports.array(external_exports.string()).optional(),
-  questions: external_exports.array(external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })).optional()
 });
 
 // packages/contracts/dist/customer-advisory.js
@@ -22324,6 +22355,7 @@ var customerReportSchema = testPlanViewSchema.pick({
     state: operationState,
     plan: customerPlanSchema.nullable(),
     planningFailure: external_exports.literal("service-rejected").optional(),
+    planningExplorationIncomplete: external_exports.literal(true).optional(),
     notice: external_exports.enum([
       "Planning could not finish. Other saved results remain available. Do not rerun tests to recreate this plan.",
       "This saved plan is unavailable in the supported view. Other saved results remain available.",
@@ -22363,7 +22395,9 @@ var customerReportSchema = testPlanViewSchema.pick({
     assertions: assertions.nullable().optional(),
     observedPages: external_exports.array(reportObservedPageSchema).optional(),
     outcomeNotice: reportOutcomeNoticeSchema.optional(),
-    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional()
+    executionRejectionNotice: reportExecutionRejectionNoticeSchema.optional(),
+    responseLimitNotice: external_exports.literal(reportResponseLimitNotice).optional(),
+    chromeDisconnectNotice: external_exports.literal(chromeDisconnectNotice).optional()
   })),
   pullRequests: external_exports.array(external_exports.object({
     repository: reportPullRequestSchema.shape.repository,
@@ -22500,6 +22534,11 @@ var reportWithoutContextFinder = customerReportSchema.omit({
 });
 var reportContextFinderInput = external_exports.object({
   contextFinder: external_exports.array(external_exports.unknown()).optional()
+});
+var incompleteExploration = external_exports.object({
+  schema: external_exports.literal("loki.planning-failure/1"),
+  reason: external_exports.literal("exploration_incomplete"),
+  receipt: external_exports.object({ status: external_exports.literal("exploration_incomplete") })
 });
 
 // packages/contracts/dist/customer-supplement.js
@@ -22936,6 +22975,7 @@ var localResponseSchema = external_exports.discriminatedUnion("ok", [
 ]);
 
 // apps/core/ui/local-capabilities/test-plan/model.ts
+var planningExplorationIncompleteNotice = "Browser exploration did not finish. No test plan was saved.";
 var renderView = testPlanViewSchema.extend({
   customerOutput: external_exports.literal(true).optional(),
   runs: external_exports.array(
@@ -22955,15 +22995,26 @@ var testPlanViewSchema2 = external_exports.union([
       schema: "loki.test-plan-view/2",
       customerOutput: true,
       plans: value.plans.map(
-        ({ plan, coverage: coverage2, evidence, notice, planningFailure: planningFailure2, ...source2 }) => ({
-          ...source2,
-          result: {
-            plan,
-            ...planningFailure2 === "service-rejected" ? { customerNotice: planningServiceRejectionNotice } : notice ? { customerNotice: notice } : {},
-            ...coverage2 ? { checks: { coverage: coverage2 } } : {},
-            ...evidence ? { evidence } : {}
-          }
-        })
+        ({
+          plan,
+          coverage: coverage2,
+          evidence,
+          notice,
+          planningFailure: planningFailure2,
+          planningExplorationIncomplete,
+          ...source2
+        }) => {
+          const customerNotice = planningFailure2 === "service-rejected" ? planningServiceRejectionNotice : planningExplorationIncomplete ? planningExplorationIncompleteNotice : notice;
+          return {
+            ...source2,
+            result: {
+              plan,
+              ...customerNotice ? { customerNotice } : {},
+              ...coverage2 ? { checks: { coverage: coverage2 } } : {},
+              ...evidence ? { evidence } : {}
+            }
+          };
+        }
       ),
       runs: value.runs.map(
         ({
@@ -22971,10 +23022,12 @@ var testPlanViewSchema2 = external_exports.union([
           assessments,
           assertions: assertions2,
           executionRejectionNotice,
+          responseLimitNotice,
+          chromeDisconnectNotice: chromeDisconnectNotice2,
           ...run
         }) => ({
           ...run,
-          ...executionRejectionNotice ? { outcomeNotice: executionRejectionNotice } : {},
+          outcomeNotice: executionRejectionNotice ?? responseLimitNotice ?? chromeDisconnectNotice2 ?? run.outcomeNotice,
           observation: "",
           ...assertions2 ? {
             assertions: {
@@ -23397,7 +23450,15 @@ function nativeReport(output2, selectedPlanId) {
           results: details(result)
         };
       }),
-      notice: run.executionLimitNotice ?? run.interruptionNote ?? run.observationNotice ?? "",
+      notices: [
+        ...new Set(
+          [
+            run.executionLimitNotice ?? run.interruptionNote,
+            run.outcomeNotice,
+            run.observationNotice
+          ].filter((notice) => Boolean(notice))
+        )
+      ],
       recap: run.executionRecap?.steps ?? [],
       recapDetailsOmitted: run.executionRecap?.detailsOmitted ?? false,
       completedSteps: run.executionReport && "completedSteps" in run.executionReport ? run.executionReport.completedSteps ?? [] : [],
