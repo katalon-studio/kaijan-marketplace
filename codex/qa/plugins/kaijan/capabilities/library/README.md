@@ -191,8 +191,10 @@ The portable output contains `api.mjs`, `computer-runner-worker.mjs`, adjacent
 `work-item-risk/` subtrees, relative data assets, the unchanged external Runner
 package/dependency closure and third-party notices. `provider-pins.json`,
 `native-selection.json`, `build-inputs.json` and `library-manifest.json` bind
-the selected bytes. Product copies this whole directory into its payload.
-Product supplies the Node runtime and transport entrypoint separately.
+the selected bytes. The Codex and Claude package builders omit the standalone
+map HTML. Their report App Model uses the shipped Test plan renderer. The
+standalone map stays available in the generic library build. Product supplies
+the Node runtime and transport entry point separately.
 
 `preservation.json` maps the original Research paths and hashes to promoted
 sources and identifies the limited transport/path/document changes. Deeper
