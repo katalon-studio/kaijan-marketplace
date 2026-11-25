@@ -101260,116 +101260,6 @@ var ConfigurationStore = class _ConfigurationStore {
   }
 };
 
-// src/configuration-ui.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath2 } from "node:url";
-var currentFormUri = "ui://kaijan/configurations/form/v2.html";
-var cachedFormUri = "ui://kaijan/configurations/form/v1.html";
-async function readConfigurationForm(uri2 = currentFormUri) {
-  if (uri2 !== currentFormUri && uri2 !== cachedFormUri)
-    throw Error("Unknown Configuration resource.");
-  return {
-    contents: [
-      {
-        uri: uri2,
-        mimeType: "text/html;profile=mcp-app",
-        text: new TextDecoder("utf-8", { fatal: true }).decode(
-          await boundedFile(
-            fileURLToPath2(
-              new URL("./configuration-form.html", import.meta.url)
-            ),
-            1024 * 1024
-          )
-        ),
-        _meta: {
-          "openai/ui": {
-            preferredDisplayMode: "inline",
-            availableDisplayModes: ["inline", "fullscreen"]
-          },
-          ui: {
-            prefersBorder: false,
-            csp: { connectDomains: [], resourceDomains: [] }
-          }
-        }
-      }
-    ]
-  };
-}
-
-// src/setup-ui.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath3 } from "node:url";
-var setupCardUri = "ui://kaijan/setup/card/v2.html";
-async function readSetupCard(uri2 = setupCardUri) {
-  if (uri2 !== setupCardUri && uri2 !== "ui://kaijan/setup/card/v1.html")
-    throw Error("Unknown Setup resource.");
-  return {
-    contents: [
-      {
-        uri: uri2,
-        mimeType: "text/html;profile=mcp-app",
-        text: new TextDecoder("utf-8", { fatal: true }).decode(
-          await boundedFile(
-            fileURLToPath3(new URL("./setup-card.html", import.meta.url))
-          )
-        ),
-        _meta: {
-          "openai/ui": {
-            preferredDisplayMode: "inline",
-            availableDisplayModes: ["inline"]
-          },
-          ui: {
-            prefersBorder: false,
-            csp: { connectDomains: [], resourceDomains: [] }
-          }
-        }
-      }
-    ]
-  };
-}
-var onboardingUri = "ui://kaijan/onboarding/v1.html";
-async function readOnboarding() {
-  return {
-    contents: [
-      {
-        uri: onboardingUri,
-        mimeType: "text/html;profile=mcp-app",
-        text: new TextDecoder("utf-8", { fatal: true }).decode(
-          await boundedFile(
-            fileURLToPath3(new URL("./onboarding.html", import.meta.url))
-          )
-        ),
-        _meta: {
-          "openai/ui": {
-            preferredDisplayMode: "inline",
-            availableDisplayModes: ["inline"]
-          },
-          ui: {
-            prefersBorder: false,
-            csp: { connectDomains: [], resourceDomains: [] }
-          }
-        }
-      }
-    ]
-  };
-}
-
 // src/feedback-drafts.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -101991,7 +101881,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath4 } from "node:url";
+import { fileURLToPath as fileURLToPath2 } from "node:url";
 var feedbackFormUri = "ui://kaijan/feedback/form/v5.html";
 var cachedFeedbackFormUris = Object.freeze([
   "ui://kaijan/feedback/form/v1.html",
@@ -102009,7 +101899,7 @@ async function readFeedbackForm(uri2 = feedbackFormUri) {
         mimeType: "text/html;profile=mcp-app",
         text: new TextDecoder("utf-8", { fatal: true }).decode(
           await boundedFile(
-            fileURLToPath4(new URL("./feedback-form.html", import.meta.url)),
+            fileURLToPath2(new URL("./feedback-form.html", import.meta.url)),
             1024 * 1024
           )
         ),
@@ -103371,7 +103261,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath5 } from "node:url";
+import { fileURLToPath as fileURLToPath3 } from "node:url";
 var issueFormUri = "ui://kaijan/issue/form/v9.html";
 var cachedIssueFormUris = Object.freeze([
   "ui://kaijan/issue/form/v1.html",
@@ -103393,7 +103283,7 @@ async function readIssueForm(uri2 = issueFormUri) {
         mimeType: "text/html;profile=mcp-app",
         text: new TextDecoder("utf-8", { fatal: true }).decode(
           await boundedFile(
-            fileURLToPath5(new URL("./issue-form.html", import.meta.url)),
+            fileURLToPath3(new URL("./issue-form.html", import.meta.url)),
             1024 * 1024
           )
         ),
@@ -105206,7 +105096,7 @@ function validateAdvisoryInput(schema, input3) {
 
 // src/work-item-risk.ts
 import { dirname as dirname7, join as join18 } from "node:path";
-import { fileURLToPath as fileURLToPath8 } from "node:url";
+import { fileURLToPath as fileURLToPath6 } from "node:url";
 var import__4 = __toESM(require__(), 1);
 import { randomUUID as randomUUID11 } from "node:crypto";
 
@@ -105861,9 +105751,9 @@ async function readRelatedCustomerView(data2, reference2, knownPins) {
 var import__2 = __toESM(require__(), 1);
 import { createHash as createHash20, randomUUID as randomUUID9 } from "node:crypto";
 import { dirname as dirname5, join as join14 } from "node:path";
-import { fileURLToPath as fileURLToPath6 } from "node:url";
+import { fileURLToPath as fileURLToPath4 } from "node:url";
 var relatedPins = define_LOKI_PR_CONTEXT_PINS_default;
-var relatedRoot = dirname5(fileURLToPath6(import.meta.url));
+var relatedRoot = dirname5(fileURLToPath4(import.meta.url));
 var relatedHandle = external_exports.strictObject({
   runId: external_exports.string().regex(/^[a-f0-9]{64}$/)
 });
@@ -107249,7 +107139,7 @@ import { createHash as createHash27, randomUUID as randomUUID10 } from "node:cry
 import { redactor } from "@katalon-loki/computer-runner/redaction";
 import { dirname as dirname6, join as join17 } from "node:path";
 import { lstat as lstat11, realpath as realpath12 } from "node:fs/promises";
-import { fileURLToPath as fileURLToPath7 } from "node:url";
+import { fileURLToPath as fileURLToPath5 } from "node:url";
 
 // src/planning-risk-context.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -115764,7 +115654,7 @@ async function planningConnectionFailure(environment, signal) {
 
 // src/test-planning.ts
 var planningPins = define_LOKI_TEST_PLANNING_PINS_default;
-var root = dirname6(fileURLToPath7(import.meta.url));
+var root = dirname6(fileURLToPath5(import.meta.url));
 var planningHandle = external_exports.strictObject({
   runId: external_exports.string().regex(/^[a-f0-9]{64}$/)
 });
@@ -117016,7 +116906,7 @@ async function loadPlanningPackage(packageRoot = root) {
 
 // src/work-item-risk.ts
 var pins = define_LOKI_WORK_ITEM_RISK_PINS_default;
-var root2 = dirname7(fileURLToPath8(import.meta.url));
+var root2 = dirname7(fileURLToPath6(import.meta.url));
 var ajv2 = new import__4.Ajv2020({ strict: false });
 var inputValid = ajv2.compile(define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA_default);
 var workItemRiskRequest = external_exports.strictObject({
@@ -126442,7 +126332,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath9 } from "node:url";
+import { fileURLToPath as fileURLToPath7 } from "node:url";
 var testPlanCardUri = "ui://loki/test-plan/card/v88.html";
 var testPlanCardMetadata = {
   ui: { resourceUri: testPlanCardUri },
@@ -126456,7 +126346,7 @@ async function readTestPlanCard(panel = false) {
         mimeType: "text/html;profile=mcp-app",
         text: new TextDecoder("utf-8", { fatal: true }).decode(
           await boundedFile(
-            fileURLToPath9(new URL("./test-plan-card.html", import.meta.url))
+            fileURLToPath7(new URL("./test-plan-card.html", import.meta.url))
           )
         ),
         _meta: {
@@ -126476,7 +126366,7 @@ async function readTestPlanCard(panel = false) {
 async function readTestPlanUi() {
   return new TextDecoder("utf-8", { fatal: true }).decode(
     await boundedFile(
-      fileURLToPath9(new URL("./test-plan-ui.html", import.meta.url))
+      fileURLToPath7(new URL("./test-plan-ui.html", import.meta.url))
     )
   );
 }
@@ -127320,7 +127210,7 @@ import { randomBytes as randomBytes5 } from "node:crypto";
 import { fork } from "node:child_process";
 import { open as open14, appendFile } from "node:fs/promises";
 import { dirname as dirname10, join as join35 } from "node:path";
-import { fileURLToPath as fileURLToPath10 } from "node:url";
+import { fileURLToPath as fileURLToPath8 } from "node:url";
 import {
   validateApplicationContextQuery,
   runnerContextSchema
@@ -127593,10 +127483,10 @@ async function invokeComputerRunner(input3, options2, worker = new URL("./comput
   };
   try {
     stderr = await open14(stderrPath, "wx", 384);
-    const child = fork(fileURLToPath10(worker), [], {
+    const child = fork(fileURLToPath8(worker), [], {
       execPath: process.execPath,
       execArgv: [],
-      cwd: dirname10(fileURLToPath10(worker)),
+      cwd: dirname10(fileURLToPath8(worker)),
       env: {
         ...process.env.PATH ? { PATH: process.env.PATH } : {},
         ...process.env.HOME ? { HOME: process.env.HOME } : {},
@@ -130908,7 +130798,7 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-import { fileURLToPath as fileURLToPath11 } from "node:url";
+import { fileURLToPath as fileURLToPath9 } from "node:url";
 var mapUiUri = "ui://loki/app-map/v6.html";
 var mapUiMime = "text/html;profile=mcp-app";
 var mapUiMetadata = {
@@ -130917,7 +130807,7 @@ var mapUiMetadata = {
 };
 async function readMapUi() {
   const bytes2 = await boundedFile(
-    fileURLToPath11(new URL("./map-ui.html", import.meta.url)),
+    fileURLToPath9(new URL("./map-ui.html", import.meta.url)),
     1024 * 1024
   );
   return {
@@ -135408,7 +135298,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash84, createHmac as createHmac2, randomBytes as randomBytes7 } from "node:crypto";
 import { join as join45, isAbsolute as isAbsolute14 } from "node:path";
 import { open as open16, realpath as realpath17 } from "node:fs/promises";
-import { fileURLToPath as fileURLToPath12 } from "node:url";
+import { fileURLToPath as fileURLToPath10 } from "node:url";
 
 // ../ui-modeler/index.mjs
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -168204,7 +168094,7 @@ var mapGenerateSchema = external_exports.strictObject({
   requestKey: external_exports.string().min(1).max(200).optional()
 });
 var digest47 = (value) => createHash84("sha256").update(value).digest("hex");
-var integrationIdentity2 = boundedFile(fileURLToPath12(import.meta.url)).then(
+var integrationIdentity2 = boundedFile(fileURLToPath10(import.meta.url)).then(
   digest47
 );
 var object41 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
@@ -169553,7 +169443,6 @@ export {
   mapUiMetadata,
   mapUiMime,
   mapUiUri,
-  onboardingUri,
   parseRunnerContextBinding,
   parseRunnerValidationBinding,
   native as plannerLoopTransport,
@@ -169567,13 +169456,10 @@ export {
   provisionRunnerParameters,
   publicRequestFailure,
   readCompleteResult,
-  readConfigurationForm,
   readFeedbackForm,
   readIssueForm,
   readMapUi,
-  readOnboarding,
   readRetainedMap,
-  readSetupCard,
   reportCardSchema,
   reportLinkSchema,
   reportOpenOutputSchema,
@@ -169601,7 +169487,6 @@ export {
   selectedIssueImages,
   setAnalysisSettings,
   setRunnerSettings,
-  setupCardUri,
   sourceReference,
   summarizeTestPlans,
   testPlanViewSchema,
