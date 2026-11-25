@@ -27,11 +27,11 @@ For an exact report already in this chat, use the existing reader:
 Use the exact retained reportId or original answer/run IDs from this chat.
 Call `kaijan_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
-The plugin's inline card shows the saved result. In Desktop Code,
-**Show details** opens the report in the right pane. In the interactive CLI,
-**Show details** opens the shared report HTML in the default browser. Resume
-the original conversation after restarting Claude to use the same saved
-report. Project history and the CLI browser fallback use the native pane.
+The plugin's inline card shows the saved result. **Show details** opens the
+shared report HTML. Desktop Code uses Claude's standard browser link. The
+interactive CLI opens the default browser. Resume the original conversation
+after restarting Claude to use the same saved report. Project history and the
+CLI browser fallback use the native pane.
 
 The interactive report uses Kaijan's shared report renderer. Its private
 browser link stays on this device and is available while the session serves

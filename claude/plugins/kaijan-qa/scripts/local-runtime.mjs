@@ -52036,12 +52036,20 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
+var runnerFindingSchema = external_exports.strictObject({
+  observation: external_exports.string(),
+  reason: external_exports.string(),
+  what_to_check: external_exports.string(),
+  evidence: external_exports.array(external_exports.string())
+});
 var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
   bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
   bug_found_by_common_sense: external_exports.boolean().optional(),
+  expectation_result: external_exports.enum(["met", "not_met", "not_specified"]).optional(),
+  findings: external_exports.array(runnerFindingSchema).optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()
@@ -62236,7 +62244,7 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
   if (presentation === "chat" && tool2.name === "loki_report_open")
     return void 0;
-  const resourceUri = "ui://loki/test-plan/card/v87.html";
+  const resourceUri = "ui://loki/test-plan/card/v88.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the text and metadata of the selected saved test plan or final report in its original chat. Read available saved screenshots with kaijan_report_read_artifact. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original Plan input or GitHub source attached to the report, then use the returned nextOffset to continue. Reading does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -62492,6 +62500,7 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v84.html",
   "ui://loki/test-plan/card/v85.html",
   "ui://loki/test-plan/card/v86.html",
+  "ui://loki/test-plan/card/v87.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"

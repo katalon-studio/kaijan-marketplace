@@ -326,9 +326,10 @@ The old direct HTTP `loki-claude` client and existing grants remain separate.
 Both interfaces read the same saved plan, run and assessment format through the
 customer report projection. It preserves source attribution and distinguishes
 proposed checks from observed outcomes. After a test, Show report displays a
-compact saved-result card. **Show details** opens the saved report in the
-right pane in Desktop. The interactive CLI opens the shared interactive
-report HTML in the default browser. The report has Tests, Runs, Related work, and
+compact saved-result card. **Show details** opens the same interactive HTML
+report as Codex. In Desktop, Claude handles the link destination. The report
+works in Claude's Browser pane and in the default browser. The interactive
+CLI opens the default browser. The report has Tests, Runs, Related work, and
 App model when the selected Plan has one. Navigation reads the saved data and
 starts no test, assessment or sign-in. Tests are grouped as
 Functional and Change impact using the saved plan selection. Review notes come
