@@ -41,12 +41,12 @@ Check `kaijan_capabilities_list` and the relevant installed owning skills/tools.
 Derive useful actions from the work context and their actual input/output
 contracts, not from a fixed menu or a chat title alone. Conditional examples:
 
-| Available context                                 | Kaijan action to consider                                   | Result to describe                                           |
-| ------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
-| Requirement or issue                              | `plan-tests`; `assess-change-risk` when uncertainty matters | Proposed tests, or consequential requirement assumptions     |
-| Actual code change or PR                          | `assess-change-risk`                                        | Source-backed change assumptions and evidence to investigate |
-| Issue or PR needing related context               | `find-related-work`                                         | Related items with reasons and source links                  |
-| A complete browser scenario and authorized target | `run-test`                                                  | Execution records and observations, separately from verdicts |
+| Available context                                       | Kaijan action to consider                                         | Result to describe                                           |
+| ------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| Requirement or issue                                    | [Plan tests](../../plan-tests/SKILL.md)                           | Proposed tests and assumptions from the original requirement |
+| Actual code change or PR                                | Plan tests with the original source and frozen `change`           | Proposed tests informed by change review                     |
+| Issue or PR needing related context                     | Plan tests with the original source and authorized `repositories` | Proposed tests informed by related work                      |
+| Saved Plan with selected tests and an authorized target | [Run selected tests](../../run-test/SKILL.md)                     | Execution records and observations, separately from verdicts |
 
 These are examples of semantic fit, not mandatory predecessors, literal option
 text or keyword rules. Do not offer every capability or fill a target count.

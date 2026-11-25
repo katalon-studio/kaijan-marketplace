@@ -111,13 +111,13 @@ export function createReportForms() {
     if (!active() || forms.get(selectedForm)?.busy) return false;
     const state = forms.get(kind) ?? { kind, edits: {} };
     state.callId = callId;
-    state.visible = true;
+    state.error = undefined;
+    state.placement = undefined;
+    state.visible = false;
     state.busy = true;
     forms.set(kind, state);
     selectedForm = kind;
     try {
-      const opened = await host.openForm(kind);
-      if (opened?.deny || !active()) return false;
       if (!state.draft) {
         const draft = await request(host, {
           kind,
@@ -127,7 +127,12 @@ export function createReportForms() {
         state.draft = draft.draft;
         state.error = draft.error ? draft.message : undefined;
       }
-      return active() && Boolean(state.draft) && !state.error;
+      if (!active() || !state.draft || state.error) return false;
+      const opened = await host.openForm(kind, callId);
+      if (opened?.deny || !active()) return false;
+      state.placement = opened?.requestId;
+      state.visible = true;
+      return true;
     } catch {
       state.error = unavailable;
       return false;
@@ -137,9 +142,9 @@ export function createReportForms() {
     }
   }
 
-  function view(host, active) {
+  function view(host, active, placement) {
     const state = forms.get(selectedForm);
-    if (!state?.visible) return undefined;
+    if (!state?.visible || state.placement !== placement) return undefined;
     const id = state.callId;
     const { Box, Button, Input, Text, Link } = host.elements;
     const redraw = () => {
@@ -232,7 +237,7 @@ export function createReportForms() {
       }
       state.visible = false;
       if (selectedForm === state.kind) selectedForm = undefined;
-      await host.closeForm();
+      if (!placement) await host.closeForm();
     };
     const submit = async (action, recovering) => {
       // Bind the press to the action on the rendered button. A delayed or
@@ -282,13 +287,23 @@ export function createReportForms() {
                 return;
               state.edits[key] = value;
             };
-            return Input({
-              key: `kaijan-form-${key}-${id}`,
-              label,
-              value: text,
-              rows,
-              onInput: edit,
-              onSubmit: edit,
+            return Box({
+              flexDirection: "column",
+              alignItems: "stretch",
+              gap: "sm",
+              children: [
+                caption(label),
+                Input({
+                  key: `kaijan-form-${key}-${id}`,
+                  placeholder: label,
+                  value: text,
+                  // Desktop fixes single-row inputs to 180 px. Its text area
+                  // fills the form width, including for the title.
+                  rows: host.desktop && rows === 1 ? 2 : rows,
+                  onInput: edit,
+                  onSubmit: edit,
+                }),
+              ],
             });
           })
         : [];
@@ -344,7 +359,7 @@ export function createReportForms() {
               : "Selected text and images will be shared with the Kaijan team."
             : "Draft kept on this device. Select Send when ready.",
         ),
-        ...(host.terminal && !closed && !recover
+        ...(host.terminal && !placement && !closed && !recover
           ? [caption("Ctrl+X then Tab to edit.")]
           : []),
         ...inputs,

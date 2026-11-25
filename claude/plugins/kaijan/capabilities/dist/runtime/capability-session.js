@@ -21219,7 +21219,7 @@ var desktopRunnerTargetSchema = external_exports.strictObject({
   app: external_exports.string().max(200).refine((value) => {
     const parts = value.split(".");
     return parts.length > 1 && parts.every((part) => /^[A-Za-z0-9-]+$/.test(part));
-  }, "An application bundle ID is required."),
+  }, "An application bundle ID is required.").describe("The installed macOS application's bundle identifier (CFBundleIdentifier)."),
   launch: external_exports.boolean().optional()
 });
 var questions = external_exports.array(external_exports.strictObject({
@@ -22476,7 +22476,7 @@ var browserRefresh = external_exports.object({
   response: external_exports.object({ url: external_exports.string(), status: external_exports.number().int() }).nullable().optional(),
   completedAt: external_exports.string().optional(),
   error: external_exports.string().optional(),
-  completion: external_exports.literal("unverified").optional()
+  completion: external_exports.enum(["unverified", "cancelled-by-beforeunload"]).optional()
 });
 var action = external_exports.object({
   index: external_exports.number().int().positive(),

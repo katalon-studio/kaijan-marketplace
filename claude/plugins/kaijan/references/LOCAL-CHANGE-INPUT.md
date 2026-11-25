@@ -1,8 +1,8 @@
-# Freeze a local change for independent risk review
+# Prepare a local change for Plan
 
-Use the actual current source available under the user's task authority. This is
-input preparation for the existing provided-snapshot contract, not a new analysis
-method or permission to read other repositories/history.
+Use the current source available under the person's task authority. A provided
+snapshot carries the selected local file evidence into Plan. The request still
+determines which repositories and history the host may read.
 
 1. Inspect the local staged and unstaged diff and the task's authorized file scope.
    Retain the original task and diff as context. Choose current source files that
@@ -41,10 +41,10 @@ const packet = {
 };
 ```
 
-Check kaijan_capabilities_list and submit the packet with optional requestKey correlation and
-mode direct through loki_change_risk_analyze. Use its advertised schema and
-owning skill for the returned answer, transport cancellation, completed-answer continuation, errors and fees. Reuse the same
-input/key after a lost reply; a changed snapshot is a new review condition.
+Follow [Plan tests](../skills/plan-tests/SKILL.md#planning-inputs). Call
+`kaijan_plan_create` with the original task and this packet in `change`. Include the
+saved Test Environment when the host requires it. Plan uses the change to prepare
+risk context before proposing tests.
 
 This full-file mode provides current-file evidence, not a historical patch or a
 verified behavioral result. Keep that distinction in interpretation. If both
@@ -56,7 +56,7 @@ In Git-change mode, each textual `patch` contains the complete per-file hunk tex
 starting with `@@`, as returned in GitHub's changed-file `patch` field. Keep Git
 file headers (`diff --git`, `index`, `---`, `+++`) outside it. Preserve all hunk
 lines and counts, file metadata, null patches and coverage; never truncate source.
-See the owning skill for a separately identified correction after a completed
-`invalid_patch` refusal proves zero provider calls and zero unknown effects.
-Keep the original packet and receipt. A lost reply or provider failure does not
-prove that input correction is safe.
+After a lost reply, reuse the original request key and inputs to recover the
+same attempt. Before submitting a correction, check the original Plan outcome
+and any observations it retained. A corrected patch or changed snapshot uses a
+fresh request key.
