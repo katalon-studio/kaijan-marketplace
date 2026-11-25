@@ -67,7 +67,7 @@
     "packages/github-capture/github_packet.mjs": "92d01d9b2de038ef50eee0753b0e99ecaee76065f94312462a1be49810a146be",
     "packages/context-intake/index.mjs": "0f6fd466288f112d45349b2b6409a3f4d99fdeb7010e0cf1dc9b8970daf92482",
     "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4",
-    "packages/provider-transport/broker-channel.mjs": "7b1f57f842ca1b29dfa39b41b5e88e02dd80255b153de819fbf4323cc94a55b5",
+    "packages/provider-transport/broker-channel.mjs": "9e2365939892879e7e59fdcd654ad002a385e53decee47eed7bd9f06783e0669",
     "packages/provider-transport/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48",
     "packages/provider-transport/index.mjs": "f3a780378f61e8eda0560467134e5fa0d0667bdc1414c967328e92facb20bec4",
     "packages/capabilities/src/provider.ts": "7d5e6b7f32c4b6ab7a5f80d60467536b8dc4816ab1716115ec2be7f8ed5c1fb6",

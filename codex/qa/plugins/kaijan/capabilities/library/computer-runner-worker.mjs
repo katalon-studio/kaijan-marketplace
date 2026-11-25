@@ -31426,7 +31426,13 @@ async function channelFetch(socketPath, path, options = {}) {
         );
       }
     );
-    req.once("error", () => reject(Error("broker_unavailable_no_replay")));
+    req.once("error", (error62) => {
+      if (error62.code === "ABORT_ERR" && options.signal?.aborted) {
+        reject(options.signal.reason);
+        return;
+      }
+      reject(Error("broker_unavailable_no_replay"));
+    });
     req.end(options.body);
   });
 }
