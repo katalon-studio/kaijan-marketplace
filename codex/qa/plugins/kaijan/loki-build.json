@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "buildId": "ec629623-c782-4252-a68f-c9e21472e761",
-  "builtAt": "2026-11-25T16:36:44.266Z",
-  "sourceRevision": "ceb5f2969daa00db1669b77e1f3615dd36e6dcf9",
+  "buildId": "63f176f9-57fc-4415-a603-c3311aa30993",
+  "builtAt": "2026-11-25T17:47:59.309Z",
+  "sourceRevision": "45f85a517535d6d95ce78b48e5269116eb0874a0",
   "sourceDirty": false,
   "profile": "production",
   "profileMode": "runtime-env/1",
@@ -20,9 +20,9 @@
   ],
   "runtimeClientId": "kaijan-codex-runtime",
   "pluginName": "kaijan",
-  "pluginVersion": "2026.1125.161508",
+  "pluginVersion": "2026.1125.173110",
   "marketplaceName": "kaijan",
-  "capabilityDigest": "cc900dd3d589b8904bfd29e4b792a8af3e8149ebca52ae0262297d77279d11e7",
+  "capabilityDigest": "48ec5630421f71af4c7f9f503867a474cbdecd5af388e30f48ecc587d047e033",
   "browserViewer": true,
   "chromeRunExtensions": {
     "qa": "ncpbpaldhmidgpcaoanagkjdhdlpcmlg"
