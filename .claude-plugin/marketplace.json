@@ -17,12 +17,12 @@
     },
     {
       "name": "kaijan-qa",
-      "version": "0.5.0-rc.475",
+      "version": "2026.1125.110612",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/katalon-studio/kaijan-marketplace.git",
         "path": "claude/plugins/kaijan-qa",
-        "sha": "19b3c5d31e94d8e47277f909ffc6f1c3fd06b6f6"
+        "sha": "9256ce9dcea863d4ed36d73f409cae6c9836db39"
       }
     }
   ]

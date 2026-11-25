@@ -12,6 +12,11 @@ can already authorize the selected target and actions. Save the Plan with
 complete scenario in chat. A plan-only request
 does not authorize execution.
 
+When the person requests one saved test, compare the requested action and
+outcome with the saved test steps and expected results. Send only the matching
+test's ID. If no single test clearly matches, ask which one to run before
+dispatch.
+
 ## Run the selected checks
 
 
@@ -25,6 +30,9 @@ available Local tools without a new AI request.
 Save an ordinary value through `kaijan_test_environment_manage` only if the person asks to
 save it.
 
+When the person chooses to save an app login from a local file, use the
+[Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+before saving the Plan.
 
 Keep raw secrets out of chat and tool arguments. Use the app login selected
 when saving the Plan. Choosing a login does not authorize execution.
@@ -34,6 +42,7 @@ Use `kaijan_run_start` for the normal combined run, assessment and report.
 Supply the exact `planId` returned by Plan, the selected `testIds`, and a
 fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
+Put the person's current Run instructions and limits in `runInstructions`.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
 
@@ -43,6 +52,15 @@ cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
+## Restart after an app login change
+
+When a Run needs a new or replacement app login, guide the person to
+save it with the [Configuration command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
+If the person requests a restart, stop a Run that is still waiting and read
+the original result to see what already happened. When the intended checks
+are safe to repeat, prepare a fresh Plan for that scope with the updated
+Configuration and start a new Run. Keep the original Run and report. The
+earlier saved Plan retains its original login reference.
 
 ## Read or stop the original test
 
@@ -55,6 +73,8 @@ Only a live clarification can resume. Use `kaijan_run_answer` with the
 original run and clarification IDs, one answer key and the available authorized
 context.
 
+For an app login that needs to be saved or changed, follow
+[Restart after an app login change](#restart-after-an-app-login-change).
 
 Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated

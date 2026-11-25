@@ -9,6 +9,42 @@ Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `kaijan_capabilities_list`. Use `kaijan_plan_create`
 to plan useful observable checks and expected results for the original task.
 
+Use `kaijan_test_inputs_read` to find and reuse the application under
+test, its Test Environment and its Test Data.
+Use a suitable existing record when available. Save the browser URL or Mac
+app bundle identifier and app account in Test Environment. Save the test
+values as the caller supplied them in Test Data. Ask which saved record to use
+when the caller's selection is unclear and the choice matters.
+
+For a site that requires sign-in, check the selected environment for the
+approved account before calling Plan. Guide the person to
+[save the login locally](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+if it is missing or needs an update. For a supplied `.app` path or first-time
+desktop setup, use the [macOS setup guide](../run-test/references/macos-appium-setup.md).
+
+For a chat-only task, pass the person's request as `testObjective`
+with a `requestKey`, the saved `testEnvironmentId` and `testDataId` when needed. Kaijan uses the
+saved target, account and data in Plan and Run. After Setup, use its saved
+`application.workItem` as the objective and its resolved target to find or save
+the environment for the selected AUT.
+
+When the person selects an issue or pull request as the basis for testing,
+read it through the host's authorized source access. Call Plan with `input`
+in place of `testObjective`. Use the original `title`, `body` and `url`
+for a single source. For more than one source, use the original work item and
+the separate attributed `sources` in the advertised `pr-context-plan/3`
+format. Keep the person's request and application details intact. Pass
+authorized `repositories` or the original frozen `change` when needed so
+Kaijan can prepare related work and risk inside Plan. If a source is
+unavailable, keep its expectations unresolved.
+
+When the person asks to test selected local code changes, use the attributed
+`pr-context-plan/3` input. Keep the person's original request as the work item.
+Include the actual diff of the selected changes as an `implementation` source
+with its source location and captured revision. Use the separately supplied
+frozen `change` for change review. Keep the saved target and the caller's action
+limits with the request.
+
 Tell the person Explorer's time limit before starting exploration. It defaults
 to five minutes. Use `explorerTimeLimitMs` to allow more time when the task
 needs it.
@@ -28,29 +64,15 @@ Keep missing details open. A task in chat is enough to plan.
 
 ## Planning inputs
 
-For a planning request in chat, use the caller's original wording in `input.body`, including their constraints. Keep proposed checks and assumptions separate from the caller's requirements. Leave unspecified behavior open for Kaijan to plan from the available evidence.
-
-Keep only caller-supplied application-testing directions in `taskInstructions`: application actions,
-expectations, permissions and restrictions. Keep requests to assess the Run, save the Kaijan
-report or reopen it in your Kaijan tool workflow, rather than duplicating them
-in `taskInstructions`. Preserve the complete original request in `input.body`.
+Use the advertised input fields and preserve the caller's original request.
+Keep only caller-supplied testing directions in `taskInstructions`. These
+include the app actions, expectations, permissions and restrictions. Handle
+requests to assess, save or reopen a Kaijan report through the owning tools.
 If the task tests the application's own report, save or export feature, keep
-those application actions and expectations in the testing directions. Distinguish
-the recipient and purpose; do not filter words such as report or save.
-
-On Claude Code, use the advertised fields above and the original user request.
-For hosts that advertise `input` and `contextId`, use the following planning
-input guidance. For browser exploration on those hosts, provide the authorized
-URL in `exploration.target.initialURL` and any supplied exploration parameters.
-
-Use one supported input form. Preserve original text, attribution and source
-roles. Put application behavior and context in `input`. Include the optional
-`taskInstructions` only when the caller supplied directions for carrying out
-the testing work. Omit the field otherwise. Kaijan retains those directions
-with the Plan and carries them into Run. Preserve supplied source
-documents unchanged. Include the known execution target as context.
-Implementation, risk findings and observations can inform
-the plan.
+those actions and expectations in the testing directions. Kaijan retains these
+directions with the Plan and carries them into Run. Preserve supplied source
+documents unchanged. Keep proposed checks and assumptions separate from the
+caller's requirements.
 
 - For a single work item, supply its original `title` and `body` in `input`.
   Include a real source `url` or existing source-file URI and pointer when
@@ -66,9 +88,10 @@ the plan.
   and files. See the [change input contract](../../references/LOCAL-CHANGE-INPUT.md)
   for Git patches and provided snapshots. Kaijan prepares risk analysis and
   resolves missing explicit in-scope GitHub links during planning. Include any
-  relevant source already available. Supply `repositories` only for authorized
-  related-work discovery, with the original work item's repository first when
-  known.
+  relevant source already available. For authorized related-work discovery,
+  supply `repositories` as `owner/repository` identifiers, with the original
+  work item's repository first when known. Keep full issue or pull request URLs
+  in their original source records.
 - Reuse an exact saved risk answer with
   `riskAnswers: [{family, answerId, resultSha256?}]` (family `changeRisk` or
   `riskFinder`). Use `procedures` for relevant past steps, either
@@ -85,45 +108,10 @@ context in separate attributed sources when needed. Use a Context Intake ID
 for Plan's `contextId`. Setup IDs and `application.contextId` identify saved
 application context.
 
-On hosts where Plan accepts `input`, use the saved `application.workItem` as
-the original task. For a saved free-text task, preserve it in `input.body`.
-Use the original task text for `input.title` when no title was supplied.
-A known pre-dispatch context-input refusal asks for corrected arguments. Reuse
-the saved task instead of asking the person to retype it or writing an unsaved
-substitute plan. Preserve an earlier uncertain outcome without replay.
-
-On hosts that advertise it, `options.deadline_ms` covers preparation and planning. Follow
+A known pre-dispatch context-input refusal asks for corrected arguments.
+Reuse the saved task. Follow
 [completed-answer reading](../../references/RESULT-READING.md) for cancellation
-and result paging. Recover a lost reply with the original optional
-`requestKey` and identical input and configuration. An offered
-`new_analysis_if_needed` is a separate read-only attempt that requires caller
-scope for new analysis. Preserve the original result or uncertainty.
-
-If the host ends its wait during browser exploration, Kaijan closes Explorer
-and continues the original Plan with the map it saved so far. Recover it with
-the identical request and configuration. An observation timeout alone leaves
-the original wait active. Keep waiting if the person still wants exploration.
-
-## Show the plan
-
-Read the returned plan, checks and receipt or the original producer failure.
-Keep assumptions distinct from supplied requirements. Explain an assumption
-when it affects a check. Identify specific missing requirements or sources
-that block checks, using the returned clarification or source request.
-Present partial coverage and a plan with no tests as recorded. Show the saved
-Test plan through [review-report](../review-report/SKILL.md) with its exact `answerId`,
-`resultSha256` and original title. Proposed steps are unexecuted.
-
-## Revise a plan when new design evidence changes an expectation
-
-Create a revised plan from the original intent, new source and affected original
-tests, attributed by Plan answer ID and digest. Include the discrepancy so the
-new Plan can explain it in `disagreements`. A retained context revision uses a
-new record with `supersedes`. Verify the revised expectations against the new
-source and show the revised report under its own answer ID. Preserve the
-original plan and report.
-
-For requested additions, use the same Plan flow. Keep the original objective,
-authorized context and tests, then include the new coverage the person requested.
-Save and show the revision with its own Plan ID. Earlier Runs keep their original
-Plan references.
+and result paging. Recover a lost reply with the original `requestKey` and
+identical arguments. An offered `new_analysis_if_needed` is a separate
+read-only attempt that requires caller scope for new analysis. Preserve the
+original result or uncertainty.

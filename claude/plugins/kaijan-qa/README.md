@@ -326,9 +326,9 @@ The old direct HTTP `loki-claude` client and existing grants remain separate.
 Both interfaces read the same saved plan, run and assessment format through the
 customer report projection. It preserves source attribution and distinguishes
 proposed checks from observed outcomes. After a test, Show report displays a
-compact saved-result card. In the original conversation, **Show details** opens
-the shared interactive report HTML. Desktop uses **Open Kaijan report** to
-follow the browser preference. The report has Tests, Runs, Related work, and
+compact saved-result card. **Show details** opens the saved report in the
+right pane in Desktop. The interactive CLI opens the shared interactive
+report HTML in the default browser. The report has Tests, Runs, Related work, and
 App model when the selected Plan has one. Navigation reads the saved data and
 starts no test, assessment or sign-in. Tests are grouped as
 Functional and Change impact using the saved plan selection. Review notes come
@@ -344,8 +344,9 @@ When a combined test starts from a saved plan, follow its Run ID through
 `kaijan_run_get` for the assessment and report. The standalone Runner reader
 provides the execution record.
 
-Keep Claude mods enabled for visual reports. The native pane serves project
-history and is available if the original report cannot open in the browser.
+Keep Claude mods enabled for visual reports and forms. Kaijan places feedback
+and issue drafts in chat on hosts that support in-chat placement. The native
+report pane also serves project history and the CLI browser fallback.
 Claude's Local adapter advertises a bounded 500,000-character
 result allowance for the three saved-report tools. This keeps ordinary larger
 reports available to the native pane in the original requested response. It
@@ -360,7 +361,8 @@ it has no classifier verdict for a plugin-initiated action; keep that refusal
 visible and do not claim a pane rendered. An interactive CLI draws the pane beside the transcript in a wide
 fullscreen terminal or above the prompt otherwise. `--print`, disabled mods and
 unsupported surfaces retain the same structured text report. No browser report
-or second plugin is needed. A report read is not a visible-render acknowledgement.
+is needed to review details in Desktop Code. A report read is not a
+visible-render acknowledgement.
 The visual controls and host limits are tracked separately from the earlier
 text-report checks in [#3532](https://github.com/katalon-studio/loki/issues/3532).
 Follow Claude's update/restart instructions and resume the original session to
@@ -385,20 +387,19 @@ customer service defaults remain unchanged; QA is our verification profile.
 
 **Build and verify → select publication → CI publishes and merges the Marketplace
 update → install or refresh.** Main changes automatically run **Build / Claude
-candidate** and retain the verified artifact for 14 days. A Main merge does not
-publish. Candidates use allocated `X.Y.Z-rc.N` versions; a rebuild attempt uses
-the same reservation with its attempt suffix. Run IDs remain provenance.
-The separate append-only ledger is `claude/candidate-version-ledger`.
-Read the candidate's SHA256SUMS digest from its record.
+candidate** and retain the verified artifact for 14 days. Publication uses a
+separate operator selection. Main builds use a UTC calendar version from the
+original Actions run creation time. A retry keeps the version and records its
+own attempt. Read the candidate's SHA256SUMS digest from its record.
 
 Public tags use **`claude/kaijan/vVERSION`** and the release title is
-**`Kaijan — claude/kaijan/vVERSION`**. An official version is `X.Y.Z`, selected
-through an existing reviewed Claude source tag. Build that tagged source with
-the `tag` input to **Build / Claude candidate**, then select its successful
-artifact for publication. Removing an RC suffix changes the manifest; the
-official package must be built and verified separately. Published bytes and
-existing tags are never relabeled. The [Claude version policy](https://github.com/katalon-studio/loki/blob/main/docs/development/claude-version-policy.md)
-records baseline, change classification and migration rules.
+**`Kaijan — claude/kaijan/vVERSION`**. Leave the build's `tag` input empty for
+calendar builds. QA preview publication uses the verified fixed-QA variant.
+For an official release, create the approved `claude/kaijan/vVERSION` source
+tag in Loki at the exact commit in the verified build. Publication checks that
+binding and publishes the verified normal package from the same build.
+The [Claude version policy](https://github.com/katalon-studio/loki/blob/main/docs/development/claude-version-policy.md)
+also describes retained SemVer releases.
 
 The build compiles one normal runtime payload, derives the fixed-QA package
 from those same complete bytes, and tests both through pinned local Git-subdir
@@ -410,9 +411,8 @@ Run **Release / Claude marketplace** on Main with the successful build run,
 exact attempt, combined SHA256SUMS digest and selected **profile** (normal
 production package by default). The receiver checks both package identities,
 their common payload, the nine common skills and actual QA Git-install receipts.
-Legacy receipts remain historical. Select a new paired candidate for
-this publisher. Source/version reservation still belongs to the normal package;
-its existing ledger and stable source-tag policy are unchanged.
+Use a paired candidate for this publisher. Earlier paired RC receipts still
+use their original version reservation.
 
 Publication updates only the selected plugin under `claude/plugins/kaijan` or
 `claude/plugins/kaijan-qa`. Its catalog source is `git-subdir` with that path and
@@ -423,7 +423,7 @@ available, but the catalog no longer installs the selected entry from an archive
 An unselected legacy entry retains its recorded source until explicitly updated.
 
 The normal public tag remains `claude/kaijan/vVERSION`; QA uses
-`claude/kaijan-qa/vVERSION`. Both share the allocated version, with independent
+`claude/kaijan-qa/vVERSION`. Both share the build version, with independent
 profile receipts and immutable assets. Public SHA256SUMS covers all flat release
 assets; `profile-SHA256SUMS` retains the original local-release checksums.
 `release-metadata.zip` restores the complete local metadata tree beside the plugin

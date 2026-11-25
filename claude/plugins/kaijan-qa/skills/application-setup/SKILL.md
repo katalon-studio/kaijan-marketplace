@@ -14,6 +14,8 @@ does not build or require application maps.
   canonical source directory. For a new configuration, use
   `kaijan_app_config_prepare` with the source directory, revision selection, original
   `workItem` when supplied, optional target and stable `requestKey`.
+- For a new target, send its `url` and `profileId` and omit `profileRevision`.
+  Setup assigns that revision independently of the Test Environment revision.
 - Default a new source selection to latest main and honor an explicit branch,
   PR ref or commit. Keep the resolved SHA. The host resolves the committed
   source without switching the checkout or executing it. An unavailable
@@ -31,8 +33,10 @@ configuration. They are not Context Intake IDs and must not be passed as
 `kaijan_plan_create.contextId`. Reuse the exact saved `application.workItem` text as
 the original task, with relevant source from the saved revision.
 
+Use that task as `testObjective`. Use the resolved Setup target to
+find or save the Test Environment for the selected application under test.
+Pass that environment ID to Plan.
 
-On hosts where Plan accepts `input`, use the saved task in `input`.
 Do not ask the person to repeat a task already saved.
 If no original task is saved or supplied in chat, ask for that missing task.
 
