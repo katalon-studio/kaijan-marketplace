@@ -60578,8 +60578,8 @@ function view(fam, native, assessmentPresentation, relatedView, proposal, propos
       ...base,
       message: native.state === "cancelled" ? "The analysis was cancelled. Preserve this answer and any retained evidence." : fam === "testPlanning" && native.reason === "local_disk_full" ? planDiskFullMessage : "The analysis outcome is uncertain. Preserve this answer; do not replay it.",
       recovery: {
-        action: "read-original",
-        instruction: "Use the retained answer in the original chat. Do not start replacement work to recover it."
+        action: "return-to-original-chat",
+        instruction: "Keep this status in the original chat. The completed-answer reader requires a completed answer. Do not start replacement work to recover this status."
       }
     });
   throw Error("Unknown advisory state");
