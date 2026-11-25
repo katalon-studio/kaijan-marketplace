@@ -127565,7 +127565,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { fileURLToPath as fileURLToPath10 } from "node:url";
-var testPlanCardUri = "ui://loki/test-plan/card/v87.html";
+var testPlanCardUri = "ui://loki/test-plan/card/v88.html";
 var testPlanCardMetadata = {
   ui: { resourceUri: testPlanCardUri },
   "openai/outputTemplate": testPlanCardUri
@@ -127578,8 +127578,7 @@ async function readTestPlanCard(panel = false) {
         mimeType: "text/html;profile=mcp-app",
         text: new TextDecoder("utf-8", { fatal: true }).decode(
           await boundedFile(
-            fileURLToPath10(new URL("./test-plan-card.html", import.meta.url)),
-            1024 * 1024
+            fileURLToPath10(new URL("./test-plan-card.html", import.meta.url))
           )
         ),
         _meta: {
@@ -127599,8 +127598,7 @@ async function readTestPlanCard(panel = false) {
 async function readTestPlanUi() {
   return new TextDecoder("utf-8", { fatal: true }).decode(
     await boundedFile(
-      fileURLToPath10(new URL("./test-plan-ui.html", import.meta.url)),
-      1024 * 1024
+      fileURLToPath10(new URL("./test-plan-ui.html", import.meta.url))
     )
   );
 }
