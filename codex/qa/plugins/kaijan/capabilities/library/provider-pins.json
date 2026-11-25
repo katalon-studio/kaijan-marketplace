@@ -951,9 +951,9 @@
     },
     "files": {
       "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029",
-      "packages/computer-runner/src/runner.mjs": "605659a695d83811fbc8e6209f265b3910bce0d0072e3f07220ef927d8f7708a",
+      "packages/computer-runner/src/runner.mjs": "a89a16cd9d8a1cbfd31721d7dc4492a4d90af9308da06e54d68d04e5d3873c51",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "c34ea4d9294fde6c307e0d5078430a0fbc27996ef939e7041e54fba6e28b4d71",
+      "packages/computer-runner/README.md": "b4cc038d3ba5b609aaa96df382f9395fa5b1f436554d2c253815bc0354a99e0e",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
       "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e",
       "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55",
@@ -994,7 +994,7 @@
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
       "packages/computer-runner/src/browser-explorer-driver.mjs": "bf718d98d90f68560954586486820df55c29003edf9de22e15cc6cb44ff252a1",
-      "packages/computer-runner/src/agent-loop.mjs": "09a2a1494916c38ecac7991f0cc24c2828a1154f4a4722dc3755979c41b2184d"
+      "packages/computer-runner/src/agent-loop.mjs": "a126331cc4f6bfbc32a75148fa0d2e0735e153451348967361312f065a160f0e"
     },
     "providerRetryPolicy": {
       "maxAttempts": 3,
