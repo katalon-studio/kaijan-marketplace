@@ -10736,7 +10736,7 @@ var require_websocket = __commonJS({
     var http2 = __require("http");
     var net = __require("net");
     var tls = __require("tls");
-    var { randomBytes: randomBytes8, createHash: createHash87 } = __require("crypto");
+    var { randomBytes: randomBytes9, createHash: createHash87 } = __require("crypto");
     var { Duplex, Readable: Readable3 } = __require("stream");
     var { URL: URL5 } = __require("url");
     var PerMessageDeflate2 = require_permessage_deflate();
@@ -11287,7 +11287,7 @@ var require_websocket = __commonJS({
         }
       }
       const defaultPort = isSecure ? 443 : 80;
-      const key5 = randomBytes8(16).toString("base64");
+      const key5 = randomBytes9(16).toString("base64");
       const request4 = isSecure ? https2.request : http2.request;
       const protocolSet = /* @__PURE__ */ new Set();
       let perMessageDeflate;
@@ -104621,7 +104621,7 @@ function createReportViewRegistry({
 }
 
 // src/api.ts
-import { createHash as createHash86 } from "node:crypto";
+import { createHash as createHash86, randomBytes as randomBytes8 } from "node:crypto";
 
 // ../contracts/dist/customer-assessment-rejection.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -170058,6 +170058,7 @@ function createCapabilityCatalog(services, options2 = {}) {
     computerRunner
   } = services;
   const previews = /* @__PURE__ */ new Map();
+  const reportLaunchLinks = /* @__PURE__ */ new Map();
   const reportViews = createReportViewRegistry();
   const resultViews = /* @__PURE__ */ new WeakMap();
   const selectedFacts = (value) => {
@@ -170887,6 +170888,46 @@ function createCapabilityCatalog(services, options2 = {}) {
     },
     reportViewMetadata(result) {
       return result && typeof result === "object" ? resultViews.get(result) : void 0;
+    },
+    // Claude's Desktop Link needs an address before the click. Mount a
+    // launcher on this conversation's existing loopback listener. The report
+    // stays unopened until the browser follows the link.
+    async reportLaunchLink(input3, signal) {
+      const reports = services.reports;
+      if (!browserUi || !reports)
+        throw new Error("Browser report details are unavailable.");
+      const { reportId } = reportHandle.parse(input3);
+      signal.throwIfAborted();
+      let link = reportLaunchLinks.get(reportId);
+      if (!link) {
+        const prefix = `/${randomBytes8(32).toString("hex")}/`;
+        const mounted = reports.viewServer.mount(prefix, (req, res) => {
+          res.setHeader("Cache-Control", "no-store");
+          res.setHeader("Referrer-Policy", "no-referrer");
+          void mounted.then(async ({ origin: origin2 }) => {
+            if (req.method !== "GET" || req.headers.host !== new URL(origin2).host || req.url !== prefix) {
+              res.writeHead(404).end();
+              return;
+            }
+            signal.throwIfAborted();
+            const snapshot2 = await reports.get(reportId);
+            const preview = await openReportPreview(snapshot2, void 0);
+            signal.throwIfAborted();
+            res.writeHead(303, { Location: preview.url }).end();
+          }).catch(() => {
+            res.writeHead(404, {
+              "Content-Type": "text/plain; charset=utf-8"
+            });
+            res.end(
+              "Kaijan could not open this saved report. Reopen it in the original conversation."
+            );
+          });
+        });
+        link = mounted.then(({ origin: origin2 }) => origin2 + prefix);
+        reportLaunchLinks.set(reportId, link);
+        void link.catch(() => reportLaunchLinks.delete(reportId));
+      }
+      return { reportId, url: await link };
     },
     reportRenderControl: uiEnabled && services.reports ? (input3) => reportViews.acknowledge(input3) : void 0,
     async close() {
