@@ -17,12 +17,15 @@ export declare const runnerTestResultsSchema: z.ZodArray<z.ZodObject<{
     }>>;
     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
     expectation_result: z.ZodOptional<z.ZodEnum<{
+        unverified: "unverified";
         met: "met";
         not_met: "not_met";
         not_specified: "not_specified";
     }>>;
     findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
         observation: z.ZodString;
+        affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+        why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         reason: z.ZodString;
         what_to_check: z.ZodString;
         evidence: z.ZodArray<z.ZodString>;
@@ -149,12 +152,15 @@ export declare const runnerExecutionReportSchema: z.ZodPreprocess<z.ZodUnion<rea
         }>>;
         bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
         expectation_result: z.ZodOptional<z.ZodEnum<{
+            unverified: "unverified";
             met: "met";
             not_met: "not_met";
             not_specified: "not_specified";
         }>>;
         findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
             observation: z.ZodString;
+            affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+            why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
             reason: z.ZodString;
             what_to_check: z.ZodString;
             evidence: z.ZodArray<z.ZodString>;
@@ -396,12 +402,15 @@ export declare const runnerNativeResultSchema: z.ZodObject<{
             }>>;
             bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
             expectation_result: z.ZodOptional<z.ZodEnum<{
+                unverified: "unverified";
                 met: "met";
                 not_met: "not_met";
                 not_specified: "not_specified";
             }>>;
             findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 observation: z.ZodString;
+                affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+                why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
                 reason: z.ZodString;
                 what_to_check: z.ZodString;
                 evidence: z.ZodArray<z.ZodString>;
@@ -632,12 +641,15 @@ export declare const runnerResultSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
                 }>>;
                 bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
                 expectation_result: z.ZodOptional<z.ZodEnum<{
+                    unverified: "unverified";
                     met: "met";
                     not_met: "not_met";
                     not_specified: "not_specified";
                 }>>;
                 findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
                     observation: z.ZodString;
+                    affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+                    why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
                     reason: z.ZodString;
                     what_to_check: z.ZodString;
                     evidence: z.ZodArray<z.ZodString>;
@@ -1223,12 +1235,15 @@ export declare const runnerOperationSchema: z.ZodUnion<readonly [z.ZodObject<{
                     }>>;
                     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
                     expectation_result: z.ZodOptional<z.ZodEnum<{
+                        unverified: "unverified";
                         met: "met";
                         not_met: "not_met";
                         not_specified: "not_specified";
                     }>>;
                     findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
                         observation: z.ZodString;
+                        affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+                        why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
                         reason: z.ZodString;
                         what_to_check: z.ZodString;
                         evidence: z.ZodArray<z.ZodString>;
@@ -2060,12 +2075,15 @@ export declare const runnerOutputSchema: z.ZodUnion<readonly [z.ZodUnion<readonl
                     }>>;
                     bug_found_by_common_sense: z.ZodOptional<z.ZodBoolean>;
                     expectation_result: z.ZodOptional<z.ZodEnum<{
+                        unverified: "unverified";
                         met: "met";
                         not_met: "not_met";
                         not_specified: "not_specified";
                     }>>;
                     findings: z.ZodOptional<z.ZodArray<z.ZodObject<{
                         observation: z.ZodString;
+                        affects_test_objective: z.ZodOptional<z.ZodBoolean>;
+                        why_unconfirmed: z.ZodOptional<z.ZodNullable<z.ZodString>>;
                         reason: z.ZodString;
                         what_to_check: z.ZodString;
                         evidence: z.ZodArray<z.ZodString>;

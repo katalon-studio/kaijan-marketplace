@@ -25403,6 +25403,8 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
 });
 var runnerFindingSchema = external_exports.strictObject({
   observation: external_exports.string(),
+  affects_test_objective: external_exports.boolean().optional(),
+  why_unconfirmed: external_exports.string().nullable().optional(),
   reason: external_exports.string(),
   what_to_check: external_exports.string(),
   evidence: external_exports.array(external_exports.string())
@@ -25413,7 +25415,7 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   bug_found: external_exports.boolean(),
   bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
   bug_found_by_common_sense: external_exports.boolean().optional(),
-  expectation_result: external_exports.enum(["met", "not_met", "not_specified"]).optional(),
+  expectation_result: external_exports.enum(["met", "not_met", "not_specified", "unverified"]).optional(),
   findings: external_exports.array(runnerFindingSchema).optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
