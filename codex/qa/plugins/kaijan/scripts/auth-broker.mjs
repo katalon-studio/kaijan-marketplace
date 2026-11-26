@@ -26623,6 +26623,20 @@ var BrokerAuthorization = class {
 
 // apps/codex-plugin/src/auth/server.mjs
 import { createServer as createServer2 } from "node:http";
+
+// apps/codex-plugin/src/auth/inference-retry.mjs
+function inferenceRetryAfter(response) {
+  if (![408, 409, 429].includes(response.status) && !(response.status >= 500 && response.status <= 599))
+    return void 0;
+  const value = response.headers.get("retry-after");
+  if (value === null) return void 0;
+  if (/^\d+$/.test(value))
+    return String(Math.min(Number(value), Number.MAX_SAFE_INTEGER));
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) && new Date(timestamp).toUTCString() === value ? value : void 0;
+}
+
+// apps/codex-plugin/src/auth/server.mjs
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { chmod } from "node:fs/promises";
@@ -30413,6 +30427,11 @@ async function startBroker({
         "content-type": response.headers.get("content-type") ?? "application/json",
         "cache-control": "no-store"
       };
+      if (!mcp && !workspace) {
+        const retryAfter = inferenceRetryAfter(response);
+        if (retryAfter !== void 0)
+          responseHeaders["retry-after"] = retryAfter;
+      }
       if (!mcp && !workspace && aiPath === "/ai/v1/responses" && !response.ok) {
         const status = response.headers.get("x-kaijan-provider-http-status");
         if (status && /^[1-5][0-9]{2}$/.test(status))
