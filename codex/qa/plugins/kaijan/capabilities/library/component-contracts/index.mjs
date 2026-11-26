@@ -21141,7 +21141,7 @@ var analysisReportFields = {
     kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
     action: external_exports.enum(["materialized", "not_hydrated"])
   })).max(1e4),
-  files: external_exports.array(analysisFileSchema).max(analysisLimits.maxFiles),
+  files: external_exports.array(analysisFileSchema),
   bundle: external_exports.union([
     external_exports.strictObject({
       size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
@@ -21171,7 +21171,7 @@ var analysisReportSchema = external_exports.discriminatedUnion("capability", [
     adapter: external_exports.literal(repositoryModelerPin.adapter),
     execution: external_exports.enum(["native-module", "controlled-native-fixture"])
   })
-]);
+]).refine((report) => "format" in report.bundle || report.files.length <= analysisLimits.maxFiles, { message: "Legacy analysis output has too many files.", path: ["files"] });
 var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
