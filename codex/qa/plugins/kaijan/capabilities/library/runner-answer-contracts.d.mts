@@ -1,9 +1,10 @@
 import { z } from "zod";
+export declare const runnerAnswerMap: z.ZodType<Record<string, unknown>, Record<string, unknown>>;
 export declare const runnerAnswer: z.ZodObject<{
     runId: z.ZodString;
     clarificationId: z.ZodString;
     answerKey: z.ZodString;
-    answers: z.ZodRecord<z.ZodString, z.ZodUnknown>;
+    answers: z.ZodType<Record<string, unknown>, Record<string, unknown>, z.core.$ZodTypeInternals<Record<string, unknown>, Record<string, unknown>>>;
     sensitiveQuestionIds: z.ZodOptional<z.ZodArray<z.ZodString>>;
 }, z.core.$loose>;
 export declare const runnerAnswerReceipt: z.ZodObject<{

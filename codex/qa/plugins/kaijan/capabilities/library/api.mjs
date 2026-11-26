@@ -104061,11 +104061,19 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var nonempty5 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var answerRecord = external_exports.record(external_exports.string(), external_exports.unknown());
+var runnerAnswerMap = external_exports.unknown().refine((value) => answerRecord.safeParse(value).success, { abort: true }).overwrite(
+  (value) => Object.fromEntries(Object.entries(value))
+).meta({
+  type: "object",
+  propertyNames: { type: "string" },
+  additionalProperties: {}
+});
 var runnerAnswer = external_exports.looseObject({
   runId: hashId,
   clarificationId: hashId,
   answerKey: nonempty5,
-  answers: external_exports.record(external_exports.string(), external_exports.unknown()),
+  answers: runnerAnswerMap,
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
 });
 var runnerAnswerReceipt = external_exports.object({
@@ -121396,7 +121404,7 @@ var clarificationRecord = external_exports.object({
       external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })
     ).min(1)
   }),
-  answer: external_exports.looseObject({ answers: external_exports.record(external_exports.string(), external_exports.unknown()) }).nullable(),
+  answer: external_exports.looseObject({ answers: runnerAnswerMap }).nullable(),
   status: external_exports.enum(["waiting", "interrupted", "answered"]),
   provenance: external_exports.object({
     source: external_exports.literal("retained-native-clarification"),
@@ -126957,7 +126965,7 @@ import {
 var rowSchema = external_exports.object({
   request: clarificationRequestSchema,
   answer: external_exports.looseObject({
-    answers: external_exports.record(external_exports.string(), external_exports.unknown()),
+    answers: runnerAnswerMap,
     sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
   }).nullable(),
   status: external_exports.enum(["waiting", "answered", "interrupted"])
