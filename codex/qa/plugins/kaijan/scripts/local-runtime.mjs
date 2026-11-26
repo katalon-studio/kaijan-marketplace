@@ -45733,6 +45733,8 @@ var analysisCapabilitySchema = external_exports.enum([
 ]);
 var analysisLimits = {
   maxBundleBytes: 64 * 1024 * 1024,
+  // S3 PutObject single-request limit. The job's scratch volume also bounds output.
+  maxStreamedBundleBytes: 5e9,
   maxOutputBytes: 64 * 1024 * 1024,
   maxFileBytes: 32 * 1024 * 1024,
   maxMapBytes: 8 * 1024 * 1024,
@@ -45860,6 +45862,7 @@ var uiModelerMapSchema = external_exports.strictObject({
   summary: external_exports.record(external_exports.string(), external_exports.number().int().nonnegative()),
   review: mapReviewSchema.optional()
 });
+var streamedAnalysisArchive = "tar.gz-v1";
 var analysisFileSchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
   sha256: digestSchema,
@@ -45890,10 +45893,17 @@ var analysisReportFields = {
     action: external_exports.enum(["materialized", "not_hydrated"])
   })).max(1e4),
   files: external_exports.array(analysisFileSchema).max(analysisLimits.maxFiles),
-  bundle: external_exports.strictObject({
-    size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
-    sha256: digestSchema
-  })
+  bundle: external_exports.union([
+    external_exports.strictObject({
+      size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
+      sha256: digestSchema
+    }),
+    external_exports.strictObject({
+      format: external_exports.literal(streamedAnalysisArchive),
+      size: external_exports.number().int().positive().max(analysisLimits.maxStreamedBundleBytes),
+      sha256: digestSchema
+    })
+  ])
 };
 var analysisReportSchema = external_exports.discriminatedUnion("capability", [
   external_exports.strictObject({

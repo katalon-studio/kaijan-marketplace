@@ -1,7 +1,7 @@
 {
-  "sourceRevision": "2cd64aa47ac54208b66037f65726421b92ca7402",
+  "sourceRevision": "78086af5d879d845ad62c705259f093cd4f0688f",
   "files": {
-    "local-runtime.mjs": "b73bb30083d1e006a85d58e62297ee326902c5f3b7d0cf3cf0a58839270cbc91",
+    "local-runtime.mjs": "776691c24e48f90b4e12daaf8bad150a42ef7864282c97759fd941e049c0b2c0",
     "LOCAL_RUNTIME_NOTICES.txt": "565159529686642268a6be9303e216d605deff63f21cf1fea901f86fe511444e"
   }
 }
