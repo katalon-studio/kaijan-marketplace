@@ -80,7 +80,9 @@ invent a replacement ID to bypass this limit.
 | Records            | Bound to the actual Claude session                                             | Same binding rule; no automatic cross-session report transfer                    |
 | Telemetry          | Lifecycle host `claude_code`; MCP host follows its actual handshake            | Same contract; no asserted Code-tab surface field                                |
 
-In Desktop, select **Show details** to open the saved report in the right pane.
+In Desktop, select **Show details** to open the saved report in Claude's Browser
+pane. If the pane is hidden, open it with **Cmd+Shift+B**. If the Browser tool
+cannot open the report, select the fallback **Show details** link.
 From the interactive CLI, **Show details** opens the shared Claude Code report HTML
 in the default browser. Project history and the CLI browser fallback use the
 native pane.
