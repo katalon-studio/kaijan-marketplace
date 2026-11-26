@@ -24616,6 +24616,61 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 
+// src/runner-answer-contracts.ts
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var nonempty = external_exports.string().refine((s) => Boolean(s.trim()));
+var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var answerRecord = external_exports.record(external_exports.string(), external_exports.unknown());
+var runnerAnswerMap = external_exports.unknown().refine((value) => answerRecord.safeParse(value).success, { abort: true }).overwrite(
+  (value) => Object.fromEntries(Object.entries(value))
+).meta({
+  type: "object",
+  propertyNames: { type: "string" },
+  additionalProperties: {}
+});
+var runnerAnswer = external_exports.looseObject({
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty,
+  answers: runnerAnswerMap,
+  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
+});
+var runnerAnswerReceipt = external_exports.object({
+  schema: external_exports.literal("loki.runner.clarification-answer/1"),
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty,
+  status: external_exports.literal("retained")
+});
+var rejectionCodes = [
+  "operation_unavailable",
+  "answer_conflict",
+  "clarification_unavailable",
+  "invalid_answers",
+  "answer_effect_unestablished"
+];
+var runnerAnswerError = external_exports.strictObject({
+  schema: external_exports.literal("loki.runner.clarification-error/1"),
+  runId: hashId,
+  clarificationId: hashId,
+  answerKey: nonempty,
+  error: external_exports.strictObject({ code: external_exports.enum(rejectionCodes) }),
+  requestDispatched: external_exports.literal(false).nullable(),
+  recovery: external_exports.string()
+});
+var runnerAnswerOutput = external_exports.union([
+  runnerAnswerReceipt,
+  runnerAnswerError
+]);
+
 // src/runner-clarification.ts
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -24662,7 +24717,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 var digest = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var revision = external_exports.string().regex(/^[a-f0-9]{40}$/);
 var repository = external_exports.string().regex(/^[\w.-]+\/[\w.-]+$/);
-var nonempty = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
+var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()), "Nonempty text required.");
 var reportedTestStatusSchema = external_exports.enum([
   "pass",
   "fail",
@@ -24671,26 +24726,26 @@ var reportedTestStatusSchema = external_exports.enum([
   "not-run"
 ]);
 var observedStepSchema = external_exports.strictObject({
-  id: nonempty,
-  title: nonempty,
+  id: nonempty2,
+  title: nonempty2,
   status: reportedTestStatusSchema,
-  expected: nonempty,
-  actual: nonempty,
-  evidenceIds: external_exports.array(nonempty).min(1)
+  expected: nonempty2,
+  actual: nonempty2,
+  evidenceIds: external_exports.array(nonempty2).min(1)
 });
 var reportedTestSchema = external_exports.strictObject({
-  testId: nonempty,
-  title: nonempty,
+  testId: nonempty2,
+  title: nonempty2,
   status: reportedTestStatusSchema,
-  expected: nonempty,
-  actual: nonempty,
+  expected: nonempty2,
+  actual: nonempty2,
   deliberateFailure: external_exports.boolean(),
   steps: external_exports.array(observedStepSchema).min(1),
   code: external_exports.strictObject({
-    path: nonempty,
-    revision: nonempty,
-    language: nonempty,
-    text: nonempty,
+    path: nonempty2,
+    revision: nonempty2,
+    language: nonempty2,
+    text: nonempty2,
     sha256: digest
   }).nullable()
 }).superRefine((test, ctx) => {
@@ -24711,17 +24766,17 @@ var reportPullRequestSchema = external_exports.strictObject({
   repository,
   number: external_exports.number().int().positive(),
   url: external_exports.url(),
-  title: nonempty,
+  title: nonempty2,
   state: external_exports.enum(["open", "closed", "merged"]),
-  author: nonempty,
-  base: external_exports.strictObject({ ref: nonempty, sha: revision }),
-  head: external_exports.strictObject({ ref: nonempty, sha: revision }),
+  author: nonempty2,
+  base: external_exports.strictObject({ ref: nonempty2, sha: revision }),
+  head: external_exports.strictObject({ ref: nonempty2, sha: revision }),
   mergeCommit: revision.nullable(),
   openedAt: external_exports.iso.datetime({ offset: true }).nullable().optional(),
   capturedAt: external_exports.iso.datetime({ offset: true }),
   files: external_exports.array(external_exports.strictObject({
-    path: nonempty,
-    status: nonempty,
+    path: nonempty2,
+    status: nonempty2,
     additions: external_exports.number().int().nonnegative(),
     deletions: external_exports.number().int().nonnegative(),
     patch: external_exports.string().nullable()
@@ -24750,8 +24805,8 @@ var reportVerificationSchema = external_exports.strictObject({
   pullRequestUrl: external_exports.url().nullable(),
   recordedAt: external_exports.iso.datetime({ offset: true }),
   provenance: external_exports.literal("product-terminal-checks/1"),
-  oracle: nonempty,
-  evidence: external_exports.array(external_exports.strictObject({ id: nonempty, text: nonempty, sha256: digest })).min(1),
+  oracle: nonempty2,
+  evidence: external_exports.array(external_exports.strictObject({ id: nonempty2, text: nonempty2, sha256: digest })).min(1),
   tests: external_exports.array(reportedTestSchema).min(1)
 }).superRefine((run, ctx) => {
   if (new Set(run.tests.map((test) => test.testId)).size !== run.tests.length)
@@ -24811,12 +24866,12 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-var nonempty2 = external_exports.string().refine((value) => Boolean(value.trim()));
+var nonempty3 = external_exports.string().refine((value) => Boolean(value.trim()));
 var digest2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var checkedPlanReferenceSchema = external_exports.strictObject({
   answerId: digest2,
   resultSha256: digest2,
-  selectedTestIds: external_exports.array(nonempty2).min(1)
+  selectedTestIds: external_exports.array(nonempty3).min(1)
 });
 
 // ../contracts/dist/report-view.js
@@ -24999,7 +25054,7 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var jsonObject = external_exports.record(external_exports.string(), external_exports.json());
 var digest5 = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var nonempty3 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var strings = external_exports.array(external_exports.string());
 var count = external_exports.number().int().nonnegative();
 var refs = external_exports.array(external_exports.strictObject({ evidence_id: external_exports.string() }));
@@ -25015,7 +25070,7 @@ var planningInputSchema = external_exports.union([
   external_exports.looseObject({
     title: external_exports.string(),
     body: external_exports.string(),
-    url: nonempty3,
+    url: nonempty4,
     map: external_exports.null().optional(),
     version: external_exports.never().optional(),
     sources: external_exports.never().optional()
@@ -25023,13 +25078,13 @@ var planningInputSchema = external_exports.union([
   external_exports.looseObject({
     version: external_exports.literal("pr-context-plan/3"),
     captured_at: external_exports.string().describe("Capture time with a timezone, such as 2026-11-04T05:16:48Z or 2026-11-04T12:16:48+07:00. Use ISO 8601, not a named timezone such as UTC."),
-    work_item: external_exports.looseObject({ title: nonempty3 }),
+    work_item: external_exports.looseObject({ title: nonempty4 }),
     sources: external_exports.array(external_exports.looseObject({
-      id: nonempty3,
+      id: nonempty4,
       kind: external_exports.enum(["intent", "implementation", "context"]),
-      uri: nonempty3,
-      revision: nonempty3,
-      text: nonempty3
+      uri: nonempty4,
+      revision: nonempty4,
+      text: nonempty4
     })).min(1),
     map: jsonObject.nullable().optional()
   })
@@ -25038,21 +25093,21 @@ var supplementInputSchema = external_exports.looseObject({
   version: external_exports.literal("test-plan-supplement-input/1"),
   context: planningInputSchema,
   baseline: external_exports.looseObject({
-    text: nonempty3,
-    uri: nonempty3,
-    revision: nonempty3,
-    plan_path: external_exports.array(nonempty3).optional()
+    text: nonempty4,
+    uri: nonempty4,
+    revision: nonempty4,
+    plan_path: external_exports.array(nonempty4).optional()
   }),
   risks: external_exports.array(external_exports.looseObject({
-    id: nonempty3,
-    text: nonempty3,
-    uri: nonempty3,
-    revision: nonempty3,
-    attribution: nonempty3
+    id: nonempty4,
+    text: nonempty4,
+    uri: nonempty4,
+    revision: nonempty4,
+    attribution: nonempty4
   }))
 });
 var record2 = external_exports.looseObject({
-  id: nonempty3,
+  id: nonempty4,
   text: external_exports.string(),
   provenance: jsonObject.nullable()
 });
@@ -25076,12 +25131,12 @@ var suppliedEvidenceInputSchema = external_exports.strictObject({
   requirements: external_exports.array(record2).nullable(),
   proposed_tests: external_exports.array(record2).nullable(),
   outcomes: external_exports.array(record2.extend({
-    test_id: nonempty3.nullable(),
-    status: nonempty3,
-    evidence_ids: external_exports.array(nonempty3)
+    test_id: nonempty4.nullable(),
+    status: nonempty4,
+    evidence_ids: external_exports.array(nonempty4)
   })),
   evidence: external_exports.array(external_exports.looseObject({
-    id: nonempty3,
+    id: nonempty4,
     text: external_exports.string().nullable(),
     bytes_base64: external_exports.string().nullable(),
     media_type: external_exports.literal("image/png").optional(),
@@ -25316,7 +25371,7 @@ var advisoryContextUnavailableSchema = external_exports.strictObject({
 });
 var advisoryExecutionFailureSchema = external_exports.strictObject({
   error: external_exports.looseObject({
-    code: nonempty3,
+    code: nonempty4,
     message: external_exports.string(),
     requestDispatched: external_exports.literal(false).optional(),
     recovery: external_exports.looseObject({
@@ -25668,10 +25723,10 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
-var nonempty4 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
+var nonempty5 = external_exports.string().min(1).refine((value) => value.trim().length > 0);
 var assessmentReceiptSchema = external_exports.looseObject({
-  id: nonempty4,
-  attribution: nonempty4,
+  id: nonempty5,
+  attribution: nonempty5,
   content: external_exports.json()
 });
 var assessmentPreparationLimits = {
@@ -31488,55 +31543,6 @@ import {
   RunnerProjectionError
 } from "@katalon-loki/computer-runner/redaction";
 import { createHash as createHash3 } from "node:crypto";
-
-// src/runner-answer-contracts.ts
-init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
-init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
-init_define_LOKI_COMPUTER_RUNNER_PINS();
-init_define_LOKI_MAC_RUNNER_PINS();
-init_define_LOKI_PLANNER_LOOP_PINS();
-init_define_LOKI_PR_CONTEXT_PINS();
-init_define_LOKI_TEST_PLANNING_PINS();
-init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
-init_define_LOKI_WORK_ITEM_RISK_PINS();
-var nonempty5 = external_exports.string().refine((s) => Boolean(s.trim()));
-var hashId = external_exports.string().regex(/^[a-f0-9]{64}$/);
-var runnerAnswer = external_exports.looseObject({
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty5,
-  answers: external_exports.record(external_exports.string(), external_exports.unknown()),
-  sensitiveQuestionIds: external_exports.array(external_exports.string()).optional()
-});
-var runnerAnswerReceipt = external_exports.object({
-  schema: external_exports.literal("loki.runner.clarification-answer/1"),
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty5,
-  status: external_exports.literal("retained")
-});
-var rejectionCodes = [
-  "operation_unavailable",
-  "answer_conflict",
-  "clarification_unavailable",
-  "invalid_answers",
-  "answer_effect_unestablished"
-];
-var runnerAnswerError = external_exports.strictObject({
-  schema: external_exports.literal("loki.runner.clarification-error/1"),
-  runId: hashId,
-  clarificationId: hashId,
-  answerKey: nonempty5,
-  error: external_exports.strictObject({ code: external_exports.enum(rejectionCodes) }),
-  requestDispatched: external_exports.literal(false).nullable(),
-  recovery: external_exports.string()
-});
-var runnerAnswerOutput = external_exports.union([
-  runnerAnswerReceipt,
-  runnerAnswerError
-]);
-
-// src/runner-clarification.ts
 var nonempty6 = external_exports.string().refine((s) => Boolean(s.trim()));
 var hashId2 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var supportingStrings = external_exports.preprocess(
@@ -31585,7 +31591,7 @@ var answerFrame = external_exports.looseObject({
   type: external_exports.literal("runner-clarification-answer"),
   clarificationId: external_exports.string().regex(/^[a-f0-9]{64}$/),
   sensitiveQuestionIds: external_exports.array(external_exports.string()).optional(),
-  answers: external_exports.record(external_exports.string(), external_exports.unknown())
+  answers: runnerAnswerMap
 });
 var failureFrame = external_exports.strictObject({
   type: external_exports.literal("runner-clarification-error"),
