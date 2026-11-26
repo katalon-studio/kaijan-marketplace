@@ -20410,6 +20410,8 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
 });
 var runnerFindingSchema = external_exports.strictObject({
   observation: external_exports.string(),
+  affects_test_objective: external_exports.boolean().optional(),
+  why_unconfirmed: external_exports.string().nullable().optional(),
   reason: external_exports.string(),
   what_to_check: external_exports.string(),
   evidence: external_exports.array(external_exports.string())
@@ -20420,7 +20422,7 @@ var runnerTestResultsSchema = external_exports.array(external_exports.object({
   bug_found: external_exports.boolean(),
   bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
   bug_found_by_common_sense: external_exports.boolean().optional(),
-  expectation_result: external_exports.enum(["met", "not_met", "not_specified"]).optional(),
+  expectation_result: external_exports.enum(["met", "not_met", "not_specified", "unverified"]).optional(),
   findings: external_exports.array(runnerFindingSchema).optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
@@ -21002,7 +21004,7 @@ var customerAssessmentStepFactsSchema = external_exports.object({
 });
 function presentRecordedAction(row) {
   const a = row.action;
-  const detail = a.type === "type" && a.text !== void 0 ? ` text ${JSON.stringify(a.text)}` : a.type === "keypress" && a.keys ? ` ${a.keys.join(" + ")}` : a.type === "scroll" ? ` horizontally ${a.scroll_x ?? 0}, vertically ${a.scroll_y ?? 0}` : a.x !== void 0 && a.y !== void 0 ? ` at (${a.x}, ${a.y})` : "";
+  const detail = a.type === "type" && a.text !== void 0 ? ` text ${JSON.stringify(a.text)}` : a.type === "keypress" && a.keys ? ` ${a.keys.join(" + ")}` : a.type === "scroll" ? ` horizontally ${a.scroll_x ?? "unavailable"}, vertically ${a.scroll_y ?? "unavailable"}` : a.x !== void 0 && a.y !== void 0 ? ` at (${a.x}, ${a.y})` : "";
   const status = row.status === "invoked" ? "attempt recorded; completion unknown" : row.status === "returned" ? "return recorded; application effect not established" : "error recorded; effects may be uncertain";
   return `${row.attribution === "retained-action-record" ? "Recorded" : "Supplied"} action ${row.index}: ${a.type.replaceAll("_", " ")}${detail} \u2014 ${status}.`;
 }
@@ -23460,13 +23462,15 @@ function nativeReport(output2, selectedPlanId) {
           run.sourceId
         ).map((result) => ({ id: result.test.testId, result }))
       ].map(({ id: id3, result }) => {
+        const judgment = judgments.find((row) => row.test_id === id3);
         return {
           id: id3,
           title: result?.test.title || id3,
           status: result?.test.status ?? "unavailable",
           expectationAuthority: result?.test.expectationAuthority,
           results: details(result),
-          findings: judgments.find((row) => row.test_id === id3)?.findings
+          warning: judgment?.warning,
+          findings: judgment?.findings
         };
       }),
       notices: [

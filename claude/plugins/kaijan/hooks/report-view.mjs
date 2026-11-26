@@ -193,6 +193,7 @@ export function reportPane(elements, report, state) {
                       .map((quote) => `${quote.attribution}: ${quote.text}`),
                   ]),
                 ]),
+                ...field("Needs confirmation", item.warning),
                 ...section("Prerequisites", item.prerequisites ?? []),
                 ...(item.findings?.length
                   ? [
@@ -201,6 +202,10 @@ export function reportPane(elements, report, state) {
                         column([
                           text(finding.observation, { weight: "semibold" }),
                           text(finding.reason),
+                          ...field(
+                            "Why it needs confirmation",
+                            finding.why_unconfirmed,
+                          ),
                           ...field("What to check", finding.what_to_check),
                           ...field(
                             "Saved evidence",

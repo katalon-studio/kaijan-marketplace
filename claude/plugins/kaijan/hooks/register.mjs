@@ -8,7 +8,7 @@ import {
 } from "./mcp-tool-names.mjs";
 
 const paneId = "kaijan-report";
-const formPaneId = "kaijan-form";
+const terminalForm = "kaijan-terminal-form";
 const reportTools = new Set([
   "loki_report_show",
   "loki_report_open",
@@ -72,7 +72,7 @@ async function findCard($, call, id, state) {
   return card;
 }
 
-function reportHost($, e, surfaces = []) {
+function reportHost($, e) {
   return {
     elements: e ? $.ui.resolve(e) : undefined,
     terminal: e?.surface === "terminal",
@@ -89,30 +89,20 @@ function reportHost($, e, surfaces = []) {
       }),
     fetch: (options) => $.http.fetch("http://localhost/form", options),
     submit: (text) => $.prompt.submit({ text, asUser: true }),
-    async openForm(kind, callId) {
-      // Desktop supports tool rows in chat even when it cannot draw Placed rows.
-      if (surfaces.includes("desktop")) return { requestId: callId };
-      try {
-        const placement = await $.ui.place({ id: `kaijan-form-${callId}` });
-        if (placement?.isPlaced && placement.requestId)
-          return { requestId: placement.requestId };
-      } catch {
-        // Try the terminal pane if this host cannot place the draft in chat.
-      }
-      const pane = await $.ui.open({
-        id: formPaneId,
-        title: kind === "issue" ? "Report a Kaijan issue" : "Kaijan feedback",
-        focus: true,
-        columns: 64,
-        rows: 28,
-      });
-      if (pane?.deny) return pane;
-      if (pane?.isPlaced) return {};
-      await $.ui.close({ id: formPaneId });
-      return { deny: true };
-    },
-    closeForm: () => $.ui.close({ id: formPaneId }),
     copy: (text) => $.ui.copy({ text, surface: e?.surface }),
+    openBrowser: async (url) => {
+      const result = await $.mcp.call("Claude Browser", "preview_start", {
+        url,
+      });
+      return (
+        !result.isError &&
+        result.content?.some(
+          (block) =>
+            block.type === "text" &&
+            /"navOk"\s*:\s*true\s*[,}]/.test(block.text),
+        )
+      );
+    },
     warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
     redraw: () => $.ui.invalidate("ui.render"),
     warn: () =>
@@ -176,6 +166,20 @@ export function register(on, runInterruption) {
     if (!state.isCurrent()) return undefined;
     const open = async () => {
       if (!state.isCurrent() || card.opening) return;
+      if (detailsLink) {
+        card.opening = true;
+        try {
+          if (await host.openBrowser(detailsLink)) return;
+        } catch {
+          // The host may not provide its Browser tool in this session.
+        } finally {
+          card.opening = false;
+        }
+        if (!state.isCurrent()) return;
+        card.useBrowserLink = true;
+        host.redraw();
+        return;
+      }
       if (desktop) host.warn();
       if (e.surface === "terminal" && !card.projectHistory) {
         card.opening = true;
@@ -219,7 +223,7 @@ export function register(on, runInterruption) {
         state.isCurrent,
         card.report.runs.length === 1 ? card.report.runs[0].id : undefined,
       ),
-      detailsLink,
+      card.useBrowserLink ? detailsLink : undefined,
     );
   };
 
@@ -280,7 +284,6 @@ export function register(on, runInterruption) {
     draftTools.clear();
     await forms.close();
     await $.ui.close({ id: paneId });
-    await $.ui.close({ id: formPaneId });
     return next(e);
   });
   on(
@@ -298,9 +301,10 @@ export function register(on, runInterruption) {
           deny: "Open the draft in an interactive Claude Code session.",
         };
       const opened = await forms.openDraft(
-        reportHost($, undefined, surfaces),
+        reportHost($),
         e.tool_use_id,
         kind,
+        surfaces.includes("desktop") ? e.tool_use_id : terminalForm,
         state.isCurrent,
         kind === "feedback" ? e.runId : undefined,
       );
@@ -424,16 +428,22 @@ export function register(on, runInterruption) {
       children: [original, rendered],
     });
   });
-  on("ui.render", { component: "Placed" }, async ($, e, next) => {
-    if (!active) return next(e);
-    return (
-      forms.view(reportHost($, e), cardState().isCurrent, e.requestId) ??
-      next(e)
-    );
+  on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
+    if (!active || e.surface !== "terminal" || e.props.hasSurvey)
+      return next(e);
+    // Unlike a transcript row, this site can receive keyboard focus in Claude Code.
+    const host = reportHost($, e);
+    const form = forms.view(host, cardState().isCurrent, terminalForm);
+    if (!form) return next(e);
+    const original = await next(e);
+    return original
+      ? host.elements.Box({
+          flexDirection: "column",
+          children: [original, form],
+        })
+      : form;
   });
   on("ui.render", { component: "Pane" }, async ($, e, next) => {
-    if (e.requestId === formPaneId && active)
-      return forms.view(reportHost($, e), cardState().isCurrent) ?? next(e);
     if (e.requestId !== paneId || !selected) return next(e);
     const redraw = () => $.ui.invalidate("ui.render");
     return reportPane($.ui.resolve(e), selected.report, {

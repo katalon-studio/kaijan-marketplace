@@ -28,8 +28,10 @@ Use the exact retained reportId or original answer/run IDs from this chat.
 Call `kaijan_report_show` with that exact saved `reportId` after the test ends.
 For original answer/run IDs, it can save their read-only report snapshot.
 The plugin's inline card shows the saved result. **Show details** opens the
-shared report HTML. Desktop Code uses Claude's standard browser link. The
-interactive CLI opens the default browser. Resume the original conversation
+shared report HTML. Desktop Code uses Claude's built-in Browser when available.
+Open the Browser pane if it is hidden. If Claude cannot open the report there,
+select the browser link on the card. The interactive CLI opens the default
+browser. Resume the original conversation
 after restarting Claude to use the same saved report. Project history and the
 CLI browser fallback use the native pane.
 
@@ -48,9 +50,9 @@ browser or pane rendered without observing it.
 
 Use **Kaijan feedback** on the card to request a private editable draft in a new
 chat turn. Use **Report issue** for a problem with Kaijan itself. Claude opens
-the requested draft with the matching draft tool. Edit and review the form
-in chat. If the interactive CLI uses the fallback pane, press Ctrl+X then
-Tab to edit.
+the requested draft with the matching draft tool. Edit and review it in chat
+on Desktop. In Claude Code CLI, the form appears above the prompt. Press
+**Ctrl+X**, then **Tab** to focus it. Press **Esc** to return to the prompt.
 
 The issue form shares the user's reviewed text and images with the Kaijan team.
 Use **Choose images** to select PNG, JPEG or WebP files for this draft. Review

@@ -111,7 +111,7 @@ export function createReportForms() {
     ];
   }
 
-  async function openDraft(host, callId, kind, active, runId) {
+  async function openDraft(host, callId, kind, placement, active, runId) {
     if (!active() || forms.get(selectedForm)?.busy) return false;
     const previous = forms.get(kind);
     const needsDraft =
@@ -135,9 +135,7 @@ export function createReportForms() {
         state.error = draft.error ? draft.message : undefined;
       }
       if (!active() || !state.draft || state.error) return false;
-      const opened = await host.openForm(kind, callId);
-      if (opened?.deny || !active()) return false;
-      state.placement = opened?.requestId;
+      state.placement = placement;
       state.visible = true;
       return true;
     } catch {
@@ -244,7 +242,6 @@ export function createReportForms() {
       }
       state.visible = false;
       if (selectedForm === state.kind) selectedForm = undefined;
-      if (!placement) await host.closeForm();
     };
     const submit = async (action, recovering) => {
       // Bind the press to the action on the rendered button. A delayed or
@@ -307,6 +304,9 @@ export function createReportForms() {
                   // Desktop fixes single-row inputs to 180 px. Its text area
                   // fills the form width, including for the title.
                   rows: host.desktop && rows === 1 ? 2 : rows,
+                  ...(host.terminal && key === "description"
+                    ? { autoFocus: true }
+                    : {}),
                   onInput: edit,
                   onSubmit: edit,
                 }),
@@ -366,8 +366,8 @@ export function createReportForms() {
               : "Selected text and images will be shared with the Kaijan team."
             : "Draft kept on this device. Select Send when ready.",
         ),
-        ...(host.terminal && !placement && !closed && !recover
-          ? [caption("Ctrl+X then Tab to edit.")]
+        ...(host.terminal && !closed && !recover
+          ? [caption("Ctrl+X then Tab to focus the form.")]
           : []),
         ...inputs,
         ...images,
