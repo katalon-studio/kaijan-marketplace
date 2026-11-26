@@ -968,7 +968,7 @@
       "packages/computer-runner/src/agent-context.mjs": "c2ccd40da1419d225f25924913663e4fe7ed22599e5a8301530ce54093528b91",
       "packages/computer-runner/src/application-ui-model.mjs": "7ad3387cc5f4d67ceb85217c8a2fea7c384009fcc026c0f2d23884b9024cffcd",
       "packages/computer-runner/src/browser-explorer.mjs": "74ef685d5677cc46313071542fdcd479dda9fa5eebd443510c78c1aae2fb158b",
-      "packages/computer-runner/src/browser-inputs.mjs": "b64b92505232313903e5ac49120c7d63f64b0125b6387ddf85ad319b6025d2c7",
+      "packages/computer-runner/src/browser-inputs.mjs": "d67935e895af2ccb0aa62e0fac5f8b16b2241cf05780d8fef62647fd64fdaee8",
       "packages/computer-runner/src/exploration-map.mjs": "ed9268fd8371124ad079ea6ccb1db8b624fa85de6516a45c727b3d14b4c4270d",
       "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9",
       "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057",
