@@ -217,7 +217,7 @@
     "packages/ui-modeler/lib/python-data-semantics.mjs": "b3e8664d5c3d14ae65d75488c808e15c5d0e576a8a1fded7ed6e7edd43a6d6f4",
     "packages/ui-modeler/scripts/ui_http_transport.mjs": "0f76bcc5e3e5c144d37b50320bf8af7fc6b0d6ba3c6ee496fe70eb05291221a8",
     "packages/ui-modeler/lib/model-pins.mjs": "647b8a8f0ab2a238a9aab21f8e749aec128bbf73baf41d7bb5f00b6a982acbaf",
-    "packages/ui-modeler/lib/model-provider.mjs": "271935bc594317e357c0b6079523f3f90f840f6ed8844aca9614483e37aee99d",
+    "packages/ui-modeler/lib/model-provider.mjs": "cc8b551a1089922635fffa54c6b5e99c8e0fb819babaca3dcad7d54d41a40e14",
     "packages/ui-modeler/lib/events-budget.mjs": "7d8491f74af39f79fa9b41bfec21018b076d7edbe92742b3edd97d3185aef7c3",
     "packages/ui-modeler/lib/captured-template-imports.mjs": "7b06a4b30b33e0f633eb7971ff10ad49b41557e8b9230c257a7287bd7bd0f900",
     "packages/ui-modeler/lib/source-import-adapters.mjs": "1bf4f2b973be4fbee5db52ea139e5b43113a1f1a42965636f568c4a83d27b772",
