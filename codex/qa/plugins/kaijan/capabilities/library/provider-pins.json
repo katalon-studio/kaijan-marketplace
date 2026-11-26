@@ -1033,7 +1033,7 @@
       "lib/jev-page-context.mjs": "1f0ac0dc6684245df9793187b90cc93f0008ad2664f42603de3c88890971e334",
       "lib/jev-seed-plan.mjs": "4efce03226e96ba1193d6ef1c1bf75ce04e6ab4069bc4fe7d87386f73d64fd1a",
       "lib/map-reviews.mjs": "acf19c9726ac4f66abbe6375bb9f8b1fdbacfce9f12c1767f35e31985c0e6964",
-      "lib/model-provider.mjs": "271935bc594317e357c0b6079523f3f90f840f6ed8844aca9614483e37aee99d",
+      "lib/model-provider.mjs": "cc8b551a1089922635fffa54c6b5e99c8e0fb819babaca3dcad7d54d41a40e14",
       "lib/pipeline-error.mjs": "7b3a649eef35f74c6c297ce3d601819b6ce58f18407e278e2eba8c8f766bee18",
       "lib/python-data-semantics.mjs": "b3e8664d5c3d14ae65d75488c808e15c5d0e576a8a1fded7ed6e7edd43a6d6f4",
       "lib/source-hash.mjs": "e5e57f42f524561d2b589b6d2b4e5ea030ee11ef6c2f1c9dae5976dd3066bf53",

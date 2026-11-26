@@ -135758,7 +135758,11 @@ async function providerCatalog({
     { signal: globalThis.AbortSignal.timeout(3e4) },
     fetch3
   );
-  if (!response.ok) throw Error("Cannot verify native model catalog");
+  if (!response.ok) {
+    await response.body?.cancel().catch(() => {
+    });
+    throw Error(`Cannot verify native model catalog (HTTP ${response.status})`);
+  }
   const native2 = await response.json();
   if (native2.id !== "gpt-6-luna")
     throw Error("Native OpenAI Luna model identity unavailable");
