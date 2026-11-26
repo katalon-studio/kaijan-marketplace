@@ -90642,19 +90642,21 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 var sourceIdSchema = external_exports.uuid().transform((value) => value.toLowerCase());
 var sourceLimits = {
-  maxBlobBytes: 8388608,
   // Single-request S3 upload ceiling for the staged source archive.
   maxStreamedBundleBytes: 5e9,
   maxGitBytes: 201326592,
+  // Compatibility envelope for older claims and Ready snapshots without a receipt.
   maxManifestBytes: 8 * 1024 * 1024
 };
 var inlineSourceManifestLimits = {
+  maxBlobBytes: 8 * 1024 * 1024,
   maxEntries: 1e4,
   maxBytes: 3 * 1024 * 1024,
   maxSourceBytes: 128 * 1024 * 1024,
   maxBundleBytes: 160 * 1024 * 1024
 };
 var sourceProtocol = "github-source-v1";
+var maxSourceLinkTargetLength = 4096;
 var sourcePolicy = "git-tree-v1";
 var gitShaSchema = external_exports.string().regex(/^[0-9a-f]{40}$/);
 var digestSchema = external_exports.string().regex(/^[0-9a-f]{64}$/);
@@ -90709,9 +90711,9 @@ var sourceEntrySchema = external_exports.strictObject({
   mode: external_exports.enum(["100644", "100755", "120000", "160000"]),
   kind: external_exports.enum(["file", "symlink", "submodule", "lfs_pointer"]),
   objectId: gitShaSchema,
-  size: external_exports.number().int().min(0).max(8388608),
+  size: external_exports.number().int().nonnegative(),
   sha256: digestSchema.nullable(),
-  target: external_exports.string().max(4096).nullable()
+  target: external_exports.string().max(maxSourceLinkTargetLength).nullable()
 });
 var sourceManifestSchema = external_exports.strictObject({
   protocol: external_exports.literal(sourceProtocol),
@@ -90788,9 +90790,10 @@ var sourceJobCompleteSchema = external_exports.strictObject({
   instance: sourceIdSchema,
   manifest: sourceManifestSchema
 });
+var sourceManifestSizeSchema = external_exports.number().int().positive().max(sourceLimits.maxStreamedBundleBytes);
 var sourceManifestReferenceSchema = external_exports.strictObject({
   sha256: digestSchema,
-  size: external_exports.number().int().positive().max(sourceLimits.maxManifestBytes)
+  size: sourceManifestSizeSchema
 });
 var sourceJobManifestUploadSchema = external_exports.strictObject({
   instance: sourceIdSchema,
@@ -91145,6 +91148,13 @@ var analysisClaimSchema = external_exports.strictObject({ instance: external_exp
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
   report: analysisReportSchema
+});
+var analysisReportDeclarationSchema = external_exports.strictObject({
+  instance: external_exports.uuid(),
+  reportRef: external_exports.strictObject({
+    sha256: digestSchema,
+    size: external_exports.number().int().positive().max(analysisLimits.maxStreamedBundleBytes)
+  })
 });
 var analysisSourceIndexSchema = external_exports.array(external_exports.strictObject({
   id: external_exports.string().regex(/^f[0-9]{1,5}$/),
