@@ -145,7 +145,7 @@
     "packages/capabilities/src/application-navigation.ts": "6a7251abbe327af028d7aacf2873eb708fdc5aff2730ce593022151ea6ee77e3",
     "packages/capabilities/src/assessment-application-evidence.ts": "26293ad6c11366a1eac3ca6919e7a4c36e67c16f1462629974ddf04c416e76e0",
     "packages/capabilities/src/browser-planner-recap.ts": "0c61045fe8b0707a830dd040832dc49ec2c981a8a516cb0100f5f2393e17e13d",
-    "packages/capabilities/src/runner-clarification.ts": "98f54bbd933c34ebd695052795f3a1d83a0b4be040608c48df87578518c8956e",
+    "packages/capabilities/src/runner-clarification.ts": "d54fdf3b34768470f9edcd674974865b7f77f0e263bfab18eff5e02ad069406c",
     "packages/capabilities/src/report-protection.ts": "b17bde48f37147af56df4ca7b1c215cb601fa4648564a78da5ef4d9674d7e84d",
     "packages/capabilities/src/runner-assessment-context.ts": "98f72271669a6b517fc82d2bd6b8201134d40eea7754d192224f989c40a103d9",
     "packages/capabilities/src/runner-outcome-projection.ts": "5ff8e1f199bb0a1b2da66ec596e16b8ec8427ab85c37e371c98f834e90c27fe7",

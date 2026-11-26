@@ -122249,45 +122249,60 @@ var RunnerClarifications = class {
     const root5 = join23(directory3, "clarification-answers");
     const name = digest32(input3.answerKey) + ".json";
     const original = JSON.stringify(input3);
-    try {
-      const retained2 = JSON.parse(
-        (await boundedFile(join23(root5, name))).toString("utf8")
-      );
+    const retainedBytes = await boundedFile(join23(root5, name)).catch((error62) => {
+      if (!absent3(error62)) throw error62;
+      return void 0;
+    });
+    let receipt4;
+    if (retainedBytes) {
+      const retained2 = JSON.parse(retainedBytes.toString("utf8"));
       if (retained2.original !== original)
         throw new ClarificationRejection("answer_conflict");
-      const receipt5 = runnerAnswerReceipt.parse(retained2.receipt);
-      if (receipt5.runId !== input3.runId || receipt5.clarificationId !== input3.clarificationId || receipt5.answerKey !== input3.answerKey)
+      const savedReceipt = runnerAnswerReceipt.parse(retained2.receipt);
+      if (savedReceipt.runId !== input3.runId || savedReceipt.clarificationId !== input3.clarificationId || savedReceipt.answerKey !== input3.answerKey)
         throw Error("Retained clarification receipt correlation changed");
-      return receipt5;
-    } catch (e2) {
-      if (!absent3(e2)) throw e2;
+      receipt4 = savedReceipt;
+    } else {
+      receipt4 = {
+        schema: "loki.runner.clarification-answer/1",
+        runId: input3.runId,
+        clarificationId: input3.clarificationId,
+        answerKey: input3.answerKey,
+        status: "retained"
+      };
     }
+    const bytes2 = retainedBytes ?? Buffer.from(JSON.stringify({ original, receipt: receipt4 }));
+    const sha2564 = digest32(bytes2.toString("utf8"));
+    const index2 = await this.protectionIndex(directory3);
+    const indexed = index2.answers.find((record15) => record15.file === name);
     const entry = this.active.get(directory3);
+    const committed = retainedBytes !== void 0 && indexed !== void 0;
+    if (committed && entry?.request.clarificationId !== input3.clarificationId)
+      return receipt4;
+    if (indexed && indexed.sha256 !== sha2564) throw new RunnerProjectionError();
     const assertLive = async () => {
       const current2 = await this.getOperation(input3.runId);
       if (!entry || this.active.get(directory3) !== entry || !available(current2) || entry.signal.aborted || Date.now() >= (entry.executionDeadline?.() ?? (entry.deadlineAt === null ? Infinity : Date.parse(entry.deadlineAt))) || entry.request.clarificationId !== input3.clarificationId)
         throw new ClarificationRejection("clarification_unavailable");
+      return entry;
     };
-    await assertLive();
-    if (!entry) throw new ClarificationRejection("clarification_unavailable");
-    const receipt4 = plain({
-      schema: "loki.runner.clarification-answer/1",
-      runId: input3.runId,
-      clarificationId: input3.clarificationId,
-      answerKey: input3.answerKey,
-      status: "retained"
-    });
-    const bytes2 = Buffer.from(JSON.stringify({ original, receipt: receipt4 }));
-    const index2 = await this.protectionIndex(directory3);
-    index2.answers.push({ file: name, sha256: digest32(bytes2.toString("utf8")) });
-    await atomicFile(
-      directory3,
-      "runner-public-protection.json",
-      Buffer.from(JSON.stringify(index2))
-    );
-    await atomicFile(root5, name, bytes2);
+    try {
+      await assertLive();
+    } catch (error62) {
+      if (committed && error62 instanceof ClarificationRejection) return receipt4;
+      throw error62;
+    }
+    if (!retainedBytes) await atomicFile(root5, name, bytes2);
+    if (!indexed) {
+      index2.answers.push({ file: name, sha256: sha2564 });
+      await atomicFile(
+        directory3,
+        "runner-public-protection.json",
+        Buffer.from(JSON.stringify(index2))
+      );
+    }
     await this.protection(directory3);
-    await assertLive();
+    const delivery = await assertLive();
     const answer = Object.fromEntries(
       Object.entries(input3).filter(
         ([key5]) => ![
@@ -122298,15 +122313,15 @@ var RunnerClarifications = class {
         ].includes(key5)
       )
     );
-    entry.resolve({
+    delivery.resolve({
       ...answer,
       answers: input3.answers,
       ...input3.sensitiveQuestionIds === void 0 ? {} : { sensitiveQuestionIds: this.sensitiveIds(input3) }
     });
-    observeLifecycle(entry.lifecycle, {
+    observeLifecycle(delivery.lifecycle, {
       kind: "user-input-received",
       requestKey: input3.clarificationId,
-      waitMs: pendingElapsed(entry.pendingStartedAtMs)
+      waitMs: pendingElapsed(delivery.pendingStartedAtMs)
     });
     return receipt4;
   }
