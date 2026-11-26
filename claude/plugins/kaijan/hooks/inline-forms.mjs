@@ -8,6 +8,10 @@ const requests = {
     "Help me report a problem with Kaijan itself. Open a draft for me to review before I send it.",
 };
 
+function isSubmitted(draft) {
+  return draft?.status === "saved" || draft?.status === "published";
+}
+
 export function createReportForms() {
   const forms = new Map();
   let bridge, child, selectedForm, opening;
@@ -109,7 +113,10 @@ export function createReportForms() {
 
   async function openDraft(host, callId, kind, active, runId) {
     if (!active() || forms.get(selectedForm)?.busy) return false;
-    const state = forms.get(kind) ?? { kind, edits: {} };
+    const previous = forms.get(kind);
+    const needsDraft =
+      !previous || (isSubmitted(previous.draft) && previous.callId !== callId);
+    const state = needsDraft ? { kind, edits: {} } : previous;
     state.callId = callId;
     state.error = undefined;
     state.placement = undefined;
@@ -193,7 +200,7 @@ export function createReportForms() {
     const field = (key) => state.edits[key] ?? state.draft?.fields[key];
     const issue = state.kind === "issue";
     const trackedIssue = issue && state.draft?.publicationRoute === "tracking";
-    const closed = ["saved", "published"].includes(state.draft?.status);
+    const closed = isSubmitted(state.draft);
     const receipt = state.draft?.receipt;
     const reference = issue
       ? state.draft?.reportReceipt?.reference
@@ -246,7 +253,7 @@ export function createReportForms() {
         action !== submissionAction() ||
         shownRevision !== state.draft?.revision ||
         recovering !== Boolean(state.submission) ||
-        ["saved", "published"].includes(state.draft?.status)
+        isSubmitted(state.draft)
       )
         return;
       if (recovering) {

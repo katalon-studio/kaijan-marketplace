@@ -39730,10 +39730,10 @@ function getLiteralValue(schema) {
 var MCP_INSTRUCTIONS_KEY = "_mcp_instructions";
 var INSTRUCTIONS_FIELD_DESCRIPTION = "Server-issued metadata for this conversation.";
 var CONVERSATION_ID_FIELD_DESCRIPTION = "The server-issued conversation identifier.";
-function canDeclareOutputInstructions(outputSchema2) {
-  if (!outputSchema2 || "object" != typeof outputSchema2) return false;
-  if (isSchemaObjectLike(outputSchema2)) return false;
-  const schema = outputSchema2;
+function canDeclareOutputInstructions(outputSchema) {
+  if (!outputSchema || "object" != typeof outputSchema) return false;
+  if (isSchemaObjectLike(outputSchema)) return false;
+  const schema = outputSchema;
   if (schema.$ref || schema.oneOf || schema.allOf || schema.anyOf) return false;
   const { properties } = schema;
   if (void 0 !== properties && ("object" != typeof properties || null === properties || Array.isArray(properties))) return false;
@@ -39766,9 +39766,9 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
   const modifiedTool = {
     ...tool2
   };
-  const outputSchema2 = JSON.parse(JSON.stringify(original2));
-  if (!outputSchema2.properties) outputSchema2.properties = {};
-  outputSchema2.properties[MCP_INSTRUCTIONS_KEY] = {
+  const outputSchema = JSON.parse(JSON.stringify(original2));
+  if (!outputSchema.properties) outputSchema.properties = {};
+  outputSchema.properties[MCP_INSTRUCTIONS_KEY] = {
     type: "object",
     description: INSTRUCTIONS_FIELD_DESCRIPTION,
     properties: {
@@ -39778,7 +39778,7 @@ function addInstructionsToOutputSchema(tool2, logger = log) {
       }
     }
   };
-  modifiedTool.outputSchema = outputSchema2;
+  modifiedTool.outputSchema = outputSchema;
   return modifiedTool;
 }
 function addInstructionsToOutputSchemas(tools2, logger = log) {
@@ -39838,40 +39838,40 @@ function addAnalyticsParameterToTool(tool2, parameterName, description, injectio
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema3 = modifiedTool.inputSchema;
-  if (!inputSchema3.properties) inputSchema3.properties = {};
-  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
-  inputSchema3.properties[parameterName] = {
+  const inputSchema2 = modifiedTool.inputSchema;
+  if (!inputSchema2.properties) inputSchema2.properties = {};
+  if (false === inputSchema2.additionalProperties) inputSchema2.additionalProperties = void 0;
+  inputSchema2.properties[parameterName] = {
     type: "string",
     description
   };
-  if (Array.isArray(inputSchema3.required)) {
-    if (!inputSchema3.required.includes(parameterName)) inputSchema3.required.push(parameterName);
-  } else inputSchema3.required = [
+  if (Array.isArray(inputSchema2.required)) {
+    if (!inputSchema2.required.includes(parameterName)) inputSchema2.required.push(parameterName);
+  } else inputSchema2.required = [
     parameterName
   ];
   return modifiedTool;
 }
-function analyticsOwnsParameter(inputSchema3, parameterName) {
-  if (!inputSchema3 || "object" != typeof inputSchema3) return canInjectAnalyticsParameter(void 0, parameterName);
-  if (isZodRawShapeCompat(inputSchema3)) return canInjectAnalyticsParameter({
-    properties: inputSchema3
+function analyticsOwnsParameter(inputSchema2, parameterName) {
+  if (!inputSchema2 || "object" != typeof inputSchema2) return canInjectAnalyticsParameter(void 0, parameterName);
+  if (isZodRawShapeCompat(inputSchema2)) return canInjectAnalyticsParameter({
+    properties: inputSchema2
   }, parameterName);
-  const shape = getObjectShape(inputSchema3);
+  const shape = getObjectShape(inputSchema2);
   if (shape) return canInjectAnalyticsParameter({
     properties: shape
   }, parameterName);
-  const schema = inputSchema3;
+  const schema = inputSchema2;
   if (JSON_SCHEMA_KEYWORDS.some((keyword) => Object.prototype.hasOwnProperty.call(schema, keyword))) return canInjectAnalyticsParameter(schema, parameterName);
   if ("_def" in schema || "_zod" in schema || "~standard" in schema) return canInjectAnalyticsParameter(void 0, parameterName);
   return canInjectAnalyticsParameter(schema, parameterName);
 }
-function getAnalyticsParameterOwnership(inputSchema3, outputSchema2) {
+function getAnalyticsParameterOwnership(inputSchema2, outputSchema) {
   return {
-    context: analyticsOwnsParameter(inputSchema3, "context"),
-    conversationId: analyticsOwnsParameter(inputSchema3, "conversation_id"),
-    llmModel: analyticsOwnsParameter(inputSchema3, "llm_model"),
-    outputInstructions: canDeclareOutputInstructions(outputSchema2)
+    context: analyticsOwnsParameter(inputSchema2, "context"),
+    conversationId: analyticsOwnsParameter(inputSchema2, "conversation_id"),
+    llmModel: analyticsOwnsParameter(inputSchema2, "llm_model"),
+    outputInstructions: canDeclareOutputInstructions(outputSchema)
   };
 }
 function stripOwnedAnalyticsArguments(args, ownership2) {
@@ -40018,10 +40018,10 @@ function addConversationIdToTool(tool2, logger = log) {
     required: []
   };
   modifiedTool.inputSchema = JSON.parse(JSON.stringify(modifiedTool.inputSchema));
-  const inputSchema3 = modifiedTool.inputSchema;
-  if (!inputSchema3.properties) inputSchema3.properties = {};
-  if (false === inputSchema3.additionalProperties) inputSchema3.additionalProperties = void 0;
-  inputSchema3.properties[CONVERSATION_ID_PARAM_NAME] = {
+  const inputSchema2 = modifiedTool.inputSchema;
+  if (!inputSchema2.properties) inputSchema2.properties = {};
+  if (false === inputSchema2.additionalProperties) inputSchema2.additionalProperties = void 0;
+  inputSchema2.properties[CONVERSATION_ID_PARAM_NAME] = {
     type: "string",
     description: DEFAULT_CONVERSATION_ID_DESCRIPTION
   };
@@ -40218,12 +40218,12 @@ function describeAliasesUsed(aliases, input3) {
   }
   return used.sort().slice(0, MAX_INPUT_KEYS);
 }
-function getToolInputProperties(input3, inputSchema3, options) {
+function getToolInputProperties(input3, inputSchema2, options) {
   try {
     if (!isRecord4(input3)) return {};
     const prototype = Object.getPrototypeOf(input3);
     if (null !== prototype && prototype !== Object.prototype) return {};
-    const properties = declaredProperties(inputSchema3);
+    const properties = declaredProperties(inputSchema2);
     const known = /* @__PURE__ */ new Set([
       ...Object.keys(properties ?? {}),
       ...aliasNames(options?.inputAliases)
@@ -40272,7 +40272,7 @@ function resolveInputAliases(data, toolName2) {
   }
 }
 async function captureToolCall(params) {
-  const { server, data, request: request3, extra, execute: execute3, parameterOwnership, inputSchema: inputSchema3, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
+  const { server, data, request: request3, extra, execute: execute3, parameterOwnership, inputSchema: inputSchema2, eventType, explicitContextIntent, extraEventProperties, omitCapturedParameters, takeCapturedError } = params;
   const resolvedEventType = eventType ?? MCPAnalyticsEventType.mcpToolsCall;
   const isVirtualAnalyticsTool = resolvedEventType === MCPAnalyticsEventType.mcpMissingCapability || resolvedEventType === MCPAnalyticsEventType.mcpFeedback;
   const ownership2 = getActiveAnalyticsParameterOwnership(data, request3.params?.name, parameterOwnership, isVirtualAnalyticsTool);
@@ -40284,7 +40284,7 @@ async function captureToolCall(params) {
   const preparedEvent = await prepareToolCallEvent(server, data, request3, downstreamRequest, extra, startTime, conversation, ownership2, resolvedEventType, canCaptureContextIntent);
   if (preparedEvent && resolvedEventType === MCPAnalyticsEventType.mcpToolsCall) {
     const sessionSchemas = (preparedEvent.event.sessionId ? data.toolInputSchemas.get(preparedEvent.event.sessionId) : void 0) ?? data.toolInputSchemas.get(schemaSessionId);
-    const schema = inputSchema3 ?? sessionSchemas?.get(request3.params?.name ?? "");
+    const schema = inputSchema2 ?? sessionSchemas?.get(request3.params?.name ?? "");
     preparedEvent.event.properties = {
       ...preparedEvent.event.properties,
       ...getToolInputProperties(request3.params?.arguments ?? {}, schema, {
@@ -40977,11 +40977,11 @@ function addTracingToToolCallbackInternal(tool2, toolName2, server, getCurrentIn
       args = void 0;
       extra = params[0];
     }
-    const inputSchema3 = getCurrentInputSchema();
+    const inputSchema2 = getCurrentInputSchema();
     const cleanedArgs = stripOwnedAnalyticsArguments(args, {
-      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema3, "context"),
-      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema3, "conversation_id"),
-      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema3, "llm_model")
+      context: isContextEnabled(options?.context) && analyticsOwnsParameter(inputSchema2, "context"),
+      conversationId: options?.enableConversationId === true && analyticsOwnsParameter(inputSchema2, "conversation_id"),
+      llmModel: isCaptureModelEnabled(options?.captureModel) && analyticsOwnsParameter(inputSchema2, "llm_model")
     });
     try {
       if (void 0 === cleanedArgs) {
@@ -52036,12 +52036,20 @@ var legacyRunnerExecutionReportSchema = external_exports.strictObject({
   responseId: external_exports.string(),
   callId: external_exports.string()
 });
+var runnerFindingSchema = external_exports.strictObject({
+  observation: external_exports.string(),
+  reason: external_exports.string(),
+  what_to_check: external_exports.string(),
+  evidence: external_exports.array(external_exports.string())
+});
 var runnerTestResultsSchema = external_exports.array(external_exports.object({
   test_id: external_exports.string(),
   scenario_finished: external_exports.boolean(),
   bug_found: external_exports.boolean(),
   bug_found_against_expected: external_exports.enum(["yes", "no", "no_expected_behavior"]).optional(),
   bug_found_by_common_sense: external_exports.boolean().optional(),
+  expectation_result: external_exports.enum(["met", "not_met", "not_specified"]).optional(),
+  findings: external_exports.array(runnerFindingSchema).optional(),
   actual: external_exports.string(),
   execution_details: external_exports.string(),
   warning: external_exports.string().nullable()
@@ -55662,10 +55670,10 @@ function usesSavedTestInputs(host) {
 }
 function testingToolDefinition(tool2, host) {
   if (tool2.name === "loki_test_plan" && usesSavedTestInputs(host)) {
-    const inputSchema3 = external_exports.toJSONSchema(planInput);
+    const inputSchema2 = external_exports.toJSONSchema(planInput);
     for (const name of Object.keys(sourceOptions)) {
       const native = tool2.inputSchema?.properties?.[name];
-      if (native) inputSchema3.properties[name] = native;
+      if (native) inputSchema2.properties[name] = native;
     }
     return {
       ...tool2,
@@ -55675,9 +55683,9 @@ function testingToolDefinition(tool2, host) {
         destructiveHint: true,
         openWorldHint: true
       },
-      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Kaijan prepares related work and change review inside Plan when you supply their source inputs. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
+      description: "Save a test plan. Choose exactly one source field. Use testObjective for a chat request, input for original attributed source material, or contextId to reuse a saved source packet. Include the saved Test Environment ID and optional Test Data ID. Plan uses any supplied code change as implementation context and prepares related work when you provide repositories. Explorer uses the saved target and defaults to five minutes. Use explorerTimeLimitMs for longer exploration. Run uses the inputs saved with the Plan. Stopping the wait during exploration advances the same request to Planner. Use the same request key and arguments to recover it.",
       // Keep the source fields visible to Codex. The receiver checks exclusivity.
-      inputSchema: inputSchema3
+      inputSchema: inputSchema2
     };
   }
   if (tool2.name === "loki_test_execute")
@@ -55808,10 +55816,6 @@ function useSavedTestInput(store, name, raw) {
 }
 
 // apps/codex-plugin/src/configurations.mjs
-var cachedFormUris = /* @__PURE__ */ new Set([
-  "ui://kaijan/configurations/form/v1.html",
-  "ui://kaijan/configurations/form/v2.html"
-]);
 var id5 = external_exports.uuid();
 var inputSchema = external_exports.strictObject({
   operation: external_exports.enum(["list", "read", "save", "delete", "select"]),
@@ -55904,9 +55908,6 @@ function createConfigurationSurface({ session, library, data }) {
   return {
     tools: tools2,
     hasTool: (name) => tools2.some((item) => item.name === name),
-    // Historical cards can read their resource, but this host opens no editor.
-    hasResource: (uri) => cachedFormUris.has(uri),
-    readResource: (uri) => library.readConfigurationForm(uri),
     async invoke(name, raw, metadata2) {
       try {
         if (name !== tool.name) {
@@ -57635,25 +57636,6 @@ async function createInstalledSession(root, build, data, broker, {
   if (host === "codex") {
     if (build.browserViewer === true && typeof library.prepareSelectedBrowserViewer === "function")
       session.prepareBrowserViewer = library.prepareSelectedBrowserViewer;
-    if (typeof library.readSetupCard === "function")
-      session.setupCard = {
-        resources: [
-          {
-            uri: library.setupCardUri,
-            name: "Kaijan setup",
-            mimeType: "text/html;profile=mcp-app"
-          },
-          ...library.onboardingUri ? [
-            {
-              uri: library.onboardingUri,
-              name: "Set up Kaijan",
-              mimeType: "text/html;profile=mcp-app"
-            }
-          ] : []
-        ],
-        onboardingUri: library.onboardingUri,
-        readResource: (uri) => uri === library.onboardingUri ? library.readOnboarding() : library.readSetupCard(uri)
-      };
   }
   if (host === "codex" || inlineForms) {
     session.feedback = createFeedbackSurface({
@@ -59071,54 +59053,6 @@ async function createSetup({
   return api;
 }
 
-// apps/codex-plugin/src/setup/onboarding.mjs
-var inputSchema2 = external_exports.strictObject({
-  applicationURL: external_exports.string().optional().describe("The application URL already supplied by the person, if any."),
-  task: external_exports.string().optional().describe("The person's original testing request, if already supplied.")
-});
-var outputSchema = external_exports.strictObject({
-  schema: external_exports.literal("kaijan.onboarding/1"),
-  applicationURL: external_exports.string(),
-  task: external_exports.string()
-});
-function createOnboarding(ui) {
-  if (!ui?.onboardingUri) return void 0;
-  return {
-    tool: {
-      name: "kaijan_onboarding_show",
-      title: "Legacy Kaijan onboarding panel",
-      description: "Open the legacy onboarding panel only when the person explicitly asks for that panel. Ordinary Kaijan Setup uses chat. Prefill the supplied application URL and request. Opening the panel does not save Setup or start a test.",
-      inputSchema: external_exports.toJSONSchema(inputSchema2),
-      outputSchema: external_exports.toJSONSchema(outputSchema),
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: true,
-        openWorldHint: false
-      },
-      _meta: { ui: { resourceUri: ui.onboardingUri } }
-    },
-    invoke(input3) {
-      const parsed = inputSchema2.safeParse(input3 ?? {});
-      if (!parsed.success) {
-        const message = "Invalid onboarding input. Use the advertised schema.";
-        const error63 = new McpError(ErrorCode.InvalidParams, message);
-        error63.message = message;
-        throw error63;
-      }
-      const result2 = {
-        schema: "kaijan.onboarding/1",
-        applicationURL: parsed.data.applicationURL ?? "",
-        task: parsed.data.task ?? ""
-      };
-      return {
-        structuredContent: result2,
-        content: [{ type: "text", text: JSON.stringify(result2) }]
-      };
-    }
-  };
-}
-
 // apps/codex-plugin/src/setup/customer-output.mjs
 var configuration = external_exports.object({
   source: sourceSchema,
@@ -59427,7 +59361,6 @@ async function createSetupTools({
   mapper,
   consumer,
   createTelemetry,
-  ui,
   prepareBrowserViewer,
   authorize = async () => {
     throw new SetupFailure("source_authorization_adapter_unavailable");
@@ -59505,7 +59438,6 @@ async function createSetupTools({
       ]
     ] : []
   ];
-  const onboarding = createOnboarding(ui);
   const tools2 = definitions.map(([name, , schema, , readOnly]) => ({
     name,
     description: name === "loki_setup_prepare" && prepareBrowserViewer ? `${customerSetupDescriptions[name]} If the person chooses the optional Kaijan Browser app, pass only browserViewer: install to prepare it on this Mac. That choice keeps saved application Setup separate.` : customerSetupDescriptions[name],
@@ -59533,9 +59465,7 @@ async function createSetupTools({
       openWorldHint: !readOnly
     }
   }));
-  if (onboarding) tools2.push(onboarding.tool);
   const invoke = async (name, arguments_, signal, invocation) => {
-    if (name === onboarding?.tool.name) return onboarding.invoke(arguments_);
     const definition = definitions.find(([toolName2]) => toolName2 === name);
     if (!definition) throw invalidSetupInput("Unknown Setup tool");
     const parsed = definition[2].safeParse(arguments_ ?? {});
@@ -59580,8 +59510,6 @@ async function createSetupTools({
   };
   return {
     tools: tools2,
-    resources: ui?.resources ?? [],
-    readResource: ui?.readResource,
     invoke,
     setup,
     close: () => setup.close()
@@ -61839,7 +61767,6 @@ var customerDiscoveryInputSchema = external_exports.strictObject({});
 var customerDiscoverySchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.customer-capabilities/2"),
   context: readiness,
-  changeReview: readiness,
   relatedWork: readiness,
   workItemReview: readiness,
   testPlanning: readiness,
@@ -61897,7 +61824,6 @@ function projectCustomerDiscovery(value, { directDevelopment = false, personalCh
       state: "available",
       message: "Save relevant task context that the caller has authorized."
     } : unavailable3,
-    changeReview: action2(native.changeRisk),
     relatedWork: action2(native.prContext),
     workItemReview: action2(native.riskFinder),
     testPlanning: planning,
@@ -62236,7 +62162,7 @@ function customerReportToolDefinition(tool2, { presentation } = {}) {
   if (!hasCustomerReportOutput(tool2.name)) return tool2;
   if (presentation === "chat" && tool2.name === "loki_report_open")
     return void 0;
-  const resourceUri = "ui://loki/test-plan/card/v87.html";
+  const resourceUri = "ui://loki/test-plan/card/v90.html";
   const description = tool2.name === "loki_report_show" ? presentation === "chat" ? "Read the saved test plan or final report for presentation as text in this chat. This does not run tests or assessment." : "Show the saved test plan or final report as a Kaijan card in this chat. Use this to present a completed plan or Run result. Use kaijan_report_get to read the data. Reuse the exact saved report or operation references. This does not run tests or assessment." : tool2.name === "loki_report_get" ? "Read the text and metadata of the selected saved test plan or final report in its original chat. Read available saved screenshots with kaijan_report_read_artifact. Use kaijan_report_show to present the card. Set sourceOffset to 0 to read the original Plan input or GitHub source attached to the report, then use the returned nextOffset to continue. Reading does not run tests or assessment." : "Read the exact saved report details for the report card's Show details action. This app callback does not show a new card or run tests or assessment.";
   return {
     name: tool2.name,
@@ -62492,6 +62418,9 @@ var cachedReportCardUris = /* @__PURE__ */ new Set([
   "ui://loki/test-plan/card/v84.html",
   "ui://loki/test-plan/card/v85.html",
   "ui://loki/test-plan/card/v86.html",
+  "ui://loki/test-plan/card/v87.html",
+  "ui://loki/test-plan/card/v88.html",
+  "ui://loki/test-plan/card/v89.html",
   "ui://loki/test-plan/card/v81.html",
   "ui://loki/test-plan/card/v80.html",
   "ui://loki/test-plan/card/v79.html"
@@ -62590,42 +62519,13 @@ ${customerInstructions}` : customerInstructions
   server.setRequestHandler(ListResourcesRequestSchema, () => ({
     resources: [
       ...catalog.resources,
-      ...setup?.resources ?? [],
       ...session.feedback?.resources ?? [],
       ...session.issues?.resources ?? []
     ]
   }));
   const reportCardUri = session.customerReportPresentation === "panel" ? tools2.find((tool2) => tool2.name === "loki_report_show")?._meta?.ui?.resourceUri : void 0;
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
-    const setupResource = setup?.resources?.find(
-      (resource) => resource.uri === params.uri || params.uri === "ui://kaijan/setup/card/v1.html" && resource.uri === "ui://kaijan/setup/card/v2.html"
-    );
-    if (setupResource) {
-      try {
-        const result2 = await setup.readResource(setupResource.uri);
-        return setupResource.uri === params.uri ? result2 : {
-          ...result2,
-          contents: result2.contents.map((content) => ({
-            ...content,
-            uri: params.uri
-          }))
-        };
-      } catch {
-        throw invalidParams(
-          "The Setup card could not be read. Continue setup in this chat."
-        );
-      }
-    }
     const uri = cachedReportCardUris.has(params.uri) ? reportCardUri ?? params.uri : params.uri;
-    if (session.configurations?.hasResource(uri)) {
-      try {
-        return await session.configurations.readResource(uri);
-      } catch {
-        throw invalidParams(
-          "Ask Kaijan in this chat to view or update your saved configurations."
-        );
-      }
-    }
     if (session.feedback?.hasResource?.(uri) || session.feedback?.resources.some((resource) => resource.uri === uri)) {
       try {
         return await session.feedback.readResource(uri);
@@ -63178,7 +63078,6 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
             directory,
             ...ports,
             prepareBrowserViewer: session.prepareBrowserViewer,
-            ui: session.setupCard,
             createTelemetry: () => createBoundLifecycle(telemetry).setup
           });
         } catch (error63) {

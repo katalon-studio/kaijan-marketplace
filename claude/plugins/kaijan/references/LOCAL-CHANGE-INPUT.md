@@ -6,7 +6,7 @@ determines which repositories and history the host may read.
 
 1. Inspect the local staged and unstaged diff and the task's authorized file scope.
    Retain the original task and diff as context. Choose current source files that
-   let the review interpret the change and consequential interactions; include
+   let Planner interpret the change and consequential interactions; include
    relevant callers/state owners rather than favorable snippets. Report untracked,
    binary, deleted, unavailable or omitted files explicitly in coverage. Do not
    silently truncate or claim complete repository coverage.
@@ -43,8 +43,8 @@ const packet = {
 
 Follow [Plan tests](../skills/plan-tests/SKILL.md#planning-inputs). Call
 `kaijan_plan_create` with the original task and this packet in `change`. Include the
-saved Test Environment when the host requires it. Plan uses the change to prepare
-risk context before proposing tests.
+saved Test Environment when the host requires it. Planner uses the change as attributed implementation context when proposing
+tests.
 
 This full-file mode provides current-file evidence, not a historical patch or a
 verified behavioral result. Keep that distinction in interpretation. If both
