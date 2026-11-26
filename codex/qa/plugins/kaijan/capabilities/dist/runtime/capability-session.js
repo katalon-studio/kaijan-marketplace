@@ -19969,11 +19969,12 @@ var gitShaSchema = external_exports.string().regex(/^[0-9a-f]{40}$/);
 var digestSchema = external_exports.string().regex(/^[0-9a-f]{64}$/);
 var githubIdSchema = external_exports.string().regex(/^[1-9][0-9]{0,19}$/);
 var repositoryNameSchema = external_exports.string().regex(/^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/).refine((name) => !name.split("/").some((part) => part === "." || part === ".."));
+var sourceBranchNameSchema = external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")));
 var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   external_exports.strictObject({ kind: external_exports.literal("commit"), sha: gitShaSchema }),
   external_exports.strictObject({
     kind: external_exports.literal("branch"),
-    name: external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")))
+    name: sourceBranchNameSchema
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
@@ -20009,7 +20010,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   host: external_exports.literal("github.com"),
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
-  installationId: githubIdSchema
+  installationId: githubIdSchema,
+  defaultBranch: sourceBranchNameSchema.optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -20146,15 +20148,17 @@ var mapReviewSchema = external_exports.strictObject({
 // ../contracts/dist/application-source.js
 var applicationSourceSelectionSchema = external_exports.strictObject({
   expectedRevision: external_exports.uuid().transform((value) => value.toLowerCase()).nullable(),
-  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once.")
-});
+  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once."),
+  repositoryBranches: external_exports.record(external_exports.uuid(), sourceBranchNameSchema).optional()
+}).refine(({ repositoryIds, repositoryBranches }) => Object.keys(repositoryBranches ?? {}).every((id6) => repositoryIds.includes(id6)), "Set branches only for selected repositories.");
 var applicationSourceConfigurationSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.application-source-configuration/1"),
   configurationId: external_exports.uuid().nullable(),
   revision: external_exports.uuid().nullable(),
   repositories: external_exports.array(external_exports.strictObject({
     repositoryId: external_exports.uuid(),
-    fullName: repositoryNameSchema
+    fullName: repositoryNameSchema,
+    branch: sourceBranchNameSchema.default("main")
   }))
 });
 var applicationSourceSnapshotSchema = external_exports.strictObject({

@@ -3,7 +3,7 @@
   "contract": "engineering.bound-documents/1-draft1",
   "representation": "engineering-bound-documents-contract/1-draft1",
   "sourceImplementationSha256": "d01f4adf0d830f615e4313410c94b5cfc18a33334c0e0df5477836be5f491c34",
-  "packagedImplementationSha256": "ea33f9a2c12c626cfb447624f0841906c88490156f29cf44f52b1e58e4fa48b2",
+  "packagedImplementationSha256": "8fa45b502c585ef0129da1208fbab221ea90c139dee1ec370632cd72fc6abc87",
   "implementationIdentityFiles": [
     "index.mjs",
     "store.mjs",
@@ -45,7 +45,7 @@
       ],
       "transformation": "esbuild ESM/node24 bundle with named re-exports and tree shaking; maintained implementations, no source rewrite; source-adapters shares staged component-contracts",
       "sourceSha256": "2101f0e898456fa21a8f7e7886c3422bb7fc22a0f7e957fed2b4e97b33b85fcf",
-      "packagedSha256": "decba64c880274349a3bba2d4b619ba2ff9cd6fab3918d92dfc9439c5f04270d",
+      "packagedSha256": "4fe46e6503f1c24a200d464879459c74700a9b74dc77fefc2d784edde663edb7",
       "inputs": {
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js": "bb08133b11b478c8e715038fff26ebea204d7fd5443fba31fe138b142d202efb",
         "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js": "c7ce485c97263e42568d16b11bb4a90133221c7e807498a9273d70f41ba16ef6",
@@ -145,9 +145,9 @@
         "packages/contracts/dist/telemetry.js": "cb143b68b4352b6e02be67ef7f2f341f1920f69aa47cb2b9dca868deb25c71de",
         "packages/contracts/dist/recording.js": "a84199595edeeeccd78dca485f097d1d493b391f660314a8327eb66dc0639480",
         "packages/contracts/dist/work-items.js": "4c69340cb5d3fee434dc8e00aa88c205163393a2c943143c85849ac74fd66c22",
-        "packages/contracts/dist/source.js": "f4b9a54f454a3705f20f016b0d26b58d9b1193a747a0a87ac7d4cf9a491f0b57",
+        "packages/contracts/dist/source.js": "d6265fd27c87759f54b14c2f2ee7eb0cb2082dac5bdaebc7130710d70f9f7718",
         "packages/contracts/dist/map-review.js": "6b84ade2e6969f20ade1dca39c46673c8ae451c44dca060881ef898c392ee2b2",
-        "packages/contracts/dist/application-source.js": "ddcc9278cda91ae6c7e4e494f1f226e50b5db714d7bed1469a4cab025a5cbb71",
+        "packages/contracts/dist/application-source.js": "85e0dc49ce723c356a0a747e2565928af2b9f41df8e230379debb3432fc93bdd",
         "packages/contracts/dist/analysis.js": "f9c43b5f732aae0d5586327503af2aaca857e41998fa07fa17ce2987cd9b8fd9",
         "packages/contracts/dist/analysis-customer.js": "cc362ce9b7c3a9b6fc9f9dce958a16fc404a1aa622ca806553a72395a56256bb",
         "packages/contracts/dist/privacy.js": "a62ad8ee95f19764d07aa755e0b2fe64fdbbc02773bb660270f286d52786ad14",
@@ -178,6 +178,6 @@
     "application-context-query/runner-context.mjs": "9867c9e7a40a5e9497ff2ef1f485fa4f8458e4ecbc74890c8afa092f601e2132",
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "source-adapters/index.mjs": "eb0494c7d6f2c77cb848045617ca0ff5dd687802068c24fee610158c6646aa4d",
-    "component-contracts/index.mjs": "decba64c880274349a3bba2d4b619ba2ff9cd6fab3918d92dfc9439c5f04270d"
+    "component-contracts/index.mjs": "4fe46e6503f1c24a200d464879459c74700a9b74dc77fefc2d784edde663edb7"
   }
 }
