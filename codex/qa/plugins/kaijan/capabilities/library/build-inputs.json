@@ -298,7 +298,7 @@
     "apps/core/ui/local-capabilities/test-plan/shadcn.css": "42a85978686f312390a27ae2e16fc76b9bea5ea35c93e5063410fd1298c6d5bb",
     "apps/core/compile-shadcn-styles.mjs": "06f12d5c7bb8b4b127cdfcb4645d743b5c1850c6c9e9c6d7eb0f1f7f315a4a53",
     "apps/core/ui/local-capabilities/shadcn-theme.css": "3186037913cb64162cfc9a92d22598336c3eb1f2a476cb4c1e04dac82291126b",
-    "apps/core/ui/local-capabilities/shadcn.tsx": "384873ef03b41f414aa5833b0644607c723c8abaf4ff97b8930e33a420c0a1e8",
+    "apps/core/ui/local-capabilities/shadcn.tsx": "9f648fd03eaacaa16739f2db41e0a04d6f7aaeaea780c66ad323b718344c7126",
     "apps/core/ui/local-capabilities/test-plan/app-model.ts": "183a70f24c0338753e4d745d4d253330e38e6484d11e3958e187abdc2960e167",
     "apps/core/ui/local-capabilities/test-plan/app.ts": "171629da14eed26b1ecf0acef31bdb6670fdaa749a646cc2eb6f2af2e236a725",
     "apps/core/ui/local-capabilities/test-plan/card.html": "84f9c6edfae4ba58f889a62d13a6cc098f8a413a97a01aa6e8e1d8092e4e0406",
