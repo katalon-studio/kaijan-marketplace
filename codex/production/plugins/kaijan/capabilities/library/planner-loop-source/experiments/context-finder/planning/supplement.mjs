@@ -1,3 +1,4 @@
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import { generateWithAgent } from "./agent-generation.mjs";
 import { isDeepStrictEqual } from "node:util";
 import {
@@ -370,7 +371,7 @@ export function requestSupplement(input, options = {}) {
     {
       model: settings.model,
       reasoning: { effort: settings.reasoning },
-      store: false,
+      store: storeKaijanResponses,
       instructions: renderSupplementInstructions(),
       input: encodedJson(modelInput),
       ...(options.max_output_tokens === undefined

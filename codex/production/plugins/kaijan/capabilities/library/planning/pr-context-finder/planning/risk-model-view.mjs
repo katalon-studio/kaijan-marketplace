@@ -168,6 +168,32 @@ export function planningRiskModelView(prepared, modelInput) {
     changed = true;
   }
   if (!changed) return modelInput;
+  const evidence = new Map(view.evidence_catalog.map((row) => [row.id, row]));
+  for (const { risk_context: context } of view.evidence_catalog) {
+    if (!context) continue;
+    for (const question of context.assumptions_to_confirm) {
+      if (!Array.isArray(question?.source_evidence)) continue;
+      for (const citation of question.source_evidence) {
+        const row = evidence.get(citation?.id);
+        if (
+          typeof citation?.quote !== "string" ||
+          !row ||
+          ![
+            "source_id",
+            "kind",
+            "uri",
+            "revision",
+            "line",
+            "quote",
+            "quote_sha256",
+          ].every((key) => row[key] === citation[key])
+        )
+          continue;
+        delete citation.quote;
+        citation.text_from_evidence_id = row.id;
+      }
+    }
+  }
   view.model_input_version = "planning-source-text/2";
   return view;
 }

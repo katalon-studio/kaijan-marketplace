@@ -17,8 +17,6 @@
   "imports": {
     "#loki-selected/application-context": "./application-context-query/index.mjs",
     "#loki-selected/runner-context": "./application-context-query/runner-context.mjs",
-    "#loki-selected/risk-method": "./change-risk/method.mjs",
-    "#loki-selected/risk-runtime": "./change-risk/runtime.mjs",
     "#loki-selected/related-records": "./pr-context/pr-context-finder/related/records.mjs",
     "#loki-selected/related-api": "./pr-context/pr-context-finder/related/index.mjs",
     "#loki-selected/related-input": "./pr-context/pr-context-finder/related/input.mjs",
