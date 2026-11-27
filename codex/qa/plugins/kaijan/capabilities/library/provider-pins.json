@@ -502,7 +502,7 @@
       "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2",
       "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830",
       "pr-context-finder/planning/risk-model-view.mjs": "2c4588acceef1707ce27010be827346a6711a6bf543fa1909338a5de1f920f37",
-      "pr-context-finder/planning/request-instructions.mjs": "50552558a52cdf64fea7bb6ab14822706149ffa725f0830285e98b1e0f726075",
+      "pr-context-finder/planning/request-instructions.mjs": "8bff1f113e208fd94ee212de891a4be44cb45e1fffe8d7dcbe6beb050c94d04a",
       "node_modules/@katalon-experiments/ai-client/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4",
       "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60",
       "node_modules/@katalon-experiments/ai-client/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319",
