@@ -26,6 +26,20 @@ const reportCallNames = [
   ...new Set([...reportTools, ...Array.from(reportTools, publicToolName)]),
 ].map((name) => reportToolPrefix + name);
 
+function browserResult(result) {
+  if (result?.isError || !Array.isArray(result?.content)) return undefined;
+  for (const block of result.content) {
+    if (block.type !== "text" || !block.text?.trimStart().startsWith("{"))
+      continue;
+    // Claude appends a human-readable note after the JSON result.
+    try {
+      return JSON.parse(block.text.slice(0, block.text.lastIndexOf("}") + 1));
+    } catch {
+      continue;
+    }
+  }
+}
+
 async function findCard($, call, id, state) {
   if (!state.isCurrent()) return undefined;
   const history = isProjectHistory(call.tool);
@@ -90,19 +104,8 @@ function reportHost($, e) {
     fetch: (options) => $.http.fetch("http://localhost/form", options),
     submit: (text) => $.prompt.submit({ text, asUser: true }),
     copy: (text) => $.ui.copy({ text, surface: e?.surface }),
-    openBrowser: async (url) => {
-      const result = await $.mcp.call("Claude Browser", "preview_start", {
-        url,
-      });
-      return (
-        !result.isError &&
-        result.content?.some(
-          (block) =>
-            block.type === "text" &&
-            /"navOk"\s*:\s*true\s*[,}]/.test(block.text),
-        )
-      );
-    },
+    browser: (tool, input) =>
+      $.mcp.call("Claude Browser", tool, input).catch(() => undefined),
     warnForm: () => $.ui.log("Kaijan could not open the draft. Try again."),
     redraw: () => $.ui.invalidate("ui.render"),
     warn: () =>
@@ -134,9 +137,48 @@ export function register(on, runInterruption) {
   const reads = new Map();
   const grouped = new Set();
   const draftTools = new Map();
+  let reportBrowser = {};
   const cardState = () => {
     const current = generation;
-    return { cards, reads, isCurrent: () => active && current === generation };
+    return {
+      cards,
+      reads,
+      reportBrowser,
+      isCurrent: () => active && current === generation,
+    };
+  };
+
+  const openBrowserReport = async (host, url, state) => {
+    const browser = state.reportBrowser;
+    const origin = new URL(url).origin;
+    if (browser.tabId) {
+      const context = browserResult(await host.browser("tabs_context", {}));
+      if (!state.isCurrent()) return false;
+      // Reuse only a tab Kaijan opened which still points at the report server.
+      const savedTab = Array.isArray(context?.tabs)
+        ? context.tabs.find(
+            (tab) => tab.tabId === browser.tabId && tab.origin === origin,
+          )
+        : undefined;
+      if (savedTab) {
+        const navigation = await host.browser("navigate", {
+          tabId: savedTab.tabId,
+          url,
+        });
+        if (!state.isCurrent()) return false;
+        if (navigation && !navigation.isError) {
+          if (savedTab.isActive) return true;
+          const selected = await host.browser("tabs_select", {
+            tabId: savedTab.tabId,
+          });
+          if (selected && !selected.isError) return true;
+        }
+      }
+    }
+    const opened = browserResult(await host.browser("preview_start", { url }));
+    if (!state.isCurrent() || opened?.navOk !== true) return false;
+    browser.tabId = opened.tabId;
+    return true;
   };
 
   const drawCard = async (host, e, card, id, state) => {
@@ -167,17 +209,20 @@ export function register(on, runInterruption) {
     const open = async () => {
       if (!state.isCurrent() || card.opening) return;
       if (detailsLink) {
-        card.opening = true;
+        const browser = state.reportBrowser;
+        if (browser.opening) return;
+        browser.opening = true;
         try {
-          if (await host.openBrowser(detailsLink)) return;
-        } catch {
-          // The host may not provide its Browser tool in this session.
+          const opened = await openBrowserReport(host, detailsLink, state);
+          if (!state.isCurrent()) return;
+          const useBrowserLink = !opened;
+          if (Boolean(card.useBrowserLink) !== useBrowserLink) {
+            card.useBrowserLink = useBrowserLink;
+            host.redraw();
+          }
         } finally {
-          card.opening = false;
+          browser.opening = false;
         }
-        if (!state.isCurrent()) return;
-        card.useBrowserLink = true;
-        host.redraw();
         return;
       }
       if (desktop) host.warn();
@@ -236,6 +281,7 @@ export function register(on, runInterruption) {
     active = true;
     generation++;
     selected = undefined;
+    reportBrowser = {};
     cards.clear();
     reads.clear();
     grouped.clear();
@@ -277,6 +323,7 @@ export function register(on, runInterruption) {
     active = false;
     generation++;
     selected = undefined;
+    reportBrowser = {};
     cards.clear();
     reads.clear();
     grouped.clear();

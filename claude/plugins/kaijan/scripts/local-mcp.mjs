@@ -20806,25 +20806,32 @@ var workItemDetailSchema = external_exports.object({
 // packages/contracts/dist/source.js
 var sourceIdSchema = external_exports.uuid().transform((value) => value.toLowerCase());
 var sourceLimits = {
-  maxEntries: 1e4,
-  maxBlobBytes: 8388608,
-  maxSourceBytes: 134217728,
-  maxBundleBytes: 167772160,
+  // Single-request S3 upload ceiling for the staged source archive.
+  maxStreamedBundleBytes: 5e9,
   maxGitBytes: 201326592,
-  maxTarBytes: 188743680,
-  maxManifestBytes: 3145728
+  // Compatibility envelope for older claims and Ready snapshots without a receipt.
+  maxManifestBytes: 8 * 1024 * 1024
+};
+var inlineSourceManifestLimits = {
+  maxBlobBytes: 8 * 1024 * 1024,
+  maxEntries: 1e4,
+  maxBytes: 3 * 1024 * 1024,
+  maxSourceBytes: 128 * 1024 * 1024,
+  maxBundleBytes: 160 * 1024 * 1024
 };
 var sourceProtocol = "github-source-v1";
+var maxSourceLinkTargetLength = 4096;
 var sourcePolicy = "git-tree-v1";
 var gitShaSchema = external_exports.string().regex(/^[0-9a-f]{40}$/);
 var digestSchema = external_exports.string().regex(/^[0-9a-f]{64}$/);
 var githubIdSchema = external_exports.string().regex(/^[1-9][0-9]{0,19}$/);
 var repositoryNameSchema = external_exports.string().regex(/^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/).refine((name) => !name.split("/").some((part) => part === "." || part === ".."));
+var sourceBranchNameSchema = external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")));
 var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   external_exports.strictObject({ kind: external_exports.literal("commit"), sha: gitShaSchema }),
   external_exports.strictObject({
     kind: external_exports.literal("branch"),
-    name: external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")))
+    name: sourceBranchNameSchema
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
@@ -20860,16 +20867,17 @@ var repositoryBindingSchema = external_exports.strictObject({
   host: external_exports.literal("github.com"),
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
-  installationId: githubIdSchema
+  installationId: githubIdSchema,
+  defaultBranch: sourceBranchNameSchema.optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
   mode: external_exports.enum(["100644", "100755", "120000", "160000"]),
   kind: external_exports.enum(["file", "symlink", "submodule", "lfs_pointer"]),
   objectId: gitShaSchema,
-  size: external_exports.number().int().min(0).max(8388608),
+  size: external_exports.number().int().nonnegative(),
   sha256: digestSchema.nullable(),
-  target: external_exports.string().max(4096).nullable()
+  target: external_exports.string().max(maxSourceLinkTargetLength).nullable()
 });
 var sourceManifestSchema = external_exports.strictObject({
   protocol: external_exports.literal(sourceProtocol),
@@ -20883,13 +20891,13 @@ var sourceManifestSchema = external_exports.strictObject({
   commit: gitShaSchema,
   tree: gitShaSchema,
   commitObject: external_exports.string().max(87384),
-  entries: external_exports.array(sourceEntrySchema).max(1e4),
-  totalBytes: external_exports.number().int().min(0).max(sourceLimits.maxSourceBytes),
+  entries: external_exports.array(sourceEntrySchema),
+  totalBytes: external_exports.number().int().nonnegative(),
   coverage: external_exports.literal("git-tree-with-recorded-pointers"),
   bundle: external_exports.strictObject({
     format: external_exports.literal("tar.gz"),
     sha256: digestSchema,
-    size: external_exports.number().int().positive().max(sourceLimits.maxBundleBytes)
+    size: external_exports.number().int().positive().max(sourceLimits.maxStreamedBundleBytes)
   })
 });
 var sourceRunSchema = external_exports.strictObject({
@@ -20946,6 +20954,19 @@ var sourceJobCompleteSchema = external_exports.strictObject({
   instance: sourceIdSchema,
   manifest: sourceManifestSchema
 });
+var sourceManifestSizeSchema = external_exports.number().int().positive().max(sourceLimits.maxStreamedBundleBytes);
+var sourceManifestReferenceSchema = external_exports.strictObject({
+  sha256: digestSchema,
+  size: sourceManifestSizeSchema
+});
+var sourceJobManifestUploadSchema = external_exports.strictObject({
+  instance: sourceIdSchema,
+  manifestRef: sourceManifestReferenceSchema
+});
+var sourceJobDeclarationSchema = external_exports.union([
+  sourceJobCompleteSchema,
+  sourceJobManifestUploadSchema
+]);
 
 // packages/contracts/dist/map-review.js
 var text = external_exports.string().max(32768);
@@ -20997,15 +21018,17 @@ var mapReviewSchema = external_exports.strictObject({
 // packages/contracts/dist/application-source.js
 var applicationSourceSelectionSchema = external_exports.strictObject({
   expectedRevision: external_exports.uuid().transform((value) => value.toLowerCase()).nullable(),
-  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once.")
-});
+  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once."),
+  repositoryBranches: external_exports.record(external_exports.uuid(), sourceBranchNameSchema).optional()
+}).refine(({ repositoryIds, repositoryBranches }) => Object.keys(repositoryBranches ?? {}).every((id6) => repositoryIds.includes(id6)), "Set branches only for selected repositories.");
 var applicationSourceConfigurationSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.application-source-configuration/1"),
   configurationId: external_exports.uuid().nullable(),
   revision: external_exports.uuid().nullable(),
   repositories: external_exports.array(external_exports.strictObject({
     repositoryId: external_exports.uuid(),
-    fullName: repositoryNameSchema
+    fullName: repositoryNameSchema,
+    branch: sourceBranchNameSchema.default("main")
   }))
 });
 var applicationSourceSnapshotSchema = external_exports.strictObject({
@@ -21058,6 +21081,10 @@ var analysisCapabilitySchema = external_exports.enum([
 ]);
 var analysisLimits = {
   maxBundleBytes: 64 * 1024 * 1024,
+  // S3 PutObject single-request limit. The job's scratch volume also bounds output.
+  maxStreamedBundleBytes: 5e9,
+  // Eleven octal size digits in the POSIX tar header.
+  maxTarEntryBytes: 8589934591,
   maxOutputBytes: 64 * 1024 * 1024,
   maxFileBytes: 32 * 1024 * 1024,
   maxMapBytes: 8 * 1024 * 1024,
@@ -21185,10 +21212,11 @@ var uiModelerMapSchema = external_exports.strictObject({
   summary: external_exports.record(external_exports.string(), external_exports.number().int().nonnegative()),
   review: mapReviewSchema.optional()
 });
+var streamedAnalysisArchive = "tar.gz-v1";
 var analysisFileSchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
   sha256: digestSchema,
-  size: external_exports.number().int().nonnegative().max(analysisLimits.maxFileBytes)
+  size: external_exports.number().int().nonnegative().max(analysisLimits.maxTarEntryBytes)
 });
 var analysisReportFields = {
   protocol: external_exports.literal("ui-modeler-output-v1"),
@@ -21213,12 +21241,19 @@ var analysisReportFields = {
     path: external_exports.string().max(1024),
     kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
     action: external_exports.enum(["materialized", "not_hydrated"])
-  })).max(1e4),
-  files: external_exports.array(analysisFileSchema).max(analysisLimits.maxFiles),
-  bundle: external_exports.strictObject({
-    size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
-    sha256: digestSchema
-  })
+  })),
+  files: external_exports.array(analysisFileSchema),
+  bundle: external_exports.union([
+    external_exports.strictObject({
+      size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
+      sha256: digestSchema
+    }),
+    external_exports.strictObject({
+      format: external_exports.literal(streamedAnalysisArchive),
+      size: external_exports.number().int().positive().max(analysisLimits.maxStreamedBundleBytes),
+      sha256: digestSchema
+    })
+  ])
 };
 var analysisReportSchema = external_exports.discriminatedUnion("capability", [
   external_exports.strictObject({
@@ -21237,18 +21272,31 @@ var analysisReportSchema = external_exports.discriminatedUnion("capability", [
     adapter: external_exports.literal(repositoryModelerPin.adapter),
     execution: external_exports.enum(["native-module", "controlled-native-fixture"])
   })
-]);
+]).refine((report) => "format" in report.bundle || report.files.every((file2) => file2.size <= analysisLimits.maxFileBytes), {
+  message: "Legacy analysis output file exceeds its limit.",
+  path: ["files"]
+}).refine((report) => "format" in report.bundle || report.files.length <= analysisLimits.maxFiles && report.accounting.length <= analysisLimits.maxFiles, {
+  message: "Legacy analysis output has too many entries.",
+  path: ["files"]
+});
 var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
   report: analysisReportSchema
+});
+var analysisReportDeclarationSchema = external_exports.strictObject({
+  instance: external_exports.uuid(),
+  reportRef: external_exports.strictObject({
+    sha256: digestSchema,
+    size: external_exports.number().int().positive().max(analysisLimits.maxStreamedBundleBytes)
+  })
 });
 var analysisSourceIndexSchema = external_exports.array(external_exports.strictObject({
   id: external_exports.string().regex(/^f[0-9]{1,5}$/),
   path: external_exports.string().max(1024),
   sha256: digestSchema,
   utf16Length: external_exports.number().int().nonnegative()
-})).max(1e4);
+}));
 var analysisResultSchema = external_exports.strictObject({
   run: analysisRunSchema,
   report: analysisReportSchema,

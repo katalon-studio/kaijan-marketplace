@@ -20,16 +20,17 @@ export function reportCard(elements, card, id, onPress, forms, detailsLink) {
             weight: "semibold",
             children: ["Kaijan"],
           }),
-          detailsLink
-            ? Markdown({ text: `[Show details](${detailsLink})` })
-            : Button({
-                key: "kaijan-details-" + id,
-                label: "Show details",
-                variant: "primary",
-                onPress,
-              }),
+          Button({
+            key: "kaijan-details-" + id,
+            label: "Show details",
+            variant: "primary",
+            onPress,
+          }),
         ],
       }),
+      ...(detailsLink
+        ? [Markdown({ text: `[Open in browser](${detailsLink})` })]
+        : []),
       ...(report.planCard
         ? [
             Text({
