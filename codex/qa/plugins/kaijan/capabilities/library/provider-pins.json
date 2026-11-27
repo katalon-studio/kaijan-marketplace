@@ -936,7 +936,7 @@
       "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029",
       "packages/computer-runner/src/runner.mjs": "9699b2349b927ef8a3a623f22eae2080b6ca3ec9ee6554fd77ebb28dbbc838d8",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
-      "packages/computer-runner/README.md": "b4cc038d3ba5b609aaa96df382f9395fa5b1f436554d2c253815bc0354a99e0e",
+      "packages/computer-runner/README.md": "14b3e9a2595f7d26ed916fdafb074d44e6a69d7d4b1c87c46ea81699e2afc71f",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
       "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e",
       "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55",
