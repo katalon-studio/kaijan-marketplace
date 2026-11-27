@@ -1,3 +1,4 @@
+import { storeKaijanResponses } from "@katalon-experiments/ai-client";
 import { check } from "./records.mjs";
 import { MODEL } from "./rank.mjs";
 
@@ -23,7 +24,7 @@ export function buildRelatedQueryRequest(
   );
   return {
     model: MODEL,
-    store: false,
+    store: storeKaijanResponses,
     reasoning: { effort: "medium" },
     max_output_tokens: maxOutputTokens,
     input: [

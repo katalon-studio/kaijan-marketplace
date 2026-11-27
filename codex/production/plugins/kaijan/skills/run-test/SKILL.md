@@ -1,6 +1,6 @@
 ---
 name: run-test
-description: Run and assess an authorized browser or macOS desktop test, read its result, or stop the same test. Use for saved Plan tests.
+description: Run selected tests from a saved Kaijan Plan in a browser or macOS desktop app. Read the result, reopen its report, or stop the same Run.
 ---
 
 # Run saved Plan tests
@@ -12,12 +12,20 @@ can already authorize the selected target and actions. Save the Plan with
 complete scenario in chat. A plan-only request
 does not authorize execution.
 
+When the person requests one saved test, compare the requested action and
+outcome with the saved test steps and expected results. Send only the matching
+test's ID. If no single test clearly matches, ask which one to run before
+dispatch.
+
 ## Run the selected checks
+
+<!-- codex-only -->
 
 In Codex, use a write-capable session with workspace write or Full Access for
 execution. Have the user handle any approval requested by Codex. Keep
 application actions within the user's task. If the host refuses dispatch,
 tell the user which permission or approval blocked the Run and keep the saved Plan.
+<!-- end-codex-only -->
 
 Check readiness for the selected action with `kaijan_capabilities_list`.
 Follow the installed Setup [AI access guide](../setup/references/provider-setup.md)
@@ -26,153 +34,118 @@ grant and an explicit direct-development build uses its local provider setup.
 Target application login is separate. Saved-result reads and Stop use the
 available Local tools without a new AI request.
 
-For hosts that advertise full Runner input, use the application and task to
-select the relevant Configuration when available. Follow the person's explicit
-selection or opt-out. Ask which group to use when several match and the choice
-matters.
-
 Save an ordinary value through `kaijan_test_environment_manage` only if the person asks to
 save it.
 
+When the person chooses to save an app login from a local file, use the
+[Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
+before saving the Plan.
+
+Keep raw secrets out of chat and tool arguments. Use the app login selected
+when saving the Plan. Choosing a login does not authorize execution.
+
 <!-- codex-only -->
 
-In Codex, when the person chooses to save an app login from a local file, use the
-[Configuration save command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config)
-before starting the test.
+Codex uses an isolated browser by default. Personal Chrome is available on
+macOS with the Local or QA Kaijan profile and its matching enabled extension.
+When the person asks about using personal Chrome, check
+`kaijan_capabilities_list` and read `personalChromeSupported`. A false value
+means personal Chrome is unavailable in the current setup. If they want to
+start a Run, ask whether to use the isolated browser. A true value means the
+current setup supports personal Chrome. The extension and tab are checked when
+the Run starts. If the field is absent, support is unverified.
+
+When personal Chrome is available and the person requests it, use
+`chrome-new-tab` for their signed-in Chrome at the saved URL or
+`chrome-shared-tab` for the current contents of a tab they already have open.
+Use the person's request in Codex to authorize this Run. The enabled Kaijan
+extension connects automatically. Skip instructions to choose or approve a tab
+in the extension. Screenshots from personal Chrome can include visible signed-in
+content. A sign-in requirement alone keeps the isolated default. Keep the same
+browser choice when recovering the original Run. If the Chrome connection is
+unavailable, ask whether to use the isolated browser before starting a different
+Run.
 <!-- end-codex-only -->
 
-Keep raw secrets out of chat and tool arguments. On
-hosts that advertise full Runner input, use `params` for ordinary overrides and
-[`privateParams`](../../references/private-parameters.md)
-for scoped secret references. Those hosts can Run without saved settings, and
-overrides leave any saved settings unchanged. Configuration selection never
-authorizes execution.
-
-Codex uses an isolated browser by default. When Codex advertises
-`browserSession`, use `chrome-new-tab` if the person wants their signed-in
-Chrome at the saved URL. Use `chrome-shared-tab` if the task needs the current
-contents of a tab they already have open. Use the person's request in Codex to
-authorize this Run. The enabled Kaijan extension connects automatically. Skip
-instructions to choose or approve a tab in the extension. Screenshots from
-personal Chrome can include visible signed-in content. A sign-in requirement
-alone keeps the isolated default. Keep the same browser choice when recovering
-the original Run. If personal Chrome is unavailable, ask whether to use the
-isolated browser before starting a different Run.
-
 Use `kaijan_run_start` for the normal combined run, assessment and report.
-When Codex advertises `planId`, supply the exact `planId` returned by Plan,
-the selected `testIds`, and a fresh UUID as `requestKey`. Kaijan loads the
+Supply the exact `planId` returned by Plan, the selected `testIds`, and a
+fresh UUID as `requestKey`. Kaijan loads the
 target, test data and private configuration references from the saved Plan.
+Put the person's current Run instructions and limits in `runInstructions`.
 If the person changes the target or test data, save a Plan using those inputs
 before running it. For an interrupted request, reuse the same key.
-Tell the person the Run's time limit before starting it. Runner defaults to ten
-minutes. Use `runnerTimeLimitMs` to allow more time when the task needs it.
 
-For hosts that advertise the full Runner input, follow the instructions below.
-Supply a fresh UUID as `requestKey`, the scenario ID, explicit `params` (or
-`{}`) and the authorized target. For one saved test, use its actual test ID as
-`scenarioId`.
-
-- `savedTests: {answerId, resultSha256, selectedTestIds}` loads the complete
-  selected Plan tests. Include the person's current request to run them and any
-  changed instructions in `guidance`, preserving their wording and concrete
-  limits even when no test steps changed. Keep the saved Plan and application
-  restrictions intact. Do not invent permission or copy the whole chat.
-  Add other relevant caller knowledge in `hostContext` separately.
-  This input cannot be combined with `scenario` or `planRef`.
-
-Browser tests use `executionMethod: "browser-ui"` and `target.initialURL`.
-Hostname restrictions are temporarily disabled for dogfooding. Do not require
-a list of sign-in or redirect hosts. Keep any local port in the URL. Supply
-credentials through [private login parameters](../../references/private-parameters.md)
-and pass only their `privateParams` references. The full Runner input starts a
-fresh isolated browser. Use `options.headless: true` when headless execution is
-requested. Optional limits can lower the advertised
-bounds. Desktop requirements are below.
-
-Keep requested in-app cleanup in the scenario. App sign-out requires an
+Keep requested in-app cleanup in the Plan's test steps. App sign-out requires an
 explicit request. Runner records cleanup of its own browser. The host owns
 cleanup of test processes it started and revocation of a temporary private
 login binding when the task no longer needs it. Verify that cleanup separately
 from the test outcome.
 
-<!-- codex-only -->
-
 ## Restart after an app login change
 
-In Codex, when a Run needs a new or replacement app login, guide the person to
+When a Run needs a new or replacement app login, guide the person to
 save it with the [Configuration command](../../references/private-parameters.md#save-an-app-login-to-test-environment-config).
 If the person requests a restart, stop a Run that is still waiting and read
 the original result to see what already happened. When the intended checks
 are safe to repeat, prepare a fresh Plan for that scope with the updated
 Configuration and start a new Run. Keep the original Run and report. The
 earlier saved Plan retains its original login reference.
-<!-- end-codex-only -->
 
 ## Read or stop the original test
 
-Use `kaijan_run_get` through the execution and assessment result, and
-`kaijan_run_stop` to stop the same test. Open the saved result with
-[report review](../review-report/SKILL.md).
+Use `kaijan_run_get` to read the same Run until it finishes or needs an
+answer. Use `kaijan_run_stop` to stop that Run. Open its saved report with
+[report review](../review-report/SKILL.md) using the final `report.reportId`.
 
 When `nextAction` asks for input, inspect the browser's retained clarification.
 Only a live clarification can resume. Use `kaijan_run_answer` with the
 original run and clarification IDs, one answer key and the available authorized
 context.
 
-<!-- codex-only -->
-
 For an app login that needs to be saved or changed, follow
 [Restart after an app login change](#restart-after-an-app-login-change).
-<!-- end-codex-only -->
 
 Match known questions when possible; partial answers and extra JSON
 context remain usable. Use available authorized context and suitable generated
 test data to answer. Mark sensitive supplied values with `sensitiveQuestionIds`.
-The original deadline still applies; a missing answer does not require
-discarding other context or stopping independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
+A missing answer does not require discarding other context or stopping
+independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
 for delivery and readback.
 
 Recover a lost reply with the same key and full original input. A new execution
 uses a fresh key only after admitted work is settled, effects are known and the
 caller scope still authorizes it. For a blocked sign-in redirect, use the
-retained blocked host and actions. A verified sign-in host can be included in
-a new authorized run when the original confirms that login did not start.
+retained blocked host and actions. If the saved target needs an updated
+sign-in setting, save a Plan with that setting before starting another Run.
 For `runner_worker_launch_failed` with `not-executed`, retain the failed receipt,
 reconnect and verify the responding package before starting a new authorized
 run. Do not replay unknown actions or effects. Stop requires original readback
 for the actual cancellation, partial evidence and cleanup.
 
 Keep execution status, actual results, assessment and cleanup distinct.
-A combined run assesses its retained evidence internally. Open its
-`report.reportId` through [review-report](../review-report/SKILL.md), or show
-standalone execution by its exact run ID and digest. Use ordered full-result
+Runner saves a judgment for each selected test. Use ordered full-result
 reads when more evidence is needed. For customer wording, follow
 [Present assessed results](../../references/assessed-result-language.md).
 Use [the saved browser trace](../review-report/SKILL.md#view-a-saved-browser-trace)
 to inspect an existing recording.
 
-## macOS desktop scenarios
+## macOS desktop tests
 
 <!-- codex-only -->
 
 In Codex, save the app’s bundle ID as `target.app` in Test Environment and pass its ID to Plan.
 <!-- end-codex-only -->
 
-Use
-`executionMethod: "desktop-ui"` and the app target on hosts that advertise the
-full Runner input. If the caller supplies a `.app` path or needs first-time setup,
+Select the Mac app when saving the Plan. If the caller supplies a `.app` path
+or needs first-time setup,
 use the [macOS setup guide](references/macos-appium-setup.md).
-Set `target.launch: true` only when launch is allowed.
-`false` requires a running app. Desktop requires configured full Xcode, UI Automation and
+Permit app launch in the Plan only when authorized. Desktop requires
+configured full Xcode, UI Automation and
 Accessibility permissions, an unlocked GUI and the app on the main display.
-Appium/Mac2 are packaged. Use `desktopInputs` for the input limit. The app
-keeps its state and stays open after the run. Browser clarification and
-Playwright trace do not apply to desktop.
+Appium/Mac2 are packaged. The app keeps its state and stays open after the run.
+Browser clarification and Playwright trace do not apply to desktop.
 
 ## Saved terminal observations
 
-Kaijan retains Runner observations for the normal Planner assessment and report.
-Do not supply caller-authored terminal predicates or verdicts. Old saved terminal
-verification stays readable with its original attribution; reading it does not
-execute or reassess a test.
+Runner saves observations and judgments with the Run. Older terminal
+verification keeps its original attribution when reopened.

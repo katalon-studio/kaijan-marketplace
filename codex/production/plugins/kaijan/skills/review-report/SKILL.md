@@ -59,10 +59,14 @@ rendering.
 
 ## Preserve PR source bindings
 
-For a new report, attach original GitHub PR and files reads as
-`reportSources` in `kaijan_report_show`. If a historical Run already has a linked
-source context, the report uses that original automatically. Keep selected Runs
-within the same source context. To read the original record, call
+For a new report, attach the original GitHub REST pull request object and
+changed-file records as `reportSources` in `kaijan_report_show`. Use an
+authorized GitHub read that returns `html_url`, nested `base` and `head`
+objects with their refs and SHAs, and the original file statuses and line counts.
+If the available read lacks these fields, omit `reportSources` and show the same
+saved result. If a historical Run already has a linked source context, the report
+uses that original automatically. Keep selected Runs within the same source
+context. To read the original record, call
 `kaijan_report_get` with the report ID and `sourceOffset: 0`. Join the returned
 `recordChunk.text` pages in order, using each `nextOffset` until it is null.
 The source revision, Plan digest and selected

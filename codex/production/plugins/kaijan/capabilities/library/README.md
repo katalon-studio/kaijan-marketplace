@@ -78,9 +78,12 @@ A multi-Plan selection does not guess a first plan.
 renderer. It preserves each selected full native Plan result and exact source
 ID/kind/digest from the existing immutable report reader. It does not use the
 bounded report excerpt or query a producer. Multiple selected Plans require a
-user selection; no latest-plan guess. Original Plan fields, partial results and
-unknown classification remain unchanged. The projection supplies `requestTestIndexes` from explicit requirement authority
-and resolved work-item intent references for both card and details. Unknown spec files/code/outcomes remain unavailable.
+user selection. The projection puts a test under **Change impact** when its
+expected result or a linked objective cites implementation evidence or a saved
+change review. It puts the remaining tests under **Functional**. The card and
+details use `requestTestIndexes` to identify the Functional tests. The saved
+Plan fields, partial results and underlying classification remain intact.
+Unknown spec files, code and outcomes remain unavailable.
 Manual test fields and per-check details remain in the original readers. The
 selected design shows executable source in successful rows and original failure
 output plus Test code/evidence in historical failure rows. Missing source is
@@ -176,21 +179,22 @@ can also be called as `buildCapabilityLibrary({ output })` from
 the normal TypeScript checks. The output must be new; failures preserve partial
 artifacts. No installation or network operation occurs during assembly.
 
-The builder reads `packages/context-finder/capability-selection.json`. That
-versioned manifest selects exact promoted source bytes and original provenance,
-including consumed derivatives that differ from newest experiment methods.
-No private `--planning-root` or `--pr-context-root` is needed. Every dynamic
-source, statically bundled native input and native data asset is hash checked.
-The static graph must remain inside `packages/`; the shared AI client is resolved
-from its promoted source rather than an arbitrary installed copy.
+The builder reads `packages/context-finder/capability-selection.json` to select
+promoted source paths, staging destinations and historical provenance. The Git
+checkout supplies first-party bytes. The build generates content digests from
+those bytes for saved-result provenance and artifact integrity. The static
+graph uses admitted source paths in `packages/`, including the promoted shared
+AI client. Independently downloaded inputs keep their integrity checks.
 
 The portable output contains `api.mjs`, `computer-runner-worker.mjs`, adjacent
 `map-ui.html`, native `change-risk/`, `pr-context/`, `planning/` and
 `work-item-risk/` subtrees, relative data assets, the unchanged external Runner
 package/dependency closure and third-party notices. `provider-pins.json`,
 `native-selection.json`, `build-inputs.json` and `library-manifest.json` bind
-the selected bytes. Product copies this whole directory into its payload.
-Product supplies the Node runtime and transport entrypoint separately.
+the selected bytes. The Codex and Claude package builders omit the standalone
+map HTML. Their report App Model uses the shipped Test plan renderer. The
+standalone map stays available in the generic library build. Product supplies
+the Node runtime and transport entry point separately.
 
 `preservation.json` maps the original Research paths and hashes to promoted
 sources and identifies the limited transport/path/document changes. Deeper

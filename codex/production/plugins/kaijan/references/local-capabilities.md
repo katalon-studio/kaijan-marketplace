@@ -88,7 +88,7 @@ useful evidence. Open external Playwright replay only when requested.
 
 Codex calls the installed Product MCP tools directly. No analysis CLI is part of this integration. Inspect kaijan_capabilities_list for actual readiness. The installed profile binds private state and the connection. In the normal managed package (`authArchitecture: shared-broker-v1` in `loki-build.json`), Core and Local use stdio and share the Kaijan sign-in broker. Source, AI access, GitHub and browser authority remain distinct.
 
-The local catalog includes test planning and browser or macOS test execution with Runner judgments. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. Plan finds related work and reviews risk from the selected source or work item. Planning never starts Runner automatically. In Codex, use the saved Test Environment and any saved Test Data with the original objective. Run uses the exact saved Plan and selected test IDs. Follow the owning skill on hosts that advertise inline target and parameters.
+The local catalog includes test planning and browser or macOS test execution with Runner judgments. Use Plan to save additions or revisions. Application maps are not offered or required in this dogfooding plugin release. Setup saves source/goal/optional-target configuration without sending source to a model. Plan finds related work and reviews risk from the selected source or work item. Planning never starts Runner automatically. Use the saved Test Environment and any saved Test Data with the original objective. Run uses the exact saved Plan and selected test IDs.
 
 Use the installed owning skill and exact advertised input schema. Plan returns the saved answer in the awaited call. There is no public advisory job, poll or Stop API. Cancel the host tool request to propagate cancellation; in-flight computation or fees can remain uncertain. Optional `requestKey` correlates identical input/configuration after a lost reply. Preserve unknown effects and never replace them under a new key. Immutable supplied-input answers may reuse a private cache bound to the complete input, selected package, model/settings and private configuration; a reused native ledger describes the original computation, not a new charge. When `resultRead` is present and the host presentation is truncated, call `kaijan_result_read` with its family, answerId and ordered offsets. Join `resultChunk.text` until nextOffset is null; this reads completed JSON without inference. Runner retains its separate execute/get/stop lifecycle. References remain unresolved unless a separately authorized capability retrieves them.
 
@@ -117,11 +117,10 @@ does not copy saved evidence back or invoke a second routine assessment. Open a 
 Plan-only requests do not execute. Full requests with sufficient inputs continue through
 their selected scenarios, evidence assessment and native report.
 
-Tell the person the time limit before starting Explorer or Runner in Codex.
-Explorer defaults to five minutes for browser and macOS targets. Runner defaults
-to ten minutes. Codex can use `explorerTimeLimitMs` on Plan or
-`runnerTimeLimitMs` on Run to increase a limit before starting that operation.
-The tools reject a duration below the stage's default.
+Tell the person the time limit before starting Explorer in Codex. Explorer
+defaults to five minutes for browser and macOS targets. Codex can use
+`explorerTimeLimitMs` on Plan to increase that limit before starting.
+Run accepts the selected tests and supports Stop.
 
 Plan retains original source internally. To read original GitHub source attached
 to a saved report, use its report ID and `sourceOffset: 0` with `kaijan_report_get`.
@@ -133,7 +132,7 @@ the selected operations. Reopen the saved report by its original report ID.
 
 Call `kaijan_capabilities_list` with `{}`. The normal reply uses
 `kaijan.customer-capabilities/2`. Each action has a `state` and `message`:
-`context`, `changeReview`, `relatedWork`, `workItemReview`, `testPlanning`,
+`context`, `relatedWork`, `workItemReview`, `testPlanning`,
 `additionalTests` and `testExecution`.
 
 - `available`: the action is available for an authorized task. Application access
@@ -141,6 +140,9 @@ Call `kaijan_capabilities_list` with `{}`. The normal reply uses
 - `setup-required`: follow the returned setup message, then continue the same task.
 - `unavailable`: follow the returned recovery message. This reply does not establish
   that the action can run.
+
+Current Codex replies include `personalChromeSupported` for the installed host
+and profile. The matching extension and tab connection are checked at Run.
 
 Read `connection.state` and `connection.message` separately. A
 `reconnect-required` result gives recovery guidance; `not-checked` does not verify

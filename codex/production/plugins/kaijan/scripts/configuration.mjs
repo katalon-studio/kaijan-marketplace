@@ -136,7 +136,7 @@ try {
 } catch {
   // File, parser, and store errors can contain input values.
   process.stderr.write(
-    "Configuration was not confirmed. Check the local file, field names, and current Configuration revision. Use save --from-file PATH --secret FIELD=VARIABLE with --name NAME --application URL, or with --id ID --revision REVISION. Include --aut-id AUT_ID when creating a Test Environment in Codex. Read the Configuration before retrying.\n",
+    "Configuration was not confirmed. Check the local file, field names, and current Configuration revision. Use save --from-file PATH --secret FIELD=VARIABLE with --name NAME --application URL, or with --id ID --revision REVISION. Include --aut-id AUT_ID when creating a Test Environment. Read the Configuration before retrying.\n",
   );
   process.exitCode = 1;
 }

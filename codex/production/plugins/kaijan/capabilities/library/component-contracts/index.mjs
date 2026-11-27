@@ -20066,6 +20066,12 @@ var planningTransportReasonSchema = external_exports.enum([
   "socket_timeout",
   "unknown"
 ]);
+var planningPreparationFailureSchema = external_exports.enum([
+  "application_model_access_denied",
+  "application_model_unavailable",
+  "desktop_xcode_setup_required",
+  "exploration_incomplete"
+]);
 var planGeneratedPropertiesSchema = external_exports.strictObject({
   session_id: external_exports.null(),
   plan_id: telemetryOperationId,
@@ -20091,11 +20097,14 @@ var planGeneratedPropertiesSchema = external_exports.strictObject({
   provider_http_status: providerHttpStatusSchema.optional(),
   failure_stage: planningFailureStageSchema.optional(),
   validation_rule: planningValidationRuleSchema.optional(),
-  transport_reason: planningTransportReasonSchema.optional()
+  transport_reason: planningTransportReasonSchema.optional(),
+  preparation_failure: planningPreparationFailureSchema.optional()
 }).refine((value) => {
-  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0) && value.outcome !== "failed")
+  if ((value.failure_stage !== void 0 || value.validation_rule !== void 0 || value.transport_reason !== void 0 || value.preparation_failure !== void 0) && value.outcome !== "failed")
     return false;
   if (value.transport_reason !== void 0 && value.error_code !== "transport_failure_no_retry")
+    return false;
+  if (value.preparation_failure !== void 0 && value.error_code !== "planning_failed")
     return false;
   if (value.provider_http_status !== void 0 && (value.provider_http_status === 200 || value.error_code !== providerFailureCode(value.provider_http_status, value.error_code === "provider_quota_exhausted")))
     return false;
@@ -20570,7 +20579,8 @@ var coreInferencePropertiesSchema = external_exports.strictObject({
   const hasUsage = value.model !== null && value.input_tokens !== null && value.output_tokens !== null;
   if (native !== hasUsage)
     return false;
-  if (native && (value.transport_outcome !== "body_complete" || value.http_status === null || value.http_status < 200 || value.http_status >= 300))
+  const websocketUsage = value.inference_route === "responses" && value.http_status === 101 && (value.native_response_outcome === "completed" || value.native_response_outcome === "incomplete" || value.native_response_outcome === "output_limit");
+  if (native && (value.transport_outcome !== "body_complete" || !websocketUsage && (value.http_status === null || value.http_status < 200 || value.http_status >= 300)))
     return false;
   if (!native && [
     value.model,
@@ -20730,11 +20740,12 @@ var gitShaSchema = external_exports.string().regex(/^[0-9a-f]{40}$/);
 var digestSchema = external_exports.string().regex(/^[0-9a-f]{64}$/);
 var githubIdSchema = external_exports.string().regex(/^[1-9][0-9]{0,19}$/);
 var repositoryNameSchema = external_exports.string().regex(/^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/).refine((name) => !name.split("/").some((part) => part === "." || part === ".."));
+var sourceBranchNameSchema = external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")));
 var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   external_exports.strictObject({ kind: external_exports.literal("commit"), sha: gitShaSchema }),
   external_exports.strictObject({
     kind: external_exports.literal("branch"),
-    name: external_exports.string().min(1).max(255).refine((value) => value !== "@" && value !== "HEAD" && !value.startsWith("-") && !value.endsWith(".") && !value.includes("..") && !value.includes("@{") && ![...value].some((character) => character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127 || "~^:?*[\\".includes(character)) && value.split("/").every((part) => Boolean(part) && !part.startsWith(".") && !part.endsWith(".lock")))
+    name: sourceBranchNameSchema
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
@@ -20770,7 +20781,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   host: external_exports.literal("github.com"),
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
-  installationId: githubIdSchema
+  installationId: githubIdSchema,
+  defaultBranch: sourceBranchNameSchema.optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -20907,15 +20919,17 @@ var mapReviewSchema = external_exports.strictObject({
 // ../contracts/dist/application-source.js
 var applicationSourceSelectionSchema = external_exports.strictObject({
   expectedRevision: external_exports.uuid().transform((value) => value.toLowerCase()).nullable(),
-  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once.")
-});
+  repositoryIds: external_exports.array(external_exports.uuid().transform((value) => value.toLowerCase())).refine((ids2) => new Set(ids2).size === ids2.length, "Select each repository once."),
+  repositoryBranches: external_exports.record(external_exports.uuid(), sourceBranchNameSchema).optional()
+}).refine(({ repositoryIds, repositoryBranches }) => Object.keys(repositoryBranches ?? {}).every((id2) => repositoryIds.includes(id2)), "Set branches only for selected repositories.");
 var applicationSourceConfigurationSchema = external_exports.strictObject({
   schema: external_exports.literal("kaijan.application-source-configuration/1"),
   configurationId: external_exports.uuid().nullable(),
   revision: external_exports.uuid().nullable(),
   repositories: external_exports.array(external_exports.strictObject({
     repositoryId: external_exports.uuid(),
-    fullName: repositoryNameSchema
+    fullName: repositoryNameSchema,
+    branch: sourceBranchNameSchema.default("main")
   }))
 });
 var applicationSourceSnapshotSchema = external_exports.strictObject({
@@ -20968,6 +20982,8 @@ var analysisCapabilitySchema = external_exports.enum([
 ]);
 var analysisLimits = {
   maxBundleBytes: 64 * 1024 * 1024,
+  // S3 PutObject single-request limit. The job's scratch volume also bounds output.
+  maxStreamedBundleBytes: 5e9,
   maxOutputBytes: 64 * 1024 * 1024,
   maxFileBytes: 32 * 1024 * 1024,
   maxMapBytes: 8 * 1024 * 1024,
@@ -21095,6 +21111,7 @@ var uiModelerMapSchema = external_exports.strictObject({
   summary: external_exports.record(external_exports.string(), external_exports.number().int().nonnegative()),
   review: mapReviewSchema.optional()
 });
+var streamedAnalysisArchive = "tar.gz-v1";
 var analysisFileSchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
   sha256: digestSchema,
@@ -21124,11 +21141,18 @@ var analysisReportFields = {
     kind: external_exports.enum(["file", "lfs_pointer", "symlink", "submodule"]),
     action: external_exports.enum(["materialized", "not_hydrated"])
   })).max(1e4),
-  files: external_exports.array(analysisFileSchema).max(analysisLimits.maxFiles),
-  bundle: external_exports.strictObject({
-    size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
-    sha256: digestSchema
-  })
+  files: external_exports.array(analysisFileSchema),
+  bundle: external_exports.union([
+    external_exports.strictObject({
+      size: external_exports.number().int().positive().max(analysisLimits.maxBundleBytes),
+      sha256: digestSchema
+    }),
+    external_exports.strictObject({
+      format: external_exports.literal(streamedAnalysisArchive),
+      size: external_exports.number().int().positive().max(analysisLimits.maxStreamedBundleBytes),
+      sha256: digestSchema
+    })
+  ])
 };
 var analysisReportSchema = external_exports.discriminatedUnion("capability", [
   external_exports.strictObject({
@@ -21147,7 +21171,7 @@ var analysisReportSchema = external_exports.discriminatedUnion("capability", [
     adapter: external_exports.literal(repositoryModelerPin.adapter),
     execution: external_exports.enum(["native-module", "controlled-native-fixture"])
   })
-]);
+]).refine((report) => "format" in report.bundle || report.files.length <= analysisLimits.maxFiles, { message: "Legacy analysis output has too many files.", path: ["files"] });
 var analysisClaimSchema = external_exports.strictObject({ instance: external_exports.uuid() });
 var analysisCompletionSchema = external_exports.strictObject({
   instance: external_exports.uuid(),
@@ -22041,6 +22065,20 @@ var productReportPreparationSchema = external_exports.strictObject({
 });
 var productReportReferenceSchema = external_exports.strictObject({
   reference: external_exports.uuid()
+});
+var productReportImageExportQuerySchema = external_exports.strictObject({
+  after: external_exports.string().regex(/^(?:0|[1-9]\d{0,15})$/).refine((value) => Number.isSafeInteger(Number(value))).default("0")
+});
+var productReportImageExportSchema = external_exports.strictObject({
+  records: external_exports.array(external_exports.strictObject({
+    sequence: external_exports.int().positive(),
+    reference: external_exports.uuid(),
+    image_id: external_exports.uuid(),
+    filename: external_exports.string().max(120),
+    media_type: external_exports.enum(["image/png", "image/jpeg", "image/webp"]),
+    image_base64: external_exports.string().min(1).max(4 * Math.ceil(issueImageLimits.fileBytes / 3))
+  })).max(1),
+  next: external_exports.int().positive().nullable()
 });
 var productReportSlackDeliverySchema = external_exports.discriminatedUnion("action", [
   productReportReferenceSchema.extend({ action: external_exports.literal("list") }),
