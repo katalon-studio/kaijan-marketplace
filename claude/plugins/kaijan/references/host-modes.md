@@ -82,7 +82,8 @@ invent a replacement ID to bypass this limit.
 
 In Desktop, select **Show details** to open the saved report in Claude's Browser
 pane. If the pane is hidden, open it with **Cmd+Shift+B**. If the Browser tool
-cannot open the report, select the fallback **Show details** link.
+cannot open the report, **Show details** stays available to retry and
+**Open in browser** provides a fallback link.
 From the interactive CLI, **Show details** opens the shared Claude Code report HTML
 in the default browser. Project history and the CLI browser fallback use the
 native pane.

@@ -1,7 +1,7 @@
 {
   "name": "kaijan",
   "displayName": "Kaijan",
-  "version": "2026.1126.71532",
+  "version": "2026.1127.42856",
   "description": "Kaijan is a testing plugin. Plan functional and change-impact tests, run authorized scenarios, and review saved results in Claude Code.",
   "author": {
     "name": "Katalon"
