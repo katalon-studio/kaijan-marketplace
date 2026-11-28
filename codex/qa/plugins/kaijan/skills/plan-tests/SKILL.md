@@ -11,7 +11,17 @@ to plan useful observable checks and expected results for the original task.
 
 <!-- codex-only -->
 
-When Core advertises `kaijan_session_get`, start new Plans on Core. Read
+When Core advertises `kaijan_plan_get`, use its Plan tools. Select the AUT and
+Environment using `kaijan_aut_list` and `kaijan_environment_list`. Call
+`kaijan_plan_create` with `environmentId`, the person's `objective`, and,
+when the task concerns a PR, `pullRequest: { repository, number }`. Use the
+repository slug and PR number. Core reads the connected GitHub source.
+Read the returned `planId` with `kaijan_plan_get`. Give the person the
+saved tests or the progress message. A Run requires a separate request.
+
+The remaining planning input instructions apply to servers advertising
+the earlier Plan schema. When such a Core advertises `kaijan_session_get`,
+start new Plans on Core. Read
 the returned `sessionId` there in the original chat. Use the saved
 `outcome.planId` and its test IDs for a separately requested Run.
 
