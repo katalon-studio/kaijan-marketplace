@@ -933,8 +933,8 @@
       "scope": "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative."
     },
     "files": {
-      "packages/computer-runner/package.json": "8bed62bd4eb85cae0a3b70d5d5f59c7015521da1ea3438fab7ad739964772029",
-      "packages/computer-runner/src/runner.mjs": "9699b2349b927ef8a3a623f22eae2080b6ca3ec9ee6554fd77ebb28dbbc838d8",
+      "packages/computer-runner/package.json": "480abb31d50ed5d9a611945014e2c18d37d364eb05446aaf35a4e14fb76f7e44",
+      "packages/computer-runner/src/runner.mjs": "780944a8644436b2f66d96fcdb6d9afdcb3ef45383a7788c04aab98c273d2eb7",
       "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f",
       "packages/computer-runner/README.md": "14b3e9a2595f7d26ed916fdafb074d44e6a69d7d4b1c87c46ea81699e2afc71f",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
@@ -951,6 +951,7 @@
       "packages/computer-runner/src/case-evidence.mjs": "285795181f5ad1b42b92d53494f1deb169eb38a4a17f0b5fff109194da4baca9",
       "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425",
       "packages/computer-runner/src/browser-target.mjs": "d3f022796c845fc4dad75ff810df697c75186b114ac6c40dbffaa28d79cd09a5",
+      "packages/computer-runner/src/browser-tool-catalog.mjs": "7b61abc67303966a20c1d26eed85dcc4315001aef6bfa82f89c6e4901254533a",
       "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263",
       "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767",
       "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c",
