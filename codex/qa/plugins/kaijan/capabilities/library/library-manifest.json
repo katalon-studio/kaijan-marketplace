@@ -12,7 +12,7 @@
     "application-context-query/runner-context.d.mts": "dd32b8c63a77bc451ed2410fd9f6e4334ffa8d827a228ca99f6c15e60e4476c7",
     "application-context-query/runner-context.mjs": "9867c9e7a40a5e9497ff2ef1f485fa4f8458e4ecbc74890c8afa092f601e2132",
     "application-context-query/store.mjs": "ddb423d064daa4b1cf4e9c6bc82b336aae78dced23fa2d3fb950f496572763f5",
-    "build-inputs.json": "414abad3c754db42b56cd39307e654db6d6c0480971b6c9127d9ce7ff839d04c",
+    "build-inputs.json": "8f6fd97798ecfb45052ba18ec7bac29ba7b939ab30b9dc33b2494d1f4472045d",
     "change-risk/input.schema.json": "d2313e509ba1d0e2a82e275528be62da03eab56d08df515d392e6225aea025a5",
     "change-risk/output.schema.json": "60e8fbe6e67ca20fa892e34582494ddb61a85d750c61d0d9ab4eeb5f0a234a49",
     "component-audit.json": "37a6ca1a227c9f0b67a32bb7ac0e45a159010dc5a9f99daa18b097613b1fadec",
