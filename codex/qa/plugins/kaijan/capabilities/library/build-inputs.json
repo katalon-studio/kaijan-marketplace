@@ -339,7 +339,7 @@
     "packages/capabilities/package.json": "5893c534b8c7399b2842a0cba8582512e47214de628a793aa67d4216f298fdac",
     "packages/capabilities/tsconfig.json": "013584d8d38838ee0e0f857e77e6cd48f6098115757d22e258d21a398d63e8bd",
     "packages/capabilities/ui/tsconfig.json": "30133c6d1c3c02de99266980d8768b4e06f6fcb60fe9462c01d74f7c005df5fc",
-    "packages/capabilities/provider-pins.json": "faca590c69531a270c1e38ed49b0e2d2ee31fa6e986d4fb36bfd3dac22d89ac0",
+    "packages/capabilities/provider-pins.json": "ac1401c85edb424c984f4a273f17bec6c306776b462c37fab90b623a56c13228",
     "packages/capabilities/scripts/build.mjs": "fee5b48601cf2885cf01ff4485fde26d5a9030196fb7a83ada1d7d777528b147",
     "packages/capabilities/scripts/capability-source.mjs": "630f530518466c188a45379285310093b8a615440c43f4e5e07edc95d6508dc2",
     "packages/capabilities/scripts/runner-declarations.mjs": "0ecb617b2d6cb61912b090a865a966cd3aa47a6855f57c85a655a0dcb4d85e31",
