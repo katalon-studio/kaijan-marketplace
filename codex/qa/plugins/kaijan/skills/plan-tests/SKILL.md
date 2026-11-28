@@ -9,6 +9,14 @@ Use the [shared Product MCP guidance](../../references/local-capabilities.md)
 and the readiness returned by `kaijan_capabilities_list`. Use `kaijan_plan_create`
 to plan useful observable checks and expected results for the original task.
 
+<!-- codex-only -->
+
+When Core advertises `kaijan_session_get`, start new Plans on Core. Read
+the returned `sessionId` there in the original chat. Use the saved
+`outcome.planId` and its test IDs for a separately requested Run.
+
+<!-- end-codex-only -->
+
 Use `kaijan_test_inputs_read` to find and reuse the application under
 test, its Test Environment and its Test Data.
 Use a suitable existing record when available. Save the browser URL or Mac

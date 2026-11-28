@@ -19984,7 +19984,8 @@ var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
-    number: external_exports.number().int().positive().max(2147483647)
+    number: external_exports.number().int().positive().max(2147483647),
+    revision: external_exports.strictObject({ base: gitShaSchema, head: gitShaSchema }).optional()
   })
 ]);
 var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
@@ -20009,7 +20010,8 @@ var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
 var repositoryConnectSchema = external_exports.strictObject({
   installationId: githubIdSchema,
   repositoryId: githubIdSchema,
-  shareWithWorkspace: external_exports.literal(true)
+  shareWithWorkspace: external_exports.literal(true),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var repositoryBindingSchema = external_exports.strictObject({
   id: sourceIdSchema,
@@ -20017,7 +20019,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
   installationId: githubIdSchema,
-  defaultBranch: sourceBranchNameSchema.optional()
+  defaultBranch: sourceBranchNameSchema.optional(),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -21546,6 +21549,40 @@ var runnerErrorSchema = external_exports.strictObject({
   })
 });
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
+
+// ../contracts/dist/model-settings.js
+var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6.1-terra"),
+    reasoning: external_exports.enum(["low", "medium"]),
+    effortRecovery: external_exports.boolean().optional()
+  }),
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6-luna"),
+    reasoning: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+    effortRecovery: external_exports.boolean().optional()
+  })
+]).transform((settings) => ({
+  model: settings.model,
+  reasoning: settings.reasoning,
+  ...settings.effortRecovery === void 0 ? {} : { effortRecovery: settings.effortRecovery }
+}));
+var defaultRunnerSettings = Object.freeze({
+  model: "gpt-6.1-terra",
+  reasoning: "low"
+});
+var defaultBrowserRunnerSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
+var analysisSettingsSchema = external_exports.strictObject({
+  model: external_exports.enum(["gpt-6-luna", "gpt-6.1-terra"]),
+  reasoning: external_exports.enum(["low", "medium"])
+});
+var defaultAnalysisSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
 
 // ../contracts/dist/assessment-preparation.js
 var digest7 = external_exports.string().regex(/^[a-f0-9]{64}$/);

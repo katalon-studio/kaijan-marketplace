@@ -1,4 +1,4 @@
-import { createRequire } from "node:module"; const require = createRequire(import.meta.url);
+const require = process.getBuiltinModule("node:module").createRequire(import.meta.url);
 
 // apps/codex-plugin/src/auth/connection-entry.mjs
 import { resolveRuntimeBuild } from "./runtime-profile.mjs";

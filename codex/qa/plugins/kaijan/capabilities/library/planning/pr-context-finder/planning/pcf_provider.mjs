@@ -275,6 +275,7 @@ async function dispatchPlan(
     max_request_bytes,
     max_output_tokens_limit,
     transport = native,
+    requestResponses,
     env = process.env,
     signal,
     deadline_ms = 180000,
@@ -317,19 +318,21 @@ async function dispatchPlan(
   )
     throw Error("Required research model and reasoning effort");
   modelSettings({ model: body.model, reasoning: body.reasoning.effort });
-  const key = env.OPENAI_API_KEY;
-  const connection = providerConnection(
-    "https://api.openai.com/v1/responses",
-    key,
-    env,
-  );
+  // Core can own the authenticated gateway call for a cloud session.
+  const connection = requestResponses
+    ? undefined
+    : providerConnection(
+        "https://api.openai.com/v1/responses",
+        env.OPENAI_API_KEY,
+        env,
+      );
   fs.mkdirSync(path.dirname(root), { recursive: true });
   fs.mkdirSync(root, { mode: 0o700 });
   save(path.join(root, "input.json"), packet);
   saveBytes(path.join(root, "request.json"), wire);
   save(path.join(root, "dispatch.json"), {
     started_at: new Date().toISOString(),
-    endpoint: connection.url,
+    endpoint: connection?.url ?? "kaijan:core/responses",
     input_hash: digest(packet),
     request_sha256: hash(wire),
     wire_bytes: wire.length,
@@ -382,28 +385,30 @@ async function dispatchPlan(
         try {
           requestSignal.throwIfAborted();
           const request = {
-            url: connection.url,
-            ...(connection.socketPath
+            url: connection?.url ?? "kaijan:core/responses",
+            ...(connection?.socketPath
               ? { socketPath: connection.socketPath }
               : {}),
             method: "POST",
             headers: {
-              ...connection.headers,
+              ...connection?.headers,
               "Content-type": "application/json",
             },
             body: wire,
             inactivityTimeoutMs: 180000,
           };
-          if (transport === native)
+          if (connection && transport === native)
             managedSession = managedPlanningSession(
               connection,
               request,
               requestBody.store,
             );
-          const selectedTransport = managedSession
+          const sendResponses =
+            requestResponses ?? managedSession?.send.bind(managedSession);
+          const selectedTransport = sendResponses
             ? async (_request, { signal: transportSignal }) =>
                 planningResponse(
-                  await managedSession.send(requestBody, transportSignal, {
+                  await sendResponses(requestBody, transportSignal, {
                     inactivityTimeoutMs: request.inactivityTimeoutMs,
                   }),
                 )
@@ -447,7 +452,7 @@ async function dispatchPlan(
         const httpFailure = (raw) => {
           const [status, reason] = providerFailure(
             response,
-            Boolean(connection.socketPath),
+            Boolean(requestResponses || connection?.socketPath),
             raw,
           );
           if (status !== undefined) receipt.provider_http_status = status;

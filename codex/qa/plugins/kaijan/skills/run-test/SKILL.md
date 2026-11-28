@@ -12,6 +12,16 @@ can already authorize the selected target and actions. Save the Plan with
 complete scenario in chat. A plan-only request
 does not authorize execution.
 
+<!-- codex-only -->
+
+For a Plan saved by Core, start the selected Run on the same server.
+When it returns a `sessionId`, use Core's `kaijan_session_get` in the
+original chat for status and outcome. Open the returned `reportId` with
+[report review](../review-report/SKILL.md). Use the controls advertised
+by the server that owns that Run.
+
+<!-- end-codex-only -->
+
 When the person requests one saved test, compare the requested action and
 outcome with the saved test steps and expected results. Send only the matching
 test's ID. If no single test clearly matches, ask which one to run before

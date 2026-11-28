@@ -1,4 +1,4 @@
-import { createRequire } from "node:module"; const require = createRequire(import.meta.url);
+const require = process.getBuiltinModule("node:module").createRequire(import.meta.url);
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -45506,7 +45506,8 @@ var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
-    number: external_exports.number().int().positive().max(2147483647)
+    number: external_exports.number().int().positive().max(2147483647),
+    revision: external_exports.strictObject({ base: gitShaSchema, head: gitShaSchema }).optional()
   })
 ]);
 var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
@@ -45531,7 +45532,8 @@ var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
 var repositoryConnectSchema = external_exports.strictObject({
   installationId: githubIdSchema,
   repositoryId: githubIdSchema,
-  shareWithWorkspace: external_exports.literal(true)
+  shareWithWorkspace: external_exports.literal(true),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var repositoryBindingSchema = external_exports.strictObject({
   id: sourceIdSchema,
@@ -45539,7 +45541,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
   installationId: githubIdSchema,
-  defaultBranch: sourceBranchNameSchema.optional()
+  defaultBranch: sourceBranchNameSchema.optional(),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -47090,7 +47093,9 @@ var permissionSchema = external_exports.enum([
   "results:write",
   "maps:read",
   "maps:write",
-  "github:credential"
+  "github:credential",
+  "testing:start",
+  "testing:execute"
 ]);
 var permissions = permissionSchema.options;
 var opaqueSchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
@@ -52339,6 +52344,40 @@ var runnerErrorSchema = external_exports.strictObject({
 });
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
+// packages/contracts/dist/model-settings.js
+var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6.1-terra"),
+    reasoning: external_exports.enum(["low", "medium"]),
+    effortRecovery: external_exports.boolean().optional()
+  }),
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6-luna"),
+    reasoning: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+    effortRecovery: external_exports.boolean().optional()
+  })
+]).transform((settings) => ({
+  model: settings.model,
+  reasoning: settings.reasoning,
+  ...settings.effortRecovery === void 0 ? {} : { effortRecovery: settings.effortRecovery }
+}));
+var defaultRunnerSettings = Object.freeze({
+  model: "gpt-6.1-terra",
+  reasoning: "low"
+});
+var defaultBrowserRunnerSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
+var analysisSettingsSchema = external_exports.strictObject({
+  model: external_exports.enum(["gpt-6-luna", "gpt-6.1-terra"]),
+  reasoning: external_exports.enum(["low", "medium"])
+});
+var defaultAnalysisSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
+
 // packages/contracts/dist/assessment-preparation.js
 var digest10 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var jsonObject3 = external_exports.record(external_exports.string(), external_exports.json());
@@ -55675,7 +55714,7 @@ var chromeRunActionResult = external_exports.strictObject({
   png: external_exports.string().max(16 * 1024 * 1024).optional()
 });
 
-// apps/codex-plugin/src/codex-testing-input.mjs
+// packages/contracts/dist/testing-input.js
 var requestKey = external_exports.string().min(1);
 var answerDigest = /^[a-f0-9]{64}$/;
 var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
@@ -55695,15 +55734,9 @@ var planInput = external_exports.strictObject({
   ...sourceOptions,
   testEnvironmentId: external_exports.uuid().describe("The saved Test Environment ID."),
   testDataId: external_exports.uuid().optional().describe("The saved Test Data ID, when needed."),
-  sourceModel: sourceModelSelectionSchema.optional().describe(
-    "Use { application: true } to read the current shared App Model."
-  ),
-  explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe(
-    "Optional longer exploration time limit in milliseconds. Omit for the five-minute default."
-  )
-}).refine(
-  ({ testObjective, input: input3, contextId }) => [testObjective, input3, contextId].filter((value) => value !== void 0).length === 1
-);
+  sourceModel: sourceModelSelectionSchema.optional().describe("Use { application: true } to read the current shared App Model."),
+  explorerTimeLimitMs: external_exports.int().min(defaultExplorerTimeLimitMs).max(maxExecutionTimerMs).optional().describe("Optional longer exploration time limit in milliseconds. Omit for the five-minute default.")
+}).refine(({ testObjective, input: input3, contextId }) => [testObjective, input3, contextId].filter((value) => value !== void 0).length === 1);
 var runInput = external_exports.strictObject({
   requestKey,
   planId,
@@ -55711,10 +55744,26 @@ var runInput = external_exports.strictObject({
   runInstructions: external_exports.string().min(1).optional().describe("The person's current instructions and limits for this Run.")
 });
 var codexRunInput = runInput.extend({
-  browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe(
-    "For this browser Run only. Default to isolated. Use chrome-new-tab when the person wants their own Chrome session at the saved target URL. Use chrome-shared-tab when the task depends on the current state of a tab they already have open. A test account or a Chrome target alone does not select a personal session."
-  )
+  browserSession: external_exports.enum(["isolated", ...chromeRunSession.options]).optional().describe("For this browser Run only. Default to isolated. Use chrome-new-tab when the person wants their own Chrome session at the saved target URL. Use chrome-shared-tab when the task depends on the current state of a tab they already have open. A test account or a Chrome target alone does not select a personal session.")
 });
+var sessionLookup = external_exports.strictObject({ sessionId: external_exports.uuid() });
+var sessionState = external_exports.enum([
+  "queued",
+  "running",
+  "completed",
+  "failed"
+]);
+var sessionReceipt = external_exports.strictObject({
+  sessionId: external_exports.uuid(),
+  threadId: external_exports.uuid(),
+  reportId: external_exports.string().regex(answerDigest).optional(),
+  kind: external_exports.enum(["plan", "run"]),
+  state: sessionState,
+  outcome: external_exports.json().optional()
+});
+
+// apps/codex-plugin/src/codex-testing-input.mjs
+var answerDigest2 = /^[a-f0-9]{64}$/;
 function usesSavedTestInputs(host) {
   return host === "codex" || host === "claude_code";
 }
@@ -55792,7 +55841,7 @@ function savedPlanRunArguments(args, host) {
   };
 }
 function savedPlanId(answerId, resultSha256) {
-  if (typeof answerId === "string" && answerDigest.test(answerId) && typeof resultSha256 === "string" && answerDigest.test(resultSha256))
+  if (typeof answerId === "string" && answerDigest2.test(answerId) && typeof resultSha256 === "string" && answerDigest2.test(resultSha256))
     return `${answerId}.${resultSha256}`;
 }
 
@@ -62509,7 +62558,9 @@ function capabilityMcpRegistration(session, setup) {
   ] : [];
   return {
     tools: [
-      ...session.catalog.tools,
+      ...session.catalog.tools.filter(
+        ({ name }) => !session.cloudDispatch || !["loki_test_plan", "loki_test_execute"].includes(name)
+      ),
       ...setup?.tools ?? [],
       ...session.feedback?.tools ?? [],
       ...session.agentFeedback?.tools ?? [],
@@ -63115,6 +63166,7 @@ async function installedLocalMcp(createSetupPorts, { runnerValidation, applicati
         }
       }
     );
+    session.cloudDispatch = build.cloudTesting && process7.env.KAIJAN_CLIENT_WORKER !== "1";
     bindHostSession(session, build, process7.env);
     startupStage = "init_services";
     const setupByScope = /* @__PURE__ */ new Map();

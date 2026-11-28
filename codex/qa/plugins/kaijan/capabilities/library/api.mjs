@@ -67,7 +67,7 @@ var init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA = __esm({
 var define_LOKI_COMPUTER_RUNNER_PINS_default;
 var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
   "<define:LOKI_COMPUTER_RUNNER_PINS>"() {
-    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, files: { "packages/computer-runner/package.json": "480abb31d50ed5d9a611945014e2c18d37d364eb05446aaf35a4e14fb76f7e44", "packages/computer-runner/src/runner.mjs": "780944a8644436b2f66d96fcdb6d9afdcb3ef45383a7788c04aab98c273d2eb7", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "14b3e9a2595f7d26ed916fdafb074d44e6a69d7d4b1c87c46ea81699e2afc71f", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "154dc4d74f0ea8d6453e46ef83ac62a481d940c144858eed56c38258be6337c1", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "7e5a48cb94676333db713a9ae8413ce5fe668fd5b89b397925d84b423cf28bdd", "packages/computer-runner/src/execution-status.mjs": "939dd465c62d5ead1f83bcf480a51d1e683031a9de1be979ec776ea6ef6d2275", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "db8303e95474207e243efdf20df3162cc2cd53dcac32a9813a2e427dfab8f992", "packages/computer-runner/src/case-evidence.mjs": "285795181f5ad1b42b92d53494f1deb169eb38a4a17f0b5fff109194da4baca9", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "d3f022796c845fc4dad75ff810df697c75186b114ac6c40dbffaa28d79cd09a5", "packages/computer-runner/src/browser-tool-catalog.mjs": "7b61abc67303966a20c1d26eed85dcc4315001aef6bfa82f89c6e4901254533a", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "5110bd4c29d5244bdb19e6f0e3d9c7a857310783cef7612a4e5b217c09efa594", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "aaee04bf2da11a89f4daabf888d52637c9a4381acb40c866005dabceb1881884", "packages/provider-transport/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4", "packages/computer-runner/src/browser-explorer.d.mts": "b5d1378bed0dffabdef71c6d9a0147c34ec8ebdb1c0c3fa6ea1cd195e409346e", "packages/computer-runner/src/agent-context.mjs": "c2ccd40da1419d225f25924913663e4fe7ed22599e5a8301530ce54093528b91", "packages/computer-runner/src/application-ui-model.mjs": "7ad3387cc5f4d67ceb85217c8a2fea7c384009fcc026c0f2d23884b9024cffcd", "packages/computer-runner/src/browser-explorer.mjs": "74ef685d5677cc46313071542fdcd479dda9fa5eebd443510c78c1aae2fb158b", "packages/computer-runner/src/browser-inputs.mjs": "d67935e895af2ccb0aa62e0fac5f8b16b2241cf05780d8fef62647fd64fdaee8", "packages/computer-runner/src/exploration-map.mjs": "ed9268fd8371124ad079ea6ccb1db8b624fa85de6516a45c727b3d14b4c4270d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "bf718d98d90f68560954586486820df55c29003edf9de22e15cc6cb44ff252a1", "packages/computer-runner/src/agent-loop.mjs": "3b5e12b45de84508b92d330db2a44039fed2f24f9f1da50ce81764cf6ff9bc04" }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
+    define_LOKI_COMPUTER_RUNNER_PINS_default = { package: "@katalon-loki/computer-runner", version: "0.1.1", sourceRevision: "38333a8e98e24352e7a5d8b93aed6faff1ed6821", integration: "public Node run(input, options)", relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Initial relocation preserved code/manifest/workflow bytes and corrected the README diagram link. Subsequent HTTP(S) validator adoption is recorded separately in httpTargetAdmission; originalPins retain the pre-adoption identities." }, originalPins: { package: "@katalon-loki/computer-runner", version: "0.1.0", sourceRevision: "43dd836b466fef346fb0e78030c526aa00537157", integration: "public Node run(input, options)", files: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "8cf7aa3319755b33c6837bffbdd29a400f51b2877d0f3f79092778c4d5849580", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, relocation: { originalFiles: { "experiments/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "experiments/computer-runner/src/runner.mjs": "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", "experiments/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "experiments/computer-runner/README.md": "c64f57ad22a14b734bdb3e3a6fe708b9ea6602d9ba118b49c1c4234a7b49d4f2", "experiments/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "experiments/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, decision: "https://github.com/katalon-studio/loki/issues/2002#issuecomment-6469411525", scope: "Code, manifest and native workflow bytes unchanged. README historical diagram link corrected for packages/ relocation." } }, httpTargetAdmission: { decision: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6475910609", adoptionRequest: "https://github.com/katalon-studio/loki/issues/2065#issuecomment-6476612534", sourceCommit: "2de819061abecfc6d5d837e8586e8f8c919d98b5", mergedCommit: "12f6a06124d3e1b28cae06edc528a3cf9330a5f7", attribution: "Runner-owner agent compatibility correction of its incidental HTTPS-only target restriction; no governing human HTTPS-only target policy was found. Not a change to Hai's native Luna model decision.", scope: "Admit absolute HTTP(S) target URLs without embedded username/password; malformed/non-web URLs remain rejected. Only native validate(config) bytes changed. Model/prompt/action/provider/trace/Stop/cleanup bytes outside that function remain exact. Provider TLS and browser certificate verification are unchanged.", baselineRunnerSha256: "53faddb129de8df90ed67dacc63b5e1e7de50f4d8f7ac8bd28b65d75f15927f9", runnerSha256: "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", ownerReadmeSha256: "05e710b4767b044de7c995f7fea1397c0b61a5192ae4522b326626a948938c83", ownerURLTests: { sourcePath: "experiments/computer-runner/test/url.test.mjs", promotedPath: "packages/computer-runner/test/url.test.mjs", sha256: "3d1f6c58749aec7b12104fa3a7bccc0790449acc1f7440ec9c21d4a41a260717" }, readmeDerivation: "Exact owner URL-contract paragraph adopted into existing relocated README; its earlier relocation diagram-link correction remains." }, filesBeforeStandards: { "packages/computer-runner/package.json": "e7255b42cb5137311e7ae629de1e2017b2965e13fbfcaee7520275f0402f0b1a", "packages/computer-runner/src/runner.mjs": "ed34d80fd45696dab9ab556ac6cd559179c6a6bd65a322d08c53f569b373e55f", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "standards-derivation.json", scope: "Browser document global declaration comment and formatting only in runtime; whole runtime AST identical. Public Node type declarations/package inclusion added. Owner HTTP(S) admission remains exact in runtime AST." }, browserProvisioning: { decision: "https://github.com/katalon-studio/loki/issues/2135", baseline: "a811364584", previousFiles: { "packages/computer-runner/package.json": "e9e6dc7a769a0558026376f5a3b9d32376154ae4b582fd12243b05cd752d72b8", "packages/computer-runner/src/runner.mjs": "fcb2901b49ad77c8e7802936b6fa99eedc2d9d224e1b53febeeb8192c19c7263", "packages/computer-runner/src/private.mjs": "f3e7a88babf797f4ca4b0a40612e4e1d5a65659c16548d1958bbdae67ecac3a5", "packages/computer-runner/README.md": "5f4a89fc690993148f6e44ea38a26dde38b09c07a058cd397f8a4e0b2b1dfbfa", "packages/computer-runner/flow.md": "01840f57448b317c06a8ed2ffbce455957aa5f6d7567301b1bb5c91cee476f7b", "packages/computer-runner/bin/runner.mjs": "6821329486c0da686e12fa705876a65b2392e7c6e7a2d8cd1e62866c90ef215a", "packages/computer-runner/src/runner.d.mts": "444598bb8e074d14f3dca94aec84c2de5795536a547dae4fc2fe7a8c7e26b1b7" }, scope: "On-demand pinned Playwright Chromium provisioning, cache reuse, cancellation and evidence. Uses official installer; Runner prompts, action selection, provider/model settings and public scenario contract are unchanged." }, modelRestoration: { decision: "https://github.com/katalon-studio/loki/issues/2161", model: "gpt-6-luna", reasoning: "low", scope: "Restore Luna low and its standard cached-token accounting. Native prompts, tools, action selection, Stop, no-replay and cleanup behavior remain unchanged." }, providerRetry: { issue: 2144, decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6512911171", candidate: "6467fb306e181ecf68d409cd948fc8581d6c588d", scope: "Bounded quiet retry for complete transient browser provider HTTP responses; current host transport, redirect rejection, Stop/deadline and per-attempt accounting retained. Browser actions and uncertain transport are never replayed. Every retry consumes the existing caller model-call budget." }, mcpInputCancellation: { issue: 2144, finding: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567146922", decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567174067", sdk: "@openai/agents-core 0.21.0 MCPCallToolOptions.signal", scope: "Pass existing operator Stop and remaining run deadline to active official MCP browser calls. On interruption skip terminal UI capture with a private manifest receipt before owned cleanup; do not wait for a pending document. Preserve provider retries, prompts, action selection, original result/error evidence and public signatures. Stop acknowledgment is not cleanup confirmation or proof of rolled-back effects." }, browserLaunchMode: { decision: "https://github.com/katalon-studio/loki/issues/2144#issuecomment-6567386637", option: "headless: boolean (optional trusted host selection)", default: false, scope: "Use Playwright launch headless option on the same owned Chromium profile. No public MCP/model argument or global environment override; mode is explicit in private validation binding, worker options/receipt, operation configuration and native protocol. Native input identity and provider/model/action semantics are unchanged." }, applicationContextQuery: { wireSchema: "loki.runner.application-context/1", agreement: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6567064668", producerMerge: "498314c1327b03785b0518e6613f9916061825ca", reviewedProducerHead: "22254e47f39552c81a049efad8c1fcd22b1b455b", scope: "Optional host descriptor/callback and separate context evidence only. Preserve producer retry, requestAI transport, SDK cancellation, terminal cleanup, validation/headless boundaries and native-input digest. Exact composed source is identified by files; sourceRevision above retains historical component provenance." }, workerFailureContainment: { issue: 2022, decision: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569770725", userOutcomeCorrection: "https://github.com/katalon-studio/loki/issues/2022#issuecomment-6569850224", baselineHead: "268c605073f6e20dce9bcb4895b58b27113ecfec", scope: "Supported AbortSignal reason distinguishes internal worker rejection from operator Stop. Existing native finally/owned cleanup and original provider/context pairing remain; no replay or success inferred. Exact derivative bytes are recorded in files; historical provenance is retained." }, reasoningEffort: "low", activeModel: "gpt-6.1-terra", modelSelection: { model: "gpt-6.1-terra", reasoningEffort: "low", authority: "Hai selected Terra 6.1 low for Runner in Head chat on 2026-11-03.", scope: "Active browser and macOS Runner Responses use native OpenAI Terra low. Historical model rollback and source provenance remain unchanged; analysis capabilities use Luna medium." }, providerCacheDefaults: { issue: 2234, decision: "https://github.com/katalon-studio/loki/issues/2234#issuecomment-6585944525", baseSourceRevision: "5ff1cbb2724a61f8fe2f6ab5e15f66023ca99391", scope: "Remove the browser producer unconditional prompt_cache_options default and record provider-default cache policy; no fixed TTL, cache hit or fee claim. Direct and managed transport bodies remain caller-owned. macOS Runner is unchanged.", files: { "packages/computer-runner/src/runner.mjs": "5e96cf70ee4da31c4ee9ea32723ab7205c85043a113b3ff50695c3082fe2692a", "packages/computer-runner/README.md": "5c8e81bd345210bffb77bd8b311e9762d03b8c41c9c4116edeb044ae9b90c46d" } }, caseEvidence: { task: 2316, baseSourceRevision: "835d4c3d0d15ceb44d60f84276acae10bb6c1204", scope: "Explicit selected Plan case boundaries and official trace groups. Existing Runner screenshots are indexed by the active case; no extra captures, screenshot overlays or before/after report controls. Grouping is Runner-declared, not a semantic verdict; unassigned activity stays Run-level. Provider, Stop, no-replay and cleanup policies remain." }, readOnlyClarificationContext: { issue: 3271, scope: "A read-only viewing-path question binds the requested task excerpt and the observed application control. Preserve historical presentation shapes, exact source digests, original pending exchanges and answer correlation; public question kind remains task-scope." }, browserViewer: { issue: 6570, decision: "https://github.com/katalon-studio/loki/issues/6570", baseline: "fa1378e2a75c684db4fb8c01e0a40bd3bd5b186b", previousFiles: { "packages/computer-runner/package.json": "d82c06c2a71b051bfae2428b5e3d8672b263a4573289c6af3407738809242f20", "packages/computer-runner/src/runner.mjs": "cfc57aec28364037c99e05c364cd7a41c5074c0a673270ea4034020f22f82229", "packages/computer-runner/README.md": "fdd07c078503f115c76e2584d221db652151792c96ea5ee7f3acff26990536aa", "packages/computer-runner/src/runner.d.mts": "98bda9450f9b24b310c7461a42d32431f7a6d8c97c55e7dcd0379659edd51eef", "packages/computer-runner/src/provider.mjs": "71cca386d4388223ff15addfa32cda7c29cfa9f1231e5e83f7e5f55ba06a05f6", "packages/computer-runner/src/application-context.mjs": "2a5617852c2b187b5362083b240baa18043e455ddf5eecd4e756ed549b0a4673", "packages/computer-runner/src/execution-status.mjs": "4b151154704043d491ff69de80a43ea7666d5ca5f7fa71d3ed1cf73bd98964f8", "packages/computer-runner/src/navigation-policy.mjs": "32a9ddcf441d48a03d44603e3d99e2b72aed02a624a59bd0780175b04906d0df" }, scope: "Optional trusted local viewer: cooperative input ownership, deterministic same-session resume, active execution clock and private handoff evidence. Public execute/get/stop and original cleanup remain. Empty viewer-release.json means ordinary plugin activation remains off pending a qualified signed/notarized companion. Historical sourceRevision remains provenance; files bind this derivative." }, files: { "packages/computer-runner/package.json": "2bd61bddc2cb70018ad4c8fdcf8a14ecfca6839b521798ca638e0cc54f102275", "packages/computer-runner/src/runner.mjs": "e3f1fb385f5fda17400d0fd78dd3c39e62e85a916ed9a53472ef612476163c67", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "77c7015ff3234b0b96006787eff5b418d603a94d43128befa3ffcb380ee2b48a", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "5df712719f0e7c2aacc2e6d2e5d1b956055f5e05686285e23f3f1b3c2cf4f8c5", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "154dc4d74f0ea8d6453e46ef83ac62a481d940c144858eed56c38258be6337c1", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "7e5a48cb94676333db713a9ae8413ce5fe668fd5b89b397925d84b423cf28bdd", "packages/computer-runner/src/execution-status.mjs": "939dd465c62d5ead1f83bcf480a51d1e683031a9de1be979ec776ea6ef6d2275", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "db8303e95474207e243efdf20df3162cc2cd53dcac32a9813a2e427dfab8f992", "packages/computer-runner/src/case-evidence.mjs": "285795181f5ad1b42b92d53494f1deb169eb38a4a17f0b5fff109194da4baca9", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "d3f022796c845fc4dad75ff810df697c75186b114ac6c40dbffaa28d79cd09a5", "packages/computer-runner/src/browser-tool-catalog.mjs": "3522fbde2b9960fc13216b763aa8fb79376205320dbb992db477982cfb0fa74e", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "3ad3c03521d16a0b5c3ff58b1c1be5a1b003b62618a3044bb3bb047e886aac5f", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "aaee04bf2da11a89f4daabf888d52637c9a4381acb40c866005dabceb1881884", "packages/provider-transport/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4", "packages/computer-runner/src/browser-explorer.d.mts": "a1ea948d46d8be5525c998bb6c9f758b1a084cfbfd30482ba28f24ca6f2d58d7", "packages/computer-runner/src/agent-context.mjs": "c2ccd40da1419d225f25924913663e4fe7ed22599e5a8301530ce54093528b91", "packages/computer-runner/src/application-ui-model.mjs": "7ad3387cc5f4d67ceb85217c8a2fea7c384009fcc026c0f2d23884b9024cffcd", "packages/computer-runner/src/browser-explorer.mjs": "17c276ac4f0f05a5e0574f9e9d56f879c64de32a8c9608f02ec3be9af14baf31", "packages/computer-runner/src/browser-inputs.mjs": "d67935e895af2ccb0aa62e0fac5f8b16b2241cf05780d8fef62647fd64fdaee8", "packages/computer-runner/src/exploration-map.mjs": "ed9268fd8371124ad079ea6ccb1db8b624fa85de6516a45c727b3d14b4c4270d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "154bf908c6ceaf7d0e4f144aac1ce9107a7d223b333b6663e356c2cbce58974d", "packages/computer-runner/src/agent-loop.mjs": "3b5e12b45de84508b92d330db2a44039fed2f24f9f1da50ce81764cf6ff9bc04" }, providerRetryPolicy: { maxAttempts: 3, backoffMs: [1e3, 2e3], maxRetryAfterMs: 3e4, requestTimeoutMs: 12e4 } };
   }
 });
 
@@ -75,7 +75,7 @@ var init_define_LOKI_COMPUTER_RUNNER_PINS = __esm({
 var define_LOKI_MAC_RUNNER_PINS_default;
 var init_define_LOKI_MAC_RUNNER_PINS = __esm({
   "<define:LOKI_MAC_RUNNER_PINS>"() {
-    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "480abb31d50ed5d9a611945014e2c18d37d364eb05446aaf35a4e14fb76f7e44", "packages/computer-runner/src/runner.mjs": "780944a8644436b2f66d96fcdb6d9afdcb3ef45383a7788c04aab98c273d2eb7", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "14b3e9a2595f7d26ed916fdafb074d44e6a69d7d4b1c87c46ea81699e2afc71f", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "7efa1bb476a0c328d7e11f9b2375a23460baabe31de39899850ee3cc5e565c8e", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "154dc4d74f0ea8d6453e46ef83ac62a481d940c144858eed56c38258be6337c1", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "7e5a48cb94676333db713a9ae8413ce5fe668fd5b89b397925d84b423cf28bdd", "packages/computer-runner/src/execution-status.mjs": "939dd465c62d5ead1f83bcf480a51d1e683031a9de1be979ec776ea6ef6d2275", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "db8303e95474207e243efdf20df3162cc2cd53dcac32a9813a2e427dfab8f992", "packages/computer-runner/src/case-evidence.mjs": "285795181f5ad1b42b92d53494f1deb169eb38a4a17f0b5fff109194da4baca9", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "d3f022796c845fc4dad75ff810df697c75186b114ac6c40dbffaa28d79cd09a5", "packages/computer-runner/src/browser-tool-catalog.mjs": "7b61abc67303966a20c1d26eed85dcc4315001aef6bfa82f89c6e4901254533a", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "5110bd4c29d5244bdb19e6f0e3d9c7a857310783cef7612a4e5b217c09efa594", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "aaee04bf2da11a89f4daabf888d52637c9a4381acb40c866005dabceb1881884", "packages/provider-transport/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4", "packages/computer-runner/src/browser-explorer.d.mts": "b5d1378bed0dffabdef71c6d9a0147c34ec8ebdb1c0c3fa6ea1cd195e409346e", "packages/computer-runner/src/agent-context.mjs": "c2ccd40da1419d225f25924913663e4fe7ed22599e5a8301530ce54093528b91", "packages/computer-runner/src/application-ui-model.mjs": "7ad3387cc5f4d67ceb85217c8a2fea7c384009fcc026c0f2d23884b9024cffcd", "packages/computer-runner/src/browser-explorer.mjs": "74ef685d5677cc46313071542fdcd479dda9fa5eebd443510c78c1aae2fb158b", "packages/computer-runner/src/browser-inputs.mjs": "d67935e895af2ccb0aa62e0fac5f8b16b2241cf05780d8fef62647fd64fdaee8", "packages/computer-runner/src/exploration-map.mjs": "ed9268fd8371124ad079ea6ccb1db8b624fa85de6516a45c727b3d14b4c4270d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "bf718d98d90f68560954586486820df55c29003edf9de22e15cc6cb44ff252a1", "packages/computer-runner/src/agent-loop.mjs": "3b5e12b45de84508b92d330db2a44039fed2f24f9f1da50ce81764cf6ff9bc04", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "8318c7b71bb3f49ebee01548412e04c71da94a9d5692af177450edf4a284c245", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "33c917056f548dfae8c2d675760d14fdaf1679c04cde26d2fd1f89224ee0b5cd", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
+    define_LOKI_MAC_RUNNER_PINS_default = { package: "@katalon-loki/mac-computer-runner", version: "0.1.0", driver: "Appium 3.9.0 / Mac2 4.5.1", files: { "packages/computer-runner/package.json": "2bd61bddc2cb70018ad4c8fdcf8a14ecfca6839b521798ca638e0cc54f102275", "packages/computer-runner/src/runner.mjs": "e3f1fb385f5fda17400d0fd78dd3c39e62e85a916ed9a53472ef612476163c67", "packages/computer-runner/src/private.mjs": "71eb4314a628bd4f133244e6a08ebf03c188789d7efca1af1ef6df074883c93f", "packages/computer-runner/README.md": "77c7015ff3234b0b96006787eff5b418d603a94d43128befa3ffcb380ee2b48a", "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59", "packages/computer-runner/src/runner.d.mts": "5df712719f0e7c2aacc2e6d2e5d1b956055f5e05686285e23f3f1b3c2cf4f8c5", "packages/computer-runner/src/browser.mjs": "d83be7e69cbf71a26992c23c5a361fc7c1daac72747b6ac0fd639f41cfb3cf55", "packages/computer-runner/src/browser.d.mts": "4054f55a9f38c99a9317dd39bf6ec6fbf00bd14ecb6854c7d56ea7c1a05a8be6", "packages/computer-runner/src/provider.mjs": "154dc4d74f0ea8d6453e46ef83ac62a481d940c144858eed56c38258be6337c1", "packages/computer-runner/src/retry.mjs": "aabd63a571e73283a3f514c0f775eb432c5a6c6030bca8b65fbdf2005ab87496", "packages/computer-runner/src/application-context.mjs": "7e5a48cb94676333db713a9ae8413ce5fe668fd5b89b397925d84b423cf28bdd", "packages/computer-runner/src/execution-status.mjs": "939dd465c62d5ead1f83bcf480a51d1e683031a9de1be979ec776ea6ef6d2275", "packages/computer-runner/src/redaction.mjs": "8deb05107d62271818d9da530b12dce1e2376ea3b0026a247b2344586a7f67ec", "packages/computer-runner/src/redaction.d.mts": "4aadda6216ccd788401b33f721dd748011c308296e1a974a1f195e9a72bd57af", "packages/computer-runner/src/navigation-policy.mjs": "db8303e95474207e243efdf20df3162cc2cd53dcac32a9813a2e427dfab8f992", "packages/computer-runner/src/case-evidence.mjs": "285795181f5ad1b42b92d53494f1deb169eb38a4a17f0b5fff109194da4baca9", "packages/computer-runner/src/model-settings.mjs": "51909dee37f8996c6b983c711bbf15dff7b4cbcb99cfeae67fc3489fc115e425", "packages/computer-runner/src/browser-target.mjs": "d3f022796c845fc4dad75ff810df697c75186b114ac6c40dbffaa28d79cd09a5", "packages/computer-runner/src/browser-tool-catalog.mjs": "3522fbde2b9960fc13216b763aa8fb79376205320dbb992db477982cfb0fa74e", "packages/computer-runner/src/ui-observation.mjs": "040a43783f6c86f92f765609361a7c96b94892e5a27fb9e6827ddcc751fdc263", "packages/computer-runner/src/clarification-presentation.mjs": "08e8331222015d16b22cb4fff5e179904befab5476b407322568e1cf9bf29767", "packages/computer-runner/src/clarification-presentation.d.mts": "d52a007830e3b5e4635894f614f89916d6bcbc4549fe46fe16f9bec5568b781c", "packages/computer-runner/src/browser-hosts.mjs": "83c6798d744ed14cdb61dca7ab3cc3016154e3eab0979dc1a4c56de5bcd337b8", "packages/computer-runner/src/browser-hosts.d.mts": "8309a19c129347e105b5cec99da369dc28d38ac15f2ef42abfbd11602bfee34a", "packages/computer-runner/src/request-instructions.mjs": "3ad3c03521d16a0b5c3ff58b1c1be5a1b003b62618a3044bb3bb047e886aac5f", "packages/computer-runner/src/browser-agent.mjs": "7fccfc336aef685c92bd99c2e9c118f19badf8ccbbc66933f6b6f889d0103300", "packages/computer-runner/src/browser-recap.mjs": "aaee04bf2da11a89f4daabf888d52637c9a4381acb40c866005dabceb1881884", "packages/provider-transport/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "packages/provider-transport/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "packages/provider-transport/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "packages/provider-transport/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "packages/provider-transport/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4", "packages/computer-runner/src/browser-explorer.d.mts": "a1ea948d46d8be5525c998bb6c9f758b1a084cfbfd30482ba28f24ca6f2d58d7", "packages/computer-runner/src/agent-context.mjs": "c2ccd40da1419d225f25924913663e4fe7ed22599e5a8301530ce54093528b91", "packages/computer-runner/src/application-ui-model.mjs": "7ad3387cc5f4d67ceb85217c8a2fea7c384009fcc026c0f2d23884b9024cffcd", "packages/computer-runner/src/browser-explorer.mjs": "17c276ac4f0f05a5e0574f9e9d56f879c64de32a8c9608f02ec3be9af14baf31", "packages/computer-runner/src/browser-inputs.mjs": "d67935e895af2ccb0aa62e0fac5f8b16b2241cf05780d8fef62647fd64fdaee8", "packages/computer-runner/src/exploration-map.mjs": "ed9268fd8371124ad079ea6ccb1db8b624fa85de6516a45c727b3d14b4c4270d", "packages/computer-runner/src/browser-handoff.mjs": "6a831ce81f3f83fab720126ae09ee79b40b09199b1c681cb1f23973bc14506c9", "packages/computer-runner/src/browser-handoff.d.mts": "b8b06efed2b35742712dd83e00d510183975fe55ee2dede52bc7a87db7a3b057", "packages/computer-runner/src/browser-dashboard.mjs": "c517919479fd6948bf1091826fd0736bccedffd8a99cb31c9316d5793cadbe2d", "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb", "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9", "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d", "packages/computer-runner/src/browser-explorer-driver.mjs": "154bf908c6ceaf7d0e4f144aac1ce9107a7d223b333b6663e356c2cbce58974d", "packages/computer-runner/src/agent-loop.mjs": "3b5e12b45de84508b92d330db2a44039fed2f24f9f1da50ce81764cf6ff9bc04", "packages/mac-computer-runner/package.json": "95c73bab8d84101f6064389dc702e92e333d2eed8a5ac312171780523269a82b", "packages/mac-computer-runner/src/runner.mjs": "8318c7b71bb3f49ebee01548412e04c71da94a9d5692af177450edf4a284c245", "packages/mac-computer-runner/src/runner.d.mts": "4c9d2d566b298d19bb837a83c0a71cec693211869420f4b712d0b0f147c6d5f4", "packages/mac-computer-runner/src/appium.mjs": "33c917056f548dfae8c2d675760d14fdaf1679c04cde26d2fd1f89224ee0b5cd", "packages/mac-computer-runner/src/explorer.mjs": "01b04ebdbbb3fa1f24fa5619ec657e1fdfa6a96c1c63be388fc82fb107cb71fa", "packages/mac-computer-runner/src/explorer.d.mts": "3a0c5c1558946e576659c2b59bba0c2f2c8a42a355cf2120709630ab35ed7a54", "packages/mac-computer-runner/src/display.swift": "d06133d3ab08ced887bb700efad335a5d060b0a6d5450dd7df69b23aeea13051", "packages/mac-computer-runner/src/model-screenshot.mjs": "bbaf75edd7e31a4bc07612ad500606722066df65c6bf9c1bd0dc1ccdafb7bc7d", "packages/mac-computer-runner/src/private.mjs": "aecdaa6ad2beb325137c5b750eccd5935424c795a8ab66e2e0b64fbf7345d630" } };
   }
 });
 
@@ -99,7 +99,7 @@ var init_define_LOKI_PR_CONTEXT_PINS = __esm({
 var define_LOKI_TEST_PLANNING_PINS_default;
 var init_define_LOKI_TEST_PLANNING_PINS = __esm({
   "<define:LOKI_TEST_PLANNING_PINS>"() {
-    define_LOKI_TEST_PLANNING_PINS_default = { sourceCommit: "008184b0a616b16768fb0e727e7679e8534aaf97", packageVersion: "2026.10.27-3", module: "pr-context-finder/planning/pcf_plan.mjs", archiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", scope: "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.", diagnosticOverlay: { sourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselineSourceCommit: "2d169e723bf21c62dbcfc4cb6a2a99368768047f", baselineArchiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", baselineVersion: "2026.10.27-1", files: { "pr-context-finder/planning/pcf_provider.mjs": "1d527ae4fe1c60225c833f4829c86e769d8569278b9da2d2c76a60d8bf5f74e5" }, scope: "Diagnostic-only provider overlay; all other standalone code/version members retained. Baseline archive/source/version identify the original package, not this derivative.", baselineMergedCommit: "e0c13f263249010df9ae803c32f8f7cbccaaede5" }, prerequisiteContractOverlay: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineSourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselinePackageVersion: "2026.10.27-1", baselineReferenceArchiveSha256: "b2ad35695db5a56e51c09022decd771e49d4152f41e217dfd12b5f9e34c7347c", files: { "pr-context-finder/planning/pcf_plan.mjs": "b946ec3361ea687bbdf366da89841994af6f07380776f429a48ef9c5abbcb9ef" }, scope: "Exact accepted empty-prerequisite module; retain required array/string types, steps, source/evidence/coverage/identity checks and diagnostic provider. Package/integrity version metadata follows accepted module release; unrelated baseline members stay original." }, baselineConciseOverlay: { sourceCommit: "305d4d3d4951ab9b52438e86a137156c2b684a11", baseline: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", mergedCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", packageVersion: "2026.10.27-2" }, baselineReferenceArchiveSha256: "bafd32ea73cbc8619eeb4755bb04ab18a7a32c6eb5a7b1c4529caacad3bee280", decision: "https://github.com/katalon-studio/loki/issues/1899#issuecomment-6439500992", files: { "pr-context-finder/planning/pcf_plan.mjs": "32afc08ab975608a1ce291520326ca61dce2c0e44973fd686b7488454634bf47", "pr-context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5" }, scope: "Exact concise-complete baseline instructions only; retain existing schema, evidence authority, risk and supplement requests. Historical archive/source identities remain baseline provenance." }, requestByteBudgetOverlay: { sourceCommit: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", files: { "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366" }, scope: "Shared transport accepts an omitted request-byte budget; supplied positive caller budgets remain enforced. No baseline request or algorithm change." }, nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", files: { "pr-context-finder/planning/pcf_plan.mjs": "4beae3bdaa091f17a7105783e923b77d1ae23a970a3397750b421ccecaf8a107", "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366", "pr-context-finder/planning/pcf_records.mjs": "597f32a0a43d71481e5928643c237614171da23b670c6e2c67725cba7d45ff38" }, scope: "Independently merged #1929 validation failure diagnostics. Shared provider bytes include #1931 optional request budget; no baseline request construction change." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", files: { "pr-context-finder/planning/cli.mjs": "da72d0c41b58ed81b9a802d02888af06973227c6171ccb93a98e53bf26aa4866", "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520", "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2", "pr-context-finder/planning/pcf_plan.mjs": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5", "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de", "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07", "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072", "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157", "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7", "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b", "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d", "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0" }, scope: "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.", helpCorrection: "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", files: { "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a", "pr-context-finder/related/api.d.mts": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08", "pr-context-finder/related/api.mjs": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee", "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07", "pr-context-finder/related/capture.mjs": "98c30beb60aeb451cae0586bd13ed5494ae4faa0e26a798f39e12665a100ebd1", "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a", "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049", "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc", "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced", "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf", "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce", "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b", "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35", "pr-context-finder/planning/pcf_provider.mjs": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade" }, scope: "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.", resultProtocolSource: "008184b0a616b16768fb0e727e7679e8534aaf97" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceRelationOverlay: { issue: 2862, schema: "planning-source-relations/1", scope: "Current generation renders typed proposal relations from exact captured application spans. Scoped customer reads reconstruct the saved projection; historical free prose keeps identity and literal application excerpts with explicit qualification. Original delivery provenance and historical request records remain unchanged." }, literalExcerptOverlay: { issue: 3055, schema: "planning-source-relations/2", scope: "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged." }, requestSchemaSharingOverlay: { issue: "https://github.com/katalon-studio/loki/issues/3138", baselineSourceCommit: "64e6a58779a6f9da319fb946e1178ee2f53b65a9", files: { "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c" }, scope: "Share identical inline schema components through definitions in outgoing structured requests. Keep the expanded native validators, all source and test constraints, explicit output budgets, original records and no-replay behavior. Does not establish the cause of historical incomplete service responses." }, generatedProposalOverlay: { issue: 3110, schema: "planning-generated-proposal/1", scope: "New plans retain complete generated QA prose as proposed interpretation. Scoped saved reads revalidate the original input, exact evidence and requirement references, candidate and catalog hashes, full test definitions and derived coverage/Runner membership. Keep historical source-relation/1 and /2 readers, earlier plan bytes and original pin provenance unchanged. No automatic source correction call, execution or readiness claim." }, agentsSdk: { issue: 3736, version: "0.21.0", scope: "Initial Planner generation uses the SDK through the managed retained transport. Existing source instructions, native plan validation, originals, no-retry, Stop and MCP contracts remain. Persistent sessions and the remaining phases are separate increments." }, files: { "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b", "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55", "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "pr-context-finder/planning/pcf_native.mjs": "48bd1c58c005472ca53a53d335d767f2caf4b8c237dcde9038b6cb790e2d2d6b", "pr-context-finder/planning/pcf_plan.mjs": "ea7b6d5d3b5a38c2999e4e61bdb60775ea19e4106358be854ea377227085ebe0", "pr-context-finder/planning/pcf_provider.mjs": "3b13d3b5ba6719720e52dd0e1e709a9bf3b0dae67689d0fee4bc325c54c0680a", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/planning/prompts.mjs": "62daed30e9045204b0a5eac95df9fb13c62adc54cfb990924bd1ffa962b9631f", "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "node_modules/@katalon-experiments/ai-client/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "node_modules/@katalon-experiments/ai-client/index.mjs": "f3a780378f61e8eda0560467134e5fa0d0667bdc1414c967328e92facb20bec4", "node_modules/@katalon-experiments/ai-client/index.d.mts": "d026db4bf45abb01eaa06cd2c886f8ea38d842f441c67f9170895268d0096cec", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "ccf0f2712a2e0f9cd61b24ae8e6ff6799378d1948dc0ff80a1ca0b01d843e4be", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "9e2365939892879e7e59fdcd654ad002a385e53decee47eed7bd9f06783e0669", "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830", "pr-context-finder/planning/risk-model-view.mjs": "2c4588acceef1707ce27010be827346a6711a6bf543fa1909338a5de1f920f37", "pr-context-finder/planning/request-instructions.mjs": "8bff1f113e208fd94ee212de891a4be44cb45e1fffe8d7dcbe6beb050c94d04a", "node_modules/@katalon-experiments/ai-client/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "node_modules/@katalon-experiments/ai-client/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "node_modules/@katalon-experiments/ai-client/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4" } };
+    define_LOKI_TEST_PLANNING_PINS_default = { sourceCommit: "008184b0a616b16768fb0e727e7679e8534aaf97", packageVersion: "2026.10.27-3", module: "pr-context-finder/planning/pcf_plan.mjs", archiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", scope: "Accepted standalone baseline plus explicit diagnostic and empty-prerequisite contract overlays. Original archive/source provenance remains in overlays; current compatibility version follows accepted module. File hashes enumerate the delivered derivative; no CLI subprocess. Explicit concise-complete baseline-only overlay; current source/version identify this derivative, while archiveSha256 retains the original baseline archive identity. Shared provider overlay #1931 makes request-byte admission optional when omitted; existing baseline and supplement defaults remain unchanged. Historical source/version/archive identities remain baseline provenance. Includes independent #1929 diagnostics; no claim those source byte changes belong to #1931. #1935 removes implicit input limits across active planning/related helper paths; no prompt/ranking/selection redesign.", diagnosticOverlay: { sourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselineSourceCommit: "2d169e723bf21c62dbcfc4cb6a2a99368768047f", baselineArchiveSha256: "0ebc4e358ff77a23f0f56aca50c14b9410814c44405cd505782697bdd3a81e3d", baselineVersion: "2026.10.27-1", files: { "pr-context-finder/planning/pcf_provider.mjs": "1d527ae4fe1c60225c833f4829c86e769d8569278b9da2d2c76a60d8bf5f74e5" }, scope: "Diagnostic-only provider overlay; all other standalone code/version members retained. Baseline archive/source/version identify the original package, not this derivative.", baselineMergedCommit: "e0c13f263249010df9ae803c32f8f7cbccaaede5" }, prerequisiteContractOverlay: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", baselineSourceCommit: "918bcc24a2cf1ce58636daaf1253a682d57ff589", baselinePackageVersion: "2026.10.27-1", baselineReferenceArchiveSha256: "b2ad35695db5a56e51c09022decd771e49d4152f41e217dfd12b5f9e34c7347c", files: { "pr-context-finder/planning/pcf_plan.mjs": "b946ec3361ea687bbdf366da89841994af6f07380776f429a48ef9c5abbcb9ef" }, scope: "Exact accepted empty-prerequisite module; retain required array/string types, steps, source/evidence/coverage/identity checks and diagnostic provider. Package/integrity version metadata follows accepted module release; unrelated baseline members stay original." }, baselineConciseOverlay: { sourceCommit: "305d4d3d4951ab9b52438e86a137156c2b684a11", baseline: { sourceCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", mergedCommit: "e12ea1f06dd236be0a6cc207c594d9e6158a50b3", packageVersion: "2026.10.27-2" }, baselineReferenceArchiveSha256: "bafd32ea73cbc8619eeb4755bb04ab18a7a32c6eb5a7b1c4529caacad3bee280", decision: "https://github.com/katalon-studio/loki/issues/1899#issuecomment-6439500992", files: { "pr-context-finder/planning/pcf_plan.mjs": "32afc08ab975608a1ce291520326ca61dce2c0e44973fd686b7488454634bf47", "pr-context-finder/planning/prompts.mjs": "c8f9669140cfd47b3b0c473d1901d702119acdb6621634feefcc877379db80a5" }, scope: "Exact concise-complete baseline instructions only; retain existing schema, evidence authority, risk and supplement requests. Historical archive/source identities remain baseline provenance." }, requestByteBudgetOverlay: { sourceCommit: "bdce8240c61f1f8d34fbe79015763011c9fa1f3b", files: { "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366" }, scope: "Shared transport accepts an omitted request-byte budget; supplied positive caller budgets remain enforced. No baseline request or algorithm change." }, nativeDiagnosticOverlay: { sourceCommit: "80795a4ac9836edf62da228784ad038f2074d1ac", files: { "pr-context-finder/planning/pcf_plan.mjs": "4beae3bdaa091f17a7105783e923b77d1ae23a970a3397750b421ccecaf8a107", "pr-context-finder/planning/pcf_provider.mjs": "9c2d12de6c34605a71b5c9cc0b4710c11cb0a97d84144580dd42d0dc258ef366", "pr-context-finder/planning/pcf_records.mjs": "597f32a0a43d71481e5928643c237614171da23b670c6e2c67725cba7d45ff38" }, scope: "Independently merged #1929 validation failure diagnostics. Shared provider bytes include #1931 optional request budget; no baseline request construction change." }, inputLimitCleanup: { sourceCommit: "026e5eb5f15aa589c33ae96cd8029bab37cc5ec8", files: { "pr-context-finder/planning/cli.mjs": "da72d0c41b58ed81b9a802d02888af06973227c6171ccb93a98e53bf26aa4866", "pr-context-finder/planning/pcf_comment_filter.mjs": "b751ea02199016d21248f70e11c651788cc43879c75061c42eab056bf07e1520", "pr-context-finder/planning/pcf_parent_select.mjs": "3b55512eae6f938dc4c2c906c202efb1f21a795e1c5e49748d128b5cd9c1e6d2", "pr-context-finder/planning/pcf_plan.mjs": "9fe714f655453b024516b019059b0b87f1ffaee9d336bdd04bd127fbd8bd22a5", "pr-context-finder/related/PROGRAMMATIC.md": "8a99b5eaf1254b9d30c1fd76b11578f953f8e67725f38cc5ffbd3e03f1ede8de", "pr-context-finder/related/README.md": "02eb723eff56a8173ac8ffb2af4a058c44ba0aa61d39c67aa2ae75d34fca3b07", "pr-context-finder/related/budgets.mjs": "67a77bdb4016ecf14232bea32e5ebc55e4a5bb04fa236395d13d8afea6406072", "pr-context-finder/related/followthrough.mjs": "035e69c6324f796e956852a9b5c5b22c7f008ac1a38fd42e01c503b8d9074157", "pr-context-finder/related/module-service.mjs": "aa1060478972fa18d9c3ca961cea5cefa4b312ff33622ce54655f10516670fe7", "pr-context-finder/related/provider.mjs": "e9336cbe986e9ff7ddd1491780a08ae7ccc009656a6a99bb4e0b476328e5f21b", "pr-context-finder/related/records.mjs": "399e3ed518dc084d50ea76289b9bb05e6741e7a9fa8c0718041a9031030f12e9", "pr-context-finder/related/service-adapters.mjs": "17be36821be7adfc92121fb3e182b6a891dbee47f3538d1195f0ff7d8849936d", "pr-context-finder/related/source-screen.mjs": "dcd361b8fd0e76cab71c61b504d5846a2988edc2305a5b9b6fed08e718cddbd0" }, scope: "Unsupported active input caps removed without pruning/segmentation. Published JEV255-choice bound, source/search semantics, paid-call/output/deadline/security contracts preserved. Prior metadata retains baseline provenance.", helpCorrection: "CLI help now describes removed local request-byte cap; earlier source commit identifies the producer logic." }, sourceResponseLimitCleanup: { sourceCommit: "1852e6676718c6b73a108f86c42384e13db0a548", files: { "pr-context-finder/related/README.md": "c27c981abc04837c3122372c7e9dd07987e3abdd03ca37d06eb8d2a783da5e7a", "pr-context-finder/related/api.d.mts": "0b33bea2f60bb3203ec5ef0167c0ca4c581fde40ab7437106ac4a70778bc9c08", "pr-context-finder/related/api.mjs": "464ad5bf71584b0cfab804bf79853709dafddf38de221b015fa97f70e7813bee", "pr-context-finder/related/budgets.mjs": "45737f17632e7aafd67ec82862ceaef4302690a81331acecc918a6c900023e07", "pr-context-finder/related/capture.mjs": "98c30beb60aeb451cae0586bd13ed5494ae4faa0e26a798f39e12665a100ebd1", "pr-context-finder/related/connected-transport.mjs": "9d0dc6b8c71efafcbc2d936503e4d72cf851cc1f0955cabd2615acfb1fa81e2a", "pr-context-finder/related/followthrough.mjs": "979badee41b0c0fe0c6c19596a75d639fb65e037329f8cd08c9b4fa2aba4f049", "pr-context-finder/related/module-service.mjs": "fb7bb97cedb89ebba4852131c871316524324744b009673d3f993b60e3f861dc", "pr-context-finder/related/provider.mjs": "838b7d5b1afd5b51a523ba42284bc0f33b4ac7841b02a8068399e1ace260dced", "pr-context-finder/related/source-control.mjs": "a721155d152fbaac9a5364e364329506221eb9c2816cfde192b01274062a9ec6", "pr-context-finder/related/source-page.mjs": "3a78e2ca4ca1fd79329479234a04e32124d868d54adc352dbbca2b12a1026edf", "pr-context-finder/related/source-screen.mjs": "6ef3f7763f92d9771c3ab70a583ab5d5bde95d71b08dfdf7be4c7f93408733ce", "pr-context-finder/planning/pcf_comment_filter.mjs": "b1fb5b4fd77342a430c7921c3a6ebe100424b9edf8b1bbcce16cc70e4101d65b", "pr-context-finder/planning/pcf_parent_select.mjs": "bd99d78cc9b21697c3c1b106d898ef01a43a419575e9c9ac1bb8084dc0222c35", "pr-context-finder/planning/pcf_provider.mjs": "aa1055abbd4b681fb608cce57b0374b08339fd0b7c33071ee7c2416fe3fc88ee", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/related/output.schema.json": "83114297e23fbad2686900ca5240d5bad6a2019423edd9aaf83478a9e7e8aade" }, scope: "No implicit source body/frame or first-response preservation byte ceilings; protocols /3 and /4; explicit budgets, privacy, identity, Stop and semantic algorithms preserved. All unlisted members remain accepted preview35 bytes.", resultProtocolSource: "008184b0a616b16768fb0e727e7679e8534aaf97" }, standardsDerivation: { baseline: "a765bbbe1e36dbef7ac839545b576abf62240cf0", proof: "../capabilities/standards-derivation.json", scope: "Current staged file identities; original source/version/overlay provenance remains historical and immutable." }, componentExtraction: { issue: 2173, manifest: "experiments/context-finder/2173-native-methods/relocation.json", base: "2204b9a46bd1ca4adda674f0f8bed6f797e33fb6", scope: "Unselected research engines/profiles extracted; selected methods and original request semantics retained." }, componentAudit: { issue: 2173, base: "88fe131f00a7de6bdfab70dddfa0127745d6d46f", record: "../capabilities/component-audit.json", scope: "Unselected methods/frontends extracted; selected methods and original upstream identities retained." }, sourceRelationOverlay: { issue: 2862, schema: "planning-source-relations/1", scope: "Current generation renders typed proposal relations from exact captured application spans. Scoped customer reads reconstruct the saved projection; historical free prose keeps identity and literal application excerpts with explicit qualification. Original delivery provenance and historical request records remain unchanged." }, literalExcerptOverlay: { issue: 3055, schema: "planning-source-relations/2", scope: "New candidates copy unique literal application excerpts; the host resolves lexical boundaries without generated character offsets. Source-bound prerequisites declare required input, not verified absence. Retained v1 offset projections, original bytes, historical hashes and source authority remain unchanged." }, requestSchemaSharingOverlay: { issue: "https://github.com/katalon-studio/loki/issues/3138", baselineSourceCommit: "64e6a58779a6f9da319fb946e1178ee2f53b65a9", files: { "pr-context-finder/planning/pcf_provider.mjs": "90048318b807761cec43938ec725c5c3452be194c52c5fa5ccbe0daf2959a89c" }, scope: "Share identical inline schema components through definitions in outgoing structured requests. Keep the expanded native validators, all source and test constraints, explicit output budgets, original records and no-replay behavior. Does not establish the cause of historical incomplete service responses." }, generatedProposalOverlay: { issue: 3110, schema: "planning-generated-proposal/1", scope: "New plans retain complete generated QA prose as proposed interpretation. Scoped saved reads revalidate the original input, exact evidence and requirement references, candidate and catalog hashes, full test definitions and derived coverage/Runner membership. Keep historical source-relation/1 and /2 readers, earlier plan bytes and original pin provenance unchanged. No automatic source correction call, execution or readiness claim." }, agentsSdk: { issue: 3736, version: "0.21.0", scope: "Initial Planner generation uses the SDK through the managed retained transport. Existing source instructions, native plan validation, originals, no-retry, Stop and MCP contracts remain. Persistent sessions and the remaining phases are separate increments." }, files: { "pr-context-finder/related/JSON-PARSER-NOTICES.txt": "6d8e1b601699abfbfda173eb93c34796a7a9e1d73f3c54d4e3282753ae2a972b", "pr-context-finder/related/json.d.mts": "c506d033c57002ea38a1d59614a715e4bae32b3e04d92e6d71cfb9a242722e55", "pr-context-finder/related/json.mjs": "ecbfbbcf5552f81572d18f22686e52cc59ef2f2f2edd534d48382f2e2c8ea770", "pr-context-finder/planning/pcf_native.mjs": "48bd1c58c005472ca53a53d335d767f2caf4b8c237dcde9038b6cb790e2d2d6b", "pr-context-finder/planning/pcf_plan.mjs": "ea7b6d5d3b5a38c2999e4e61bdb60775ea19e4106358be854ea377227085ebe0", "pr-context-finder/planning/pcf_provider.mjs": "2af5ee9fdc33a9c3d8cb8159cd70220bbb768999a7abd6decc16a176e25018f0", "pr-context-finder/planning/pcf_records.mjs": "beb6c01b0f7e31546d09d86b215d53d1a5326c8fd4bd0a26a1e8c4c56ec0aa32", "pr-context-finder/planning/prompts.mjs": "62daed30e9045204b0a5eac95df9fb13c62adc54cfb990924bd1ffa962b9631f", "pr-context-finder/planning/semantics.mjs": "8447994fae491749d1d607689b04010f7abbb1692be6bfd58ea9d2f0a49bd963", "node_modules/@katalon-experiments/ai-client/package.json": "b34b38cd811d2b3e621d4bdb056131eec78bccbc25af2922dcadad6952461bfd", "node_modules/@katalon-experiments/ai-client/index.mjs": "f3a780378f61e8eda0560467134e5fa0d0667bdc1414c967328e92facb20bec4", "node_modules/@katalon-experiments/ai-client/index.d.mts": "d026db4bf45abb01eaa06cd2c886f8ea38d842f441c67f9170895268d0096cec", "node_modules/@katalon-experiments/ai-client/litellm-route.mjs": "7cfa9317584f2737160f82fe12d2a4d4233c3cdf9b26aa6128f223c6113c1a48", "node_modules/@katalon-experiments/ai-client/litellm-route.d.mts": "1185e7db338618f634b45836c5dfeb063cf40d1fa3a2ec4a106b26e258796a03", "node_modules/@katalon-experiments/ai-client/README.md": "ccf0f2712a2e0f9cd61b24ae8e6ff6799378d1948dc0ff80a1ca0b01d843e4be", "node_modules/@katalon-experiments/ai-client/broker-channel.mjs": "9e2365939892879e7e59fdcd654ad002a385e53decee47eed7bd9f06783e0669", "pr-context-finder/planning/source-relations.mjs": "d24a4b28cf4449e34ce308a37d6ddf6d7b229856e4144ca43e71d9dee9d4acf2", "pr-context-finder/planning/planning-source.mjs": "1f60da08466ad5c75a17cf00c4032d537b4cf979c790b3ba59e7056ba8f3d830", "pr-context-finder/planning/risk-model-view.mjs": "2c4588acceef1707ce27010be827346a6711a6bf543fa1909338a5de1f920f37", "pr-context-finder/planning/request-instructions.mjs": "8bff1f113e208fd94ee212de891a4be44cb45e1fffe8d7dcbe6beb050c94d04a", "node_modules/@katalon-experiments/ai-client/agents.mjs": "bd15bf48ae824778e4c597d07ef75557b95f66ef766fee7841e91e10e1c0afa4", "node_modules/@katalon-experiments/ai-client/agents.d.mts": "3560e04eefcaaee3854c20450714b1a9d19693bb5f2e44d9feebca1f7368ee60", "node_modules/@katalon-experiments/ai-client/responses-session.d.mts": "645480e0b0845e8e436df2634723d8319a3d1c3ebad83eb29208881ba494e319", "node_modules/@katalon-experiments/ai-client/responses-session.mjs": "530b4efc9cdb33176bfbacc5e829d6b34631dd1b8eecdf20c940af32f99796d9", "node_modules/@katalon-experiments/ai-client/retention.mjs": "2fd8e0854373cd7c2286aa679dff34b440547d5566b339d1681703c59f55baa4" } };
   }
 });
 
@@ -11352,8 +11352,8 @@ var require_websocket = __commonJS({
           abortHandshake(websocket, socket, "Invalid Upgrade header");
           return;
         }
-        const digest48 = createHash86("sha1").update(key5 + GUID).digest("base64");
-        if (res.headers["sec-websocket-accept"] !== digest48) {
+        const digest49 = createHash86("sha1").update(key5 + GUID).digest("base64");
+        if (res.headers["sec-websocket-accept"] !== digest49) {
           abortHandshake(websocket, socket, "Invalid Sec-WebSocket-Accept header");
           return;
         }
@@ -12055,12 +12055,12 @@ var require_websocket_server = __commonJS({
           );
         }
         if (this._state > RUNNING) return abortHandshake(socket, 503);
-        const digest48 = createHash86("sha1").update(key5 + GUID).digest("base64");
+        const digest49 = createHash86("sha1").update(key5 + GUID).digest("base64");
         const headers = [
           "HTTP/1.1 101 Switching Protocols",
           "Upgrade: websocket",
           "Connection: Upgrade",
-          `Sec-WebSocket-Accept: ${digest48}`
+          `Sec-WebSocket-Accept: ${digest49}`
         ];
         const ws = new this.options.WebSocket(null, void 0, this.options);
         if (protocols.size) {
@@ -38395,8 +38395,8 @@ var require_connection = __commonJS({
             return;
           }
           const secWSAccept = response.headersList.get("Sec-WebSocket-Accept");
-          const digest48 = crypto.hash("sha1", keyValue + uid, "base64");
-          if (secWSAccept !== digest48) {
+          const digest49 = crypto.hash("sha1", keyValue + uid, "base64");
+          if (secWSAccept !== digest49) {
             failHandshake(handler, response, 1002, "Incorrect hash received in Sec-WebSocket-Accept header.");
             return;
           }
@@ -90671,7 +90671,8 @@ var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
-    number: external_exports.number().int().positive().max(2147483647)
+    number: external_exports.number().int().positive().max(2147483647),
+    revision: external_exports.strictObject({ base: gitShaSchema, head: gitShaSchema }).optional()
   })
 ]);
 var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
@@ -90696,7 +90697,8 @@ var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
 var repositoryConnectSchema = external_exports.strictObject({
   installationId: githubIdSchema,
   repositoryId: githubIdSchema,
-  shareWithWorkspace: external_exports.literal(true)
+  shareWithWorkspace: external_exports.literal(true),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var repositoryBindingSchema = external_exports.strictObject({
   id: sourceIdSchema,
@@ -90704,7 +90706,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
   installationId: githubIdSchema,
-  defaultBranch: sourceBranchNameSchema.optional()
+  defaultBranch: sourceBranchNameSchema.optional(),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -92376,6 +92379,15 @@ var sourceModelSelectionSchema = external_exports.strictObject({
   modelRef: external_exports.uuid().optional(),
   pageIds: external_exports.array(external_exports.string().min(1)).optional()
 }).refine((value) => [value.application, value.repositoryId, value.repository].filter(Boolean).length === 1, "Choose the configured application, or one legacy repository ID or full name.");
+function applicationModelFailure(status2) {
+  return status2 === 403 ? {
+    reason: "application_model_access_denied",
+    message: "This connection cannot read the workspace App Model."
+  } : {
+    reason: "application_model_unavailable",
+    message: "No app model is available yet. Continue with local source or browser observations."
+  };
+}
 var sourceModelReferenceSchema = external_exports.strictObject({
   modelRef: external_exports.uuid(),
   repositoryId: external_exports.uuid(),
@@ -92456,7 +92468,9 @@ var permissionSchema = external_exports.enum([
   "results:write",
   "maps:read",
   "maps:write",
-  "github:credential"
+  "github:credential",
+  "testing:start",
+  "testing:execute"
 ]);
 var permissions = permissionSchema.options;
 var opaqueSchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
@@ -93091,6 +93105,53 @@ function preserveAdvisoryInput(schema) {
       for (const issue4 of result.error.issues)
         context.addIssue({ ...issue4 });
   }).meta(external_exports.toJSONSchema(schema, { io: "input" }));
+}
+var savedEnvironmentSetup = "Kaijan resolved the application target from the selected Test Environment. The saved environment name identifies the setup in Kaijan and can differ from the names displayed by the application.";
+function savedEnvironmentPlanningSource(digest49) {
+  const revision2 = digest49(savedEnvironmentSetup);
+  return {
+    id: "saved-test-environment-" + revision2,
+    kind: "context",
+    uri: "urn:kaijan:saved-test-environment:" + revision2,
+    revision: revision2,
+    text: savedEnvironmentSetup,
+    attribution: "Saved Test Environment resolved by Kaijan."
+  };
+}
+function savedTestDataPlanningSource(value, digest49) {
+  const text15 = JSON.stringify(value);
+  const revision2 = digest49(text15);
+  return {
+    id: `caller-test-data:${revision2}`,
+    kind: "context",
+    uri: `kaijan-planning://test-data/${revision2}`,
+    revision: revision2,
+    text: text15,
+    attribution: "Test data supplied by the caller for this plan."
+  };
+}
+function sharedModelPlanningSource(context, digest49) {
+  const text15 = JSON.stringify(context);
+  return {
+    id: "shared-source-model-" + context.reference.modelRef,
+    kind: "context",
+    uri: "urn:kaijan:source-model:" + context.reference.modelRef,
+    revision: digest49(text15),
+    text: text15,
+    attribution: "Shared Main source-derived application context; runtime behavior unverified. Local changes and browser observations remain separate."
+  };
+}
+function suppliedChangePlanningSource(text15, digest49) {
+  const revision2 = digest49(text15);
+  return {
+    id: `supplied-change:${revision2}`,
+    kind: "implementation",
+    uri: `urn:kaijan:supplied-change:${revision2}`,
+    revision: revision2,
+    text: text15,
+    attribution: "Original change supplied with the planning request.",
+    authority_limit: "Caller-supplied implementation context. Its content digest is not an independently observed repository revision or application result."
+  };
 }
 var planningInputSchema = external_exports.union([
   external_exports.looseObject({
@@ -93780,6 +93841,49 @@ var runnerErrorSchema = external_exports.strictObject({
 });
 var runnerOutputSchema = external_exports.union([runnerOperationSchema, runnerErrorSchema]).meta({ $id: "urn:kaijan:runner-output:1" });
 
+// ../contracts/dist/model-settings.js
+init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
+init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
+init_define_LOKI_COMPUTER_RUNNER_PINS();
+init_define_LOKI_MAC_RUNNER_PINS();
+init_define_LOKI_PLANNER_LOOP_PINS();
+init_define_LOKI_PR_CONTEXT_PINS();
+init_define_LOKI_TEST_PLANNING_PINS();
+init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
+init_define_LOKI_WORK_ITEM_RISK_PINS();
+var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6.1-terra"),
+    reasoning: external_exports.enum(["low", "medium"]),
+    effortRecovery: external_exports.boolean().optional()
+  }),
+  external_exports.strictObject({
+    model: external_exports.literal("gpt-6-luna"),
+    reasoning: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
+    effortRecovery: external_exports.boolean().optional()
+  })
+]).transform((settings) => ({
+  model: settings.model,
+  reasoning: settings.reasoning,
+  ...settings.effortRecovery === void 0 ? {} : { effortRecovery: settings.effortRecovery }
+}));
+var defaultRunnerSettings = Object.freeze({
+  model: "gpt-6.1-terra",
+  reasoning: "low"
+});
+var defaultBrowserRunnerSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
+var analysisSettingsSchema = external_exports.strictObject({
+  model: external_exports.enum(["gpt-6-luna", "gpt-6.1-terra"]),
+  reasoning: external_exports.enum(["low", "medium"])
+});
+var defaultAnalysisSettings = Object.freeze({
+  model: "gpt-6-luna",
+  reasoning: "medium"
+});
+
 // ../contracts/dist/assessment-preparation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
 init_define_LOKI_CHANGE_RISK_INPUT_SCHEMA();
@@ -94018,6 +94122,22 @@ var testRunErrorSchema = external_exports.looseObject({
   error: external_exports.looseObject({ code: external_exports.string(), message: external_exports.string() })
 });
 var testRunOutputSchema = external_exports.union([testRunResultSchema, testRunErrorSchema]).meta({ $id: "urn:kaijan:test-run-output:1" });
+function retainedTestAssessment(report, selectedIds, stopped = false) {
+  const rows4 = report && typeof report === "object" && !Array.isArray(report) ? report.test_results : void 0;
+  const judgments = (Array.isArray(rows4) ? rows4 : []).flatMap((row2) => {
+    if (!row2 || typeof row2 !== "object" || Array.isArray(row2) || typeof row2.test_id !== "string" || !selectedIds.includes(row2.test_id))
+      return [];
+    const verdict2 = row2.bug_found ? "fail" : row2.scenario_finished ? "pass" : "incomplete";
+    return [{ ...row2, test_id: row2.test_id, verdict: verdict2 }];
+  });
+  if (stopped && !judgments.length)
+    return;
+  const complete = selectedIds.every((id8) => judgments.some((row2) => row2.test_id === id8));
+  return {
+    state: stopped ? "stopped" : complete ? "complete" : "input-unavailable",
+    result: { assessment: { test_results: judgments } }
+  };
+}
 
 // ../contracts/dist/report-presentation.js
 init_define_LOKI_ADVISORY_NATIVE_OUTPUT_SCHEMAS();
@@ -94914,8 +95034,8 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-function plannedTest(view, planId, digest48, testId) {
-  const source5 = view.plans.find((plan) => plan.sourceId === planId && plan.resultSha256 === digest48);
+function plannedTest(view, planId, digest49, testId) {
+  const source5 = view.plans.find((plan) => plan.sourceId === planId && plan.resultSha256 === digest49);
   const object42 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
   const tests2 = object42(object42(source5?.result).plan).tests;
   const test = Array.isArray(tests2) ? object42(tests2.find((item2) => object42(item2).id === testId)) : {};
@@ -95042,6 +95162,8 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
+var reportScreenshotName = /^(?:screen-(?:initial|[0-9]+|action-[0-9]+)|terminal|review-[a-f0-9-]+)\.png$/;
+var reportArtifactIdParts = (reportId, runId2, manifestSha256, name, sha2564) => JSON.stringify([reportId, runId2, manifestSha256, name, sha2564]);
 var digest13 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var count6 = external_exports.number().int().nonnegative();
 var captureTime = external_exports.iso.datetime({ offset: true });
@@ -96099,6 +96221,20 @@ function projectCustomerSavedPlanEvidence(values, sha2564) {
       return proved ? retainCustomerRiskEvidence(result, risk) : result;
     } catch {
       return unavailable5();
+    }
+  });
+}
+function retainedPlanPresentation(source5, verified, hasSourceProjection) {
+  const parsed = customerPlanSchema.parse(source5);
+  return customerPlanSchema.parse({
+    ...parsed,
+    presentation: {
+      schema: "kaijan.planning-presentation/1",
+      state: !verified ? "unverified" : hasSourceProjection ? "source-bound-proposal" : "legacy-source-excerpts",
+      semantics: "proposed-only",
+      ...verified && hasSourceProjection ? {} : {
+        detailsAvailable: verified && parsed.presentation?.detailsAvailable !== false
+      }
     }
   });
 }
@@ -98854,30 +98990,6 @@ async function adoptProviderEnvironment(data2, environment = process.env) {
     Buffer.from(JSON.stringify(provider))
   );
 }
-var runnerSettingsSchema = external_exports.discriminatedUnion("model", [
-  external_exports.strictObject({
-    model: external_exports.literal("gpt-6.1-terra"),
-    reasoning: external_exports.enum(["low", "medium"]),
-    effortRecovery: external_exports.boolean().optional()
-  }),
-  external_exports.strictObject({
-    model: external_exports.literal("gpt-6-luna"),
-    reasoning: external_exports.enum(["none", "low", "medium", "high", "xhigh", "max"]),
-    effortRecovery: external_exports.boolean().optional()
-  })
-]).transform((settings) => ({
-  model: settings.model,
-  reasoning: settings.reasoning,
-  ...settings.effortRecovery === void 0 ? {} : { effortRecovery: settings.effortRecovery }
-}));
-var defaultRunnerSettings = Object.freeze({
-  model: "gpt-6.1-terra",
-  reasoning: "low"
-});
-var defaultBrowserRunnerSettings = Object.freeze({
-  model: "gpt-6-luna",
-  reasoning: "medium"
-});
 async function runnerSettings(data2, explicit = {}, defaults = defaultBrowserRunnerSettings) {
   data2 = providerRoots.get(data2) ?? data2;
   let saved = defaults;
@@ -98931,14 +99043,6 @@ async function resetRunnerSettings(data2) {
   }
   await unlink2(path21);
 }
-var analysisSettingsSchema = external_exports.strictObject({
-  model: external_exports.enum(["gpt-6-luna", "gpt-6.1-terra"]),
-  reasoning: external_exports.enum(["low", "medium"])
-});
-var defaultAnalysisSettings = Object.freeze({
-  model: "gpt-6-luna",
-  reasoning: "medium"
-});
 async function analysisSettings(data2, env = process.env) {
   data2 = providerRoots.get(data2) ?? data2;
   let saved = defaultAnalysisSettings;
@@ -99591,11 +99695,9 @@ var PlanningSourceFailure = class extends Error {
 var ApplicationModelUnavailable = class extends Error {
   code;
   constructor(status2) {
-    const accessDenied = status2 === 403;
-    super(
-      accessDenied ? "This connection cannot read the workspace App Model." : "No app model is available yet. Continue with local source or browser observations."
-    );
-    this.code = accessDenied ? "application_model_access_denied" : "application_model_unavailable";
+    const { reason, message } = applicationModelFailure(status2);
+    super(message);
+    this.code = reason;
   }
 };
 var PlanningContextFailure = class extends Error {
@@ -115243,7 +115345,8 @@ var MODES = Object.freeze(["guided", "direct"]);
 
 // src/planning-preparation.ts
 var object10 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
-var hash12 = (value) => createHash26("sha256").update(JSON.stringify(value)).digest("hex");
+var digest28 = (text15) => createHash26("sha256").update(text15).digest("hex");
+var hash12 = (value) => digest28(JSON.stringify(value));
 var githubRecord = /^https:\/\/github\.com\/([\w.-]+\/[\w.-]+)\/(issues|pull)\/([1-9][0-9]*)$/;
 function referenceText(text15) {
   if (!text15.includes("[") || !text15.includes("https://github.com/")) return text15;
@@ -115524,16 +115627,9 @@ function createPlanningPreparation(dependencies) {
     if (change !== void 0 || selectedRiskSources.length) {
       const selected2 = [...selectedRiskSources];
       if (change !== void 0) {
-        const digest48 = hash12(change);
-        selected2.unshift({
-          id: `supplied-change:${digest48}`,
-          kind: "implementation",
-          uri: `urn:kaijan:supplied-change:${digest48}`,
-          revision: digest48,
-          text: JSON.stringify(change),
-          attribution: "Original change supplied with the planning request.",
-          authority_limit: "Caller-supplied implementation context. Its content digest is not an independently observed repository revision or application result."
-        });
+        selected2.unshift(
+          suppliedChangePlanningSource(JSON.stringify(change), digest28)
+        );
       }
       sources.push(...selected2);
       return {
@@ -115791,8 +115887,7 @@ function preparationHasUnknownUsage(preparation) {
     return accounting.calls_started !== 0 && accounting.calls !== 0;
   });
 }
-var digest28 = (bytes2) => createHash27("sha256").update(bytes2).digest("hex");
-var savedEnvironmentSetup = "Kaijan resolved the application target from the selected Test Environment. The saved environment name identifies the setup in Kaijan and can differ from the names displayed by the application.";
+var digest29 = (bytes2) => createHash27("sha256").update(bytes2).digest("hex");
 function planningTaskInput(request4, prepare2) {
   if (request4.taskInstructions === void 0 && request4.agentInstructions === void 0 && request4.testData === void 0)
     return request4.input;
@@ -115802,20 +115897,11 @@ function planningTaskInput(request4, prepare2) {
     ...request4.agentInstructions === void 0 ? {} : { agentInstructions: request4.agentInstructions }
   };
   if (request4.testData === void 0) return packet;
-  const text15 = JSON.stringify(request4.testData);
-  const revision2 = digest28(text15);
   return prepare2({
     ...packet,
     sources: [
       ...external_exports.array(external_exports.json()).parse(packet.sources),
-      {
-        id: `caller-test-data:${revision2}`,
-        kind: "context",
-        uri: `kaijan-planning://test-data/${revision2}`,
-        revision: revision2,
-        text: text15,
-        attribution: "Test data supplied by the caller for this plan."
-      }
+      savedTestDataPlanningSource(request4.testData, digest29)
     ]
   });
 }
@@ -116004,15 +116090,7 @@ var TestPlanning = class {
                 }
               };
             }
-            const text15 = JSON.stringify(sourceContext);
-            extraSources.push({
-              id: "shared-source-model-" + sourceContext.reference.modelRef,
-              kind: "context",
-              uri: "urn:kaijan:source-model:" + sourceContext.reference.modelRef,
-              revision: digest28(text15),
-              text: text15,
-              attribution: "Shared Main source-derived application context; runtime behavior unverified. Local changes and browser observations remain separate."
-            });
+            extraSources.push(sharedModelPlanningSource(sourceContext, digest29));
           }
           if ((request4.exploration || request4.desktopTarget) && !this.dependencies.prepareForPlanning)
             throw Error(
@@ -116022,15 +116100,7 @@ var TestPlanning = class {
           const target3 = request4.desktopTarget ? desktopRunnerTargetSchema.parse(request4.desktopTarget) : selection4?.target;
           if (target3) {
             if (request4.planningEnvironment) {
-              const revision3 = digest28(savedEnvironmentSetup);
-              extraSources.push({
-                id: "saved-test-environment-" + revision3,
-                kind: "context",
-                uri: "urn:kaijan:saved-test-environment:" + revision3,
-                revision: revision3,
-                text: savedEnvironmentSetup,
-                attribution: "Saved Test Environment resolved by Kaijan."
-              });
+              extraSources.push(savedEnvironmentPlanningSource(digest29));
             }
             const privateInputHosts = /* @__PURE__ */ new Map();
             const resolved2 = await resolveRunnerParameters(
@@ -116228,7 +116298,7 @@ var TestPlanning = class {
               }
             }
             const text15 = JSON.stringify(snapshot2);
-            const revision2 = digest28(text15);
+            const revision2 = digest29(text15);
             extraSources.push({
               id: "application-model-" + revision2,
               kind: "context",
@@ -116507,7 +116577,7 @@ var TestPlanning = class {
         ),
         source: planningPins?.sourceCommit ?? null,
         packageVersion: planningPins?.packageVersion ?? null,
-        inputSha256: digest28(JSON.stringify(request4)),
+        inputSha256: digest29(JSON.stringify(request4)),
         integration: "in-process"
       },
       lifecycle2,
@@ -116569,7 +116639,7 @@ var TestPlanning = class {
         ),
         nativePins: planningPins,
         preparation: this.dependencies.prepareForPlanning ? request4.repositories ? "related-context-and-risk/1" : request4.change ? "linked-context-and-supplied-change/1" : "linked-context-and-risk/1" : null,
-        inputSha256: digest28(JSON.stringify(request4)),
+        inputSha256: digest29(JSON.stringify(request4)),
         integration: "in-process"
       },
       {
@@ -116744,7 +116814,7 @@ var TestPlanning = class {
         customerPlan: projectCustomerPlan(
           native2.plan,
           [],
-          digest28,
+          digest29,
           void 0,
           true
         ),
@@ -116757,17 +116827,11 @@ var TestPlanning = class {
   }
   async readCustomerPlan(reference2) {
     const selected2 = await this.retainedCustomerPlan(reference2, true);
-    const plan = customerPlanSchema.parse({
-      ...customerPlanSchema.parse(selected2.customerPlan),
-      presentation: {
-        schema: "kaijan.planning-presentation/1",
-        state: !selected2.verified ? "unverified" : object11(selected2.native).source_projection ? "source-bound-proposal" : "legacy-source-excerpts",
-        semantics: "proposed-only",
-        ...selected2.verified && object11(selected2.native).source_projection ? {} : {
-          detailsAvailable: selected2.verified && object11(object11(selected2.customerPlan).presentation ?? {}).detailsAvailable !== false
-        }
-      }
-    });
+    const plan = retainedPlanPresentation(
+      selected2.customerPlan,
+      selected2.verified,
+      Boolean(object11(selected2.native).source_projection)
+    );
     return retainCustomerPlanningSource({
       schema: "kaijan.planning-presentation/1",
       answerId: reference2.answerId,
@@ -116778,7 +116842,7 @@ var TestPlanning = class {
       plan: selected2.verified ? projectCustomerPlan(
         retainCustomerPlanningSource(plan),
         [],
-        digest28,
+        digest29,
         void 0,
         true
       ) : retainCustomerPlanningSource(plan)
@@ -116796,7 +116860,7 @@ var TestPlanning = class {
     const selectedTestIds = resolveCustomerPlanningIds(
       ids2,
       reference2.selectedTestIds,
-      digest28
+      digest29
     );
     const saved = plannerConversationBindingSchema.parse(
       object11(selected2.native).planner_conversation
@@ -116855,7 +116919,7 @@ var TestPlanning = class {
     const selectedTestIds = resolveCustomerPlanningIds(
       ids2,
       reference2.selectedTestIds,
-      digest28
+      digest29
     );
     return {
       reference: { ...reference2, selectedTestIds },
@@ -116971,7 +117035,7 @@ async function loadPlanningPackage(packageRoot = root) {
       join17(packageRoot, "planning", name),
       4 * 1024 * 1024
     );
-    if (digest28(bytes2) !== expected)
+    if (digest29(bytes2) !== expected)
       throw Error("Planning source differs from its accepted delivery.");
   }
   const api = await import("#loki-selected/planning-api");
@@ -117705,7 +117769,7 @@ var PlanningFailure = class extends Error {
     Object.assign(this, { reason, root: root5, receipt: receipt4 });
   }
 };
-var digest29 = (value) => createHash28("sha256").update(utf8(encodedJson(value, { sortKeys: true, ascii: true }))).digest("hex");
+var digest30 = (value) => createHash28("sha256").update(utf8(encodedJson(value, { sortKeys: true, ascii: true }))).digest("hex");
 var openNew = (file3) => fs2.openSync(
   file3,
   fs2.constants.O_WRONLY | fs2.constants.O_CREAT | fs2.constants.O_EXCL | fs2.constants.O_NOFOLLOW | fs2.constants.O_NONBLOCK,
@@ -117923,7 +117987,7 @@ async function generate(packet, body2, root5, validate4, {
   save(path2.join(root5, "dispatch.json"), {
     started_at: (/* @__PURE__ */ new Date()).toISOString(),
     endpoint: connection2.url,
-    input_hash: digest29(packet),
+    input_hash: digest30(packet),
     request_sha256: hash13(wire),
     wire_bytes: wire.length,
     ...max_request_bytes === void 0 ? {} : { max_request_bytes },
@@ -118075,10 +118139,10 @@ async function generate(packet, body2, root5, validate4, {
           ).join("");
           candidate = readCandidate ? await readCandidate(raw) : parseJson(text15);
           save(path2.join(root5, "candidate.json"), candidate);
-          const before = digest29(candidate);
+          const before = digest30(candidate);
           failureStage = "plan_validation";
           checks = await validate4(candidate);
-          if (digest29(candidate) !== before)
+          if (digest30(candidate) !== before)
             throw Error("Validator changed original candidate");
           save(path2.join(root5, "validation.json"), checks);
         } catch (failure2) {
@@ -118103,7 +118167,7 @@ async function generate(packet, body2, root5, validate4, {
           nativeOperationValue = {
             plan: candidate,
             checks,
-            input_hash: digest29(packet),
+            input_hash: digest30(packet),
             receipt_directory: String(root5),
             receipt: receipt4
           };
@@ -118467,7 +118531,7 @@ function validateGeneratedSupplementText(candidate, prepared) {
   );
   const riskSources = new Map(
     prepared.risks.map((risk) => [
-      "supplement-risk-" + digest29(risk.id),
+      "supplement-risk-" + digest30(risk.id),
       risk.id
     ])
   );
@@ -118606,7 +118670,7 @@ var need4 = (ok, message, context) => {
 };
 function literalRequirements(packet) {
   return packet.sources.filter((s) => s.kind === "intent").map((s) => ({
-    id: "R-" + digest29([s.id, s.text]).slice(0, 12),
+    id: "R-" + digest30([s.id, s.text]).slice(0, 12),
     section: "unsplit intent",
     source_id: s.id,
     quote: s.text
@@ -118712,7 +118776,7 @@ function evidenceCatalog2(packet) {
     splitlines(source5.text).forEach((line, index2) => {
       if (!strip(line)) return;
       result.push({
-        id: "E-" + digest29([source5.id, index2 + 1, line]).slice(0, 16),
+        id: "E-" + digest30([source5.id, index2 + 1, line]).slice(0, 16),
         source_id: source5.id,
         kind: source5.kind,
         uri: source5.uri,
@@ -118937,7 +119001,7 @@ function suppliedInput(value) {
     map: null,
     input_projection: {
       kind: "supplied_work_item",
-      original_object_sha256: digest29(value),
+      original_object_sha256: digest30(value),
       text_projection: "complete title + newline + complete body",
       copied_author_claim: copied,
       authorship_proven: false,
@@ -119062,7 +119126,7 @@ function prepareSupplement(input3) {
     need5(!riskIds.has(risk.id), "Duplicate risk identity");
     riskIds.add(risk.id);
     return {
-      id: "supplement-risk-" + digest29(risk.id),
+      id: "supplement-risk-" + digest30(risk.id),
       kind: "context",
       uri: risk.uri,
       revision: risk.revision,
@@ -119265,7 +119329,7 @@ function verifySupplementSource(result, prepared) {
   return projected;
 }
 function supplementInputHash(prepared) {
-  return digest29(prepared);
+  return digest30(prepared);
 }
 function requestSupplement(input3, options2 = {}) {
   const settings = modelSettings(options2.modelSettings);
@@ -120457,7 +120521,7 @@ var WorkspaceResults = class {
           constants5.O_WRONLY | constants5.O_CREAT | constants5.O_EXCL | constants5.O_NOFOLLOW,
           384
         );
-        const digest48 = createHash37("sha256");
+        const digest49 = createHash37("sha256");
         let size = 0;
         try {
           await pipeline(
@@ -120471,7 +120535,7 @@ var WorkspaceResults = class {
                   return done(
                     Error("Downloaded bytes exceed the selected identity.")
                   );
-                digest48.update(chunk);
+                digest49.update(chunk);
                 done(null, chunk);
               }
             }),
@@ -120481,7 +120545,7 @@ var WorkspaceResults = class {
         } finally {
           await output2.close();
         }
-        if (size !== descriptor.bytes || digest48.digest("hex") !== descriptor.sha256)
+        if (size !== descriptor.bytes || digest49.digest("hex") !== descriptor.sha256)
           throw Error("Workspace download failed integrity verification.");
         stored2.push({
           ...item2.expected ? { fileId: item2.expected.fileId } : {},
@@ -120853,8 +120917,8 @@ function unverifiedClarificationQuestion(question3, protection, privateIdentitie
     ) ? question3.kind : "task-scope"
   };
 }
-var digest30 = (value) => createHash38("sha256").update(value).digest("hex");
-var customerClarificationQuestionId = (clarificationId, id8) => digest30(JSON.stringify([clarificationId, id8]));
+var digest31 = (value) => createHash38("sha256").update(value).digest("hex");
+var customerClarificationQuestionId = (clarificationId, id8) => digest31(JSON.stringify([clarificationId, id8]));
 var retained = /* @__PURE__ */ new WeakMap();
 function bindRetainedClarificationView(record15, view) {
   retained.set(record15, {
@@ -121293,7 +121357,7 @@ var object19 = (value) => value !== null && typeof value === "object" && !Array.
 var list5 = (value) => Array.isArray(value) ? value : [];
 var hash18 = (text15) => createHash40("sha256").update(text15).digest("hex");
 var jsonHash2 = (value) => hash18(JSON.stringify(value));
-var digest31 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest32 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var state = external_exports.enum([
   "completed",
   "incomplete",
@@ -121353,7 +121417,7 @@ var actionRow = external_exports.object({
 });
 var screenshot2 = external_exports.object({
   name: external_exports.string().regex(/^(?:screen-(?:initial|[0-9]+)|terminal)\.png$/),
-  sha256: digest31,
+  sha256: digest32,
   capturedAt: date5
 });
 var caseAction = external_exports.object({
@@ -121447,7 +121511,7 @@ function sourceProvenance(entry, original, text15, kind) {
 var clarificationRecord = external_exports.object({
   request: external_exports.object({
     schema: external_exports.literal("loki.runner.clarification/1"),
-    clarificationId: digest31,
+    clarificationId: digest32,
     questions: external_exports.array(
       external_exports.object({ id: external_exports.string(), question: external_exports.string(), kind: external_exports.string() })
     ).min(1)
@@ -121456,11 +121520,11 @@ var clarificationRecord = external_exports.object({
   status: external_exports.enum(["waiting", "interrupted", "answered"]),
   provenance: external_exports.object({
     source: external_exports.literal("retained-native-clarification"),
-    runId: digest31,
-    manifestSha256: digest31,
+    runId: digest32,
+    manifestSha256: digest32,
     artifact: external_exports.object({
       name: external_exports.string(),
-      sha256: digest31,
+      sha256: digest32,
       bytes: external_exports.number().int().nonnegative()
     }),
     question: external_exports.literal("model-authored-unverified"),
@@ -121480,10 +121544,10 @@ var cleanupRecord = external_exports.object({
   errorCount: external_exports.number().int().nonnegative(),
   provenance: external_exports.object({
     source: external_exports.literal("retained-native-browser-cleanup"),
-    runId: digest31,
-    manifestSha256: digest31,
+    runId: digest32,
+    manifestSha256: digest32,
     artifact: external_exports.object({
-      sha256: digest31,
+      sha256: digest32,
       bytes: external_exports.number().int().nonnegative()
     }),
     phase: external_exports.literal("native-final-cleanup-after-execution")
@@ -121793,7 +121857,7 @@ var identityFields = {
   callId: nonempty6
 };
 var checkCorrelation = (value, ctx) => {
-  if (value.clarificationId !== digest32(value.providerResponseId + "\0" + value.callId))
+  if (value.clarificationId !== digest33(value.providerResponseId + "\0" + value.callId))
     ctx.addIssue({
       code: "custom",
       message: "Invalid clarification correlation"
@@ -121820,7 +121884,7 @@ var ClarificationRejection = class extends Error {
   }
   code;
 };
-var digest32 = (text15) => createHash41("sha256").update(text15).digest("hex");
+var digest33 = (text15) => createHash41("sha256").update(text15).digest("hex");
 var plain = (value) => JSON.parse(JSON.stringify(value));
 var monotonic = () => {
   try {
@@ -121887,11 +121951,11 @@ var RunnerClarifications = class {
         const bytes2 = await boundedFile(
           join23(directory3, "clarification-answers", record15.file)
         );
-        if (digest32(bytes2.toString("utf8")) !== record15.sha256)
+        if (digest33(bytes2.toString("utf8")) !== record15.sha256)
           throw new RunnerProjectionError();
         const saved = external_exports.object({ original: external_exports.string(), receipt: runnerAnswerReceipt }).parse(JSON.parse(bytes2.toString("utf8")));
         const answer = runnerAnswer.parse(JSON.parse(saved.original));
-        if (digest32(answer.answerKey) + ".json" !== record15.file || answer.runId !== saved.receipt.runId || answer.clarificationId !== saved.receipt.clarificationId || answer.answerKey !== saved.receipt.answerKey)
+        if (digest33(answer.answerKey) + ".json" !== record15.file || answer.runId !== saved.receipt.runId || answer.clarificationId !== saved.receipt.clarificationId || answer.answerKey !== saved.receipt.answerKey)
           throw new RunnerProjectionError();
         if (answer.runId !== basename(resolve9(directory3)))
           throw new RunnerProjectionError();
@@ -122093,7 +122157,7 @@ var RunnerClarifications = class {
       (await privateFile(join23(directory3, "request.json"))).toString("utf8")
     );
     const expected = external_exports.object({ inputSha256: hashId2 }).parse(status2.identity);
-    if (digest32(canonicalJson(original)) !== expected.inputSha256)
+    if (digest33(canonicalJson(original)) !== expected.inputSha256)
       throw Error("Original task identity changed.");
     const protection = await this.protection(directory3);
     const identities = [];
@@ -122201,7 +122265,7 @@ var RunnerClarifications = class {
         join23(
           directory3,
           "clarification-answers",
-          digest32(input3.answerKey) + ".json"
+          digest33(input3.answerKey) + ".json"
         )
       );
       try {
@@ -122281,7 +122345,7 @@ var RunnerClarifications = class {
   }
   async deliver(input3, directory3) {
     const root5 = join23(directory3, "clarification-answers");
-    const name = digest32(input3.answerKey) + ".json";
+    const name = digest33(input3.answerKey) + ".json";
     const original = JSON.stringify(input3);
     const retainedBytes = await boundedFile(join23(root5, name)).catch((error62) => {
       if (!absent3(error62)) throw error62;
@@ -122306,7 +122370,7 @@ var RunnerClarifications = class {
       };
     }
     const bytes2 = retainedBytes ?? Buffer.from(JSON.stringify({ original, receipt: receipt4 }));
-    const sha2564 = digest32(bytes2.toString("utf8"));
+    const sha2564 = digest33(bytes2.toString("utf8"));
     const index2 = await this.protectionIndex(directory3);
     const indexed = index2.answers.find((record15) => record15.file === name);
     const entry = this.active.get(directory3);
@@ -122533,16 +122597,16 @@ var equalProjectedOutcome = (run, original, reported) => {
     return false;
   }
 };
-var digest33 = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
+var digest34 = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 function matchesReportedOutcome(outcome, reported, run, outcomeIndex) {
   if (equal3(outcome, reported)) return true;
   if (equalProjectedOutcome(run, outcome, reported)) return true;
-  if (!reported || !digest33(run.runId) || !digest33(run.resultSha256))
+  if (!reported || !digest34(run.runId) || !digest34(run.resultSha256))
     return false;
   const reference2 = record9(
     record9(record9(reported.provenance).implementation).original
   );
-  if (!digest33(reference2.reportId)) return false;
+  if (!digest34(reference2.reportId)) return false;
   const pointer2 = text9(reference2.pointer).match(
     /^\/entries\/(0|[1-9][0-9]*)\/result\/assessmentFragment\/outcomes\/(0|[1-9][0-9]*)\/provenance\/implementation$/
   );
@@ -122587,7 +122651,7 @@ function matchesStandaloneExpectation(item2, run, native2, scenarioId) {
   ).scenario;
   const projected = projectScenario(native2.task);
   if (item2.expected === projected) return true;
-  if (!digest33(run.runId) || !digest33(run.resultSha256)) return false;
+  if (!digest34(run.runId) || !digest34(run.resultSha256)) return false;
   const legacy = text9(projected).replace(/\bhttps?:\/\/[^\s"<>]+/gi, (url2) => {
     const parsed = new URL(url2);
     parsed.search = "";
@@ -122844,7 +122908,7 @@ import { realpath as realpath14 } from "node:fs/promises";
 function artifactFailure(message, diagnosticReason) {
   return Object.assign(new Error(message), { diagnosticReason });
 }
-var digest34 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest35 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var sha2563 = (value) => createHash44("sha256").update(value).digest("hex");
 var manifestSchema = external_exports.object({
   schema: external_exports.enum([
@@ -122859,15 +122923,12 @@ var manifestSchema = external_exports.object({
       // in an unselected member; never resolve a caller-supplied path.
       path: external_exports.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/),
       bytes: external_exports.number().int().nonnegative(),
-      sha256: digest34
+      sha256: digest35
     })
   )
 });
 function mediaType(name) {
-  if (/^(?:screen-(?:initial|[0-9]+|action-[0-9]+)|terminal|review-[a-f0-9-]+)\.png$/.test(
-    name
-  ))
-    return "image/png";
+  if (reportScreenshotName.test(name)) return "image/png";
   if ([
     "actions.json",
     "case-evidence.json",
@@ -122883,7 +122944,7 @@ var nativeIdentity = external_exports.object({
   taskId: external_exports.string().min(1),
   traceManifest: external_exports.object({
     path: external_exports.string(),
-    sha256: digest34,
+    sha256: digest35,
     files: external_exports.number().int().nonnegative()
   })
 });
@@ -123109,13 +123170,13 @@ async function readArtifact(data2, reportId, entry, artifactId, offset2 = 0, cus
     ))
       return [];
     const artifactId2 = sha2563(
-      JSON.stringify([
+      reportArtifactIdParts(
         reportId,
-        entry.runId,
+        identity2.runId,
         identity2.manifestSha256,
         file3.path,
         file3.sha256
-      ])
+      )
     );
     artifactSources.set(artifactId2, file3.path);
     return type ? [
@@ -123194,8 +123255,8 @@ async function readArtifact(data2, reportId, entry, artifactId, offset2 = 0, cus
             correlation: external_exports.object({
               selectedTestIds: external_exports.array(external_exports.string().min(1)).optional(),
               planRef: external_exports.object({
-                answerId: digest34,
-                resultSha256: digest34,
+                answerId: digest35,
+                resultSha256: digest35,
                 selectedTestIds: external_exports.array(external_exports.string().min(1)).optional()
               })
             })
@@ -125249,24 +125310,24 @@ function testPlanCardSummary(view, includeCardDetails) {
 
 // src/report.ts
 var hash21 = (value) => createHash51("sha256").update(value).digest("hex");
-var digest35 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest36 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var reportReference = external_exports.union([
   external_exports.strictObject({
     kind: external_exports.enum(["plan", "assessment"]),
-    answerId: digest35,
-    resultSha256: digest35.optional()
+    answerId: digest36,
+    resultSha256: digest36.optional()
   }),
   // Direct-library operation consumers and Runner still have genuine run IDs.
   external_exports.strictObject({
     kind: external_exports.enum(["plan", "runner", "assessment"]),
-    runId: digest35,
-    resultSha256: digest35.optional()
+    runId: digest36,
+    resultSha256: digest36.optional()
   })
 ]);
 var reportSelection = external_exports.strictObject({
   title: external_exports.string().trim().min(1),
   operations: external_exports.array(reportReference).max(30),
-  sourceContextId: digest35.optional().describe(
+  sourceContextId: digest36.optional().describe(
     "Optional Context ID compatible with nativeInputs.reportSources. When omitted, reuse the unique original context of selected PR-bound Runner verification, or keep an unbound report."
   ),
   view: external_exports.literal("test-plan").optional(),
@@ -125282,7 +125343,7 @@ var reportSelection = external_exports.strictObject({
   ).size === value.operations.length,
   "Each original operation can be selected only once."
 );
-var reportHandle = external_exports.strictObject({ reportId: digest35 });
+var reportHandle = external_exports.strictObject({ reportId: digest36 });
 var reportGet = reportHandle.extend({
   sourceOffset: external_exports.number().int().nonnegative().optional().describe(
     "Use 0 to read the saved Plan input or attached GitHub source. Continue at the returned nextOffset."
@@ -125302,7 +125363,7 @@ var reportShow = preserveAdvisoryInput(
   ])
 );
 var reportTrace = reportHandle.extend({
-  runId: digest35,
+  runId: digest36,
   action: external_exports.enum(["status", "open", "launch", "close"]),
   caseTarget: external_exports.strictObject({
     testId: external_exports.string().min(1).max(512),
@@ -125907,7 +125968,7 @@ var Reports = class {
       for (const entry of entries) {
         const result = object24(entry.result);
         if (entry.kind === "runner" && result.verification && result.sourceContextId !== null && result.sourceContextId !== void 0)
-          contexts.add(digest35.parse(result.sourceContextId));
+          contexts.add(digest36.parse(result.sourceContextId));
       }
       if (contexts.size > 1)
         throw new Error(
@@ -125925,7 +125986,7 @@ var Reports = class {
       const retained2 = external_exports.object({
         state: external_exports.literal("input-compatible"),
         contextId: external_exports.literal(sourceContextId),
-        recordSha256: digest35,
+        recordSha256: digest36,
         input: external_exports.unknown()
       }).parse(consumed);
       evidenceContext = {
@@ -125995,7 +126056,7 @@ var Reports = class {
     );
   }
   async get(reportId) {
-    digest35.parse(reportId);
+    digest36.parse(reportId);
     try {
       return await this.readSnapshot(reportId);
     } catch (cause) {
@@ -126263,7 +126324,7 @@ var Reports = class {
     };
   }
   async readSnapshot(reportId) {
-    digest35.parse(reportId);
+    digest36.parse(reportId);
     await checkPrivateDirectory(this.directory);
     const raw = new TextDecoder("utf-8", { fatal: true }).decode(
       await boundedFile(
@@ -126273,23 +126334,23 @@ var Reports = class {
     );
     const value = external_exports.object({
       schema: external_exports.enum(["loki.report/1", "loki.report/2"]),
-      reportId: digest35,
+      reportId: digest36,
       title: external_exports.string(),
       createdAt: external_exports.string(),
       mapId: external_exports.string().optional(),
       evidenceContext: external_exports.object({
-        contextId: digest35,
-        recordSha256: digest35,
+        contextId: digest36,
+        recordSha256: digest36,
         input: reportEvidenceSchema
       }).optional(),
       executionEvidence: external_exports.array(reportExecutionSchema).optional(),
       entries: external_exports.array(
         external_exports.object({
           kind: external_exports.enum(["plan", "runner", "assessment"]),
-          runId: digest35.optional(),
-          answerId: digest35.optional(),
+          runId: digest36.optional(),
+          answerId: digest36.optional(),
           state: external_exports.string(),
-          resultSha256: digest35.nullable(),
+          resultSha256: digest36.nullable(),
           result: external_exports.unknown(),
           operation: external_exports.record(external_exports.string(), external_exports.unknown()).optional()
         }).refine(
@@ -126844,24 +126905,24 @@ import { lstat as lstat12 } from "node:fs/promises";
 import { join as join32 } from "node:path";
 var hash23 = (value) => createHash53("sha256").update(value).digest("hex");
 var object25 = external_exports.record(external_exports.string(), external_exports.json());
-var digest36 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest37 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var historicalProducer = external_exports.object({
   package: external_exports.literal("@katalon-loki/computer-runner"),
   version: external_exports.literal("0.1.1"),
   sourceRevision: external_exports.literal("e78b378bf9ac81222d0e3617b7bff1aeee1c4b22"),
   integration: external_exports.literal("public Node run(input, options)"),
-  files: external_exports.record(external_exports.string(), digest36)
+  files: external_exports.record(external_exports.string(), digest37)
 }).refine(
   (value) => Object.keys(value.files).length === 11 && hash23(canonicalJson(value.files)) === "851dc7de38dd789108a43dc086c1502726561f16fe5dc5fd3a4edcdea80eebc0"
 );
 var identitySchema = external_exports.strictObject({
   implementation: object25,
   integration: external_exports.literal("isolated-public-Node-API"),
-  inputSha256: digest36,
+  inputSha256: digest37,
   applicationContext: external_exports.json().optional(),
   validationContext: external_exports.strictObject({
     bindingId: external_exports.string().min(1),
-    bindingSha256: digest36,
+    bindingSha256: digest37,
     headless: external_exports.boolean()
   }).optional()
 });
@@ -126930,7 +126991,7 @@ var assessmentSchema = external_exports.strictObject({
       text: external_exports.string().nullable(),
       bytes_base64: external_exports.null(),
       reference: external_exports.json(),
-      sha256: digest36.optional(),
+      sha256: digest37.optional(),
       provenance: object25
     })
   ),
@@ -128250,7 +128311,7 @@ function parseRunnerContextBinding(value) {
   Object.freeze(binding2.sources);
   return Object.freeze(binding2);
 }
-var digest37 = (value) => createHash57("sha256").update(canonicalJson(JSON.parse(JSON.stringify(value)))).digest("hex");
+var digest38 = (value) => createHash57("sha256").update(canonicalJson(JSON.parse(JSON.stringify(value)))).digest("hex");
 function retainRunnerContextBinding(value) {
   if (value === void 0) return;
   return parseRunnerContextBinding(value);
@@ -128259,8 +128320,8 @@ async function runnerContextIdentity(binding2) {
   return binding2 ? {
     schema: "loki.runner.application-context/1",
     bindingId: binding2.bindingId,
-    bindingSha256: digest37(binding2),
-    descriptorSha256: digest37(applicationContextTool),
+    bindingSha256: digest38(binding2),
+    descriptorSha256: digest38(applicationContextTool),
     serviceIdentity: await applicationContextServiceIdentity()
   } : null;
 }
@@ -128293,7 +128354,7 @@ async function bindRunnerApplicationContext(binding2, context, scope, requestKey
     queryMs: binding2.queryMs,
     outputBytes: binding2.outputBytes,
     bindingId: binding2.bindingId,
-    bindingSha256: digest37(binding2)
+    bindingSha256: digest38(binding2)
   };
   const host = await createRunnerApplicationContext({
     ...config2,
@@ -128327,7 +128388,7 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash58 } from "node:crypto";
-var digest38 = (value) => createHash58("sha256").update(value).digest("hex");
+var digest39 = (value) => createHash58("sha256").update(value).digest("hex");
 var sha = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var selector2 = external_exports.union([
   external_exports.strictObject({ call: external_exports.number().int().min(1).max(80) }),
@@ -128413,7 +128474,7 @@ function selectRunnerValidation(binding2, scopeId, request4) {
   const selected2 = binding2.operations.find(
     (item2) => item2.requestKey === request4.requestKey
   );
-  if (!selected2 || selected2.requestSha256 !== digest38(canonicalJson(request4)))
+  if (!selected2 || selected2.requestSha256 !== digest39(canonicalJson(request4)))
     throw Error("Validation operation mismatch; no dispatch");
   return selected2;
 }
@@ -128425,9 +128486,9 @@ function runnerValidationOperation(binding2, scopeId, request4, nativeInput2, ro
     schema: "loki.runner-validation-worker/1",
     bindingId: binding2.id,
     bindingSha256: runnerValidationIdentity(binding2).bindingSha256,
-    runId: digest38(JSON.stringify([scopeId, request4.requestKey])),
+    runId: digest39(JSON.stringify([scopeId, request4.requestKey])),
     requestKey: selected2.requestKey,
-    nativeInputSha256: digest38(canonicalJson(nativeInput2)),
+    nativeInputSha256: digest39(canonicalJson(nativeInput2)),
     route,
     ...binding2.headless === void 0 ? {} : { headless: binding2.headless },
     faults: selected2.faults
@@ -128436,7 +128497,7 @@ function runnerValidationOperation(binding2, scopeId, request4, nativeInput2, ro
 function runnerValidationIdentity(binding2) {
   return {
     bindingId: binding2.id,
-    bindingSha256: digest38(canonicalJson(external_exports.json().parse(binding2))),
+    bindingSha256: digest39(canonicalJson(external_exports.json().parse(binding2))),
     headless: binding2.headless ?? false
   };
 }
@@ -129608,7 +129669,7 @@ import { createHash as createHash60 } from "node:crypto";
 var retainedMapBundleVersion = "retained-visible-map-bundle/1";
 var retainedMapLookupVersion = "retained-visible-map-lookup/1";
 var retainedMapSha256 = (value) => createHash60("sha256").update(value, "utf8").digest("hex");
-var digest39 = (value) => retainedMapSha256(JSON.stringify(value));
+var digest40 = (value) => retainedMapSha256(JSON.stringify(value));
 var sourceVersion2 = (map2) => {
   const origin2 = map2?.source?.origin;
   return ["folder", "git_working_tree"].includes(origin2?.mode) && /^[a-f0-9]{64}$/.test(origin2?.snapshot_sha256) ? "snapshot:" + origin2.snapshot_sha256 : origin2?.revision;
@@ -129703,7 +129764,7 @@ function createRetainedMapBundle(mapJson, corpus, { repository: repository2, all
     map_sha256_utf8: retainedMapSha256(mapJson),
     files,
     unavailable_citations,
-    source_material_hash: digest39({ files, unavailable_citations }),
+    source_material_hash: digest40({ files, unavailable_citations }),
     source_material_hash_encoding: "sha256(JSON.stringify({files,unavailable_citations}))",
     provenance: "Original map bytes and exact citation fragments; full-file hashes recorded at bundle creation. Historical model-input exposure and runtime behavior are not reconstructed. Explicitly unavailable citations remain unresolved."
   };
@@ -129711,7 +129772,7 @@ function createRetainedMapBundle(mapJson, corpus, { repository: repository2, all
   return bundle;
 }
 function inspectRetainedMapBundle(bundle) {
-  if (bundle?.schema_version !== retainedMapBundleVersion || typeof bundle.repository !== "string" || !bundle.repository.trim() || typeof bundle.map_json !== "string" || retainedMapSha256(bundle.map_json) !== bundle.map_sha256_utf8 || !Array.isArray(bundle.files) || !Array.isArray(bundle.unavailable_citations) || digest39({
+  if (bundle?.schema_version !== retainedMapBundleVersion || typeof bundle.repository !== "string" || !bundle.repository.trim() || typeof bundle.map_json !== "string" || retainedMapSha256(bundle.map_json) !== bundle.map_sha256_utf8 || !Array.isArray(bundle.files) || !Array.isArray(bundle.unavailable_citations) || digest40({
     files: bundle.files,
     unavailable_citations: bundle.unavailable_citations
   }) !== bundle.source_material_hash)
@@ -131010,11 +131071,11 @@ init_define_LOKI_PR_CONTEXT_PINS();
 init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
-var digest40 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest41 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var origin = external_exports.object({
   sourceKind: external_exports.string(),
   provenance: external_exports.object({ role: external_exports.string(), reported: external_exports.unknown() }),
-  rendered: external_exports.object({ text: external_exports.string(), sha256: digest40 })
+  rendered: external_exports.object({ text: external_exports.string(), sha256: digest41 })
 });
 var task = external_exports.strictObject({
   title: external_exports.string(),
@@ -131110,7 +131171,7 @@ function retainedSourceDisplay(value) {
       source: external_exports.literal("application-evidence-projection"),
       schema: external_exports.literal("kaijan.application-evidence/1"),
       kind: external_exports.enum(["application-page", "application-artifact"]),
-      textSha256: digest40
+      textSha256: digest41
     }).safeParse(row2.provenance.reported);
     const selected2 = page3.safeParse(raw);
     if (!projection2.success || projection2.data.textSha256 !== row2.rendered.sha256 || !selected2.success)
@@ -131294,7 +131355,7 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash63 } from "node:crypto";
 var hash29 = (text15) => createHash63("sha256").update(text15).digest("hex");
-var digest41 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest42 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 var record12 = (value) => value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
 var recap = external_exports.object({
   schema: external_exports.literal("loki.runner.execution-recap/1"),
@@ -131304,14 +131365,14 @@ var sourceSchema = external_exports.object({
   id: external_exports.string(),
   kind: external_exports.literal("execution_record"),
   text: external_exports.string(),
-  sha256: digest41
+  sha256: digest42
 });
 var bindingSchema3 = external_exports.object({
   status: external_exports.literal("bound"),
   sourceKind: external_exports.literal("execution_record"),
   pointer: external_exports.object({
     sourceId: external_exports.string(),
-    sourceSha256: digest41,
+    sourceSha256: digest42,
     startUtf16: external_exports.literal(0),
     endUtf16: external_exports.number().int()
   }),
@@ -131321,13 +131382,13 @@ var bindingSchema3 = external_exports.object({
       source: external_exports.literal("application-evidence-projection"),
       schema: external_exports.literal("kaijan.application-evidence/1"),
       kind: external_exports.literal("application-artifact"),
-      runId: digest41,
-      resultSha256: digest41,
-      originalRecordSha256: digest41,
-      textSha256: digest41
+      runId: digest42,
+      resultSha256: digest42,
+      originalRecordSha256: digest42,
+      textSha256: digest42
     })
   }),
-  rendered: external_exports.object({ text: external_exports.string(), sha256: digest41 })
+  rendered: external_exports.object({ text: external_exports.string(), sha256: digest42 })
 });
 function retainedRecapQuote(binding2, source5) {
   const original = record12(source5);
@@ -134033,18 +134094,18 @@ init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { join as join42 } from "node:path";
 import { createHash as createHash69 } from "node:crypto";
-var digest42 = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var digest43 = external_exports.string().regex(/^[a-f0-9]{64}$/);
 async function readAssessmentNoteIdentities(data2, reference2) {
-  digest42.parse(reference2.answerId);
-  digest42.parse(reference2.resultSha256);
-  if (reference2.inputSha256 !== void 0) digest42.parse(reference2.inputSha256);
+  digest43.parse(reference2.answerId);
+  digest43.parse(reference2.resultSha256);
+  if (reference2.inputSha256 !== void 0) digest43.parse(reference2.inputSha256);
   const root5 = join42(data2, "planner-assessment-runs-queries");
   await checkPrivateDirectory(root5);
   await checkPrivateDirectory(join42(root5, "answers"));
   const directory3 = join42(root5, "answers", reference2.answerId);
   const receipt4 = external_exports.object({
     state: external_exports.literal("complete"),
-    key: digest42,
+    key: digest43,
     resultSha256: external_exports.literal(reference2.resultSha256)
   }).parse(
     JSON.parse(
@@ -134054,7 +134115,7 @@ async function readAssessmentNoteIdentities(data2, reference2) {
   await checkPrivateDirectory(join42(root5, "identities"));
   await checkPrivateDirectory(join42(root5, "identities", receipt4.key));
   const identity2 = external_exports.object({
-    inputSha256: reference2.inputSha256 === void 0 ? digest42 : external_exports.literal(reference2.inputSha256),
+    inputSha256: reference2.inputSha256 === void 0 ? digest43 : external_exports.literal(reference2.inputSha256),
     analysisSettings: external_exports.object({ model: external_exports.string().min(1) }).optional()
   }).parse(
     JSON.parse(
@@ -134944,29 +135005,15 @@ var TestRun = class {
         external_exports.json().parse(native2.nativeResult),
         "executionReport"
       );
-      const judgments = rows3(member(report, "test_results")).flatMap((row2) => {
-        const test_id = member(row2, "test_id");
-        if (typeof test_id !== "string" || !selected2.ids.includes(test_id))
-          return [];
-        const verdict2 = member(row2, "bug_found") ? "fail" : member(row2, "scenario_finished") ? "pass" : "incomplete";
-        return [{ ...object34(row2), test_id, verdict: verdict2 }];
-      });
-      if (stopped2 && !judgments.length) return;
-      const complete = selected2.ids.every(
-        (id8) => judgments.some((row2) => row2.test_id === id8)
-      );
-      result.status.assessment = stopped2 ? "stopped" : complete ? "complete" : "input-unavailable";
+      const assessment = retainedTestAssessment(report, selected2.ids, stopped2);
+      if (!assessment) return;
+      result.status.assessment = assessment.state;
       result.preparation = {
         source: request4.executionMethod === "desktop-ui" ? "runner-desktop-session" : "runner-browser-session",
         runId: runId2
       };
-      result.assessment = {
-        state: result.status.assessment,
-        result: {
-          assessment: { test_results: judgments }
-        }
-      };
-      return judgments;
+      result.assessment = assessment;
+      return assessment.result.assessment.test_results;
     };
     const stopped = async () => {
       result.status.assessment = "stopped";
@@ -158305,7 +158352,7 @@ function remove_bom(source5) {
 }
 
 // ../ui-modeler/lib/captured-svelte-imports.mjs
-var digest43 = (s) => createHash74("sha256").update(s).digest("hex");
+var digest44 = (s) => createHash74("sha256").update(s).digest("hex");
 var script = (s) => (0, import_parser.parse)(s, {
   sourceType: "unambiguous",
   plugins: ["typescript", "jsx"],
@@ -158380,7 +158427,7 @@ function capturedSvelteImports(sources, { layouts = true, packageExports = false
       metadata: [manifest, ...configs].map((f) => ({
         file_id: f.id,
         path: f.path,
-        text_hash: digest43(f.text)
+        text_hash: digest44(f.text)
       })),
       error: null
     };
@@ -158742,7 +158789,7 @@ var frameworkImportOptions = Object.freeze({
   templateCandidates: true
 });
 var root4 = "/__ui_modeler_source__";
-var digest44 = (text15) => createHash75("sha256").update(text15).digest("hex");
+var digest45 = (text15) => createHash75("sha256").update(text15).digest("hex");
 var diagnostic2 = (reason, config2) => ({
   reason,
   config: config2.replace(root4 + "/", "")
@@ -158776,7 +158823,7 @@ function capturedFrameworkImports(corpus, { angularResources = false, literalDyn
       sources: [...accessed].filter((p) => files.has(p)).map((p) => ({
         path: files.get(p).path,
         file_id: files.get(p).id,
-        text_hash: digest44(files.get(p).text)
+        text_hash: digest45(files.get(p).text)
       })),
       cache: ts2.createModuleResolutionCache(root4, (p) => p, parsed.options)
     };
@@ -159883,7 +159930,7 @@ init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { URL as URL4 } from "node:url";
 import { TextDecoder as TextDecoder2 } from "node:util";
 import { createHash as createHash77 } from "node:crypto";
-var digest45 = (raw) => createHash77("sha256").update(raw).digest("hex");
+var digest46 = (raw) => createHash77("sha256").update(raw).digest("hex");
 function repositoryIdentity(repo, { deadline = null, signal, env } = {}) {
   const runtime2 = inventoryRuntime(deadline, signal);
   const result = runtime2.sync(
@@ -159926,7 +159973,7 @@ async function census(entries, origin2, preserveAliases = false) {
     const record15 = {
       path: name,
       bytes: raw.length,
-      sha256: digest45(raw),
+      sha256: digest46(raw),
       ...metadata4
     };
     if (metadata4.unsupported_kind) {
@@ -160248,7 +160295,7 @@ async function snapshot(folder, output2, revision2 = null, { deadline = null, si
   }
   const result = await census(entries(), origin2, true);
   result.exclusions = exclusions;
-  result.origin.snapshot_sha256 = digest45(
+  result.origin.snapshot_sha256 = digest46(
     Buffer7.from(pyJson(result.inventory, { sortKeys: true }))
   );
   return result;
@@ -161528,11 +161575,11 @@ init_define_LOKI_TEST_PLANNING_PINS();
 init_define_LOKI_WORK_ITEM_RISK_INPUT_SCHEMA();
 init_define_LOKI_WORK_ITEM_RISK_PINS();
 import { createHash as createHash78 } from "node:crypto";
-var digest46 = (text15) => createHash78("sha256").update(text15, "utf8").digest("hex");
+var digest47 = (text15) => createHash78("sha256").update(text15, "utf8").digest("hex");
 var safePath = (value) => typeof value === "string" && value.length > 0 && !value.startsWith("/") && !value.includes("\\") && !value.includes("\0") && value.split("/").every((p) => p && p !== "." && p !== "..");
 var pinnedOrigin = (origin2) => typeof origin2?.repository === "string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(origin2.repository) && typeof origin2.revision === "string" && /^[a-f0-9]{40,64}$/.test(origin2.revision);
 function validateFileOrigin(origin2, text15) {
-  if (!pinnedOrigin(origin2) || !safePath(origin2.path) || origin2.sha256_utf8 !== digest46(text15))
+  if (!pinnedOrigin(origin2) || !safePath(origin2.path) || origin2.sha256_utf8 !== digest47(text15))
     throw Error("Invalid captured file origin or content hash");
   return {
     repository: origin2.repository,
@@ -166886,13 +166933,13 @@ async function sourceIndexFromArchive(run, protocol, map2, corpus, results, { re
       ]);
       for (const id8 of considered)
         for (const config2 of structuralIndex.get(id8)?.configuration_sources ?? []) {
-          const file3 = files.get(config2.file_id), digest48 = file3 && createHash83("sha256").update(file3.text).digest("hex");
-          if (!file3 || file3.path !== config2.path || digest48 !== config2.text_hash)
+          const file3 = files.get(config2.file_id), digest49 = file3 && createHash83("sha256").update(file3.text).digest("hex");
+          if (!file3 || file3.path !== config2.path || digest49 !== config2.text_hash)
             throw Error("Captured structural configuration differs");
           structuralFiles.set(file3.id, {
             file_id: file3.id,
             path: file3.path,
-            sha256_utf8: digest48
+            sha256_utf8: digest49
           });
         }
     }
@@ -168202,9 +168249,9 @@ var mapGenerateSchema = external_exports.strictObject({
   seconds: external_exports.number().int().min(1).max(5400).default(5400),
   requestKey: external_exports.string().min(1).max(200).optional()
 });
-var digest47 = (value) => createHash84("sha256").update(value).digest("hex");
+var digest48 = (value) => createHash84("sha256").update(value).digest("hex");
 var integrationIdentity2 = boundedFile(fileURLToPath10(import.meta.url)).then(
-  digest47
+  digest48
 );
 var object41 = (value) => external_exports.record(external_exports.string(), external_exports.json()).parse(value);
 var nativeCorpus = (value) => {
@@ -168238,12 +168285,12 @@ var UiModeler = class {
         verify: (input3, invocation) => {
           invocation.signal.throwIfAborted();
           nativeCorpus(input3.corpus);
-          const capture3 = this.captures.get(digest47(JSON.stringify(input3)));
-          if (!capture3 || digest47(JSON.stringify(capture3.corpus)) !== digest47(JSON.stringify(input3.corpus)))
+          const capture3 = this.captures.get(digest48(JSON.stringify(input3)));
+          if (!capture3 || digest48(JSON.stringify(capture3.corpus)) !== digest48(JSON.stringify(input3.corpus)))
             throw Error("Invocation capture is unavailable or differs");
         },
         execute: async (input3, invocation) => {
-          const capture3 = this.captures.get(digest47(JSON.stringify(input3)));
+          const capture3 = this.captures.get(digest48(JSON.stringify(input3)));
           if (!capture3) throw Error("Invocation source capture is unavailable");
           const environment = invocation.environment ?? {};
           const scope = createHmac2("sha256", await this.key()).update(
@@ -168294,7 +168341,7 @@ var UiModeler = class {
             const bundle = createRetainedMapBundle(mapJson, corpus, {
               repository: input3.folder
             });
-            const bytes2 = Buffer.from(JSON.stringify(bundle)), sha2564 = digest47(bytes2), path21 = join45(invocation.artifactDirectory, "retained-bundle.json");
+            const bytes2 = Buffer.from(JSON.stringify(bundle)), sha2564 = digest48(bytes2), path21 = join45(invocation.artifactDirectory, "retained-bundle.json");
             await atomicFile(
               invocation.artifactDirectory,
               "retained-bundle.json",
@@ -168414,7 +168461,7 @@ var UiModeler = class {
       throw Error(
         "Captured source exceeds the private 64 MiB request envelope; no source clipped or provider dispatched"
       );
-    const key5 = digest47(signature), capture3 = this.captures.get(key5) ?? {
+    const key5 = digest48(signature), capture3 = this.captures.get(key5) ?? {
       startedAt,
       callers: 0,
       corpus: captured

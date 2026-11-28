@@ -6,6 +6,21 @@ description: Read a saved Kaijan Test plan or report, inspect a saved observatio
 # Read the selected report
 
 Use the [shared Product MCP guidance](../../references/local-capabilities.md).
+<!-- codex-only -->
+
+For a report saved by Core, use the original chat and the Core server
+that returned the session. If you have its `sessionId`, read it with
+`kaijan_session_get` to find the saved `reportId`. Pass just that
+`reportId` to Core's `kaijan_report_show` for the panel or
+`kaijan_report_get` for the saved details in chat. To inspect a screenshot,
+pass the report ID and the selected Run’s `runs[].sourceId` as `runId`
+to Core's `kaijan_report_read_artifact`. Select an `artifactId` from its
+listing. These reads work with the Kaijan Client offline.
+
+## Reports saved by the local plugin
+
+<!-- end-codex-only -->
+
 Open a saved snapshot by its exact `reportId` in the owning conversation.
 Use `kaijan_report_get` for data and `kaijan_report_show` to reopen its presentation.
 Keep earlier report snapshots available when comparing Runs.
