@@ -934,7 +934,7 @@
     },
     "files": {
       "packages/computer-runner/package.json": "2bd61bddc2cb70018ad4c8fdcf8a14ecfca6839b521798ca638e0cc54f102275",
-      "packages/computer-runner/src/runner.mjs": "e3f1fb385f5fda17400d0fd78dd3c39e62e85a916ed9a53472ef612476163c67",
+      "packages/computer-runner/src/runner.mjs": "60aade2116ad48cdff430b0f049ff8a1c09b0c49bdce9c32959754190eb4e4ae",
       "packages/computer-runner/src/private.mjs": "529c42686dbf207aedd71c7cb54660738b4e8068987614c756132718f2c8312a",
       "packages/computer-runner/README.md": "77c7015ff3234b0b96006787eff5b418d603a94d43128befa3ffcb380ee2b48a",
       "packages/computer-runner/flow.md": "4a58bedeb7b17beef26de53a34e467d27af8d9bd758e89d679ab9096efaa4b59",
@@ -977,7 +977,7 @@
       "packages/computer-runner/src/browser-companion.mjs": "c0a0d370aa091dfe070a03c2cd1a65f439194cd166606b528b733c75bf134deb",
       "packages/computer-runner/src/browser-companion.d.mts": "1a496b49970bd5cb9c4942096f35e7392bb19a8e37fe0bcca19a5ed53076afe9",
       "packages/computer-runner/src/viewer-release.json": "f1ddeeea291a748ca0cb57c9a2a38cde30350122774569c5b1e1a71b528c331d",
-      "packages/computer-runner/src/browser-explorer-driver.mjs": "154bf908c6ceaf7d0e4f144aac1ce9107a7d223b333b6663e356c2cbce58974d",
+      "packages/computer-runner/src/browser-explorer-driver.mjs": "ad062f628760e802028758430c0f1a823ef6deeb6285d2ecbc759147b22b2d61",
       "packages/computer-runner/src/agent-loop.mjs": "3b5e12b45de84508b92d330db2a44039fed2f24f9f1da50ce81764cf6ff9bc04"
     },
     "providerRetryPolicy": {
