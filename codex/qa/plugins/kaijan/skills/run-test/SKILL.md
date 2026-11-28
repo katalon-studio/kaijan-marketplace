@@ -14,7 +14,16 @@ does not authorize execution.
 
 <!-- codex-only -->
 
-For a Plan saved by Core, start the selected Run on the same server.
+For a Plan saved by Core, start the selected Run on the same server. When
+Core advertises the Run start fields `planId`, `testIds`, and `environmentId`,
+pass the saved Plan ID, the authorized tests from that Plan, and the selected
+Environment for the same AUT. Read the returned `runId` with `kaijan_run_get`.
+Use `kaijan_ui_show_report` with that Run ID to open the result. Each Start
+creates a new Run. If the reply is interrupted, use the original Run ID
+from the tool history when available. If the ID is missing, report the
+uncertain Start and leave it pending. Repeating Start can execute the tests again.
+
+On a server advertising the earlier Run start fields, follow its schema.
 When it returns a `sessionId`, use Core's `kaijan_session_get` in the
 original chat for status and outcome. Open the returned `reportId` with
 [report review](../review-report/SKILL.md). Use the controls advertised
@@ -28,6 +37,8 @@ test's ID. If no single test clearly matches, ask which one to run before
 dispatch.
 
 ## Run the selected checks
+
+The following steps apply to Plans saved by Local Kaijan.
 
 <!-- codex-only -->
 
@@ -103,7 +114,7 @@ earlier saved Plan retains its original login reference.
 
 ## Read or stop the original test
 
-Use `kaijan_run_get` to read the same Run until it finishes or needs an
+For a Local Run, use `kaijan_run_get` to read the same Run until it finishes or needs an
 answer. Use `kaijan_run_stop` to stop that Run. Open its saved report with
 [report review](../review-report/SKILL.md) using the final `report.reportId`.
 
@@ -122,8 +133,8 @@ A missing answer does not require discarding other context or stopping
 independent work. See the [clarification contract](../../references/RUNNER.md#browser-clarification-and-recovery-contract-2334)
 for delivery and readback.
 
-Recover a lost reply with the same key and full original input. A new execution
-uses a fresh key only after admitted work is settled, effects are known and the
+For a Local Start that accepted `requestKey`, recover a lost reply with the
+same key and full original input. A new execution uses a fresh key only after admitted work is settled, effects are known and the
 caller scope still authorizes it. For a blocked sign-in redirect, use the
 retained blocked host and actions. If the saved target needs an updated
 sign-in setting, save a Plan with that setting before starting another Run.
