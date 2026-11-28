@@ -55715,6 +55715,19 @@ var chromeRunActionResult = external_exports.strictObject({
 });
 
 // packages/contracts/dist/testing-input.js
+var environmentTarget = external_exports.union([
+  external_exports.strictObject({
+    initialURL: external_exports.url({ protocol: /^https?$/ }).refine((value) => {
+      const url2 = URL.parse(value);
+      return url2 !== null && !url2.username && !url2.password;
+    }, "Use the application address. Keep login details on the Client.")
+  }),
+  desktopRunnerTargetSchema
+]);
+var assignedEnvironment = external_exports.strictObject({
+  target: environmentTarget,
+  revision: external_exports.int().positive()
+});
 var requestKey = external_exports.string().min(1);
 var answerDigest = /^[a-f0-9]{64}$/;
 var planId = external_exports.string().regex(/^[a-f0-9]{64}\.[a-f0-9]{64}$/);
