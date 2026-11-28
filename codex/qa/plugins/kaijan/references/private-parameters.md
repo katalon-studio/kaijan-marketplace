@@ -19,6 +19,11 @@ file and saves exactly those values under the specified keys. If the site has
 an authorized sign-in host on another domain, include it with `--host`. The
 command prints the saved Configuration name, ID and revision.
 
+For a Test Environment already created in Core, include its `--id` and
+`--revision 0` on the first local save, together with the same application
+URL. Include each approved sign-in host with `--host`. The Client uses these
+settings when the assigned environment ID and URL match.
+
 To replace selected values, repeat `save --from-file ... --secret ...` with
 `--id` and `--revision` from the latest Configuration read in place of
 `--name`, `--application`, `--aut-id`, and `--host`. The remaining settings are retained.

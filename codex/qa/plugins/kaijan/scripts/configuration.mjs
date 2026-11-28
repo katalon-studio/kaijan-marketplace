@@ -61,9 +61,12 @@ async function saveConfiguration(root, argv) {
   const revision =
     values.revision === undefined ? undefined : Number(values.revision);
   if (!file || !secret?.length) throw Error("Select the file and fields");
+  const creating = id === undefined || values.revision === "0";
   if (
-    id === undefined
-      ? !name || !application || revision !== undefined
+    creating
+      ? !name ||
+        !application ||
+        (id === undefined ? revision !== undefined : !id)
       : !id ||
         !Number.isSafeInteger(revision) ||
         revision < 1 ||
@@ -103,9 +106,9 @@ async function saveConfiguration(root, argv) {
   );
   const store = await ConfigurationStore.open(state);
   try {
-    const previous = id
-      ? store.read(id)
-      : { name, application, autId, allowedHosts: host ?? [], entries: [] };
+    const previous = creating
+      ? { name, application, autId, allowedHosts: host ?? [], entries: [] }
+      : store.read(id);
     for (const { key, secret: hidden, value } of previous.entries) {
       if (!entries.has(key))
         entries.set(key, { key, secret: hidden, ...(hidden ? {} : { value }) });
