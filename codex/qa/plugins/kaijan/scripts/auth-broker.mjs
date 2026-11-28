@@ -1,4 +1,4 @@
-import { createRequire } from "node:module"; const require = createRequire(import.meta.url);
+const require = process.getBuiltinModule("node:module").createRequire(import.meta.url);
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -26098,7 +26098,7 @@ var messages = {
 async function sendCompletion(response, outcome, host = "codex") {
   if (response.destroyed) return;
   const [title, originalMessage] = messages[outcome];
-  const message = host === "claude_code" ? originalMessage.replace("Codex", "Claude Code") : originalMessage;
+  const message = host === "claude_code" ? originalMessage.replace("Codex", "Claude Code") : host === "kaijan_client" ? originalMessage.replace("Codex", "Kaijan Client") : originalMessage;
   const nonce = randomBytes(18).toString("base64url");
   response.writeHead(outcome === "failed" ? 503 : 200, {
     "Cache-Control": "no-store",
@@ -26127,7 +26127,8 @@ var allowedScopes = /* @__PURE__ */ new Set([
   "results:write",
   "maps:read",
   "maps:write",
-  "github:credential"
+  "github:credential",
+  "testing:execute"
 ]);
 var bindingId = (value) => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 var BrokerAuthorization = class {
@@ -26145,7 +26146,7 @@ var BrokerAuthorization = class {
   }) {
     if (!Array.isArray(scopes) || !scopes.includes("session:read") || new Set(scopes).size !== scopes.length || scopes.some((value) => !allowedScopes.has(value)))
       throw Error("invalid_broker_scope");
-    if (!["codex", "claude_code"].includes(host))
+    if (!["codex", "claude_code", "kaijan_client"].includes(host))
       throw Error("invalid_broker_host");
     this.host = host;
     this.scope = scopes.join(" ");
@@ -26518,12 +26519,27 @@ var BrokerAuthorization = class {
     await this.connectionBinding(options.signal);
     return this.request(path, options, expectedConnection);
   }
-  async responsesWebSocket(expectedConnection, signal) {
+  responsesWebSocket(expectedConnection, signal) {
+    return this.#boundWebSocket(
+      "/api/v1/ai/v1/responses",
+      expectedConnection,
+      signal
+    );
+  }
+  async testingWebSocket(signal) {
+    const binding = await this.connectionBinding(signal);
+    return this.#boundWebSocket(
+      "/api/v1/testing/client/socket",
+      binding,
+      signal
+    );
+  }
+  async #boundWebSocket(path, expectedConnection, signal) {
     await this.connectionBinding(signal);
     this.assertAIConnection(expectedConnection);
     signal?.throwIfAborted();
     const saved = this.saved;
-    const url2 = new URL("/api/v1/ai/v1/responses", this.origin);
+    const url2 = new URL(path, this.origin);
     url2.protocol = url2.protocol === "https:" ? "wss:" : "ws:";
     return {
       url: url2,
@@ -27707,7 +27723,8 @@ var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
-    number: external_exports.number().int().positive().max(2147483647)
+    number: external_exports.number().int().positive().max(2147483647),
+    revision: external_exports.strictObject({ base: gitShaSchema, head: gitShaSchema }).optional()
   })
 ]);
 var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
@@ -27732,7 +27749,8 @@ var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
 var repositoryConnectSchema = external_exports.strictObject({
   installationId: githubIdSchema,
   repositoryId: githubIdSchema,
-  shareWithWorkspace: external_exports.literal(true)
+  shareWithWorkspace: external_exports.literal(true),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var repositoryBindingSchema = external_exports.strictObject({
   id: sourceIdSchema,
@@ -27740,7 +27758,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
   installationId: githubIdSchema,
-  defaultBranch: sourceBranchNameSchema.optional()
+  defaultBranch: sourceBranchNameSchema.optional(),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -29291,7 +29310,9 @@ var permissionSchema = external_exports.enum([
   "results:write",
   "maps:read",
   "maps:write",
-  "github:credential"
+  "github:credential",
+  "testing:start",
+  "testing:execute"
 ]);
 var permissions = permissionSchema.options;
 var opaqueSchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);

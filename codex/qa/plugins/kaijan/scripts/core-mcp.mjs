@@ -1,4 +1,4 @@
-import { createRequire } from "node:module"; const require = createRequire(import.meta.url);
+const require = process.getBuiltinModule("node:module").createRequire(import.meta.url);
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -31432,7 +31432,8 @@ var sourceReferenceSchema = external_exports.discriminatedUnion("kind", [
   }),
   external_exports.strictObject({
     kind: external_exports.literal("pull_request"),
-    number: external_exports.number().int().positive().max(2147483647)
+    number: external_exports.number().int().positive().max(2147483647),
+    revision: external_exports.strictObject({ base: gitShaSchema, head: gitShaSchema }).optional()
   })
 ]);
 var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
@@ -31457,7 +31458,8 @@ var sourceRunRequestSchema = external_exports.discriminatedUnion("input", [
 var repositoryConnectSchema = external_exports.strictObject({
   installationId: githubIdSchema,
   repositoryId: githubIdSchema,
-  shareWithWorkspace: external_exports.literal(true)
+  shareWithWorkspace: external_exports.literal(true),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var repositoryBindingSchema = external_exports.strictObject({
   id: sourceIdSchema,
@@ -31465,7 +31467,8 @@ var repositoryBindingSchema = external_exports.strictObject({
   githubId: githubIdSchema,
   fullName: repositoryNameSchema,
   installationId: githubIdSchema,
-  defaultBranch: sourceBranchNameSchema.optional()
+  defaultBranch: sourceBranchNameSchema.optional(),
+  trackPullRequests: external_exports.boolean().optional()
 });
 var sourceEntrySchema = external_exports.strictObject({
   path: external_exports.string().min(1).max(1024),
@@ -33016,7 +33019,9 @@ var permissionSchema = external_exports.enum([
   "results:write",
   "maps:read",
   "maps:write",
-  "github:credential"
+  "github:credential",
+  "testing:start",
+  "testing:execute"
 ]);
 var permissions = permissionSchema.options;
 var opaqueSchema = external_exports.string().regex(/^[A-Za-z0-9_-]{43}$/);
