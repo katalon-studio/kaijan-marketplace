@@ -26195,7 +26195,11 @@ var BrokerAuthorization = class {
     }
     if (this.credentialError) throw this.credentialError;
   }
-  async ensure({ interactive = false, observeProgress } = {}) {
+  async ensure({
+    interactive = false,
+    observeProgress,
+    refreshBeforeMs = 3e4
+  } = {}) {
     observeProgress?.(this.loadProgress);
     await this.ready;
     const progress = { stage: "read_credentials" };
@@ -26221,7 +26225,7 @@ var BrokerAuthorization = class {
       progress.stage = "insufficient_grant_scope";
       throw new ConnectionRequiredError();
     }
-    if (!this.blocked && !(interactive && this.githubReconnectRequired) && this.saved?.expiresAt > Date.now() + 3e4 && this.scope.split(" ").every((value) => this.saved.tokens.scope?.split(" ").includes(value)))
+    if (!this.blocked && !(interactive && this.githubReconnectRequired) && this.saved?.expiresAt > Date.now() + refreshBeforeMs && this.scope.split(" ").every((value) => this.saved.tokens.scope?.split(" ").includes(value)))
       return;
     this.pendingProgress = progress;
     this.pending = Promise.resolve().then(async () => {
@@ -26528,11 +26532,16 @@ var BrokerAuthorization = class {
   }
   async testingWebSocket(signal) {
     const binding = await this.connectionBinding(signal);
-    return this.#boundWebSocket(
-      "/api/v1/testing/client/socket",
-      binding,
-      signal
-    );
+    const path = "/api/v1/testing/client/socket";
+    return {
+      ...await this.#boundWebSocket(path, binding, signal),
+      renew: async (signal2) => {
+        signal2.throwIfAborted();
+        this.assertAIConnection(binding);
+        await this.ensure({ refreshBeforeMs: 6e4 });
+        return this.#boundWebSocket(path, binding, signal2);
+      }
+    };
   }
   async #boundWebSocket(path, expectedConnection, signal) {
     await this.connectionBinding(signal);
